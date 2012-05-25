@@ -10,6 +10,9 @@
 #pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>
+// IOAN 17.05.2012
+#include "ioan_bot.h"
+#include "ioan_bas.h"
 
 
 /*
@@ -1878,6 +1881,12 @@ void CheckParameters(int argc, char *argv[])
             param_ignorenumchunks = true;
         else IFARG("--help")
             showHelp = true;
+			// IOAN 17.05.2012: added --bot parameter
+			else IFARG("--bot")
+				BotMan::active = true;
+			// IOAN 17.05.2012: added --nonazis
+			else IFARG("--nonazis")
+				Basic::nonazis = true;
         else hasError = true;
     }
     if(hasError || showHelp)

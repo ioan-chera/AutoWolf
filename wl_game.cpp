@@ -4,6 +4,8 @@
 #include "wl_def.h"
 #include <SDL_mixer.h>
 #pragma hdrstop
+// IOAN 17.05.2012
+#include "ioan_bas.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -336,8 +338,8 @@ static void ScanInfoPlane(void)
                 case 108:
                 case 109:
                 case 110:
-                case 111:
-                    SpawnStand(en_guard,x,y,tile-108);
+                case 111:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_guard, x, y, tile - 108);
                     break;
 
 
@@ -358,8 +360,8 @@ static void ScanInfoPlane(void)
                 case 112:
                 case 113:
                 case 114:
-                case 115:
-                    SpawnPatrol(en_guard,x,y,tile-112);
+                case 115:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_guard, x, y, tile - 112, true);
                     break;
 
                 case 124:
@@ -385,8 +387,8 @@ static void ScanInfoPlane(void)
                 case 116:
                 case 117:
                 case 118:
-                case 119:
-                    SpawnStand(en_officer,x,y,tile-116);
+                case 119:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_officer, x, y, tile - 116);
                     break;
 
 
@@ -407,8 +409,8 @@ static void ScanInfoPlane(void)
                 case 120:
                 case 121:
                 case 122:
-                case 123:
-                    SpawnPatrol(en_officer,x,y,tile-120);
+                case 123:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_officer, x, y, tile - 120, true);
                     break;
 
 
@@ -432,8 +434,8 @@ static void ScanInfoPlane(void)
                 case 126:
                 case 127:
                 case 128:
-                case 129:
-                    SpawnStand(en_ss,x,y,tile-126);
+                case 129:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_ss, x, y, tile - 126);
                     break;
 
 
@@ -454,8 +456,8 @@ static void ScanInfoPlane(void)
                 case 130:
                 case 131:
                 case 132:
-                case 133:
-                    SpawnPatrol(en_ss,x,y,tile-130);
+                case 133:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_ss, x, y, tile - 130, true);
                     break;
 
 //
@@ -478,8 +480,8 @@ static void ScanInfoPlane(void)
                 case 134:
                 case 135:
                 case 136:
-                case 137:
-                    SpawnStand(en_dog,x,y,tile-134);
+                case 137:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_dog, x, y, tile - 134);
                     break;
 
 
@@ -500,53 +502,53 @@ static void ScanInfoPlane(void)
                 case 138:
                 case 139:
                 case 140:
-                case 141:
-                    SpawnPatrol(en_dog,x,y,tile-138);
+                case 141:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_dog, x, y, tile - 138, true);
                     break;
 
 //
 // boss
 //
 #ifndef SPEAR
-                case 214:
-                    SpawnBoss (x,y);
+                case 214:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_boss, x, y);
                     break;
-                case 197:
-                    SpawnGretel (x,y);
+                case 197:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_gretel, x, y);
                     break;
-                case 215:
-                    SpawnGift (x,y);
+                case 215:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_gift, x, y);
                     break;
-                case 179:
-                    SpawnFat (x,y);
+                case 179:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_fat, x, y);
                     break;
-                case 196:
-                    SpawnSchabbs (x,y);
+                case 196:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_schabbs, x, y);
                     break;
-                case 160:
-                    SpawnFakeHitler (x,y);
+                case 160:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_fake, x, y);
                     break;
-                case 178:
-                    SpawnHitler (x,y);
+                case 178:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_hitler, x, y);
                     break;
 #else
-                case 106:
-                    SpawnSpectre (x,y);
+                case 106:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_spectre, x, y);
                     break;
-                case 107:
-                    SpawnAngel (x,y);
+                case 107:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_angel, x, y);
                     break;
-                case 125:
-                    SpawnTrans (x,y);
+                case 125:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_trans, x, y);
                     break;
-                case 142:
-                    SpawnUber (x,y);
+                case 142:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_uber, x, y);
                     break;
-                case 143:
-                    SpawnWill (x,y);
+                case 143:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_will, x, y);
                     break;
-                case 161:
-                    SpawnDeath (x,y);
+                case 161:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_death, x, y);
                     break;
 
 #endif
@@ -571,8 +573,8 @@ static void ScanInfoPlane(void)
                 case 216:
                 case 217:
                 case 218:
-                case 219:
-                    SpawnStand(en_mutant,x,y,tile-216);
+                case 219:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_mutant, x, y, tile - 216);
                     break;
 
                 case 256:
@@ -592,25 +594,25 @@ static void ScanInfoPlane(void)
                 case 220:
                 case 221:
                 case 222:
-                case 223:
-                    SpawnPatrol(en_mutant,x,y,tile-220);
+                case 223:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_mutant, x, y, tile - 220, true);
                     break;
 
 //
 // ghosts
 //
 #ifndef SPEAR
-                case 224:
-                    SpawnGhosts (en_blinky,x,y);
+                case 224:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_blinky, x, y);
                     break;
-                case 225:
-                    SpawnGhosts (en_clyde,x,y);
+                case 225:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_clyde, x, y);
                     break;
-                case 226:
-                    SpawnGhosts (en_pinky,x,y);
+                case 226:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_pinky, x, y);
                     break;
-                case 227:
-                    SpawnGhosts (en_inky,x,y);
+                case 227:	// IOAN 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(en_inky, x, y);
                     break;
 #endif
             }

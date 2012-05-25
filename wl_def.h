@@ -1482,4 +1482,39 @@ static inline longword READLONGWORD(byte *&ptr)
     void Scale3DShape(byte *vbuf, unsigned vbufPitch, statobj_t *ob);
 #endif
 
+//
+// IOAN 17.05.2012
+//
+// Other externs
+//
+
+// Spawn frames and data
+extern statetype s_grdstand;
+extern statetype s_ofcstand;
+extern statetype s_mutstand;
+extern statetype s_ssstand;
+extern short starthitpoints[4][NUMENEMIES];
+extern statetype s_grdpath1;
+extern statetype s_ofcpath1;
+extern statetype s_sspath1;
+extern statetype s_mutpath1;
+extern statetype s_dogpath1;
+
+#ifndef SPEAR
+extern statetype s_bossstand;
+extern statetype s_gretelstand;
+extern statetype s_schabbdie2;
+extern statetype s_schabbstand;
+extern statetype s_clydechase1;
+extern statetype s_pinkychase1;
+extern statetype s_inkychase1;
+extern statetype s_giftdie2;
+extern statetype s_giftstand;
+extern statetype s_fatdie2;
+extern statetype s_fatstand;
+extern statetype s_hitlerdie2;
+extern statetype s_fakestand;
+extern statetype s_mechastand;
+#endif
+
 #endif

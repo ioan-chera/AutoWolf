@@ -5,6 +5,8 @@
 
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
+// IOAN 17.05.2012
+#include "ioan_bot.h"
 
 /*
 =============================================================================
@@ -450,27 +452,30 @@ void PollControls (void)
     }
 
 
-//
-// get button states
-//
-    PollKeyboardButtons ();
+	 if(!BotMan::active)	// IOAN 17.05.2012: if bot active, don't poll the user.
+	 {
+	//
+	// get button states
+	//
+		 PollKeyboardButtons ();
 
-    if (mouseenabled && IN_IsInputGrabbed())
-        PollMouseButtons ();
+		 if (mouseenabled && IN_IsInputGrabbed())
+			  PollMouseButtons ();
 
-    if (joystickenabled)
-        PollJoystickButtons ();
+		 if (joystickenabled)
+			  PollJoystickButtons ();
 
-//
-// get movements
-//
-    PollKeyboardMove ();
+	//
+	// get movements
+	//
+		 PollKeyboardMove ();
 
-    if (mouseenabled && IN_IsInputGrabbed())
-        PollMouseMove ();
+		 if (mouseenabled && IN_IsInputGrabbed())
+			  PollMouseMove ();
 
-    if (joystickenabled)
-        PollJoystickMove ();
+		 if (joystickenabled)
+			  PollJoystickMove ();
+	 }
 
 //
 // bound movement to a maximum
