@@ -239,7 +239,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	exity = -1;
 
 	// items
-	for(i = 0; i < MAXSTATS - 1; ++i)
+	for(i = 0; &statobjlist[i] != laststatobj; ++i)
 	{
 		if(statobjlist[i].tilex == (byte)tx && statobjlist[i].tiley == (byte)ty && statobjlist[i].flags & FL_BONUS
 			&& statobjlist[i].shapenum >= 0)
@@ -495,6 +495,10 @@ void BotMan::DoCommand()
 			return;
 	}
 
+	static boolean waitpwall;
+	if(pwallstate)
+		waitpwall = true;
+
 	// found path to exit
 	int searchpos = 0;
 	int nowon = -1;
@@ -508,8 +512,9 @@ void BotMan::DoCommand()
 			break;
 		}
 	}
-	if(nowon < 0)
+	if(nowon < 0 || !pwallstate && waitpwall)
 	{
+		waitpwall = false;
 		pathexists = false;
 		return;
 	}
@@ -574,7 +579,7 @@ void BotMan::DoCommand()
 
 	if(dangle > -45 && dangle < 45)
 	{
-		controly -= delta;
+		controly -= RUNMOVE * tics;
 		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && ++pressuse % 4 == 0)
 			buttonstate[bt_use] = true;
 		else
@@ -584,9 +589,9 @@ void BotMan::DoCommand()
 	buttonstate[bt_strafe] = false;
 
 	if(dangle > 0)
-		controlx -= delta;
+		controlx -= BASEMOVE * tics;
 	else if(dangle < 0)
-		controlx += delta;
+		controlx += BASEMOVE * tics;
 	else
 	{
 		buttonstate[bt_strafe] = true;
@@ -616,11 +621,11 @@ void BotMan::DoCommand()
 		}
 		if(plro - cento > 4096)
 		{
-			controlx += delta;
+			controlx += BASEMOVE * tics;
 		}
 		else if(plro - cento < -4096)
 		{
-			controlx -= delta;
+			controlx -= BASEMOVE * tics;
 		}
 	}
 
