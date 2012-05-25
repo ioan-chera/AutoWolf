@@ -33,8 +33,9 @@ protected:
 
 	// protected variables
 	static boolean pathexists, exitfound;
-	static byte nothingleft, wakeupfire;
+	static byte nothingleft, wakeupfire, retreat;
 	static int exitx, exity, exfrontx;
+	static objtype *threater;
 
 	// protected functions
 	// Finds the path to an exit (A*)
@@ -53,6 +54,8 @@ protected:
 			searchset = NULL;
 		}
 	}
+	// move by strafing
+	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
 	// Add set
 	static void AddToSet(const SData &data);
 	// ApproximateDistance
@@ -71,7 +74,8 @@ protected:
 	static objtype *EnemiesArmed();
 	// do retreat
 	static void DoRetreat();
-
+	// like EnemiesArmed, but not restricted to the player
+	static objtype *Crossfire(int tx, int ty);
 public:
 	static boolean active;	// true if bots are activated
 

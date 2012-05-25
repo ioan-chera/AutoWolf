@@ -22,11 +22,11 @@ boolean Basic::IsArmed(objtype *ob)
 	switch(ob->obclass)
 	{
 	case guardobj:
-		return st == &s_grdshoot1 || st == &s_grdshoot2 || st == &s_grdshoot3;
+		return /*st == &s_grdshoot1 ||*/ st == &s_grdshoot2 || st == &s_grdshoot3;
 	case officerobj:
 		return st == &s_ofcshoot1 || st == &s_ofcshoot2 || st == &s_ofcshoot3;
 	case ssobj:
-		return st == &s_ssshoot1 || st == &s_ssshoot2 || st == &s_ssshoot3 || 
+		return /*st == &s_ssshoot1 ||*/ st == &s_ssshoot2 || st == &s_ssshoot3 || 
 			st == &s_ssshoot4 || st == &s_ssshoot5 || st == &s_ssshoot6 || 
 			st == &s_ssshoot7 || st == &s_ssshoot8 || st == &s_ssshoot9;
 	case dogobj:
@@ -86,6 +86,141 @@ boolean Basic::IsArmed(objtype *ob)
 		return false;
 	}
 	return false;
+}
+
+//
+// Basic::GenericCheckLine
+//
+// Like CheckLine, but with user-settable coordinates
+//
+boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
+{
+    int         xt1,yt1,xt2,yt2;
+    int         x,y;
+    int         xdist,ydist,xstep,ystep;
+    int         partial,delta;
+    int32_t     ltemp;
+    int         xfrac,yfrac,deltafrac;
+    unsigned    value,intercept;
+
+    x1 >>= UNSIGNEDSHIFT;            // 1/256 tile precision
+    y1 >>= UNSIGNEDSHIFT;
+    xt1 = x1 >> 8;
+    yt1 = y1 >> 8;
+
+	 x2 >>= UNSIGNEDSHIFT;
+	 y2 >>= UNSIGNEDSHIFT;
+    xt2 = x2 >> 8;
+    yt2 = y2 >> 8;
+
+    xdist = abs(xt2-xt1);
+
+    if (xdist > 0)
+    {
+        if (xt2 > xt1)
+        {
+            partial = 256-(x1&0xff);
+            xstep = 1;
+        }
+        else
+        {
+            partial = x1&0xff;
+            xstep = -1;
+        }
+
+        deltafrac = abs(x2-x1);
+        delta = y2-y1;
+        ltemp = ((int32_t)delta<<8)/deltafrac;
+        if (ltemp > 0x7fffl)
+            ystep = 0x7fff;
+        else if (ltemp < -0x7fffl)
+            ystep = -0x7fff;
+        else
+            ystep = ltemp;
+        yfrac = y1 + (((int32_t)ystep*partial) >>8);
+
+        x = xt1+xstep;
+        xt2 += xstep;
+        do
+        {
+            y = yfrac>>8;
+            yfrac += ystep;
+
+            value = (unsigned)tilemap[x][y];
+            x += xstep;
+
+            if (!value)
+                continue;
+
+            if (value<128 || value>256)
+                return false;
+
+            //
+            // see if the door is open enough
+            //
+            value &= ~0x80;
+            intercept = yfrac-ystep/2;
+
+            if (intercept>doorposition[value])
+                return false;
+
+        } while (x != xt2);
+    }
+
+    ydist = abs(yt2-yt1);
+
+    if (ydist > 0)
+    {
+        if (yt2 > yt1)
+        {
+            partial = 256-(y1&0xff);
+            ystep = 1;
+        }
+        else
+        {
+            partial = y1&0xff;
+            ystep = -1;
+        }
+
+        deltafrac = abs(y2-y1);
+        delta = x2-x1;
+        ltemp = ((int32_t)delta<<8)/deltafrac;
+        if (ltemp > 0x7fffl)
+            xstep = 0x7fff;
+        else if (ltemp < -0x7fffl)
+            xstep = -0x7fff;
+        else
+            xstep = ltemp;
+        xfrac = x1 + (((int32_t)xstep*partial) >>8);
+
+        y = yt1 + ystep;
+        yt2 += ystep;
+        do
+        {
+            x = xfrac>>8;
+            xfrac += xstep;
+
+            value = (unsigned)tilemap[x][y];
+            y += ystep;
+
+            if (!value)
+                continue;
+
+            if (value<128 || value>256)
+                return false;
+
+            //
+            // see if the door is open enough
+            //
+            value &= ~0x80;
+            intercept = xfrac-xstep/2;
+
+            if (intercept>doorposition[value])
+                return false;
+        } while (y != yt2);
+    }
+
+    return true;
 }
 
 //
