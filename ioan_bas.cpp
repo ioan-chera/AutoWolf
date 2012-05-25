@@ -12,78 +12,89 @@
 boolean Basic::nonazis;
 
 //
-// Basic::IsArmed
+// Basic::IsDangerous
 //
 // Check if the Nazi is ready to fire or firing (important for fighting SS and bosses)
 //
-boolean Basic::IsArmed(objtype *ob)
+boolean Basic::IsDamaging(objtype *ret, int dist)
 {
-	statetype *&st = ob->state;
-	switch(ob->obclass)
+	switch(ret->obclass)
 	{
 	case guardobj:
-		return /*st == &s_grdshoot1 ||*/ st == &s_grdshoot2 || st == &s_grdshoot3;
+		if(dist <= 2 && (ret->state == &s_grdshoot2 || ret->state == &s_grdshoot3))
+			return true;
+		break;
 	case officerobj:
-		return st == &s_ofcshoot1 || st == &s_ofcshoot2 || st == &s_ofcshoot3;
+		if(dist <= 4 && (ret->state == &s_ofcshoot2 || ret->state == &s_ofcshoot3))
+			return true;
+		break;
 	case ssobj:
-		return /*st == &s_ssshoot1 ||*/ st == &s_ssshoot2 || st == &s_ssshoot3 || 
-			st == &s_ssshoot4 || st == &s_ssshoot5 || st == &s_ssshoot6 || 
-			st == &s_ssshoot7 || st == &s_ssshoot8 || st == &s_ssshoot9;
-	case dogobj:
-		return false;
+		if(dist <= 7 && (ret->state == &s_ssshoot2 || ret->state == &s_ssshoot3 || ret->state == &s_ssshoot4
+			|| ret->state == &s_ssshoot5 || ret->state == &s_ssshoot6 || ret->state == &s_ssshoot7
+			|| ret->state == &s_ssshoot8 || ret->state == &s_ssshoot9))
+			return true;
+		break;
 	case mutantobj:
-		return st == &s_mutshoot1 || st == &s_mutshoot2 || st == &s_mutshoot3 || st == &s_mutshoot4;
-
+		if(dist <= 1 && ret->flags & FL_ATTACKMODE)
+			return true;
+		break;
 #ifndef SPEAR
 	case bossobj:
-		return st == &s_bossshoot1 || st == &s_bossshoot2 || st == &s_bossshoot3 ||
-			 st == &s_bossshoot4 || st == &s_bossshoot5 || st == &s_bossshoot6 ||
-			  st == &s_bossshoot7 || st == &s_bossshoot8;
-	case schabbobj:
-		return st == &s_schabbshoot1 || st == &s_schabbshoot2;
-	case fakeobj:
-		return st == &s_fakeshoot1 || st == &s_fakeshoot2 || st == &s_fakeshoot3 || 
-			st == &s_fakeshoot4 || st == &s_fakeshoot5 || st == &s_fakeshoot6 || 
-			st == &s_fakeshoot7 || st == &s_fakeshoot8 || st == &s_fakeshoot9; 
-	case mechahitlerobj:
-		return st == &s_mechashoot1 || st == &s_mechashoot2 || st == &s_mechashoot3 ||
-			 st == &s_mechashoot4 || st == &s_mechashoot5 || st == &s_mechashoot6;
+		if(dist <= 8 && (ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
+			|| ret->state == &s_bossshoot5 || ret->state == &s_bossshoot6 || ret->state == &s_bossshoot7
+			|| ret->state == &s_bossshoot8))
+			return true;
+		break;
 	case ghostobj:
-		return false;
+		if(dist <= 2)
+			return true;
+		break;
+	case mechahitlerobj:
+		if(dist <= 6 && (ret->state == &s_mechashoot2 || ret->state == &s_mechashoot3 || ret->state == &s_mechashoot4
+			|| ret->state == &s_mechashoot5 || ret->state == &s_mechashoot6))
+			return true;
+		break;
 	case realhitlerobj:
-		return st == &s_hitlershoot1 || st == &s_hitlershoot2 || st == &s_hitlershoot3 ||
-			 st == &s_hitlershoot4 || st == &s_hitlershoot5 || st == &s_hitlershoot6;
+		if(dist <= 6 && (ret->state == &s_hitlershoot2 || ret->state == &s_hitlershoot3 || ret->state == &s_hitlershoot4
+			|| ret->state == &s_hitlershoot5 || ret->state == &s_hitlershoot6))
+			return true;
+		break;
 	case gretelobj:
-		return st == &s_gretelshoot1 || st == &s_gretelshoot2 || st == &s_gretelshoot3 ||
-			 st == &s_gretelshoot4 || st == &s_gretelshoot5 || st == &s_gretelshoot6 ||
-			 st == &s_gretelshoot7 || st == &s_gretelshoot8;
-	case giftobj:
-		return st == &s_giftshoot1 || st == &s_giftshoot2;
+		if(dist <= 7 && (ret->state == &s_gretelshoot2 || ret->state == &s_gretelshoot3 
+			|| ret->state == &s_gretelshoot4
+			|| ret->state == &s_gretelshoot5 || ret->state == &s_gretelshoot6 || ret->state == &s_gretelshoot7
+			|| ret->state == &s_gretelshoot8))
+			return true;
+		break;
 	case fatobj:
-		return st == &s_fatshoot1 || st == &s_fatshoot2 || st == &s_fatshoot3 ||
-			 st == &s_fatshoot4 || st == &s_fatshoot5 || st == &s_fatshoot6;
+		if(dist <= 6 && (ret->state == &s_fatshoot2 || ret->state == &s_fatshoot3 || ret->state == &s_fatshoot4
+			|| ret->state == &s_fatshoot5 || ret->state == &s_fatshoot6))
+			return true;
+		break;
 #else
-	case spectreobj:
-		return false;
-	case angelobj:
-		return st == &s_angelshoot1 || st == &s_angelshoot2 || st == &s_angelshoot3;
 	case transobj:
-		return st == &s_transshoot1 || st == &s_transshoot2 || st == &s_transshoot3 ||
-			 st == &s_transshoot4 || st == &s_transshoot5 || st == &s_transshoot6 ||
-			 st == &s_transshoot7 || st == &s_transshoot8;
-	case uberobj:
-		return st == &s_ubershoot1 || st == &s_ubershoot2 || st == &s_ubershoot3 ||
-			 st == &s_ubershoot4 || st == &s_ubershoot5 || st == &s_ubershoot6 ||
-			 st == &s_ubershoot7;
+		if(dist <= 7 && (ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
+			|| ret->state == &s_transshoot4
+			|| ret->state == &s_transshoot5 || ret->state == &s_transshoot6 || ret->state == &s_transshoot7
+			|| ret->state == &s_transshoot8))
+			return true;
+		break;
 	case willobj:
-		return st == &s_willshoot1 || st == &s_willshoot2 || st == &s_willshoot3 ||
-			 st == &s_willshoot4 || st == &s_willshoot5 || st == &s_willshoot6;
+		if(dist <= 6 && (ret->state == &s_willshoot2 || ret->state == &s_willshoot3 || ret->state == &s_willshoot4
+			|| ret->state == &s_willshoot5 || ret->state == &s_willshoot6))
+			return true;
+		break;
+	case uberobj:
+		if(dist <= 6 && (ret->state == &s_ubershoot2 || ret->state == &s_ubershoot3 || ret->state == &s_ubershoot4
+			|| ret->state == &s_ubershoot5 || ret->state == &s_ubershoot6 || ret->state == &s_ubershoot7))
+			return true;
+		break;
 	case deathobj:
-		return st == &s_deathshoot1 || &s_deathshoot2 || &s_deathshoot3 || &s_deathshoot4 || &s_deathshoot5;
+		if(dist <= 6 && (ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
+			|| ret->state == &s_deathshoot5 || ret->state == &s_deathshoot6 || ret->state == &s_deathshoot7))
+			return true;
+		break;
 #endif
-
-	default:
-		return false;
 	}
 	return false;
 }

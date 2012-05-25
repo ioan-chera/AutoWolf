@@ -76,7 +76,7 @@ public:
 		}
 		return false;
 	}
-	// if shoots a repeated gun
+	// if it's dangerous
 	static boolean IsAutomatic(classtype cls)
 	{
 		switch(cls)
@@ -99,7 +99,7 @@ public:
 	}
 
 	// Check if it's armed
-	static boolean IsArmed(objtype *ob);
+	static boolean IsDamaging(objtype *ret, int dist);
 
 	// Generic check line
 	static boolean GenericCheckLine (int x1, int y1, int x2, int y2);

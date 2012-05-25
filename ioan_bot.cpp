@@ -657,27 +657,43 @@ objtype *BotMan::EnemyEager()
 }
 
 //
-// BotMan::EnemiesArmed
+// BotMan::DamageThreat
 //
-// true if enemies are armed
+// true if damage is imminent and retreat should be done
 //
-objtype *BotMan::EnemiesArmed()
+objtype *BotMan::DamageThreat()
 {
 	int tx = player->tilex, ty = player->tiley;
-	int j, k;
+	int j, k, dist;
 	objtype *ret;
 
-	for(j = -10; j <= 10; ++j)
+	// Threat types
+	// Guard: dist 2, shooting
+	// Officer: dist 4, shooting
+	// SS: dist 7, shooting
+	// Mutant: dist 4, just being there
+	// Hans: dist 8, shooting
+	// Monster: dist 2, just being there
+	// Hitler: dist 6, shooting
+	// Gretel: dist 7, shooting
+	// Fat: dist 6, shooting
+	// Trans: dist 7, shooting
+	// Will: dist 6, shooting
+	// Uber: dist 6, shooting
+	// Death: dist 6, shooting
+
+	for(j = -8; j <= 8; ++j)
 	{
-		for(k = -10; k <= 10; ++k)
+		for(k = -8; k <= 8; ++k)
 		{
+			dist = abs(j) < abs(k) ? abs(j) : abs(k);
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
-			ret = actorat[player->tilex + k][player->tiley + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
-				&& Basic::IsArmed(ret) && Basic::IsAutomatic(ret->obclass) && CheckLine(ret))
+			ret = actorat[tx + k][ty + j];
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret))
 			{
-				return ret;
+				if(Basic::IsDamaging(ret, dist))
+					return ret;
 			}
 		}
 	}
@@ -691,23 +707,24 @@ objtype *BotMan::EnemiesArmed()
 //
 objtype *BotMan::Crossfire(int tx, int ty)
 {
-	int j, k;
+	int j, k, dist;
 	objtype *ret;
 
 	for(j = -10; j <= 10; ++j)
 	{
 		for(k = -10; k <= 10; ++k)
 		{
+			dist = abs(j) < abs(k) ? abs(j) : abs(k);
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
 			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
-				&& Basic::IsArmed(ret) && Basic::IsAutomatic(ret->obclass) 
 				&& Basic::GenericCheckLine(ret->x, ret->y, 
-				(tx << TILESHIFT) + (1 << (TILESHIFT - 1)),
-				(ty << TILESHIFT) + (1 << (TILESHIFT - 1))))
+				Basic::Major(tx),
+				Basic::Major(ty)))
 			{
-				return ret;
+				if(Basic::IsDamaging(ret, dist))
+					return ret;
 			}
 		}
 	}
@@ -722,7 +739,7 @@ objtype *BotMan::Crossfire(int tx, int ty)
 void BotMan::DoRetreat()
 {
 	controly += RUNMOVE * tics;
-	int backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
+	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
 	if(player->angle > 0 && player->angle <= 45)
 	{
 		backx = -1;
@@ -752,7 +769,7 @@ void BotMan::DoRetreat()
 		backx = 1;
 		backy = 0;
 		sidex = 0;
-		sidey = -1;
+		sidey = 1;
 		dir = -RUNMOVE;
 	}
 	else if(player->angle > 180 && player->angle <= 225)
@@ -760,13 +777,13 @@ void BotMan::DoRetreat()
 		backx = 1;
 		backy = 0;
 		sidex = 0;
-		sidey = 1;
+		sidey = -1;
 		dir = RUNMOVE;
 	}
 	else if(player->angle > 225 && player->angle <= 270)
 	{
 		backx = 0;
-		backy = 1;
+		backy = -1;
 		sidex = 1;
 		sidey = 0;
 		dir = -RUNMOVE;
@@ -774,7 +791,7 @@ void BotMan::DoRetreat()
 	else if(player->angle > 270 && player->angle <= 315)
 	{
 		backx = 0;
-		backy = 1;
+		backy = -1;
 		sidex = -1;
 		sidey = 0;
 		dir = RUNMOVE;
@@ -789,20 +806,78 @@ void BotMan::DoRetreat()
 	}
 	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
 		return;
-	backx += tx;
-	backy += ty;
-	sidex += tx;
-	sidey += ty;
-	objtype *check1 = actorat[backx][backy], *check2 = actorat[sidex][sidey];
+//	backx += tx;
+//	backy += ty;
+//	sidex += tx;
+//	sidey += ty;
+
+	objtype *check1 = actorat[tx + backx][ty + backy], *check2;
 	if(check1 && !ISPOINTER(check1) || check1 && ISPOINTER(check1) && check1->flags & FL_SHOOTABLE)
 	{
-		buttonstate[bt_strafe] = true;
-		if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+		// Look for way backwards
+		if(sidex)	// strafing east or west
 		{
-			controlx -= dir*tics;
+			for(j = tx + sidex; ; j += sidex)
+			{
+				if(j >= MAPSIZE)
+					break;
+				check2 = actorat[j][ty];
+				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+					break;	// stopped
+
+				check2 = actorat[j][ty + backy];
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+					goto solved;// found here
+			}
+			for(j = tx - sidex; ; j -= sidex)
+			{
+				if(j < 0)
+					break;
+				check2 = actorat[j][ty];
+				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+					break;
+
+				check2 = actorat[j][ty + backy];
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				{
+					dir = -dir;// found here
+					break;
+				}
+			}
 		}
-		else
-			controlx += dir*tics;
+		else if(sidey)
+		{
+			for(j = ty + sidey; ; j += sidey)
+			{
+				if(j >= MAPSIZE)
+					break;
+				check2 = actorat[tx][j];
+				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+					break;	// stopped
+
+				check2 = actorat[tx + backx][j];
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+					goto solved;// found here
+			}
+			for(j = ty - sidey; ; j -= sidey)
+			{
+				if(j < 0)
+					break;
+				check2 = actorat[tx][j];
+				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+					break;
+
+				check2 = actorat[tx + backx][j];
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				{
+					dir = -dir;// found here
+					break;
+				}
+			}
+		}
+solved:
+		buttonstate[bt_strafe] = true;
+		controlx += dir*tics;
 	}
 	else
 		buttonstate[bt_strafe] = false;
@@ -926,6 +1001,7 @@ void BotMan::DoCommand()
 
 	if(check = EnemyVisible(&eangle, &edist))
 	{
+		pathexists = false;
 		// Enemy visible mode
 		// centred angle here
 		dangle = eangle - player->angle;
@@ -959,11 +1035,13 @@ void BotMan::DoCommand()
 			{
 				controly -= RUNMOVE * tics;
 			}
-			else if((edist < 4 || Basic::IsArmed(check)) /*&& !retreatactive*/ && gamestate.weaponframe >= 3
-				|| EnemiesArmed())
+			else if(/*(edist < 4 || Basic::IsArmed(check)) && gamestate.weaponframe >= 3
+				||*/ check = DamageThreat())
 			{
 				DoRetreat();
 				retreat = 20;
+				if(check->obclass == mutantobj)
+					retreat = 5;
 			}
 		}
 	}
