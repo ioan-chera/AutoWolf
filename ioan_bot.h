@@ -38,6 +38,8 @@ protected:
 	// protected functions
 	// Finds the path to an exit (A*)
 	static boolean FindPathToExit();
+	// Finds the closest object of interest (object, hidden door, exit)
+	static boolean FindRandomPath();
 	// Finds the exit on the map
 	static boolean FindExit();
 	// Empty set
@@ -54,6 +56,8 @@ protected:
 	static void AddToSet(const SData &data);
 	// ApproximateDistance
 	static int ApproxDist(int dx, int dy);
+	// Object of interest
+	static boolean ObjectOfInterest(int dx, int dy);
 
 public:
 	static boolean active;	// true if bots are activated

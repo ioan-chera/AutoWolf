@@ -140,11 +140,7 @@ boolean BotMan::FindPathToExit()
 		}
 		if(!openfound)
 			break;
-		searchset[imin].tilex; 
-		searchset[imin].tiley;
 		searchset[imin].open = false;
-		if(searchset[imin].prev > -1)
-			searchset[searchset[imin].prev].next = imin;
 
 		if(searchset[imin].tilex == exfrontx && searchset[imin].tiley == exity)
 		{
@@ -178,8 +174,17 @@ boolean BotMan::FindPathToExit()
 				break;
 			}
 			check = actorat[cx][cy];
-			if(check && !ISPOINTER(check) && !(tilemap[cx][cy] & 0x80))
+			byte door = tilemap[cx][cy];
+			if(check && !ISPOINTER(check) && !(door & 0x80))
 				continue;	// solid, can't be passed
+			else if (door & 0x80)
+			{
+				door = door & ~0x80;
+				byte lock = doorobjlist[door].lock;
+				if (lock >= dr_lock1 && lock <= dr_lock4)
+					if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+						continue;
+			}
 			neighinvalid = false;
 			neighfound = false;
 			for(i = searchlen - 1; i >= 0; --i)
@@ -223,6 +228,258 @@ boolean BotMan::FindPathToExit()
 }
 
 //
+// BotMan::ObjectOfInterest
+//
+// Pickable item, secret door, exit switch, exit pad
+//
+boolean BotMan::ObjectOfInterest(int tx, int ty)
+{
+	int i;
+	exitx = -1;
+	exity = -1;
+
+	// items
+	for(i = 0; i < MAXSTATS - 1; ++i)
+	{
+		if(statobjlist[i].tilex == (byte)tx && statobjlist[i].tiley == (byte)ty && statobjlist[i].flags & FL_BONUS
+			&& statobjlist[i].shapenum >= 0)
+		{
+			switch (statobjlist[i].itemnumber)
+			{
+			case    bo_firstaid:
+			case    bo_food:
+			case    bo_alpo:
+				if (gamestate.health < 100)
+					return true;
+				break;
+			case    bo_key1:
+			case    bo_key2:
+			case    bo_key3:
+			case    bo_key4:
+			case    bo_cross:
+			case    bo_chalice:
+			case    bo_bible:
+			case    bo_crown:
+			case    bo_machinegun:
+			case    bo_chaingun:
+			case    bo_fullheal:
+				return true;
+			case    bo_clip:
+			case    bo_clip2:
+				if (gamestate.ammo < 99)
+					return true;
+				break;
+#ifdef SPEAR
+			case    bo_25clip:
+				if (gamestate.ammo < 99)
+					return true;
+				break;
+			case    bo_spear:
+				return true;
+#endif
+			case    bo_gibs:
+				if (gamestate.health <= 10)
+					return true;
+				break;
+			}
+		}
+	}
+
+	// secret door
+	if(ty + 3 < MAPSIZE && *(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
+	{
+		if(!actorat[tx][ty+2] && !actorat[tx][ty+3])
+		{
+			exity = ty + 1;
+			exitx = tx;
+			return true;
+		}
+	}
+	if(ty - 3 >= 0 && *(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
+	{
+		if(!actorat[tx][ty-2] && !actorat[tx][ty-3])
+		{
+			exity = ty - 1;
+			exitx = tx;
+			return true;
+		}
+	}
+	if(tx + 3 < MAPSIZE && *(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
+	{
+		if(!actorat[tx+2][ty] && !actorat[tx+3][ty])
+		{
+			exity = ty;
+			exitx = tx + 1;
+			return true;
+		}
+	}
+	if(tx - 3 >= 0 && *(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
+	{
+		if(!actorat[tx-2][ty] && !actorat[tx-3][ty])
+		{
+			exity = ty;
+			exitx = tx - 1;
+			return true;
+		}
+	}
+
+	// exit switch
+	if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
+	{
+		exitx = tx - 1;
+		exity = ty;
+		return true;
+	}
+	if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
+	{
+		exitx = tx + 1;
+		exity = ty;
+		return true;
+	}
+
+	// exit pad
+	if(*(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+		return true;
+	return false;
+}
+
+//
+// BotMan::FindPathToExit
+//
+// Finds the path to an exit (A*)
+//
+boolean BotMan::FindRandomPath()
+{
+	int i, j;
+
+	SData data;
+	data.g_score = 0;
+	data.f_score = 0;
+	data.open = true;
+	data.tilex = player->tilex;
+	data.tiley = player->tiley;
+	data.prev = -1;
+
+	EmptySet();
+	AddToSet(data);
+
+	boolean openfound;
+	int fmin, imin, ifound;
+	int cx, cy;
+	objtype *check;
+	boolean neighinvalid, neighfound;
+	int tentative_g_score;
+	while(1)
+	{
+		// look for open sets
+		openfound = false;
+		fmin = INT_MAX;
+		for(i = 0; i < searchlen; ++i)
+		{
+			if(searchset[i].open)
+			{
+				openfound = true;
+				if(searchset[i].f_score < fmin)
+				{
+					fmin = searchset[i].f_score;
+					imin = i;
+				}
+			}
+		}
+		if(!openfound)
+			break;
+		searchset[imin].tilex;
+		searchset[imin].tiley;
+		searchset[imin].open = false;
+
+		if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley))
+		{
+			// found goal
+			searchset[imin].next = -1;
+			ifound = imin;
+			for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
+				searchset[imin].next = ifound;
+			pathexists = true;
+			return true;
+		}
+		
+		for(j = 0; j < 4; ++j)
+		{
+			switch(j)
+			{
+			case 0:
+				cx = searchset[imin].tilex + 1;
+				cy = searchset[imin].tiley;
+				break;
+			case 1:
+				cx = searchset[imin].tilex;
+				cy = searchset[imin].tiley + 1;
+				break;
+			case 2:
+				cx = searchset[imin].tilex - 1;
+				cy = searchset[imin].tiley;
+				break;
+			case 3:
+				cx = searchset[imin].tilex;
+				cy = searchset[imin].tiley - 1;
+				break;
+			}
+			check = actorat[cx][cy];
+			byte door = tilemap[cx][cy];
+			if(check && !ISPOINTER(check) && !(door & 0x80))
+				continue;	// solid, can't be passed
+			else if (door & 0x80)
+			{
+				door = door & ~0x80;
+				byte lock = doorobjlist[door].lock;
+				if (lock >= dr_lock1 && lock <= dr_lock4)
+					if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+						continue;
+			}
+
+			neighinvalid = false;
+			neighfound = false;
+			for(i = searchlen - 1; i >= 0; --i)
+			{
+				if(searchset[i].tilex == cx && searchset[i].tiley == cy)
+				{
+					if(!searchset[i].open)
+						neighinvalid = true;
+					else
+					{
+						neighfound = true;
+						ifound = i;
+					}
+					break;
+				}
+			}
+			if(neighinvalid)
+				continue;
+			tentative_g_score = searchset[imin].g_score + 1;
+			if(!neighfound)
+			{
+				data.g_score = tentative_g_score;
+				data.h_score = 0;
+				data.f_score = data.g_score;
+				data.open = true;
+				data.tilex = cx;
+				data.tiley = cy;
+				data.prev = imin;
+				AddToSet(data);
+			}
+			else if(tentative_g_score < searchset[ifound].g_score)
+			{
+				searchset[ifound].g_score = tentative_g_score;
+				searchset[ifound].f_score = tentative_g_score;
+				searchset[ifound].prev = imin;
+			}
+		}
+	}
+
+	return false;
+}
+
+//
 // BotMan::FindPath
 //
 // Finds the path to walk through
@@ -231,11 +488,15 @@ void BotMan::DoCommand()
 {
 	// no path got defined
 	if(!pathexists)
-		if(!FindPathToExit())
+	{
+//		if(!FindPathToExit())
+//			return;
+		if(!FindRandomPath())
 			return;
+	}
 
 	// found path to exit
-	static int searchpos = 0;
+	int searchpos = 0;
 	int nowon = -1;
 
 	// look if it's there
@@ -264,17 +525,34 @@ void BotMan::DoCommand()
 	my = player->tiley;
 	
 	// elevator
+	byte tile;
 	if(searchset[nowon].next == -1)
 	{
-		nx = exitx;
-		ny = exity;
-		tryuse = true;
+		pathexists = false;
+		if(exitx >= 0 && exity >= 0)
+		{
+			nx = exitx;
+			ny = exity;
+			tryuse = true;
+		}
+		else if(searchset[nowon].prev >= 0)
+		{
+			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
+			ny = 2*my - searchset[searchset[nowon].prev].tiley;
+		}
+		else
+		{
+			nx = mx + 1;
+			ny = my;
+		}
 	}
 	else
 	{
 		nx = searchset[searchset[nowon].next].tilex;
 		ny = searchset[searchset[nowon].next].tiley;
-		tryuse = (tilemap[nx][ny] & 0x80) == 0x80;
+		tile = tilemap[nx][ny];
+		tryuse = (tile & 0x80) == 0x80 
+			&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
 	}
 
 	if(nx > mx)
@@ -286,20 +564,22 @@ void BotMan::DoCommand()
 	else if(ny < my)
 		tangle = 90;
 
-	if(tangle == 0)
-	{
-		if(player->angle > 345 || player->angle < 15)
-			controly -= delta;
-	}
-	else
-		if(tangle - player->angle < 15 || player->angle - tangle < 15)
-			controly -= delta;
+	static byte pressuse;
 
 	dangle = tangle - player->angle;
 	if(dangle > 180)
 		dangle -= 360;
 	else if(dangle <= -180)
 		dangle += 360;
+
+	if(dangle > -45 && dangle < 45)
+	{
+		controly -= delta;
+		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && ++pressuse % 4 == 0)
+			buttonstate[bt_use] = true;
+		else
+			buttonstate[bt_use] = false;
+	}
 
 	buttonstate[bt_strafe] = false;
 
@@ -344,8 +624,5 @@ void BotMan::DoCommand()
 		}
 	}
 
-	if(tryuse)
-		buttonstate[bt_use] = !buttonstate[bt_use];
-	else
-		buttonstate[bt_use] = false;
+	
 }
