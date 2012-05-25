@@ -33,6 +33,7 @@ protected:
 
 	// protected variables
 	static boolean pathexists, exitfound;
+	static byte nothingleft;
 	static int exitx, exity, exfrontx;
 
 	// protected functions
@@ -69,6 +70,7 @@ public:
 	inline static void MapInit()
 	{
 		exitfound = pathexists = false;
+		nothingleft = 0;
 		EmptySet();
 	}
 };

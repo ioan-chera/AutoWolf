@@ -13,6 +13,7 @@
 boolean BotMan::active;
 // protected ones
 boolean BotMan::pathexists, BotMan::exitfound;
+byte BotMan::nothingleft;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
@@ -324,22 +325,27 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	}
 
 	// exit switch
-	if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
+	if(nothingleft >= 1)
 	{
-		exitx = tx - 1;
-		exity = ty;
-		return true;
-	}
-	if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
-	{
-		exitx = tx + 1;
-		exity = ty;
-		return true;
-	}
+		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
+		{
+			exitx = tx - 1;
+			exity = ty;
+			if(tilemap[tx][ty] == ALTELEVATORTILE || nothingleft >= 2)
+				return true;
+		}
+		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
+		{
+			exitx = tx + 1;
+			exity = ty;
+			if(tilemap[tx][ty] == ALTELEVATORTILE || nothingleft >= 2)
+				return true;
+		}
 
-	// exit pad
-	if(*(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
-		return true;
+		// exit pad
+		if(nothingleft >= 2 && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+			return true;
+	}
 	return false;
 }
 
@@ -476,6 +482,9 @@ boolean BotMan::FindRandomPath()
 		}
 	}
 
+	if(!pwallstate)
+		nothingleft++;
+
 	return false;
 }
 
@@ -588,8 +597,12 @@ void BotMan::DoCommand()
 
 	buttonstate[bt_strafe] = false;
 
-	if(dangle > 0)
+	if(dangle > 15)
+		controlx -= RUNMOVE * tics;
+	else if(dangle > 0)
 		controlx -= BASEMOVE * tics;
+	else if(dangle < -15)
+		controlx += RUNMOVE * tics;
 	else if(dangle < 0)
 		controlx += BASEMOVE * tics;
 	else
