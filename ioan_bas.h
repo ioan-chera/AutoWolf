@@ -103,6 +103,12 @@ public:
 
 	// Generic check line
 	static boolean GenericCheckLine (int x1, int y1, int x2, int y2);
+
+	// Get coordinates
+	inline static int Major(int t)
+	{
+		return (t << TILESHIFT) + (1 << (TILESHIFT - 1));
+	}
 };
 
 #endif

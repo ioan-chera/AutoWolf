@@ -13,11 +13,10 @@
 boolean BotMan::active;
 // protected ones
 boolean BotMan::pathexists, BotMan::exitfound;
-byte BotMan::nothingleft, BotMan::wakeupfire, BotMan::retreat;
+byte BotMan::nothingleft, BotMan::wakeupfire;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
-objtype *BotMan::threater;
 
 //
 // BotMan::FindExit
@@ -240,25 +239,6 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	exitx = -1;
 	exity = -1;
 
-	// retreat mode
-
-	if(retreat == 1)
-	{
-		static byte retstep = 0;
-
-		static short eangle;
-		static int edist;
-		if(retstep > 0 && EnemyVisible(&eangle, &edist))
-			retstep = 0;
-		else if(!EnemyVisible(&eangle, &edist))
-		{
-			retstep++;
-			if(retstep == 2)
-				return true;
-		}
-		return false;
-	}
-
 	// items
 	for(i = 0; &statobjlist[i] != laststatobj; ++i)
 	{
@@ -395,6 +375,7 @@ boolean BotMan::FindRandomPath()
 	int i, j;
 
 	SData data;
+
 	data.g_score = 0;
 	data.f_score = 0;
 	data.open = true;
@@ -475,7 +456,8 @@ boolean BotMan::FindRandomPath()
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
-					if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+					if (doorobjlist[door].action != dr_open &&
+						doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
 						continue;
 			}
 
@@ -611,6 +593,35 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 						return ret;
 					}
 				}
+			}
+		}
+	}
+	return NULL;
+}
+
+//
+// BotMan::GenericEnemyVisible
+//
+// True if an enemy is in sight
+//
+objtype *BotMan::GenericEnemyVisible(int tx, int ty)
+{
+	int x = Basic::Major(tx);
+	int y = Basic::Major(ty);
+	int j, k;
+	objtype *ret;
+
+	for(j = -15; j <= 15; ++j)
+	{
+		for(k = -15; k <= 15; ++k)
+		{
+			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
+				continue;
+			ret = actorat[tx + k][ty + j];
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
+				&& Basic::GenericCheckLine(ret->x, ret->y, x, y))
+			{
+				return ret;
 			}
 		}
 	}
@@ -798,113 +809,6 @@ void BotMan::DoRetreat()
 }
 
 //
-// BotMan::MoveStrafe
-//
-// During retreating, keep eye on enemy, unless a door has to be opened
-//
-void BotMan::MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny)
-{
-	if(tryuse)
-	{
-		if(dangle > -45 && dangle < 45)
-		{
-			// So move
-			controly -= RUNMOVE * tics;
-			// Press if there's an obstacle ahead
-			if((actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
-				buttonstate[bt_use] = true;
-			else
-				buttonstate[bt_use] = false;
-		}
-
-		// normally just turn (it's non-combat, no problem)
-		buttonstate[bt_strafe] = false;
-
-		if(dangle > 15)
-			controlx = -RUNMOVE * tics;
-		else if(dangle > 0)
-			controlx = -BASEMOVE * tics;
-		else if(dangle < -15)
-			controlx = RUNMOVE * tics;
-		else if(dangle < 0)
-			controlx = BASEMOVE * tics;
-		else
-		{
-			// straight line: can strafe now
-			buttonstate[bt_strafe] = true;
-			fixed centx, centy, cento, plro;
-			centx = (player->tilex << TILESHIFT);
-			centy = (player->tiley << TILESHIFT);
-			
-			switch(tangle)
-			{
-			case 0:
-				cento = -centy;
-				plro = -player->y + (1<<(TILESHIFT - 1));
-				break;
-			case 90:
-				cento = -centx;
-				plro = -player->x + (1<<(TILESHIFT - 1));
-				break;
-			case 180:
-				cento = centy;
-				plro = player->y - (1<<(TILESHIFT - 1));
-				break;
-			case 270:
-				cento = centx;
-				plro = player->x - (1<<(TILESHIFT - 1));
-				break;
-			}
-			if(plro - cento > 4096)
-				controlx += BASEMOVE * tics;
-			else if(plro - cento < -4096)
-				controlx -= BASEMOVE * tics;
-		}
-		return;
-	}
-	if(dangle >= -22 && dangle < 23)	// forward
-	{
-		controly -= RUNMOVE*tics;
-		controlx = 0;
-	}
-	else if(dangle >= 23 && dangle < 68)	// forward-left
-	{
-		controly -= RUNMOVE*tics;
-		controlx -= RUNMOVE*tics;
-	}
-	else if(dangle >= 68 && dangle < 113)	// left
-	{
-		controly = 0;
-		controlx -= RUNMOVE*tics;
-	}
-	else if(dangle >= 113 && dangle < 158)	// back-left
-	{
-		controly += RUNMOVE*tics;
-		controlx -= RUNMOVE*tics;
-	}
-	else if(dangle >= 158 || dangle < -157)	// back
-	{
-		controly += RUNMOVE*tics;
-		controlx = 0;
-	}
-	else if(dangle >= -157 && dangle < -112)	// back-right
-	{
-		controly += RUNMOVE*tics;
-		controlx += RUNMOVE*tics;
-	}
-	else if(dangle >= -112 && dangle < -67)	// right
-	{
-		controly = 0;
-		controlx += RUNMOVE*tics;
-	}
-	else	// forward-right
-	{
-		controly -= RUNMOVE*tics;
-		controlx += RUNMOVE*tics;
-	}
-}
-
-//
 // BotMan::FindPath
 //
 // Finds the path to walk through
@@ -960,7 +864,6 @@ void BotMan::DoCommand()
 	if(searchset[nowon].next == -1)
 	{
 		// end of path; start a new search
-		retreat = 0;	// stop retreating
 		pathexists = false;
 		if(exitx >= 0 && exity >= 0)
 		{
@@ -1003,7 +906,7 @@ void BotMan::DoCommand()
 	else if(ny < my)
 		tangle = 90;
 
-	static byte pressuse, retreatactive, retreat2;
+	static byte pressuse, retreat, retreatactive, retreat2;
 
 	if(!retreat)
 		retreatactive = 0;
@@ -1052,47 +955,30 @@ void BotMan::DoCommand()
 				buttonstate[bt_attack] = false;
 
 			// TODO: don't always charge when using the knife!
-			if(dangle > -45 && dangle < 45 && (gamestate.weapon == wp_knife || edist > 6) && !retreat)
-				controly -= RUNMOVE * tics;	// charge
-			else if(!retreat /*&& Threatened()*/ &&
-				(edist < 3 || Basic::IsArmed(check))/* && !retreatactive*/ && gamestate.weaponframe >= 3
+			if(dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife || edist > 6)
+			{
+				controly -= RUNMOVE * tics;
+			}
+			else if((edist < 4 || Basic::IsArmed(check)) /*&& !retreatactive*/ && gamestate.weaponframe >= 3
 				|| EnemiesArmed())
 			{
-				// TODO: replace all this with a path searching mode.
-				retreat = 1;
-				threater = check;
-				if(!FindRandomPath())	// unable to find retreat point
-				{
-					pathexists = false;
-					retreat = 2;	// secondary retreat
-				}
-			}
-			else if(retreat == 1)	// standard retreat (go by path, by strafing)
-			{
-				dangle = tangle - player->angle;
-				if(dangle > 180)	// centred angle
-					dangle -= 360;
-				else if(dangle <= -180)
-					dangle += 360;
-
-				// do the possible combinations (eight):
-				MoveStrafe(tangle, dangle, tryuse, pressuse, nx, ny);
-				
-			}
-			else if(retreat == 2)	// no hideout found, so just back off
 				DoRetreat();
+				retreat = 20;
+			}
 		}
 	}
-	else if(retreat == 1)	// standard retreat, still moving
+	else if(retreat)	// standard retreat, still moving
 	{
 		// retreat mode (to be removed?)
-		MoveStrafe(tangle, dangle, tryuse, pressuse, nx, ny);
 		edist = -1;
+		retreat--;
+		retreatactive = 1;
+		DoRetreat();
+		retreat2 = 3;
 	}
 	else
 	{
 		edist = -1;
-		retreat = 0;	// stop back-off retreating (if it even happens)
 		// Non-combat mode
 		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20)
 		{
@@ -1104,7 +990,6 @@ void BotMan::DoCommand()
 			buttonstate[bt_attack] = false;
 
 		wakeupfire = 0;	// near dead
-		threater = NULL;	// also near dead?
 
 		// Move forward only if it's safe (replace this bloatness with a function)
 
