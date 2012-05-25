@@ -33,15 +33,11 @@ protected:
 
 	// protected variables
 	static boolean pathexists, exitfound;
-	static byte nothingleft, wakeupfire, retreat;
 	static int exitx, exity, exfrontx;
-	static objtype *threater;
 
 	// protected functions
 	// Finds the path to an exit (A*)
 	static boolean FindPathToExit();
-	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath();
 	// Finds the exit on the map
 	static boolean FindExit();
 	// Empty set
@@ -54,30 +50,11 @@ protected:
 			searchset = NULL;
 		}
 	}
-	// move by strafing
-	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
 	// Add set
 	static void AddToSet(const SData &data);
 	// ApproximateDistance
 	static int ApproxDist(int dx, int dy);
-	// Object of interest
-	static boolean ObjectOfInterest(int dx, int dy);
-	// Enemy on spot
-	static objtype *EnemyFound(int dx, int dy);
-	// Enemy targetted
-	static objtype *EnemyOnTarget();
-	// Enemy visible
-	static objtype *EnemyVisible(short *angle, int *distance);
-	// Enemy eager to follow
-	static objtype *EnemyEager();
-	// Automated and armed
-	static objtype *DamageThreat();
-	// do retreat
-	static void DoRetreat();
-	// like EnemiesArmed, but not restricted to the player
-	static objtype *Crossfire(int tx, int ty);
-	// Like enemyvisible, but for any spot
-	static objtype *BotMan::GenericEnemyVisible(int tx, int ty);
+
 public:
 	static boolean active;	// true if bots are activated
 
@@ -88,7 +65,6 @@ public:
 	inline static void MapInit()
 	{
 		exitfound = pathexists = false;
-		nothingleft = wakeupfire = 0;
 		EmptySet();
 	}
 };

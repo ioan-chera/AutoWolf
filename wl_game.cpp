@@ -6,6 +6,7 @@
 #pragma hdrstop
 // IOAN 17.05.2012
 #include "ioan_bas.h"
+#include "ioan_bot.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -781,6 +782,9 @@ void SetupGameLevel (void)
 // are in memory
 //
     CA_LoadAllSounds ();
+
+	 // IOAN 17.05.2012: initialize bot
+	 BotMan::MapInit();
 }
 
 

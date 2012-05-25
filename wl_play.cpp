@@ -452,7 +452,7 @@ void PollControls (void)
     }
 
 
-	 if(!BotMan::active)	// IOAN 17.05.2012: if bot active, don't poll the user.
+	 //if(!BotMan::active)	// IOAN 17.05.2012: if bot active, don't poll the user.
 	 {
 	//
 	// get button states
@@ -475,6 +475,11 @@ void PollControls (void)
 
 		 if (joystickenabled)
 			  PollJoystickMove ();
+	 }
+	 if(BotMan::active)	// bot active: operate
+	 {
+		 // Find A* path
+		 BotMan::DoCommand();
 	 }
 
 //
