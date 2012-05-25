@@ -661,7 +661,7 @@ objtype *BotMan::EnemyEager()
 //
 // true if damage is imminent and retreat should be done
 //
-objtype *BotMan::DamageThreat()
+objtype *BotMan::DamageThreat(objtype *targ)
 {
 	int tx = player->tilex, ty = player->tiley;
 	int j, k, dist;
@@ -690,7 +690,7 @@ objtype *BotMan::DamageThreat()
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret))
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret) && ret != targ)
 			{
 				if(Basic::IsDamaging(ret, dist))
 					return ret;
@@ -997,9 +997,9 @@ void BotMan::DoCommand()
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -1;
-	objtype *check;
+	objtype *check, *check2;
 
-	if(check = EnemyVisible(&eangle, &edist))
+	if(EnemyVisible(&eangle, &edist))
 	{
 		pathexists = false;
 		// Enemy visible mode
@@ -1022,7 +1022,8 @@ void BotMan::DoCommand()
 			controlx += BASEMOVE * tics;
 
 		// FIXME: work around the numbness bug
-		if(EnemyOnTarget())
+		check = EnemyOnTarget();
+		if(check)
 		{
 			// shoot according to how the weapon works
 			if(gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol)
@@ -1031,16 +1032,17 @@ void BotMan::DoCommand()
 				buttonstate[bt_attack] = false;
 
 			// TODO: don't always charge when using the knife!
-			if(dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife || edist > 6)
+			check2 = DamageThreat(check);
+			if((!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 			{
 				controly -= RUNMOVE * tics;
 			}
 			else if(/*(edist < 4 || Basic::IsArmed(check)) && gamestate.weaponframe >= 3
-				||*/ check = DamageThreat())
+				||*/ check2)
 			{
 				DoRetreat();
 				retreat = 20;
-				if(check->obclass == mutantobj)
+				if(check2->obclass == mutantobj)
 					retreat = 5;
 			}
 		}
@@ -1058,7 +1060,7 @@ void BotMan::DoCommand()
 	{
 		edist = -1;
 		// Non-combat mode
-		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20)
+		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && !madenoise)
 		{
 			// shoot something to alert nazis
 			// TODO: more stealth gameplay considerations?

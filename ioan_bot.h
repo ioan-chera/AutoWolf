@@ -71,7 +71,7 @@ protected:
 	// Enemy eager to follow
 	static objtype *EnemyEager();
 	// Automated and armed
-	static objtype *DamageThreat();
+	static objtype *DamageThreat(objtype *targ);
 	// do retreat
 	static void DoRetreat();
 	// like EnemiesArmed, but not restricted to the player
