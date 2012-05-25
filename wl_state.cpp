@@ -49,6 +49,7 @@ void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
 boolean CheckLine (objtype *ob);
+
 void    FirstSighting (objtype *ob);
 boolean CheckSight (objtype *ob);
 
@@ -1084,8 +1085,9 @@ boolean CheckLine (objtype *ob)
     xt1 = x1 >> 8;
     yt1 = y1 >> 8;
 
-    x2 = plux;
-    y2 = pluy;
+	 // IOAN 20.05.2012: set x2, y2 directly instead of plux, pluy
+	 x2 = (int)((word)(player->x >> UNSIGNEDSHIFT));
+	 y2 = (int)((word)(player->y >> UNSIGNEDSHIFT));
     xt2 = player->tilex;
     yt2 = player->tiley;
 
@@ -1287,6 +1289,7 @@ boolean CheckSight (objtype *ob)
     //
     // trace a line to check for blocking tiles (corners)
     //
+
     return CheckLine (ob);
 }
 

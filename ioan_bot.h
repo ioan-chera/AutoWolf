@@ -33,7 +33,7 @@ protected:
 
 	// protected variables
 	static boolean pathexists, exitfound;
-	static byte nothingleft;
+	static byte nothingleft, wakeupfire;
 	static int exitx, exity, exfrontx;
 
 	// protected functions
@@ -59,6 +59,18 @@ protected:
 	static int ApproxDist(int dx, int dy);
 	// Object of interest
 	static boolean ObjectOfInterest(int dx, int dy);
+	// Enemy on spot
+	static objtype *EnemyFound(int dx, int dy);
+	// Enemy targetted
+	static objtype *EnemyOnTarget();
+	// Enemy visible
+	static objtype *EnemyVisible(short *angle, int *distance);
+	// Enemy eager to follow
+	static objtype *EnemyEager();
+	// Automated and armed
+	static objtype *EnemiesArmed();
+	// do retreat
+	static void DoRetreat();
 
 public:
 	static boolean active;	// true if bots are activated
@@ -70,7 +82,7 @@ public:
 	inline static void MapInit()
 	{
 		exitfound = pathexists = false;
-		nothingleft = 0;
+		nothingleft = wakeupfire = 0;
 		EmptySet();
 	}
 };

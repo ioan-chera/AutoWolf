@@ -13,7 +13,7 @@
 boolean BotMan::active;
 // protected ones
 boolean BotMan::pathexists, BotMan::exitfound;
-byte BotMan::nothingleft;
+byte BotMan::nothingleft, BotMan::wakeupfire;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
@@ -248,9 +248,15 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 			switch (statobjlist[i].itemnumber)
 			{
 			case    bo_firstaid:
+				if (gamestate.health <= 75)
+					return true;
+				break;
 			case    bo_food:
+				if (gamestate.health <= 90)
+					return true;
+				break;
 			case    bo_alpo:
-				if (gamestate.health < 100)
+				if (gamestate.health <= 96)
 					return true;
 				break;
 			case    bo_key1:
@@ -266,13 +272,16 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 			case    bo_fullheal:
 				return true;
 			case    bo_clip:
+				if(gamestate.ammo <= 91)
+					return true;
+				break;
 			case    bo_clip2:
-				if (gamestate.ammo < 99)
+				if (gamestate.ammo < 95)
 					return true;
 				break;
 #ifdef SPEAR
 			case    bo_25clip:
-				if (gamestate.ammo < 99)
+				if (gamestate.ammo < 74)
 					return true;
 				break;
 			case    bo_spear:
@@ -284,6 +293,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 				break;
 			}
 		}
+	}
+
+	objtype *check = actorat[tx][ty];
+	if(gamestate.health > 75 && gamestate.ammo > 75 &&
+		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->hitpoints > 0)
+	{
+		return true;
 	}
 
 	// secret door
@@ -489,6 +505,241 @@ boolean BotMan::FindRandomPath()
 }
 
 //
+// BotMan::EnemyOnTarget
+//
+// True if can shoot
+//
+objtype *BotMan::EnemyOnTarget()
+{
+	objtype *check,*closest,*oldclosest;
+	int32_t  viewdist;
+
+	//
+	// find potential targets
+	//
+	viewdist = 0x7fffffffl;
+	closest = NULL;
+
+	while (1)
+	{
+		oldclosest = closest;
+
+		for (check=player->next ; check ; check=check->next)
+		{
+			if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
+				&& abs(check->viewx-centerx) < shootdelta)
+			{
+				if (check->transx < viewdist)
+				{
+					viewdist = check->transx;
+					closest = check;
+				}
+			}
+		}
+
+		if (closest == oldclosest)
+			return NULL;                                         // no more targets, all missed
+
+		//
+		// trace a line from player to enemey
+		//
+
+		if (CheckLine(closest))
+			return closest;
+	}
+	return NULL;
+}
+
+//
+// BotMan::EnemyVisible
+//
+// True if an enemy is in sight
+//
+objtype *BotMan::EnemyVisible(short *angle, int *distance)
+{
+	int tx = player->tilex, ty = player->tiley;
+	int i, j, k;
+	objtype *ret;
+	static objtype *oldret;
+
+	for(i = 1; i < 15; ++i)	// absolute maximum range: 21
+	{
+		for(j = -i; j <= i; ++j)
+		{
+			for(k = -i; k <= i; ++k)
+			{
+				if(j > -i && j < i && k > -i && k < i)
+					continue;
+				if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
+					continue;
+				ret = actorat[player->tilex + k][player->tiley + j];
+				if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret))
+				{
+					double dby = -((double)(ret->y) - (double)(player->y));
+					double dbx = (double)(ret->x) - (double)(player->x);
+					if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && oldret->hitpoints <= 0)
+					{
+						*angle = (short)(180.0/PI*atan2(dby, dbx));
+						*distance = i;
+									
+						if(*angle >= 360)
+							*angle -= 360;
+						if(*angle < 0)
+							*angle += 360;
+
+						oldret = ret;
+						return ret;
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+//
+// BotMan::EnemyEager
+//
+// True if 1 non-ambush enemies are afoot 
+//
+objtype *BotMan::EnemyEager()
+{
+	int tx = player->tilex, ty = player->tiley;
+	int j, k;
+	objtype *ret;
+
+	for(j = -6; j <= 6; ++j)
+	{
+		for(k = -6; k <= 6; ++k)
+		{
+			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
+				continue;
+			ret = actorat[player->tilex + k][player->tiley + j];
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
+				&& areabyplayer[ret->areanumber] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+			{
+				return ret;
+			}
+		}
+	}
+	return NULL;
+}
+
+//
+// BotMan::EnemiesArmed
+//
+// true if enemies are armed
+//
+objtype *BotMan::EnemiesArmed()
+{
+	int tx = player->tilex, ty = player->tiley;
+	int j, k;
+	objtype *ret;
+
+	for(j = -10; j <= 10; ++j)
+	{
+		for(k = -10; k <= 10; ++k)
+		{
+			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
+				continue;
+			ret = actorat[player->tilex + k][player->tiley + j];
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
+				&& Basic::IsArmed(ret) && Basic::IsAutomatic(ret->obclass))
+			{
+				return ret;
+			}
+		}
+	}
+	return NULL;
+}
+
+//
+// BotMan::DoRetreat
+//
+// Retreats the bot sliding off walls
+//
+void BotMan::DoRetreat()
+{
+	controly += RUNMOVE * tics;
+	int backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley;
+	if(player->angle > 0 && player->angle <= 45)
+	{
+		backx = -1;
+		backy = 0;
+		sidex = 0;
+		sidey = 1;
+	}
+	else if(player->angle > 45 && player->angle <= 90)
+	{
+		backx = 0;
+		backy = 1;
+		sidex = -1;
+		sidey = 0;
+	}
+	else if(player->angle > 90 && player->angle <= 135)
+	{
+		backx = 0;
+		backy = 1;
+		sidex = 1;
+		sidey = 0;
+	}
+	else if(player->angle > 135 && player->angle <= 180)
+	{
+		backx = 1;
+		backy = 0;
+		sidex = 0;
+		sidey = -1;
+	}
+	else if(player->angle > 180 && player->angle <= 225)
+	{
+		backx = 1;
+		backy = 0;
+		sidex = 0;
+		sidey = 1;
+	}
+	else if(player->angle > 225 && player->angle <= 270)
+	{
+		backx = 0;
+		backy = 1;
+		sidex = 1;
+		sidey = 0;
+	}
+	else if(player->angle > 270 && player->angle <= 315)
+	{
+		backx = 0;
+		backy = 1;
+		sidex = -1;
+		sidey = 0;
+	}
+	else
+	{
+		backx = -1;
+		backy = 0;
+		sidex = 0;
+		sidey = -1;
+	}
+	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
+		return;
+	backx += tx;
+	backy += ty;
+	sidex += tx;
+	sidey += ty;
+	objtype *check1 = actorat[backx][backy], *check2 = actorat[sidex][sidey];
+	if(check1 && !ISPOINTER(check1) || check1 && ISPOINTER(check1) && check1->flags & FL_SHOOTABLE)
+	{
+		buttonstate[bt_strafe] = true;
+		if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+		{
+			controlx -= RUNMOVE*tics;
+		}
+		else
+			controlx += RUNMOVE*tics;
+	}
+	else
+		buttonstate[bt_strafe] = false;
+}
+
+//
 // BotMan::FindPath
 //
 // Finds the path to walk through
@@ -528,10 +779,7 @@ void BotMan::DoCommand()
 		return;
 	}
 
-	// now move!
-	int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
-
-	short tangle, dangle;
+	static short tangle, dangle;
 	int nx, ny, mx, my;
 	boolean tryuse = false;
 
@@ -578,7 +826,12 @@ void BotMan::DoCommand()
 	else if(ny < my)
 		tangle = 90;
 
-	static byte pressuse;
+	static byte pressuse, retreat, retreatactive, retreat2;
+
+	if(!retreat)
+		retreatactive = 0;
+	if(retreat2)
+		retreat2--;
 
 	dangle = tangle - player->angle;
 	if(dangle > 180)
@@ -586,61 +839,123 @@ void BotMan::DoCommand()
 	else if(dangle <= -180)
 		dangle += 360;
 
-	if(dangle > -45 && dangle < 45)
+	++pressuse;
+	static short eangle = -1;
+	static int edist = -1;
+	objtype *check;
+	static objtype *threater;
+	if(check = EnemyVisible(&eangle, &edist))
 	{
-		controly -= RUNMOVE * tics;
-		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && ++pressuse % 4 == 0)
-			buttonstate[bt_use] = true;
-		else
-			buttonstate[bt_use] = false;
-	}
 
-	buttonstate[bt_strafe] = false;
+		dangle = eangle - player->angle;
+		if(dangle > 180)
+			dangle -= 360;
+		else if(dangle <= -180)
+			dangle += 360;
 
-	if(dangle > 15)
-		controlx -= RUNMOVE * tics;
-	else if(dangle > 0)
-		controlx -= BASEMOVE * tics;
-	else if(dangle < -15)
-		controlx += RUNMOVE * tics;
-	else if(dangle < 0)
-		controlx += BASEMOVE * tics;
-	else
-	{
-		buttonstate[bt_strafe] = true;
-		fixed centx, centy, cento, plro;
-		centx = (player->tilex << TILESHIFT);
-		centy = (player->tiley << TILESHIFT);
-
-		
-		switch(tangle)
-		{
-		case 0:
-			cento = -centy;
-			plro = -player->y + (1<<(TILESHIFT - 1));
-			break;
-		case 90:
-			cento = -centx;
-			plro = -player->x + (1<<(TILESHIFT - 1));
-			break;
-		case 180:
-			cento = centy;
-			plro = player->y - (1<<(TILESHIFT - 1));
-			break;
-		case 270:
-			cento = centx;
-			plro = player->x - (1<<(TILESHIFT - 1));
-			break;
-		}
-		if(plro - cento > 4096)
-		{
-			controlx += BASEMOVE * tics;
-		}
-		else if(plro - cento < -4096)
-		{
+		buttonstate[bt_strafe] = false;
+		if(dangle > 15)
+			controlx -= RUNMOVE * tics;
+		else if(dangle > 0)
 			controlx -= BASEMOVE * tics;
+		else if(dangle < -15)
+			controlx += RUNMOVE * tics;
+		else if(dangle < 0)
+			controlx += BASEMOVE * tics;
+
+		if(EnemyOnTarget())
+		{
+			if(gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol)
+				buttonstate[bt_attack] = true;
+			else
+				buttonstate[bt_attack] = false;
+
+			if(dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife || edist > 6)
+			{
+				controly -= RUNMOVE * tics;
+			}
+			else if((edist < 4 || Basic::IsArmed(check)) /*&& !retreatactive*/ && gamestate.weaponframe >= 3
+				|| EnemiesArmed())
+			{
+				DoRetreat();
+				retreat = 20;
+				threater = check;
+			}
 		}
 	}
+	else if(retreat)
+	{
+		edist = -1;
+		retreat--;
+		retreatactive = 1;
+		DoRetreat();
+		retreat2 = 3;
+	}
+	else if(!retreat2 || threater && threater->hitpoints <= 0)
+	{
+		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 10)
+		{
+			buttonstate[bt_attack] = true;
+		}
+		else
+			buttonstate[bt_attack] = false;
 
-	
+		wakeupfire = 0;
+		threater = NULL;
+		if(dangle > -45 && dangle < 45)
+		{
+			controly -= RUNMOVE * tics;
+			if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+				buttonstate[bt_use] = true;
+			else
+				buttonstate[bt_use] = false;
+		}
+
+		buttonstate[bt_strafe] = false;
+
+		if(dangle > 15)
+			controlx -= RUNMOVE * tics;
+		else if(dangle > 0)
+			controlx -= BASEMOVE * tics;
+		else if(dangle < -15)
+			controlx += RUNMOVE * tics;
+		else if(dangle < 0)
+			controlx += BASEMOVE * tics;
+		else
+		{
+			buttonstate[bt_strafe] = true;
+			fixed centx, centy, cento, plro;
+			centx = (player->tilex << TILESHIFT);
+			centy = (player->tiley << TILESHIFT);
+
+			
+			switch(tangle)
+			{
+			case 0:
+				cento = -centy;
+				plro = -player->y + (1<<(TILESHIFT - 1));
+				break;
+			case 90:
+				cento = -centx;
+				plro = -player->x + (1<<(TILESHIFT - 1));
+				break;
+			case 180:
+				cento = centy;
+				plro = player->y - (1<<(TILESHIFT - 1));
+				break;
+			case 270:
+				cento = centx;
+				plro = player->x - (1<<(TILESHIFT - 1));
+				break;
+			}
+			if(plro - cento > 4096)
+			{
+				controlx += BASEMOVE * tics;
+			}
+			else if(plro - cento < -4096)
+			{
+				controlx -= BASEMOVE * tics;
+			}
+		}
+	}
 }

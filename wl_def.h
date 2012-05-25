@@ -1500,6 +1500,28 @@ extern statetype s_sspath1;
 extern statetype s_mutpath1;
 extern statetype s_dogpath1;
 
+// IOAN 20.05.2012
+extern  statetype s_grdshoot1;
+extern  statetype s_grdshoot2;
+extern  statetype s_grdshoot3;
+extern  statetype s_ofcshoot1;
+extern  statetype s_ofcshoot2;
+extern  statetype s_ofcshoot3;
+extern  statetype s_ssshoot1;
+extern  statetype s_ssshoot2;
+extern  statetype s_ssshoot3;
+extern  statetype s_ssshoot4;
+extern  statetype s_ssshoot5;
+extern  statetype s_ssshoot6;
+extern  statetype s_ssshoot7;
+extern  statetype s_ssshoot8;
+extern  statetype s_ssshoot9;
+extern  statetype s_mutshoot1;
+extern  statetype s_mutshoot2;
+extern  statetype s_mutshoot3;
+extern  statetype s_mutshoot4;
+
+
 #ifndef SPEAR
 extern statetype s_bossstand;
 extern statetype s_gretelstand;
@@ -1515,6 +1537,85 @@ extern statetype s_fatstand;
 extern statetype s_hitlerdie2;
 extern statetype s_fakestand;
 extern statetype s_mechastand;
+
+// IOAN 20.05.2012
+extern  statetype s_bossshoot1;
+extern  statetype s_bossshoot2;
+extern  statetype s_bossshoot3;
+extern  statetype s_bossshoot4;
+extern  statetype s_bossshoot5;
+extern  statetype s_bossshoot6;
+extern  statetype s_bossshoot7;
+extern  statetype s_bossshoot8;
+extern  statetype s_schabbshoot1;
+extern  statetype s_schabbshoot2;
+extern  statetype s_fakeshoot1;
+extern  statetype s_fakeshoot2;
+extern  statetype s_fakeshoot3;
+extern  statetype s_fakeshoot4;
+extern  statetype s_fakeshoot5;
+extern  statetype s_fakeshoot6;
+extern  statetype s_fakeshoot7;
+extern  statetype s_fakeshoot8;
+extern  statetype s_fakeshoot9;
+extern  statetype s_mechashoot1;
+extern  statetype s_mechashoot2;
+extern  statetype s_mechashoot3;
+extern  statetype s_mechashoot4;
+extern  statetype s_mechashoot5;
+extern  statetype s_mechashoot6;
+extern  statetype s_hitlershoot1;
+extern  statetype s_hitlershoot2;
+extern  statetype s_hitlershoot3;
+extern  statetype s_hitlershoot4;
+extern  statetype s_hitlershoot5;
+extern  statetype s_hitlershoot6;
+extern  statetype s_gretelshoot1;
+extern  statetype s_gretelshoot2;
+extern  statetype s_gretelshoot3;
+extern  statetype s_gretelshoot4;
+extern  statetype s_gretelshoot5;
+extern  statetype s_gretelshoot6;
+extern  statetype s_gretelshoot7;
+extern  statetype s_gretelshoot8;
+extern  statetype s_giftshoot1;
+extern  statetype s_giftshoot2;
+extern  statetype s_fatshoot1;
+extern  statetype s_fatshoot2;
+extern  statetype s_fatshoot3;
+extern  statetype s_fatshoot4;
+extern  statetype s_fatshoot5;
+extern  statetype s_fatshoot6;
+#else
+extern  statetype s_angelshoot1;
+extern  statetype s_angelshoot2;
+extern  statetype s_angelshoot3;
+extern  statetype s_transshoot1;
+extern  statetype s_transshoot2;
+extern  statetype s_transshoot3;
+extern  statetype s_transshoot4;
+extern  statetype s_transshoot5;
+extern  statetype s_transshoot6;
+extern  statetype s_transshoot7;
+extern  statetype s_transshoot8;
+extern  statetype s_ubershoot1;
+extern  statetype s_ubershoot2;
+extern  statetype s_ubershoot3;
+extern  statetype s_ubershoot4;
+extern  statetype s_ubershoot5;
+extern  statetype s_ubershoot6;
+extern  statetype s_ubershoot7;
+extern  statetype s_willshoot1;
+extern  statetype s_willshoot2;
+extern  statetype s_willshoot3;
+extern  statetype s_willshoot4;
+extern  statetype s_willshoot5;
+extern  statetype s_willshoot6;
+extern  statetype s_deathshoot1;
+extern  statetype s_deathshoot2;
+extern  statetype s_deathshoot3;
+extern  statetype s_deathshoot4;
+extern  statetype s_deathshoot5;
 #endif
 
 #endif

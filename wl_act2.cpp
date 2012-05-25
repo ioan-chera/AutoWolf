@@ -4,6 +4,7 @@
 #include <math.h>
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bot.h"	// include bot
 
 /*
 =============================================================================
@@ -2117,6 +2118,7 @@ void T_Fat (objtype *ob)
     dy = abs(ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 
+	 // IOAN 20.05.2012: modif func
     if (CheckLine(ob))                                              // got a shot at player?
     {
         ob->hidden = false;
@@ -2463,6 +2465,7 @@ void T_Fake (objtype *ob)
 {
     int32_t move;
 
+	 // IOAN 20.05.2012: modif func
     if (CheckLine(ob))                      // got a shot at player?
     {
         ob->hidden = false;
@@ -2564,7 +2567,8 @@ void T_Chase (objtype *ob)
         return;
 
     dodge = false;
-    if (CheckLine(ob))      // got a shot at player?
+// IOAN 20.05.2012: modif func
+	 if (CheckLine(ob))      // got a shot at player?
     {
         ob->hidden = false;
         dx = abs(ob->tilex - player->tilex);

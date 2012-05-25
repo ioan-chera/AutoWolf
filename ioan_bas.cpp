@@ -12,226 +12,80 @@
 boolean Basic::nonazis;
 
 //
-// Basic::IsDangerous
+// Basic::IsArmed
 //
 // Check if the Nazi is ready to fire or firing (important for fighting SS and bosses)
 //
-boolean Basic::IsDamaging(objtype *ret, int dist)
+boolean Basic::IsArmed(objtype *ob)
 {
-	switch(ret->obclass)
+	statetype *&st = ob->state;
+	switch(ob->obclass)
 	{
 	case guardobj:
-		if(dist <= 2 && (ret->state == &s_grdshoot2 || ret->state == &s_grdshoot3))
-			return true;
-		break;
+		return st == &s_grdshoot1 || st == &s_grdshoot2 || st == &s_grdshoot3;
 	case officerobj:
-		if(dist <= 4 && (ret->state == &s_ofcshoot2 || ret->state == &s_ofcshoot3))
-			return true;
-		break;
+		return st == &s_ofcshoot1 || st == &s_ofcshoot2 || st == &s_ofcshoot3;
 	case ssobj:
-		if(dist <= 7 && (ret->state == &s_ssshoot2 || ret->state == &s_ssshoot3 || ret->state == &s_ssshoot4
-			|| ret->state == &s_ssshoot5 || ret->state == &s_ssshoot6 || ret->state == &s_ssshoot7
-			|| ret->state == &s_ssshoot8 || ret->state == &s_ssshoot9))
-			return true;
-		break;
+		return st == &s_ssshoot1 || st == &s_ssshoot2 || st == &s_ssshoot3 || 
+			st == &s_ssshoot4 || st == &s_ssshoot5 || st == &s_ssshoot6 || 
+			st == &s_ssshoot7 || st == &s_ssshoot8 || st == &s_ssshoot9;
+	case dogobj:
+		return false;
 	case mutantobj:
-		if(dist <= 1 && ret->flags & FL_ATTACKMODE)
-			return true;
-		break;
+		return st == &s_mutshoot1 || st == &s_mutshoot2 || st == &s_mutshoot3 || st == &s_mutshoot4;
+
 #ifndef SPEAR
 	case bossobj:
-		if(dist <= 8 && (ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
-			|| ret->state == &s_bossshoot5 || ret->state == &s_bossshoot6 || ret->state == &s_bossshoot7
-			|| ret->state == &s_bossshoot8))
-			return true;
-		break;
-	case ghostobj:
-		if(dist <= 2)
-			return true;
-		break;
+		return st == &s_bossshoot1 || st == &s_bossshoot2 || st == &s_bossshoot3 ||
+			 st == &s_bossshoot4 || st == &s_bossshoot5 || st == &s_bossshoot6 ||
+			  st == &s_bossshoot7 || st == &s_bossshoot8;
+	case schabbobj:
+		return st == &s_schabbshoot1 || st == &s_schabbshoot2;
+	case fakeobj:
+		return st == &s_fakeshoot1 || st == &s_fakeshoot2 || st == &s_fakeshoot3 || 
+			st == &s_fakeshoot4 || st == &s_fakeshoot5 || st == &s_fakeshoot6 || 
+			st == &s_fakeshoot7 || st == &s_fakeshoot8 || st == &s_fakeshoot9; 
 	case mechahitlerobj:
-		if(dist <= 6 && (ret->state == &s_mechashoot2 || ret->state == &s_mechashoot3 || ret->state == &s_mechashoot4
-			|| ret->state == &s_mechashoot5 || ret->state == &s_mechashoot6))
-			return true;
-		break;
+		return st == &s_mechashoot1 || st == &s_mechashoot2 || st == &s_mechashoot3 ||
+			 st == &s_mechashoot4 || st == &s_mechashoot5 || st == &s_mechashoot6;
+	case ghostobj:
+		return false;
 	case realhitlerobj:
-		if(dist <= 6 && (ret->state == &s_hitlershoot2 || ret->state == &s_hitlershoot3 || ret->state == &s_hitlershoot4
-			|| ret->state == &s_hitlershoot5 || ret->state == &s_hitlershoot6))
-			return true;
-		break;
+		return st == &s_hitlershoot1 || st == &s_hitlershoot2 || st == &s_hitlershoot3 ||
+			 st == &s_hitlershoot4 || st == &s_hitlershoot5 || st == &s_hitlershoot6;
 	case gretelobj:
-		if(dist <= 7 && (ret->state == &s_gretelshoot2 || ret->state == &s_gretelshoot3 
-			|| ret->state == &s_gretelshoot4
-			|| ret->state == &s_gretelshoot5 || ret->state == &s_gretelshoot6 || ret->state == &s_gretelshoot7
-			|| ret->state == &s_gretelshoot8))
-			return true;
-		break;
+		return st == &s_gretelshoot1 || st == &s_gretelshoot2 || st == &s_gretelshoot3 ||
+			 st == &s_gretelshoot4 || st == &s_gretelshoot5 || st == &s_gretelshoot6 ||
+			 st == &s_gretelshoot7 || st == &s_gretelshoot8;
+	case giftobj:
+		return st == &s_giftshoot1 || st == &s_giftshoot2;
 	case fatobj:
-		if(dist <= 6 && (ret->state == &s_fatshoot2 || ret->state == &s_fatshoot3 || ret->state == &s_fatshoot4
-			|| ret->state == &s_fatshoot5 || ret->state == &s_fatshoot6))
-			return true;
-		break;
+		return st == &s_fatshoot1 || st == &s_fatshoot2 || st == &s_fatshoot3 ||
+			 st == &s_fatshoot4 || st == &s_fatshoot5 || st == &s_fatshoot6;
 #else
+	case spectreobj:
+		return false;
+	case angelobj:
+		return st == &s_angelshoot1 || st == &s_angelshoot2 || st == &s_angelshoot3;
 	case transobj:
-		if(dist <= 7 && (ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
-			|| ret->state == &s_transshoot4
-			|| ret->state == &s_transshoot5 || ret->state == &s_transshoot6 || ret->state == &s_transshoot7
-			|| ret->state == &s_transshoot8))
-			return true;
-		break;
-	case willobj:
-		if(dist <= 6 && (ret->state == &s_willshoot2 || ret->state == &s_willshoot3 || ret->state == &s_willshoot4
-			|| ret->state == &s_willshoot5 || ret->state == &s_willshoot6))
-			return true;
-		break;
+		return st == &s_transshoot1 || st == &s_transshoot2 || st == &s_transshoot3 ||
+			 st == &s_transshoot4 || st == &s_transshoot5 || st == &s_transshoot6 ||
+			 st == &s_transshoot7 || st == &s_transshoot8;
 	case uberobj:
-		if(dist <= 6 && (ret->state == &s_ubershoot2 || ret->state == &s_ubershoot3 || ret->state == &s_ubershoot4
-			|| ret->state == &s_ubershoot5 || ret->state == &s_ubershoot6 || ret->state == &s_ubershoot7))
-			return true;
-		break;
+		return st == &s_ubershoot1 || st == &s_ubershoot2 || st == &s_ubershoot3 ||
+			 st == &s_ubershoot4 || st == &s_ubershoot5 || st == &s_ubershoot6 ||
+			 st == &s_ubershoot7;
+	case willobj:
+		return st == &s_willshoot1 || st == &s_willshoot2 || st == &s_willshoot3 ||
+			 st == &s_willshoot4 || st == &s_willshoot5 || st == &s_willshoot6;
 	case deathobj:
-		if(dist <= 6 && (ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
-			|| ret->state == &s_deathshoot5 || ret->state == &s_deathshoot6 || ret->state == &s_deathshoot7))
-			return true;
-		break;
+		return st == &s_deathshoot1 || &s_deathshoot2 || &s_deathshoot3 || &s_deathshoot4 || &s_deathshoot5;
 #endif
+
+	default:
+		return false;
 	}
 	return false;
-}
-
-//
-// Basic::GenericCheckLine
-//
-// Like CheckLine, but with user-settable coordinates
-//
-boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
-{
-    int         xt1,yt1,xt2,yt2;
-    int         x,y;
-    int         xdist,ydist,xstep,ystep;
-    int         partial,delta;
-    int32_t     ltemp;
-    int         xfrac,yfrac,deltafrac;
-    unsigned    value,intercept;
-
-    x1 >>= UNSIGNEDSHIFT;            // 1/256 tile precision
-    y1 >>= UNSIGNEDSHIFT;
-    xt1 = x1 >> 8;
-    yt1 = y1 >> 8;
-
-	 x2 >>= UNSIGNEDSHIFT;
-	 y2 >>= UNSIGNEDSHIFT;
-    xt2 = x2 >> 8;
-    yt2 = y2 >> 8;
-
-    xdist = abs(xt2-xt1);
-
-    if (xdist > 0)
-    {
-        if (xt2 > xt1)
-        {
-            partial = 256-(x1&0xff);
-            xstep = 1;
-        }
-        else
-        {
-            partial = x1&0xff;
-            xstep = -1;
-        }
-
-        deltafrac = abs(x2-x1);
-        delta = y2-y1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
-        if (ltemp > 0x7fffl)
-            ystep = 0x7fff;
-        else if (ltemp < -0x7fffl)
-            ystep = -0x7fff;
-        else
-            ystep = ltemp;
-        yfrac = y1 + (((int32_t)ystep*partial) >>8);
-
-        x = xt1+xstep;
-        xt2 += xstep;
-        do
-        {
-            y = yfrac>>8;
-            yfrac += ystep;
-
-            value = (unsigned)tilemap[x][y];
-            x += xstep;
-
-            if (!value)
-                continue;
-
-            if (value<128 || value>256)
-                return false;
-
-            //
-            // see if the door is open enough
-            //
-            value &= ~0x80;
-            intercept = yfrac-ystep/2;
-
-            if (intercept>doorposition[value])
-                return false;
-
-        } while (x != xt2);
-    }
-
-    ydist = abs(yt2-yt1);
-
-    if (ydist > 0)
-    {
-        if (yt2 > yt1)
-        {
-            partial = 256-(y1&0xff);
-            ystep = 1;
-        }
-        else
-        {
-            partial = y1&0xff;
-            ystep = -1;
-        }
-
-        deltafrac = abs(y2-y1);
-        delta = x2-x1;
-        ltemp = ((int32_t)delta<<8)/deltafrac;
-        if (ltemp > 0x7fffl)
-            xstep = 0x7fff;
-        else if (ltemp < -0x7fffl)
-            xstep = -0x7fff;
-        else
-            xstep = ltemp;
-        xfrac = x1 + (((int32_t)xstep*partial) >>8);
-
-        y = yt1 + ystep;
-        yt2 += ystep;
-        do
-        {
-            x = xfrac>>8;
-            xfrac += xstep;
-
-            value = (unsigned)tilemap[x][y];
-            y += ystep;
-
-            if (!value)
-                continue;
-
-            if (value<128 || value>256)
-                return false;
-
-            //
-            // see if the door is open enough
-            //
-            value &= ~0x80;
-            intercept = xfrac-xstep/2;
-
-            if (intercept>doorposition[value])
-                return false;
-        } while (y != yt2);
-    }
-
-    return true;
 }
 
 //

@@ -1301,6 +1301,7 @@ void    GunAttack (objtype *ob)
         //
         // trace a line from player to enemey
         //
+
         if (CheckLine(closest))
             break;
     }
