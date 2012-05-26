@@ -299,6 +299,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	if(gamestate.health > 75 && gamestate.ammo > 75 &&
 		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->hitpoints > 0)
 	{
+		nothingleft = 0;	// reset counter if enemies here
 		return true;
 	}
 
@@ -347,14 +348,14 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 		{
 			exitx = tx - 1;
 			exity = ty;
-			if(tilemap[tx][ty] == ALTELEVATORTILE || nothingleft >= 2)
+			if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
 				return true;
 		}
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
 			exitx = tx + 1;
 			exity = ty;
-			if(tilemap[tx][ty] == ALTELEVATORTILE || nothingleft >= 2)
+			if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
 				return true;
 		}
 
@@ -449,7 +450,7 @@ boolean BotMan::FindRandomPath()
 			}
 			check = actorat[cx][cy];
 			byte door = tilemap[cx][cy];
-			if(check && !ISPOINTER(check) && !(door & 0x80))
+			if(check && !ISPOINTER(check) && !(door & 0x80) || IsProjectile(cx, cy))
 				continue;	// solid, can't be passed
 			else if (door & 0x80)
 			{
@@ -888,102 +889,58 @@ solved:
 }
 
 //
+// BotMan::IsProjectile
+//
+// True if a flying projectile exists in this place
+//
+objtype *BotMan::IsProjectile(int tx, int ty)
+{
+	objtype *ret = lastobj;
+
+	while(ret && ret->flags & FL_NEVERMARK)
+		if(abs(ret->tilex - tx) > 1 || abs(ret->tiley - ty) > 1)
+			ret = ret->next;
+		else
+			break;
+	if(!ret)
+		return NULL;
+
+	switch(ret->obclass)
+	{
+#ifndef SPEAR
+	case needleobj:
+	case fireobj:
+	case ghostobj:	// monsters count as projectiles
+		return ret;
+#endif
+	case rocketobj:
+		if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
+			return ret;
+		break;
+#ifdef SPEAR
+	case hrocketobj:
+		if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
+			return ret;
+		break;
+	case sparkobj:
+		return ret;
+#endif
+	}
+
+	return NULL;
+}
+
+//
 // BotMan::FindPath
 //
 // Finds the path to walk through
 //
 void BotMan::DoCommand()
 {
-	// no path got defined
-	if(!pathexists)
-	{
-//		if(!FindPathToExit())
-//			return;
-		if(!FindRandomPath())
-		{
-			return;
-		}
-	}
 
-	static boolean waitpwall;
-	if(pwallstate)
-		waitpwall = true;
-
-	// found path to exit
-	int searchpos = 0;
-	int nowon = -1;
-
-	// look if it's there
-	for(; searchpos != -1; searchpos = searchset[searchpos].next)
-	{
-		if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
-		{
-			nowon = searchpos;
-			break;
-		}
-	}
-
-	if(nowon < 0 || !pwallstate && waitpwall)
-	{
-		// Reset if out of the path, or if a pushwall stopped moving
-		waitpwall = false;
-		pathexists = false;
-		return;
-	}
 
 	static short tangle, dangle;
-	int nx, ny, mx, my;
-	boolean tryuse = false;	// whether to try using
-
-	mx = player->tilex;
-	my = player->tiley;
 	
-	// elevator
-	byte tile;
-	if(searchset[nowon].next == -1)
-	{
-		// end of path; start a new search
-		pathexists = false;
-		if(exitx >= 0 && exity >= 0)
-		{
-			// elevator switch: press it now
-			nx = exitx;
-			ny = exity;
-			tryuse = true;
-		}
-		else if(searchset[nowon].prev >= 0)
-		{
-			// just go forward
-			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
-			ny = 2*my - searchset[searchset[nowon].prev].tiley;
-		}
-		else
-		{
-			// if undefined, just go east
-			nx = mx + 1;
-			ny = my;
-		}
-	}
-	else
-	{
-		// in the path
-		nx = searchset[searchset[nowon].next].tilex;
-		ny = searchset[searchset[nowon].next].tiley;
-		tile = tilemap[nx][ny];
-		// whether to press to open a door
-		tryuse = (tile & 0x80) == 0x80 
-			&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
-	}
-
-	// set up the target angle
-	if(nx > mx)
-		tangle = 0;
-	else if(ny > my)
-		tangle = 270;
-	else if(nx < mx)
-		tangle = 180;
-	else if(ny < my)
-		tangle = 90;
 
 	static byte pressuse, retreat, retreatactive, retreat2;
 
@@ -992,18 +949,12 @@ void BotMan::DoCommand()
 	if(retreat2)
 		retreat2--;
 
-	dangle = tangle - player->angle;
-	if(dangle > 180)	// centred angle
-		dangle -= 360;
-	else if(dangle <= -180)
-		dangle += 360;
-
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -1;
-	objtype *check, *check2;
+	objtype *check0, *check, *check2;
 
-	if(EnemyVisible(&eangle, &edist))
+	if(check0 = EnemyVisible(&eangle, &edist))
 	{
 		pathexists = false;
 		// Enemy visible mode
@@ -1013,6 +964,14 @@ void BotMan::DoCommand()
 			dangle -= 360;
 		else if(dangle <= -180)
 			dangle += 360;
+
+		// if knife and impossible, disengage
+		if(gamestate.weapon == wp_knife/* && Basic::IsBoss(check0->obclass)*/ || IsProjectile(player->tilex, player->tiley))
+		{
+			pathexists = false;
+			retreat = 0;
+			goto disengage;
+		}
 
 		// turn towards nearest target
 		buttonstate[bt_strafe] = false;
@@ -1045,7 +1004,7 @@ void BotMan::DoCommand()
 
 			// TODO: don't always charge when using the knife!
 			check2 = DamageThreat(check);
-			if((!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+			if((!check2/* || check2 == check*/) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 			{
 				// otherwise
 				// TODO: use DoCharge here, to maintain slaloming 
@@ -1056,6 +1015,13 @@ void BotMan::DoCommand()
 	}
 	else if(retreat)	// standard retreat, still moving
 	{
+		// if knife and impossible, disengage
+		if(gamestate.weapon == wp_knife/* && Basic::IsBoss(check0->obclass)*/ || IsProjectile(player->tilex, player->tiley))
+		{
+			pathexists = false;
+			retreat = 0;
+			goto disengage;
+		}
 		// retreat mode (to be removed?)
 		edist = -1;
 		retreat--;
@@ -1065,6 +1031,103 @@ void BotMan::DoCommand()
 	}
 	else
 	{
+disengage:
+			// no path got defined
+		if(!pathexists)
+		{
+	//		if(!FindPathToExit())
+	//			return;
+			if(!FindRandomPath())
+			{
+				return;
+			}
+		}
+
+		static boolean waitpwall;
+		if(pwallstate)
+			waitpwall = true;
+
+		// found path to exit
+		int searchpos = 0;
+		int nowon = -1;
+
+		// look if it's there
+		for(; searchpos != -1; searchpos = searchset[searchpos].next)
+		{
+			if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
+			{
+				nowon = searchpos;
+				break;
+			}
+		}
+
+		if(nowon < 0 || !pwallstate && waitpwall)
+		{
+			// Reset if out of the path, or if a pushwall stopped moving
+			waitpwall = false;
+			pathexists = false;
+			return;
+		}
+
+		int nx, ny, mx, my;
+		boolean tryuse = false;	// whether to try using
+
+		mx = player->tilex;
+		my = player->tiley;
+		
+		// elevator
+		byte tile;
+		if(searchset[nowon].next == -1)
+		{
+			// end of path; start a new search
+			pathexists = false;
+			if(exitx >= 0 && exity >= 0)
+			{
+				// elevator switch: press it now
+				nx = exitx;
+				ny = exity;
+				tryuse = true;
+			}
+			else if(searchset[nowon].prev >= 0)
+			{
+				// just go forward
+				nx = 2*mx - searchset[searchset[nowon].prev].tilex;
+				ny = 2*my - searchset[searchset[nowon].prev].tiley;
+			}
+			else
+			{
+				// if undefined, just go east
+				nx = mx + 1;
+				ny = my;
+			}
+		}
+		else
+		{
+			// in the path
+			nx = searchset[searchset[nowon].next].tilex;
+			ny = searchset[searchset[nowon].next].tiley;
+			tile = tilemap[nx][ny];
+			// whether to press to open a door
+			tryuse = (tile & 0x80) == 0x80 
+				&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+		}
+
+		// set up the target angle
+		if(nx > mx)
+			tangle = 0;
+		else if(ny > my)
+			tangle = 270;
+		else if(nx < mx)
+			tangle = 180;
+		else if(ny < my)
+			tangle = 90;
+
+		dangle = tangle - player->angle;
+		if(dangle > 180)	// centred angle
+			dangle -= 360;
+		else if(dangle <= -180)
+			dangle += 360;
+
 		edist = -1;
 		// Non-combat mode
 		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && !madenoise)
@@ -1079,6 +1142,15 @@ void BotMan::DoCommand()
 		wakeupfire = 0;	// near dead
 
 		// Move forward only if it's safe (replace this bloatness with a function)
+
+		// What if there are projectiles
+		if(searchset[nowon].next >= 0 && IsProjectile(searchset[searchset[nowon].next].tilex,
+			searchset[searchset[nowon].next].tiley))
+		{
+			pathexists = false;
+			FindRandomPath();
+			return;
+		}
 
 		if(dangle > -45 && dangle < 45 && !(searchset[nowon].next >= 0 
 			&& Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))

@@ -21,15 +21,15 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 	switch(ret->obclass)
 	{
 	case guardobj:
-		if(dist <= 2 && (ret->state == &s_grdshoot2 || ret->state == &s_grdshoot3))
+		if(dist <= 6 && (ret->state == &s_grdshoot2 || ret->state == &s_grdshoot3))
 			return true;
 		break;
 	case officerobj:
-		if(dist <= 4 && (ret->state == &s_ofcshoot2 || ret->state == &s_ofcshoot3))
+		if(dist <= 8 && (ret->state == &s_ofcshoot2 || ret->state == &s_ofcshoot3))
 			return true;
 		break;
 	case ssobj:
-		if(dist <= 7 && (ret->state == &s_ssshoot2 || ret->state == &s_ssshoot3 || ret->state == &s_ssshoot4
+		if(dist <= 11 && (ret->state == &s_ssshoot2 || ret->state == &s_ssshoot3 || ret->state == &s_ssshoot4
 			|| ret->state == &s_ssshoot5 || ret->state == &s_ssshoot6 || ret->state == &s_ssshoot7
 			|| ret->state == &s_ssshoot8 || ret->state == &s_ssshoot9))
 			return true;
@@ -40,7 +40,7 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 		break;
 #ifndef SPEAR
 	case bossobj:
-		if(dist <= 8 && (ret->state == &s_bossshoot1 || ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
+		if(dist <= 12 && (ret->state == &s_bossshoot1 || ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
 			|| ret->state == &s_bossshoot5 || ret->state == &s_bossshoot6 || ret->state == &s_bossshoot7
 			|| ret->state == &s_bossshoot8))
 			return true;
@@ -50,47 +50,47 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			return true;
 		break;
 	case mechahitlerobj:
-		if(dist <= 6 && (ret->state == &s_mechashoot1 || ret->state == &s_mechashoot2 || ret->state == &s_mechashoot3 || ret->state == &s_mechashoot4
+		if(dist <= 10 && (ret->state == &s_mechashoot1 || ret->state == &s_mechashoot2 || ret->state == &s_mechashoot3 || ret->state == &s_mechashoot4
 			|| ret->state == &s_mechashoot5 || ret->state == &s_mechashoot6))
 			return true;
 		break;
 	case realhitlerobj:
-		if(dist <= 6 && (ret->state == &s_hitlershoot1 || ret->state == &s_hitlershoot2 || ret->state == &s_hitlershoot3 || ret->state == &s_hitlershoot4
+		if(dist <= 10 && (ret->state == &s_hitlershoot1 || ret->state == &s_hitlershoot2 || ret->state == &s_hitlershoot3 || ret->state == &s_hitlershoot4
 			|| ret->state == &s_hitlershoot5 || ret->state == &s_hitlershoot6))
 			return true;
 		break;
 	case gretelobj:
-		if(dist <= 7 && (ret->state == &s_gretelshoot1 || ret->state == &s_gretelshoot2 || ret->state == &s_gretelshoot3 
+		if(dist <= 11 && (ret->state == &s_gretelshoot1 || ret->state == &s_gretelshoot2 || ret->state == &s_gretelshoot3 
 			|| ret->state == &s_gretelshoot4
 			|| ret->state == &s_gretelshoot5 || ret->state == &s_gretelshoot6 || ret->state == &s_gretelshoot7
 			|| ret->state == &s_gretelshoot8))
 			return true;
 		break;
 	case fatobj:
-		if(dist <= 6 && (ret->state == &s_fatshoot1 || ret->state == &s_fatshoot2 || ret->state == &s_fatshoot3 || ret->state == &s_fatshoot4
+		if(dist <= 10 && (ret->state == &s_fatshoot1 || ret->state == &s_fatshoot2 || ret->state == &s_fatshoot3 || ret->state == &s_fatshoot4
 			|| ret->state == &s_fatshoot5 || ret->state == &s_fatshoot6))
 			return true;
 		break;
 #else
 	case transobj:
-		if(dist <= 7 && (ret->state == &s_transshoot1 || ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
+		if(dist <= 11 && (ret->state == &s_transshoot1 || ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
 			|| ret->state == &s_transshoot4
 			|| ret->state == &s_transshoot5 || ret->state == &s_transshoot6 || ret->state == &s_transshoot7
 			|| ret->state == &s_transshoot8))
 			return true;
 		break;
 	case willobj:
-		if(dist <= 6 && (ret->state == &s_willshoot1 || ret->state == &s_willshoot2 || ret->state == &s_willshoot3 || ret->state == &s_willshoot4
+		if(dist <= 10 && (ret->state == &s_willshoot1 || ret->state == &s_willshoot2 || ret->state == &s_willshoot3 || ret->state == &s_willshoot4
 			|| ret->state == &s_willshoot5 || ret->state == &s_willshoot6))
 			return true;
 		break;
 	case uberobj:
-		if(dist <= 6 && (ret->state == &s_ubershoot1 || ret->state == &s_ubershoot2 || ret->state == &s_ubershoot3 || ret->state == &s_ubershoot4
+		if(dist <= 10 && (ret->state == &s_ubershoot1 || ret->state == &s_ubershoot2 || ret->state == &s_ubershoot3 || ret->state == &s_ubershoot4
 			|| ret->state == &s_ubershoot5 || ret->state == &s_ubershoot6 || ret->state == &s_ubershoot7))
 			return true;
 		break;
 	case deathobj:
-		if(dist <= 6 && (ret->state == &s_deathshoot1 || ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
+		if(dist <= 10 && (ret->state == &s_deathshoot1 || ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
 			|| ret->state == &s_deathshoot5))
 			return true;
 		break;

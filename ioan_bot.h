@@ -77,7 +77,9 @@ protected:
 	// like EnemiesArmed, but not restricted to the player
 	static objtype *Crossfire(int tx, int ty);
 	// Like enemyvisible, but for any spot
-	static objtype *BotMan::GenericEnemyVisible(int tx, int ty);
+	static objtype *GenericEnemyVisible(int tx, int ty);
+	// Test if there's a projectile there
+	static objtype *IsProjectile(int tx, int ty);
 public:
 	static boolean active;	// true if bots are activated
 

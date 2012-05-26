@@ -1685,6 +1685,7 @@ void CheckParameters(int argc, char *argv[])
     bool sampleRateGiven = false, audioBufferGiven = false;
     int defaultSampleRate = param_samplerate;
 
+	 BotMan::active = true;	// IOAN 26.05.2012: initialize with true, not false
     for(int i = 1; i < argc; i++)
     {
         char *arg = argv[i];
@@ -1881,9 +1882,9 @@ void CheckParameters(int argc, char *argv[])
             param_ignorenumchunks = true;
         else IFARG("--help")
             showHelp = true;
-			// IOAN 17.05.2012: added --bot parameter
-			else IFARG("--bot")
-				BotMan::active = true;
+			// IOAN 17.05.2012: added --nobot parameter
+			else IFARG("--nobot")
+				BotMan::active = false;
 			// IOAN 17.05.2012: added --nonazis
 			else IFARG("--nonazis")
 				Basic::nonazis = true;

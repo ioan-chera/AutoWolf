@@ -1586,6 +1586,9 @@ extern  statetype s_fatshoot3;
 extern  statetype s_fatshoot4;
 extern  statetype s_fatshoot5;
 extern  statetype s_fatshoot6;
+extern statetype s_boom1;
+extern statetype s_boom2;
+extern statetype s_boom3;
 #else
 extern  statetype s_angelshoot1;
 extern  statetype s_angelshoot2;
@@ -1627,6 +1630,12 @@ extern statetype s_deathstand;
 extern statetype s_angeldie11;
 extern statetype s_angelstand;
 extern statetype s_spectrewait1;
+extern statetype s_hboom1;
+extern statetype s_hboom2;
+extern statetype s_hboom3;
 #endif
+
+// IOAN 26.05.2012
+extern objtype *lastobj;
 
 #endif
