@@ -73,7 +73,7 @@ protected:
 	// Automated and armed
 	static objtype *DamageThreat(objtype *targ);
 	// do retreat
-	static void DoRetreat();
+	static void DoRetreat(boolean forth = false, objtype *cause = NULL);
 	// like EnemiesArmed, but not restricted to the player
 	static objtype *Crossfire(int tx, int ty);
 	// Like enemyvisible, but for any spot

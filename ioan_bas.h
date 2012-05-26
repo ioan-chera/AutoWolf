@@ -97,6 +97,28 @@ public:
 		}
 		return false;
 	}
+	// if it's a boss (no pain chance)
+	static boolean IsBoss(classtype cls)
+	{
+		switch(cls)
+		{
+		case bossobj:
+		case schabbobj:
+		case fakeobj:
+		case mechahitlerobj:
+		case realhitlerobj:
+		case giftobj:
+		case gretelobj:
+		case fatobj:
+		case transobj:
+		case uberobj:
+		case willobj:
+		case deathobj:
+		case angelobj:
+			return true;
+		}
+		return false;
+	}
 
 	// Check if it's armed
 	static boolean IsDamaging(objtype *ret, int dist);

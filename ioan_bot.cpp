@@ -686,11 +686,12 @@ objtype *BotMan::DamageThreat(objtype *targ)
 	{
 		for(k = -8; k <= 8; ++k)
 		{
-			dist = abs(j) < abs(k) ? abs(j) : abs(k);
+			dist = abs(j) > abs(k) ? abs(j) : abs(k);
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret) && ret != targ)
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret)
+				&& (ret != targ || Basic::IsBoss(ret->obclass)))
 			{
 				if(Basic::IsDamaging(ret, dist))
 					return ret;
@@ -714,7 +715,7 @@ objtype *BotMan::Crossfire(int tx, int ty)
 	{
 		for(k = -10; k <= 10; ++k)
 		{
-			dist = abs(j) < abs(k) ? abs(j) : abs(k);
+			dist = abs(j) > abs(k) ? abs(j) : abs(k);
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
@@ -736,73 +737,76 @@ objtype *BotMan::Crossfire(int tx, int ty)
 //
 // Retreats the bot sliding off walls
 //
-void BotMan::DoRetreat()
+void BotMan::DoRetreat(boolean forth, objtype *cause)
 {
-	controly += RUNMOVE * tics;
+	int neg = forth? -1 : 1;
+	controly += neg * RUNMOVE * tics;
+	if(cause && cause->obclass == mutantobj)
+		return;
 	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
 	if(player->angle > 0 && player->angle <= 45)
 	{
-		backx = -1;
+		backx = -1*neg;
 		backy = 0;
 		sidex = 0;
-		sidey = 1;
-		dir = RUNMOVE;
+		sidey = 1*neg;
+		dir = RUNMOVE*neg;
 	}
 	else if(player->angle > 45 && player->angle <= 90)
 	{
 		backx = 0;
-		backy = 1;
-		sidex = -1;
+		backy = 1*neg;
+		sidex = -1*neg;
 		sidey = 0;
-		dir = -RUNMOVE;
+		dir = -RUNMOVE*neg;
 	}
 	else if(player->angle > 90 && player->angle <= 135)
 	{
 		backx = 0;
-		backy = 1;
-		sidex = 1;
+		backy = 1*neg;
+		sidex = 1*neg;
 		sidey = 0;
-		dir = RUNMOVE;
+		dir = RUNMOVE*neg;
 	}
 	else if(player->angle > 135 && player->angle <= 180)
 	{
-		backx = 1;
+		backx = 1*neg;
 		backy = 0;
 		sidex = 0;
-		sidey = 1;
-		dir = -RUNMOVE;
+		sidey = 1*neg;
+		dir = -RUNMOVE*neg;
 	}
 	else if(player->angle > 180 && player->angle <= 225)
 	{
-		backx = 1;
+		backx = 1*neg;
 		backy = 0;
 		sidex = 0;
-		sidey = -1;
-		dir = RUNMOVE;
+		sidey = -1*neg;
+		dir = RUNMOVE*neg;
 	}
 	else if(player->angle > 225 && player->angle <= 270)
 	{
 		backx = 0;
-		backy = -1;
-		sidex = 1;
+		backy = -1*neg;
+		sidex = 1*neg;
 		sidey = 0;
-		dir = -RUNMOVE;
+		dir = -RUNMOVE*neg;
 	}
 	else if(player->angle > 270 && player->angle <= 315)
 	{
 		backx = 0;
-		backy = -1;
-		sidex = -1;
+		backy = -1*neg;
+		sidex = -1*neg;
 		sidey = 0;
-		dir = RUNMOVE;
+		dir = RUNMOVE*neg;
 	}
 	else
 	{
-		backx = -1;
+		backx = -1*neg;
 		backy = 0;
 		sidex = 0;
-		sidey = -1;
-		dir = -RUNMOVE;
+		sidey = -1*neg;
+		dir = -RUNMOVE*neg;
 	}
 	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
 		return;
@@ -1023,6 +1027,14 @@ void BotMan::DoCommand()
 
 		// FIXME: work around the numbness bug
 		check = EnemyOnTarget();
+		check2 = DamageThreat(check);
+		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)))
+		{
+			DoRetreat(false, check2);
+			retreat = 20;
+			if(check2->obclass == mutantobj)
+				retreat = 5;
+		}
 		if(check)
 		{
 			// shoot according to how the weapon works
@@ -1035,15 +1047,10 @@ void BotMan::DoCommand()
 			check2 = DamageThreat(check);
 			if((!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 			{
-				controly -= RUNMOVE * tics;
-			}
-			else if(/*(edist < 4 || Basic::IsArmed(check)) && gamestate.weaponframe >= 3
-				||*/ check2)
-			{
-				DoRetreat();
-				retreat = 20;
-				if(check2->obclass == mutantobj)
-					retreat = 5;
+				// otherwise
+				// TODO: use DoCharge here, to maintain slaloming 
+				// controly -= RUNMOVE * tics;
+				DoRetreat(true);
 			}
 		}
 	}

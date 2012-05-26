@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;F:\SDL-1.2.12\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\wolf3d\SDL-1.2.15\include&quot;;&quot;F:\SDL-1.2.12\include&quot;"
 				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib"
-				AdditionalLibraryDirectories="&quot;F:\SDL-1.2.12\lib&quot;"
+				OutputFile="$(OutDir)\AutoWolf.exe"
+				AdditionalLibraryDirectories="&quot;C:\wolf3d\SDL-1.2.15\lib&quot;;&quot;F:\SDL-1.2.12\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -115,7 +116,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;F:\SDL-1.2.12\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\wolf3d\SDL-1.2.15\include&quot;;&quot;F:\SDL-1.2.12\include&quot;"
 				PreprocessorDefinitions="_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				WarningLevel="3"
@@ -134,7 +135,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib"
-				AdditionalLibraryDirectories="&quot;F:\SDL-1.2.12\lib&quot;"
+				OutputFile="$(OutDir)\AutoWolf.exe"
+				AdditionalLibraryDirectories="&quot;C:\wolf3d\SDL-1.2.15\lib&quot;;&quot;F:\SDL-1.2.12\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -176,6 +178,42 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\id_ca.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_in.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_pm.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_sd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_us_1.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_vh.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\id_vl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ioan_bas.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ioan_bot.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\sdl_winmain.cpp"
 				>
 			</File>
@@ -185,6 +223,78 @@
 			</File>
 			<File
 				RelativePath=".\sodpal.inc"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_act1.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_act2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_agent.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_atmos.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_cloudsky.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_debug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_dir3dspr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_draw.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_floorceiling.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_inter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_menu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_parallax.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_play.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_shade.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_state.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_text.cpp"
 				>
 			</File>
 			<File
@@ -216,122 +326,26 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="ID_"
+				Name="mame"
 				>
 				<File
-					RelativePath=".\id_ca.cpp"
+					RelativePath=".\mame\fmopl.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\id_in.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\id_pm.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\id_sd.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\id_us_1.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\id_vh.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\id_vl.cpp"
+					RelativePath=".\mame\fmopl.h"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="WL_"
+				Name="dosbox"
 				>
 				<File
-					RelativePath=".\wl_act1.cpp"
+					RelativePath=".\dosbox\dbopl.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\wl_act2.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_agent.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_atmos.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_cloudsky.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_debug.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_dir3dspr.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_draw.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_floorceiling.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_game.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_inter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_main.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_menu.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_parallax.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_play.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_shade.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_state.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_text.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="IOAN_"
-				>
-				<File
-					RelativePath=".\ioan_bas.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ioan_bot.cpp"
+					RelativePath=".\dosbox\dbopl.h"
 					>
 				</File>
 			</Filter>
@@ -382,7 +396,63 @@
 				>
 			</File>
 			<File
+				RelativePath=".\id_ca.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_in.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_pm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_sd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_us.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_vh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\id_vl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ioan_bas.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ioan_bot.h"
+				>
+			</File>
+			<File
 				RelativePath=".\version.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_atmos.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_cloudsky.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_def.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_menu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\wl_shade.h"
 				>
 			</File>
 			<Filter
@@ -394,74 +464,6 @@
 				</File>
 				<File
 					RelativePath=".\dc\dc_vmu.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="ID_"
-				>
-				<File
-					RelativePath=".\id_ca.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_in.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_pm.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_sd.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_us.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_vh.h"
-					>
-				</File>
-				<File
-					RelativePath=".\id_vl.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="WL_"
-				>
-				<File
-					RelativePath=".\wl_atmos.h"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_cloudsky.h"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_def.h"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_menu.h"
-					>
-				</File>
-				<File
-					RelativePath=".\wl_shade.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="IOAN_"
-				>
-				<File
-					RelativePath=".\ioan_bas.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ioan_bot.h"
 					>
 				</File>
 			</Filter>
