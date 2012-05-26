@@ -1616,6 +1616,17 @@ extern  statetype s_deathshoot2;
 extern  statetype s_deathshoot3;
 extern  statetype s_deathshoot4;
 extern  statetype s_deathshoot5;
+extern  statetype s_transdie01;
+extern statetype s_transstand;
+extern statetype s_uberdie01;
+extern statetype s_uberstand;
+extern statetype s_willdie2;
+extern statetype s_willstand;
+extern statetype s_deathdie2;
+extern statetype s_deathstand;
+extern statetype s_angeldie11;
+extern statetype s_angelstand;
+extern statetype s_spectrewait1;
 #endif
 
 #endif

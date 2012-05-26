@@ -740,7 +740,7 @@ objtype *BotMan::Crossfire(int tx, int ty)
 void BotMan::DoRetreat(boolean forth, objtype *cause)
 {
 	int neg = forth? -1 : 1;
-	controly += neg * RUNMOVE * tics;
+	controly = neg * RUNMOVE * tics;
 	if(cause && cause->obclass == mutantobj)
 		return;
 	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
@@ -881,7 +881,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 		}
 solved:
 		buttonstate[bt_strafe] = true;
-		controlx += dir*tics;
+		controlx = dir*tics;
 	}
 	else
 		buttonstate[bt_strafe] = false;

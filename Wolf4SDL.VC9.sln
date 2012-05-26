@@ -7,12 +7,33 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
+		release-sod|Win32 = release-sod|Win32
+		release-sod-ep2|Win32 = release-sod-ep2|Win32
+		release-sod-ep3|Win32 = release-sod-ep3|Win32
+		release-v11-apogee|Win32 = release-v11-apogee|Win32
+		release-v14-activision|Win32 = release-v14-activision|Win32
+		release-v14-apogee|Win32 = release-v14-apogee|Win32
+		release-v14-imagineer|Win32 = release-v14-imagineer|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{411B026A-F58B-4E25-840B-4FE67710F762}.Debug|Win32.ActiveCfg = Debug|Win32
 		{411B026A-F58B-4E25-840B-4FE67710F762}.Debug|Win32.Build.0 = Debug|Win32
 		{411B026A-F58B-4E25-840B-4FE67710F762}.Release|Win32.ActiveCfg = Release|Win32
 		{411B026A-F58B-4E25-840B-4FE67710F762}.Release|Win32.Build.0 = Release|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod|Win32.ActiveCfg = release-sod|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod|Win32.Build.0 = release-sod|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod-ep2|Win32.ActiveCfg = release-sod-ep2|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod-ep2|Win32.Build.0 = release-sod-ep2|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod-ep3|Win32.ActiveCfg = release-sod-ep3|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-sod-ep3|Win32.Build.0 = release-sod-ep3|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v11-apogee|Win32.ActiveCfg = release-v11-apogee|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v11-apogee|Win32.Build.0 = release-v11-apogee|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-activision|Win32.ActiveCfg = release-v14-activision|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-activision|Win32.Build.0 = release-v14-activision|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-apogee|Win32.ActiveCfg = release-v14-apogee|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-apogee|Win32.Build.0 = release-v14-apogee|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-imagineer|Win32.ActiveCfg = release-v14-imagineer|Win32
+		{411B026A-F58B-4E25-840B-4FE67710F762}.release-v14-imagineer|Win32.Build.0 = release-v14-imagineer|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

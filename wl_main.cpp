@@ -1891,13 +1891,16 @@ void CheckParameters(int argc, char *argv[])
     }
     if(hasError || showHelp)
     {
-        if(hasError) printf("\n");
+        if(hasError) printf("\n");	// IOAN 26.05.2012: updated title and info
         printf(
-            "Wolf4SDL v1.7 ($Revision: 257 $)\n"
-            "Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
+            "AutoWolf v0.1\n"
+				"By Ioan Chera on Wolf4SDL codebase"
+				"Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
             "Original Wolfenstein 3D by id Software\n\n"
-            "Usage: Wolf4SDL [options]\n"
+            "Usage: AutoWolf [options]\n"
             "Options:\n"
+				" --nobot                Do not use bot\n"
+				" --nonazis              Maps without Nazis spawned\n"
             " --help                 This help page\n"
             " --tedlevel <level>     Starts the game in the given level\n"
             " --baby                 Sets the difficulty to baby for tedlevel\n"

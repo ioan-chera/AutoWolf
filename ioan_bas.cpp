@@ -91,7 +91,7 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 		break;
 	case deathobj:
 		if(dist <= 6 && (ret->state == &s_deathshoot1 || ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
-			|| ret->state == &s_deathshoot5 || ret->state == &s_deathshoot6 || ret->state == &s_deathshoot7))
+			|| ret->state == &s_deathshoot5))
 			return true;
 		break;
 #endif
