@@ -79,7 +79,7 @@ protected:
 	// Like enemyvisible, but for any spot
 	static objtype *GenericEnemyVisible(int tx, int ty);
 	// Test if there's a projectile there
-	static objtype *IsProjectile(int tx, int ty);
+	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
 public:
 	static boolean active;	// true if bots are activated
 

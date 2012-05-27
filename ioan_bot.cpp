@@ -450,7 +450,7 @@ boolean BotMan::FindRandomPath()
 			}
 			check = actorat[cx][cy];
 			byte door = tilemap[cx][cy];
-			if(check && !ISPOINTER(check) && !(door & 0x80) || IsProjectile(cx, cy))
+			if(check && !ISPOINTER(check) && !(door & 0x80))
 				continue;	// solid, can't be passed
 			else if (door & 0x80)
 			{
@@ -683,21 +683,18 @@ objtype *BotMan::DamageThreat(objtype *targ)
 	// Uber: dist 6, shooting
 	// Death: dist 6, shooting
 
-	for(j = -8; j <= 8; ++j)
+	for(ret = lastobj; ret; ret = ret->prev)
 	{
-		for(k = -8; k <= 8; ++k)
-		{
-			dist = abs(j) > abs(k) ? abs(j) : abs(k);
-			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-				continue;
-			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret)
-				&& (ret != targ || Basic::IsBoss(ret->obclass)))
-			{
-				if(Basic::IsDamaging(ret, dist))
-					return ret;
-			}
-		}
+		k = ret->tilex - tx;
+		j = ret->tiley - ty;
+		dist = abs(j) > abs(k) ? abs(j) : abs(k);
+		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || ret->hitpoints <= 0 || !CheckLine(ret) 
+			|| ret == targ && !Basic::IsBoss(ret->obclass))
+			continue;
+
+		if(Basic::IsDamaging(ret, dist))
+			return ret;
+		
 	}
 	return NULL;
 }
@@ -712,23 +709,20 @@ objtype *BotMan::Crossfire(int tx, int ty)
 	int j, k, dist;
 	objtype *ret;
 
-	for(j = -10; j <= 10; ++j)
+	for(ret = lastobj; ret; ret = ret->prev)
 	{
-		for(k = -10; k <= 10; ++k)
-		{
-			dist = abs(j) > abs(k) ? abs(j) : abs(k);
-			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-				continue;
-			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
-				&& Basic::GenericCheckLine(ret->x, ret->y, 
-				Basic::Major(tx),
-				Basic::Major(ty)))
-			{
-				if(Basic::IsDamaging(ret, dist))
-					return ret;
-			}
-		}
+		k = ret->tilex - tx;
+		j = ret->tiley - ty;
+		dist = abs(j) > abs(k) ? abs(j) : abs(k);
+		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || ret->hitpoints <= 0
+			|| !Basic::GenericCheckLine(ret->x, ret->y, 
+			Basic::Major(tx),
+			Basic::Major(ty)))
+			continue;
+
+		if(Basic::IsDamaging(ret, dist))
+			return ret;
+		
 	}
 	return NULL;
 }
@@ -742,8 +736,6 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
-	if(cause && cause->obclass == mutantobj)
-		return;
 	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
 	if(player->angle > 0 && player->angle <= 45)
 	{
@@ -846,6 +838,9 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
 				{
 					dir = -dir;// found here
+					sidex = -sidex;
+					sidey = -sidey;
+					controly = 0;
 					break;
 				}
 			}
@@ -876,11 +871,17 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
 				{
 					dir = -dir;// found here
+					sidex = -sidex;
+					sidey = -sidey;
+					controly = 0;
 					break;
 				}
 			}
 		}
 solved:
+		check2 = actorat[tx + sidex][ty + sidey];
+		if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+			return;
 		buttonstate[bt_strafe] = true;
 		controlx = dir*tics;
 	}
@@ -893,12 +894,12 @@ solved:
 //
 // True if a flying projectile exists in this place
 //
-objtype *BotMan::IsProjectile(int tx, int ty)
+objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
 {
 	objtype *ret = lastobj;
 
-	while(ret && ret->flags & FL_NEVERMARK)
-		if(abs(ret->tilex - tx) > 1 || abs(ret->tiley - ty) > 1)
+	while(ret)
+		if(abs(ret->tilex - tx) > dist || abs(ret->tiley - ty) > dist)
 			ret = ret->next;
 		else
 			break;
@@ -911,23 +912,42 @@ objtype *BotMan::IsProjectile(int tx, int ty)
 	case needleobj:
 	case fireobj:
 	case ghostobj:	// monsters count as projectiles
-		return ret;
-#endif
+		goto retok;
 	case rocketobj:
 		if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
-			return ret;
+			goto retok;
 		break;
+#endif
 #ifdef SPEAR
 	case hrocketobj:
 		if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
-			return ret;
+			goto retok;
 		break;
 	case sparkobj:
-		return ret;
+		goto retok;
 #endif
 	}
 
 	return NULL;
+retok:
+
+
+	if(angle && distance)
+	{
+		
+		double dby = -((double)(ret->y) - (double)(player->y));
+		double dbx = (double)(ret->x) - (double)(player->x);
+
+		*angle = (short)(180.0/PI*atan2(dby, dbx));
+		*distance = dist;
+					
+		if(*angle >= 360)
+			*angle -= 360;
+		if(*angle < 0)
+			*angle += 360;
+	}
+
+	return ret;
 }
 
 //
@@ -937,24 +957,17 @@ objtype *BotMan::IsProjectile(int tx, int ty)
 //
 void BotMan::DoCommand()
 {
-
-
 	static short tangle, dangle;
-	
-
-	static byte pressuse, retreat, retreatactive, retreat2;
-
-	if(!retreat)
-		retreatactive = 0;
-	if(retreat2)
-		retreat2--;
+	static byte pressuse, retreat;
 
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -1;
+
 	objtype *check0, *check, *check2;
 
-	if(check0 = EnemyVisible(&eangle, &edist))
+	check0 = EnemyVisible(&eangle, &edist);
+	if(check0)
 	{
 		pathexists = false;
 		// Enemy visible mode
@@ -965,73 +978,65 @@ void BotMan::DoCommand()
 		else if(dangle <= -180)
 			dangle += 360;
 
-		// if knife and impossible, disengage
-		if(gamestate.weapon == wp_knife/* && Basic::IsBoss(check0->obclass)*/ || IsProjectile(player->tilex, player->tiley))
-		{
-			pathexists = false;
-			retreat = 0;
-			goto disengage;
-		}
-
-		// turn towards nearest target
 		buttonstate[bt_strafe] = false;
+		// turn towards nearest target
+			
 		if(dangle > 15)
-			controlx -= RUNMOVE * tics;
+			controlx = -RUNMOVE * tics;
 		else if(dangle > 0)
-			controlx -= BASEMOVE * tics;
+			controlx = -BASEMOVE * tics;
 		else if(dangle < -15)
-			controlx += RUNMOVE * tics;
+			controlx = +RUNMOVE * tics;
 		else if(dangle < 0)
-			controlx += BASEMOVE * tics;
-
+			controlx = +BASEMOVE * tics;
+	
 		// FIXME: work around the numbness bug
 		check = EnemyOnTarget();
 		check2 = DamageThreat(check);
-		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)))
+
+		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
 			DoRetreat(false, check2);
-			retreat = 20;
+			retreat = 10;
 			if(check2->obclass == mutantobj)
 				retreat = 5;
 		}
+		else
+			retreat = 0;
+
+		if(!check && dangle >= -15 && dangle <= 15 && !retreat)
+			controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+
 		if(check)
 		{
 			// shoot according to how the weapon works
-			if(gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol)
+			if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
 				buttonstate[bt_attack] = true;
 			else
 				buttonstate[bt_attack] = false;
 
 			// TODO: don't always charge when using the knife!
-			check2 = DamageThreat(check);
-			if((!check2/* || check2 == check*/) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+
+			if(!retreat && (!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 			{
 				// otherwise
 				// TODO: use DoCharge here, to maintain slaloming 
-				// controly -= RUNMOVE * tics;
-				DoRetreat(true);
+				if(gamestate.weapon == wp_knife)
+					controly = -RUNMOVE * tics;
+				else
+					DoRetreat(true);
 			}
 		}
 	}
 	else if(retreat)	// standard retreat, still moving
 	{
-		// if knife and impossible, disengage
-		if(gamestate.weapon == wp_knife/* && Basic::IsBoss(check0->obclass)*/ || IsProjectile(player->tilex, player->tiley))
-		{
-			pathexists = false;
-			retreat = 0;
-			goto disengage;
-		}
 		// retreat mode (to be removed?)
 		edist = -1;
 		retreat--;
-		retreatactive = 1;
 		DoRetreat();
-		retreat2 = 3;
 	}
 	else
 	{
-disengage:
 			// no path got defined
 		if(!pathexists)
 		{
@@ -1130,7 +1135,7 @@ disengage:
 
 		edist = -1;
 		// Non-combat mode
-		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && !madenoise)
+		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0)
 		{
 			// shoot something to alert nazis
 			// TODO: more stealth gameplay considerations?
@@ -1145,7 +1150,7 @@ disengage:
 
 		// What if there are projectiles
 		if(searchset[nowon].next >= 0 && IsProjectile(searchset[searchset[nowon].next].tilex,
-			searchset[searchset[nowon].next].tiley))
+			searchset[searchset[nowon].next].tiley, 2))
 		{
 			pathexists = false;
 			FindRandomPath();
@@ -1159,7 +1164,7 @@ disengage:
 			searchset[searchset[searchset[nowon].next].next].tiley)))
 		{
 			// So move
-			controly -= RUNMOVE * tics;
+			controly = -RUNMOVE * tics;
 			// Press if there's an obstacle ahead
 			if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
 				buttonstate[bt_use] = true;
@@ -1171,13 +1176,13 @@ disengage:
 		buttonstate[bt_strafe] = false;
 
 		if(dangle > 15)
-			controlx -= RUNMOVE * tics;
+			controlx = -RUNMOVE * tics;
 		else if(dangle > 0)
-			controlx -= BASEMOVE * tics;
+			controlx = -BASEMOVE * tics;
 		else if(dangle < -15)
-			controlx += RUNMOVE * tics;
+			controlx = +RUNMOVE * tics;
 		else if(dangle < 0)
-			controlx += BASEMOVE * tics;
+			controlx = +BASEMOVE * tics;
 		else
 		{
 			// straight line: can strafe now
@@ -1206,9 +1211,9 @@ disengage:
 				break;
 			}
 			if(plro - cento > 4096)
-				controlx += BASEMOVE * tics;
+				controlx = BASEMOVE * tics;
 			else if(plro - cento < -4096)
-				controlx -= BASEMOVE * tics;
+				controlx = -BASEMOVE * tics;
 		}
 	}
 }
