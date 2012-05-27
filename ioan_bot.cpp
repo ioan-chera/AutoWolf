@@ -297,7 +297,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 
 	objtype *check = actorat[tx][ty];
 	if(gamestate.health > 75 && gamestate.ammo > 75 &&
-		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->hitpoints > 0)
+		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
 	{
 		nothingleft = 0;	// reset counter if enemies here
 		return true;
@@ -371,7 +371,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 //
 // Finds the path to an exit (A*)
 //
-boolean BotMan::FindRandomPath()
+boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 {
 	int i, j;
 
@@ -450,7 +450,10 @@ boolean BotMan::FindRandomPath()
 			}
 			check = actorat[cx][cy];
 			byte door = tilemap[cx][cy];
-			if(check && !ISPOINTER(check) && !(door & 0x80))
+			if(check && !ISPOINTER(check) && !(door & 0x80)
+				|| 
+				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && IsProjectile(cx, cy, 1) && !ignoreproj ||
+				IsEnemyAround(cx, cy, 1) && mindnazis)
 				continue;	// solid, can't be passed
 			else if (door & 0x80)
 			{
@@ -561,43 +564,52 @@ objtype *BotMan::EnemyOnTarget()
 objtype *BotMan::EnemyVisible(short *angle, int *distance)
 {
 	int tx = player->tilex, ty = player->tiley;
-	int i, j, k;
-	objtype *ret;
+	int i, j, k, distmin;
+	objtype *ret, *retmin = NULL;
+	short angmin;
 	static objtype *oldret;
+	double dby, dbx;
 
-	for(i = 1; i < 15; ++i)	// absolute maximum range: 21
+	distmin = INT_MAX;
+
+	for(ret = lastobj; ret; ret = ret->prev)
 	{
-		for(j = -i; j <= i; ++j)
-		{
-			for(k = -i; k <= i; ++k)
-			{
-				if(j > -i && j < i && k > -i && k < i)
-					continue;
-				if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-					continue;
-				ret = actorat[player->tilex + k][player->tiley + j];
-				if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 && CheckLine(ret))
-				{
-					double dby = -((double)(ret->y) - (double)(player->y));
-					double dbx = (double)(ret->x) - (double)(player->x);
-					if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && oldret->hitpoints <= 0)
-					{
-						*angle = (short)(180.0/PI*atan2(dby, dbx));
-						*distance = i;
-									
-						if(*angle >= 360)
-							*angle -= 360;
-						if(*angle < 0)
-							*angle += 360;
+		k = abs(ret->tilex - tx);
+		j = abs(ret->tiley - ty);
+		i = k > j ? k : j;
 
-						oldret = ret;
-						return ret;
-					}
-				}
+		if(k > 15 || j > 15)
+			continue;
+		if(!Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret))
+			continue;
+
+		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && !(oldret->flags & FL_SHOOTABLE))
+		{
+			if(i <= distmin)
+			{
+				dby = -((double)(ret->y) - (double)(player->y));
+				dbx = (double)(ret->x) - (double)(player->x);
+				distmin = i;
+				angmin = (short)(180.0/PI*atan2(dby, dbx));
+
+				if(angmin >= 360)
+					angmin -= 360;
+				if(angmin < 0)
+					angmin += 360;
+
+				retmin = ret;
 			}
 		}
 	}
-	return NULL;
+
+	if(retmin)
+	{
+		oldret = retmin;
+		*angle = angmin;
+		*distance = distmin;
+	}
+
+	return retmin;
 }
 
 //
@@ -619,7 +631,7 @@ objtype *BotMan::GenericEnemyVisible(int tx, int ty)
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE 
 				&& Basic::GenericCheckLine(ret->x, ret->y, x, y))
 			{
 				return ret;
@@ -647,7 +659,7 @@ objtype *BotMan::EnemyEager()
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[player->tilex + k][player->tiley + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->hitpoints > 0 
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE 
 				&& areabyplayer[ret->areanumber] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			{
 				return ret;
@@ -688,7 +700,7 @@ objtype *BotMan::DamageThreat(objtype *targ)
 		k = ret->tilex - tx;
 		j = ret->tiley - ty;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || ret->hitpoints <= 0 || !CheckLine(ret) 
+		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret) 
 			|| ret == targ && !Basic::IsBoss(ret->obclass))
 			continue;
 
@@ -714,7 +726,7 @@ objtype *BotMan::Crossfire(int tx, int ty)
 		k = ret->tilex - tx;
 		j = ret->tiley - ty;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || ret->hitpoints <= 0
+		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE)
 			|| !Basic::GenericCheckLine(ret->x, ret->y, 
 			Basic::Major(tx),
 			Basic::Major(ty)))
@@ -823,7 +835,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 					break;	// stopped
 
 				check2 = actorat[j][ty + backy];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
 					goto solved;// found here
 			}
 			for(j = tx - sidex; ; j -= sidex)
@@ -835,7 +847,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 					break;
 
 				check2 = actorat[j][ty + backy];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
 				{
 					dir = -dir;// found here
 					sidex = -sidex;
@@ -856,7 +868,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 					break;	// stopped
 
 				check2 = actorat[tx + backx][j];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
 					goto solved;// found here
 			}
 			for(j = ty - sidey; ; j -= sidey)
@@ -868,7 +880,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 					break;
 
 				check2 = actorat[tx + backx][j];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || check2->hitpoints <= 0))
+				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
 				{
 					dir = -dir;// found here
 					sidex = -sidex;
@@ -899,35 +911,33 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 	objtype *ret = lastobj;
 
 	while(ret)
-		if(abs(ret->tilex - tx) > dist || abs(ret->tiley - ty) > dist)
-			ret = ret->next;
-		else
-			break;
-	if(!ret)
-		return NULL;
-
-	switch(ret->obclass)
 	{
+		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
+		{
+			switch(ret->obclass)
+			{
 #ifndef SPEAR
-	case needleobj:
-	case fireobj:
-	case ghostobj:	// monsters count as projectiles
-		goto retok;
-	case rocketobj:
-		if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
-			goto retok;
-		break;
+			case needleobj:
+			case fireobj:
+			case ghostobj:	// monsters count as projectiles
+				goto retok;
+			case rocketobj:
+				if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
+					goto retok;
+				break;
 #endif
 #ifdef SPEAR
-	case hrocketobj:
-		if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
-			goto retok;
-		break;
-	case sparkobj:
-		goto retok;
+			case hrocketobj:
+				if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
+					goto retok;
+				break;
+			case sparkobj:
+				goto retok;
 #endif
+			}
+		}
+		ret = ret->prev;
 	}
-
 	return NULL;
 retok:
 
@@ -951,6 +961,25 @@ retok:
 }
 
 //
+// BotMan::IsEnemyAround
+//
+// True if a living enemy exists around
+//
+objtype *BotMan::IsEnemyAround(int tx, int ty, int dist)
+{
+	objtype *ret = lastobj;
+
+	while(ret)
+	{
+		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
+			if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && ret->flags & FL_ATTACKMODE)
+				return ret;
+		ret = ret->prev;
+	}
+	return NULL;
+}
+
+//
 // BotMan::FindPath
 //
 // Finds the path to walk through
@@ -969,6 +998,15 @@ void BotMan::DoCommand()
 	check0 = EnemyVisible(&eangle, &edist);
 	if(check0)
 	{
+		nothingleft = 0;	// reset elevator counter if distracted
+
+		if(gamestate.weapon == wp_knife)
+			if(FindRandomPath(false, true))
+			{
+				pathexists = false;
+				goto disengage;
+			}
+
 		pathexists = false;
 		// Enemy visible mode
 		// centred angle here
@@ -993,10 +1031,30 @@ void BotMan::DoCommand()
 		// FIXME: work around the numbness bug
 		check = EnemyOnTarget();
 		check2 = DamageThreat(check);
+		short pangle, epangle; int proj = 0;
+		if(!check2)
+		{
+			check2 = IsProjectile(player->tilex, player->tiley, 2, &pangle, &proj);
+			proj = 1;
+		}
 
 		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
 			DoRetreat(false, check2);
+			
+			if(proj)
+			{
+				epangle = pangle - player->angle;
+				if(epangle > 180)
+					epangle -= 360;
+				else if(epangle <= -180)
+					epangle += 360;
+				buttonstate[bt_strafe] = true;
+				if(epangle >= 0)	// strafe right
+					controlx = RUNMOVE * tics;
+				else
+					controlx = -RUNMOVE * tics;
+			}
 			retreat = 10;
 			if(check2->obclass == mutantobj)
 				retreat = 5;
@@ -1037,14 +1095,16 @@ void BotMan::DoCommand()
 	}
 	else
 	{
+disengage:
 			// no path got defined
 		if(!pathexists)
 		{
 	//		if(!FindPathToExit())
 	//			return;
-			if(!FindRandomPath())
+			if(!FindRandomPath(false, gamestate.weapon == wp_knife))
 			{
-				return;
+				if(!FindRandomPath(true, gamestate.weapon == wp_knife))
+					return;
 			}
 		}
 
@@ -1062,7 +1122,17 @@ void BotMan::DoCommand()
 			if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
 			{
 				nowon = searchpos;
-				break;
+//				break;
+			}
+			if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley)
+				&& (abs(searchset[searchpos].tilex - player->tilex) > 1 || 
+				abs(searchset[searchpos].tiley - player->tiley) > 1))
+			{
+				nothingleft = 0;
+				pathexists = false;
+				if(!FindRandomPath())
+					FindRandomPath(true);
+				return;
 			}
 		}
 
@@ -1149,19 +1219,20 @@ void BotMan::DoCommand()
 		// Move forward only if it's safe (replace this bloatness with a function)
 
 		// What if there are projectiles
-		if(searchset[nowon].next >= 0 && IsProjectile(searchset[searchset[nowon].next].tilex,
-			searchset[searchset[nowon].next].tiley, 2))
-		{
-			pathexists = false;
-			FindRandomPath();
-			return;
-		}
+//		if(searchset[nowon].next >= 0 && IsProjectile(searchset[searchset[nowon].next].tilex,
+//			searchset[searchset[nowon].next].tiley, 2))
+//		{
+//			pathexists = false;
+//			FindRandomPath();
+//			return;
+//		}
 
-		if(dangle > -45 && dangle < 45 && !(searchset[nowon].next >= 0 
+		if(dangle > -45 && dangle < 45 && (Crossfire(player->tilex, player->tiley)
+			|| !(searchset[nowon].next >= 0 
 			&& Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))
 			&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
 			&& Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
-			searchset[searchset[searchset[nowon].next].next].tiley)))
+			searchset[searchset[searchset[nowon].next].next].tiley))))
 		{
 			// So move
 			controly = -RUNMOVE * tics;

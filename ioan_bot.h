@@ -41,7 +41,7 @@ protected:
 	// Finds the path to an exit (A*)
 	static boolean FindPathToExit();
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath();
+	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false);
 	// Finds the exit on the map
 	static boolean FindExit();
 	// Empty set
@@ -80,6 +80,8 @@ protected:
 	static objtype *GenericEnemyVisible(int tx, int ty);
 	// Test if there's a projectile there
 	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
+	// Test if there's an enemy
+	static objtype *IsEnemyAround(int tx, int ty, int dist);
 public:
 	static boolean active;	// true if bots are activated
 

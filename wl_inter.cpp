@@ -2,6 +2,8 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bot.h"	// IOAN 27.05.2012
+#include "ioan_bas.h"
 
 LRstruct LevelRatios[LRpack];
 int32_t lastBreathTime = 0;
@@ -893,8 +895,18 @@ done:   itoa (kr, tempstr, 10);
 
     lastBreathTime = GetTimeCount();
     IN_StartAck ();
+
+	 // IOAN 27.05.2012: let bots automatically hit after 3 seconds
+	 int botcount = 0;
     while (!IN_CheckAck ())
+	 {
         BJ_Breathe ();
+		  if(BotMan::active)
+		  {
+			  if(++botcount == 600)
+				  break;
+		  }
+	 }
 
 //
 // done
@@ -1224,7 +1236,18 @@ CheckHighScore (int32_t score, word other)
         PrintX = 4 * 8;
         backcolor = BORDCOLOR;
         fontcolor = 15;
-        US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
+		  // IOAN 27.05.2012: let the bot write his random name
+		  if(BotMan::active)
+		  {
+			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			  US_Print(Scores[n].name);
+			  VW_UpdateScreen();
+
+			  IN_ClearKeysDown ();
+			  IN_UserInput (500);
+		  }
+		  else
+			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
 #else
         PrintX = 16;
         fontnumber = 1;
@@ -1232,7 +1255,18 @@ CheckHighScore (int32_t score, word other)
         VW_UpdateScreen ();
         backcolor = 0x9c;
         fontcolor = 15;
-        US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
+		  // IOAN 27.05.2012: let the bot write his random name
+		  if(BotMan::active)
+		  {
+			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			  US_Print(Scores[n].name);
+			  VW_UpdateScreen();
+
+			  IN_ClearKeysDown ();
+			  IN_UserInput (500);
+		  }
+		  else
+			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
 #endif
     }
     else

@@ -56,6 +56,9 @@ extern	word		WindowX,WindowY,// Current location of window
 extern	void		(*USL_MeasureString)(const char *,word *,word *);
 extern void			(*USL_DrawString)(const char *);
 
+// IOAN 27.05.2012: add rndindex
+extern int rndindex;
+
 extern	boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
 extern	void		(*USL_ResetGame)(void);
 extern	SaveGame	Games[MaxSaveGames];

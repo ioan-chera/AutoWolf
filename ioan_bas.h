@@ -40,6 +40,7 @@ protected:
 	static void SpawnAngel (int tilex, int tiley);
 	static void SpawnSpectre (int tilex, int tiley);
 #endif
+	static int markov[27][27], marktot[27];
 
 public:
 	static boolean nonazis;	// no enemies spawned
@@ -131,6 +132,9 @@ public:
 	{
 		return (t << TILESHIFT) + (1 << (TILESHIFT - 1));
 	}
+
+	// Write a random name
+	static void MarkovWrite(char *c, int nmax);
 };
 
 #endif
