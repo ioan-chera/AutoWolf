@@ -648,23 +648,13 @@ objtype *BotMan::GenericEnemyVisible(int tx, int ty)
 //
 objtype *BotMan::EnemyEager()
 {
-	int tx = player->tilex, ty = player->tiley;
-	int j, k;
 	objtype *ret;
 
-	for(j = -6; j <= 6; ++j)
+	for(ret = lastobj; ret; ret = ret->prev)
 	{
-		for(k = -6; k <= 6; ++k)
-		{
-			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-				continue;
-			ret = actorat[player->tilex + k][player->tiley + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE 
-				&& areabyplayer[ret->areanumber] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
-			{
-				return ret;
-			}
-		}
+		if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && areabyplayer[ret->areanumber] &&
+			!(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+			return ret;
 	}
 	return NULL;
 }
