@@ -276,7 +276,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 					return true;
 				break;
 			case    bo_clip2:
-				if (gamestate.ammo < 95)
+				if (gamestate.ammo <= 95)
 					return true;
 				break;
 #ifdef SPEAR
