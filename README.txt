@@ -66,6 +66,7 @@ Credits:
    success.
  - Microsoft for Visual Studio 2008 Professional and their Academic Alliance
    with the universities.
+ - SourceForge for their kind hosting of open-source projects.
  - All the people involved in computer science, from school, from Wikipedia,
    for teaching me some useful graph traversing algorithms.
 
