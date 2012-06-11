@@ -101,7 +101,8 @@ static  boolean                 DigiPlaying;
 //      PC Sound variables
 static  volatile byte           pcLastSample;
 static  byte * volatile         pcSound;
-static  longword                pcLengthLeft;
+// IOAN 11.06.2012: commented to made compiler stop complaining
+//static  longword                pcLengthLeft;
 
 //      AdLib variables
 static  byte * volatile         alSound;

@@ -60,6 +60,11 @@
     #include "f_spear.h"
 #endif
 
+// IOAN 11.06.2012: define INT_MAX if it's not already so
+#ifndef INT_MAX
+#define INT_MAX 2147483647
+#endif
+
 typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;

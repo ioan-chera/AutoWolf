@@ -15,8 +15,8 @@
 statobj_t       statobjlist[MAXSTATS];
 statobj_t       *laststatobj;
 
-
-struct
+// IOAN 11.06.2012: added name to made compiler stop complaining
+struct _statinfo_t
 {
     short      picnum;
     wl_stat_t  type;

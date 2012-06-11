@@ -195,60 +195,20 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
-				FA21BE12157412A800C23B4A /* ioan_bas.h */,
-				FA21BE13157412A800C23B4A /* ioan_bot.cpp */,
-				FA21BE14157412A800C23B4A /* ioan_bot.h */,
-				D901F4C70FC0DBCB0040C290 /* id_in.h */,
+				FA8DFA991586930700EBBFB2 /* GFXV */,
+				FA8DFA98158692FB00EBBFB2 /* WL */,
+				FA8DFA97158692EB00EBBFB2 /* ID */,
+				FA8DFA96158692E000EBBFB2 /* IOAN */,
 				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
 				D901F4C90FC0DBCB0040C290 /* fmopl.h */,
 				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
 				D901F4CB0FC0DBCB0040C290 /* fmopl.cpp */,
-				D901F4CC0FC0DBCB0040C290 /* id_pm.cpp */,
-				D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */,
-				D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */,
-				D901F4D00FC0DBCB0040C290 /* wl_game.cpp */,
-				D901F4D10FC0DBCB0040C290 /* wl_floorceiling.cpp */,
-				D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */,
-				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
-				D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */,
-				D901F4D60FC0DBCB0040C290 /* wl_dir3dspr.cpp */,
-				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
-				D901F4D80FC0DBCB0040C290 /* wl_debug.cpp */,
-				D901F4D90FC0DBCB0040C290 /* wl_cloudsky.h */,
-				D901F4DA0FC0DBCB0040C290 /* wl_cloudsky.cpp */,
-				D901F4DB0FC0DBCB0040C290 /* wl_atmos.h */,
-				D901F4DC0FC0DBCB0040C290 /* wl_atmos.cpp */,
-				D901F4DD0FC0DBCB0040C290 /* wl_agent.cpp */,
-				D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */,
-				D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */,
 				D901F4E00FC0DBCB0040C290 /* version.h */,
 				D901F4E10FC0DBCB0040C290 /* signon.cpp */,
 				D901F4E20FC0DBCB0040C290 /* sdl_winmain.cpp */,
 				D901F4E30FC0DBCB0040C290 /* audiowl6.h */,
-				D901F4E40FC0DBCB0040C290 /* id_ca.h */,
-				D901F4E50FC0DBCB0040C290 /* id_us_1.cpp */,
-				D901F4E60FC0DBCB0040C290 /* id_us.h */,
-				D901F4E70FC0DBCB0040C290 /* wl_text.cpp */,
-				D901F4E80FC0DBCB0040C290 /* id_sd.h */,
-				D901F4E90FC0DBCB0040C290 /* id_sd.cpp */,
 				D901F4EA0FC0DBCB0040C290 /* gp2x.h */,
-				D901F4EB0FC0DBCB0040C290 /* wl_state.cpp */,
-				D901F4EC0FC0DBCB0040C290 /* wl_shade.h */,
-				D901F4ED0FC0DBCB0040C290 /* wl_shade.cpp */,
-				D901F4EE0FC0DBCB0040C290 /* wl_play.cpp */,
-				D901F4EF0FC0DBCB0040C290 /* wl_parallax.cpp */,
-				D901F4F00FC0DBCB0040C290 /* wl_menu.h */,
-				D901F4F10FC0DBCB0040C290 /* wl_menu.cpp */,
-				D901F4F20FC0DBCB0040C290 /* wl_main.cpp */,
-				D901F4F30FC0DBCB0040C290 /* id_in.cpp */,
 				D901F4F40FC0DBCB0040C290 /* foreign.h */,
-				D901F4F50FC0DBCB0040C290 /* id_pm.h */,
-				D901F4F60FC0DBCB0040C290 /* id_vl.h */,
-				D901F4F70FC0DBCB0040C290 /* id_vl.cpp */,
-				D901F4FA0FC0DBCB0040C290 /* id_vh.h */,
-				D901F4FB0FC0DBCB0040C290 /* id_vh.cpp */,
-				D901F4FC0FC0DBCB0040C290 /* id_ca.cpp */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -270,6 +230,78 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
+			isa = PBXGroup;
+			children = (
+				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
+				FA21BE12157412A800C23B4A /* ioan_bas.h */,
+				FA21BE13157412A800C23B4A /* ioan_bot.cpp */,
+				FA21BE14157412A800C23B4A /* ioan_bot.h */,
+			);
+			name = IOAN;
+			sourceTree = "<group>";
+		};
+		FA8DFA97158692EB00EBBFB2 /* ID */ = {
+			isa = PBXGroup;
+			children = (
+				D901F4E40FC0DBCB0040C290 /* id_ca.h */,
+				D901F4E50FC0DBCB0040C290 /* id_us_1.cpp */,
+				D901F4E60FC0DBCB0040C290 /* id_us.h */,
+				D901F4E80FC0DBCB0040C290 /* id_sd.h */,
+				D901F4E90FC0DBCB0040C290 /* id_sd.cpp */,
+				D901F4CC0FC0DBCB0040C290 /* id_pm.cpp */,
+				D901F4C70FC0DBCB0040C290 /* id_in.h */,
+				D901F4F30FC0DBCB0040C290 /* id_in.cpp */,
+				D901F4F70FC0DBCB0040C290 /* id_vl.cpp */,
+				D901F4FA0FC0DBCB0040C290 /* id_vh.h */,
+				D901F4FB0FC0DBCB0040C290 /* id_vh.cpp */,
+				D901F4F50FC0DBCB0040C290 /* id_pm.h */,
+				D901F4F60FC0DBCB0040C290 /* id_vl.h */,
+				D901F4FC0FC0DBCB0040C290 /* id_ca.cpp */,
+			);
+			name = ID;
+			sourceTree = "<group>";
+		};
+		FA8DFA98158692FB00EBBFB2 /* WL */ = {
+			isa = PBXGroup;
+			children = (
+				D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */,
+				D901F4D60FC0DBCB0040C290 /* wl_dir3dspr.cpp */,
+				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
+				D901F4D80FC0DBCB0040C290 /* wl_debug.cpp */,
+				D901F4D90FC0DBCB0040C290 /* wl_cloudsky.h */,
+				D901F4DA0FC0DBCB0040C290 /* wl_cloudsky.cpp */,
+				D901F4DB0FC0DBCB0040C290 /* wl_atmos.h */,
+				D901F4DC0FC0DBCB0040C290 /* wl_atmos.cpp */,
+				D901F4DD0FC0DBCB0040C290 /* wl_agent.cpp */,
+				D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */,
+				D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */,
+				D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */,
+				D901F4D00FC0DBCB0040C290 /* wl_game.cpp */,
+				D901F4D10FC0DBCB0040C290 /* wl_floorceiling.cpp */,
+				D901F4E70FC0DBCB0040C290 /* wl_text.cpp */,
+				D901F4EB0FC0DBCB0040C290 /* wl_state.cpp */,
+				D901F4EC0FC0DBCB0040C290 /* wl_shade.h */,
+				D901F4ED0FC0DBCB0040C290 /* wl_shade.cpp */,
+				D901F4EE0FC0DBCB0040C290 /* wl_play.cpp */,
+				D901F4EF0FC0DBCB0040C290 /* wl_parallax.cpp */,
+				D901F4F00FC0DBCB0040C290 /* wl_menu.h */,
+				D901F4F10FC0DBCB0040C290 /* wl_menu.cpp */,
+				D901F4F20FC0DBCB0040C290 /* wl_main.cpp */,
+			);
+			name = WL;
+			sourceTree = "<group>";
+		};
+		FA8DFA991586930700EBBFB2 /* GFXV */ = {
+			isa = PBXGroup;
+			children = (
+				D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */,
+				D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */,
+				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
+			);
+			name = GFXV;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -385,14 +417,23 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
+					/Library/Frameworks/SDL.framework/Headers,
+					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
+					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
+					"$(HEADER_SEARCH_PATHS)",
+					/Library/Frameworks/SDL.framework/Versions/A/Headers,
+					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -418,7 +459,7 @@
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
 				PRODUCT_NAME = Wolf4SDL;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -426,13 +467,14 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -442,9 +484,11 @@
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
 					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
 					"$(HEADER_SEARCH_PATHS)",
+					/Library/Frameworks/SDL.framework/Versions/A/Headers,
+					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 			};
 			name = Debug;
 		};
@@ -471,10 +515,12 @@
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
 					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
 					"$(HEADER_SEARCH_PATHS)",
+					/Library/Frameworks/SDL.framework/Versions/A/Headers,
+					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;

@@ -19,48 +19,6 @@ BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
 
 //
-// BotMan::FindExit
-//
-// Finds the exit on the map
-//
-boolean BotMan::FindExit()
-{
-	int i, j;
-	objtype *check1, *check2;
-
-	for(i = 0; i < MAPSIZE; ++i)
-	{
-		for(j = 0; j < MAPSIZE; ++j)
-		{
-			// Look if one of the ways is free
-			check1 = j > 0 ? actorat[j - 1][i] : (objtype *)1;
-			check2 = j < MAPSIZE - 1 ? actorat[j + 1][i] : (objtype *)1;
-			
-			if(tilemap[j][i] == ELEVATORTILE)
-			{
-				if(check1 && !ISPOINTER(check1) && check2 && !ISPOINTER(check2))
-				{
-					// blocked
-					continue;
-				}
-				else
-				{
-					// found
-					exitx = j;
-					exity = i;
-					if(!check1 || ISPOINTER(check1))
-						exfrontx = j - 1;
-					else if(!check2 || ISPOINTER(check2))
-						exfrontx = j + 1;
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-//
 // BotMan::ApproxDist
 //
 // Approx. distance (too lazy to use sqrt)
@@ -89,143 +47,6 @@ void BotMan::AddToSet(const SData &data)
 		CHECKMALLOCRESULT(searchset);
 	}
 	searchset[searchlen - 1] = data;
-}
-
-//
-// BotMan::FindPathToExit
-//
-// Finds the path to an exit (A*)
-//
-boolean BotMan::FindPathToExit()
-{
-	int i, j;
-	// Look for map exit
-	if(!exitfound)
-		exitfound = FindExit();
-	if(!exitfound)
-		return false;
-
-	SData data;
-	data.g_score = 0;
-	data.f_score = data.h_score = ApproxDist(exfrontx - player->tilex, exity - player->tiley);
-	data.open = true;
-	data.tilex = player->tilex;
-	data.tiley = player->tiley;
-	data.prev = -1;
-
-	EmptySet();
-	AddToSet(data);
-
-	boolean openfound;
-	int fmin, imin, ifound;
-	int cx, cy;
-	objtype *check;
-	boolean neighinvalid, neighfound;
-	int tentative_g_score;
-	while(1)
-	{
-		// look for open sets
-		openfound = false;
-		fmin = INT_MAX;
-		for(i = 0; i < searchlen; ++i)
-		{
-			if(searchset[i].open)
-			{
-				openfound = true;
-				if(searchset[i].f_score < fmin)
-				{
-					fmin = searchset[i].f_score;
-					imin = i;
-				}
-			}
-		}
-		if(!openfound)
-			break;
-		searchset[imin].open = false;
-
-		if(searchset[imin].tilex == exfrontx && searchset[imin].tiley == exity)
-		{
-			// found goal
-			searchset[imin].next = -1;
-			ifound = imin;
-			for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
-				searchset[imin].next = ifound;
-			return true;
-		}
-		
-		for(j = 0; j < 4; ++j)
-		{
-			switch(j)
-			{
-			case 0:
-				cx = searchset[imin].tilex + 1;
-				cy = searchset[imin].tiley;
-				break;
-			case 1:
-				cx = searchset[imin].tilex;
-				cy = searchset[imin].tiley + 1;
-				break;
-			case 2:
-				cx = searchset[imin].tilex - 1;
-				cy = searchset[imin].tiley;
-				break;
-			case 3:
-				cx = searchset[imin].tilex;
-				cy = searchset[imin].tiley - 1;
-				break;
-			}
-			check = actorat[cx][cy];
-			byte door = tilemap[cx][cy];
-			if(check && !ISPOINTER(check) && !(door & 0x80))
-				continue;	// solid, can't be passed
-			else if (door & 0x80)
-			{
-				door = door & ~0x80;
-				byte lock = doorobjlist[door].lock;
-				if (lock >= dr_lock1 && lock <= dr_lock4)
-					if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
-						continue;
-			}
-			neighinvalid = false;
-			neighfound = false;
-			for(i = searchlen - 1; i >= 0; --i)
-			{
-				if(searchset[i].tilex == cx && searchset[i].tiley == cy)
-				{
-					if(!searchset[i].open)
-						neighinvalid = true;
-					else
-					{
-						neighfound = true;
-						ifound = i;
-					}
-					break;
-				}
-			}
-			if(neighinvalid)
-				continue;
-			tentative_g_score = searchset[imin].g_score + 1;
-			if(!neighfound)
-			{
-				data.g_score = tentative_g_score;
-				data.h_score = ApproxDist(exfrontx - cx, exity - cy);
-				data.f_score = data.g_score + data.h_score;
-				data.open = true;
-				data.tilex = cx;
-				data.tiley = cy;
-				data.prev = imin;
-				AddToSet(data);
-			}
-			else if(tentative_g_score < searchset[ifound].g_score)
-			{
-				searchset[ifound].g_score = tentative_g_score;
-				searchset[ifound].f_score = tentative_g_score + searchset[ifound].h_score;
-				searchset[ifound].prev = imin;
-			}
-		}
-	}
-
-	return false;
 }
 
 //
@@ -367,9 +188,9 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 }
 
 //
-// BotMan::FindPathToExit
+// BotMan::FindRandomPath
 //
-// Finds the path to an exit (A*)
+// Finds the path to the nearest destination
 //
 boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 {
@@ -1207,15 +1028,6 @@ disengage:
 		wakeupfire = 0;	// near dead
 
 		// Move forward only if it's safe (replace this bloatness with a function)
-
-		// What if there are projectiles
-//		if(searchset[nowon].next >= 0 && IsProjectile(searchset[searchset[nowon].next].tilex,
-//			searchset[searchset[nowon].next].tiley, 2))
-//		{
-//			pathexists = false;
-//			FindRandomPath();
-//			return;
-//		}
 
 		if(dangle > -45 && dangle < 45 && (Crossfire(player->tilex, player->tiley)
 			|| !(searchset[nowon].next >= 0 

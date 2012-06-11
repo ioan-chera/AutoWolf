@@ -52,7 +52,8 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height);
 
 int     maporgx;
 int     maporgy;
-enum {mapview,tilemapview,actoratview,visview}  viewtype;
+// IOAN 11.06.2012: added name to made compiler stop complaining
+enum _viewtype_t {mapview,tilemapview,actoratview,visview}  viewtype;
 
 void ViewMap (void);
 

@@ -38,12 +38,8 @@ protected:
 	static objtype *threater;
 
 	// protected functions
-	// Finds the path to an exit (A*)
-	static boolean FindPathToExit();
 	// Finds the closest object of interest (object, hidden door, exit)
 	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false);
-	// Finds the exit on the map
-	static boolean FindExit();
 	// Empty set
 	inline static void EmptySet()
 	{
