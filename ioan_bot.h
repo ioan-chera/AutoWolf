@@ -39,7 +39,7 @@ protected:
 
 	// protected functions
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false);
+	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, boolean retreating = false);
 	// Empty set
 	inline static void EmptySet()
 	{
@@ -78,6 +78,8 @@ protected:
 	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
 	// Test if there's an enemy
 	static objtype *IsEnemyAround(int tx, int ty, int dist);
+	// Move by path only by strafing
+	static void MoveByRetreat();
 public:
 	static boolean active;	// true if bots are activated
 
@@ -88,6 +90,7 @@ public:
 	inline static void MapInit()
 	{
 		exitfound = pathexists = false;
+		threater = NULL;
 		nothingleft = wakeupfire = 0;
 		EmptySet();
 	}

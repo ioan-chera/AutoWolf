@@ -17,6 +17,7 @@ byte BotMan::nothingleft, BotMan::wakeupfire;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
+objtype *BotMan::threater;
 
 //
 // BotMan::ApproxDist
@@ -192,14 +193,15 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
+boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean retreating)
 {
 	int i, j;
 
 	SData data;
 
 	data.g_score = 0;
-	data.f_score = 0;
+	data.h_score = retreating && threater != NULL ? -ApproxDist(threater->tilex - player->tilex, threater->tiley - player->tiley) : 0;
+	data.f_score = data.g_score + data.h_score;
 	data.open = true;
 	data.tilex = player->tilex;
 	data.tiley = player->tiley;
@@ -237,16 +239,34 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 		searchset[imin].tiley;
 		searchset[imin].open = false;
 
-		if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley))
+		if(!retreating)
 		{
-			// found goal
-			searchset[imin].next = -1;
-			ifound = imin;
-			for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
-				searchset[imin].next = ifound;
-			pathexists = true;
-			return true;
+			if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley))
+			{
+				// found goal
+				searchset[imin].next = -1;
+				ifound = imin;
+				for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
+					searchset[imin].next = ifound;
+				pathexists = true;
+				return true;
+			}
 		}
+		else
+		{
+			if(!Crossfire(searchset[imin].tilex, searchset[imin].tiley))
+				if(searchset[imin].prev >= 0 && !Crossfire(searchset[searchset[imin].prev].tilex, searchset[searchset[imin].prev].tiley))
+				{
+					// found goal
+					searchset[imin].next = -1;
+					ifound = imin;
+					for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
+						searchset[imin].next = ifound;
+					pathexists = true;
+					return true;
+				}
+		}
+
 		
 		for(j = 0; j < 4; ++j)
 		{
@@ -278,6 +298,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 				continue;	// solid, can't be passed
 			else if (door & 0x80)
 			{
+				if(retreating)
+					continue;
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
@@ -305,11 +327,14 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 			if(neighinvalid)
 				continue;
 			tentative_g_score = searchset[imin].g_score + 1;
+			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening)
+				tentative_g_score += 4;
 			if(!neighfound)
 			{
 				data.g_score = tentative_g_score;
-				data.h_score = 0;
-				data.f_score = data.g_score;
+				data.h_score = retreating && threater != NULL ? 
+					-ApproxDist(threater->tilex - player->tilex, threater->tiley - player->tiley) : 0;
+				data.f_score = data.g_score + data.h_score;
 				data.open = true;
 				data.tilex = cx;
 				data.tiley = cy;
@@ -319,7 +344,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis)
 			else if(tentative_g_score < searchset[ifound].g_score)
 			{
 				searchset[ifound].g_score = tentative_g_score;
-				searchset[ifound].f_score = tentative_g_score;
+				searchset[ifound].f_score = tentative_g_score + searchset[ifound].h_score;
 				searchset[ifound].prev = imin;
 			}
 		}
@@ -791,6 +816,224 @@ objtype *BotMan::IsEnemyAround(int tx, int ty, int dist)
 }
 
 //
+// BotMan::MoveByRetreat
+//
+// Move without strafing. Only searchset[1] is relevant.
+//
+void BotMan::MoveByRetreat()
+{
+	
+	static short tangle, dangle, movedir, pressuse;
+	pressuse++;
+	
+	int nowon = 0;
+	if(!searchset)
+	{
+		DoRetreat();
+		return;
+	}
+	
+	int nx, ny, mx, my;
+	boolean tryuse = false;	// whether to try using
+	
+	mx = player->tilex;
+	my = player->tiley;
+	
+	// elevator
+	byte tile;
+	if(searchset[nowon].next == -1)
+	{
+		// end of path; start a new search
+		pathexists = false;
+		if(searchset[nowon].prev >= 0)
+		{
+			// just go forward
+			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
+			ny = 2*my - searchset[searchset[nowon].prev].tiley;
+		}
+		else
+		{
+			// if undefined, just go east
+			nx = mx + 1;
+			ny = my;
+		}
+	}
+	else
+	{
+		// in the path
+		nx = searchset[searchset[nowon].next].tilex;
+		ny = searchset[searchset[nowon].next].tiley;
+		tile = tilemap[nx][ny];
+		// whether to press to open a door
+		tryuse = (tile & 0x80) == 0x80 
+		&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+	}
+	
+	// set up the target angle
+	if(nx > mx)
+		tangle = 0;
+	else if(ny > my)
+		tangle = 270;
+	else if(nx < mx)
+		tangle = 180;
+	else if(ny < my)
+		tangle = 90;
+	
+	dangle = tangle - player->angle;
+	if(dangle > 180)	// centred angle
+		dangle -= 360;
+	else if(dangle <= -180)
+		dangle += 360;
+	
+	// STRAFE LOGIC
+	
+	// if it's door
+	if(actorat[nx][ny] && !ISPOINTER(actorat[nx][ny]))
+		movedir = 0;
+	else if(dangle >= -45 && dangle < 45)
+	{
+//		dangle -= 45;
+		movedir = 1;
+	}
+	else if(dangle >= 45 && dangle < 135)
+	{
+		dangle -= 90;
+		movedir = 2;	// left
+	}
+	else if(dangle >= 135 || dangle < -135)
+	{
+		dangle -= 180;
+		if(dangle <= -180)
+			dangle += 360;
+		movedir = 3;	// back
+	}
+	else if(dangle >= -135 && dangle < -45)
+	{
+		dangle += 90;
+		movedir = 4;	// right
+	}
+	
+	// Move forward only if it's safe (replace this bloatness with a function)
+	
+	if(dangle > -45 && dangle < 45)
+	{
+		// So move
+		buttonstate[bt_strafe] = true;
+		switch(movedir)
+		{
+			case 0:
+			case 1:
+				controly = -RUNMOVE * tics;
+				//controly = 0;
+				buttonstate[bt_strafe] = false;
+				break;
+			case 2:	// left
+				controly = 0;
+				controlx = -RUNMOVE * tics;
+				break;
+			case 3:	// back
+				controly =  RUNMOVE * tics;
+				buttonstate[bt_strafe] = false;
+				break;
+			case 4:	// right
+				controly = 0;
+				controlx =  RUNMOVE * tics;
+				break;
+		}
+		// Press if there's an obstacle ahead
+		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+			buttonstate[bt_use] = true;
+		else
+			buttonstate[bt_use] = false;
+	}
+	
+	if(dangle > 15)
+	{
+		controlx = -RUNMOVE * tics;
+		buttonstate[bt_strafe] = false;
+	}
+//	else if(dangle > 0)
+//	{
+//		controlx = -BASEMOVE * tics;
+//		buttonstate[bt_strafe] = false;
+//	}
+	else if(dangle < -15)
+	{
+		controlx = +RUNMOVE * tics;
+		buttonstate[bt_strafe] = false;
+	}
+//	else if(dangle < -0)
+//	{
+//		controlx = +BASEMOVE * tics;
+//		buttonstate[bt_strafe] = false;
+//	}
+	else
+	{
+		buttonstate[bt_strafe] = true;
+		// straight line: can strafe now
+		fixed centx, centy, cento, plro;
+		centx = (player->tilex << TILESHIFT);
+		centy = (player->tiley << TILESHIFT);
+		
+		switch(tangle)
+		{
+			case 0:
+				cento = -centy;
+				plro = -player->y + (1<<(TILESHIFT - 1));
+				break;
+			case 90:
+				cento = -centx;
+				plro = -player->x + (1<<(TILESHIFT - 1));
+				break;
+			case 180:
+				cento = centy;
+				plro = player->y - (1<<(TILESHIFT - 1));
+				break;
+			case 270:
+				cento = centx;
+				plro = player->x - (1<<(TILESHIFT - 1));
+				break;
+		}
+		if(plro - cento > 8192)	// too left, move right
+		{
+			switch(movedir)
+			{
+				case 0:
+				case 1:
+					controlx = BASEMOVE * tics;
+					break;
+				case 2:	// left, move forward
+					controly = -BASEMOVE * tics;
+					break;
+				case 3:	// back, move left
+					controlx = -BASEMOVE * tics;
+					break;
+				case 4:	// right, move back
+					controly =  BASEMOVE * tics;
+			}
+		}
+		else if(plro - cento < -8192)	// too right, move left
+		{
+			switch(movedir)
+			{
+				case 0:
+				case 1:
+					controlx = -BASEMOVE * tics;
+					break;
+				case 2:	// left, move back
+					controly =  BASEMOVE * tics;
+					break;
+				case 3:	// back-right
+					controlx =  BASEMOVE * tics;
+					break;
+				case 4:	// right, move forth
+					controly = -BASEMOVE * tics;
+			}
+		}
+	}
+}
+
+//
 // BotMan::FindPath
 //
 // Finds the path to walk through
@@ -805,6 +1048,10 @@ void BotMan::DoCommand()
 	static int edist = -1;
 
 	objtype *check0, *check, *check2;
+	
+	// A dead threater is no threat
+	if(threater && threater->hitpoints <= 0)
+		threater = NULL;
 
 	check0 = EnemyVisible(&eangle, &edist);
 	if(check0)
@@ -839,7 +1086,6 @@ void BotMan::DoCommand()
 		else if(dangle < 0)
 			controlx = +BASEMOVE * tics;
 	
-		// FIXME: work around the numbness bug
 		check = EnemyOnTarget();
 		check2 = DamageThreat(check);
 		short pangle, epangle; int proj = 0;
@@ -851,7 +1097,11 @@ void BotMan::DoCommand()
 
 		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
-			DoRetreat(false, check2);
+			threater = check2;
+			if(FindRandomPath(false, true, true))
+				MoveByRetreat();
+			else
+				DoRetreat(false, check2);
 			
 			if(proj)
 			{
@@ -902,16 +1152,18 @@ void BotMan::DoCommand()
 		// retreat mode (to be removed?)
 		edist = -1;
 		retreat--;
-		DoRetreat();
+//		if(FindRandomPath(false, true, true))
+			MoveByRetreat();
+//		else
+//			DoRetreat(false, check2);
 	}
 	else
 	{
 disengage:
 			// no path got defined
+		threater = NULL;
 		if(!pathexists)
 		{
-	//		if(!FindPathToExit())
-	//			return;
 			if(!FindRandomPath(false, gamestate.weapon == wp_knife))
 			{
 				if(!FindRandomPath(true, gamestate.weapon == wp_knife))
@@ -933,7 +1185,6 @@ disengage:
 			if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
 			{
 				nowon = searchpos;
-//				break;
 			}
 			if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley)
 				&& (abs(searchset[searchpos].tilex - player->tilex) > 1 || 
@@ -1029,64 +1280,67 @@ disengage:
 
 		// Move forward only if it's safe (replace this bloatness with a function)
 
-		if(dangle > -45 && dangle < 45 && (Crossfire(player->tilex, player->tiley)
+		if((Crossfire(player->tilex, player->tiley)
 			|| !(searchset[nowon].next >= 0 
 			&& Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))
 			&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
 			&& Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
 			searchset[searchset[searchset[nowon].next].next].tiley))))
 		{
-			// So move
-			controly = -RUNMOVE * tics;
-			// Press if there's an obstacle ahead
-			if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
-				buttonstate[bt_use] = true;
-			else
-				buttonstate[bt_use] = false;
-		}
-
-		// normally just turn (it's non-combat, no problem)
-		buttonstate[bt_strafe] = false;
-
-		if(dangle > 15)
-			controlx = -RUNMOVE * tics;
-		else if(dangle > 0)
-			controlx = -BASEMOVE * tics;
-		else if(dangle < -15)
-			controlx = +RUNMOVE * tics;
-		else if(dangle < 0)
-			controlx = +BASEMOVE * tics;
-		else
-		{
-			// straight line: can strafe now
-			buttonstate[bt_strafe] = true;
-			fixed centx, centy, cento, plro;
-			centx = (player->tilex << TILESHIFT);
-			centy = (player->tiley << TILESHIFT);
-			
-			switch(tangle)
+			if(dangle > -45 && dangle < 45)
 			{
-			case 0:
-				cento = -centy;
-				plro = -player->y + (1<<(TILESHIFT - 1));
-				break;
-			case 90:
-				cento = -centx;
-				plro = -player->x + (1<<(TILESHIFT - 1));
-				break;
-			case 180:
-				cento = centy;
-				plro = player->y - (1<<(TILESHIFT - 1));
-				break;
-			case 270:
-				cento = centx;
-				plro = player->x - (1<<(TILESHIFT - 1));
-				break;
+				// So move
+				controly = -RUNMOVE * tics;
+				// Press if there's an obstacle ahead
+				if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+					buttonstate[bt_use] = true;
+				else	
+					buttonstate[bt_use] = false;
 			}
-			if(plro - cento > 4096)
-				controlx = BASEMOVE * tics;
-			else if(plro - cento < -4096)
+
+			// normally just turn (it's non-combat, no problem)
+			buttonstate[bt_strafe] = false;
+
+			if(dangle > 15)
+				controlx = -RUNMOVE * tics;
+			else if(dangle > 0)
 				controlx = -BASEMOVE * tics;
+			else if(dangle < -15)
+				controlx = +RUNMOVE * tics;
+			else if(dangle < 0)
+				controlx = +BASEMOVE * tics;
+			else
+			{
+				// straight line: can strafe now
+				buttonstate[bt_strafe] = true;
+				fixed centx, centy, cento, plro;
+				centx = (player->tilex << TILESHIFT);
+				centy = (player->tiley << TILESHIFT);
+			
+				switch(tangle)
+				{
+				case 0:
+					cento = -centy;
+					plro = -player->y + (1<<(TILESHIFT - 1));
+					break;
+				case 90:
+					cento = -centx;
+					plro = -player->x + (1<<(TILESHIFT - 1));
+					break;
+				case 180:
+					cento = centy;
+					plro = player->y - (1<<(TILESHIFT - 1));
+					break;
+				case 270:
+					cento = centx;
+					plro = player->x - (1<<(TILESHIFT - 1));
+					break;
+				}
+				if(plro - cento > 4096)
+					controlx = BASEMOVE * tics;
+				else if(plro - cento < -4096)
+					controlx = -BASEMOVE * tics;
+			}
 		}
 	}
 }
