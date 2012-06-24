@@ -49,7 +49,9 @@ typedef int8_t		Bit8s;
 
 namespace DBOPL {
 
-struct Chip;
+	// IOAN 20.06.2012: added function declarations (needed for Mac's GCC)
+	struct Chip;
+	
 struct Operator;
 struct Channel;
 

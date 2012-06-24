@@ -13,7 +13,6 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D901F4C20FC0DB520040C290 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D901F4C10FC0DB520040C290 /* SDL_mixer.framework */; };
-		D901F4FD0FC0DBCB0040C290 /* fmopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D901F4CB0FC0DBCB0040C290 /* fmopl.cpp */; };
 		D901F4FE0FC0DBCB0040C290 /* id_pm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D901F4CC0FC0DBCB0040C290 /* id_pm.cpp */; };
 		D901F5000FC0DBCB0040C290 /* wl_inter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */; };
 		D901F5010FC0DBCB0040C290 /* wl_game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D901F4D00FC0DBCB0040C290 /* wl_game.cpp */; };
@@ -45,6 +44,7 @@
 		D94B84D50FC0F2F800EADB6F /* wolf4sdl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D94B84D40FC0F2F800EADB6F /* wolf4sdl.icns */; };
 		FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */; };
 		FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */; };
+		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,9 +75,7 @@
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = id_in.h; path = ../id_in.h; sourceTree = SOURCE_ROOT; };
 		D901F4C80FC0DBCB0040C290 /* f_spear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = f_spear.h; path = ../f_spear.h; sourceTree = SOURCE_ROOT; };
-		D901F4C90FC0DBCB0040C290 /* fmopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmopl.h; path = ../mame/fmopl.h; sourceTree = SOURCE_ROOT; };
 		D901F4CA0FC0DBCB0040C290 /* audiosod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = audiosod.h; path = ../audiosod.h; sourceTree = SOURCE_ROOT; };
-		D901F4CB0FC0DBCB0040C290 /* fmopl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fmopl.cpp; path = ../mame/fmopl.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4CC0FC0DBCB0040C290 /* id_pm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = id_pm.cpp; path = ../id_pm.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_sod.h; path = ../gfxv_sod.h; sourceTree = SOURCE_ROOT; };
 		D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_inter.cpp; path = ../wl_inter.cpp; sourceTree = SOURCE_ROOT; };
@@ -128,6 +126,8 @@
 		FA21BE12157412A800C23B4A /* ioan_bas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bas.h; path = ../ioan_bas.h; sourceTree = SOURCE_ROOT; };
 		FA21BE13157412A800C23B4A /* ioan_bot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_bot.cpp; path = ../ioan_bot.cpp; sourceTree = SOURCE_ROOT; };
 		FA21BE14157412A800C23B4A /* ioan_bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bot.h; path = ../ioan_bot.h; sourceTree = SOURCE_ROOT; };
+		FAB104D11591AA9100393DE3 /* dbopl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dbopl.cpp; path = ../dosbox/dbopl.cpp; sourceTree = SOURCE_ROOT; };
+		FAB104D21591AA9100393DE3 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../dosbox/dbopl.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,14 +195,14 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
+				FAB104D21591AA9100393DE3 /* dbopl.h */,
 				FA8DFA991586930700EBBFB2 /* GFXV */,
 				FA8DFA98158692FB00EBBFB2 /* WL */,
 				FA8DFA97158692EB00EBBFB2 /* ID */,
 				FA8DFA96158692E000EBBFB2 /* IOAN */,
 				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
-				D901F4C90FC0DBCB0040C290 /* fmopl.h */,
 				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
-				D901F4CB0FC0DBCB0040C290 /* fmopl.cpp */,
 				D901F4E00FC0DBCB0040C290 /* version.h */,
 				D901F4E10FC0DBCB0040C290 /* signon.cpp */,
 				D901F4E20FC0DBCB0040C290 /* sdl_winmain.cpp */,
@@ -333,6 +333,7 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Wolf4SDL" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -367,7 +368,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */,
-				D901F4FD0FC0DBCB0040C290 /* fmopl.cpp in Sources */,
 				D901F4FE0FC0DBCB0040C290 /* id_pm.cpp in Sources */,
 				D901F5000FC0DBCB0040C290 /* wl_inter.cpp in Sources */,
 				D901F5010FC0DBCB0040C290 /* wl_game.cpp in Sources */,
@@ -397,6 +397,7 @@
 				D901F51B0FC0DBCB0040C290 /* id_ca.cpp in Sources */,
 				FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */,
 				FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */,
+				FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +453,7 @@
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
 				GCC_VERSION = 4.0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
