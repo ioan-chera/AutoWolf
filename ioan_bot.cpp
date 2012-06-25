@@ -118,7 +118,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	}
 
 	objtype *check = actorat[tx][ty];
-	if(gamestate.health > 75 && gamestate.ammo > 75 &&
+	if(gamestate.health > 75 && gamestate.ammo > 50 &&
 		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
 	{
 		nothingleft = 0;	// reset counter if enemies here
@@ -168,17 +168,23 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	{
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
-			exitx = tx - 1;
-			exity = ty;
-			if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
-				return true;
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || !actorat[tx-2][ty]) 
+			{
+				exitx = tx - 1;
+				exity = ty;
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
+					return true;
+			}
 		}
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
-			exitx = tx + 1;
-			exity = ty;
-			if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
-				return true;
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || !actorat[tx+2][ty]) 
+			{
+				exitx = tx + 1;
+				exity = ty;
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
+					return true;
+			}
 		}
 
 		// exit pad
@@ -206,6 +212,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 	data.tilex = player->tilex;
 	data.tiley = player->tiley;
 	data.prev = -1;
+	data.next = -1;
 
 	EmptySet();
 	AddToSet(data);
@@ -1098,7 +1105,9 @@ void BotMan::DoCommand()
 		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
 			threater = check2;
-			if(FindRandomPath(false, true, true))
+			if(FindRandomPath(false, true, true) && (check2->obclass != mutantobj || check2->state == &s_mutshoot1 || 
+													 check2->state == &s_mutshoot2 || check2->state == &s_mutshoot3 || 
+																					  check2->state == &s_mutshoot4))
 				MoveByRetreat();
 			else
 				DoRetreat(false, check2);
