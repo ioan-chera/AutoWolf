@@ -335,7 +335,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>FAB8482A15991DB400566946</string>
+										<string>FAB848721599E08900566946</string>
 										<key>history</key>
 										<array>
 											<string>FA8DFA831586922C00EBBFB2</string>
@@ -364,13 +364,13 @@
 											<string>FAB104EA15920BB900393DE3</string>
 											<string>FAB845CD1597BA7700566946</string>
 											<string>FAB8477C1598ED3400566946</string>
-											<string>FAB847981598F50A00566946</string>
 											<string>FAB847A01598F77600566946</string>
 											<string>FAB847A11598F77600566946</string>
 											<string>FAB847A21598F77600566946</string>
 											<string>FAB847A31598F77600566946</string>
 											<string>FAB847C2159910FC00566946</string>
-											<string>FAB847C3159910FC00566946</string>
+											<string>FAB848601599DF3000566946</string>
+											<string>FAB848611599DF3000566946</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -384,18 +384,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {946, 357}}</string>
+								<string>{{0, 0}, {946, 348}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 111 1280 667 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>357pt</string>
+							<string>348pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>264pt</string>
+							<string>273pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -409,7 +409,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {946, 237}}</string>
+										<string>{{10, 27}, {946, 246}}</string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -463,7 +463,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {946, 237}}</string>
+										<string>{{10, 27}, {946, 246}}</string>
 										<key>RubberWindowFrame</key>
 										<string>0 111 1280 667 0 0 1280 778 </string>
 									</dict>
@@ -493,11 +493,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>FAB847801598ED3C00566946</string>
+				<string>FAB8484E1599DD4000566946</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>FAB847811598ED3C00566946</string>
+				<string>FAB8484F1599DD4000566946</string>
 				<string>FA8DFA811586922C00EBBFB2</string>
-				<string>FAB847821598ED3C00566946</string>
+				<string>FAB848501599DD4000566946</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -646,14 +646,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>FAB847831598ED3C00566946</string>
+				<string>FAB848511599DD4000566946</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>FAB847841598ED3C00566946</string>
-				<string>FAB847851598ED3C00566946</string>
-				<string>FAB847861598ED3C00566946</string>
-				<string>FAB847871598ED3C00566946</string>
-				<string>FA8DFA811586922C00EBBFB2</string>
+				<string>FAB848521599DD4000566946</string>
+				<string>FAB848531599DD4000566946</string>
+				<string>FAB848541599DD4000566946</string>
+				<string>FAB848551599DD4000566946</string>
+				<string>FAB848561599DD4000566946</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -687,8 +687,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>FAB847891598ED3C00566946</string>
-		<string>FAB8478A1598ED3C00566946</string>
+		<string>FAB848731599E08900566946</string>
+		<string>FAB848581599DD4000566946</string>
+		<string>FAB848591599DD4000566946</string>
 		<string>/Users/macbook/Development/cross/autowolfsf/macosx/Wolf4SDL.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

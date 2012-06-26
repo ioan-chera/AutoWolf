@@ -55,7 +55,7 @@ void BotMan::AddToSet(const SData &data)
 //
 // Pickable item, secret door, exit switch, exit pad
 //
-boolean BotMan::ObjectOfInterest(int tx, int ty)
+boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 {
 	int i;
 	exitx = -1;
@@ -89,6 +89,9 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 			case    bo_chalice:
 			case    bo_bible:
 			case    bo_crown:
+				if(!knifeinsight)
+					return true;
+				break;
 			case    bo_machinegun:
 			case    bo_chaingun:
 			case    bo_fullheal:
@@ -126,40 +129,43 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	}
 
 	// secret door
-	if(ty + 3 < MAPSIZE && *(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
+	if(!knifeinsight)
 	{
-		if(!actorat[tx][ty+2] && !actorat[tx][ty+3])
+		if(ty + 3 < MAPSIZE && *(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
-			exity = ty + 1;
-			exitx = tx;
-			return true;
+			if(!actorat[tx][ty+2] && !actorat[tx][ty+3])
+			{
+				exity = ty + 1;
+				exitx = tx;
+				return true;
+			}
 		}
-	}
-	if(ty - 3 >= 0 && *(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
-	{
-		if(!actorat[tx][ty-2] && !actorat[tx][ty-3])
+		if(ty - 3 >= 0 && *(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
-			exity = ty - 1;
-			exitx = tx;
-			return true;
+			if(!actorat[tx][ty-2] && !actorat[tx][ty-3])
+			{
+				exity = ty - 1;
+				exitx = tx;
+				return true;
+			}
 		}
-	}
-	if(tx + 3 < MAPSIZE && *(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
-	{
-		if(!actorat[tx+2][ty] && !actorat[tx+3][ty])
+		if(tx + 3 < MAPSIZE && *(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
 		{
-			exity = ty;
-			exitx = tx + 1;
-			return true;
+			if(!actorat[tx+2][ty] && !actorat[tx+3][ty])
+			{
+				exity = ty;
+				exitx = tx + 1;
+				return true;
+			}
 		}
-	}
-	if(tx - 3 >= 0 && *(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
-	{
-		if(!actorat[tx-2][ty] && !actorat[tx-3][ty])
+		if(tx - 3 >= 0 && *(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
 		{
-			exity = ty;
-			exitx = tx - 1;
-			return true;
+			if(!actorat[tx-2][ty] && !actorat[tx-3][ty])
+			{
+				exity = ty;
+				exitx = tx - 1;
+				return true;
+			}
 		}
 	}
 
@@ -168,6 +174,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 	{
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
+			// TODO: take care of overflows and violations here!
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || !actorat[tx-2][ty]) 
 			{
 				exitx = tx - 1;
@@ -199,7 +206,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty)
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean retreating)
+boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean retreating, boolean knifeinsight)
 {
 	int i, j;
 
@@ -248,7 +255,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 
 		if(!retreating)
 		{
-			if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley))
+			if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley, knifeinsight))
 			{
 				// found goal
 				searchset[imin].next = -1;
@@ -852,7 +859,14 @@ void BotMan::MoveByRetreat()
 	{
 		// end of path; start a new search
 		pathexists = false;
-		if(searchset[nowon].prev >= 0)
+		if(exitx >= 0 && exity >= 0)
+		{
+			// elevator switch: press it now
+			nx = exitx;
+			ny = exity;
+			tryuse = true;
+		}
+		else if(searchset[nowon].prev >= 0)
 		{
 			// just go forward
 			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
@@ -959,7 +973,7 @@ void BotMan::MoveByRetreat()
 		controlx = -RUNMOVE * tics;
 		buttonstate[bt_strafe] = false;
 	}
-//	else if(dangle > 0)
+//	else if(dangle > 0 && movedir == 0)
 //	{
 //		controlx = -BASEMOVE * tics;
 //		buttonstate[bt_strafe] = false;
@@ -969,7 +983,7 @@ void BotMan::MoveByRetreat()
 		controlx = +RUNMOVE * tics;
 		buttonstate[bt_strafe] = false;
 	}
-//	else if(dangle < -0)
+//	else if(dangle < -0 && movedir == 0)
 //	{
 //		controlx = +BASEMOVE * tics;
 //		buttonstate[bt_strafe] = false;
@@ -1066,10 +1080,12 @@ void BotMan::DoCommand()
 		nothingleft = 0;	// reset elevator counter if distracted
 
 		if(gamestate.weapon == wp_knife)
-			if(FindRandomPath(false, true))
+			if(FindRandomPath(false, true, false, true))
 			{
-				pathexists = false;
-				goto disengage;
+//				pathexists = false;
+				MoveByRetreat();
+				return;
+				//goto disengage;
 			}
 
 		pathexists = false;
@@ -1105,9 +1121,7 @@ void BotMan::DoCommand()
 		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
 			threater = check2;
-			if(FindRandomPath(false, true, true) && (check2->obclass != mutantobj || check2->state == &s_mutshoot1 || 
-													 check2->state == &s_mutshoot2 || check2->state == &s_mutshoot3 || 
-																					  check2->state == &s_mutshoot4))
+			if(FindRandomPath(false, true, true) && (check2->obclass != mutantobj))
 				MoveByRetreat();
 			else
 				DoRetreat(false, check2);

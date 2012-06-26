@@ -39,7 +39,8 @@ protected:
 
 	// protected functions
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, boolean retreating = false);
+	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, boolean retreating = false,
+								  boolean knifeinsight = false);
 	// Empty set
 	inline static void EmptySet()
 	{
@@ -57,7 +58,7 @@ protected:
 	// ApproximateDistance
 	static int ApproxDist(int dx, int dy);
 	// Object of interest
-	static boolean ObjectOfInterest(int dx, int dy);
+	static boolean ObjectOfInterest(int dx, int dy, boolean knifeinsight = false);
 	// Enemy on spot
 	static objtype *EnemyFound(int dx, int dy);
 	// Enemy targetted
