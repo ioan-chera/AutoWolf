@@ -33,7 +33,7 @@ protected:
 
 	// protected variables
 	static boolean pathexists, exitfound;
-	static byte nothingleft, wakeupfire, retreat;
+	static byte nothingleft, retreatwaitdelay, retreat;
 	static int exitx, exity, exfrontx;
 	static objtype *threater;
 
@@ -72,17 +72,18 @@ protected:
 	// do retreat
 	static void DoRetreat(boolean forth = false, objtype *cause = NULL);
 	// like EnemiesArmed, but not restricted to the player
-	static objtype *Crossfire(int tx, int ty);
+	static objtype *Crossfire(int tx, int ty, objtype *objignore = NULL, boolean justexists = false);
 	// Like enemyvisible, but for any spot
 	static objtype *GenericEnemyVisible(int tx, int ty);
 	// Test if there's a projectile there
 	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
 	// Test if there's an enemy
-	static objtype *IsEnemyAround(int tx, int ty, int dist);
+	static objtype *IsEnemyBlocking(int tx, int ty);
 	// Move by path only by strafing
 	static void MoveByRetreat();
 public:
 	static boolean active;	// true if bots are activated
+	static byte efficiency;
 
 	// Finds the path to walk through
 	static void DoCommand();
@@ -92,7 +93,8 @@ public:
 	{
 		exitfound = pathexists = false;
 		threater = NULL;
-		nothingleft = wakeupfire = 0;
+		nothingleft = retreatwaitdelay = 0;
+		efficiency = 10;
 		EmptySet();
 	}
 };

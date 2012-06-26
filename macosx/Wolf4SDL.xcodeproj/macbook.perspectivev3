@@ -269,6 +269,7 @@
 								<string>29B97314FDCFA39411CA2CEA</string>
 								<string>080E96DDFE201D6D7F000001</string>
 								<string>29B97315FDCFA39411CA2CEA</string>
+								<string>FA8DFA98158692FB00EBBFB2</string>
 								<string>FA8DFA97158692EB00EBBFB2</string>
 								<string>FA8DFA96158692E000EBBFB2</string>
 								<string>29B97317FDCFA39411CA2CEA</string>
@@ -276,19 +277,18 @@
 								<string>29B97323FDCFA39411CA2CEA</string>
 								<string>1058C7A0FEA54F0111CA2CBB</string>
 								<string>1058C7A2FEA54F0111CA2CBB</string>
-								<string>1C37FBAC04509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>27</integer>
-									<integer>24</integer>
+									<integer>50</integer>
+									<integer>47</integer>
 									<integer>4</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 327}, {312, 608}}</string>
+							<string>{{0, 411}, {312, 608}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -335,10 +335,9 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>FAB848721599E08900566946</string>
+										<string>FAB84939159A607300566946</string>
 										<key>history</key>
 										<array>
-											<string>FA8DFA831586922C00EBBFB2</string>
 											<string>FA8DFA9F1586936E00EBBFB2</string>
 											<string>FA8DFAA01586936E00EBBFB2</string>
 											<string>FA8DFAA31586936E00EBBFB2</string>
@@ -352,13 +351,10 @@
 											<string>FA8DFAAE1586936E00EBBFB2</string>
 											<string>FA8DFAAF1586936E00EBBFB2</string>
 											<string>FA8DFAB01586936E00EBBFB2</string>
-											<string>FA8DFAB11586936E00EBBFB2</string>
 											<string>FA8DFAB21586936E00EBBFB2</string>
 											<string>FA8DFABA158693DF00EBBFB2</string>
 											<string>FA8DFABB158693DF00EBBFB2</string>
 											<string>FA8DFAC51586955400EBBFB2</string>
-											<string>FA8DFAC91586955400EBBFB2</string>
-											<string>FA8DFAE715869AF400EBBFB2</string>
 											<string>FAB104E615920BB900393DE3</string>
 											<string>FAB104E915920BB900393DE3</string>
 											<string>FAB104EA15920BB900393DE3</string>
@@ -366,11 +362,16 @@
 											<string>FAB8477C1598ED3400566946</string>
 											<string>FAB847A01598F77600566946</string>
 											<string>FAB847A11598F77600566946</string>
-											<string>FAB847A21598F77600566946</string>
-											<string>FAB847A31598F77600566946</string>
 											<string>FAB847C2159910FC00566946</string>
-											<string>FAB848601599DF3000566946</string>
-											<string>FAB848611599DF3000566946</string>
+											<string>FAB84886159A278000566946</string>
+											<string>FAB84898159A2E2900566946</string>
+											<string>FAB84905159A518500566946</string>
+											<string>FAB84906159A518500566946</string>
+											<string>FAB84907159A518500566946</string>
+											<string>FAB84908159A518500566946</string>
+											<string>FAB8491F159A556C00566946</string>
+											<string>FAB84937159A607300566946</string>
+											<string>FAB84938159A607300566946</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -425,7 +426,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {946, 237}}</string>
+										<string>{{10, 27}, {946, 246}}</string>
 									</dict>
 									<key>Module</key>
 									<string>PBXProjectFindModule</string>
@@ -687,7 +688,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>FAB848731599E08900566946</string>
+		<string>FAB8493A159A607300566946</string>
 		<string>FAB848581599DD4000566946</string>
 		<string>FAB848591599DD4000566946</string>
 		<string>/Users/macbook/Development/cross/autowolfsf/macosx/Wolf4SDL.xcodeproj</string>

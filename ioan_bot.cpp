@@ -13,7 +13,7 @@
 boolean BotMan::active;
 // protected ones
 boolean BotMan::pathexists, BotMan::exitfound;
-byte BotMan::nothingleft, BotMan::wakeupfire;
+byte BotMan::nothingleft, BotMan::retreatwaitdelay, BotMan::efficiency;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
@@ -174,8 +174,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	{
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
-			// TODO: take care of overflows and violations here!
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || !actorat[tx-2][ty]) 
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || tx - 2 < 0 || !actorat[tx-2][ty]) 
 			{
 				exitx = tx - 1;
 				exity = ty;
@@ -185,7 +184,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		}
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || !actorat[tx+2][ty]) 
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || tx + 2 >= MAPSIZE || !actorat[tx+2][ty]) 
 			{
 				exitx = tx + 1;
 				exity = ty;
@@ -269,7 +268,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 		else
 		{
 			if(!Crossfire(searchset[imin].tilex, searchset[imin].tiley))
-				if(searchset[imin].prev >= 0 && !Crossfire(searchset[searchset[imin].prev].tilex, searchset[searchset[imin].prev].tiley))
+				if(searchset[imin].prev >= 0 && 
+				!Crossfire(searchset[searchset[imin].prev].tilex, searchset[searchset[imin].prev].tiley))
 				{
 					// found goal
 					searchset[imin].next = -1;
@@ -308,11 +308,15 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			if(check && !ISPOINTER(check) && !(door & 0x80)
 				|| 
 				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && IsProjectile(cx, cy, 1) && !ignoreproj ||
-				IsEnemyAround(cx, cy, 1) && mindnazis)
+				IsEnemyBlocking(cx, cy) && mindnazis)
 				continue;	// solid, can't be passed
 			else if (door & 0x80)
 			{
-				if(retreating)
+				objtype *checkindoor = actorat[cx][cy];
+				
+				if(retreating && checkindoor && (!ISPOINTER(checkindoor) || 
+												 (ISPOINTER(checkindoor) && checkindoor != player && 
+												  checkindoor->hitpoints > 0)))
 					continue;
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
@@ -341,7 +345,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			if(neighinvalid)
 				continue;
 			tentative_g_score = searchset[imin].g_score + 1;
-			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening)
+			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening 
+			|| Crossfire(cx, cy, NULL, true))
 				tentative_g_score += 4;
 			if(!neighfound)
 			{
@@ -566,13 +571,15 @@ objtype *BotMan::DamageThreat(objtype *targ)
 //
 // Returns true if there's a crossfire in that spot
 //
-objtype *BotMan::Crossfire(int tx, int ty)
+objtype *BotMan::Crossfire(int tx, int ty, objtype *objignore, boolean justexists)
 {
 	int j, k, dist;
 	objtype *ret;
 
 	for(ret = lastobj; ret; ret = ret->prev)
 	{
+		if(ret == objignore)
+			continue;
 		k = ret->tilex - tx;
 		j = ret->tiley - ty;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
@@ -582,7 +589,7 @@ objtype *BotMan::Crossfire(int tx, int ty)
 			Basic::Major(ty)))
 			continue;
 
-		if(Basic::IsDamaging(ret, dist))
+		if(Basic::IsDamaging(ret, dist) || justexists)
 			return ret;
 		
 	}
@@ -811,17 +818,20 @@ retok:
 }
 
 //
-// BotMan::IsEnemyAround
+// BotMan::IsEnemyBlocking
 //
 // True if a living enemy exists around
 //
-objtype *BotMan::IsEnemyAround(int tx, int ty, int dist)
+objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 {
 	objtype *ret = lastobj;
+	
+	int x = Basic::Major(tx), y = Basic::Major(ty);
+	
 
 	while(ret)
 	{
-		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
+		if(abs(ret->x - x) < 1<<TILESHIFT && abs(ret->y - y) < 1<<TILESHIFT)
 			if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && ret->flags & FL_ATTACKMODE)
 				return ret;
 		ret = ret->prev;
@@ -1063,6 +1073,16 @@ void BotMan::DoCommand()
 {
 	static short tangle, dangle;
 	static byte pressuse, retreat;
+	static boolean panic = false;
+	
+	// Set correct weapon
+	if(gamestate.bestweapon == wp_chaingun)
+	{
+		if(!panic && (gamestate.ammo < 30 && gamestate.weapon != wp_machinegun || efficiency <= 4))
+			buttonstate[bt_readymachinegun] = true;
+		else if(panic || gamestate.ammo >= 50 && gamestate.weapon != wp_chaingun && efficiency > 7)
+			buttonstate[bt_readychaingun] = true;
+	}
 
 	++pressuse;	// key press timer
 	static short eangle = -1;
@@ -1100,14 +1120,17 @@ void BotMan::DoCommand()
 		buttonstate[bt_strafe] = false;
 		// turn towards nearest target
 			
-		if(dangle > 15)
-			controlx = -RUNMOVE * tics;
-		else if(dangle > 0)
-			controlx = -BASEMOVE * tics;
-		else if(dangle < -15)
-			controlx = +RUNMOVE * tics;
-		else if(dangle < 0)
-			controlx = +BASEMOVE * tics;
+		if(player->state != &s_attack || gamestate.attackframe != 0)
+		{
+			if(dangle > 15)
+				controlx = -RUNMOVE * tics;
+			else if(dangle > 0)
+				controlx = -BASEMOVE * tics;
+			else if(dangle < -15)
+				controlx = +RUNMOVE * tics;
+			else if(dangle < 0)
+				controlx = +BASEMOVE * tics;
+		}
 	
 		check = EnemyOnTarget();
 		check2 = DamageThreat(check);
@@ -1121,10 +1144,16 @@ void BotMan::DoCommand()
 		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
 		{
 			threater = check2;
-			if(FindRandomPath(false, true, true) && (check2->obclass != mutantobj))
+			if(FindRandomPath(false, true, true)/* && (check2->obclass != mutantobj)*/)
+			{
+				panic = false;
 				MoveByRetreat();
+			}
 			else
+			{
+				panic = true;
 				DoRetreat(false, check2);
+			}
 			
 			if(proj)
 			{
@@ -1147,7 +1176,18 @@ void BotMan::DoCommand()
 			retreat = 0;
 
 		if(!check && dangle >= -15 && dangle <= 15 && !retreat)
-			controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+		{
+			// Do NOT charge if there's a risk ahead!
+			fixed plx = player->x, ply = player->y;
+			plx += 3*costable[player->angle]/2;
+			ply -= 3*sintable[player->angle]/2;
+			
+			plx >>= TILESHIFT;
+			ply >>= TILESHIFT;
+			
+			if(!Crossfire(plx, ply))
+				controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+		}
 
 		if(check)
 		{
@@ -1159,14 +1199,29 @@ void BotMan::DoCommand()
 
 			// TODO: don't always charge when using the knife!
 
-			if(!retreat && (!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+			if(!retreat && (!check2 || check2 == check) && edist > 6 || 
+			   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 			{
+				
+				
+				
 				// otherwise
 				// TODO: use DoCharge here, to maintain slaloming 
 				if(gamestate.weapon == wp_knife)
 					controly = -RUNMOVE * tics;
 				else
-					DoRetreat(true);
+				{
+					// Do NOT charge if there's a risk ahead!
+					fixed plx = player->x, ply = player->y;
+					plx += 3*costable[player->angle]/2;
+					ply -= 3*sintable[player->angle]/2;
+					
+					plx >>= TILESHIFT;
+					ply >>= TILESHIFT;
+					
+					if(!Crossfire(plx, ply, check))
+						DoRetreat(true);
+				}
 			}
 		}
 	}
@@ -1175,7 +1230,7 @@ void BotMan::DoCommand()
 		// retreat mode (to be removed?)
 		edist = -1;
 		retreat--;
-//		if(FindRandomPath(false, true, true))
+//		if(!threater || threater->obclass != mutantobj)
 			MoveByRetreat();
 //		else
 //			DoRetreat(false, check2);
@@ -1183,6 +1238,7 @@ void BotMan::DoCommand()
 	else
 	{
 disengage:
+		panic = false;
 			// no path got defined
 		threater = NULL;
 		if(!pathexists)
@@ -1299,8 +1355,6 @@ disengage:
 		else
 			buttonstate[bt_attack] = false;
 
-		wakeupfire = 0;	// near dead
-
 		// Move forward only if it's safe (replace this bloatness with a function)
 
 		if((Crossfire(player->tilex, player->tiley)
@@ -1310,7 +1364,9 @@ disengage:
 			&& Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
 			searchset[searchset[searchset[nowon].next].next].tiley))))
 		{
-			if(dangle > -45 && dangle < 45)
+			if(retreatwaitdelay)
+				retreatwaitdelay--;
+			else if(dangle > -45 && dangle < 45)
 			{
 				// So move
 				controly = -RUNMOVE * tics;
@@ -1320,50 +1376,55 @@ disengage:
 				else	
 					buttonstate[bt_use] = false;
 			}
-
-			// normally just turn (it's non-combat, no problem)
-			buttonstate[bt_strafe] = false;
-
-			if(dangle > 15)
-				controlx = -RUNMOVE * tics;
-			else if(dangle > 0)
-				controlx = -BASEMOVE * tics;
-			else if(dangle < -15)
-				controlx = +RUNMOVE * tics;
-			else if(dangle < 0)
-				controlx = +BASEMOVE * tics;
-			else
-			{
-				// straight line: can strafe now
-				buttonstate[bt_strafe] = true;
-				fixed centx, centy, cento, plro;
-				centx = (player->tilex << TILESHIFT);
-				centy = (player->tiley << TILESHIFT);
-			
-				switch(tangle)
-				{
-				case 0:
-					cento = -centy;
-					plro = -player->y + (1<<(TILESHIFT - 1));
-					break;
-				case 90:
-					cento = -centx;
-					plro = -player->x + (1<<(TILESHIFT - 1));
-					break;
-				case 180:
-					cento = centy;
-					plro = player->y - (1<<(TILESHIFT - 1));
-					break;
-				case 270:
-					cento = centx;
-					plro = player->x - (1<<(TILESHIFT - 1));
-					break;
-				}
-				if(plro - cento > 4096)
-					controlx = BASEMOVE * tics;
-				else if(plro - cento < -4096)
-					controlx = -BASEMOVE * tics;
-			}
 		}
+		else if (dangle > -45 && dangle < 45)
+		{
+			controly += BASEMOVE * tics;
+			retreatwaitdelay = 35;
+		}
+		// normally just turn (it's non-combat, no problem)
+		buttonstate[bt_strafe] = false;
+
+		if(dangle > 15)
+			controlx = -RUNMOVE * tics;
+		else if(dangle > 0)
+			controlx = -BASEMOVE * tics;
+		else if(dangle < -15)
+			controlx = +RUNMOVE * tics;
+		else if(dangle < 0)
+			controlx = +BASEMOVE * tics;
+		else
+		{
+			// straight line: can strafe now
+			buttonstate[bt_strafe] = true;
+			fixed centx, centy, cento, plro;
+			centx = (player->tilex << TILESHIFT);
+			centy = (player->tiley << TILESHIFT);
+		
+			switch(tangle)
+			{
+			case 0:
+				cento = -centy;
+				plro = -player->y + (1<<(TILESHIFT - 1));
+				break;
+			case 90:
+				cento = -centx;
+				plro = -player->x + (1<<(TILESHIFT - 1));
+				break;
+			case 180:
+				cento = centy;
+				plro = player->y - (1<<(TILESHIFT - 1));
+				break;
+			case 270:
+				cento = centx;
+				plro = player->x - (1<<(TILESHIFT - 1));
+				break;
+			}
+			if(plro - cento > 4096)
+				controlx = BASEMOVE * tics;
+			else if(plro - cento < -4096)
+				controlx = -BASEMOVE * tics;
+		}
+		//}
 	}
 }

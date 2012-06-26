@@ -2,6 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bot.h"	// IOAN
 
 /*
 =============================================================================
@@ -1296,7 +1297,12 @@ void    GunAttack (objtype *ob)
         }
 
         if (closest == oldclosest)
+		{
+			// IOAN 26.06.2012: efficiency
+			if(BotMan::efficiency > 0)
+				BotMan::efficiency--;
             return;                                         // no more targets, all missed
+		}
 
         //
         // trace a line from player to enemey
@@ -1319,9 +1325,17 @@ void    GunAttack (objtype *ob)
     else
     {
         if ( (US_RndT() / 12) < dist)           // missed
+		{
+			// IOAN 26.06.2012: efficiency
+			if(BotMan::efficiency > 0)
+				BotMan::efficiency--;
             return;
+		}
         damage = US_RndT() / 6;
     }
+	// IOAN 26.06.2012: efficiency
+	if(BotMan::efficiency < 10)
+		BotMan::efficiency++;
     DamageActor (closest,damage);
 }
 

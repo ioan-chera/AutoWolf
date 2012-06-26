@@ -1494,6 +1494,7 @@ static inline longword READLONGWORD(byte *&ptr)
 //
 
 // Spawn frames and data
+extern statetype   s_attack;
 extern statetype s_grdstand;
 extern statetype s_ofcstand;
 extern statetype s_mutstand;
