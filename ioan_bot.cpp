@@ -13,7 +13,7 @@
 boolean BotMan::active;
 // protected ones
 boolean BotMan::pathexists, BotMan::exitfound;
-byte BotMan::nothingleft, BotMan::retreatwaitdelay, BotMan::efficiency;
+byte BotMan::nothingleft, BotMan::retreatwaitdelay, BotMan::efficiency, BotMan::retreat;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
@@ -840,6 +840,25 @@ objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 }
 
 //
+// BotMan::IsEnemyNearby
+//
+// True if a living enemy exists around
+//
+objtype *BotMan::IsEnemyNearby(int tx, int ty)
+{
+	objtype *ret = lastobj;
+	
+	while(ret)
+	{
+		if(abs(ret->tilex - tx) <= 1 && abs(ret->tiley - ty) <= 1)
+			if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE)
+				return ret;
+		ret = ret->prev;
+	}
+	return NULL;
+}
+
+//
 // BotMan::MoveByRetreat
 //
 // Move without strafing. Only searchset[1] is relevant.
@@ -1072,7 +1091,7 @@ void BotMan::MoveByRetreat()
 void BotMan::DoCommand()
 {
 	static short tangle, dangle;
-	static byte pressuse, retreat;
+	static byte pressuse;
 	static boolean panic = false;
 	
 	// Set correct weapon
@@ -1175,7 +1194,7 @@ void BotMan::DoCommand()
 		else
 			retreat = 0;
 
-		if(!check && dangle >= -15 && dangle <= 15 && !retreat)
+		if(!check && dangle >= -15 && dangle <= 15 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
 		{
 			// Do NOT charge if there's a risk ahead!
 			fixed plx = player->x, ply = player->y;

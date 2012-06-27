@@ -79,6 +79,7 @@ protected:
 	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
 	// Test if there's an enemy
 	static objtype *IsEnemyBlocking(int tx, int ty);
+	static objtype *IsEnemyNearby(int tx, int ty);
 	// Move by path only by strafing
 	static void MoveByRetreat();
 public:
@@ -91,6 +92,7 @@ public:
 	// Unfinds the exit (on load and setup)
 	inline static void MapInit()
 	{
+		retreat = 0;
 		exitfound = pathexists = false;
 		threater = NULL;
 		nothingleft = retreatwaitdelay = 0;

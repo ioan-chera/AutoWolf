@@ -71,7 +71,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* Wolf4SDL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wolf4SDL.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* AutoSpear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoSpear.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = id_in.h; path = ../id_in.h; sourceTree = SOURCE_ROOT; };
 		D901F4C80FC0DBCB0040C290 /* f_spear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = f_spear.h; path = ../f_spear.h; sourceTree = SOURCE_ROOT; };
@@ -175,7 +175,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* Wolf4SDL.app */,
+				8D1107320486CEB800E47090 /* AutoSpear.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,7 +323,7 @@
 			name = Wolf4SDL;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Untitled;
-			productReference = 8D1107320486CEB800E47090 /* Wolf4SDL.app */;
+			productReference = 8D1107320486CEB800E47090 /* AutoSpear.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -438,7 +438,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				PRODUCT_NAME = Wolf4SDL;
+				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -460,7 +460,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = Wolf4SDL;
+				PRODUCT_NAME = AutoWolf;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 				WRAPPER_EXTENSION = app;
 			};
@@ -490,6 +490,7 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				PREBINDING = NO;
+				PRODUCT_NAME = AutoWolf;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 			};
 			name = Debug;
@@ -522,10 +523,67 @@
 				);
 				LLVM_LTO = YES;
 				PREBINDING = NO;
+				PRODUCT_NAME = AutoWolf;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
+		};
+		FA01B27E159BAE9500AB5295 /* Release sod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks",
+					/Library/Frameworks,
+					"$(FRAMEWORK_SEARCH_PATHS)",
+				);
+				GCC_DYNAMIC_NO_PIC = YES;
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
+					/Library/Frameworks/SDL.framework/Headers,
+					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
+					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
+					"$(HEADER_SEARCH_PATHS)",
+					/Library/Frameworks/SDL.framework/Versions/A/Headers,
+					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
+				);
+				LLVM_LTO = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = AutoSpear;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				VALID_ARCHS = "i386 x86_64";
+			};
+			name = "Release sod";
+		};
+		FA01B27F159BAE9500AB5295 /* Release sod */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CFLAGS = "-fast";
+				OTHER_CPLUSPLUSFLAGS = "-fast";
+				PRODUCT_NAME = AutoSpear;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Release sod";
 		};
 /* End XCBuildConfiguration section */
 
@@ -535,6 +593,7 @@
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
 				C01FCF4C08A954540054247B /* Release */,
+				FA01B27F159BAE9500AB5295 /* Release sod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -544,6 +603,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				FA01B27E159BAE9500AB5295 /* Release sod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
