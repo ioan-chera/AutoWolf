@@ -135,6 +135,31 @@ public:
 
 	// Write a random name
 	static void MarkovWrite(char *c, int nmax);
+	
+	// Centre the angle
+	static int CentreAngle(int whatangle, int centangle)
+	{
+		int dangle = whatangle - centangle;
+		if(dangle > 180)
+			dangle -= 360;
+		else if(dangle <= -180)
+			dangle += 360;
+		return dangle;
+	}
+	
+	// get angle from dir
+	static int DirAngle(int mx, int my, int nx, int ny)
+	{
+		if(nx > mx)
+			return 0;
+		if(ny > my)
+			return 270;
+		if(nx < mx)
+			return 180;
+		if(ny < my)
+			return 90;
+		return 0;
+	}
 };
 
 #endif

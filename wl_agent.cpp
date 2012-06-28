@@ -3,6 +3,7 @@
 #include "wl_def.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// IOAN
+#include "HistoryRatio.h"
 
 /*
 =============================================================================
@@ -1299,8 +1300,7 @@ void    GunAttack (objtype *ob)
         if (closest == oldclosest)
 		{
 			// IOAN 26.06.2012: efficiency
-			if(BotMan::efficiency > 0)
-				BotMan::efficiency--;
+			BotMan::shootRatio.addFail();
             return;                                         // no more targets, all missed
 		}
 
@@ -1327,15 +1327,13 @@ void    GunAttack (objtype *ob)
         if ( (US_RndT() / 12) < dist)           // missed
 		{
 			// IOAN 26.06.2012: efficiency
-			if(BotMan::efficiency > 0)
-				BotMan::efficiency--;
+			BotMan::shootRatio.addFail();
             return;
 		}
         damage = US_RndT() / 6;
     }
 	// IOAN 26.06.2012: efficiency
-	if(BotMan::efficiency < 10)
-		BotMan::efficiency++;
+	BotMan::shootRatio.addSuccess();
     DamageActor (closest,damage);
 }
 

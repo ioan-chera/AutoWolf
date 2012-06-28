@@ -8,16 +8,37 @@
 
 #include "ioan_bot.h"
 #include "ioan_bas.h"
+#include "HistoryRatio.h"
 
 // static class member definition
 boolean BotMan::active;
 // protected ones
-boolean BotMan::pathexists, BotMan::exitfound;
-byte BotMan::nothingleft, BotMan::retreatwaitdelay, BotMan::efficiency, BotMan::retreat;
+boolean BotMan::pathexists, BotMan::exitfound, BotMan::panic;
+byte BotMan::retreatwaitdelay, BotMan::retreat, BotMan::pressuse;
+SearchStage BotMan::nothingleft;
 int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
 BotMan::SData *BotMan::searchset;
 int BotMan::searchsize, BotMan::searchlen;
 objtype *BotMan::threater;
+
+HistoryRatio BotMan::shootRatio;
+
+//
+// BotMan::MapInit
+//
+// Initialize for each map load.
+//
+void BotMan::MapInit()
+{
+	shootRatio.initLength(10);
+	retreat = 0;
+	exitfound = pathexists = false;
+	threater = NULL;
+	retreatwaitdelay = 0;
+	nothingleft = SSGeneral;
+	EmptySet();
+	panic = false;
+}
 
 //
 // BotMan::ApproxDist
@@ -110,7 +131,9 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 					return true;
 				break;
 			case    bo_spear:
-				return true;
+				if(nothingleft >= SSSecretLift)
+					return true;
+				break;
 #endif
 			case    bo_gibs:
 				if (gamestate.health <= 10)
@@ -124,53 +147,65 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	if(gamestate.health > 75 && gamestate.ammo > 50 &&
 		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
 	{
-		nothingleft = 0;	// reset counter if enemies here
+		nothingleft = SSGeneral;	// reset counter if enemies here
 		return true;
 	}
 
 	// secret door
 	if(!knifeinsight)
 	{
-		if(ty + 3 < MAPSIZE && *(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
+		if(*(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
-			if(!actorat[tx][ty+2] && !actorat[tx][ty+3])
+			if(ty + 2 < MAPSIZE && !actorat[tx][ty + 2])
 			{
-				exity = ty + 1;
-				exitx = tx;
-				return true;
+				if(nothingleft >= SSOnePushWalls || ty + 3 < MAPSIZE && !actorat[tx][ty + 3])
+				{
+					exity = ty + 1;
+					exitx = tx;
+					return true;
+				}
 			}
 		}
-		if(ty - 3 >= 0 && *(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
+		if(*(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
-			if(!actorat[tx][ty-2] && !actorat[tx][ty-3])
+			if(ty - 2 >= 0 && !actorat[tx][ty - 2])
 			{
-				exity = ty - 1;
-				exitx = tx;
-				return true;
+				if(nothingleft >= SSOnePushWalls || ty - 3 >= 0 && !actorat[tx][ty - 3])
+				{
+					exity = ty - 1;
+					exitx = tx;
+					return true;
+				}
 			}
 		}
-		if(tx + 3 < MAPSIZE && *(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
+		if(*(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
 		{
-			if(!actorat[tx+2][ty] && !actorat[tx+3][ty])
+			if(tx + 2 < MAPSIZE && !actorat[tx + 2][ty])
 			{
-				exity = ty;
-				exitx = tx + 1;
-				return true;
-			}
+				if(nothingleft >= SSOnePushWalls || tx + 3 < MAPSIZE && !actorat[tx + 3][ty])
+				{
+					exity = ty;
+					exitx = tx + 1;
+					return true;
+				}
+			}	
 		}
-		if(tx - 3 >= 0 && *(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
+		if(*(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
 		{
-			if(!actorat[tx-2][ty] && !actorat[tx-3][ty])
+			if(tx - 2 >= 0 && !actorat[tx - 2][ty])
 			{
-				exity = ty;
-				exitx = tx - 1;
-				return true;
+				if(nothingleft >= SSOnePushWalls || tx - 3 >= 0 && !actorat[tx - 3][ty])
+				{
+					exity = ty;
+					exitx = tx - 1;
+					return true;
+				}
 			}
 		}
 	}
 
 	// exit switch
-	if(nothingleft >= 1)
+	if(nothingleft >= SSSecretLift)
 	{
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
@@ -178,7 +213,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 			{
 				exitx = tx - 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= SSNormalLift)
 					return true;
 			}
 		}
@@ -188,13 +223,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 			{
 				exitx = tx + 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= 2)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= SSNormalLift)
 					return true;
 			}
 		}
 
 		// exit pad
-		if(nothingleft >= 2 && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+		if(nothingleft >= SSNormalLift && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
 			return true;
 	}
 	return false;
@@ -370,7 +405,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 	}
 
 	if(!pwallstate)
-		nothingleft++;
+		nothingleft = (SearchStage)((int)nothingleft + 1);
 
 	return false;
 }
@@ -859,11 +894,11 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty)
 }
 
 //
-// BotMan::MoveByRetreat
+// BotMan::MoveByStrafe
 //
-// Move without strafing. Only searchset[1] is relevant.
+// Move by strafing. Only searchset[1] is relevant.
 //
-void BotMan::MoveByRetreat()
+void BotMan::MoveByStrafe()
 {
 	
 	static short tangle, dangle, movedir, pressuse;
@@ -1084,344 +1119,302 @@ void BotMan::MoveByRetreat()
 }
 
 //
-// BotMan::FindPath
+// BotMan::ChooseWeapon
 //
-// Finds the path to walk through
-//
-void BotMan::DoCommand()
+void BotMan::ChooseWeapon()
 {
-	static short tangle, dangle;
-	static byte pressuse;
-	static boolean panic = false;
-	
-	// Set correct weapon
 	if(gamestate.bestweapon == wp_chaingun)
 	{
-		if(!panic && (gamestate.ammo < 30 && gamestate.weapon != wp_machinegun || efficiency <= 4))
+		if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
 			buttonstate[bt_readymachinegun] = true;
-		else if(panic || gamestate.ammo >= 50 && gamestate.weapon != wp_chaingun && efficiency > 7)
+		else if(gamestate.weapon != wp_chaingun && (panic || gamestate.ammo >= 50 && shootRatio.getValue() > 7))
 			buttonstate[bt_readychaingun] = true;
 	}
+}
 
-	++pressuse;	// key press timer
-	static short eangle = -1;
-	static int edist = -1;
-
-	objtype *check0, *check, *check2;
+//
+// BotMan::DoCombatAI
+//
+void BotMan::DoCombatAI(int eangle, int edist)
+{
+	nothingleft = SSGeneral;	// reset elevator counter if distracted
 	
-	// A dead threater is no threat
-	if(threater && threater->hitpoints <= 0)
-		threater = NULL;
+	if(gamestate.weapon == wp_knife)
+		if(FindRandomPath(false, true, false, true))
+		{
+			MoveByStrafe();
+			return;
+		}
+	
+	pathexists = false;
+	// Enemy visible mode
+	// centred angle here
+	int dangle = Basic::CentreAngle(eangle, player->angle);
+	
+	buttonstate[bt_strafe] = false;
+	// turn towards nearest target
 
-	check0 = EnemyVisible(&eangle, &edist);
-	if(check0)
+	if(dangle > 15)
+		controlx = -RUNMOVE * tics;
+	else if(dangle > 0)
+		controlx = -BASEMOVE * tics;
+	else if(dangle < -15)
+		controlx = +RUNMOVE * tics;
+	else if(dangle < 0)
+		controlx = +BASEMOVE * tics;
+	
+	objtype *check = EnemyOnTarget();
+	objtype *check2 = DamageThreat(check);
+	short int pangle, epangle; 
+	int proj = 0;
+	
+	if(!check2)
 	{
-		nothingleft = 0;	// reset elevator counter if distracted
-
-		if(gamestate.weapon == wp_knife)
-			if(FindRandomPath(false, true, false, true))
-			{
-//				pathexists = false;
-				MoveByRetreat();
-				return;
-				//goto disengage;
-			}
-
-		pathexists = false;
-		// Enemy visible mode
-		// centred angle here
-		dangle = eangle - player->angle;
-		if(dangle > 180)
-			dangle -= 360;
-		else if(dangle <= -180)
-			dangle += 360;
-
-		buttonstate[bt_strafe] = false;
-		// turn towards nearest target
-			
-		if(player->state != &s_attack || gamestate.attackframe != 0)
-		{
-			if(dangle > 15)
-				controlx = -RUNMOVE * tics;
-			else if(dangle > 0)
-				controlx = -BASEMOVE * tics;
-			else if(dangle < -15)
-				controlx = +RUNMOVE * tics;
-			else if(dangle < 0)
-				controlx = +BASEMOVE * tics;
-		}
+		check2 = IsProjectile(player->tilex, player->tiley, 2, &pangle, &proj);
+		proj = 1;
+	}
 	
-		check = EnemyOnTarget();
-		check2 = DamageThreat(check);
-		short pangle, epangle; int proj = 0;
-		if(!check2)
+	if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
+	{
+		threater = check2;
+		if(FindRandomPath(false, true, true))
 		{
-			check2 = IsProjectile(player->tilex, player->tiley, 2, &pangle, &proj);
-			proj = 1;
-		}
-
-		if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
-		{
-			threater = check2;
-			if(FindRandomPath(false, true, true)/* && (check2->obclass != mutantobj)*/)
-			{
-				panic = false;
-				MoveByRetreat();
-			}
-			else
-			{
-				panic = true;
-				DoRetreat(false, check2);
-			}
-			
-			if(proj)
-			{
-				epangle = pangle - player->angle;
-				if(epangle > 180)
-					epangle -= 360;
-				else if(epangle <= -180)
-					epangle += 360;
-				buttonstate[bt_strafe] = true;
-				if(epangle >= 0)	// strafe right
-					controlx = RUNMOVE * tics;
-				else
-					controlx = -RUNMOVE * tics;
-			}
-			retreat = 10;
-			if(check2->obclass == mutantobj)
-				retreat = 5;
+			panic = false;
+			MoveByStrafe();
 		}
 		else
-			retreat = 0;
-
-		if(!check && dangle >= -15 && dangle <= 15 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
 		{
-			// Do NOT charge if there's a risk ahead!
-			fixed plx = player->x, ply = player->y;
-			plx += 3*costable[player->angle]/2;
-			ply -= 3*sintable[player->angle]/2;
-			
-			plx >>= TILESHIFT;
-			ply >>= TILESHIFT;
-			
-			if(!Crossfire(plx, ply))
-				controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+			panic = true;
+			DoRetreat(false, check2);
 		}
-
-		if(check)
+		
+		// TODO: make complete projectile avoider
+		if(proj)
 		{
-			// shoot according to how the weapon works
-			if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
-				buttonstate[bt_attack] = true;
+			epangle = pangle - player->angle;
+			if(epangle > 180)
+				epangle -= 360;
+			else if(epangle <= -180)
+				epangle += 360;
+			buttonstate[bt_strafe] = true;
+			if(epangle >= 0)	// strafe right
+				controlx = RUNMOVE * tics;
 			else
-				buttonstate[bt_attack] = false;
-
-			// TODO: don't always charge when using the knife!
-
-			if(!retreat && (!check2 || check2 == check) && edist > 6 || 
-			   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+				controlx = -RUNMOVE * tics;
+		}
+		retreat = 10;
+		if(check2->obclass == mutantobj)
+			retreat = 5;
+	}
+	else
+		retreat = 0;
+	
+	if(!check && dangle >= -15 && dangle <= 15 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
+	{
+		// Do NOT charge if there's a risk ahead!
+		fixed plx = player->x, ply = player->y;
+		plx += 3*costable[player->angle]/2;
+		ply -= 3*sintable[player->angle]/2;
+		
+		plx >>= TILESHIFT;
+		ply >>= TILESHIFT;
+		
+		if(!Crossfire(plx, ply))
+			controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+	}
+	
+	if(check)
+	{
+		// shoot according to how the weapon works
+		if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
+			buttonstate[bt_attack] = true;
+		else
+			buttonstate[bt_attack] = false;
+		
+		if(!retreat && (!check2 || check2 == check) && edist > 6 || 
+		   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+		{
+			
+			// otherwise
+			if(gamestate.weapon == wp_knife)
+				controly = -RUNMOVE * tics;
+			else
 			{
+				// Do NOT charge if there's a risk ahead!
+				fixed plx = player->x, ply = player->y;
+				plx += 3*costable[player->angle]/2;
+				ply -= 3*sintable[player->angle]/2;
 				
+				plx >>= TILESHIFT;
+				ply >>= TILESHIFT;
 				
-				
-				// otherwise
-				// TODO: use DoCharge here, to maintain slaloming 
-				if(gamestate.weapon == wp_knife)
-					controly = -RUNMOVE * tics;
-				else
-				{
-					// Do NOT charge if there's a risk ahead!
-					fixed plx = player->x, ply = player->y;
-					plx += 3*costable[player->angle]/2;
-					ply -= 3*sintable[player->angle]/2;
-					
-					plx >>= TILESHIFT;
-					ply >>= TILESHIFT;
-					
-					if(!Crossfire(plx, ply, check))
-						DoRetreat(true);
-				}
+				if(!Crossfire(plx, ply, check))
+					DoRetreat(true);
 			}
 		}
 	}
-	else if(retreat)	// standard retreat, still moving
+}
+
+//
+// BotMan::DoNonCombatAI
+//
+void BotMan::DoNonCombatAI()
+{
+	
+	// TODO: don't go through open locked doors if there's no escape the other side!
+	panic = false;
+	// no path got defined
+	threater = NULL;
+	if(!pathexists)
 	{
-		// retreat mode (to be removed?)
-		edist = -1;
-		retreat--;
-//		if(!threater || threater->obclass != mutantobj)
-			MoveByRetreat();
-//		else
-//			DoRetreat(false, check2);
+		if(!FindRandomPath(false, gamestate.weapon == wp_knife))
+		{
+			if(!FindRandomPath(true, gamestate.weapon == wp_knife))
+				return;
+		}
+	}
+	
+	static boolean waitpwall;
+	if(pwallstate)
+		waitpwall = true;
+	
+	// found path to exit
+	int searchpos = 0;
+	int nowon = -1;
+	
+	// look if it's there
+	for(; searchpos != -1; searchpos = searchset[searchpos].next)
+	{
+		if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
+		{
+			nowon = searchpos;
+		}
+		if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley)
+		   && (abs(searchset[searchpos].tilex - player->tilex) > 1 || 
+			   abs(searchset[searchpos].tiley - player->tiley) > 1))
+		{
+			nothingleft = SSGeneral;
+			pathexists = false;
+			if(!FindRandomPath())
+				FindRandomPath(true);
+			return;
+		}
+	}
+	
+	if(nowon < 0 || !pwallstate && waitpwall)
+	{
+		// Reset if out of the path, or if a pushwall stopped moving
+		nothingleft = SSGeneral;	// new areas revealed, so look
+		waitpwall = false;
+		pathexists = false;
+		return;
+	}
+	
+	int nx, ny, mx, my;
+	boolean tryuse = false;	// whether to try using
+	
+	mx = player->tilex;
+	my = player->tiley;
+	
+	// elevator
+	byte tile;
+	if(searchset[nowon].next == -1)
+	{
+		// end of path; start a new search
+		pathexists = false;
+		if(exitx >= 0 && exity >= 0)
+		{
+			// elevator switch: press it now
+			nx = exitx;
+			ny = exity;
+			tryuse = true;
+		}
+		else if(searchset[nowon].prev >= 0)
+		{
+			// just go forward
+			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
+			ny = 2*my - searchset[searchset[nowon].prev].tiley;
+		}
+		else
+		{
+			// if undefined, just go east
+			nx = mx + 1;
+			ny = my;
+		}
 	}
 	else
 	{
-disengage:
-		panic = false;
-			// no path got defined
-		threater = NULL;
-		if(!pathexists)
+		// in the path
+		nx = searchset[searchset[nowon].next].tilex;
+		ny = searchset[searchset[nowon].next].tiley;
+		tile = tilemap[nx][ny];
+		// whether to press to open a door
+		tryuse = (tile & 0x80) == 0x80 
+		&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+	}
+	
+	// set up the target angle
+	int tangle = Basic::DirAngle(mx,my,nx,ny);
+	int dangle = Basic::CentreAngle(tangle, player->angle);
+	
+	// Non-combat mode
+	if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0)
+	{
+		// shoot something to alert nazis
+		// TODO: more stealth gameplay considerations?
+		buttonstate[bt_attack] = true;
+	}
+	else
+		buttonstate[bt_attack] = false;
+	
+	// Move forward only if it's safe (replace this bloatness with a function)
+	
+	if((Crossfire(player->tilex, player->tiley)
+		|| !(searchset[nowon].next >= 0 
+			 && Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))
+		&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
+			 && Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
+						  searchset[searchset[searchset[nowon].next].next].tiley))))
+	{
+		if(retreatwaitdelay)
+			retreatwaitdelay--;
+		else if(dangle > -45 && dangle < 45)
 		{
-			if(!FindRandomPath(false, gamestate.weapon == wp_knife))
-			{
-				if(!FindRandomPath(true, gamestate.weapon == wp_knife))
-					return;
-			}
+			// So move
+			controly = -RUNMOVE * tics;
+			// Press if there's an obstacle ahead
+			if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+				buttonstate[bt_use] = true;
+			else	
+				buttonstate[bt_use] = false;
 		}
-
-		static boolean waitpwall;
-		if(pwallstate)
-			waitpwall = true;
-
-		// found path to exit
-		int searchpos = 0;
-		int nowon = -1;
-
-		// look if it's there
-		for(; searchpos != -1; searchpos = searchset[searchpos].next)
-		{
-			if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
-			{
-				nowon = searchpos;
-			}
-			if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley)
-				&& (abs(searchset[searchpos].tilex - player->tilex) > 1 || 
-				abs(searchset[searchpos].tiley - player->tiley) > 1))
-			{
-				nothingleft = 0;
-				pathexists = false;
-				if(!FindRandomPath())
-					FindRandomPath(true);
-				return;
-			}
-		}
-
-		if(nowon < 0 || !pwallstate && waitpwall)
-		{
-			// Reset if out of the path, or if a pushwall stopped moving
-			waitpwall = false;
-			pathexists = false;
-			return;
-		}
-
-		int nx, ny, mx, my;
-		boolean tryuse = false;	// whether to try using
-
-		mx = player->tilex;
-		my = player->tiley;
+	}
+	else if (dangle > -45 && dangle < 45)
+	{
+		controly += BASEMOVE * tics;
+		retreatwaitdelay = 35;
+	}
+	// normally just turn (it's non-combat, no problem)
+	buttonstate[bt_strafe] = false;
+	
+	if(dangle > 15)
+		controlx = -RUNMOVE * tics;
+	else if(dangle > 0)
+		controlx = -BASEMOVE * tics;
+	else if(dangle < -15)
+		controlx = +RUNMOVE * tics;
+	else if(dangle < 0)
+		controlx = +BASEMOVE * tics;
+	else
+	{
+		// straight line: can strafe now
+		buttonstate[bt_strafe] = true;
+		fixed centx, centy, cento, plro;
+		centx = (player->tilex << TILESHIFT);
+		centy = (player->tiley << TILESHIFT);
 		
-		// elevator
-		byte tile;
-		if(searchset[nowon].next == -1)
+		switch(tangle)
 		{
-			// end of path; start a new search
-			pathexists = false;
-			if(exitx >= 0 && exity >= 0)
-			{
-				// elevator switch: press it now
-				nx = exitx;
-				ny = exity;
-				tryuse = true;
-			}
-			else if(searchset[nowon].prev >= 0)
-			{
-				// just go forward
-				nx = 2*mx - searchset[searchset[nowon].prev].tilex;
-				ny = 2*my - searchset[searchset[nowon].prev].tiley;
-			}
-			else
-			{
-				// if undefined, just go east
-				nx = mx + 1;
-				ny = my;
-			}
-		}
-		else
-		{
-			// in the path
-			nx = searchset[searchset[nowon].next].tilex;
-			ny = searchset[searchset[nowon].next].tiley;
-			tile = tilemap[nx][ny];
-			// whether to press to open a door
-			tryuse = (tile & 0x80) == 0x80 
-				&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
-		}
-
-		// set up the target angle
-		if(nx > mx)
-			tangle = 0;
-		else if(ny > my)
-			tangle = 270;
-		else if(nx < mx)
-			tangle = 180;
-		else if(ny < my)
-			tangle = 90;
-
-		dangle = tangle - player->angle;
-		if(dangle > 180)	// centred angle
-			dangle -= 360;
-		else if(dangle <= -180)
-			dangle += 360;
-
-		edist = -1;
-		// Non-combat mode
-		if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0)
-		{
-			// shoot something to alert nazis
-			// TODO: more stealth gameplay considerations?
-			buttonstate[bt_attack] = true;
-		}
-		else
-			buttonstate[bt_attack] = false;
-
-		// Move forward only if it's safe (replace this bloatness with a function)
-
-		if((Crossfire(player->tilex, player->tiley)
-			|| !(searchset[nowon].next >= 0 
-			&& Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))
-			&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
-			&& Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
-			searchset[searchset[searchset[nowon].next].next].tiley))))
-		{
-			if(retreatwaitdelay)
-				retreatwaitdelay--;
-			else if(dangle > -45 && dangle < 45)
-			{
-				// So move
-				controly = -RUNMOVE * tics;
-				// Press if there's an obstacle ahead
-				if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
-					buttonstate[bt_use] = true;
-				else	
-					buttonstate[bt_use] = false;
-			}
-		}
-		else if (dangle > -45 && dangle < 45)
-		{
-			controly += BASEMOVE * tics;
-			retreatwaitdelay = 35;
-		}
-		// normally just turn (it's non-combat, no problem)
-		buttonstate[bt_strafe] = false;
-
-		if(dangle > 15)
-			controlx = -RUNMOVE * tics;
-		else if(dangle > 0)
-			controlx = -BASEMOVE * tics;
-		else if(dangle < -15)
-			controlx = +RUNMOVE * tics;
-		else if(dangle < 0)
-			controlx = +BASEMOVE * tics;
-		else
-		{
-			// straight line: can strafe now
-			buttonstate[bt_strafe] = true;
-			fixed centx, centy, cento, plro;
-			centx = (player->tilex << TILESHIFT);
-			centy = (player->tiley << TILESHIFT);
-		
-			switch(tangle)
-			{
 			case 0:
 				cento = -centy;
 				plro = -player->y + (1<<(TILESHIFT - 1));
@@ -1438,12 +1431,47 @@ disengage:
 				cento = centx;
 				plro = player->x - (1<<(TILESHIFT - 1));
 				break;
-			}
-			if(plro - cento > 4096)
-				controlx = BASEMOVE * tics;
-			else if(plro - cento < -4096)
-				controlx = -BASEMOVE * tics;
 		}
-		//}
+		if(plro - cento > 4096)
+			controlx = BASEMOVE * tics;
+		else if(plro - cento < -4096)
+			controlx = -BASEMOVE * tics;
+	}
+}
+
+//
+// BotMan::FindPath
+//
+// Finds the path to walk through
+//
+void BotMan::DoCommand()
+{
+	++pressuse;	// key press timer
+	static short eangle = -1;
+	static int edist = -1;
+	
+	// Set correct weapon
+	ChooseWeapon();
+
+	objtype *check0;
+	
+	// A dead threater is no threat
+	if(threater && threater->hitpoints <= 0)
+		threater = NULL;
+
+	check0 = EnemyVisible(&eangle, &edist);
+	if(check0)
+	{
+		DoCombatAI(eangle, edist);
+	}
+	else if(retreat)	// standard retreat, still moving
+	{
+		edist = -1;
+		retreat--;
+		MoveByStrafe();
+	}
+	else
+	{
+		DoNonCombatAI();
 	}
 }

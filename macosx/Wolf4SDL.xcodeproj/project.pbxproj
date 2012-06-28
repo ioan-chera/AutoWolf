@@ -44,6 +44,8 @@
 		D94B84D50FC0F2F800EADB6F /* wolf4sdl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D94B84D40FC0F2F800EADB6F /* wolf4sdl.icns */; };
 		FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */; };
 		FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */; };
+		FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */; };
+		FA762DBC159D08A500610D61 /* ObjectSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762DBB159D08A500610D61 /* ObjectSet.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
 /* End PBXBuildFile section */
 
@@ -71,7 +73,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* AutoSpear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoSpear.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* AutoWolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = id_in.h; path = ../id_in.h; sourceTree = SOURCE_ROOT; };
 		D901F4C80FC0DBCB0040C290 /* f_spear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = f_spear.h; path = ../f_spear.h; sourceTree = SOURCE_ROOT; };
@@ -126,6 +128,10 @@
 		FA21BE12157412A800C23B4A /* ioan_bas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bas.h; path = ../ioan_bas.h; sourceTree = SOURCE_ROOT; };
 		FA21BE13157412A800C23B4A /* ioan_bot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_bot.cpp; path = ../ioan_bot.cpp; sourceTree = SOURCE_ROOT; };
 		FA21BE14157412A800C23B4A /* ioan_bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bot.h; path = ../ioan_bot.h; sourceTree = SOURCE_ROOT; };
+		FA762D62159CD1FF00610D61 /* HistoryRatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryRatio.h; path = ../HistoryRatio.h; sourceTree = SOURCE_ROOT; };
+		FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HistoryRatio.cpp; path = ../HistoryRatio.cpp; sourceTree = SOURCE_ROOT; };
+		FA762DBA159D08A500610D61 /* ObjectSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectSet.h; path = ../ObjectSet.h; sourceTree = "<group>"; };
+		FA762DBB159D08A500610D61 /* ObjectSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectSet.cpp; path = ../ObjectSet.cpp; sourceTree = "<group>"; };
 		FAB104D11591AA9100393DE3 /* dbopl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dbopl.cpp; path = ../dosbox/dbopl.cpp; sourceTree = SOURCE_ROOT; };
 		FAB104D21591AA9100393DE3 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../dosbox/dbopl.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -175,7 +181,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* AutoSpear.app */,
+				8D1107320486CEB800E47090 /* AutoWolf.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -239,6 +245,10 @@
 				FA21BE12157412A800C23B4A /* ioan_bas.h */,
 				FA21BE13157412A800C23B4A /* ioan_bot.cpp */,
 				FA21BE14157412A800C23B4A /* ioan_bot.h */,
+				FA762D62159CD1FF00610D61 /* HistoryRatio.h */,
+				FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */,
+				FA762DBA159D08A500610D61 /* ObjectSet.h */,
+				FA762DBB159D08A500610D61 /* ObjectSet.cpp */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -323,7 +333,7 @@
 			name = Wolf4SDL;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Untitled;
-			productReference = 8D1107320486CEB800E47090 /* AutoSpear.app */;
+			productReference = 8D1107320486CEB800E47090 /* AutoWolf.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -398,6 +408,8 @@
 				FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */,
 				FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */,
 				FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */,
+				FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */,
+				FA762DBC159D08A500610D61 /* ObjectSet.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

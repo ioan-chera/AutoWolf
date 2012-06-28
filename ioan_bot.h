@@ -10,6 +10,20 @@
 #define __IOAN_BOT_H__
 
 #include "wl_def.h"
+class HistoryRatio;
+
+//
+// SearchStage
+//
+// Separate search objects into stages. Must be in order here
+//
+enum SearchStage
+{
+	SSGeneral,
+	SSOnePushWalls,
+	SSSecretLift,
+	SSNormalLift
+};
 
 //
 // BotMan
@@ -32,8 +46,9 @@ protected:
 	static int searchsize, searchlen;
 
 	// protected variables
-	static boolean pathexists, exitfound;
-	static byte nothingleft, retreatwaitdelay, retreat;
+	static boolean pathexists, exitfound, panic;
+	static byte retreatwaitdelay, retreat, pressuse;
+	static SearchStage nothingleft;
 	static int exitx, exity, exfrontx;
 	static objtype *threater;
 
@@ -81,24 +96,22 @@ protected:
 	static objtype *IsEnemyBlocking(int tx, int ty);
 	static objtype *IsEnemyNearby(int tx, int ty);
 	// Move by path only by strafing
-	static void MoveByRetreat();
+	static void MoveByStrafe();
+	// Choose weapon
+	static void ChooseWeapon();
+	// Do combat AI
+	static void DoCombatAI(int eangle, int edist);
+	// Do noncombat AI
+	static void DoNonCombatAI();
 public:
 	static boolean active;	// true if bots are activated
-	static byte efficiency;
+	static HistoryRatio shootRatio;
 
 	// Finds the path to walk through
 	static void DoCommand();
 
 	// Unfinds the exit (on load and setup)
-	inline static void MapInit()
-	{
-		retreat = 0;
-		exitfound = pathexists = false;
-		threater = NULL;
-		nothingleft = retreatwaitdelay = 0;
-		efficiency = 10;
-		EmptySet();
-	}
+	static void MapInit();
 };
 
 #endif
