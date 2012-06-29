@@ -11,12 +11,7 @@
 
 ObjectSet::~ObjectSet()
 {
-	SetComponent *next;
-	for(current = base; current; current = next)
-	{
-		next = current->next;
-		delete current;
-	}
+	removeAllObjects();
 }
 
 void ObjectSet::addObject(void *what)
@@ -44,4 +39,15 @@ void ObjectSet::removeObject(void *what)
 		}
 		oldcur = current;
 	}
+}
+
+void ObjectSet::removeAllObjects()
+{
+	SetComponent *next;
+	for(current = base; current; current = next)
+	{
+		next = current->next;
+		delete current;
+	}
+	base = current = 0;
 }

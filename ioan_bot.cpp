@@ -9,6 +9,7 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "HistoryRatio.h"
+#include "ObjectSet.h"
 
 // static class member definition
 boolean BotMan::active;
@@ -302,9 +303,10 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 		}
 		else
 		{
-			if(!Crossfire(searchset[imin].tilex, searchset[imin].tiley))
+			if(!Crossfire(Basic::Major(searchset[imin].tilex), Basic::Major(searchset[imin].tiley)))
 				if(searchset[imin].prev >= 0 && 
-				!Crossfire(searchset[searchset[imin].prev].tilex, searchset[searchset[imin].prev].tiley))
+				   !Crossfire(Basic::Major(searchset[searchset[imin].prev].tilex), 
+							  Basic::Major(searchset[searchset[imin].prev].tiley)))
 				{
 					// found goal
 					searchset[imin].next = -1;
@@ -381,7 +383,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 				continue;
 			tentative_g_score = searchset[imin].g_score + 1;
 			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening 
-			|| Crossfire(cx, cy, NULL, true))
+			   || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
 				tentative_g_score += 4;
 			if(!neighfound)
 			{
@@ -430,10 +432,9 @@ objtype *BotMan::EnemyOnTarget()
 	{
 		oldclosest = closest;
 
-		for (check=player->next ; check ; check=check->next)
+		for(check = (objtype *)Basic::livingNazis.firstObject(); check; check = (objtype *)Basic::livingNazis.nextObject())
 		{
-			if ((check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
-				&& abs(check->viewx-centerx) < shootdelta)
+			if ((check->flags & FL_VISABLE) && abs(check->viewx-centerx) < shootdelta)
 			{
 				if (check->transx < viewdist)
 				{
@@ -472,7 +473,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 
 	distmin = INT_MAX;
 
-	for(ret = lastobj; ret; ret = ret->prev)
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		k = abs(ret->tilex - tx);
 		j = abs(ret->tiley - ty);
@@ -480,7 +481,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 
 		if(k > 15 || j > 15)
 			continue;
-		if(!Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret))
+		if(!CheckLine(ret))
 			continue;
 
 		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && !(oldret->flags & FL_SHOOTABLE))
@@ -550,10 +551,9 @@ objtype *BotMan::EnemyEager()
 {
 	objtype *ret;
 
-	for(ret = lastobj; ret; ret = ret->prev)
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && areabyplayer[ret->areanumber] &&
-			!(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+		if(areabyplayer[ret->areanumber] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			return ret;
 	}
 	return NULL;
@@ -566,39 +566,7 @@ objtype *BotMan::EnemyEager()
 //
 objtype *BotMan::DamageThreat(objtype *targ)
 {
-	int tx = player->tilex, ty = player->tiley;
-	int j, k, dist;
-	objtype *ret;
-
-	// Threat types
-	// Guard: dist 2, shooting
-	// Officer: dist 4, shooting
-	// SS: dist 7, shooting
-	// Mutant: dist 4, just being there
-	// Hans: dist 8, shooting
-	// Monster: dist 2, just being there
-	// Hitler: dist 6, shooting
-	// Gretel: dist 7, shooting
-	// Fat: dist 6, shooting
-	// Trans: dist 7, shooting
-	// Will: dist 6, shooting
-	// Uber: dist 6, shooting
-	// Death: dist 6, shooting
-
-	for(ret = lastobj; ret; ret = ret->prev)
-	{
-		k = ret->tilex - tx;
-		j = ret->tiley - ty;
-		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret) 
-			|| ret == targ && !Basic::IsBoss(ret->obclass))
-			continue;
-
-		if(Basic::IsDamaging(ret, dist))
-			return ret;
-		
-	}
-	return NULL;
+	return Crossfire(player->x, player->y, targ ? (Basic::IsBoss(targ->obclass) ? NULL : targ) : NULL);
 }
 
 //
@@ -606,22 +574,19 @@ objtype *BotMan::DamageThreat(objtype *targ)
 //
 // Returns true if there's a crossfire in that spot
 //
-objtype *BotMan::Crossfire(int tx, int ty, objtype *objignore, boolean justexists)
+objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 {
 	int j, k, dist;
 	objtype *ret;
 
-	for(ret = lastobj; ret; ret = ret->prev)
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		if(ret == objignore)
 			continue;
-		k = ret->tilex - tx;
-		j = ret->tiley - ty;
+		k = ret->tilex - (x >> TILESHIFT);
+		j = ret->tiley - (y >> TILESHIFT);
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE)
-			|| !Basic::GenericCheckLine(ret->x, ret->y, 
-			Basic::Major(tx),
-			Basic::Major(ty)))
+		if(dist > 16 || !Basic::GenericCheckLine(ret->x, ret->y, x, y))
 			continue;
 
 		if(Basic::IsDamaging(ret, dist) || justexists)
@@ -859,17 +824,15 @@ retok:
 //
 objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 {
-	objtype *ret = lastobj;
+	objtype *ret;
 	
 	int x = Basic::Major(tx), y = Basic::Major(ty);
 	
-
-	while(ret)
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		if(abs(ret->x - x) < 1<<TILESHIFT && abs(ret->y - y) < 1<<TILESHIFT)
-			if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && ret->flags & FL_ATTACKMODE)
+			if(ret->flags & FL_ATTACKMODE)
 				return ret;
-		ret = ret->prev;
 	}
 	return NULL;
 }
@@ -881,14 +844,12 @@ objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 //
 objtype *BotMan::IsEnemyNearby(int tx, int ty)
 {
-	objtype *ret = lastobj;
+	objtype *ret;
 	
-	while(ret)
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		if(abs(ret->tilex - tx) <= 1 && abs(ret->tiley - ty) <= 1)
-			if(Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE)
-				return ret;
-		ret = ret->prev;
+			return ret;
 	}
 	return NULL;
 }
@@ -1209,15 +1170,12 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	else
 		retreat = 0;
 	
-	if(!check && dangle >= -15 && dangle <= 15 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
+	if(!check && dangle >= -5 && dangle <= 5 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
 	{
 		// Do NOT charge if there's a risk ahead!
 		fixed plx = player->x, ply = player->y;
 		plx += 3*costable[player->angle]/2;
 		ply -= 3*sintable[player->angle]/2;
-		
-		plx >>= TILESHIFT;
-		ply >>= TILESHIFT;
 		
 		if(!Crossfire(plx, ply))
 			controly = -BASEMOVE * tics;	// something's wrong, so move a bit
@@ -1245,14 +1203,16 @@ void BotMan::DoCombatAI(int eangle, int edist)
 				plx += 3*costable[player->angle]/2;
 				ply -= 3*sintable[player->angle]/2;
 				
-				plx >>= TILESHIFT;
-				ply >>= TILESHIFT;
-				
 				if(!Crossfire(plx, ply, check))
 					DoRetreat(true);
 			}
 		}
 	}
+//	if(gamestate.attackframe == 0 && player->state == &s_attack)
+//	{
+//		controlx = 0;
+//		controly = 0;	// stay put
+//	}
 }
 
 //
@@ -1369,12 +1329,13 @@ void BotMan::DoNonCombatAI()
 	
 	// Move forward only if it's safe (replace this bloatness with a function)
 	
-	if((Crossfire(player->tilex, player->tiley)
+	if((Crossfire(player->x, player->y)
 		|| !(searchset[nowon].next >= 0 
-			 && Crossfire(searchset[searchset[nowon].next].tilex, searchset[searchset[nowon].next].tiley))
+			 && Crossfire(Basic::Major(searchset[searchset[nowon].next].tilex), 
+						  Basic::Major(searchset[searchset[nowon].next].tiley)))
 		&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
-			 && Crossfire(searchset[searchset[searchset[nowon].next].next].tilex, 
-						  searchset[searchset[searchset[nowon].next].next].tiley))))
+			 && Crossfire(Basic::Major(searchset[searchset[searchset[nowon].next].next].tilex), 
+						  Basic::Major(searchset[searchset[searchset[nowon].next].next].tiley)))))
 	{
 		if(retreatwaitdelay)
 			retreatwaitdelay--;

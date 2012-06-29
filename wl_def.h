@@ -1315,25 +1315,10 @@ extern  statetype s_hitlerdeathcam2;
 extern  statetype s_giftdeathcam2;
 extern  statetype s_fatdeathcam2;
 
-void SpawnStand (enemy_t which, int tilex, int tiley, int dir);
-void SpawnPatrol (enemy_t which, int tilex, int tiley, int dir);
+// IOAN 29.06.2012: deleted global ghosts moved to Basic
 void KillActor (objtype *ob);
 
 void SpawnDeadGuard (int tilex, int tiley);
-void SpawnBoss (int tilex, int tiley);
-void SpawnGretel (int tilex, int tiley);
-void SpawnTrans (int tilex, int tiley);
-void SpawnUber (int tilex, int tiley);
-void SpawnWill (int tilex, int tiley);
-void SpawnDeath (int tilex, int tiley);
-void SpawnAngel (int tilex, int tiley);
-void SpawnSpectre (int tilex, int tiley);
-void SpawnGhosts (int which, int tilex, int tiley);
-void SpawnSchabbs (int tilex, int tiley);
-void SpawnGift (int tilex, int tiley);
-void SpawnFat (int tilex, int tiley);
-void SpawnFakeHitler (int tilex, int tiley);
-void SpawnHitler (int tilex, int tiley);
 
 void A_DeathScream (objtype *ob);
 void SpawnBJVictory (void);

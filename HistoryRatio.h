@@ -7,6 +7,9 @@
  *
  */
 
+#ifndef HISTORYRATIO_H_
+#define HISTORYRATIO_H_
+
 //
 // HistoryRatio
 //
@@ -26,3 +29,5 @@ public:
 		return value;
 	}
 };
+
+#endif

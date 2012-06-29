@@ -7,6 +7,9 @@
  *
  */
 
+#ifndef OBJECTSET_H_
+#define OBJECTSET_H_
+
 //
 // ObjectSet
 //
@@ -26,12 +29,17 @@ public:
 	~ObjectSet();
 	void addObject(void *what);
 	void removeObject(void *what);
+	void removeAllObjects();
 	void *firstObject()
 	{
-		return (current = base)->obj;
+		current = base;
+		return current ? current->obj : 0;
 	}
 	void *nextObject()
 	{
-		return (current = current->next)->obj;
+		current = current->next;
+		return current ? current->obj : 0;
 	}
 };
+
+#endif

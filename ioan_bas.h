@@ -11,6 +11,8 @@
 
 #include "wl_def.h"
 
+class ObjectSet;
+
 //
 // Basic
 //
@@ -20,30 +22,19 @@ class Basic
 {
 protected:
 	// Moved some global functions here
-	static void SpawnStand (enemy_t which, int tilex, int tiley, int dir);
-	static void SpawnPatrol (enemy_t which, int tilex, int tiley, int dir);
-
+	static objtype *SpawnStand (enemy_t which, int tilex, int tiley, int dir);
+	static objtype *SpawnPatrol (enemy_t which, int tilex, int tiley, int dir);
+	static objtype *SpawnBoss (enemy_t which, int tilex, int tiley);
+	
 #ifndef SPEAR
-	static void SpawnBoss (int tilex, int tiley);
-	static void SpawnGretel (int tilex, int tiley);
 	static void SpawnGhosts (int which, int tilex, int tiley);
-	static void SpawnSchabbs (int tilex, int tiley);
-	static void SpawnGift (int tilex, int tiley);
-	static void SpawnFat (int tilex, int tiley);
-	static void SpawnFakeHitler (int tilex, int tiley);
-	static void SpawnHitler (int tilex, int tiley);
-#else
-	static void SpawnTrans (int tilex, int tiley);
-	static void SpawnUber (int tilex, int tiley);
-	static void SpawnWill (int tilex, int tiley);
-	static void SpawnDeath (int tilex, int tiley);
-	static void SpawnAngel (int tilex, int tiley);
-	static void SpawnSpectre (int tilex, int tiley);
 #endif
+
 	static int markov[27][27], marktot[27];
 
 public:
 	static boolean nonazis;	// no enemies spawned
+	static ObjectSet livingNazis;
 
 	// Spawns a Nazi (originally they were separate functions; no more)
 	static void SpawnEnemy(enemy_t which, int tilex, int tiley, int dir = 0, boolean patrol = false);

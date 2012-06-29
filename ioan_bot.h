@@ -87,7 +87,7 @@ protected:
 	// do retreat
 	static void DoRetreat(boolean forth = false, objtype *cause = NULL);
 	// like EnemiesArmed, but not restricted to the player
-	static objtype *Crossfire(int tx, int ty, objtype *objignore = NULL, boolean justexists = false);
+	static objtype *Crossfire(int x, int y, objtype *objignore = NULL, boolean justexists = false);
 	// Like enemyvisible, but for any spot
 	static objtype *GenericEnemyVisible(int tx, int ty);
 	// Test if there's a projectile there

@@ -2,6 +2,8 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bas.h"	// IOAN 29.06.2012
+#include "ObjectSet.h"
 
 /*
 =============================================================================
@@ -978,6 +980,9 @@ void KillActor (objtype *ob)
     }
 
     gamestate.killcount++;
+	// IOAN 29.06.2012: remove object from living set
+	Basic::livingNazis.removeObject(ob);
+	
     ob->flags &= ~FL_SHOOTABLE;
     actorat[ob->tilex][ob->tiley] = NULL;
     ob->flags |= FL_NONMARK;
