@@ -45,7 +45,8 @@
 		FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */; };
 		FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */; };
 		FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */; };
-		FA762DBC159D08A500610D61 /* ObjectSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762DBB159D08A500610D61 /* ObjectSet.cpp */; };
+		FA762DBC159D08A500610D61 /* LinkList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762DBB159D08A500610D61 /* LinkList.cpp */; };
+		FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7630A6159F6D9800610D61 /* PathArray.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
 /* End PBXBuildFile section */
 
@@ -130,8 +131,10 @@
 		FA21BE14157412A800C23B4A /* ioan_bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bot.h; path = ../ioan_bot.h; sourceTree = SOURCE_ROOT; };
 		FA762D62159CD1FF00610D61 /* HistoryRatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryRatio.h; path = ../HistoryRatio.h; sourceTree = SOURCE_ROOT; };
 		FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HistoryRatio.cpp; path = ../HistoryRatio.cpp; sourceTree = SOURCE_ROOT; };
-		FA762DBA159D08A500610D61 /* ObjectSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectSet.h; path = ../ObjectSet.h; sourceTree = "<group>"; };
-		FA762DBB159D08A500610D61 /* ObjectSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectSet.cpp; path = ../ObjectSet.cpp; sourceTree = "<group>"; };
+		FA762DBA159D08A500610D61 /* LinkList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkList.h; path = ../LinkList.h; sourceTree = "<group>"; };
+		FA762DBB159D08A500610D61 /* LinkList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LinkList.cpp; path = ../LinkList.cpp; sourceTree = "<group>"; };
+		FA7630A6159F6D9800610D61 /* PathArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PathArray.cpp; path = ../PathArray.cpp; sourceTree = SOURCE_ROOT; };
+		FA7630A7159F6D9800610D61 /* PathArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PathArray.h; path = ../PathArray.h; sourceTree = SOURCE_ROOT; };
 		FAB104D11591AA9100393DE3 /* dbopl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dbopl.cpp; path = ../dosbox/dbopl.cpp; sourceTree = SOURCE_ROOT; };
 		FAB104D21591AA9100393DE3 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../dosbox/dbopl.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -241,14 +244,16 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
-				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
 				FA21BE12157412A800C23B4A /* ioan_bas.h */,
-				FA21BE13157412A800C23B4A /* ioan_bot.cpp */,
+				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
 				FA21BE14157412A800C23B4A /* ioan_bot.h */,
+				FA21BE13157412A800C23B4A /* ioan_bot.cpp */,
 				FA762D62159CD1FF00610D61 /* HistoryRatio.h */,
 				FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */,
-				FA762DBA159D08A500610D61 /* ObjectSet.h */,
-				FA762DBB159D08A500610D61 /* ObjectSet.cpp */,
+				FA762DBA159D08A500610D61 /* LinkList.h */,
+				FA762DBB159D08A500610D61 /* LinkList.cpp */,
+				FA7630A7159F6D9800610D61 /* PathArray.h */,
+				FA7630A6159F6D9800610D61 /* PathArray.cpp */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -409,7 +414,8 @@
 				FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */,
 				FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */,
 				FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */,
-				FA762DBC159D08A500610D61 /* ObjectSet.cpp in Sources */,
+				FA762DBC159D08A500610D61 /* LinkList.cpp in Sources */,
+				FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

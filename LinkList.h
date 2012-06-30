@@ -1,5 +1,5 @@
 /*
- *  ObjectSet.h
+ *  LinkList.h
  *  AutoWOlf
  *
  *  Created by MacBook on 28.06.2012.
@@ -7,29 +7,31 @@
  *
  */
 
-#ifndef OBJECTSET_H_
-#define OBJECTSET_H_
+#ifndef LINKLIST_H_
+#define LINKLIST_H_
 
 //
-// ObjectSet
+// LinkList
 //
 // A mutable list of objects
 //
-class ObjectSet
+class LinkList
 {
-	struct SetComponent
+	struct Link
 	{
 		void *obj;
-		SetComponent *next;
+		Link *next;
 	} *base, *current;
+	
 public:
-	ObjectSet() : base(0)
+	LinkList() : base(0)
 	{
 	}
-	~ObjectSet();
-	void addObject(void *what);
-	void removeObject(void *what);
-	void removeAllObjects();
+	~LinkList();
+	
+	void addLink(void *what);
+	void removeLink(void *what);
+	void removeAllLinks();
 	void *firstObject()
 	{
 		current = base;

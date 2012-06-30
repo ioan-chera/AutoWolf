@@ -13,6 +13,7 @@
 // IOAN 17.05.2012
 #include "ioan_bot.h"
 #include "ioan_bas.h"
+#include "LinkList.h"
 
 
 /*
@@ -659,6 +660,30 @@ boolean LoadTheGame(FILE *file,int x,int y)
             gamestate.bestweapon = wp_pistol;
         gamestate.ammo = 8;
     }
+	
+	// IOAN 30.06.2012: unlink all dead Nazis from the list
+	for(objtype *obj = lastobj; obj; obj = obj->prev)
+	{
+		if(obj->hitpoints <= 0)
+			Basic::livingNazis.removeLink(obj);
+		switch(obj->obclass)
+		{
+			case needleobj:
+			case fireobj:
+			case rocketobj:
+			case hrocketobj:
+			case sparkobj:
+				if(obj->state != &s_boom1 && obj->state != &s_boom2 && obj->state != &s_boom3
+#ifdef SPEAR
+				   && obj->state != &s_hboom1 && obj->state != &s_hboom2 && obj->state != &s_hboom3
+#endif
+				   )
+				{
+					Basic::thrownProjectiles.addLink(obj);
+				}
+				
+		}
+	}
 
     return true;
 }

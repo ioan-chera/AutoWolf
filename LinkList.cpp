@@ -1,5 +1,5 @@
 /*
- *  ObjectSet.cpp
+ *  LinkList.cpp
  *  AutoWolf
  *
  *  Created by MacBook on 28.06.2012.
@@ -7,24 +7,24 @@
  *
  */
 
-#include "ObjectSet.h"
+#include "LinkList.h"
 
-ObjectSet::~ObjectSet()
+LinkList::~LinkList()
 {
-	removeAllObjects();
+	removeAllLinks();
 }
 
-void ObjectSet::addObject(void *what)
+void LinkList::addLink(void *what)
 {
 	current = base;
-	base = new SetComponent;
+	base = new Link;
 	base->obj = what;
 	base->next = current;
 }
 
-void ObjectSet::removeObject(void *what)
+void LinkList::removeLink(void *what)
 {
-	SetComponent *oldcur = 0;
+	Link *oldcur = 0;
 	for(current = base; current; current = current->next)
 	{
 		if(current->obj == what)
@@ -41,9 +41,9 @@ void ObjectSet::removeObject(void *what)
 	}
 }
 
-void ObjectSet::removeAllObjects()
+void LinkList::removeAllLinks()
 {
-	SetComponent *next;
+	Link *next;
 	for(current = base; current; current = next)
 	{
 		next = current->next;

@@ -11,6 +11,7 @@
 
 #include "wl_def.h"
 class HistoryRatio;
+class PathArray;
 
 //
 // SearchStage
@@ -34,44 +35,21 @@ class BotMan
 {
 protected:
 	// search data structure
-	struct SData
-	{
-		int tilex, tiley;
-		int f_score, g_score, h_score;
-		int prev, next;
-		boolean open;
-	};
-
-	static SData *searchset;
-	static int searchsize, searchlen;
+	static PathArray path;
 
 	// protected variables
-	static boolean pathexists, exitfound, panic;
+	static boolean panic;
 	static byte retreatwaitdelay, retreat, pressuse;
 	static SearchStage nothingleft;
-	static int exitx, exity, exfrontx;
+	static int exitx, exity;
 	static objtype *threater;
 
 	// protected functions
 	// Finds the closest object of interest (object, hidden door, exit)
 	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, boolean retreating = false,
 								  boolean knifeinsight = false);
-	// Empty set
-	inline static void EmptySet()
-	{
-		searchsize = searchlen = 0;
-		if(searchset)
-		{
-			free(searchset);
-			searchset = NULL;
-		}
-	}
 	// move by strafing
 	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
-	// Add set
-	static void AddToSet(const SData &data);
-	// ApproximateDistance
-	static int ApproxDist(int dx, int dy);
 	// Object of interest
 	static boolean ObjectOfInterest(int dx, int dy, boolean knifeinsight = false);
 	// Enemy on spot

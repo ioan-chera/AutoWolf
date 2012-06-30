@@ -5,6 +5,8 @@
 #include "wl_def.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// include bot
+#include "ioan_bas.h"
+#include "LinkList.h"
 
 /*
 =============================================================================
@@ -329,6 +331,9 @@ void T_Projectile (objtype *ob)
 
     if (!ProjectileTryMove (ob))
     {
+		// IOAN 30.06.2012: remove link
+		Basic::thrownProjectiles.removeLink(ob);
+		
 #ifndef APOGEE_1_0          // actually the whole method is never reached in shareware 1.0
         if (ob->obclass == rocketobj)
         {
@@ -351,6 +356,9 @@ void T_Projectile (objtype *ob)
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {       // hit the player
+		// IOAN 30.06.2012: remove link
+		Basic::thrownProjectiles.removeLink(ob);
+		
         switch (ob->obclass)
         {
         case needleobj:
@@ -1399,6 +1407,9 @@ void T_Launch (objtype *ob)
     newobj->speed = 0x2000l;
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
+	
+	// IOAN 30.06.2012: link proj
+	Basic::thrownProjectiles.addLink(newobj);
 }
 
 
@@ -1869,6 +1880,9 @@ void T_SchabbThrow (objtype *ob)
 
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
+	
+	// IOAN 30.06.2012: link to projectile list
+	Basic::thrownProjectiles.addLink(newobj);
 
     PlaySoundLocActor (SCHABBSTHROWSND,newobj);
 }
@@ -2447,6 +2461,9 @@ void T_FakeFire (objtype *ob)
     newobj->speed = 0x1200l;
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
+	
+	// IOAN 30.06.2012: link fire
+	Basic::thrownProjectiles.addLink(newobj);
 
     PlaySoundLocActor (FLAMETHROWERSND,newobj);
 }

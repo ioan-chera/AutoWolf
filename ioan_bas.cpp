@@ -8,11 +8,11 @@
 
 #include "ioan_bas.h"
 
-#include "ObjectSet.h"
+#include "LinkList.h"
 
 // static members definition
 boolean Basic::nonazis;
-ObjectSet Basic::livingNazis;
+LinkList Basic::livingNazis, Basic::thrownProjectiles;
 
 int Basic::markov[27][27] =
 {
@@ -627,7 +627,7 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 #endif
 	}
 	if(newenemy)
-		livingNazis.addObject(newenemy);
+		livingNazis.addLink(newenemy);
 }
 
 //
@@ -663,4 +663,18 @@ void Basic::MarkovWrite(char *c, int nmax)
 	}
 	while(i < 26 && n < nmax || n < 6);
 	c[n] = '\0';
+}
+
+//
+// Basic::ApproxDist
+//
+// Approx. distance (too lazy to use sqrt)
+//
+int Basic::ApproxDist(int dx, int dy)
+{
+	dx = abs(dx);
+	dy = abs(dy);
+	if(dx < dy)
+		return dx + dy - (dx >> 1);
+	return dx + dy - (dy >> 1);
 }

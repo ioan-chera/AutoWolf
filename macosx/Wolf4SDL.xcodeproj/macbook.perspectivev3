@@ -280,14 +280,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>36</integer>
+									<integer>37</integer>
 									<integer>33</integer>
 									<integer>4</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 57}, {312, 608}}</string>
+							<string>{{0, 577}, {312, 608}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -304,7 +304,7 @@
 							<real>312</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>0 111 1280 667 0 0 1280 778 </string>
+						<string>-1 111 1280 667 0 0 1280 778 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -334,18 +334,16 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>FA762E50159E5DA200610D61</string>
+										<string>FA7631CE159FB28700610D61</string>
 										<key>history</key>
 										<array>
 											<string>FA8DFAA01586936E00EBBFB2</string>
 											<string>FA8DFAA31586936E00EBBFB2</string>
 											<string>FA8DFAA41586936E00EBBFB2</string>
-											<string>FA8DFAA51586936E00EBBFB2</string>
 											<string>FA8DFAA61586936E00EBBFB2</string>
 											<string>FA8DFAA91586936E00EBBFB2</string>
 											<string>FA8DFAAA1586936E00EBBFB2</string>
 											<string>FA8DFAAB1586936E00EBBFB2</string>
-											<string>FA8DFAAC1586936E00EBBFB2</string>
 											<string>FA8DFAAE1586936E00EBBFB2</string>
 											<string>FA8DFAAF1586936E00EBBFB2</string>
 											<string>FA8DFAB01586936E00EBBFB2</string>
@@ -359,26 +357,35 @@
 											<string>FAB847A01598F77600566946</string>
 											<string>FAB847A11598F77600566946</string>
 											<string>FAB84886159A278000566946</string>
-											<string>FAB84906159A518500566946</string>
 											<string>FA01B251159B840E00AB5295</string>
 											<string>FA762D6C159CD52C00610D61</string>
 											<string>FA762DC6159E443200610D61</string>
-											<string>FA762DD1159E44A900610D61</string>
-											<string>FA762DD9159E4A3700610D61</string>
 											<string>FA762DE9159E4C0900610D61</string>
-											<string>FA762DEA159E4C0900610D61</string>
-											<string>FA762DF2159E4C4200610D61</string>
-											<string>FA762DFC159E529B00610D61</string>
-											<string>FA762E37159E563300610D61</string>
-											<string>FA762E38159E563300610D61</string>
-											<string>FA762E39159E563300610D61</string>
-											<string>FA762E3A159E563300610D61</string>
-											<string>FA762E3C159E563300610D61</string>
-											<string>FA762E42159E5B3700610D61</string>
-											<string>FA762E48159E5CE900610D61</string>
-											<string>FA762E49159E5CE900610D61</string>
-											<string>FA762E4A159E5CE900610D61</string>
-											<string>FA762E4B159E5CE900610D61</string>
+											<string>FA762E63159F0BA700610D61</string>
+											<string>FA762E78159F0F1A00610D61</string>
+											<string>FA762E79159F0F1A00610D61</string>
+											<string>FA762E7A159F0F1A00610D61</string>
+											<string>FA762E7B159F0F1A00610D61</string>
+											<string>FA762E90159F2A4600610D61</string>
+											<string>FA762E9C159F532500610D61</string>
+											<string>FA762EB0159F553600610D61</string>
+											<string>FA762EBA159F595100610D61</string>
+											<string>FA762ED9159F6D4D00610D61</string>
+											<string>FA7630DE159F975B00610D61</string>
+											<string>FA7630E1159F975B00610D61</string>
+											<string>FA76310C159F9AE500610D61</string>
+											<string>FA763167159FAA9C00610D61</string>
+											<string>FA763168159FAA9C00610D61</string>
+											<string>FA763169159FAA9C00610D61</string>
+											<string>FA76316A159FAA9C00610D61</string>
+											<string>FA763175159FAB0500610D61</string>
+											<string>FA7631C7159FB28700610D61</string>
+											<string>FA7631C8159FB28700610D61</string>
+											<string>FA7631C9159FB28700610D61</string>
+											<string>FA7631CA159FB28700610D61</string>
+											<string>FA7631CB159FB28700610D61</string>
+											<string>FA7631CC159FB28700610D61</string>
+											<string>FA7631CD159FB28700610D61</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -394,7 +401,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {946, 386}}</string>
 								<key>RubberWindowFrame</key>
-								<string>0 111 1280 667 0 0 1280 778 </string>
+								<string>-1 111 1280 667 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -435,7 +442,7 @@
 										<key>Frame</key>
 										<string>{{10, 27}, {946, 208}}</string>
 										<key>RubberWindowFrame</key>
-										<string>0 111 1280 667 0 0 1280 778 </string>
+										<string>-1 111 1280 667 0 0 1280 778 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXProjectFindModule</string>
@@ -695,13 +702,13 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>FA762E51159E5DA200610D61</string>
+		<string>FA7631CF159FB28700610D61</string>
 		<string>FA762D5E159CD1A800610D61</string>
 		<string>FA762D5F159CD1A800610D61</string>
 		<string>/Users/macbook/Development/cross/autowolfsf/macosx/Wolf4SDL.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>0 111 1280 667 0 0 1280 778 </string>
+	<string>-1 111 1280 667 0 0 1280 778 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>

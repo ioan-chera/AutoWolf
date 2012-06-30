@@ -11,7 +11,7 @@
 
 #include "wl_def.h"
 
-class ObjectSet;
+class LinkList;
 
 //
 // Basic
@@ -34,7 +34,7 @@ protected:
 
 public:
 	static boolean nonazis;	// no enemies spawned
-	static ObjectSet livingNazis;
+	static LinkList livingNazis, thrownProjectiles;
 
 	// Spawns a Nazi (originally they were separate functions; no more)
 	static void SpawnEnemy(enemy_t which, int tilex, int tiley, int dir = 0, boolean patrol = false);
@@ -141,16 +141,42 @@ public:
 	// get angle from dir
 	static int DirAngle(int mx, int my, int nx, int ny)
 	{
-		if(nx > mx)
+		nx = Basic::Major(nx);
+		ny = Basic::Major(ny);
+		
+		double dx = (double)(nx - mx);
+		double dy = -(double)(ny - my);
+		double ang = atan2(dy, dx);
+		int rang = (int)(180.0/PI*ang);
+		while(rang < 0)
+			rang += 360;
+		while(rang >= 360)
+			rang -= 360;
+		return rang/5*5;
+		
+		/*
+		if(nx > mx && ny == my)
 			return 0;
-		if(ny > my)
+		if(ny > my && nx == mx)
 			return 270;
-		if(nx < mx)
+		if(nx < mx && ny == my)
 			return 180;
-		if(ny < my)
+		if(ny < my && nx == mx)
 			return 90;
-		return 0;
+		
+		if(nx > mx && ny < my)
+			return 45;
+		if(nx < mx && ny < my)
+			return 135;
+		if(nx < mx && ny > my)
+			return 225;
+		if(nx > mx && ny > my)
+			return 315;
+		return 0;*/
 	}
+	
+	// ApproximateDistance
+	static int ApproxDist(int dx, int dy);
 };
 
 #endif

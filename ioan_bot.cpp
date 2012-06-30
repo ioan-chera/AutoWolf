@@ -9,18 +9,19 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "HistoryRatio.h"
-#include "ObjectSet.h"
+#include "LinkList.h"
+#include "PathArray.h"
+#include <limits.h>
 
 // static class member definition
 boolean BotMan::active;
 // protected ones
-boolean BotMan::pathexists, BotMan::exitfound, BotMan::panic;
+boolean BotMan::panic;
 byte BotMan::retreatwaitdelay, BotMan::retreat, BotMan::pressuse;
 SearchStage BotMan::nothingleft;
-int BotMan::exitx, BotMan::exity, BotMan::exfrontx;
-BotMan::SData *BotMan::searchset;
-int BotMan::searchsize, BotMan::searchlen;
+int BotMan::exitx, BotMan::exity;
 objtype *BotMan::threater;
+PathArray BotMan::path;
 
 HistoryRatio BotMan::shootRatio;
 
@@ -33,43 +34,11 @@ void BotMan::MapInit()
 {
 	shootRatio.initLength(10);
 	retreat = 0;
-	exitfound = pathexists = false;
 	threater = NULL;
 	retreatwaitdelay = 0;
 	nothingleft = SSGeneral;
-	EmptySet();
+	path.makeEmpty();
 	panic = false;
-}
-
-//
-// BotMan::ApproxDist
-//
-// Approx. distance (too lazy to use sqrt)
-//
-int BotMan::ApproxDist(int dx, int dy)
-{
-	dx = abs(dx);
-	dy = abs(dy);
-	//if(dx < dy)
-	//	return dx + dy - (dx >> 1);
-	//return dx + dy - (dy >> 1);
-	return dx + dy;
-}
-
-//
-// BotMan::AddToSet
-//
-// Adds copy of value to set
-//
-void BotMan::AddToSet(const SData &data)
-{
-	if(++searchlen > searchsize)
-	{
-		searchset = (SData*)realloc(searchset, searchsize < 32 ? (searchsize = 32) * sizeof(SData) 
-			: (searchsize = 2 * searchsize) * sizeof(SData));
-		CHECKMALLOCRESULT(searchset);
-	}
-	searchset[searchlen - 1] = data;
 }
 
 //
@@ -243,166 +212,160 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 //
 boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean retreating, boolean knifeinsight)
 {
-	int i, j;
+	int j;
 
-	SData data;
+	path.makeEmpty();
+	if(retreating && threater != NULL)
+		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
+	else		
+		path.addStartNode(player->tilex, player->tiley);
 
-	data.g_score = 0;
-	data.h_score = retreating && threater != NULL ? -ApproxDist(threater->tilex - player->tilex, threater->tiley - player->tiley) : 0;
-	data.f_score = data.g_score + data.h_score;
-	data.open = true;
-	data.tilex = player->tilex;
-	data.tiley = player->tiley;
-	data.prev = -1;
-	data.next = -1;
-
-	EmptySet();
-	AddToSet(data);
-
-	boolean openfound;
-	int fmin, imin, ifound;
-	int cx, cy;
-	objtype *check;
-	boolean neighinvalid, neighfound;
-	int tentative_g_score;
+	int imin, ifound;
+	int tx, ty, cx, cy;
+	objtype *check, *check2;
+	int tentative_g_add;
+	
 	while(1)
 	{
-		// look for open sets
-		openfound = false;
-		fmin = INT_MAX;
-		for(i = 0; i < searchlen; ++i)
-		{
-			if(searchset[i].open)
-			{
-				openfound = true;
-				if(searchset[i].f_score < fmin)
-				{
-					fmin = searchset[i].f_score;
-					imin = i;
-				}
-			}
-		}
-		if(!openfound)
+		// This finds the index of the best score node
+		imin = path.bestScoreIndex();
+		if(imin < 0)
 			break;
-		searchset[imin].tilex;
-		searchset[imin].tiley;
-		searchset[imin].open = false;
-
+		
+		path.closeNode(imin);
+		
+		path.getCoords(imin, &tx, &ty);
+		
+		// This checks if a destination has been found on the spot
 		if(!retreating)
 		{
-			if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley, knifeinsight))
+			if(ObjectOfInterest(tx, ty, knifeinsight))
 			{
 				// found goal
-				searchset[imin].next = -1;
-				ifound = imin;
-				for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
-					searchset[imin].next = ifound;
-				pathexists = true;
+				path.finish(imin);
 				return true;
 			}
 		}
 		else
 		{
-			if(!Crossfire(Basic::Major(searchset[imin].tilex), Basic::Major(searchset[imin].tiley)))
-				if(searchset[imin].prev >= 0 && 
-				   !Crossfire(Basic::Major(searchset[searchset[imin].prev].tilex), 
-							  Basic::Major(searchset[searchset[imin].prev].tiley)))
+			int iminprev = path.getPrevIndex(imin);
+			if(iminprev >= 0)
+			{
+				int ptx, pty;
+				path.getCoords(iminprev, &ptx, &pty);
+				if(!Crossfire(Basic::Major(tx), Basic::Major(ty)) &&
+				   !Crossfire(Basic::Major(ptx), Basic::Major(pty)))
 				{
-					// found goal
-					searchset[imin].next = -1;
-					ifound = imin;
-					for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
-						searchset[imin].next = ifound;
-					pathexists = true;
+					path.finish(imin);
 					return true;
 				}
+			}
 		}
 
-		
-		for(j = 0; j < 4; ++j)
+		// This looks in all four directions. Planned to be in eight directions.
+		for(j = 0; j < 8; ++j)
 		{
 			switch(j)
 			{
 			case 0:
-				cx = searchset[imin].tilex + 1;
-				cy = searchset[imin].tiley;
+				cx = tx + 1;
+				cy = ty;
 				break;
 			case 1:
-				cx = searchset[imin].tilex;
-				cy = searchset[imin].tiley + 1;
+				cx = tx;
+				cy = ty + 1;
 				break;
 			case 2:
-				cx = searchset[imin].tilex - 1;
-				cy = searchset[imin].tiley;
+				cx = tx - 1;
+				cy = ty;
 				break;
 			case 3:
-				cx = searchset[imin].tilex;
-				cy = searchset[imin].tiley - 1;
+				cx = tx;
+				cy = ty - 1;
+				break;
+			case 4:	// up-right
+				cx = tx + 1;
+				cy = ty - 1;
+				break;
+			case 5:	// up-left
+				cx = tx - 1;
+				cy = ty - 1;
+				break;
+			case 6:	// down-left
+				cx = tx - 1;
+				cy = ty + 1;
+				break;
+			case 7:	// down-right
+				cx = tx + 1;
+				cy = ty + 1;
 				break;
 			}
+			
+			if(j >= 4 && j < 8)
+			{
+				check = actorat[cx][ty];
+				check2 = actorat[tx][cy];
+				if(check && !ISPOINTER(check) || check2 && !ISPOINTER(check2))
+				{
+					continue;
+				}
+			}
+			
 			check = actorat[cx][cy];
 			byte door = tilemap[cx][cy];
+			
+			// This checks for any blocking device: refactor it
 			if(check && !ISPOINTER(check) && !(door & 0x80)
 				|| 
-				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && IsProjectile(cx, cy, 1) && !ignoreproj ||
-				IsEnemyBlocking(cx, cy) && mindnazis)
+				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1) ||
+				mindnazis && IsEnemyBlocking(cx, cy))
+			{
 				continue;	// solid, can't be passed
+			}
 			else if (door & 0x80)
 			{
+				// This checks if it's a door and can be passed
 				objtype *checkindoor = actorat[cx][cy];
 				
 				if(retreating && checkindoor && (!ISPOINTER(checkindoor) || 
 												 (ISPOINTER(checkindoor) && checkindoor != player && 
 												  checkindoor->hitpoints > 0)))
+				{
 					continue;
+				}
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
 					if (doorobjlist[door].action != dr_open &&
 						doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+					{
 						continue;
+					}
 			}
 
-			neighinvalid = false;
-			neighfound = false;
-			for(i = searchlen - 1; i >= 0; --i)
-			{
-				if(searchset[i].tilex == cx && searchset[i].tiley == cy)
-				{
-					if(!searchset[i].open)
-						neighinvalid = true;
-					else
-					{
-						neighfound = true;
-						ifound = i;
-					}
-					break;
-				}
-			}
-			if(neighinvalid)
+			// this looks if the entry exists in the list
+			ifound = path.openCoordsIndex(cx, cy);
+			
+			if(ifound == -2)
 				continue;
-			tentative_g_score = searchset[imin].g_score + 1;
+			
+			// This sets the score, depending on situation
+			if(j < 4)
+				tentative_g_add = 0x100;
+			else {
+				tentative_g_add = Basic::ApproxDist(0x100, 0x100);
+			}
+
+			
 			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening 
 			   || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
-				tentative_g_score += 4;
-			if(!neighfound)
-			{
-				data.g_score = tentative_g_score;
-				data.h_score = retreating && threater != NULL ? 
-					-ApproxDist(threater->tilex - player->tilex, threater->tiley - player->tiley) : 0;
-				data.f_score = data.g_score + data.h_score;
-				data.open = true;
-				data.tilex = cx;
-				data.tiley = cy;
-				data.prev = imin;
-				AddToSet(data);
-			}
-			else if(tentative_g_score < searchset[ifound].g_score)
-			{
-				searchset[ifound].g_score = tentative_g_score;
-				searchset[ifound].f_score = tentative_g_score + searchset[ifound].h_score;
-				searchset[ifound].prev = imin;
-			}
+				tentative_g_add <<= 2;
+			
+			if(retreating && threater != NULL)
+				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
+			else
+				path.updateNode(ifound, imin, cx, cy, tentative_g_add);
+			
 		}
 	}
 
@@ -765,9 +728,10 @@ solved:
 //
 objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
 {
-	objtype *ret = lastobj;
+	objtype *ret;
 
-	while(ret)
+	for(ret = (objtype *)Basic::thrownProjectiles.firstObject(); ret;
+		ret = (objtype *)Basic::thrownProjectiles.nextObject())
 	{
 		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
 		{
@@ -776,7 +740,6 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 #ifndef SPEAR
 			case needleobj:
 			case fireobj:
-			case ghostobj:	// monsters count as projectiles
 				goto retok;
 			case rocketobj:
 				if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
@@ -793,7 +756,6 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 #endif
 			}
 		}
-		ret = ret->prev;
 	}
 	return NULL;
 retok:
@@ -861,12 +823,9 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty)
 //
 void BotMan::MoveByStrafe()
 {
+	int movedir;
 	
-	static short tangle, dangle, movedir, pressuse;
-	pressuse++;
-	
-	int nowon = 0;
-	if(!searchset)
+	if(!path.length())
 	{
 		DoRetreat();
 		return;
@@ -880,10 +839,11 @@ void BotMan::MoveByStrafe()
 	
 	// elevator
 	byte tile;
-	if(searchset[nowon].next == -1)
+	int nexton = path.getNextIndex(0);
+	if(nexton == -1)
 	{
 		// end of path; start a new search
-		pathexists = false;
+		path.reset();
 		if(exitx >= 0 && exity >= 0)
 		{
 			// elevator switch: press it now
@@ -891,24 +851,19 @@ void BotMan::MoveByStrafe()
 			ny = exity;
 			tryuse = true;
 		}
-		else if(searchset[nowon].prev >= 0)
-		{
-			// just go forward
-			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
-			ny = 2*my - searchset[searchset[nowon].prev].tiley;
-		}
 		else
 		{
 			// if undefined, just go east
-			nx = mx + 1;
-			ny = my;
+			// TODO: make it go forward!
+			return;	// just quit
+			// nx = mx + 1;
+			// ny = my;
 		}
 	}
 	else
 	{
 		// in the path
-		nx = searchset[searchset[nowon].next].tilex;
-		ny = searchset[searchset[nowon].next].tiley;
+		path.getCoords(nexton, &nx, &ny);
 		tile = tilemap[nx][ny];
 		// whether to press to open a door
 		tryuse = (tile & 0x80) == 0x80 
@@ -916,6 +871,8 @@ void BotMan::MoveByStrafe()
 	}
 	
 	// set up the target angle
+	// int tangle = Basic::DirAngle(mx,my,nx,ny);
+	int tangle = 0;
 	if(nx > mx)
 		tangle = 0;
 	else if(ny > my)
@@ -924,12 +881,7 @@ void BotMan::MoveByStrafe()
 		tangle = 180;
 	else if(ny < my)
 		tangle = 90;
-	
-	dangle = tangle - player->angle;
-	if(dangle > 180)	// centred angle
-		dangle -= 360;
-	else if(dangle <= -180)
-		dangle += 360;
+	int dangle = Basic::CentreAngle(tangle, player->angle);
 	
 	// STRAFE LOGIC
 	
@@ -1040,7 +992,7 @@ void BotMan::MoveByStrafe()
 				plro = player->x - (1<<(TILESHIFT - 1));
 				break;
 		}
-		if(plro - cento > 8192)	// too left, move right
+		if(plro - cento > 4096)	// too left, move right
 		{
 			switch(movedir)
 			{
@@ -1058,7 +1010,7 @@ void BotMan::MoveByStrafe()
 					controly =  BASEMOVE * tics;
 			}
 		}
-		else if(plro - cento < -8192)	// too right, move left
+		else if(plro - cento < -4096)	// too right, move left
 		{
 			switch(movedir)
 			{
@@ -1107,7 +1059,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 			return;
 		}
 	
-	pathexists = false;
+	path.reset();
 	// Enemy visible mode
 	// centred angle here
 	int dangle = Basic::CentreAngle(eangle, player->angle);
@@ -1208,11 +1160,6 @@ void BotMan::DoCombatAI(int eangle, int edist)
 			}
 		}
 	}
-//	if(gamestate.attackframe == 0 && player->state == &s_attack)
-//	{
-//		controlx = 0;
-//		controly = 0;	// stay put
-//	}
 }
 
 //
@@ -1225,7 +1172,7 @@ void BotMan::DoNonCombatAI()
 	panic = false;
 	// no path got defined
 	threater = NULL;
-	if(!pathexists)
+	if(!path.exists())
 	{
 		if(!FindRandomPath(false, gamestate.weapon == wp_knife))
 		{
@@ -1239,49 +1186,38 @@ void BotMan::DoNonCombatAI()
 		waitpwall = true;
 	
 	// found path to exit
-	int searchpos = 0;
-	int nowon = -1;
-	
-	// look if it's there
-	for(; searchpos != -1; searchpos = searchset[searchpos].next)
-	{
-		if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
-		{
-			nowon = searchpos;
-		}
-		if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley)
-		   && (abs(searchset[searchpos].tilex - player->tilex) > 1 || 
-			   abs(searchset[searchpos].tiley - player->tiley) > 1))
-		{
-			nothingleft = SSGeneral;
-			pathexists = false;
-			if(!FindRandomPath())
-				FindRandomPath(true);
-			return;
-		}
-	}
+	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
 	
 	if(nowon < 0 || !pwallstate && waitpwall)
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
 		nothingleft = SSGeneral;	// new areas revealed, so look
 		waitpwall = false;
-		pathexists = false;
+		path.reset();
 		return;
 	}
 	
 	int nx, ny, mx, my;
 	boolean tryuse = false;	// whether to try using
 	
-	mx = player->tilex;
-	my = player->tiley;
+	
+	mx = player->x;
+	my = player->y;
+	 
 	
 	// elevator
 	byte tile;
-	if(searchset[nowon].next == -1)
+	int nexton = path.getNextIndex(nowon);
+	int nexton2 = path.getNextIndex(nexton);
+	int nx2, ny2;
+	if(nexton2 >= 0)
+		path.getCoords(nexton2, &nx2, &ny2);
+	
+	if(nexton == -1)
 	{
+		int prevon = path.getPrevIndex(nowon);
 		// end of path; start a new search
-		pathexists = false;
+		path.reset();
 		if(exitx >= 0 && exity >= 0)
 		{
 			// elevator switch: press it now
@@ -1289,24 +1225,25 @@ void BotMan::DoNonCombatAI()
 			ny = exity;
 			tryuse = true;
 		}
-		else if(searchset[nowon].prev >= 0)
+		else if(prevon >= 0)
 		{
+			int ptx, pty;
+			path.getCoords(prevon, &ptx, &pty);
 			// just go forward
-			nx = 2*mx - searchset[searchset[nowon].prev].tilex;
-			ny = 2*my - searchset[searchset[nowon].prev].tiley;
+			nx = 2*(mx>>TILESHIFT) - ptx;
+			ny = 2*(my>>TILESHIFT) - pty;
 		}
 		else
 		{
 			// if undefined, just go east
-			nx = mx + 1;
-			ny = my;
+			nx = (mx>>TILESHIFT) + 1;
+			ny = my>>TILESHIFT;
 		}
 	}
 	else
 	{
 		// in the path
-		nx = searchset[searchset[nowon].next].tilex;
-		ny = searchset[searchset[nowon].next].tiley;
+		path.getCoords(nexton, &nx, &ny);
 		tile = tilemap[nx][ny];
 		// whether to press to open a door
 		tryuse = (tile & 0x80) == 0x80 
@@ -1318,7 +1255,7 @@ void BotMan::DoNonCombatAI()
 	int dangle = Basic::CentreAngle(tangle, player->angle);
 	
 	// Non-combat mode
-	if(EnemyEager() && gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0)
+	if(gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0 && EnemyEager())
 	{
 		// shoot something to alert nazis
 		// TODO: more stealth gameplay considerations?
@@ -1329,13 +1266,11 @@ void BotMan::DoNonCombatAI()
 	
 	// Move forward only if it's safe (replace this bloatness with a function)
 	
-	if((Crossfire(player->x, player->y)
-		|| !(searchset[nowon].next >= 0 
-			 && Crossfire(Basic::Major(searchset[searchset[nowon].next].tilex), 
-						  Basic::Major(searchset[searchset[nowon].next].tiley)))
-		&& !(searchset[nowon].next >= 0 && searchset[searchset[nowon].next].next >= 0
-			 && Crossfire(Basic::Major(searchset[searchset[searchset[nowon].next].next].tilex), 
-						  Basic::Major(searchset[searchset[searchset[nowon].next].next].tiley)))))
+	if(Crossfire(player->x, player->y) ||
+	   !(nexton >= 0
+		 && Crossfire(Basic::Major(nx), Basic::Major(ny))) &&
+	   !(nexton2 >= 0
+		 && Crossfire(Basic::Major(nx2), Basic::Major(ny2))))
 	{
 		if(retreatwaitdelay)
 			retreatwaitdelay--;
@@ -1352,7 +1287,7 @@ void BotMan::DoNonCombatAI()
 	}
 	else if (dangle > -45 && dangle < 45)
 	{
-		controly += BASEMOVE * tics;
+		controly += BASEMOVE * tics;	// back off a little after retreating
 		retreatwaitdelay = 35;
 	}
 	// normally just turn (it's non-combat, no problem)
@@ -1365,39 +1300,55 @@ void BotMan::DoNonCombatAI()
 	else if(dangle < -15)
 		controlx = +RUNMOVE * tics;
 	else if(dangle < 0)
-		controlx = +BASEMOVE * tics;
-	else
+		controlx = +BASEMOVE * tics;/*
+	else// if(tangle % 90 == 0)
 	{
 		// straight line: can strafe now
 		buttonstate[bt_strafe] = true;
-		fixed centx, centy, cento, plro;
-		centx = (player->tilex << TILESHIFT);
-		centy = (player->tiley << TILESHIFT);
+		fixed centx, centy, dif, dif1, dif2;
+		centx = (player->tilex << TILESHIFT) + (1<<(TILESHIFT - 1));
+		centy = (player->tiley << TILESHIFT) + (1<<(TILESHIFT - 1));
 		
 		switch(tangle)
 		{
 			case 0:
-				cento = -centy;
-				plro = -player->y + (1<<(TILESHIFT - 1));
+				dif = player->y - centy;
+				break;
+			case 45:
+				dif1 = player->y - centy;
+				dif2 = player->x - centx;
+				dif = dif1 > dif2 ? dif1 : dif2;
 				break;
 			case 90:
-				cento = -centx;
-				plro = -player->x + (1<<(TILESHIFT - 1));
+				dif = player->x - centx;
+				break;
+			case 135:
+				dif1 = -player->y + centy;
+				dif2 = player->x - centx;
+				dif = dif1 > dif2 ? dif1 : dif2;
 				break;
 			case 180:
-				cento = centy;
-				plro = player->y - (1<<(TILESHIFT - 1));
+				dif = centy - player->y;
+				break;
+			case 225:
+				dif1 = -player->y + centy;
+				dif2 = -player->x + centx;
+				dif = dif1 > dif2 ? dif1 : dif2;
 				break;
 			case 270:
-				cento = centx;
-				plro = player->x - (1<<(TILESHIFT - 1));
+				dif = centx - player->x;
+				break;
+			case 315:
+				dif1 = player->y - centy;
+				dif2 = -player->x + centx;
+				dif = dif1 > dif2 ? dif1 : dif2;
 				break;
 		}
-		if(plro - cento > 4096)
-			controlx = BASEMOVE * tics;
-		else if(plro - cento < -4096)
+		if(dif > 4096)
 			controlx = -BASEMOVE * tics;
-	}
+		else if(dif < -4096)
+			controlx = BASEMOVE * tics;
+	}*/
 }
 
 //
