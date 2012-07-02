@@ -431,6 +431,9 @@ void TakeDamage (int points,objtype *attacker)
         return;
     if (gamestate.difficulty==gd_baby)
         points>>=2;
+	
+	// IOAN 02.07.2012: alert the bot that damage was taken
+	BotMan::damagetaken = attacker;
 
     if (!godmode)
         gamestate.health -= points;

@@ -81,8 +81,15 @@ protected:
 	static void DoCombatAI(int eangle, int edist);
 	// Do noncombat AI
 	static void DoNonCombatAI();
+	// Do knife AI (when guns won't work)
+	static boolean DoMeleeAI();
+	// See if there's an active behind the corner that may be knifed
+	static objtype *DogGnawing(int *eangle = NULL);
+	// Turn the player
+	static void TurnToAngle(int dangle);
 public:
 	static boolean active;	// true if bots are activated
+	static objtype *damagetaken;
 	static HistoryRatio shootRatio;
 
 	// Finds the path to walk through

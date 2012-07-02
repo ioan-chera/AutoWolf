@@ -15,6 +15,7 @@
 
 // static class member definition
 boolean BotMan::active;
+objtype *BotMan::damagetaken;
 // protected ones
 boolean BotMan::panic;
 byte BotMan::retreatwaitdelay, BotMan::retreat, BotMan::pressuse;
@@ -76,6 +77,9 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 			case    bo_key2:
 			case    bo_key3:
 			case    bo_key4:
+				if(!knifeinsight && !(gamestate.keys & (1<<(statobjlist[i].itemnumber - bo_key1))))
+					return true;
+				break;
 			case    bo_cross:
 			case    bo_chalice:
 			case    bo_bible:
@@ -84,7 +88,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 					return true;
 				break;
 			case    bo_machinegun:
+				if(gamestate.bestweapon < wp_machinegun || gamestate.ammo <= 93)
+					return true;
+				break;
 			case    bo_chaingun:
+				if(gamestate.bestweapon < wp_chaingun || gamestate.ammo <= 93)
+					return true;
+				break;
 			case    bo_fullheal:
 				return true;
 			case    bo_clip:
@@ -318,7 +328,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			if(check && !ISPOINTER(check) && !(door & 0x80)
 				|| 
 				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1) ||
-				mindnazis && IsEnemyBlocking(cx, cy))
+				mindnazis && (player->tilex != tx || player->tiley != ty) && IsEnemyBlocking(cx, cy))
 			{
 				continue;	// solid, can't be passed
 			}
@@ -442,7 +452,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 		j = abs(ret->tiley - ty);
 		i = k > j ? k : j;
 
-		if(k > 15 || j > 15)
+		if(i > 15)
 			continue;
 		if(!CheckLine(ret))
 			continue;
@@ -544,7 +554,7 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		if(ret == objignore)
+		if(!areabyplayer[ret->areanumber] || ret == objignore)
 			continue;
 		k = ret->tilex - (x >> TILESHIFT);
 		j = ret->tiley - (y >> TILESHIFT);
@@ -793,7 +803,7 @@ objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		if(abs(ret->x - x) < 1<<TILESHIFT && abs(ret->y - y) < 1<<TILESHIFT)
-			if(ret->flags & FL_ATTACKMODE)
+//			if(ret->flags & FL_ATTACKMODE)
 				return ret;
 	}
 	return NULL;
@@ -814,6 +824,36 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty)
 			return ret;
 	}
 	return NULL;
+}
+
+//
+// BotMan::DogGnawing
+//
+// a living aggressive enemy is all behind the corner
+//
+objtype *BotMan::DogGnawing(int *eangle)
+{
+	objtype *check;
+    for (check=(objtype *)Basic::livingNazis.firstObject(); check; check=(objtype *)Basic::livingNazis.nextObject())
+    {
+        if(check->obclass == dogobj && (check->flags & FL_ATTACKMODE))
+		{
+			int dx = check->tilex - player->tilex, dy = check->tiley - player->tiley;
+			if(areabyplayer[check->areanumber] && abs(dx) <= 1 && 
+			   abs(dy) <= 1)
+			{
+				if(eangle)
+				{
+					double ddx = (double)dx, ddy = -(double)dy;
+					double dang = atan2(ddy, ddx);
+					*eangle = (int)(180.0/PI*dang);
+				}
+				return check;
+			}
+		}
+    }
+	
+    return NULL;
 }
 
 //
@@ -950,21 +990,11 @@ void BotMan::MoveByStrafe()
 		controlx = -RUNMOVE * tics;
 		buttonstate[bt_strafe] = false;
 	}
-//	else if(dangle > 0 && movedir == 0)
-//	{
-//		controlx = -BASEMOVE * tics;
-//		buttonstate[bt_strafe] = false;
-//	}
 	else if(dangle < -15)
 	{
 		controlx = +RUNMOVE * tics;
 		buttonstate[bt_strafe] = false;
 	}
-//	else if(dangle < -0 && movedir == 0)
-//	{
-//		controlx = +BASEMOVE * tics;
-//		buttonstate[bt_strafe] = false;
-//	}
 	else
 	{
 		buttonstate[bt_strafe] = true;
@@ -1036,13 +1066,35 @@ void BotMan::MoveByStrafe()
 //
 void BotMan::ChooseWeapon()
 {
-	if(gamestate.bestweapon == wp_chaingun)
+	if(gamestate.ammo > 0)
 	{
-		if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
-			buttonstate[bt_readymachinegun] = true;
-		else if(gamestate.weapon != wp_chaingun && (panic || gamestate.ammo >= 50 && shootRatio.getValue() > 7))
-			buttonstate[bt_readychaingun] = true;
+		if(gamestate.weapon == wp_knife)
+			buttonstate[bt_readyknife + gamestate.bestweapon - wp_knife] = true;
+		if(gamestate.bestweapon == wp_chaingun)
+		{
+			if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
+				buttonstate[bt_readymachinegun] = true;
+			else if(gamestate.weapon != wp_chaingun && (panic || gamestate.ammo >= 50 && shootRatio.getValue() > 7))
+				buttonstate[bt_readychaingun] = true;
+		}
 	}
+}
+
+//
+// BotMan::TurnToAngle
+//
+void BotMan::TurnToAngle(int dangle)
+{
+	buttonstate[bt_strafe] = false;
+
+	if(dangle > 15)
+		controlx = -RUNMOVE * tics;
+	else if(dangle > 0)
+		controlx = -BASEMOVE * tics;
+	else if(dangle < -15)
+		controlx = +RUNMOVE * tics;
+	else if(dangle < 0)
+		controlx = +BASEMOVE * tics;
 }
 
 //
@@ -1050,6 +1102,9 @@ void BotMan::ChooseWeapon()
 //
 void BotMan::DoCombatAI(int eangle, int edist)
 {
+	// Set correct weapon
+	ChooseWeapon();
+	
 	nothingleft = SSGeneral;	// reset elevator counter if distracted
 	
 	if(gamestate.weapon == wp_knife)
@@ -1064,17 +1119,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	// centred angle here
 	int dangle = Basic::CentreAngle(eangle, player->angle);
 	
-	buttonstate[bt_strafe] = false;
-	// turn towards nearest target
-
-	if(dangle > 15)
-		controlx = -RUNMOVE * tics;
-	else if(dangle > 0)
-		controlx = -BASEMOVE * tics;
-	else if(dangle < -15)
-		controlx = +RUNMOVE * tics;
-	else if(dangle < 0)
-		controlx = +BASEMOVE * tics;
+	TurnToAngle(dangle);
 	
 	objtype *check = EnemyOnTarget();
 	objtype *check2 = DamageThreat(check);
@@ -1098,7 +1143,8 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		else
 		{
 			panic = true;
-			DoRetreat(false, check2);
+			controly = RUNMOVE*tics;
+			//DoRetreat(false, check2);
 		}
 		
 		// TODO: make complete projectile avoider
@@ -1138,8 +1184,6 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		// shoot according to how the weapon works
 		if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
 			buttonstate[bt_attack] = true;
-		else
-			buttonstate[bt_attack] = false;
 		
 		if(!retreat && (!check2 || check2 == check) && edist > 6 || 
 		   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
@@ -1291,65 +1335,43 @@ void BotMan::DoNonCombatAI()
 		retreatwaitdelay = 35;
 	}
 	// normally just turn (it's non-combat, no problem)
-	buttonstate[bt_strafe] = false;
-	
-	if(dangle > 15)
-		controlx = -RUNMOVE * tics;
-	else if(dangle > 0)
-		controlx = -BASEMOVE * tics;
-	else if(dangle < -15)
-		controlx = +RUNMOVE * tics;
-	else if(dangle < 0)
-		controlx = +BASEMOVE * tics;/*
-	else// if(tangle % 90 == 0)
-	{
-		// straight line: can strafe now
-		buttonstate[bt_strafe] = true;
-		fixed centx, centy, dif, dif1, dif2;
-		centx = (player->tilex << TILESHIFT) + (1<<(TILESHIFT - 1));
-		centy = (player->tiley << TILESHIFT) + (1<<(TILESHIFT - 1));
-		
-		switch(tangle)
-		{
-			case 0:
-				dif = player->y - centy;
-				break;
-			case 45:
-				dif1 = player->y - centy;
-				dif2 = player->x - centx;
-				dif = dif1 > dif2 ? dif1 : dif2;
-				break;
-			case 90:
-				dif = player->x - centx;
-				break;
-			case 135:
-				dif1 = -player->y + centy;
-				dif2 = player->x - centx;
-				dif = dif1 > dif2 ? dif1 : dif2;
-				break;
-			case 180:
-				dif = centy - player->y;
-				break;
-			case 225:
-				dif1 = -player->y + centy;
-				dif2 = -player->x + centx;
-				dif = dif1 > dif2 ? dif1 : dif2;
-				break;
-			case 270:
-				dif = centx - player->x;
-				break;
-			case 315:
-				dif1 = player->y - centy;
-				dif2 = -player->x + centx;
-				dif = dif1 > dif2 ? dif1 : dif2;
-				break;
-		}
-		if(dif > 4096)
-			controlx = -BASEMOVE * tics;
-		else if(dif < -4096)
-			controlx = BASEMOVE * tics;
-	}*/
+	TurnToAngle(dangle);
 }
+
+//
+// BotMan::DoMeleeAI
+//
+// Use the knife if the gun won't work (e.g. biting dogs)
+//
+boolean BotMan::DoMeleeAI()
+{
+	int eangle;
+	if(DogGnawing(&eangle))
+	{
+		if(gamestate.weapon != wp_knife)
+			buttonstate[bt_readyknife] = true;
+		
+		// Use missile AI code here
+		path.reset();
+		// Enemy visible mode
+		// centred angle here
+		int dangle = Basic::CentreAngle(eangle, player->angle);
+		
+		TurnToAngle(dangle);
+		if(abs(dangle) <= 5)
+		{
+			controly = -RUNMOVE * tics;
+			if(pressuse % 4 == 0)
+				buttonstate[bt_attack] = true;
+		}
+	}
+	else {
+		return false;
+	}
+	return true;
+}
+
+
 
 //
 // BotMan::FindPath
@@ -1362,8 +1384,7 @@ void BotMan::DoCommand()
 	static short eangle = -1;
 	static int edist = -1;
 	
-	// Set correct weapon
-	ChooseWeapon();
+	
 
 	objtype *check0;
 	
@@ -1374,16 +1395,34 @@ void BotMan::DoCommand()
 	check0 = EnemyVisible(&eangle, &edist);
 	if(check0)
 	{
+		damagetaken = NULL;
 		DoCombatAI(eangle, edist);
 	}
 	else if(retreat)	// standard retreat, still moving
 	{
+		damagetaken = NULL;
 		edist = -1;
 		retreat--;
 		MoveByStrafe();
 	}
 	else
 	{
-		DoNonCombatAI();
+		if(damagetaken)	// someone hurt me but I couldn't see him
+		{
+			threater = damagetaken;
+			if(FindRandomPath(false, true, true))
+			{
+				MoveByStrafe();
+			}
+			else
+			{
+				controly = RUNMOVE*tics;
+				//DoRetreat(false, check2);
+			}
+			retreat = 5;
+			damagetaken = NULL;
+		}
+		else
+			DoNonCombatAI();
 	}
 }
