@@ -1102,6 +1102,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\HistoryRatio.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\id_ca.cpp"
 				>
 			</File>
@@ -1135,6 +1139,14 @@
 			</File>
 			<File
 				RelativePath=".\ioan_bot.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LinkList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PathArray.cpp"
 				>
 			</File>
 			<File
@@ -1320,6 +1332,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HistoryRatio.h"
+				>
+			</File>
+			<File
 				RelativePath=".\id_ca.h"
 				>
 			</File>
@@ -1353,6 +1369,14 @@
 			</File>
 			<File
 				RelativePath=".\ioan_bot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LinkList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PathArray.h"
 				>
 			</File>
 			<File
