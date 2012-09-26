@@ -420,7 +420,6 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
 	return newobj;
 }
 
-#ifndef SPEAR
 //
 // Basic::SpawnBoss
 //
@@ -543,6 +542,7 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 	return newobj;
 }
 
+#ifndef SPEAR
 //
 // Basic::SpawnGhosts
 //

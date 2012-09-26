@@ -1507,6 +1507,9 @@ extern  statetype s_mutshoot2;
 extern  statetype s_mutshoot3;
 extern  statetype s_mutshoot4;
 
+extern statetype s_boom1;
+extern statetype s_boom2;
+extern statetype s_boom3;
 
 #ifndef SPEAR
 extern statetype s_bossstand;
@@ -1572,9 +1575,6 @@ extern  statetype s_fatshoot3;
 extern  statetype s_fatshoot4;
 extern  statetype s_fatshoot5;
 extern  statetype s_fatshoot6;
-extern statetype s_boom1;
-extern statetype s_boom2;
-extern statetype s_boom3;
 #else
 extern  statetype s_angelshoot1;
 extern  statetype s_angelshoot2;

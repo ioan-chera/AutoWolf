@@ -313,6 +313,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			
 			if(j >= 4 && j < 8)
 			{
+				if(retreating)
+					continue;	// Don't go diagonally if looking for retreat
 				check = actorat[cx][ty];
 				check2 = actorat[tx][cy];
 				if(check && !ISPOINTER(check) || check2 && !ISPOINTER(check2))
@@ -328,7 +330,9 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			if(check && !ISPOINTER(check) && !(door & 0x80)
 				|| 
 				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1) ||
-				mindnazis && (player->tilex != tx || player->tiley != ty) && IsEnemyBlocking(cx, cy))
+				mindnazis && 
+			   (player->tilex != tx || player->tiley != ty || check && ISPOINTER(check) && check->flags & FL_SHOOTABLE) && 
+			   IsEnemyBlocking(cx, cy))
 			{
 				continue;	// solid, can't be passed
 			}
