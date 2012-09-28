@@ -39,7 +39,8 @@ protected:
 
 	// protected variables
 	static boolean panic;
-	static byte retreatwaitdelay, retreat, pressuse;
+	static byte pressuse;
+	static short retreatwaitdelay, retreatwaitcount, retreat;
 	static SearchStage nothingleft;
 	static int exitx, exity;
 	static objtype *threater;

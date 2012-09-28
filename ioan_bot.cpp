@@ -18,7 +18,8 @@ boolean BotMan::active;
 objtype *BotMan::damagetaken;
 // protected ones
 boolean BotMan::panic;
-byte BotMan::retreatwaitdelay, BotMan::retreat, BotMan::pressuse;
+byte BotMan::pressuse;
+short BotMan::retreatwaitdelay, BotMan::retreatwaitcount, BotMan::retreat;
 SearchStage BotMan::nothingleft;
 int BotMan::exitx, BotMan::exity;
 objtype *BotMan::threater;
@@ -37,6 +38,7 @@ void BotMan::MapInit()
 	retreat = 0;
 	threater = NULL;
 	retreatwaitdelay = 0;
+	retreatwaitcount = 0;
 	nothingleft = SSGeneral;
 	path.makeEmpty();
 	panic = false;
@@ -272,7 +274,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			}
 		}
 
-		// This looks in all four directions. Planned to be in eight directions.
+		// This looks in all eight directions.
 		for(j = 0; j < 8; ++j)
 		{
 			switch(j)
@@ -341,12 +343,16 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 				// This checks if it's a door and can be passed
 				objtype *checkindoor = actorat[cx][cy];
 				
+				// Don't attempt to retreat (backpedal) through closed or blocked doors
 				if(retreating && checkindoor && (!ISPOINTER(checkindoor) || 
 												 (ISPOINTER(checkindoor) && checkindoor != player && 
 												  checkindoor->hitpoints > 0)))
 				{
 					continue;
 				}
+				
+				// Don't attempt to pass through locked doors without having the key
+				// FIXME: take care with open locked doors, still without the key, not to get stuck
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
@@ -360,7 +366,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 			// this looks if the entry exists in the list
 			ifound = path.openCoordsIndex(cx, cy);
 			
-			if(ifound == -2)
+			if(ifound == -2)	// found it as closed. Don't try to visit it again, so pass
 				continue;
 			
 			// This sets the score, depending on situation
@@ -370,7 +376,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 				tentative_g_add = Basic::ApproxDist(0x100, 0x100);
 			}
 
-			
+			// Increase the effective (time) distance if a closed door is in the way
 			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening 
 			   || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
 				tentative_g_add <<= 2;
@@ -461,10 +467,13 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 		if(!CheckLine(ret))
 			continue;
 
+		// don't change target if distance difference is too little (don't lose focus on the current threat)
 		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && !(oldret->flags & FL_SHOOTABLE))
 		{
+			// choose closest target
 			if(i <= distmin)
 			{
+				// set angle towards ret
 				dby = -((double)(ret->y) - (double)(player->y));
 				dbx = (double)(ret->x) - (double)(player->x);
 				distmin = i;
@@ -480,6 +489,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 		}
 	}
 
+	// found a target
 	if(retmin)
 	{
 		oldret = retmin;
@@ -543,7 +553,13 @@ objtype *BotMan::EnemyEager()
 //
 objtype *BotMan::DamageThreat(objtype *targ)
 {
-	return Crossfire(player->x, player->y, targ ? (Basic::IsBoss(targ->obclass) ? NULL : targ) : NULL);
+	objtype *objignore = targ;
+	if(targ && (Basic::IsBoss(targ->obclass) || targ->obclass == mutantobj && gamestate.weapon < wp_machinegun
+				&& gamestate.weaponframe != 1))
+	{
+		objignore = NULL;
+	}
+	return Crossfire(player->x, player->y, objignore);
 }
 
 //
@@ -1136,7 +1152,10 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		proj = 1;
 	}
 	
-	if(check2 && (check2 != check || Basic::IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
+	if(check2 && (check2 != check 
+				  || (Basic::IsBoss(check->obclass) || check->obclass == mutantobj && gamestate.weapon < wp_machinegun
+					  && gamestate.weaponframe != 1)) 
+	   && gamestate.weapon != wp_knife)
 	{
 		threater = check2;
 		if(FindRandomPath(false, true, true))
@@ -1313,17 +1332,31 @@ void BotMan::DoNonCombatAI()
 		buttonstate[bt_attack] = false;
 	
 	// Move forward only if it's safe (replace this bloatness with a function)
-	
-	if(Crossfire(player->x, player->y) ||
+	//
+	// Logic: if there is danger ahead, set up timer and backpedal.
+	// If there is not, decrease timer, then move ahead.
+	// What to do: do not set timer for the 10th consecutive time, 
+	// and just pretend to go forward (default first case)
+	//
+	// Detect going back right after being free.
+	// How? retreatwaitdelay just below 0
+	//
+	// Solution? retreatwaitcount variable
+	//
+	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) ||
 	   !(nexton >= 0
 		 && Crossfire(Basic::Major(nx), Basic::Major(ny))) &&
 	   !(nexton2 >= 0
 		 && Crossfire(Basic::Major(nx2), Basic::Major(ny2))))
 	{
-		if(retreatwaitdelay)
-			retreatwaitdelay--;
+		if(retreatwaitcount < 10 && retreatwaitdelay > 0)
+			retreatwaitdelay -= tics;
 		else if(dangle > -45 && dangle < 45)
 		{
+			if(retreatwaitdelay > -100)	// set to an arbitrary negative, as a threshold
+				retreatwaitdelay -= tics;
+			else
+				retreatwaitcount = 0;	// reset retreatwaitcount
 			// So move
 			controly = -RUNMOVE * tics;
 			// Press if there's an obstacle ahead
@@ -1335,6 +1368,10 @@ void BotMan::DoNonCombatAI()
 	}
 	else if (dangle > -45 && dangle < 45)
 	{
+		if(retreatwaitdelay > -10 && retreatwaitdelay <= 0)	// re-retreating too soon.
+		{
+			retreatwaitcount++;	// so increase counter
+		}
 		controly += BASEMOVE * tics;	// back off a little after retreating
 		retreatwaitdelay = 35;
 	}
@@ -1378,9 +1415,9 @@ boolean BotMan::DoMeleeAI()
 
 
 //
-// BotMan::FindPath
+// BotMan::DoCommand
 //
-// Finds the path to walk through
+// Bot execution entry
 //
 void BotMan::DoCommand()
 {
@@ -1402,11 +1439,11 @@ void BotMan::DoCommand()
 		damagetaken = NULL;
 		DoCombatAI(eangle, edist);
 	}
-	else if(retreat)	// standard retreat, still moving
+	else if(retreat > 0)	// standard retreat, still moving
 	{
 		damagetaken = NULL;
 		edist = -1;
-		retreat--;
+		retreat -= tics;
 		MoveByStrafe();
 	}
 	else

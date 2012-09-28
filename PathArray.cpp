@@ -50,7 +50,7 @@ int PathArray::addStartNode(int tx, int ty)
 int PathArray::addStartNode(int tx, int ty, int destx, int desty, boolean negate)
 {
 	Node node;
-	int dist = Basic::ApproxDist(destx - tx, desty - ty);
+	int dist = Basic::ApproxDist((destx - tx) << 8, (desty - ty) << 8);
 	
 	// This resets and creates new data with possible negative distance
 	node.g_score = 0;
@@ -170,7 +170,7 @@ void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist, int
 	if(ichange == -1)
 	{
 		Node node;
-		int apdist = Basic::ApproxDist(destx - cx, desty - cy);
+		int apdist = Basic::ApproxDist((destx - cx) << 8, (desty - cy) << 8);
 		node.g_score = dist;
 		node.h_score = negate ? -apdist : apdist;
 		node.f_score = node.g_score + node.h_score;
