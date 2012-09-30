@@ -1368,7 +1368,7 @@ void BotMan::DoNonCombatAI()
 	}
 	else if (dangle > -45 && dangle < 45)
 	{
-		if(retreatwaitdelay > -10 && retreatwaitdelay <= 0)	// re-retreating too soon.
+		if(retreatwaitdelay > -20 && retreatwaitdelay <= 0)	// re-retreating too soon.
 		{
 			retreatwaitcount++;	// so increase counter
 		}
