@@ -2,6 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bas.h"	// IOAN 29.09.2012
 
 /*
 =============================================================================
@@ -823,7 +824,8 @@ void MovePWalls (void)
         //
         // see if it should be pushed farther
         //
-        if (pwallstate>=256)            // only move two tiles fix
+		// IOAN 29.09.2012: secretstep3 parameter in action
+        if (pwallstate>= (Basic::secretstep3 ? 384 : 256))            // only move two tiles fix
         {
             //
             // the block has been pushed two tiles

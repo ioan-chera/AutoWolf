@@ -55,6 +55,34 @@ Compiling from source code:
 
 See Wolf4SDL's readme file (README-wolf4sdl.txt) for information on this topic.
 
+Frequently asked questions
+--------------------------
+
+Q: The bot has stopped moving, is this a problem with its AI?
+A: The bot will stop moving when there is nowhere to go, i.e. when it's stuck.
+   This can happen because:
+   a) it failed to solve a pushwall puzzle critical to solving the level.
+      Currently the bot does not know how to intelligently solve pushwall
+      puzzles like those in E4M2 or E4M7 (the latter case being critical).
+   b) the map has been designed with the pushwall bug in mind, where the
+      walls would move 3 steps instead of 2, in vanilla Wolf3D, when the
+      frame rate would be large enough. To emulate this bug, you need to
+      run AutoWolf with the --secretstep3 command-line switch.
+
+
+Q: The bot has gone into a perpetual loop. It won't advance.
+A: Though I've tried fixing the more prominent cases, it can still occur.
+   To budge it, simply try to move it forward (by running). Even if it's a
+   bot, you still have some limited control over it.
+
+
+Q: Does the bot learn as it goes?
+A: No, for now everything is programmed from the start. This also means that
+   nothing needs to be stored in save-games, since the bot can set itself up
+   immediately from the level's conditions.
+   Learning algorithms are intended when AutoWolf gets ported to mod-friendly
+   engines.
+
 
 Credits:
 --------
@@ -81,6 +109,15 @@ Licenses:
      At your choice:
      - license-mame.txt (fmopl.cpp)
      - license-gpl.txt (dbopl.cpp, USE_GPL define in version.h or set GPL=1 for Makefile)
+
+=============================================================================
+
+    This program is distributed in the hope that it will be useful, but 
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+                             for more details.
+
+=============================================================================
 
 Contact:
 --------

@@ -61,7 +61,7 @@
 			FA76312D159F9B8E00610D61 /* PathArray.cpp:145 */,
 			FA76312F159F9B8F00610D61 /* PathArray.cpp:149 */,
 			FA763131159F9B9000610D61 /* PathArray.cpp:151 */,
-			FA763170159FAAFA00610D61 /* ioan_bas.h:155 */,
+			FA763170159FAAFA00610D61 /* ioan_bas.h:156 */,
 			FA67501B16161CA8005CC6B8 /* ioan_bot.cpp:1373 */,
 		);
 		codeSenseManager = FA21BE0F1574127500C23B4A /* Code sense */;
@@ -220,6 +220,19 @@
 			FA67501F16161CAE005CC6B8 /* PBXTextBookmark */ = FA67501F16161CAE005CC6B8 /* PBXTextBookmark */;
 			FA67502016161CAE005CC6B8 /* PBXTextBookmark */ = FA67502016161CAE005CC6B8 /* PBXTextBookmark */;
 			FA67502416161CF3005CC6B8 /* PBXTextBookmark */ = FA67502416161CF3005CC6B8 /* PBXTextBookmark */;
+			FA675036161721FC005CC6B8 /* PBXTextBookmark */ = FA675036161721FC005CC6B8 /* PBXTextBookmark */;
+			FA675037161721FC005CC6B8 /* PBXTextBookmark */ = FA675037161721FC005CC6B8 /* PBXTextBookmark */;
+			FA675038161721FC005CC6B8 /* PBXTextBookmark */ = FA675038161721FC005CC6B8 /* PBXTextBookmark */;
+			FA67503916177081005CC6B8 /* PBXTextBookmark */ = FA67503916177081005CC6B8 /* PBXTextBookmark */;
+			FA67503A16177081005CC6B8 /* PBXTextBookmark */ = FA67503A16177081005CC6B8 /* PBXTextBookmark */;
+			FA67503B16177081005CC6B8 /* PBXTextBookmark */ = FA67503B16177081005CC6B8 /* PBXTextBookmark */;
+			FA67503C16177081005CC6B8 /* PBXTextBookmark */ = FA67503C16177081005CC6B8 /* PBXTextBookmark */;
+			FA675045161775CD005CC6B8 /* PBXTextBookmark */ = FA675045161775CD005CC6B8 /* PBXTextBookmark */;
+			FA675046161775CD005CC6B8 /* PBXTextBookmark */ = FA675046161775CD005CC6B8 /* PBXTextBookmark */;
+			FA675047161775CD005CC6B8 /* PBXTextBookmark */ = FA675047161775CD005CC6B8 /* PBXTextBookmark */;
+			FA675048161775CD005CC6B8 /* PBXTextBookmark */ = FA675048161775CD005CC6B8 /* PBXTextBookmark */;
+			FA675049161775CD005CC6B8 /* PBXTextBookmark */ = FA675049161775CD005CC6B8 /* PBXTextBookmark */;
+			FA67504D16177689005CC6B8 /* PBXTextBookmark */ = FA67504D16177689005CC6B8 /* PBXTextBookmark */;
 			FA762DC6159E443200610D61 = FA762DC6159E443200610D61 /* PBXTextBookmark */;
 			FA762E78159F0F1A00610D61 = FA762E78159F0F1A00610D61 /* PBXTextBookmark */;
 			FA762E79159F0F1A00610D61 = FA762E79159F0F1A00610D61 /* PBXTextBookmark */;
@@ -329,9 +342,9 @@
 	};
 	D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 23192}}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 23218}}";
 			sepNavSelRange = "{122, 8}";
-			sepNavVisRange = "{0, 415}";
+			sepNavVisRange = "{0, 418}";
 		};
 	};
 	D901F4D00FC0DBCB0040C290 /* wl_game.cpp */ = {
@@ -381,16 +394,16 @@
 	};
 	D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 45552}}";
-			sepNavSelRange = "{94280, 21}";
-			sepNavVisRange = "{94180, 627}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 45331}}";
+			sepNavSelRange = "{94271, 0}";
+			sepNavVisRange = "{94177, 632}";
 		};
 	};
 	D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 11388}}";
-			sepNavSelRange = "{14909, 0}";
-			sepNavVisRange = "{14853, 291}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 11076}}";
+			sepNavSelRange = "{94, 0}";
+			sepNavVisRange = "{0, 634}";
 		};
 	};
 	D901F4E00FC0DBCB0040C290 /* version.h */ = {
@@ -495,9 +508,9 @@
 	};
 	D901F4F20FC0DBCB0040C290 /* wl_main.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 26208}}";
-			sepNavSelRange = "{20067, 24}";
-			sepNavVisRange = "{19835, 572}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 25103}}";
+			sepNavSelRange = "{50247, 0}";
+			sepNavVisRange = "{49809, 856}";
 			sepNavWindowFrame = "{{0, 52}, {1280, 721}}";
 		};
 	};
@@ -549,14 +562,16 @@
 			NO,
 			NO,
 			NO,
+			YES,
 		);
 		argumentStrings = (
 			"--windowed",
-			"--tedlevel 09",
+			"--tedlevel 23",
 			"--hard",
 			"--easy",
 			"--nonazis",
 			"--nobot",
+			"--secretstep3",
 		);
 		autoAttachOnCrash = 1;
 		breakpointsEnabled = 1;
@@ -600,24 +615,24 @@
 	};
 	FA21BE11157412A800C23B4A /* ioan_bas.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1090, 8411}}";
-			sepNavSelRange = "{3147, 9}";
-			sepNavVisRange = "{2830, 966}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 8684}}";
+			sepNavSelRange = "{196, 0}";
+			sepNavVisRange = "{25, 1003}";
 			sepNavWindowFrame = "{{0, 52}, {1280, 721}}";
 		};
 	};
 	FA21BE12157412A800C23B4A /* ioan_bas.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 2483}}";
-			sepNavSelRange = "{1964, 0}";
-			sepNavVisRange = "{1792, 453}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 2288}}";
+			sepNavSelRange = "{1165, 0}";
+			sepNavVisRange = "{375, 894}";
 		};
 	};
 	FA21BE13157412A800C23B4A /* ioan_bot.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {885, 18889}}";
-			sepNavSelRange = "{32070, 0}";
-			sepNavVisRange = "{31985, 547}";
+			sepNavIntBoundsRect = "{{0, 0}, {885, 19110}}";
+			sepNavSelRange = "{28470, 0}";
+			sepNavVisRange = "{28080, 557}";
 			sepNavWindowFrame = "{{0, 57}, {1280, 721}}";
 		};
 	};
@@ -684,7 +699,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1385";
 		rLen = 0;
-		rLoc = 33089;
+		rLoc = 33097;
 		rType = 0;
 		vrLen = 316;
 		vrLoc = 31390;
@@ -694,7 +709,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1387";
 		rLen = 0;
-		rLoc = 33102;
+		rLoc = 33110;
 		rType = 0;
 		vrLen = 469;
 		vrLoc = 31345;
@@ -704,7 +719,7 @@
 		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
 		name = "ioan_bas.cpp: 673";
 		rLen = 39;
-		rLoc = 18210;
+		rLoc = 18230;
 		rType = 0;
 		vrLen = 398;
 		vrLoc = 17962;
@@ -744,7 +759,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1438";
 		rLen = 13;
-		rLoc = 33893;
+		rLoc = 33901;
 		rType = 0;
 		vrLen = 402;
 		vrLoc = 32419;
@@ -754,7 +769,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1436";
 		rLen = 0;
-		rLoc = 33880;
+		rLoc = 33888;
 		rType = 0;
 		vrLen = 387;
 		vrLoc = 32444;
@@ -774,7 +789,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1414";
 		rLen = 0;
-		rLoc = 33489;
+		rLoc = 33497;
 		rType = 0;
 		vrLen = 483;
 		vrLoc = 32229;
@@ -811,7 +826,7 @@
 		fRef = FA21BE12157412A800C23B4A /* ioan_bas.h */;
 		name = "ioan_bas.h: 93";
 		rLen = 39;
-		rLoc = 1942;
+		rLoc = 2031;
 		rType = 0;
 		vrLen = 521;
 		vrLoc = 2058;
@@ -851,7 +866,7 @@
 		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
 		name = "ioan_bas.cpp: 74";
 		rLen = 9;
-		rLoc = 3147;
+		rLoc = 3167;
 		rType = 0;
 		vrLen = 966;
 		vrLoc = 2830;
@@ -871,7 +886,7 @@
 		fRef = FA21BE12157412A800C23B4A /* ioan_bas.h */;
 		name = "ioan_bas.h: 93";
 		rLen = 0;
-		rLoc = 1964;
+		rLoc = 2053;
 		rType = 0;
 		vrLen = 453;
 		vrLoc = 1792;
@@ -930,7 +945,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1205";
 		rLen = 0;
-		rLoc = 27873;
+		rLoc = 27877;
 		rType = 0;
 		vrLen = 561;
 		vrLoc = 26765;
@@ -960,7 +975,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1350";
 		rLen = 16;
-		rLoc = 31520;
+		rLoc = 31528;
 		rType = 0;
 		vrLen = 730;
 		vrLoc = 31307;
@@ -970,7 +985,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1371";
 		rLen = 0;
-		rLoc = 32089;
+		rLoc = 32097;
 		rType = 0;
 		vrLen = 665;
 		vrLoc = 31703;
@@ -989,7 +1004,7 @@
 		ignoreCount = 0;
 		lineNumber = 1373;
 		location = AutoWolf;
-		modificationTime = 370547954.067094;
+		modificationTime = 370636423.972674;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -998,7 +1013,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1370";
 		rLen = 0;
-		rLoc = 32070;
+		rLoc = 32078;
 		rType = 0;
 		vrLen = 636;
 		vrLoc = 31854;
@@ -1008,7 +1023,7 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1371";
 		rLen = 0;
-		rLoc = 32074;
+		rLoc = 32082;
 		rType = 0;
 		vrLen = 548;
 		vrLoc = 31942;
@@ -1018,10 +1033,140 @@
 		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
 		name = "ioan_bot.cpp: 1370";
 		rLen = 0;
-		rLoc = 32070;
+		rLoc = 32078;
 		rType = 0;
 		vrLen = 547;
 		vrLoc = 31985;
+	};
+	FA675036161721FC005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */;
+		name = "wl_act2.cpp: 2978";
+		rLen = 0;
+		rLoc = 94271;
+		rType = 0;
+		vrLen = 632;
+		vrLoc = 94177;
+	};
+	FA675037161721FC005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
+		name = "ioan_bot.cpp: 1194";
+		rLen = 13;
+		rLoc = 27403;
+		rType = 0;
+		vrLen = 811;
+		vrLoc = 27315;
+	};
+	FA675038161721FC005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
+		name = "ioan_bot.cpp: 1233";
+		rLen = 0;
+		rLoc = 28470;
+		rType = 0;
+		vrLen = 520;
+		vrLoc = 28075;
+	};
+	FA67503916177081005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */;
+		name = "ioan_bot.cpp: 1233";
+		rLen = 0;
+		rLoc = 28470;
+		rType = 0;
+		vrLen = 557;
+		vrLoc = 28080;
+	};
+	FA67503A16177081005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE12157412A800C23B4A /* ioan_bas.h */;
+		name = "ioan_bas.h: 43";
+		rLen = 0;
+		rLoc = 1165;
+		rType = 0;
+		vrLen = 894;
+		vrLoc = 375;
+	};
+	FA67503B16177081005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4F20FC0DBCB0040C290 /* wl_main.cpp */;
+		name = "wl_main.cpp: 1937";
+		rLen = 0;
+		rLoc = 51227;
+		rType = 0;
+		vrLen = 1635;
+		vrLoc = 50497;
+	};
+	FA67503C16177081005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4F20FC0DBCB0040C290 /* wl_main.cpp */;
+		name = "wl_main.cpp: 1937";
+		rLen = 0;
+		rLoc = 51214;
+		rType = 0;
+		vrLen = 1714;
+		vrLoc = 50418;
+	};
+	FA675045161775CD005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */;
+		name = "wl_inter.cpp: 8";
+		rLen = 8;
+		rLoc = 122;
+		rType = 0;
+		vrLen = 418;
+		vrLoc = 0;
+	};
+	FA675046161775CD005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4F20FC0DBCB0040C290 /* wl_main.cpp */;
+		name = "wl_main.cpp: 1916";
+		rLen = 0;
+		rLoc = 50247;
+		rType = 0;
+		vrLen = 856;
+		vrLoc = 49809;
+	};
+	FA675047161775CD005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */;
+		name = "wl_act1.cpp: 5";
+		rLen = 0;
+		rLoc = 94;
+		rType = 0;
+		vrLen = 634;
+		vrLoc = 0;
+	};
+	FA675048161775CD005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
+		name = "ioan_bas.cpp: 74";
+		rLen = 9;
+		rLoc = 3167;
+		rType = 0;
+		vrLen = 966;
+		vrLoc = 2830;
+	};
+	FA675049161775CD005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
+		name = "ioan_bas.cpp: 9";
+		rLen = 0;
+		rLoc = 196;
+		rType = 0;
+		vrLen = 879;
+		vrLoc = 4;
+	};
+	FA67504D16177689005CC6B8 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
+		name = "ioan_bas.cpp: 9";
+		rLen = 0;
+		rLoc = 196;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 25;
 	};
 	FA762D62159CD1FF00610D61 /* HistoryRatio.h */ = {
 		uiCtxt = {
@@ -1051,7 +1196,7 @@
 		ignoreCount = 0;
 		lineNumber = 14;
 		location = AutoWolf;
-		modificationTime = 370547954.060788;
+		modificationTime = 370636423.969389;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1069,7 +1214,7 @@
 		ignoreCount = 0;
 		lineNumber = 20;
 		location = AutoWolf;
-		modificationTime = 370547954.060897;
+		modificationTime = 370636423.96948;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1087,7 +1232,7 @@
 		ignoreCount = 0;
 		lineNumber = 21;
 		location = AutoWolf;
-		modificationTime = 370547954.061311;
+		modificationTime = 370636423.969577;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1105,7 +1250,7 @@
 		ignoreCount = 0;
 		lineNumber = 15;
 		location = AutoWolf;
-		modificationTime = 370547954.061424;
+		modificationTime = 370636423.96967;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1154,7 +1299,7 @@
 		ignoreCount = 0;
 		lineNumber = 27;
 		location = AutoWolf;
-		modificationTime = 370547954.061528;
+		modificationTime = 370636423.96977;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1172,7 +1317,7 @@
 		ignoreCount = 0;
 		lineNumber = 758;
 		location = AutoWolf;
-		modificationTime = 370547954.061636;
+		modificationTime = 370636423.969862;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1190,7 +1335,7 @@
 		ignoreCount = 0;
 		lineNumber = 792;
 		location = AutoWolf;
-		modificationTime = 370547954.061741;
+		modificationTime = 370636423.969953;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1326,7 +1471,7 @@
 		ignoreCount = 0;
 		lineNumber = 243;
 		location = AutoWolf;
-		modificationTime = 370547954.06185;
+		modificationTime = 370636423.970056;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1354,7 +1499,7 @@
 		ignoreCount = 0;
 		lineNumber = 185;
 		location = AutoWolf;
-		modificationTime = 370547954.062051;
+		modificationTime = 370636423.970167;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1372,7 +1517,7 @@
 		ignoreCount = 0;
 		lineNumber = 187;
 		location = AutoWolf;
-		modificationTime = 370547954.064688;
+		modificationTime = 370636423.970273;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1390,7 +1535,7 @@
 		ignoreCount = 0;
 		lineNumber = 189;
 		location = AutoWolf;
-		modificationTime = 370547954.064837;
+		modificationTime = 370636423.970379;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1408,7 +1553,7 @@
 		ignoreCount = 0;
 		lineNumber = 191;
 		location = AutoWolf;
-		modificationTime = 370547954.065066;
+		modificationTime = 370636423.970492;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1425,7 +1570,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 191;
-		modificationTime = 370547954.065169;
+		modificationTime = 370636423.970611;
 		originalNumberOfMultipleMatches = 0;
 		state = 2;
 	};
@@ -1443,7 +1588,7 @@
 		ignoreCount = 0;
 		lineNumber = 209;
 		location = AutoWolf;
-		modificationTime = 370547954.065278;
+		modificationTime = 370636423.97074;
 		originalNumberOfMultipleMatches = 1;
 		state = 0;
 	};
@@ -1461,7 +1606,7 @@
 		ignoreCount = 0;
 		lineNumber = 211;
 		location = AutoWolf;
-		modificationTime = 370547954.065381;
+		modificationTime = 370636423.970852;
 		originalNumberOfMultipleMatches = 1;
 		state = 0;
 	};
@@ -1478,7 +1623,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 214;
-		modificationTime = 370547954.065496;
+		modificationTime = 370636423.970961;
 		originalNumberOfMultipleMatches = 0;
 		state = 2;
 	};
@@ -1496,7 +1641,7 @@
 		ignoreCount = 0;
 		lineNumber = 213;
 		location = AutoWolf;
-		modificationTime = 370547954.065599;
+		modificationTime = 370636423.971073;
 		originalNumberOfMultipleMatches = 1;
 		state = 0;
 	};
@@ -1513,7 +1658,7 @@
 		hitCount = 0;
 		ignoreCount = 0;
 		lineNumber = 216;
-		modificationTime = 370547954.065705;
+		modificationTime = 370636423.971274;
 		originalNumberOfMultipleMatches = 0;
 		state = 2;
 	};
@@ -1531,7 +1676,7 @@
 		ignoreCount = 0;
 		lineNumber = 215;
 		location = AutoWolf;
-		modificationTime = 370547954.065812;
+		modificationTime = 370636423.971386;
 		originalNumberOfMultipleMatches = 1;
 		state = 0;
 	};
@@ -1549,7 +1694,7 @@
 		ignoreCount = 0;
 		lineNumber = 131;
 		location = AutoWolf;
-		modificationTime = 370547954.06592;
+		modificationTime = 370636423.971553;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1567,7 +1712,7 @@
 		ignoreCount = 0;
 		lineNumber = 133;
 		location = AutoWolf;
-		modificationTime = 370547954.066051;
+		modificationTime = 370636423.971709;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1585,7 +1730,7 @@
 		ignoreCount = 0;
 		lineNumber = 137;
 		location = AutoWolf;
-		modificationTime = 370547954.066169;
+		modificationTime = 370636423.971837;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1603,7 +1748,7 @@
 		ignoreCount = 0;
 		lineNumber = 139;
 		location = AutoWolf;
-		modificationTime = 370547954.066357;
+		modificationTime = 370636423.971955;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1621,7 +1766,7 @@
 		ignoreCount = 0;
 		lineNumber = 143;
 		location = AutoWolf;
-		modificationTime = 370547954.066485;
+		modificationTime = 370636423.972066;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1639,7 +1784,7 @@
 		ignoreCount = 0;
 		lineNumber = 145;
 		location = AutoWolf;
-		modificationTime = 370547954.066604;
+		modificationTime = 370636423.972183;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1657,7 +1802,7 @@
 		ignoreCount = 0;
 		lineNumber = 149;
 		location = AutoWolf;
-		modificationTime = 370547954.066721;
+		modificationTime = 370636423.972302;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1675,7 +1820,7 @@
 		ignoreCount = 0;
 		lineNumber = 151;
 		location = AutoWolf;
-		modificationTime = 370547954.066842;
+		modificationTime = 370636423.972425;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1696,7 +1841,7 @@
 		path = /Developer/SDKs/MacOSX10.6.sdk/usr/include/architecture/i386/math.h;
 		sourceTree = "<absolute>";
 	};
-	FA763170159FAAFA00610D61 /* ioan_bas.h:155 */ = {
+	FA763170159FAAFA00610D61 /* ioan_bas.h:156 */ = {
 		isa = PBXFileBreakpoint;
 		actions = (
 		);
@@ -1708,9 +1853,9 @@
 		functionName = "DirAngle(int mx, int my, int nx, int ny)";
 		hitCount = 0;
 		ignoreCount = 0;
-		lineNumber = 155;
+		lineNumber = 156;
 		location = AutoWolf;
-		modificationTime = 370547954.066966;
+		modificationTime = 370636423.972549;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -1796,7 +1941,7 @@
 		fRef = D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */;
 		name = "wl_act1.cpp: 544";
 		rLen = 0;
-		rLoc = 14909;
+		rLoc = 14951;
 		rType = 0;
 		vrLen = 291;
 		vrLoc = 14853;
@@ -2059,7 +2204,7 @@
 		ignoreCount = 0;
 		lineNumber = 950;
 		location = AutoWolf;
-		modificationTime = 370547954.060189;
+		modificationTime = 370636423.968968;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -2087,7 +2232,7 @@
 		ignoreCount = 0;
 		lineNumber = 1440;
 		location = Wolf4SDL;
-		modificationTime = 370547954.060628;
+		modificationTime = 370636423.969288;
 		originalNumberOfMultipleMatches = 1;
 		state = 2;
 	};
@@ -2153,7 +2298,7 @@
 		fRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */;
 		name = "ioan_bas.cpp: 553";
 		rLen = 0;
-		rLoc = 15938;
+		rLoc = 15958;
 		rType = 0;
 		vrLen = 567;
 		vrLoc = 15724;

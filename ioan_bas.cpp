@@ -11,7 +11,7 @@
 #include "LinkList.h"
 
 // static members definition
-boolean Basic::nonazis;
+boolean Basic::nonazis, Basic::secretstep3;
 LinkList Basic::livingNazis, Basic::thrownProjectiles;
 
 int Basic::markov[27][27] =

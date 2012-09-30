@@ -1913,6 +1913,9 @@ void CheckParameters(int argc, char *argv[])
 			// IOAN 17.05.2012: added --nonazis
 			else IFARG("--nonazis")
 				Basic::nonazis = true;
+			// IOAN 29.09.2012: added --secretstep3
+			else IFARG("--secretstep3")
+				Basic::secretstep3 = true;
         else hasError = true;
     }
     if(hasError || showHelp)
@@ -1927,6 +1930,7 @@ void CheckParameters(int argc, char *argv[])
             "Options:\n"
 				" --nobot                Do not use bot\n"
 				" --nonazis              Maps without Nazis spawned\n"
+			    " --secretstep3          Emulate 3-step secret wall bug\n"
             " --help                 This help page\n"
             " --tedlevel <level>     Starts the game in the given level\n"
             " --baby                 Sets the difficulty to baby for tedlevel\n"

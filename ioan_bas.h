@@ -34,6 +34,7 @@ protected:
 
 public:
 	static boolean nonazis;	// no enemies spawned
+	static boolean secretstep3;	// make secret walls go three steps (for troublesome maps)
 	static LinkList livingNazis, thrownProjectiles;
 
 	// Spawns a Nazi (originally they were separate functions; no more)

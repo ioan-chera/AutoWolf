@@ -280,14 +280,14 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>37</integer>
+									<integer>35</integer>
 									<integer>33</integer>
 									<integer>4</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 120}, {312, 620}}</string>
+							<string>{{0, 194}, {312, 620}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -322,7 +322,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>FA8DFA811586922C00EBBFB2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ioan_bot.cpp</string>
+								<string>ioan_bas.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -330,11 +330,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>FA8DFA821586922C00EBBFB2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ioan_bot.cpp</string>
+										<string>ioan_bas.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>FA67502416161CF3005CC6B8</string>
+										<string>FA67504D16177689005CC6B8</string>
 										<key>history</key>
 										<array>
 											<string>FA8DFAA01586936E00EBBFB2</string>
@@ -358,7 +358,6 @@
 											<string>FA01B251159B840E00AB5295</string>
 											<string>FA762DC6159E443200610D61</string>
 											<string>FA762E78159F0F1A00610D61</string>
-											<string>FA762E79159F0F1A00610D61</string>
 											<string>FA762E7A159F0F1A00610D61</string>
 											<string>FA762E7B159F0F1A00610D61</string>
 											<string>FA762E90159F2A4600610D61</string>
@@ -371,25 +370,26 @@
 											<string>FA7631C7159FB28700610D61</string>
 											<string>FA7631CA159FB28700610D61</string>
 											<string>FA7631F815A218D000610D61</string>
-											<string>FA76322415A22D8D00610D61</string>
-											<string>FA76322A15A22F3200610D61</string>
 											<string>FA76322B15A22F3200610D61</string>
 											<string>FA76322C15A22F3200610D61</string>
 											<string>FA76324815A2380E00610D61</string>
 											<string>FA76324A15A2380E00610D61</string>
 											<string>FAFDDBA015A62C99002CEFCF</string>
-											<string>FAFE2DC015AB6B53001E768E</string>
 											<string>FAFE2DDC15AB6C77001E768E</string>
 											<string>FACC565B15CDB2E20065D2E4</string>
 											<string>FA674FD31614E892005CC6B8</string>
 											<string>FA674FE01615ADD3005CC6B8</string>
 											<string>FA674FE11615ADD3005CC6B8</string>
-											<string>FA674FFF1615C62D005CC6B8</string>
-											<string>FA6750011615C62D005CC6B8</string>
 											<string>FA6750081615C929005CC6B8</string>
 											<string>FA6750091615C929005CC6B8</string>
 											<string>FA67501316161C14005CC6B8</string>
-											<string>FA67501F16161CAE005CC6B8</string>
+											<string>FA675036161721FC005CC6B8</string>
+											<string>FA67503916177081005CC6B8</string>
+											<string>FA67503A16177081005CC6B8</string>
+											<string>FA675045161775CD005CC6B8</string>
+											<string>FA675046161775CD005CC6B8</string>
+											<string>FA675047161775CD005CC6B8</string>
+											<string>FA675048161775CD005CC6B8</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -706,7 +706,7 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>FA67502516161CF3005CC6B8</string>
+		<string>FA67504E16177689005CC6B8</string>
 		<string>FA674FBE161389BE005CC6B8</string>
 		<string>FA674FBF161389BE005CC6B8</string>
 		<string>/Users/macbook/Development/cross/autowolfsf/macosx/Wolf4SDL.xcodeproj</string>

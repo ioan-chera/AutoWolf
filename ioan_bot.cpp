@@ -1191,7 +1191,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	else
 		retreat = 0;
 	
-	if(!check && dangle >= -5 && dangle <= 5 && !retreat && !IsEnemyNearby(player->tilex, player->tiley))
+	if(!check && dangle >= -5 && dangle <= 5 && retreat <= 0 && !IsEnemyNearby(player->tilex, player->tiley))
 	{
 		// Do NOT charge if there's a risk ahead!
 		fixed plx = player->x, ply = player->y;
@@ -1208,7 +1208,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
 			buttonstate[bt_attack] = true;
 		
-		if(!retreat && (!check2 || check2 == check) && edist > 6 || 
+		if(retreat <= 0 && (!check2 || check2 == check) && edist > 6 || 
 		   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
 		{
 			
