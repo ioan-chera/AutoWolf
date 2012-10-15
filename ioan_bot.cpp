@@ -222,7 +222,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean retreating, boolean knifeinsight)
+boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
 {
 	int j;
 
@@ -344,7 +344,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, boolean re
 				objtype *checkindoor = actorat[cx][cy];
 				
 				// Don't attempt to retreat (backpedal) through closed or blocked doors
-				if(retreating && checkindoor && (!ISPOINTER(checkindoor) || 
+				// Only if retreating == 1
+				if(retreating == 1 && checkindoor && (!ISPOINTER(checkindoor) || 
 												 (ISPOINTER(checkindoor) && checkindoor != player && 
 												  checkindoor->hitpoints > 0)))
 				{
@@ -1128,7 +1129,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	nothingleft = SSGeneral;	// reset elevator counter if distracted
 	
 	if(gamestate.weapon == wp_knife)
-		if(FindRandomPath(false, true, false, true))
+		if(FindRandomPath(false, true, 0, true))
 		{
 			MoveByStrafe();
 			return;
@@ -1158,7 +1159,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	   && gamestate.weapon != wp_knife)
 	{
 		threater = check2;
-		if(FindRandomPath(false, true, true))
+		if(FindRandomPath(false, true, 1))
 		{
 			panic = false;
 			MoveByStrafe();
@@ -1166,7 +1167,10 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		else
 		{
 			panic = true;
-			controly = RUNMOVE*tics;
+			if(FindRandomPath(false, true, 2))	// try to pass by opening doors now
+				MoveByStrafe();
+			else
+				controly = RUNMOVE*tics;
 			//DoRetreat(false, check2);
 		}
 		
@@ -1423,7 +1427,7 @@ void BotMan::DoCommand()
 {
 	++pressuse;	// key press timer
 	static short eangle = -1;
-	static int edist = -1;
+	static int edist = -2;
 	
 	
 
@@ -1451,7 +1455,7 @@ void BotMan::DoCommand()
 		if(damagetaken)	// someone hurt me but I couldn't see him
 		{
 			threater = damagetaken;
-			if(FindRandomPath(false, true, true))
+			if(FindRandomPath(false, true, 1))
 			{
 				MoveByStrafe();
 			}

@@ -280,7 +280,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>35</integer>
+									<integer>37</integer>
 									<integer>33</integer>
 									<integer>4</integer>
 									<integer>0</integer>
@@ -322,7 +322,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>FA8DFA811586922C00EBBFB2</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>ioan_bas.cpp</string>
+								<string>ioan_bot.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -330,11 +330,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>FA8DFA821586922C00EBBFB2</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>ioan_bas.cpp</string>
+										<string>ioan_bot.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>FA67504D16177689005CC6B8</string>
+										<string>FA8899AB162BEDC90025048A</string>
 										<key>history</key>
 										<array>
 											<string>FA8DFAA01586936E00EBBFB2</string>
@@ -359,7 +359,6 @@
 											<string>FA762DC6159E443200610D61</string>
 											<string>FA762E78159F0F1A00610D61</string>
 											<string>FA762E7A159F0F1A00610D61</string>
-											<string>FA762E7B159F0F1A00610D61</string>
 											<string>FA762E90159F2A4600610D61</string>
 											<string>FA762E9C159F532500610D61</string>
 											<string>FA762EB0159F553600610D61</string>
@@ -382,14 +381,15 @@
 											<string>FA674FE11615ADD3005CC6B8</string>
 											<string>FA6750081615C929005CC6B8</string>
 											<string>FA6750091615C929005CC6B8</string>
-											<string>FA67501316161C14005CC6B8</string>
-											<string>FA675036161721FC005CC6B8</string>
-											<string>FA67503916177081005CC6B8</string>
-											<string>FA67503A16177081005CC6B8</string>
 											<string>FA675045161775CD005CC6B8</string>
 											<string>FA675046161775CD005CC6B8</string>
 											<string>FA675047161775CD005CC6B8</string>
-											<string>FA675048161775CD005CC6B8</string>
+											<string>FA6750571618654A005CC6B8</string>
+											<string>FA6750581618654A005CC6B8</string>
+											<string>FA6750591618654A005CC6B8</string>
+											<string>FA67505A1618654A005CC6B8</string>
+											<string>FA675060161867A3005CC6B8</string>
+											<string>FA6750661625CAA5005CC6B8</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -403,18 +403,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {946, 382}}</string>
+								<string>{{0, 0}, {946, 374}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 99 1280 679 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>382pt</string>
+							<string>374pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>251pt</string>
+							<string>259pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -428,7 +428,9 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {946, 224}}</string>
+										<string>{{10, 27}, {946, 232}}</string>
+										<key>RubberWindowFrame</key>
+										<string>0 99 1280 679 0 0 1280 778 </string>
 									</dict>
 									<key>Module</key>
 									<string>XCDetailModule</string>
@@ -483,8 +485,6 @@
 									<dict>
 										<key>Frame</key>
 										<string>{{10, 27}, {946, 224}}</string>
-										<key>RubberWindowFrame</key>
-										<string>0 99 1280 679 0 0 1280 778 </string>
 									</dict>
 									<key>Module</key>
 									<string>PBXBuildResultsModule</string>
@@ -512,11 +512,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>FA674FB4161389BE005CC6B8</string>
+				<string>FA8899AC162BEDC90025048A</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>FA674FB5161389BE005CC6B8</string>
+				<string>FA8899AD162BEDC90025048A</string>
 				<string>FA8DFA811586922C00EBBFB2</string>
-				<string>FA674FB6161389BE005CC6B8</string>
+				<string>FA8899AE162BEDC90025048A</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -706,9 +706,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>FA67504E16177689005CC6B8</string>
-		<string>FA674FBE161389BE005CC6B8</string>
-		<string>FA674FBF161389BE005CC6B8</string>
 		<string>/Users/macbook/Development/cross/autowolfsf/macosx/Wolf4SDL.xcodeproj</string>
 	</array>
 	<key>WindowString</key>

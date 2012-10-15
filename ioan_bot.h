@@ -47,7 +47,7 @@ protected:
 
 	// protected functions
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, boolean retreating = false,
+	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0,
 								  boolean knifeinsight = false);
 	// move by strafing
 	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);

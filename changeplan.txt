@@ -1,0 +1,7 @@
+Problems to solve (30.09.2012):
+
+* solve pushwall puzzles. Find the solution with the maximum possible score (treasure, enemies, total-bonus)
+
+* make the bot know when not to pass locked doors opened by others. Try to find out if a way can be exited somehow (either by locating a key, by alerting). Try to lure enemies into the doorway and kill them there.
+
+* fix the clairvoyance issue, where it knows where everything else is. This might work as a combination of persistent memory and short-term (forgettable) memory. It is most noticeable when dealing with mutants, whose presence can be unrealistically sensed.
