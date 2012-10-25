@@ -603,8 +603,8 @@ void CheckKeys (void)
     //
     if (Keyboard[sc_M] && Keyboard[sc_L] && Keyboard[sc_I])
     {
-        gamestate.health = 100;
-        gamestate.ammo = 99;
+        gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
+        gamestate.ammo = I_MAXAMMO;	// IOAN
         gamestate.keys = 3;
         gamestate.score = 0;
         gamestate.TimeCount += 42000L;

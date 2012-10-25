@@ -859,25 +859,25 @@ void KillActor (objtype *ob)
     switch (ob->obclass)
     {
         case guardobj:
-            GivePoints (100);
+            GivePoints (I_GUARDSCORE);	// IOAN 25.10.2012: all constants started with I_
             NewState (ob,&s_grddie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case officerobj:
-            GivePoints (400);
+            GivePoints (I_OFFICERSCORE);
             NewState (ob,&s_ofcdie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case mutantobj:
-            GivePoints (700);
+            GivePoints (I_MUTANTSCORE);
             NewState (ob,&s_mutdie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case ssobj:
-            GivePoints (500);
+            GivePoints (I_SSSCORE);
             NewState (ob,&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
                 PlaceItemType (bo_machinegun,tilex,tiley);
@@ -886,54 +886,54 @@ void KillActor (objtype *ob)
             break;
 
         case dogobj:
-            GivePoints (200);
+            GivePoints (I_DOGSCORE);
             NewState (ob,&s_dogdie1);
             break;
 
 #ifndef SPEAR
         case bossobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_bossdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case gretelobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_greteldie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case giftobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
             NewState (ob,&s_giftdie1);
             break;
 
         case fatobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
             NewState (ob,&s_fatdie1);
             break;
 
         case schabbobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
             NewState (ob,&s_schabbdie1);
             break;
         case fakeobj:
-            GivePoints (2000);
+            GivePoints (I_FAKEHITLERSCORE);
             NewState (ob,&s_fakedie1);
             break;
 
         case mechahitlerobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_mechadie1);
             break;
         case realhitlerobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
             NewState (ob,&s_hitlerdie1);
@@ -942,37 +942,37 @@ void KillActor (objtype *ob)
         case spectreobj:
             if (ob->flags&FL_BONUS)
             {
-                GivePoints (200);       // Get points once for each
+                GivePoints (I_SPECTRESCORE);       // Get points once for each
                 ob->flags &= ~FL_BONUS;
             }
             NewState (ob,&s_spectredie1);
             break;
 
         case angelobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_angeldie1);
             break;
 
         case transobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_transdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case uberobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_uberdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case willobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_willdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case deathobj:
-            GivePoints (5000);
+            GivePoints (I_BOSSSCORE);
             NewState (ob,&s_deathdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;

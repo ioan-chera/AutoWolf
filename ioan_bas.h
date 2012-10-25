@@ -6,8 +6,8 @@
 // Basic general setup. New functions and such placed here, instead of randomly through the exe
 //
 
-#ifndef __IOAN_BAS_H__
-#define __IOAN_BAS_H__
+#ifndef IOAN_BAS_H_
+#define IOAN_BAS_H_
 
 #include "wl_def.h"
 

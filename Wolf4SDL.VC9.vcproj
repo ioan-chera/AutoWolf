@@ -1142,6 +1142,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ioan_secret.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LinkList.cpp"
 				>
 			</File>
@@ -1369,6 +1373,10 @@
 			</File>
 			<File
 				RelativePath=".\ioan_bot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ioan_secret.h"
 				>
 			</File>
 			<File

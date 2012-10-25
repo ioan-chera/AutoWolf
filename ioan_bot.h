@@ -6,8 +6,8 @@
 // Basic bot setup. I'm working with classes here!
 //
 
-#ifndef __IOAN_BOT_H__
-#define __IOAN_BOT_H__
+#ifndef IOAN_BOT_H_
+#define IOAN_BOT_H_
 
 #include "wl_def.h"
 class HistoryRatio;

@@ -264,6 +264,34 @@ typedef enum
     // next free bit is   0x00001000
 } objflag_t;
 
+//
+// IOAN 25.10.2012
+// Other constants that had to be named
+//
+#define I_PLAYERHEALTH		100
+#define I_FIRSTAIDHEALTH	25
+#define I_FOODHEALTH			10
+#define I_DOGFOODHEALTH		4
+#define I_BLOODHEALTHTHRESHOLD	10
+#define I_CROSSSCORE			100
+#define I_CHALICESCORE		500
+#define I_TREASURESCORE		1000
+#define I_CROWNSCORE			5000
+#define I_GUARDSCORE			100
+#define I_OFFICERSCORE		400
+#define I_MUTANTSCORE		700
+#define I_SSSCORE				500
+#define I_DOGSCORE			200
+#define I_BOSSSCORE			5000
+#define I_FAKEHITLERSCORE	2000
+#define I_SPECTRESCORE		200
+#define I_MAXAMMO				99
+#define I_CLIPAMMO			8
+#define I_SEMICLIPAMMO		4
+#define I_BOXAMMO				25
+#define I_GUNAMMO				6
+#define I_BONUSAMMO			25
+
 
 //
 // sprite constants

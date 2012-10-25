@@ -1346,7 +1346,7 @@ void Died (void)
 
     if (gamestate.lives > -1)
     {
-        gamestate.health = 100;
+        gamestate.health = I_PLAYERHEALTH;	// IOAN
         gamestate.weapon = gamestate.bestweapon
             = gamestate.chosenweapon = wp_pistol;
         gamestate.ammo = STARTAMMO;

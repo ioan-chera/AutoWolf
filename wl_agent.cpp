@@ -309,8 +309,8 @@ void DrawFace (void)
             StatusDrawFace(GODMODEFACE1PIC+gamestate.faceframe);
         else
 #endif
-            StatusDrawFace(FACE1APIC+3*((100-gamestate.health)/16)+gamestate.faceframe);
-    }
+            StatusDrawFace(FACE1APIC+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
+    }	// IOAN 25.10.2012: named constant
     else
     {
 #ifndef SPEAR
@@ -474,8 +474,8 @@ void TakeDamage (int points,objtype *attacker)
 void HealSelf (int points)
 {
     gamestate.health += points;
-    if (gamestate.health>100)
-        gamestate.health = 100;
+    if (gamestate.health>I_PLAYERHEALTH)
+        gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
 
     DrawHealth ();
     DrawFace ();
@@ -622,7 +622,7 @@ void DrawKeys (void)
 
 void GiveWeapon (int weapon)
 {
-    GiveAmmo (6);
+    GiveAmmo (I_GUNAMMO);	// IOAN 25.10.2012: named constants
 
     if (gamestate.bestweapon<weapon)
         gamestate.bestweapon = gamestate.weapon
@@ -666,8 +666,8 @@ void GiveAmmo (int ammo)
         }
     }
     gamestate.ammo += ammo;
-    if (gamestate.ammo > 99)
-        gamestate.ammo = 99;
+    if (gamestate.ammo > I_MAXAMMO)	// IOAN 25.10.2012: named constants
+        gamestate.ammo = I_MAXAMMO;
     DrawAmmo ();
 }
 
@@ -710,11 +710,11 @@ void GetBonus (statobj_t *check)
     switch (check->itemnumber)
     {
         case    bo_firstaid:
-            if (gamestate.health == 100)
+            if (gamestate.health == I_PLAYERHEALTH)	// IOAN 25.10.2012: named constant
                 return;
 
             SD_PlaySound (HEALTH2SND);
-            HealSelf (25);
+            HealSelf (I_FIRSTAIDHEALTH);	// IOAN
             break;
 
         case    bo_key1:
@@ -727,47 +727,47 @@ void GetBonus (statobj_t *check)
 
         case    bo_cross:
             SD_PlaySound (BONUS1SND);
-            GivePoints (100);
+            GivePoints (I_CROSSSCORE);	// IOAN
             gamestate.treasurecount++;
             break;
         case    bo_chalice:
             SD_PlaySound (BONUS2SND);
-            GivePoints (500);
+            GivePoints (I_CHALICESCORE);	// IOAN
             gamestate.treasurecount++;
             break;
         case    bo_bible:
             SD_PlaySound (BONUS3SND);
-            GivePoints (1000);
+            GivePoints (I_TREASURESCORE);	// IOAN
             gamestate.treasurecount++;
             break;
         case    bo_crown:
             SD_PlaySound (BONUS4SND);
-            GivePoints (5000);
+            GivePoints (I_CROWNSCORE);	// IOAN
             gamestate.treasurecount++;
             break;
 
         case    bo_clip:
-            if (gamestate.ammo == 99)
+            if (gamestate.ammo == I_MAXAMMO)	// IOAN
                 return;
 
             SD_PlaySound (GETAMMOSND);
-            GiveAmmo (8);
+            GiveAmmo (I_CLIPAMMO);	// IOAN
             break;
         case    bo_clip2:
-            if (gamestate.ammo == 99)
+            if (gamestate.ammo == I_MAXAMMO)	// IOAN
                 return;
 
             SD_PlaySound (GETAMMOSND);
-            GiveAmmo (4);
+            GiveAmmo (I_SEMICLIPAMMO);	// IOAN
             break;
 
 #ifdef SPEAR
         case    bo_25clip:
-            if (gamestate.ammo == 99)
+            if (gamestate.ammo == I_MAXAMMO)	// IOAN
                 return;
 
             SD_PlaySound (GETAMMOBOXSND);
-            GiveAmmo (25);
+            GiveAmmo (I_BOXAMMO);	// IOAN
             break;
 #endif
 
@@ -787,30 +787,30 @@ void GetBonus (statobj_t *check)
 
         case    bo_fullheal:
             SD_PlaySound (BONUS1UPSND);
-            HealSelf (99);
-            GiveAmmo (25);
+            HealSelf (I_PLAYERHEALTH - 1);	// IOAN
+            GiveAmmo (I_BONUSAMMO);	// IOAN
             GiveExtraMan ();
             gamestate.treasurecount++;
             break;
 
         case    bo_food:
-            if (gamestate.health == 100)
+            if (gamestate.health == I_PLAYERHEALTH)	// IOAN
                 return;
 
             SD_PlaySound (HEALTH1SND);
-            HealSelf (10);
+            HealSelf (I_FOODHEALTH);	// IOAN
             break;
 
         case    bo_alpo:
-            if (gamestate.health == 100)
+            if (gamestate.health == I_PLAYERHEALTH)	// IOAN
                 return;
 
             SD_PlaySound (HEALTH1SND);
-            HealSelf (4);
+            HealSelf (I_DOGFOODHEALTH);	// IOAN
             break;
 
         case    bo_gibs:
-            if (gamestate.health >10)
+            if (gamestate.health > I_BLOODHEALTHTHRESHOLD)	// IOAN
                 return;
 
             SD_PlaySound (SLURPIESND);

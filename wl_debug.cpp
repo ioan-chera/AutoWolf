@@ -539,12 +539,12 @@ int DebugKeys (void)
         US_PrintCentered ("Free items!");
         VW_UpdateScreen();
         GivePoints (100000);
-        HealSelf (99);
+        HealSelf (I_PLAYERHEALTH - 1);	// IOAN 25.10.2012: named constants
         if (gamestate.bestweapon<wp_chaingun)
             GiveWeapon (gamestate.bestweapon+1);
         gamestate.ammo += 50;
-        if (gamestate.ammo > 99)
-            gamestate.ammo = 99;
+        if (gamestate.ammo > I_MAXAMMO)	// IOAN
+            gamestate.ammo = I_MAXAMMO;
         DrawAmmo ();
         IN_Ack ();
         return 1;

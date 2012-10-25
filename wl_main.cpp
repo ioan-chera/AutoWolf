@@ -320,7 +320,7 @@ void NewGame (int difficulty,int episode)
     gamestate.difficulty = difficulty;
     gamestate.weapon = gamestate.bestweapon
             = gamestate.chosenweapon = wp_pistol;
-    gamestate.health = 100;
+    gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
     gamestate.ammo = STARTAMMO;
     gamestate.lives = 3;
     gamestate.nextextra = EXTRAPOINTS;
