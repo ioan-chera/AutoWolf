@@ -11,6 +11,8 @@
 
 class Secret
 {
+protected:
+	static void CalcScoreAdd(int tx, int ty);	// CalcScore recursive component
 public:
 	static int CalcScore(int tx, int ty);	// calculate the available score from this current position
 };

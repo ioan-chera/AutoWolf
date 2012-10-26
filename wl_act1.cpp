@@ -183,6 +183,8 @@ void SpawnStatic (int tilex, int tiley, int type)
         case    bo_spear:
             laststatobj->flags = FL_BONUS;
             laststatobj->itemnumber = statinfo[type].type;
+			// IOAN 26.10.2012: add to list
+			Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
             break;
     }
 
@@ -248,6 +250,8 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     spot->visspot = &spotvis[tilex][tiley];
     spot->flags = FL_BONUS | statinfo[type].specialFlags;
     spot->itemnumber = statinfo[type].type;
+	// IOAN: add item to list
+	Basic::AddItemToList(spot->tilex, spot->tiley, spot->itemnumber);
 }
 
 

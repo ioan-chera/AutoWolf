@@ -9,7 +9,7 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "HistoryRatio.h"
-#include "LinkList.h"
+#include "List.h"
 #include "PathArray.h"
 #include <limits.h>
 
@@ -56,72 +56,69 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	exity = -1;
 
 	// items
-	for(i = 0; &statobjlist[i] != laststatobj; ++i)
+	byte itemnum;
+	for(itemnum = Basic::FirstObjectAt(tx, ty); itemnum; itemnum = Basic::NextObjectAt(tx, ty))
 	{
-		if(statobjlist[i].tilex == (byte)tx && statobjlist[i].tiley == (byte)ty && statobjlist[i].flags & FL_BONUS
-			&& statobjlist[i].shapenum >= 0)
+		switch(itemnum)
 		{
-			switch (statobjlist[i].itemnumber)
-			{
-			case    bo_firstaid:
-				if (gamestate.health <= 75)
-					return true;
-				break;
-			case    bo_food:
-				if (gamestate.health <= 90)
-					return true;
-				break;
-			case    bo_alpo:
-				if (gamestate.health <= 96)
-					return true;
-				break;
-			case    bo_key1:
-			case    bo_key2:
-			case    bo_key3:
-			case    bo_key4:
-				if(!knifeinsight && !(gamestate.keys & (1<<(statobjlist[i].itemnumber - bo_key1))))
-					return true;
-				break;
-			case    bo_cross:
-			case    bo_chalice:
-			case    bo_bible:
-			case    bo_crown:
-				if(!knifeinsight)
-					return true;
-				break;
-			case    bo_machinegun:
-				if(gamestate.bestweapon < wp_machinegun || gamestate.ammo <= 93)
-					return true;
-				break;
-			case    bo_chaingun:
-				if(gamestate.bestweapon < wp_chaingun || gamestate.ammo <= 93)
-					return true;
-				break;
-			case    bo_fullheal:
+		case    bo_firstaid:
+			if (gamestate.health <= 75)
 				return true;
-			case    bo_clip:
-				if(gamestate.ammo <= 91)
-					return true;
-				break;
-			case    bo_clip2:
-				if (gamestate.ammo <= 95)
-					return true;
-				break;
+			break;
+		case    bo_food:
+			if (gamestate.health <= 90)
+				return true;
+			break;
+		case    bo_alpo:
+			if (gamestate.health <= 96)
+				return true;
+			break;
+		case    bo_key1:
+		case    bo_key2:
+		case    bo_key3:
+		case    bo_key4:
+			if(!knifeinsight && !(gamestate.keys & (1<<(statobjlist[i].itemnumber - bo_key1))))
+				return true;
+			break;
+		case    bo_cross:
+		case    bo_chalice:
+		case    bo_bible:
+		case    bo_crown:
+			if(!knifeinsight)
+				return true;
+			break;
+		case    bo_machinegun:
+			if(gamestate.bestweapon < wp_machinegun || gamestate.ammo <= 93)
+				return true;
+			break;
+		case    bo_chaingun:
+			if(gamestate.bestweapon < wp_chaingun || gamestate.ammo <= 93)
+				return true;
+			break;
+		case    bo_fullheal:
+			return true;
+		case    bo_clip:
+			if(gamestate.ammo <= 91)
+				return true;
+			break;
+		case    bo_clip2:
+			if (gamestate.ammo <= 95)
+				return true;
+			break;
 #ifdef SPEAR
-			case    bo_25clip:
-				if (gamestate.ammo < 74)
-					return true;
-				break;
-			case    bo_spear:
-				if(nothingleft >= SSSecretLift)
-					return true;
-				break;
+		case    bo_25clip:
+			if (gamestate.ammo < 74)
+				return true;
+			break;
+		case    bo_spear:
+			if(nothingleft >= SSSecretLift)
+				return true;
+			break;
 #endif
-			case    bo_gibs:
-				if (gamestate.health <= 10)
-					return true;
-				break;
-			}
+		case    bo_gibs:
+			if (gamestate.health <= 10)
+				return true;
+			break;
 		}
 	}
 

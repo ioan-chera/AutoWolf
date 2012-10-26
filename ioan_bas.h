@@ -10,8 +10,9 @@
 #define IOAN_BAS_H_
 
 #include "wl_def.h"
+#include "List.h"
 
-class LinkList;
+//class LinkList;
 
 //
 // Basic
@@ -31,11 +32,32 @@ protected:
 #endif
 
 	static int markov[27][27], marktot[27];
+	
+	static List<byte> itemList[MAPSIZE][MAPSIZE];	// list of items per map tile
 
 public:
 	static boolean nonazis;	// no enemies spawned
 	static boolean secretstep3;	// make secret walls go three steps (for troublesome maps)
-	static LinkList livingNazis, thrownProjectiles;
+	static List<void *> livingNazis, thrownProjectiles;
+	
+	static void EmptyItemList();	// empty itemList
+	static void AddItemToList(int tx, int ty, byte itemtype)
+	{
+		itemList[tx][ty].add(itemtype);
+	}
+	static void RemoveItemFromList(int tx, int ty, byte itemtype)
+	{
+		itemList[tx][ty].remove(itemtype);
+	}
+	static byte FirstObjectAt(int tx, int ty)
+	{
+		return itemList[tx][ty].firstObject();
+	}
+	static byte NextObjectAt(int tx, int ty)
+	{
+		return itemList[tx][ty].nextObject();
+	}
+
 
 	// Spawns a Nazi (originally they were separate functions; no more)
 	static void SpawnEnemy(enemy_t which, int tilex, int tiley, int dir = 0, boolean patrol = false);

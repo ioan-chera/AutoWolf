@@ -2,6 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bas.h"
 #include "ioan_bot.h"	// IOAN
 #include "HistoryRatio.h"
 
@@ -829,6 +830,9 @@ void GetBonus (statobj_t *check)
 
     StartBonusFlash ();
     check->shapenum = -1;                   // remove from list
+	
+	// IOAN 26.10.2012: remove item from list
+	Basic::RemoveItemFromList(check->tilex, check->tiley, check->itemnumber);
 }
 
 /*

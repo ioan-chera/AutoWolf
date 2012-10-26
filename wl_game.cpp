@@ -7,7 +7,7 @@
 // IOAN 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"
-#include "LinkList.h"
+#include "List.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -706,9 +706,11 @@ void SetupGameLevel (void)
 //
 // spawn doors
 //
-	
-	Basic::livingNazis.removeAllLinks();	// IOAN
-	Basic::thrownProjectiles.removeAllLinks();
+
+	// IOAN: reset lists
+	Basic::livingNazis.removeAll();
+	Basic::thrownProjectiles.removeAll();
+	Basic::EmptyItemList();
 	
     InitActorList ();                       // start spawning things with a clean slate
     InitDoorList ();

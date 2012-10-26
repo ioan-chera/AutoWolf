@@ -13,7 +13,7 @@
 // IOAN 17.05.2012
 #include "ioan_bot.h"
 #include "ioan_bas.h"
-#include "LinkList.h"
+#include "List.h"
 
 
 /*
@@ -665,7 +665,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
 	for(objtype *obj = lastobj; obj; obj = obj->prev)
 	{
 		if(obj->hitpoints <= 0)
-			Basic::livingNazis.removeLink(obj);
+			Basic::livingNazis.remove(obj);
 		switch(obj->obclass)
 		{
 			case needleobj:
@@ -679,7 +679,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
 #endif
 				   )
 				{
-					Basic::thrownProjectiles.addLink(obj);
+					Basic::thrownProjectiles.add(obj);
 				}
 				
 		}

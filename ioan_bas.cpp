@@ -8,11 +8,10 @@
 
 #include "ioan_bas.h"
 
-#include "LinkList.h"
-
 // static members definition
 boolean Basic::nonazis, Basic::secretstep3;
-LinkList Basic::livingNazis, Basic::thrownProjectiles;
+List<void *> Basic::livingNazis, Basic::thrownProjectiles;
+List<byte> Basic::itemList[MAPSIZE][MAPSIZE];
 
 int Basic::markov[27][27] =
 {
@@ -627,7 +626,7 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 #endif
 	}
 	if(newenemy)
-		livingNazis.addLink(newenemy);
+		livingNazis.add(newenemy);
 }
 
 //
@@ -677,4 +676,17 @@ int Basic::ApproxDist(int dx, int dy)
 	if(dx < dy)
 		return dx + dy - (dx >> 1);
 	return dx + dy - (dy >> 1);
+}
+
+//
+// Basic::EmptyItemList
+//
+// empty itemList
+//
+void Basic::EmptyItemList()
+{
+	int i, j;
+	for(i = 0; i < MAPSIZE; ++i)
+		for(j = 0; j < MAPSIZE; ++j)
+			itemList[i][j].removeAll();
 }
