@@ -1146,10 +1146,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LinkList.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\PathArray.cpp"
 				>
 			</File>
@@ -1380,7 +1376,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LinkList.h"
+				RelativePath=".\List.h"
 				>
 			</File>
 			<File

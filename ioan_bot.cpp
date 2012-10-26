@@ -8,6 +8,7 @@
 
 #include "ioan_bot.h"
 #include "ioan_bas.h"
+#include "ioan_secret.h"
 #include "HistoryRatio.h"
 #include "List.h"
 #include "PathArray.h"
@@ -51,7 +52,7 @@ void BotMan::MapInit()
 //
 boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 {
-	int i;
+	//int i;
 	exitx = -1;
 	exity = -1;
 
@@ -77,7 +78,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		case    bo_key2:
 		case    bo_key3:
 		case    bo_key4:
-			if(!knifeinsight && !(gamestate.keys & (1<<(statobjlist[i].itemnumber - bo_key1))))
+			if(!knifeinsight && !(gamestate.keys & (1<<(itemnum - bo_key1))))
 				return true;
 			break;
 		case    bo_cross:
