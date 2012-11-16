@@ -520,7 +520,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib"
-				OutputFile="$(OutDir)\AutoWolf.exe"
+				OutputFile="$(OutDir)\AutoSpear.exe"
 				AdditionalLibraryDirectories="&quot;C:\wolf3d\SDL-1.2.15\lib&quot;;&quot;F:\SDL-1.2.12\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1059,7 +1059,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="SDL.lib SDL_mixer.lib"
-				OutputFile="$(OutDir)\AutoWolf.exe"
+				OutputFile="$(OutDir)\AutoSpear.exe"
 				AdditionalLibraryDirectories="&quot;C:\wolf3d\SDL-1.2.15\lib&quot;;&quot;F:\SDL-1.2.12\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -1258,18 +1258,6 @@
 				</File>
 				<File
 					RelativePath=".\dc\dc_vmu.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="mame"
-				>
-				<File
-					RelativePath=".\mame\fmopl.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\mame\fmopl.h"
 					>
 				</File>
 			</Filter>
