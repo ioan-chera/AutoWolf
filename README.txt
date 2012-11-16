@@ -1,4 +1,4 @@
-Automatic Wolfenstein alias AutoWolf by Ioan Chera "printz" (https://sourceforge.net/users/printz)
+Automatic Wolfenstein alias AutoWolf by Ioan Chera (https://sourceforge.net/users/printz)
 Wolf4SDL by Moritz "Ripper" Kroll (http://www.chaos-software.de.vu)
 Original Wolfenstein 3D by id Software (http://www.idsoftware.com)
 =============================================================================
@@ -8,7 +8,7 @@ first-person shooter Wolfenstein 3D, with the purpose of implementing
 competitive bots (computer controlled players) who should be able to solve any
 level, at maximum score.
 
-This version is alpha01. As such, there are some features that haven't been
+This version is alpha02. As such, there are some features that haven't been
 completed, but the bot should be able to survive and finish most of the maps,
 and even win some of the boss setups.
 
@@ -26,20 +26,41 @@ Project homepage:
 https://sourceforge.net/projects/autowolf/
 
 
+Installing
+----------
+Windows or Mac OSX:
+
+Extract the contents of the archive into a folder,
+and place all Wolfenstein 3D data files (*.WL6 or *.SOD) in that same folder.
+
+AutoWolf shall be ready to start.
+
+
+Updates over alpha01
+--------------------
+ 
+ - The bot can now search for cover, not just by moving backwards. For this, 
+   it strafes.
+ - Smooth movement, no longer auto-levelled on the centre of the tile.
+ - More conserving usage of ammo, by switching to the machinegun when wasteful
+   with the chaingun.
+ - Now it will not get stuck, waiting for user input, if a threat remains stuck
+   nearby but out of sight. It will stop waiting and will move ahead.
+ - Mac OSX binary available (Snow Leopard minimum required).
+
+
 Future plans:
 -------------
 
 These features haven't been started or haven't been completed, and are probable
 to appear on the next alpha or beta:
 
- - Improved cover, knife and projectile evasion tactics;
+ - Screensaver that also lets the computer go into power saving mode.
  - Intelligent pushwall puzzle solving;
  - Integration into Blzut3's ECWolf port and therefore mod-aware behavior, as
    well as posibility to make the bot cooperative or deathmatch (if applicable);
  - Speed-running behaviour;
  - Optional human-like behaviour, especially if it happens in a proposed multiplayer;
- - Make a cross-platform binary release, including on Mac OSX (I might be having
-   an outdated OSX for now).
 
 
 New command-line parameters:
@@ -49,6 +70,8 @@ In addition to Wolf4SDL, AutoWolf supports the following command-line parameters
  --nobot                Disables the bot. This makes the game act like regular
                         Wolfenstein.
  --nonazis              Disables spawning of enemies.
+ --secretstep3          Emulates the Wolf3D bug of secret walls being pushed too far.
+                        Necessary for any custom map which relies on this behaviour.
 
 Compiling from source code:
 ---------------------------
@@ -84,6 +107,12 @@ A: No, for now everything is programmed from the start. This also means that
    engines.
 
 
+Q: Hey, the bot seems to die quite often now!
+A: Sometimes the bot may happen to get into quite risky behaviour, waking up
+   too many Nazis and running back and forth into danger (surrounded) until
+   it's capped to death. Even though I understand the error of this tactic,
+   it makes the game more fun to watch.
+
 Credits:
 --------
 
@@ -92,23 +121,13 @@ Credits:
  - Moritz "Ripper" Kroll for his excellent port of DOS Wolfenstein to modern
    systems, which made this bot possible, or at least with better chances of
    success.
- - Microsoft for Visual Studio 2008 Professional and their Academic Alliance
-   with the universities.
- - SourceForge for their kind hosting of open-source projects.
- - All the people involved in computer science, from school, from Wikipedia,
-   for teaching me some useful graph traversing algorithms.
+ - SourceForge for their hosting of open-source projects.
 
-Licenses:
+License:
 ---------
 
- - The original source code of Wolfenstein 3D:
-     At your choice:
-     - license-id.txt or
-     - license-gpl.txt
- - The OPL2 emulator:
-     At your choice:
-     - license-mame.txt (fmopl.cpp)
-     - license-gpl.txt (dbopl.cpp, USE_GPL define in version.h or set GPL=1 for Makefile)
+This program is distributed under the GNU GENERAL PUBLIC LICENSE version 2.
+See license-gpl.txt for details.
 
 =============================================================================
 
@@ -122,4 +141,5 @@ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 Contact:
 --------
 You can email me for questions regarding this project at ioan_chera@yahoo.com
-You can find me posting at the Doomworld or ZDoom forums as the user "printz"
+You can find me posting at the Doomworld or ZDoom forums as the user "printz".
+PM me there if you're registered.

@@ -1741,6 +1741,8 @@ void CheckParameters(int argc, char *argv[])
         }
         else IFARG("--windowed")
             fullscreen = false;
+       else IFARG("--fullscreen")
+          fullscreen = true;  // IOAN 20121611: added --fullscreen option for Macs
         else IFARG("--windowed-mouse")
         {
             fullscreen = false;
