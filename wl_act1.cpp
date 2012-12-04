@@ -186,6 +186,8 @@ void SpawnStatic (int tilex, int tiley, int type)
 			// IOAN 26.10.2012: add to list
 			Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
             break;
+		default:
+			;
     }
 
     laststatobj->flags |= statinfo[type].specialFlags;
@@ -728,6 +730,8 @@ void MoveDoors (void)
             case dr_closing:
                 DoorClosing(door);
                 break;
+			default:
+				;
         }
     }
 }
@@ -850,7 +854,7 @@ void MovePWalls (void)
             pwally += dy;
 
             if (actorat[pwallx+dx][pwally+dy]
-                || xl<=pwallx+dx && pwallx+dx<=xh && yl<=pwally+dy && pwally+dy<=yh)
+                || (xl<=pwallx+dx && pwallx+dx<=xh && yl<=pwally+dy && pwally+dy<=yh))
             {
                 pwallstate = 0;
                 tilemap[pwallx][pwally] = oldtile;

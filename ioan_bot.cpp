@@ -138,7 +138,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		{
 			if(ty + 2 < MAPSIZE && !actorat[tx][ty + 2])
 			{
-				if(nothingleft >= SSOnePushWalls || ty + 3 < MAPSIZE && !actorat[tx][ty + 3])
+				if(nothingleft >= SSOnePushWalls || (ty + 3 < MAPSIZE && !actorat[tx][ty + 3]))
 				{
 					exity = ty + 1;
 					exitx = tx;
@@ -150,7 +150,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		{
 			if(ty - 2 >= 0 && !actorat[tx][ty - 2])
 			{
-				if(nothingleft >= SSOnePushWalls || ty - 3 >= 0 && !actorat[tx][ty - 3])
+				if(nothingleft >= SSOnePushWalls || (ty - 3 >= 0 && !actorat[tx][ty - 3]))
 				{
 					exity = ty - 1;
 					exitx = tx;
@@ -162,7 +162,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		{
 			if(tx + 2 < MAPSIZE && !actorat[tx + 2][ty])
 			{
-				if(nothingleft >= SSOnePushWalls || tx + 3 < MAPSIZE && !actorat[tx + 3][ty])
+				if(nothingleft >= SSOnePushWalls || (tx + 3 < MAPSIZE && !actorat[tx + 3][ty]))
 				{
 					exity = ty;
 					exitx = tx + 1;
@@ -174,7 +174,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		{
 			if(tx - 2 >= 0 && !actorat[tx - 2][ty])
 			{
-				if(nothingleft >= SSOnePushWalls || tx - 3 >= 0 && !actorat[tx - 3][ty])
+				if(nothingleft >= SSOnePushWalls || (tx - 3 >= 0 && !actorat[tx - 3][ty]))
 				{
 					exity = ty;
 					exitx = tx - 1;
@@ -317,7 +317,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 					continue;	// Don't go diagonally if looking for retreat
 				check = actorat[cx][ty];
 				check2 = actorat[tx][cy];
-				if(check && !ISPOINTER(check) || check2 && !ISPOINTER(check2))
+				if((check && !ISPOINTER(check)) || (check2 && !ISPOINTER(check2)))
 				{
 					continue;
 				}
@@ -327,12 +327,12 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 			byte door = tilemap[cx][cy];
 			
 			// This checks for any blocking device: refactor it
-			if(check && !ISPOINTER(check) && !(door & 0x80)
+			if((check && !ISPOINTER(check) && !(door & 0x80))
 				|| 
-				(abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1) ||
-				mindnazis && 
-			   (player->tilex != tx || player->tiley != ty || check && ISPOINTER(check) && check->flags & FL_SHOOTABLE) && 
-			   IsEnemyBlocking(cx, cy))
+				((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1)) ||
+				(mindnazis && 
+			   (player->tilex != tx || player->tiley != ty || (check && ISPOINTER(check) && check->flags & FL_SHOOTABLE)) && 
+			   IsEnemyBlocking(cx, cy)))
 			{
 				continue;	// solid, can't be passed
 			}
@@ -376,7 +376,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 			}
 
 			// Increase the effective (time) distance if a closed door is in the way
-			if(door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening 
+			if((door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening)
 			   || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
 				tentative_g_add <<= 2;
 			
@@ -467,7 +467,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 			continue;
 
 		// don't change target if distance difference is too little (don't lose focus on the current threat)
-		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && !(oldret->flags & FL_SHOOTABLE))
+		if((abs(*distance - i) >= 2 && ret != oldret) || ret == oldret || (oldret && !(oldret->flags & FL_SHOOTABLE)))
 		{
 			// choose closest target
 			if(i <= distmin)
@@ -553,8 +553,8 @@ objtype *BotMan::EnemyEager()
 objtype *BotMan::DamageThreat(objtype *targ)
 {
 	objtype *objignore = targ;
-	if(targ && (Basic::IsBoss(targ->obclass) || targ->obclass == mutantobj && gamestate.weapon < wp_machinegun
-				&& gamestate.weaponframe != 1))
+	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && gamestate.weapon < wp_machinegun
+				&& gamestate.weaponframe != 1)))
 	{
 		objignore = NULL;
 	}
@@ -670,7 +670,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 //	sidey += ty;
 
 	objtype *check1 = actorat[tx + backx][ty + backy], *check2;
-	if(check1 && !ISPOINTER(check1) || check1 && ISPOINTER(check1) && check1->flags & FL_SHOOTABLE)
+	if((check1 && !ISPOINTER(check1)) || (check1 && ISPOINTER(check1) && check1->flags & FL_SHOOTABLE))
 	{
 		// Look for way backwards
 		if(sidex)	// strafing east or west
@@ -680,11 +680,11 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(j >= MAPSIZE)
 					break;
 				check2 = actorat[j][ty];
-				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+				if((check2 && !ISPOINTER(check2)) || (check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE))
 					break;	// stopped
 
 				check2 = actorat[j][ty + backy];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
+				if(!check2 || (check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE))))
 					goto solved;// found here
 			}
 			for(j = tx - sidex; ; j -= sidex)
@@ -692,11 +692,11 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(j < 0)
 					break;
 				check2 = actorat[j][ty];
-				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+				if((check2 && !ISPOINTER(check2)) || (check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE))
 					break;
 
 				check2 = actorat[j][ty + backy];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
+				if(!check2 || (check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE))))
 				{
 					dir = -dir;// found here
 					sidex = -sidex;
@@ -713,11 +713,11 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(j >= MAPSIZE)
 					break;
 				check2 = actorat[tx][j];
-				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+				if((check2 && !ISPOINTER(check2)) || (check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE))
 					break;	// stopped
 
 				check2 = actorat[tx + backx][j];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
+				if(!check2 || (check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE))))
 					goto solved;// found here
 			}
 			for(j = ty - sidey; ; j -= sidey)
@@ -725,11 +725,11 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 				if(j < 0)
 					break;
 				check2 = actorat[tx][j];
-				if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+				if((check2 && !ISPOINTER(check2)) || (check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE))
 					break;
 
 				check2 = actorat[tx + backx][j];
-				if(!check2 || check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE)))
+				if(!check2 || (check2 && ISPOINTER(check2) && (check2->obclass == inertobj || !(check2->flags & FL_SHOOTABLE))))
 				{
 					dir = -dir;// found here
 					sidex = -sidex;
@@ -741,7 +741,7 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 		}
 solved:
 		check2 = actorat[tx + sidex][ty + sidey];
-		if(check2 && !ISPOINTER(check2) || check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE)
+		if((check2 && !ISPOINTER(check2)) || (check2 && ISPOINTER(check2) && check2->flags & FL_SHOOTABLE))
 			return;
 		buttonstate[bt_strafe] = true;
 		controlx = dir*tics;
@@ -783,6 +783,8 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 			case sparkobj:
 				goto retok;
 #endif
+				default:
+					;
 			}
 		}
 	}
@@ -1093,7 +1095,7 @@ void BotMan::ChooseWeapon()
 		{
 			if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
 				buttonstate[bt_readymachinegun] = true;
-			else if(gamestate.weapon != wp_chaingun && (panic || gamestate.ammo >= 50 && shootRatio.getValue() > 7))
+			else if(gamestate.weapon != wp_chaingun && (panic || (gamestate.ammo >= 50 && shootRatio.getValue() > 7)))
 				buttonstate[bt_readychaingun] = true;
 		}
 	}
@@ -1152,8 +1154,8 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	}
 	
 	if(check2 && (check2 != check 
-				  || (Basic::IsBoss(check->obclass) || check->obclass == mutantobj && gamestate.weapon < wp_machinegun
-					  && gamestate.weaponframe != 1)) 
+				  || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun
+					  && gamestate.weaponframe != 1)))
 	   && gamestate.weapon != wp_knife)
 	{
 		threater = check2;
@@ -1207,11 +1209,11 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	if(check)
 	{
 		// shoot according to how the weapon works
-		if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
+		if(((gamestate.weapon <= wp_pistol && pressuse % 4 == 0) || gamestate.weapon > wp_pistol) && edist <= 10)
 			buttonstate[bt_attack] = true;
 		
-		if(retreat <= 0 && (!check2 || check2 == check) && edist > 6 || 
-		   dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+		if((retreat <= 0 && (!check2 || check2 == check) && edist > 6) || 
+		   (dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife))
 		{
 			
 			// otherwise
@@ -1257,7 +1259,7 @@ void BotMan::DoNonCombatAI()
 	// found path to exit
 	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
 	
-	if(nowon < 0 || !pwallstate && waitpwall)
+	if(nowon < 0 || (!pwallstate && waitpwall))
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
 		nothingleft = SSGeneral;	// new areas revealed, so look
@@ -1346,10 +1348,10 @@ void BotMan::DoNonCombatAI()
 	// Solution? retreatwaitcount variable
 	//
 	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) ||
-	   !(nexton >= 0
+	   (!(nexton >= 0
 		 && Crossfire(Basic::Major(nx), Basic::Major(ny))) &&
 	   !(nexton2 >= 0
-		 && Crossfire(Basic::Major(nx2), Basic::Major(ny2))))
+		 && Crossfire(Basic::Major(nx2), Basic::Major(ny2)))))
 	{
 		if(retreatwaitcount < 10 && retreatwaitdelay > 0)
 			retreatwaitdelay -= tics;

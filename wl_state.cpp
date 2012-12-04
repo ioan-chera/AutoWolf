@@ -248,6 +248,8 @@ boolean TryWalk (objtype *ob)
                 ob->tilex--;
                 ob->tiley--;
                 break;
+			default:
+				;
         }
     }
     else
@@ -977,6 +979,8 @@ void KillActor (objtype *ob)
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 #endif
+		default:
+			;
     }
 
     gamestate.killcount++;
@@ -1052,6 +1056,8 @@ void DamageActor (objtype *ob, unsigned damage)
                     NewState (ob,&s_sspain1);
 
                 break;
+			default:
+				;
         }
     }
 }
@@ -1289,6 +1295,8 @@ boolean CheckSight (objtype *ob)
             if (DEMOCOND_SDL && -deltax > deltay)
                 return false;
             break;
+		default:
+			;
     }
 
     //
@@ -1437,6 +1445,8 @@ void FirstSighting (objtype *ob)
             ob->speed = 2048;                       // go faster when chasing player
             break;
 #endif
+		default:
+			;
     }
 
     if (ob->distance < 0)
@@ -1528,6 +1538,8 @@ boolean SightPlayer (objtype *ob)
             case deathobj:
                 ob->temp2 = 1;
                 break;
+			default:
+				;
         }
         return false;
     }

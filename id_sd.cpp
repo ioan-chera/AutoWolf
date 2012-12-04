@@ -99,7 +99,7 @@ static  digiinfo               *DigiList;
 static  boolean                 DigiPlaying;
 
 //      PC Sound variables
-static  volatile byte           pcLastSample;
+// static  volatile byte           pcLastSample;
 static  byte * volatile         pcSound;
 // IOAN 11.06.2012: commented to made compiler stop complaining
 //static  longword                pcLengthLeft;
@@ -558,6 +558,8 @@ SD_StopDigitized(void)
 //            SDL_SBStopSampleInIRQ();
             Mix_HaltChannel(-1);
             break;
+		default:
+			;
     }
 }
 
@@ -585,6 +587,8 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
             Mix_SetPanning(channel, ((15 - leftpos) << 4) + 15,
                 ((15 - rightpos) << 4) + 15);
             break;
+		default:
+			;
     }
 }
 
@@ -700,6 +704,8 @@ SD_SetDigiDevice(SDSMode mode)
             if (!SoundBlasterPresent)
                 devicenotpresent = true;
             break;
+		default:
+			;
     }
 
     if (!devicenotpresent)
@@ -906,6 +912,8 @@ SDL_ShutDevice(void)
         case sdm_AdLib:
             SDL_ShutAL();
             break;
+		default:
+			;
     }
     SoundMode = sdm_Off;
 }
@@ -935,6 +943,8 @@ SDL_StartDevice(void)
         case sdm_AdLib:
             SDL_StartAL();
             break;
+		default:
+			;
     }
     SoundNumber = (soundnames) 0;
     SoundPriority = 0;
@@ -1276,6 +1286,8 @@ SD_PlaySound(soundnames sound)
         case sdm_AdLib:
             SDL_ALPlaySound((AdLibSound *)s);
             break;
+		default:
+			;
     }
 
     SoundNumber = sound;
@@ -1303,6 +1315,8 @@ SD_SoundPlaying(void)
         case sdm_AdLib:
             result = alSound? true : false;
             break;
+		default:
+			;
     }
 
     if (result)
@@ -1330,6 +1344,8 @@ SD_StopSound(void)
         case sdm_AdLib:
             SDL_ALStopSound();
             break;
+		default:
+			;
     }
 
     SoundPositioned = false;
@@ -1379,6 +1395,8 @@ SD_MusicOff(void)
             for (i = 0;i < sqMaxTracks;i++)
                 alOut(alFreqH + i + 1, 0);
             break;
+		default:
+			;
     }
 
     return (int) (sqHackPtr-sqHack);
@@ -1461,6 +1479,8 @@ SD_FadeOutMusic(void)
             // DEBUG - quick hack to turn the music off
             SD_MusicOff();
             break;
+		default:
+			;
     }
 }
 

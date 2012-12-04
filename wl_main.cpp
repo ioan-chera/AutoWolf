@@ -682,6 +682,8 @@ boolean LoadTheGame(FILE *file,int x,int y)
 					Basic::thrownProjectiles.add(obj);
 				}
 				
+			default:
+				;
 		}
 	}
 
@@ -1760,7 +1762,7 @@ void CheckParameters(int argc, char *argv[])
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
                 unsigned factor = screenWidth / 320;
-                if(screenWidth % 320 || screenHeight != 200 * factor && screenHeight != 240 * factor)
+                if(screenWidth % 320 || (screenHeight != 200 * factor && screenHeight != 240 * factor))
                     printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
             }
         }

@@ -88,6 +88,8 @@ public:
 		case willobj:
 		case deathobj:
 			return true;
+		default:	// silence compiler
+			;
 		}
 		return false;
 	}
@@ -109,6 +111,8 @@ public:
 		case willobj:
 		case deathobj:
 			return true;
+		default:
+			;
 		}
 		return false;
 	}
@@ -131,6 +135,8 @@ public:
 		case deathobj:
 		case angelobj:
 			return true;
+			default:
+				;
 		}
 		return false;
 	}

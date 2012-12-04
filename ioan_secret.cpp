@@ -109,7 +109,9 @@ int Secret::CalcScoreAdd(int tx, int ty, bool start)
 		case uberobj:
 		case willobj:
 		case deathobj:
-			score += I_BOSSSCORE;
+				score += I_BOSSSCORE;
+			default:
+				;
 		}
 	}
 

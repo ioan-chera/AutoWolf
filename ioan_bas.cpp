@@ -71,9 +71,9 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			return true;
 		break;
 	case mutantobj:
-		if(dist <= 2 && ret->flags & FL_ATTACKMODE
-			|| dist <= 14 && (ret->state == &s_mutshoot1 || ret->state == &s_mutshoot2 || ret->state == &s_mutshoot3 || 
-			ret->state == &s_mutshoot4))
+		if((dist <= 2 && ret->flags & FL_ATTACKMODE)
+			|| (dist <= 14 && (ret->state == &s_mutshoot1 || ret->state == &s_mutshoot2 || ret->state == &s_mutshoot3 || 
+			ret->state == &s_mutshoot4)))
 			return true;
 		break;
 #ifndef SPEAR
@@ -133,6 +133,8 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			return true;
 		break;
 #endif
+		default:
+			;
 	}
 	return false;
 }
@@ -312,6 +314,8 @@ objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
             if (!loadedgame)
                 gamestate.killtotal++;
             break;
+		default:
+			;
     }
 
 
@@ -387,6 +391,8 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
             if (!loadedgame)
                 gamestate.killtotal++;
             break;
+		default:
+			;
     }
 
     newobj->obclass = (classtype)(guardobj+which);
@@ -522,6 +528,8 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 			break;
 			
 #endif
+		default:
+			;
 	}
 	
     SpawnNewObj (tilex,tiley,spawnstate);
@@ -660,7 +668,7 @@ void Basic::MarkovWrite(char *c, int nmax)
 			c[n++] = (char)(i + 'a');
 		j = i;
 	}
-	while(i < 26 && n < nmax || n < 6);
+	while((i < 26 && n < nmax) || n < 6);
 	c[n] = '\0';
 }
 

@@ -372,6 +372,8 @@ void T_Projectile (objtype *ob)
         case fireobj:
             damage = (US_RndT() >>3);
             break;
+		default:
+				;
         }
 
         TakeDamage (damage,ob);
@@ -894,6 +896,8 @@ void A_DeathScream (objtype *ob)
             case dogobj:
                 PlaySoundLocActor(DEATHSCREAM6SND,ob);
                 return;
+			default:
+				;
         }
     }
 #endif
@@ -981,6 +985,8 @@ void A_DeathScream (objtype *ob)
             SD_PlaySound(KNIGHTDEATHSND);
             break;
 #endif
+		default:
+			;
     }
 }
 
@@ -2669,6 +2675,8 @@ void T_Chase (objtype *ob)
                     NewState (ob,&s_deathshoot1);
                     break;
 #endif
+				default:
+					;
             }
             return;
         }
@@ -3402,6 +3410,8 @@ void    A_StartDeathCam (objtype *ob)
             NewState (ob,&s_fatdeathcam);
             break;
 #endif
+		default:
+			;
     }
 }
 
