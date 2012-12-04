@@ -48,6 +48,22 @@
 		FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7630A6159F6D9800610D61 /* PathArray.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
 		FAB790EA163A7C3E003DC8E1 /* ioan_secret.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */; };
+		FAE8D0FD166E3C58006B2EDE /* AUDIOHED.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */; };
+		FAE8D0FE166E3C58006B2EDE /* AUDIOT.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */; };
+		FAE8D0FF166E3C58006B2EDE /* CONFIG.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */; };
+		FAE8D100166E3C58006B2EDE /* GAMEMAPS.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */; };
+		FAE8D101166E3C58006B2EDE /* MAPHEAD.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */; };
+		FAE8D102166E3C58006B2EDE /* Savegam0.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */; };
+		FAE8D103166E3C58006B2EDE /* Savegam1.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */; };
+		FAE8D104166E3C58006B2EDE /* Savegam2.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */; };
+		FAE8D105166E3C58006B2EDE /* Savegam3.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */; };
+		FAE8D106166E3C58006B2EDE /* Savegam4.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */; };
+		FAE8D107166E3C58006B2EDE /* Savegam5.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */; };
+		FAE8D108166E3C58006B2EDE /* Savegam6.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */; };
+		FAE8D109166E3C58006B2EDE /* VGADICT.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */; };
+		FAE8D10A166E3C58006B2EDE /* VGAGRAPH.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */; };
+		FAE8D10B166E3C58006B2EDE /* VGAHEAD.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */; };
+		FAE8D10C166E3C58006B2EDE /* VSWAP.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +77,31 @@
 				002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */,
 			);
 			name = "Copy Frameworks into .app bundle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAE8D0FC166E3C43006B2EDE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				FAE8D0FD166E3C58006B2EDE /* AUDIOHED.WL6 in CopyFiles */,
+				FAE8D0FE166E3C58006B2EDE /* AUDIOT.WL6 in CopyFiles */,
+				FAE8D0FF166E3C58006B2EDE /* CONFIG.WL6 in CopyFiles */,
+				FAE8D100166E3C58006B2EDE /* GAMEMAPS.WL6 in CopyFiles */,
+				FAE8D101166E3C58006B2EDE /* MAPHEAD.WL6 in CopyFiles */,
+				FAE8D102166E3C58006B2EDE /* Savegam0.wl6 in CopyFiles */,
+				FAE8D103166E3C58006B2EDE /* Savegam1.wl6 in CopyFiles */,
+				FAE8D104166E3C58006B2EDE /* Savegam2.wl6 in CopyFiles */,
+				FAE8D105166E3C58006B2EDE /* Savegam3.wl6 in CopyFiles */,
+				FAE8D106166E3C58006B2EDE /* Savegam4.wl6 in CopyFiles */,
+				FAE8D107166E3C58006B2EDE /* Savegam5.wl6 in CopyFiles */,
+				FAE8D108166E3C58006B2EDE /* Savegam6.wl6 in CopyFiles */,
+				FAE8D109166E3C58006B2EDE /* VGADICT.WL6 in CopyFiles */,
+				FAE8D10A166E3C58006B2EDE /* VGAGRAPH.WL6 in CopyFiles */,
+				FAE8D10B166E3C58006B2EDE /* VGAHEAD.WL6 in CopyFiles */,
+				FAE8D10C166E3C58006B2EDE /* VSWAP.WL6 in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -138,6 +179,22 @@
 		FAB104D21591AA9100393DE3 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../dosbox/dbopl.h; sourceTree = SOURCE_ROOT; };
 		FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_secret.cpp; path = ../ioan_secret.cpp; sourceTree = SOURCE_ROOT; };
 		FAB790E9163A7C3E003DC8E1 /* ioan_secret.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_secret.h; path = ../ioan_secret.h; sourceTree = SOURCE_ROOT; };
+		FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOHED.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOHED.WL6; sourceTree = "<group>"; };
+		FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOT.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOT.WL6; sourceTree = "<group>"; };
+		FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = CONFIG.WL6; path = ../../../../../../Applications/Wolf4SDL/CONFIG.WL6; sourceTree = "<group>"; };
+		FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = GAMEMAPS.WL6; path = ../../../../../../Applications/Wolf4SDL/GAMEMAPS.WL6; sourceTree = "<group>"; };
+		FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = MAPHEAD.WL6; path = ../../../../../../Applications/Wolf4SDL/MAPHEAD.WL6; sourceTree = "<group>"; };
+		FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam0.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam0.wl6; sourceTree = "<group>"; };
+		FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam1.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam1.wl6; sourceTree = "<group>"; };
+		FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam2.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam2.wl6; sourceTree = "<group>"; };
+		FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam3.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam3.wl6; sourceTree = "<group>"; };
+		FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam4.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam4.wl6; sourceTree = "<group>"; };
+		FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam5.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam5.wl6; sourceTree = "<group>"; };
+		FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam6.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam6.wl6; sourceTree = "<group>"; };
+		FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGADICT.WL6; path = ../../../../../../Applications/Wolf4SDL/VGADICT.WL6; sourceTree = "<group>"; };
+		FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGAGRAPH.WL6; path = ../../../../../../Applications/Wolf4SDL/VGAGRAPH.WL6; sourceTree = "<group>"; };
+		FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGAHEAD.WL6; path = ../../../../../../Applications/Wolf4SDL/VGAHEAD.WL6; sourceTree = "<group>"; };
+		FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VSWAP.WL6; path = ../../../../../../Applications/Wolf4SDL/VSWAP.WL6; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +250,7 @@
 		29B97314FDCFA39411CA2CEA /* Untitled */ = {
 			isa = PBXGroup;
 			children = (
+				FAE8D0DB166E3BF0006B2EDE /* Wolfenstein 3D Data Files */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -284,26 +342,18 @@
 		FA8DFA98158692FB00EBBFB2 /* WL */ = {
 			isa = PBXGroup;
 			children = (
+				FAE8D10D166E3E1E006B2EDE /* Gimmicks */,
 				D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */,
-				D901F4D60FC0DBCB0040C290 /* wl_dir3dspr.cpp */,
 				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
 				D901F4D80FC0DBCB0040C290 /* wl_debug.cpp */,
-				D901F4D90FC0DBCB0040C290 /* wl_cloudsky.h */,
-				D901F4DA0FC0DBCB0040C290 /* wl_cloudsky.cpp */,
-				D901F4DB0FC0DBCB0040C290 /* wl_atmos.h */,
-				D901F4DC0FC0DBCB0040C290 /* wl_atmos.cpp */,
 				D901F4DD0FC0DBCB0040C290 /* wl_agent.cpp */,
 				D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */,
 				D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */,
 				D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */,
 				D901F4D00FC0DBCB0040C290 /* wl_game.cpp */,
-				D901F4D10FC0DBCB0040C290 /* wl_floorceiling.cpp */,
 				D901F4E70FC0DBCB0040C290 /* wl_text.cpp */,
 				D901F4EB0FC0DBCB0040C290 /* wl_state.cpp */,
-				D901F4EC0FC0DBCB0040C290 /* wl_shade.h */,
-				D901F4ED0FC0DBCB0040C290 /* wl_shade.cpp */,
 				D901F4EE0FC0DBCB0040C290 /* wl_play.cpp */,
-				D901F4EF0FC0DBCB0040C290 /* wl_parallax.cpp */,
 				D901F4F00FC0DBCB0040C290 /* wl_menu.h */,
 				D901F4F10FC0DBCB0040C290 /* wl_menu.cpp */,
 				D901F4F20FC0DBCB0040C290 /* wl_main.cpp */,
@@ -321,6 +371,45 @@
 			name = GFXV;
 			sourceTree = "<group>";
 		};
+		FAE8D0DB166E3BF0006B2EDE /* Wolfenstein 3D Data Files */ = {
+			isa = PBXGroup;
+			children = (
+				FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */,
+				FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */,
+				FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */,
+				FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */,
+				FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */,
+				FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */,
+				FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */,
+				FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */,
+				FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */,
+				FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */,
+				FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */,
+				FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */,
+				FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */,
+				FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */,
+				FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */,
+				FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */,
+			);
+			name = "Wolfenstein 3D Data Files";
+			sourceTree = "<group>";
+		};
+		FAE8D10D166E3E1E006B2EDE /* Gimmicks */ = {
+			isa = PBXGroup;
+			children = (
+				D901F4D60FC0DBCB0040C290 /* wl_dir3dspr.cpp */,
+				D901F4D90FC0DBCB0040C290 /* wl_cloudsky.h */,
+				D901F4DA0FC0DBCB0040C290 /* wl_cloudsky.cpp */,
+				D901F4DB0FC0DBCB0040C290 /* wl_atmos.h */,
+				D901F4DC0FC0DBCB0040C290 /* wl_atmos.cpp */,
+				D901F4D10FC0DBCB0040C290 /* wl_floorceiling.cpp */,
+				D901F4EC0FC0DBCB0040C290 /* wl_shade.h */,
+				D901F4ED0FC0DBCB0040C290 /* wl_shade.cpp */,
+				D901F4EF0FC0DBCB0040C290 /* wl_parallax.cpp */,
+			);
+			name = Gimmicks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -332,6 +421,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				FAE8D0FC166E3C43006B2EDE /* CopyFiles */,
 			);
 			buildRules = (
 			);

@@ -221,7 +221,7 @@ statetype s_hboom3              = {false,SPR_HBOOM_3,6,NULL,NULL,NULL};
 
 #endif
 
-void    T_Schabb (objtype *ob);
+void    T_ProjectileBossChase (objtype *ob);
 void    T_SchabbThrow (objtype *ob);
 void    T_Fake (objtype *ob);
 void    T_FakeFire (objtype *ob);
@@ -1002,7 +1002,7 @@ void A_DeathScream (objtype *ob)
 #ifdef SPEAR
 
 void T_Launch (objtype *ob);
-void T_Will (objtype *ob);
+void T_ProjectileBossChase (objtype *ob);
 
 extern  statetype s_angelshoot1;
 extern  statetype s_deathshoot1;
@@ -1169,12 +1169,12 @@ extern  statetype s_willshoot6;
 
 statetype s_willstand           = {false,SPR_WILL_W1,0,(statefunc)T_Stand,NULL,&s_willstand};
 
-statetype s_willchase1          = {false,SPR_WILL_W1,10,(statefunc)T_Will,NULL,&s_willchase1s};
+statetype s_willchase1          = {false,SPR_WILL_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_willchase1s};
 statetype s_willchase1s         = {false,SPR_WILL_W1,3,NULL,NULL,&s_willchase2};
-statetype s_willchase2          = {false,SPR_WILL_W2,8,(statefunc)T_Will,NULL,&s_willchase3};
-statetype s_willchase3          = {false,SPR_WILL_W3,10,(statefunc)T_Will,NULL,&s_willchase3s};
+statetype s_willchase2          = {false,SPR_WILL_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_willchase3};
+statetype s_willchase3          = {false,SPR_WILL_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_willchase3s};
 statetype s_willchase3s         = {false,SPR_WILL_W3,3,NULL,NULL,&s_willchase4};
-statetype s_willchase4          = {false,SPR_WILL_W4,8,(statefunc)T_Will,NULL,&s_willchase1};
+statetype s_willchase4          = {false,SPR_WILL_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_willchase1};
 
 statetype s_willdeathcam        = {false,SPR_WILL_W1,1,NULL,NULL,&s_willdie1};
 
@@ -1191,103 +1191,6 @@ statetype s_willshoot3          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Sh
 statetype s_willshoot4          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willshoot5};
 statetype s_willshoot5          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_willshoot6};
 statetype s_willshoot6          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willchase1};
-
-/*
-================
-=
-= T_Will
-=
-================
-*/
-
-void T_Will (objtype *ob)
-{
-    int32_t move;
-    int     dx,dy,dist;
-    boolean dodge;
-
-    dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
-    dist = dx>dy ? dx : dy;
-
-    if (CheckLine(ob))                                              // got a shot at player?
-    {
-        ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
-        {
-            //
-            // go into attack frame
-            //
-            if (ob->obclass == willobj)
-                NewState (ob,&s_willshoot1);
-            else if (ob->obclass == angelobj)
-                NewState (ob,&s_angelshoot1);
-            else
-                NewState (ob,&s_deathshoot1);
-            return;
-        }
-        dodge = true;
-    }
-    else
-        ob->hidden = true;
-
-    if (ob->dir == nodir)
-    {
-        if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-
-    move = ob->speed*tics;
-
-    while (move)
-    {
-        if (ob->distance < 0)
-        {
-            //
-            // waiting for a door to open
-            //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
-                return;
-            ob->distance = TILEGLOBAL;      // go ahead, the door is now open
-            TryWalk(ob);
-        }
-
-        if (move < ob->distance)
-        {
-            MoveObj (ob,move);
-            break;
-        }
-
-        //
-        // reached goal tile, so select another one
-        //
-
-        //
-        // fix position to account for round off during moving
-        //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
-
-        move -= ob->distance;
-
-        if (dist <4)
-            SelectRunDir (ob);
-        else if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-
-}
 
 
 //
@@ -1321,12 +1224,12 @@ extern  statetype s_deathshoot5;
 
 statetype s_deathstand          = {false,SPR_DEATH_W1,0,(statefunc)T_Stand,NULL,&s_deathstand};
 
-statetype s_deathchase1         = {false,SPR_DEATH_W1,10,(statefunc)T_Will,NULL,&s_deathchase1s};
+statetype s_deathchase1         = {false,SPR_DEATH_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_deathchase1s};
 statetype s_deathchase1s        = {false,SPR_DEATH_W1,3,NULL,NULL,&s_deathchase2};
-statetype s_deathchase2         = {false,SPR_DEATH_W2,8,(statefunc)T_Will,NULL,&s_deathchase3};
-statetype s_deathchase3         = {false,SPR_DEATH_W3,10,(statefunc)T_Will,NULL,&s_deathchase3s};
+statetype s_deathchase2         = {false,SPR_DEATH_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_deathchase3};
+statetype s_deathchase3         = {false,SPR_DEATH_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_deathchase3s};
 statetype s_deathchase3s        = {false,SPR_DEATH_W3,3,NULL,NULL,&s_deathchase4};
-statetype s_deathchase4         = {false,SPR_DEATH_W4,8,(statefunc)T_Will,NULL,&s_deathchase1};
+statetype s_deathchase4         = {false,SPR_DEATH_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_deathchase1};
 
 statetype s_deathdeathcam       = {false,SPR_DEATH_W1,1,NULL,NULL,&s_deathdie1};
 
@@ -1471,12 +1374,12 @@ extern  statetype s_spark4;
 
 statetype s_angelstand          = {false,SPR_ANGEL_W1,0,(statefunc)T_Stand,NULL,&s_angelstand};
 
-statetype s_angelchase1         = {false,SPR_ANGEL_W1,10,(statefunc)T_Will,NULL,&s_angelchase1s};
+statetype s_angelchase1         = {false,SPR_ANGEL_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_angelchase1s};
 statetype s_angelchase1s        = {false,SPR_ANGEL_W1,3,NULL,NULL,&s_angelchase2};
-statetype s_angelchase2         = {false,SPR_ANGEL_W2,8,(statefunc)T_Will,NULL,&s_angelchase3};
-statetype s_angelchase3         = {false,SPR_ANGEL_W3,10,(statefunc)T_Will,NULL,&s_angelchase3s};
+statetype s_angelchase2         = {false,SPR_ANGEL_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_angelchase3};
+statetype s_angelchase3         = {false,SPR_ANGEL_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_angelchase3s};
 statetype s_angelchase3s        = {false,SPR_ANGEL_W3,3,NULL,NULL,&s_angelchase4};
-statetype s_angelchase4         = {false,SPR_ANGEL_W4,8,(statefunc)T_Will,NULL,&s_angelchase1};
+statetype s_angelchase4         = {false,SPR_ANGEL_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_angelchase1};
 
 statetype s_angeldie1           = {false,SPR_ANGEL_W1,1,NULL,(statefunc)A_DeathScream,&s_angeldie11};
 statetype s_angeldie11          = {false,SPR_ANGEL_W1,1,NULL,NULL,&s_angeldie2};
@@ -1663,6 +1566,127 @@ moveok:
 #endif
 
 /*
+ =================
+ =
+ = IOAN 20121204
+ = Merged T_Will, T_Schabb and T_Gift here
+ =
+ = T_ProjectileBossChase
+ =
+ =================
+ */
+
+void T_ProjectileBossChase(objtype *ob)
+{
+    int32_t move;
+    int     dx,dy,dist;
+    boolean dodge;
+	
+    dodge = false;
+    dx = abs(ob->tilex - player->tilex);
+    dy = abs(ob->tiley - player->tiley);
+    dist = dx>dy ? dx : dy;
+	
+    if (CheckLine(ob))                                              // got a shot at player?
+    {
+        ob->hidden = false;
+        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
+        {
+            //
+            // go into attack frame
+            //
+			
+			switch(ob->obclass)
+			{
+#ifdef SPEAR
+				case willobj:
+					NewState (ob,&s_willshoot1);
+					break;
+				case angelobj:
+					NewState (ob,&s_angelshoot1);
+					break;
+				case deathobj:
+					NewState (ob,&s_deathshoot1);
+					break;
+#else
+				case schabbobj:
+					NewState(ob, &s_schabbshoot1);
+					break;
+				case giftobj:
+					NewState(ob, &s_giftshoot1);
+					break;
+				case fatobj:
+					NewState(ob, &s_fatshoot1);
+					break;
+					
+#endif
+				default:
+					;
+			}
+            return;
+        }
+        dodge = true;
+    }
+    else
+        ob->hidden = true;
+	
+    if (ob->dir == nodir)
+    {
+        if (dodge)
+            SelectDodgeDir (ob);
+        else
+            SelectChaseDir (ob);
+        if (ob->dir == nodir)
+            return;                                                 // object is blocked in
+    }
+	
+    move = ob->speed*tics;
+	
+    while (move)
+    {
+        if (ob->distance < 0)
+        {
+            //
+            // waiting for a door to open
+            //
+            OpenDoor (-ob->distance-1);
+            if (doorobjlist[-ob->distance-1].action != dr_open)
+                return;
+            ob->distance = TILEGLOBAL;      // go ahead, the door is now open
+            TryWalk(ob);
+        }
+		
+        if (move < ob->distance)
+        {
+            MoveObj (ob,move);
+            break;
+        }
+		
+        //
+        // reached goal tile, so select another one
+        //
+		
+        //
+        // fix position to account for round off during moving
+        //
+        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+		
+        move -= ob->distance;
+		
+        if (dist <4)
+            SelectRunDir (ob);
+        else if (dodge)
+            SelectDodgeDir (ob);
+        else
+            SelectChaseDir (ob);
+		
+        if (ob->dir == nodir)
+            return;                                                 // object is blocked in
+    }
+}
+
+/*
 =============================================================================
 
                             SCHABBS / GIFT / FAT
@@ -1672,10 +1696,9 @@ moveok:
 
 #ifndef SPEAR
 
-void    T_Gift (objtype *ob);
+void    T_ProjectileBossChase (objtype *ob);
 void    T_GiftThrow (objtype *ob);
 
-void    T_Fat (objtype *ob);
 void    T_FatThrow (objtype *ob);
 
 //
@@ -1710,12 +1733,12 @@ extern  statetype s_schabbdeathcam;
 
 statetype s_schabbstand         = {false,SPR_SCHABB_W1,0,(statefunc)T_Stand,NULL,&s_schabbstand};
 
-statetype s_schabbchase1        = {false,SPR_SCHABB_W1,10,(statefunc)T_Schabb,NULL,&s_schabbchase1s};
+statetype s_schabbchase1        = {false,SPR_SCHABB_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_schabbchase1s};
 statetype s_schabbchase1s       = {false,SPR_SCHABB_W1,3,NULL,NULL,&s_schabbchase2};
-statetype s_schabbchase2        = {false,SPR_SCHABB_W2,8,(statefunc)T_Schabb,NULL,&s_schabbchase3};
-statetype s_schabbchase3        = {false,SPR_SCHABB_W3,10,(statefunc)T_Schabb,NULL,&s_schabbchase3s};
+statetype s_schabbchase2        = {false,SPR_SCHABB_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_schabbchase3};
+statetype s_schabbchase3        = {false,SPR_SCHABB_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_schabbchase3s};
 statetype s_schabbchase3s       = {false,SPR_SCHABB_W3,3,NULL,NULL,&s_schabbchase4};
-statetype s_schabbchase4        = {false,SPR_SCHABB_W4,8,(statefunc)T_Schabb,NULL,&s_schabbchase1};
+statetype s_schabbchase4        = {false,SPR_SCHABB_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_schabbchase1};
 
 statetype s_schabbdeathcam      = {false,SPR_SCHABB_W1,1,NULL,NULL,&s_schabbdie1};
 
@@ -1771,12 +1794,12 @@ extern  statetype s_boom3;
 
 statetype s_giftstand           = {false,SPR_GIFT_W1,0,(statefunc)T_Stand,NULL,&s_giftstand};
 
-statetype s_giftchase1          = {false,SPR_GIFT_W1,10,(statefunc)T_Gift,NULL,&s_giftchase1s};
+statetype s_giftchase1          = {false,SPR_GIFT_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_giftchase1s};
 statetype s_giftchase1s         = {false,SPR_GIFT_W1,3,NULL,NULL,&s_giftchase2};
-statetype s_giftchase2          = {false,SPR_GIFT_W2,8,(statefunc)T_Gift,NULL,&s_giftchase3};
-statetype s_giftchase3          = {false,SPR_GIFT_W3,10,(statefunc)T_Gift,NULL,&s_giftchase3s};
+statetype s_giftchase2          = {false,SPR_GIFT_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_giftchase3};
+statetype s_giftchase3          = {false,SPR_GIFT_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_giftchase3s};
 statetype s_giftchase3s         = {false,SPR_GIFT_W3,3,NULL,NULL,&s_giftchase4};
-statetype s_giftchase4          = {false,SPR_GIFT_W4,8,(statefunc)T_Gift,NULL,&s_giftchase1};
+statetype s_giftchase4          = {false,SPR_GIFT_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_giftchase1};
 
 statetype s_giftdeathcam        = {false,SPR_GIFT_W1,1,NULL,NULL,&s_giftdie1};
 
@@ -1827,12 +1850,12 @@ extern  statetype s_fatdeathcam;
 
 statetype s_fatstand            = {false,SPR_FAT_W1,0,(statefunc)T_Stand,NULL,&s_fatstand};
 
-statetype s_fatchase1           = {false,SPR_FAT_W1,10,(statefunc)T_Fat,NULL,&s_fatchase1s};
+statetype s_fatchase1           = {false,SPR_FAT_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_fatchase1s};
 statetype s_fatchase1s          = {false,SPR_FAT_W1,3,NULL,NULL,&s_fatchase2};
-statetype s_fatchase2           = {false,SPR_FAT_W2,8,(statefunc)T_Fat,NULL,&s_fatchase3};
-statetype s_fatchase3           = {false,SPR_FAT_W3,10,(statefunc)T_Fat,NULL,&s_fatchase3s};
+statetype s_fatchase2           = {false,SPR_FAT_W2,8,(statefunc)T_ProjectileBossChase,NULL,&s_fatchase3};
+statetype s_fatchase3           = {false,SPR_FAT_W3,10,(statefunc)T_ProjectileBossChase,NULL,&s_fatchase3s};
 statetype s_fatchase3s          = {false,SPR_FAT_W3,3,NULL,NULL,&s_fatchase4};
-statetype s_fatchase4           = {false,SPR_FAT_W4,8,(statefunc)T_Fat,NULL,&s_fatchase1};
+statetype s_fatchase4           = {false,SPR_FAT_W4,8,(statefunc)T_ProjectileBossChase,NULL,&s_fatchase1};
 
 statetype s_fatdeathcam         = {false,SPR_FAT_W1,1,NULL,NULL,&s_fatdie1};
 
@@ -1928,287 +1951,13 @@ void T_GiftThrow (objtype *ob)
     newobj->speed = 0x2000l;
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
+	
+	// IOAN 30.06.2012: link to projectile list
+	Basic::thrownProjectiles.add(newobj);
 
 #ifndef APOGEE_1_0          // T_GiftThrow will never be called in shareware v1.0
     PlaySoundLocActor (MISSILEFIRESND,newobj);
 #endif
-}
-
-
-/*
-=================
-=
-= T_Schabb
-=
-=================
-*/
-
-void T_Schabb (objtype *ob)
-{
-    int32_t move;
-    int     dx,dy,dist;
-    boolean dodge;
-
-    dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
-    dist = dx>dy ? dx : dy;
-
-    if (CheckLine(ob))                                              // got a shot at player?
-    {
-        ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
-        {
-            //
-            // go into attack frame
-            //
-            NewState (ob,&s_schabbshoot1);
-            return;
-        }
-        dodge = true;
-    }
-    else
-        ob->hidden = true;
-
-    if (ob->dir == nodir)
-    {
-        if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-
-    move = ob->speed*tics;
-
-    while (move)
-    {
-        if (ob->distance < 0)
-        {
-            //
-            // waiting for a door to open
-            //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
-                return;
-            ob->distance = TILEGLOBAL;      // go ahead, the door is now open
-            TryWalk(ob);
-        }
-
-        if (move < ob->distance)
-        {
-            MoveObj (ob,move);
-            break;
-        }
-
-        //
-        // reached goal tile, so select another one
-        //
-
-        //
-        // fix position to account for round off during moving
-        //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
-
-        move -= ob->distance;
-
-        if (dist <4)
-            SelectRunDir (ob);
-        else if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-}
-
-
-/*
-=================
-=
-= T_Gift
-=
-=================
-*/
-
-void T_Gift (objtype *ob)
-{
-    int32_t move;
-    int     dx,dy,dist;
-    boolean dodge;
-
-    dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
-    dist = dx>dy ? dx : dy;
-
-    if (CheckLine(ob))                                              // got a shot at player?
-    {
-        ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
-        {
-            //
-            // go into attack frame
-            //
-            NewState (ob,&s_giftshoot1);
-            return;
-        }
-        dodge = true;
-    }
-    else
-        ob->hidden = true;
-
-    if (ob->dir == nodir)
-    {
-        if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-
-    move = ob->speed*tics;
-
-    while (move)
-    {
-        if (ob->distance < 0)
-        {
-            //
-            // waiting for a door to open
-            //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
-                return;
-            ob->distance = TILEGLOBAL;      // go ahead, the door is now open
-            TryWalk(ob);
-        }
-
-        if (move < ob->distance)
-        {
-            MoveObj (ob,move);
-            break;
-        }
-
-        //
-        // reached goal tile, so select another one
-        //
-
-        //
-        // fix position to account for round off during moving
-        //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
-
-        move -= ob->distance;
-
-        if (dist <4)
-            SelectRunDir (ob);
-        else if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-}
-
-
-/*
-=================
-=
-= T_Fat
-=
-=================
-*/
-
-void T_Fat (objtype *ob)
-{
-    int32_t move;
-    int     dx,dy,dist;
-    boolean dodge;
-
-    dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
-    dist = dx>dy ? dx : dy;
-
-	 // IOAN 20.05.2012: modif func
-    if (CheckLine(ob))                                              // got a shot at player?
-    {
-        ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
-        {
-            //
-            // go into attack frame
-            //
-            NewState (ob,&s_fatshoot1);
-            return;
-        }
-        dodge = true;
-    }
-    else
-        ob->hidden = true;
-
-    if (ob->dir == nodir)
-    {
-        if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
-
-    move = ob->speed*tics;
-
-    while (move)
-    {
-        if (ob->distance < 0)
-        {
-            //
-            // waiting for a door to open
-            //
-            OpenDoor (-ob->distance-1);
-            if (doorobjlist[-ob->distance-1].action != dr_open)
-                return;
-            ob->distance = TILEGLOBAL;      // go ahead, the door is now open
-            TryWalk(ob);
-        }
-
-        if (move < ob->distance)
-        {
-            MoveObj (ob,move);
-            break;
-        }
-
-        //
-        // reached goal tile, so select another one
-        //
-
-        //
-        // fix position to account for round off during moving
-        //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
-
-        move -= ob->distance;
-
-        if (dist <4)
-            SelectRunDir (ob);
-        else if (dodge)
-            SelectDodgeDir (ob);
-        else
-            SelectChaseDir (ob);
-
-        if (ob->dir == nodir)
-            return;                                                 // object is blocked in
-    }
 }
 
 

@@ -84,7 +84,7 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			return true;
 		break;
 	case ghostobj:
-		if(dist <= 2)
+		if(dist <= 2 && ret->flags & FL_ATTACKMODE)
 			return true;
 		break;
 	case mechahitlerobj:
