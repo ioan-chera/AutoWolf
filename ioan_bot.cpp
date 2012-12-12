@@ -21,10 +21,12 @@ objtype *BotMan::damagetaken;
 boolean BotMan::panic;
 byte BotMan::pressuse;
 short BotMan::retreatwaitdelay, BotMan::retreatwaitcount, BotMan::retreat;
-SearchStage BotMan::nothingleft;
+SearchStage BotMan::searchstage;
 int BotMan::exitx, BotMan::exity;
 objtype *BotMan::threater;
 PathArray BotMan::path;
+boolean BotMan::explored[MAPSIZE][MAPSIZE];
+List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
 
 HistoryRatio BotMan::shootRatio;
 
@@ -40,9 +42,15 @@ void BotMan::MapInit()
 	threater = NULL;
 	retreatwaitdelay = 0;
 	retreatwaitcount = 0;
-	nothingleft = SSGeneral;
+	searchstage = SSGeneral;
 	path.makeEmpty();
 	panic = false;
+	memset(explored, 0, maparea * sizeof(boolean));
+	int i, j;
+	
+//	for(i = 0; i < MAPSIZE; ++i)
+//		for(j = 0; j < MAPSIZE; ++j)
+//			enemyrecord[i][j].removeAll();
 }
 
 //
@@ -112,7 +120,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 				return true;
 			break;
 		case    bo_spear:
-			if(nothingleft >= SSSecretLift)
+			if(searchstage >= SSSecretLift)
 				return true;
 			break;
 #endif
@@ -123,22 +131,33 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		}
 	}
 
-	objtype *check = actorat[tx][ty];
-	if(gamestate.health > 75 && gamestate.ammo > 50 &&
-		check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
-	{
-		nothingleft = SSGeneral;	// reset counter if enemies here
-		return true;
-	}
+	//objtype *check = enemyrecord[tx][ty].firstObject();
+	
+	
+	//if(gamestate.health > 75 && gamestate.ammo > 50 && check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
+	//if(gamestate.health > 75 && gamestate.ammo > 50 && check)
+	//{
+	//	while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
+//		{
+//		//	enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
+//			check = enemyrecord[tx][ty].nextObject();
+//		}
+//		if(check)
+//		{
+//			searchstage = SSGeneral;	// reset counter if enemies here
+//			return true;
+//		}
+//	}
 
 	// secret door
-	if(!knifeinsight)
+	if(!knifeinsight)	// don't look for secret doors if compromised
 	{
+		// PUSH SOUTH
 		if(*(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
 			if(ty + 2 < MAPSIZE && !actorat[tx][ty + 2])
 			{
-				if(nothingleft >= SSOnePushWalls || (ty + 3 < MAPSIZE && !actorat[tx][ty + 3]))
+				if(searchstage >= SSOnePushWalls || (ty + 3 < MAPSIZE && !actorat[tx][ty + 3]))
 				{
 					exity = ty + 1;
 					exitx = tx;
@@ -146,11 +165,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 				}
 			}
 		}
+		
+		// PUSH NORTH
 		if(*(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
 		{
 			if(ty - 2 >= 0 && !actorat[tx][ty - 2])
 			{
-				if(nothingleft >= SSOnePushWalls || (ty - 3 >= 0 && !actorat[tx][ty - 3]))
+				if(searchstage >= SSOnePushWalls || (ty - 3 >= 0 && !actorat[tx][ty - 3]))
 				{
 					exity = ty - 1;
 					exitx = tx;
@@ -158,11 +179,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 				}
 			}
 		}
+		
+		// PUSH EAST
 		if(*(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
 		{
 			if(tx + 2 < MAPSIZE && !actorat[tx + 2][ty])
 			{
-				if(nothingleft >= SSOnePushWalls || (tx + 3 < MAPSIZE && !actorat[tx + 3][ty]))
+				if(searchstage >= SSOnePushWalls || (tx + 3 < MAPSIZE && !actorat[tx + 3][ty]))
 				{
 					exity = ty;
 					exitx = tx + 1;
@@ -170,11 +193,13 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 				}
 			}	
 		}
+		
+		// PUSH WEST
 		if(*(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
 		{
 			if(tx - 2 >= 0 && !actorat[tx - 2][ty])
 			{
-				if(nothingleft >= SSOnePushWalls || (tx - 3 >= 0 && !actorat[tx - 3][ty]))
+				if(searchstage >= SSOnePushWalls || (tx - 3 >= 0 && !actorat[tx - 3][ty]))
 				{
 					exity = ty;
 					exitx = tx - 1;
@@ -185,44 +210,78 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	}
 
 	// exit switch
-	if(nothingleft >= SSSecretLift)
+	if(searchstage >= SSSecretLift)
 	{
+		
+		// THROW WEST
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || tx - 2 < 0 || !actorat[tx-2][ty]) 
 			{
 				exitx = tx - 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= SSNormalLift)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift)
 					return true;
 			}
 		}
+		
+		// THROW EAST
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || tx + 2 >= MAPSIZE || !actorat[tx+2][ty]) 
 			{
 				exitx = tx + 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || nothingleft >= SSNormalLift)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift)
 					return true;
 			}
 		}
 
 		// exit pad
-		if(nothingleft >= SSNormalLift && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+		if(searchstage >= SSNormalLift && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
 			return true;
 	}
 	return false;
 }
 
 //
-// BotMan::FindRandomPath
+// BotMan::ExploreFill
+//
+// Recursively explores from the given origin
+//
+void BotMan::ExploreFill(int tx, int ty, int ox, int oy)
+{
+	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+		return;
+	if(explored[tx][ty])
+		return;
+	objtype *check = actorat[tx][ty];
+	if(check && !ISPOINTER(check))	// FIXME: how to find out on solid objects
+		return;
+	
+	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy), Basic::Major(tx), Basic::Major(ty)))
+	{
+		explored[tx][ty] = true;
+		
+		ExploreFill(tx - 1, ty, ox, oy);
+		ExploreFill(tx + 1, ty, ox, oy);
+		ExploreFill(tx, ty - 1, ox, oy);
+		ExploreFill(tx, ty + 1, ox, oy);
+	}
+}
+
+//
+// BotMan::FindPath
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
+boolean BotMan::FindPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
 {
 	int j;
+	
+	// TODO: fill newly explored areas here
+	if(!explored[player->tilex][player->tiley])
+		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley);
 
 	path.makeEmpty();
 	if(retreating && threater != NULL)
@@ -249,7 +308,8 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 		// This checks if a destination has been found on the spot
 		if(!retreating)
 		{
-			if(ObjectOfInterest(tx, ty, knifeinsight))
+			// TODO: unexplored tile is also a destination
+			if(ObjectOfInterest(tx, ty, knifeinsight) || !explored[tx][ty])
 			{
 				// found goal
 				path.finish(imin);
@@ -327,12 +387,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 			byte door = tilemap[cx][cy];
 			
 			// This checks for any blocking device: refactor it
-			if((check && !ISPOINTER(check) && !(door & 0x80))
-				|| 
-				((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1)) ||
-				(mindnazis && 
-			   (player->tilex != tx || player->tiley != ty || (check && ISPOINTER(check) && check->flags & FL_SHOOTABLE)) && 
-			   IsEnemyBlocking(cx, cy)))
+			if((check && !ISPOINTER(check) && !(door & 0x80)) || ((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1)) || (mindnazis && (player->tilex != tx || player->tiley != ty || (check && ISPOINTER(check) && check->flags & FL_SHOOTABLE)) && IsEnemyBlocking(cx, cy)))
 			{
 				continue;	// solid, can't be passed
 			}
@@ -343,9 +398,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 				
 				// Don't attempt to retreat (backpedal) through closed or blocked doors
 				// Only if retreating == 1
-				if(retreating == 1 && checkindoor && (!ISPOINTER(checkindoor) || 
-												 (ISPOINTER(checkindoor) && checkindoor != player && 
-												  checkindoor->hitpoints > 0)))
+				if(retreating == 1 && checkindoor && (!ISPOINTER(checkindoor) || (ISPOINTER(checkindoor) && checkindoor != player && checkindoor->hitpoints > 0)))
 				{
 					continue;
 				}
@@ -355,8 +408,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
-					if (doorobjlist[door].action != dr_open &&
-						doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+					if (doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
 					{
 						continue;
 					}
@@ -376,8 +428,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 			}
 
 			// Increase the effective (time) distance if a closed door is in the way
-			if((door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening)
-			   || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
+			if((door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening) || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
 				tentative_g_add <<= 2;
 			
 			if(retreating && threater != NULL)
@@ -389,7 +440,7 @@ boolean BotMan::FindRandomPath(boolean ignoreproj, boolean mindnazis, byte retre
 	}
 
 	if(!pwallstate)
-		nothingleft = (SearchStage)((int)nothingleft + 1);
+		searchstage = (SearchStage)((int)searchstage + 1);
 
 	return false;
 }
@@ -440,6 +491,28 @@ objtype *BotMan::EnemyOnTarget()
 }
 
 //
+// BotMan::RecordEnemyPosition
+//
+// Update the enemy's known position record
+//
+void BotMan::RecordEnemyPosition(objtype *enemy)
+{
+	// hack: recordx and recordy if 0 are handled as if not set. Bite me.
+	
+	if(enemy->recordx == enemy->tilex && enemy->recordy == enemy->tiley)
+		return;	// change nothing
+	
+
+	if(enemy->recordx > 0 && enemy->recordy > 0)
+	{
+		enemyrecord[enemy->recordx][enemy->recordy].remove(enemy);
+	}
+	enemy->recordx = enemy->tilex;
+	enemy->recordy = enemy->tiley;
+	enemyrecord[enemy->tilex][enemy->tiley].add(enemy);
+}
+
+//
 // BotMan::EnemyVisible
 //
 // True if an enemy is in sight
@@ -465,6 +538,9 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 			continue;
 		if(!CheckLine(ret))
 			continue;
+		
+		// ret visible here: handle their updated location
+		//RecordEnemyPosition(ret);
 
 		// don't change target if distance difference is too little (don't lose focus on the current threat)
 		if((abs(*distance - i) >= 2 && ret != oldret) || ret == oldret || (oldret && !(oldret->flags & FL_SHOOTABLE)))
@@ -518,8 +594,7 @@ objtype *BotMan::GenericEnemyVisible(int tx, int ty)
 			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
 				continue;
 			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE 
-				&& Basic::GenericCheckLine(ret->x, ret->y, x, y))
+			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && Basic::GenericCheckLine(ret->x, ret->y, x, y))
 			{
 				return ret;
 			}
@@ -539,7 +614,8 @@ objtype *BotMan::EnemyEager()
 
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		if(areabyplayer[ret->areanumber] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
+		if(areabyplayer[ret->areanumber] && explored[ret->tilex][ret->tiley] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			return ret;
 	}
 	return NULL;
@@ -553,8 +629,7 @@ objtype *BotMan::EnemyEager()
 objtype *BotMan::DamageThreat(objtype *targ)
 {
 	objtype *objignore = targ;
-	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && gamestate.weapon < wp_machinegun
-				&& gamestate.weaponframe != 1)))
+	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1)))
 	{
 		objignore = NULL;
 	}
@@ -915,7 +990,6 @@ void BotMan::MoveByStrafe()
 		else
 		{
 			// if undefined, just go east
-			// TODO: make it go forward!
 			return;	// just quit
 			// nx = mx + 1;
 			// ny = my;
@@ -1126,10 +1200,10 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	// Set correct weapon
 	ChooseWeapon();
 	
-	nothingleft = SSGeneral;	// reset elevator counter if distracted
+	searchstage = SSGeneral;	// reset elevator counter if distracted
 	
 	if(gamestate.weapon == wp_knife)
-		if(FindRandomPath(false, true, 0, true))
+		if(FindPath(false, true, 0, true))
 		{
 			MoveByStrafe();
 			return;
@@ -1153,13 +1227,10 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		proj = 1;
 	}
 	
-	if(check2 && (check2 != check 
-				  || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun
-					  && gamestate.weaponframe != 1)))
-	   && gamestate.weapon != wp_knife)
+	if(check2 && (check2 != check || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1))) && gamestate.weapon != wp_knife)
 	{
 		threater = check2;
-		if(FindRandomPath(false, true, 1))
+		if(FindPath(false, true, 1))
 		{
 			panic = false;
 			MoveByStrafe();
@@ -1167,14 +1238,14 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		else
 		{
 			panic = true;
-			if(FindRandomPath(false, true, 2))	// try to pass by opening doors now
+			if(FindPath(false, true, 2))	// try to pass by opening doors now
 				MoveByStrafe();
 			else
 				controly = RUNMOVE*tics;
 			//DoRetreat(false, check2);
 		}
 		
-		// TODO: make complete projectile avoider
+		// FIXME: make complete projectile avoider
 		if(proj)
 		{
 			epangle = pangle - player->angle;
@@ -1239,15 +1310,15 @@ void BotMan::DoCombatAI(int eangle, int edist)
 void BotMan::DoNonCombatAI()
 {
 	
-	// TODO: don't go through open locked doors if there's no escape the other side!
+	// FIXME: don't go through open locked doors if there's no escape the other side!
 	panic = false;
 	// no path got defined
 	threater = NULL;
 	if(!path.exists())
 	{
-		if(!FindRandomPath(false, gamestate.weapon == wp_knife))
+		if(!FindPath(false, gamestate.weapon == wp_knife))
 		{
-			if(!FindRandomPath(true, gamestate.weapon == wp_knife))
+			if(!FindPath(true, gamestate.weapon == wp_knife))
 				return;
 		}
 	}
@@ -1262,7 +1333,7 @@ void BotMan::DoNonCombatAI()
 	if(nowon < 0 || (!pwallstate && waitpwall))
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
-		nothingleft = SSGeneral;	// new areas revealed, so look
+		searchstage = SSGeneral;	// new areas revealed, so look
 		waitpwall = false;
 		path.reset();
 		return;
@@ -1317,8 +1388,7 @@ void BotMan::DoNonCombatAI()
 		path.getCoords(nexton, &nx, &ny);
 		tile = tilemap[nx][ny];
 		// whether to press to open a door
-		tryuse = (tile & 0x80) == 0x80 
-		&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
 	}
 	
 	// set up the target angle
@@ -1329,7 +1399,9 @@ void BotMan::DoNonCombatAI()
 	if(gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0 && EnemyEager())
 	{
 		// shoot something to alert nazis
-		// TODO: more stealth gameplay considerations?
+		// FIXME: more stealth gameplay considerations?
+		// Example: if destination won't wake up any enemies, don't wake them up
+		// Still, often it's better to shoot early, than be ambushed later
 		buttonstate[bt_attack] = true;
 	}
 	else
@@ -1347,11 +1419,7 @@ void BotMan::DoNonCombatAI()
 	//
 	// Solution? retreatwaitcount variable
 	//
-	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) ||
-	   (!(nexton >= 0
-		 && Crossfire(Basic::Major(nx), Basic::Major(ny))) &&
-	   !(nexton2 >= 0
-		 && Crossfire(Basic::Major(nx2), Basic::Major(ny2)))))
+	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) || (!(nexton >= 0 && Crossfire(Basic::Major(nx), Basic::Major(ny))) && !(nexton2 >= 0 && Crossfire(Basic::Major(nx2), Basic::Major(ny2)))))
 	{
 		if(retreatwaitcount < 10 && retreatwaitdelay > 0)
 			retreatwaitdelay -= tics;
@@ -1410,7 +1478,8 @@ boolean BotMan::DoMeleeAI()
 				buttonstate[bt_attack] = true;
 		}
 	}
-	else {
+	else
+	{
 		return false;
 	}
 	return true;
@@ -1429,8 +1498,6 @@ void BotMan::DoCommand()
 	static short eangle = -1;
 	static int edist = -2;
 	
-	
-
 	objtype *check0;
 	
 	// A dead threater is no threat
@@ -1455,7 +1522,7 @@ void BotMan::DoCommand()
 		if(damagetaken)	// someone hurt me but I couldn't see him
 		{
 			threater = damagetaken;
-			if(FindRandomPath(false, true, 1))
+			if(FindPath(false, true, 1))
 			{
 				MoveByStrafe();
 			}

@@ -60,8 +60,9 @@ public:
 		base = current = 0;
 	}
 	
-	List() : base(0)
+	List()
 	{
+		base = 0;
 	}
 	~List()
 	{

@@ -9,6 +9,7 @@
 #ifndef IOAN_BOT_H_
 #define IOAN_BOT_H_
 
+#include "List.h"
 #include "wl_def.h"
 class HistoryRatio;
 class PathArray;
@@ -20,10 +21,10 @@ class PathArray;
 //
 enum SearchStage
 {
-	SSGeneral,
-	SSOnePushWalls,
-	SSSecretLift,
-	SSNormalLift
+	SSGeneral,		// search normal things
+	SSOnePushWalls,	// only now look for one-push-walls (TO BE MODIFIED)
+	SSSecretLift,	// only now look for secret exit
+	SSNormalLift	// only now look for normal exit
 };
 
 //
@@ -38,17 +39,20 @@ protected:
 	static PathArray path;
 
 	// protected variables
-	static boolean panic;
-	static byte pressuse;
-	static short retreatwaitdelay, retreatwaitcount, retreat;
-	static SearchStage nothingleft;
+	static boolean panic;	// gun logic switch (use gatling gun to kill quickly)
+	static byte pressuse;	// periodic switch for triggering button-down-only commands
+	static short retreatwaitdelay, retreatwaitcount, retreat;	// retreat (cover) controllers
+	static SearchStage searchstage;
 	static int exitx, exity;
 	static objtype *threater;
+	static boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+	static List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
 
 	// protected functions
+	// Recursively explores from the given origin
+	static void ExploreFill(int tx, int ty, int ox, int oy);
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindRandomPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0,
-								  boolean knifeinsight = false);
+	static boolean FindPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0, boolean knifeinsight = false);
 	// move by strafing
 	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
 	// Object of interest
@@ -57,6 +61,8 @@ protected:
 	static objtype *EnemyFound(int dx, int dy);
 	// Enemy targetted
 	static objtype *EnemyOnTarget();
+	// Update the enemy's known position record
+	static void RecordEnemyPosition(objtype *enemy);
 	// Enemy visible
 	static objtype *EnemyVisible(short *angle, int *distance);
 	// Enemy eager to follow
