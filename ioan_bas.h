@@ -57,6 +57,13 @@ public:
 	{
 		return itemList[tx][ty].nextObject();
 	}
+	static void InitItemList()
+	{
+		int i, j;
+		for (i = 0; i < MAPSIZE; ++i)
+			for (j = 0; j < MAPSIZE; ++j)
+				itemList[i][j].staticInit();
+	}
 
 
 	// Spawns a Nazi (originally they were separate functions; no more)

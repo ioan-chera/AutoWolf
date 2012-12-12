@@ -10,7 +10,6 @@
 #include "ioan_bas.h"
 #include "ioan_secret.h"
 #include "HistoryRatio.h"
-#include "List.h"
 #include "PathArray.h"
 #include <limits.h>
 
@@ -45,12 +44,16 @@ void BotMan::MapInit()
 	searchstage = SSGeneral;
 	path.makeEmpty();
 	panic = false;
-	memset(explored, 0, maparea * sizeof(boolean));
 	int i, j;
+	for(i = 0; i < MAPSIZE; ++i)
+		for(j = 0; j < MAPSIZE; ++j)
+			explored[i][j] = false;
+//	memset(explored, 0, maparea * sizeof(boolean));
+
 	
-//	for(i = 0; i < MAPSIZE; ++i)
-//		for(j = 0; j < MAPSIZE; ++j)
-//			enemyrecord[i][j].removeAll();
+	for(i = 0; i < MAPSIZE; ++i)
+		for(j = 0; j < MAPSIZE; ++j)
+			enemyrecord[i][j].removeAll();
 }
 
 //
@@ -60,13 +63,21 @@ void BotMan::MapInit()
 //
 boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 {
+	assert(tx >= 0);
+	assert(tx < MAPSIZE);
+	assert(ty >= 0);
+	assert(ty < MAPSIZE);
+	
 	//int i;
 	exitx = -1;
 	exity = -1;
 
 	// items
+	
 	byte itemnum;
-	for(itemnum = Basic::FirstObjectAt(tx, ty); itemnum; itemnum = Basic::NextObjectAt(tx, ty))
+//	assert((tx!=29 && tx!=38) || ty!=25 );
+	for(
+		itemnum = Basic::FirstObjectAt(tx, ty); itemnum; itemnum = Basic::NextObjectAt(tx, ty))
 	{
 		switch(itemnum)
 		{
@@ -131,23 +142,23 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		}
 	}
 
-	//objtype *check = enemyrecord[tx][ty].firstObject();
+	objtype *check = enemyrecord[tx][ty].firstObject();
 	
 	
 	//if(gamestate.health > 75 && gamestate.ammo > 50 && check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
-	//if(gamestate.health > 75 && gamestate.ammo > 50 && check)
-	//{
-	//	while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
-//		{
-//		//	enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
-//			check = enemyrecord[tx][ty].nextObject();
-//		}
-//		if(check)
-//		{
-//			searchstage = SSGeneral;	// reset counter if enemies here
-//			return true;
-//		}
-//	}
+	if(gamestate.health > 75 && gamestate.ammo > 50 && check)
+	{
+		while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
+		{
+		//	enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
+			check = enemyrecord[tx][ty].nextObject();
+		}
+		if(check)
+		{
+			searchstage = SSGeneral;	// reset counter if enemies here
+			return true;
+		}
+	}
 
 	// secret door
 	if(!knifeinsight)	// don't look for secret doors if compromised
@@ -495,6 +506,7 @@ objtype *BotMan::EnemyOnTarget()
 //
 // Update the enemy's known position record
 //
+
 void BotMan::RecordEnemyPosition(objtype *enemy)
 {
 	// hack: recordx and recordy if 0 are handled as if not set. Bite me.
@@ -511,7 +523,6 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 	enemy->recordy = enemy->tiley;
 	enemyrecord[enemy->tilex][enemy->tiley].add(enemy);
 }
-
 //
 // BotMan::EnemyVisible
 //
@@ -540,7 +551,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 			continue;
 		
 		// ret visible here: handle their updated location
-		//RecordEnemyPosition(ret);
+		RecordEnemyPosition(ret);
 
 		// don't change target if distance difference is too little (don't lose focus on the current threat)
 		if((abs(*distance - i) >= 2 && ret != oldret) || ret == oldret || (oldret && !(oldret->flags & FL_SHOOTABLE)))

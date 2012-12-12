@@ -60,9 +60,14 @@ public:
 		base = current = 0;
 	}
 	
-	List()
+	void staticInit()
 	{
 		base = 0;
+	}
+	
+	List()
+	{
+		staticInit();
 	}
 	~List()
 	{

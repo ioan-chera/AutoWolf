@@ -9,8 +9,8 @@
 #ifndef IOAN_BOT_H_
 #define IOAN_BOT_H_
 
-#include "List.h"
 #include "wl_def.h"
+#include "List.h"
 class HistoryRatio;
 class PathArray;
 
