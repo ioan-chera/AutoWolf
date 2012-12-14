@@ -59,15 +59,9 @@ public:
 		}
 		base = current = 0;
 	}
-	
-	void staticInit()
-	{
-		base = 0;
-	}
-	
 	List()
 	{
-		staticInit();
+		base = 0;
 	}
 	~List()
 	{

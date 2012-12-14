@@ -260,15 +260,27 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 //
 // Recursively explores from the given origin
 //
-void BotMan::ExploreFill(int tx, int ty, int ox, int oy)
+void BotMan::ExploreFill(int tx, int ty, int ox, int oy, boolean firstcall)
 {
 	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
 		return;
-	if(explored[tx][ty])
+	
+	static boolean explore_visited[MAPSIZE][MAPSIZE];
+	if(firstcall)	// origin
+	{
+		memset(explore_visited, 0, maparea*sizeof(boolean));
+	}
+	
+	if(explore_visited[tx][ty])
 		return;
+	explore_visited[tx][ty] = true;
+	
 	objtype *check = actorat[tx][ty];
-	if(check && !ISPOINTER(check))	// FIXME: how to find out on solid objects
-		return;
+	if(check && !ISPOINTER(check))
+	{
+		if(tilemap[tx][ty] < AREATILE)	// is a wall
+			return;
+	}
 	
 	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy), Basic::Major(tx), Basic::Major(ty)))
 	{
@@ -282,17 +294,17 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy)
 }
 
 //
-// BotMan::FindPath
+// BotMan::FindShortestPath
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
+boolean BotMan::FindShortestPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
 {
 	int j;
 	
 	// TODO: fill newly explored areas here
 	if(!explored[player->tilex][player->tiley])
-		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley);
+		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley, true);
 
 	path.makeEmpty();
 	if(retreating && threater != NULL)
@@ -1214,7 +1226,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	searchstage = SSGeneral;	// reset elevator counter if distracted
 	
 	if(gamestate.weapon == wp_knife)
-		if(FindPath(false, true, 0, true))
+		if(FindShortestPath(false, true, 0, true))
 		{
 			MoveByStrafe();
 			return;
@@ -1241,7 +1253,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	if(check2 && (check2 != check || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1))) && gamestate.weapon != wp_knife)
 	{
 		threater = check2;
-		if(FindPath(false, true, 1))
+		if(FindShortestPath(false, true, 1))
 		{
 			panic = false;
 			MoveByStrafe();
@@ -1249,7 +1261,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		else
 		{
 			panic = true;
-			if(FindPath(false, true, 2))	// try to pass by opening doors now
+			if(FindShortestPath(false, true, 2))	// try to pass by opening doors now
 				MoveByStrafe();
 			else
 				controly = RUNMOVE*tics;
@@ -1327,9 +1339,9 @@ void BotMan::DoNonCombatAI()
 	threater = NULL;
 	if(!path.exists())
 	{
-		if(!FindPath(false, gamestate.weapon == wp_knife))
+		if(!FindShortestPath(false, gamestate.weapon == wp_knife))
 		{
-			if(!FindPath(true, gamestate.weapon == wp_knife))
+			if(!FindShortestPath(true, gamestate.weapon == wp_knife))
 				return;
 		}
 	}
@@ -1533,7 +1545,7 @@ void BotMan::DoCommand()
 		if(damagetaken)	// someone hurt me but I couldn't see him
 		{
 			threater = damagetaken;
-			if(FindPath(false, true, 1))
+			if(FindShortestPath(false, true, 1))
 			{
 				MoveByStrafe();
 			}

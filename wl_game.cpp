@@ -676,6 +676,8 @@ void SetupGameLevel (void)
 
     #undef MXX
 #endif
+	// IOAN 20121213
+	// TODO: calculate checksum of it
 
 //
 // copy the wall data to a data segment array

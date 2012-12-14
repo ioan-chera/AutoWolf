@@ -50,9 +50,9 @@ protected:
 
 	// protected functions
 	// Recursively explores from the given origin
-	static void ExploreFill(int tx, int ty, int ox, int oy);
+	static void ExploreFill(int tx, int ty, int ox, int oy, boolean firstcall = false);
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0, boolean knifeinsight = false);
+	static boolean FindShortestPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0, boolean knifeinsight = false);
 	// move by strafing
 	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
 	// Object of interest

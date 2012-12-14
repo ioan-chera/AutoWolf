@@ -48,6 +48,10 @@
 		FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7630A6159F6D9800610D61 /* PathArray.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
 		FAB790EA163A7C3E003DC8E1 /* ioan_secret.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */; };
+		FAC97A4A1679D15000949336 /* CheckSum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A481679D14E00949336 /* CheckSum.cpp */; };
+		FAC97A4D167A08CE00949336 /* DataFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A4B167A08CE00949336 /* DataFile.cpp */; };
+		FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A52167A696F00949336 /* DirectoryFile.cpp */; };
+		FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */; };
 		FAE8D0FD166E3C58006B2EDE /* AUDIOHED.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */; };
 		FAE8D0FE166E3C58006B2EDE /* AUDIOT.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */; };
 		FAE8D0FF166E3C58006B2EDE /* CONFIG.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */; };
@@ -179,6 +183,14 @@
 		FAB104D21591AA9100393DE3 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../dosbox/dbopl.h; sourceTree = SOURCE_ROOT; };
 		FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_secret.cpp; path = ../ioan_secret.cpp; sourceTree = SOURCE_ROOT; };
 		FAB790E9163A7C3E003DC8E1 /* ioan_secret.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_secret.h; path = ../ioan_secret.h; sourceTree = SOURCE_ROOT; };
+		FAC97A481679D14E00949336 /* CheckSum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CheckSum.cpp; path = ../CheckSum.cpp; sourceTree = "<group>"; };
+		FAC97A491679D14F00949336 /* CheckSum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckSum.h; path = ../CheckSum.h; sourceTree = "<group>"; };
+		FAC97A4B167A08CE00949336 /* DataFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataFile.cpp; path = ../DataFile.cpp; sourceTree = "<group>"; };
+		FAC97A4C167A08CE00949336 /* DataFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataFile.h; path = ../DataFile.h; sourceTree = "<group>"; };
+		FAC97A52167A696F00949336 /* DirectoryFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectoryFile.cpp; path = ../DirectoryFile.cpp; sourceTree = "<group>"; };
+		FAC97A53167A696F00949336 /* DirectoryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirectoryFile.h; path = ../DirectoryFile.h; sourceTree = "<group>"; };
+		FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MasterDirectoryFile.cpp; path = ../MasterDirectoryFile.cpp; sourceTree = "<group>"; };
+		FAC97A56167B3F0F00949336 /* MasterDirectoryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MasterDirectoryFile.h; path = ../MasterDirectoryFile.h; sourceTree = "<group>"; };
 		FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOHED.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOHED.WL6; sourceTree = "<group>"; };
 		FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOT.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOT.WL6; sourceTree = "<group>"; };
 		FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = CONFIG.WL6; path = ../../../../../../Applications/Wolf4SDL/CONFIG.WL6; sourceTree = "<group>"; };
@@ -314,6 +326,9 @@
 				FA762DBA159D08A500610D61 /* List.h */,
 				FA7630A7159F6D9800610D61 /* PathArray.h */,
 				FA7630A6159F6D9800610D61 /* PathArray.cpp */,
+				FAC97A491679D14F00949336 /* CheckSum.h */,
+				FAC97A481679D14E00949336 /* CheckSum.cpp */,
+				FAC97A51167A679800949336 /* DataFile */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -369,6 +384,19 @@
 				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
 			);
 			name = GFXV;
+			sourceTree = "<group>";
+		};
+		FAC97A51167A679800949336 /* DataFile */ = {
+			isa = PBXGroup;
+			children = (
+				FAC97A4C167A08CE00949336 /* DataFile.h */,
+				FAC97A4B167A08CE00949336 /* DataFile.cpp */,
+				FAC97A53167A696F00949336 /* DirectoryFile.h */,
+				FAC97A52167A696F00949336 /* DirectoryFile.cpp */,
+				FAC97A56167B3F0F00949336 /* MasterDirectoryFile.h */,
+				FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */,
+			);
+			name = DataFile;
 			sourceTree = "<group>";
 		};
 		FAE8D0DB166E3BF0006B2EDE /* Wolfenstein 3D Data Files */ = {
@@ -511,6 +539,10 @@
 				FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */,
 				FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */,
 				FAB790EA163A7C3E003DC8E1 /* ioan_secret.cpp in Sources */,
+				FAC97A4A1679D15000949336 /* CheckSum.cpp in Sources */,
+				FAC97A4D167A08CE00949336 /* DataFile.cpp in Sources */,
+				FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */,
+				FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

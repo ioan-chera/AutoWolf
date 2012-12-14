@@ -1996,8 +1996,6 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-	// IOAN 20121212: initialize some things
-	Basic::InitItemList();
 
     CheckForEpisodes();
 
