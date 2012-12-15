@@ -51,7 +51,7 @@ public:
 	DataFile() : filename(0), header(0), initialized(false)
 	{
 	}
-	~DataFile()
+	virtual ~DataFile()
 	{
 		delete filename;
 		delete header;
@@ -71,7 +71,7 @@ public:
 	//virtual char *exportToString() const = 0;
 	
 	// do that other thing
-	virtual void initialize(const char *fname);
+	void initialize(const char *fname);
 	
 	// get file size
 	virtual uint64_t getSize() = 0;

@@ -6,12 +6,14 @@
 // Basic bot setup. I'm working with classes here!
 //
 
+#include <limits.h>
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
 #include "HistoryRatio.h"
 #include "PathArray.h"
-#include <limits.h>
+#include "CheckSum.h"
+#include "MasterDirectoryFile.h"
 
 // static class member definition
 boolean BotMan::active;
@@ -45,15 +47,36 @@ void BotMan::MapInit()
 	path.makeEmpty();
 	panic = false;
 	int i, j;
-	for(i = 0; i < MAPSIZE; ++i)
-		for(j = 0; j < MAPSIZE; ++j)
-			explored[i][j] = false;
+	
+	
+	// IOAN 20121213
+	// calculate checksum of it
+	CalculateMapsegsChecksum();
+	// get explored data
+	GetExploredData(explored);
+	
+	
+	// FIXME: this should be taken from external file
+//	for(i = 0; i < MAPSIZE; ++i)
+//		for(j = 0; j < MAPSIZE; ++j)
+//			explored[i][j] = false;
 //	memset(explored, 0, maparea * sizeof(boolean));
 
-	
+	// FIXME: this should be taken from loaded game data. I might put a LoadGameInit just for that.
 	for(i = 0; i < MAPSIZE; ++i)
 		for(j = 0; j < MAPSIZE; ++j)
 			enemyrecord[i][j].removeAll();
+}
+
+//
+// BotMan::SaveExplored
+//
+// Saves explored to data file
+//
+void BotMan::SaveExplored()
+{
+	PutExploredData(explored);
+	MasterDirectoryFile::MainDir().saveToFile();
 }
 
 //
@@ -67,6 +90,14 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	assert(tx < MAPSIZE);
 	assert(ty >= 0);
 	assert(ty < MAPSIZE);
+	
+	objtype *check = actorat[tx][ty];
+	
+	// unexplored tile that's unoccupied by a solid block
+	if(!explored[tx][ty] && (!check || ISPOINTER(check)))
+	{
+		return true;
+	}
 	
 	//int i;
 	exitx = -1;
@@ -142,7 +173,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		}
 	}
 
-	objtype *check = enemyrecord[tx][ty].firstObject();
+	check = enemyrecord[tx][ty].firstObject();
 	
 	
 	//if(gamestate.health > 75 && gamestate.ammo > 50 && check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
@@ -150,8 +181,8 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 	{
 		while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
 		{
-		//	enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
-			check = enemyrecord[tx][ty].nextObject();
+			enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
+			check = enemyrecord[tx][ty].firstObject();
 		}
 		if(check)
 		{
@@ -302,7 +333,10 @@ boolean BotMan::FindShortestPath(boolean ignoreproj, boolean mindnazis, byte ret
 {
 	int j;
 	
-	// TODO: fill newly explored areas here
+	// if stepped and reached on a former enemy position, remove it
+	enemyrecord[player->tilex][player->tiley].removeAll();
+	
+	// if stepped on unexplored terrain, do a scan
 	if(!explored[player->tilex][player->tiley])
 		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley, true);
 
@@ -331,8 +365,8 @@ boolean BotMan::FindShortestPath(boolean ignoreproj, boolean mindnazis, byte ret
 		// This checks if a destination has been found on the spot
 		if(!retreating)
 		{
-			// TODO: unexplored tile is also a destination
-			if(ObjectOfInterest(tx, ty, knifeinsight) || !explored[tx][ty])
+			
+			if(ObjectOfInterest(tx, ty, knifeinsight))
 			{
 				// found goal
 				path.finish(imin);

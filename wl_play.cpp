@@ -1358,6 +1358,10 @@ void PlayLoop (void)
         }
     }
     while (!playstate && !startgame);
+	
+	// IOAN 20121215
+	// Now is a time to save explored map data
+	BotMan::SaveExplored();
 
     if (playstate != ex_died)
         FinishPaletteShifts ();

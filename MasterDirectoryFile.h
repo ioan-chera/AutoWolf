@@ -11,6 +11,9 @@
 
 #include "DirectoryFile.h"
 
+#define MASTERDIR_MAPSDIRECTORY "Maps"
+
+
 //
 // MasterDirectoryFile
 //
@@ -21,7 +24,10 @@ class MasterDirectoryFile : public DirectoryFile
 protected:
 	const char fileHeader[9] = "AutoWolf";
 	const char masterDirectoryFileName[14] = "AutoWolf.data";
+	
+//	void doWriteToFile(FILE *f);
 public:
+	
 	static MasterDirectoryFile &MainDir();
 	// save it to file
 	void saveToFile();

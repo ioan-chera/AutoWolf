@@ -32,10 +32,10 @@ bool DirectoryFile::addFile(DataFile *file)
 //
 // access file with name
 //
-const DataFile *DirectoryFile::getFileWithName(const char *fname)
+DataFile *DirectoryFile::getFileWithName(const char *fname)
 {
 	// FIXME: Implement faster, proven searching methods than this
-	const DataFile *file;
+	DataFile *file;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
 		if(!strcasecmp(file->getFilename(), fname))
@@ -118,4 +118,26 @@ void DirectoryFile::doWriteToFile(FILE *f)
 		size = file->getSize();
 		fwrite(&size, sizeof(size), 1, f);
 	}
+}
+
+//
+// DirectoryFile::makeDirectory
+//
+// create folder if not exist
+//
+DirectoryFile *DirectoryFile::makeDirectory(const char *fname)
+{
+	DataFile *findDir = getFileWithName(fname);
+	if(!findDir || (findDir && strcmp(findDir->getHeader(), this->fileHeader)))
+	{
+		// either doesn't exist or is not a folder
+		DirectoryFile *newdir = new DirectoryFile;
+		newdir->initialize(fname);
+		addFile(newdir);
+		
+		return newdir;
+	}
+	
+	// exists and is a folder
+	return (DirectoryFile *)findDir;
 }

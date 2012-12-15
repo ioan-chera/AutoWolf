@@ -12,6 +12,7 @@
 #include "DataFile.h"
 #include "List.h"
 
+
 //
 // DirectoryFile
 //
@@ -38,7 +39,7 @@ protected:
 	// number of files
 	uint32_t numberOfFiles;
 	// address of list
-	uint64_t addressOfList;	// FIXME: really needed?
+	uint64_t addressOfList;
 	
 	void doWriteToFile(FILE *f);
 	
@@ -50,7 +51,12 @@ public:
 	}
 	~DirectoryFile()
 	{
-		// TODO: delete all files, then empty the list
+		DataFile *file, *next;
+		for(file = fileList.firstObject(); file; file = next)
+		{
+			next = fileList.nextObject();
+			delete file;
+		}
 	}
 	
 	// now size
@@ -60,7 +66,10 @@ public:
 	bool addFile(DataFile *file);
 	
 	// access file with name
-	const DataFile *getFileWithName(const char *fname);
+	DataFile *getFileWithName(const char *fname);
+	
+	// create folder if not exist
+	DirectoryFile *makeDirectory(const char *fname);
 };
 
 #endif
