@@ -9,13 +9,22 @@
 #include "ExploredArrayFile.h"
 
 //
+// ExploredArrayFile::ExploredArrayFile
+//
+ExploredArrayFile::ExploredArrayFile()
+{
+	memset(explored, 0, sizeof(explored));
+	strcpy(header, "Explored");
+}
+
+//
 // ExploredArrayFile::doWriteToFile
 //
 // Execute writing to file
 //
 void ExploredArrayFile::doWriteToFile(FILE *f)
 {
-	fputs(fileHeader, f);
+	fputs(header, f);
 	fwrite(explored, sizeof(explored), 1, f);
 }
 

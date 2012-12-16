@@ -10,6 +10,14 @@
 #include "DirectoryFile.h"
 
 //
+// DirectoryFile::DirectoryFile
+//
+DirectoryFile::DirectoryFile() : numberOfFiles(0), addressOfList(0)
+{
+	strcpy(header, DIRECTORY_HEADER);
+}
+
+//
 // DirectoryFile::addFile
 //
 // Add file to directory list
@@ -28,18 +36,48 @@ bool DirectoryFile::addFile(DataFile *file)
 }
 
 //
+// DirectoryFile::makeDirectory
+//
+// create folder if not exist
+//
+DirectoryFile *DirectoryFile::makeDirectory(const char *fname, size_t nchar)
+{
+	DataFile *findDir = getFileWithName(fname, nchar);
+	if(!findDir || (findDir && strcmp(findDir->getHeader(), DIRECTORY_HEADER)))
+	{
+		// either doesn't exist or is not a folder
+		DirectoryFile *newdir = new DirectoryFile;
+		newdir->initialize(fname, nchar);
+		addFile(newdir);
+		
+		return newdir;
+	}
+	
+	// exists and is a folder
+	return (DirectoryFile *)findDir;
+}
+
+//
 // DirectoryFile::getFileWithName
 //
 // access file with name
 //
-DataFile *DirectoryFile::getFileWithName(const char *fname)
+DataFile *DirectoryFile::getFileWithName(const char *fname, size_t nchar)
 {
 	// FIXME: Implement faster, proven searching methods than this
 	DataFile *file;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
-		if(!strcasecmp(file->getFilename(), fname))
-			return file;
+		if(nchar <= 0)
+		{
+			if(!strcmp(file->getFilename(), fname))
+				return file;
+		}
+		else
+		{
+			if(!memcmp(file->getFilename(), fname, nchar))
+				return file;
+		}
 	}
 	return NULL;
 }
@@ -84,7 +122,7 @@ uint64_t DirectoryFile::getSize()
 		ret += file->getSize();
 		
 		// directory entry
-		ret += sizeof(uint16_t) + strlen(file->getFilename()) + sizeof(uint64_t) + sizeof(uint64_t);
+		ret += sizeof(uint16_t) + file->getFilenameLen() + sizeof(uint64_t) + sizeof(uint64_t);
 	}
 	
 	return ret;
@@ -97,47 +135,35 @@ uint64_t DirectoryFile::getSize()
 //
 void DirectoryFile::doWriteToFile(FILE *f)
 {
-	fputs(fileHeader, f);
+	fputs(header, f);
 	fwrite(&numberOfFiles, sizeof(numberOfFiles), 1, f);
 	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
 	DataFile *file;
+	uint64_t size = 0, addr;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
 		file->doWriteToFile(f);
+		size += file->getSize();	// FIXME: try to cache that
 	}
-	uint64_t addr = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
-	uint64_t size;
+	addr = ftell(f);
+	
+	fseek(f, -size - sizeof(addressOfList), SEEK_CUR);
+	addressOfList = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList) + size;
+	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
+	fseek(f, size, SEEK_CUR);
+	
+	addr = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
+	
 	uint16_t len;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
-		len = strlen(file->getFilename());
+		len = file->getFilenameLen();
 		fwrite(&len, sizeof(len), 1, f);
-		fputs(file->getFilename(), f);
+		fwrite(file->getFilename(), sizeof(uint8_t), len, f);
 		fwrite(&addr, sizeof(addr), 1, f);
-		addr += file->getSize();
 		size = file->getSize();
+		addr += size;
 		fwrite(&size, sizeof(size), 1, f);
 	}
 }
 
-//
-// DirectoryFile::makeDirectory
-//
-// create folder if not exist
-//
-DirectoryFile *DirectoryFile::makeDirectory(const char *fname)
-{
-	DataFile *findDir = getFileWithName(fname);
-	if(!findDir || (findDir && strcmp(findDir->getHeader(), this->fileHeader)))
-	{
-		// either doesn't exist or is not a folder
-		DirectoryFile *newdir = new DirectoryFile;
-		newdir->initialize(fname);
-		addFile(newdir);
-		
-		return newdir;
-	}
-	
-	// exists and is a folder
-	return (DirectoryFile *)findDir;
-}

@@ -32,14 +32,9 @@ protected:
 	// Execute writing to file
 	void doWriteToFile(FILE *f);
 	// data stuff
-	uint8_t explored[MAPSIZE][MAPSIZE];
-	
-	const char fileHeader[9] = "Explored";
+	boolean explored[MAPSIZE][MAPSIZE];
 public:
-	ExploredArrayFile()
-	{
-		memset(explored, 0, sizeof(explored));
-	}
+	ExploredArrayFile();
 	// get file size
 	uint64_t getSize();
 	

@@ -51,6 +51,7 @@ void BotMan::MapInit()
 	
 	// IOAN 20121213
 	// calculate checksum of it
+	memset(explored, 0, sizeof(explored));
 	CalculateMapsegsChecksum();
 	// get explored data
 	GetExploredData(explored);

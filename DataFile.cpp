@@ -28,13 +28,21 @@
 ////////////
 
 //
+// DataFile::DataFile
+//
+DataFile::DataFile() : filename(0), initialized(false)
+{
+	strcpy(header, "Unknown");
+}
+
+//
 // DirectoryFile::initialize
 //
 // Initialize with the Director name
 //
-void DataFile::initialize(const char *fname)
+void DataFile::initialize(const char *fname, size_t nchar)
 {
-	doInitializeEmpty(fname, fileHeader);
+	doInitializeEmpty(fname, nchar);
 }
 
 //
@@ -42,9 +50,19 @@ void DataFile::initialize(const char *fname)
 //
 // Creates a new structure
 //
-void DataFile::doInitializeEmpty(const char *fname, const char *hdr)
+void DataFile::doInitializeEmpty(const char *fname, size_t nchar)
 {
-	filename = strdup(fname);
-	header = strdup(hdr);
+	if(nchar <= 0)	// text string
+	{
+		filename = strdup(fname);
+		filenamelen = strlen(filename);
+	}
+	else			// arbitrary char array (may have null)
+	{
+		filename = new char[nchar];
+		memcpy(filename, fname, nchar);
+		filenamelen = nchar;
+	}
+	
 	initialized = true;
 }

@@ -33,28 +33,25 @@ class DataFile
 protected:
 	// name of file (appears as directory entry or outer filename)
 	char *filename;
+	// length of filename
+	size_t filenamelen;
 	// file header (as defined by subclasses)
-	const char *header;
+	char header[9];
 	// see if initialized
 	bool initialized;
 	
 	// creates a new empty file
-	void doInitializeEmpty(const char *fname, const char *hdr);
+	void doInitializeEmpty(const char *fname, size_t nchar = 0);
 	// Execute writing to file
 	virtual void doWriteToFile(FILE *f) = 0;
-	
-	const char fileHeader[9] = "Unknown";
 
 public:
 	
 	
-	DataFile() : filename(0), header(0), initialized(false)
-	{
-	}
+	DataFile();
 	virtual ~DataFile()
 	{
 		delete filename;
-		delete header;
 	}
 	
 	// accessor methods
@@ -66,12 +63,16 @@ public:
 	{
 		return header;
 	}
+	size_t getFilenameLen() const
+	{
+		return filenamelen;
+	}
 	
 	// export contents to file
 	//virtual char *exportToString() const = 0;
 	
 	// do that other thing
-	void initialize(const char *fname);
+	void initialize(const char *fname, size_t nchar = 0);
 	
 	// get file size
 	virtual uint64_t getSize() = 0;

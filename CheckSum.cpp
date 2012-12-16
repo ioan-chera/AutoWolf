@@ -185,13 +185,14 @@ void CalculateMapsegsChecksum()
 void GetExploredData(void *exploredTarget)
 {
 	// see if folder exists in AutoWolf/Maps
+	memset(exploredTarget, 0, sizeof(maparea * sizeof(boolean)));
 	
 	// now to write the file
 	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(digeststring);					// the hash-named directory
+	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
 	
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
@@ -210,7 +211,7 @@ void GetExploredData(void *exploredTarget)
 		dir->addFile(exploredFile);
 		
 		// write zero on exploredTarget
-		memset(exploredTarget, 0, sizeof(maparea));
+		memset(exploredTarget, 0, sizeof(maparea * sizeof(boolean)));
 	}
 }
 
@@ -228,7 +229,7 @@ void PutExploredData(const void *explored)
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(digeststring);					// the hash-named directory
+	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
 	
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);

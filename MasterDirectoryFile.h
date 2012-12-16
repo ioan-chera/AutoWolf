@@ -22,11 +22,11 @@
 class MasterDirectoryFile : public DirectoryFile
 {
 protected:
-	const char fileHeader[9] = "AutoWolf";
 	const char masterDirectoryFileName[14] = "AutoWolf.data";
 	
 //	void doWriteToFile(FILE *f);
 public:
+	MasterDirectoryFile();
 	
 	static MasterDirectoryFile &MainDir();
 	// save it to file

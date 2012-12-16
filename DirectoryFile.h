@@ -9,6 +9,8 @@
 #ifndef DIRECTORYFILE_H_
 #define DIRECTORYFILE_H_
 
+#define DIRECTORY_HEADER "Director"
+
 #include "DataFile.h"
 #include "List.h"
 
@@ -42,13 +44,8 @@ protected:
 	uint64_t addressOfList;
 	
 	void doWriteToFile(FILE *f);
-	
-	const char fileHeader[9] = "Director";
 public:
-	DirectoryFile() : numberOfFiles(0), addressOfList(0)
-	{
-		// initialize empty
-	}
+	DirectoryFile();
 	~DirectoryFile()
 	{
 		DataFile *file, *next;
@@ -66,10 +63,10 @@ public:
 	bool addFile(DataFile *file);
 	
 	// access file with name
-	DataFile *getFileWithName(const char *fname);
+	DataFile *getFileWithName(const char *fname, size_t nchar = 0);
 	
 	// create folder if not exist
-	DirectoryFile *makeDirectory(const char *fname);
+	DirectoryFile *makeDirectory(const char *fname, size_t nchar = 0);
 };
 
 #endif
