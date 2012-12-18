@@ -72,7 +72,7 @@ void BotMan::MapInit()
 //
 // BotMan::SaveData
 //
-// Saves explored to data file
+// Saves explored to data file (at death/victory, or quit -- must be ingame)
 //
 void BotMan::SaveData()
 {
@@ -83,7 +83,7 @@ void BotMan::SaveData()
 //
 // BotMan::LoadData
 //
-// Loads data from file
+// Loads data from file (at startup)
 //
 void BotMan::LoadData()
 {

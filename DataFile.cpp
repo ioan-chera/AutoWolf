@@ -59,7 +59,8 @@ void DataFile::doInitializeEmpty(const char *fname, size_t nchar)
 	}
 	else			// arbitrary char array (may have null)
 	{
-		filename = new char[nchar];
+		filename = new char[nchar + 1];
+		filename[nchar] = 0;
 		memcpy(filename, fname, nchar);
 		filenamelen = nchar;
 	}
