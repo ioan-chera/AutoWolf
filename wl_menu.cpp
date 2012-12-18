@@ -16,6 +16,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
+#include "ioan_bot.h"	// IOAN 20121217: bot
 
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;
@@ -2953,6 +2954,10 @@ CP_Quit (int)
 
 #endif
     {
+		// IOAN 20121217: save data
+		if(ingame)
+			BotMan::SaveData();
+		
         VW_UpdateScreen ();
         SD_MusicOff ();
         SD_StopSound ();

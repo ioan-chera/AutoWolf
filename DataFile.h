@@ -36,7 +36,7 @@ protected:
 	// length of filename
 	size_t filenamelen;
 	// file header (as defined by subclasses)
-	char header[9];
+	char header[FILE_HEADER_LENGTH + 1];
 	// see if initialized
 	bool initialized;
 	
@@ -44,6 +44,8 @@ protected:
 	void doInitializeEmpty(const char *fname, size_t nchar = 0);
 	// Execute writing to file
 	virtual void doWriteToFile(FILE *f) = 0;
+	// Execute reading from file
+	virtual bool doReadFromFile(FILE *f) = 0;
 
 public:
 	

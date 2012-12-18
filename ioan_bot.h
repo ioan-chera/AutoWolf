@@ -105,8 +105,11 @@ public:
 	// Unfinds the exit (on load and setup)
 	static void MapInit();
 	
-	// Saves explored to data file
-	static void SaveExplored();
+	// Saves data to data file
+	static void SaveData();
+	
+	// Loads data from file
+	static void LoadData();
 };
 
 #endif

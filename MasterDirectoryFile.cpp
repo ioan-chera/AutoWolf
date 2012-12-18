@@ -32,7 +32,7 @@ MasterDirectoryFile::MasterDirectoryFile()
 	filenamelen = strlen(filename);
 	initialized = true;
 	
-	strcpy(header, "AutoWolf");
+	strcpy(header, MASTERDIR_HEADER);
 }
 
 //
@@ -57,4 +57,42 @@ void MasterDirectoryFile::saveToFile()
 	f = fopen(masterDirectoryFileName, "wb");
 	this->MasterDirectoryFile::doWriteToFile(f);
 	fclose(f);
+}
+
+//
+// MasterDirectoryFile::loadFromFile
+//
+// load it from file
+//
+// How is it supposed to know:
+// As interface command, detect the AutoWolf header. Call the directory (or master directory?)
+// internal function. That will read the address and number, and the access each file.
+//
+// Read each eight-character header, and depending on it, create a new object of each type
+// and call that one's reader. When that is finished, go to the next address (remmeber the previous)
+//
+bool MasterDirectoryFile::loadFromFile()
+{
+	FILE *f;
+	
+	f = fopen(masterDirectoryFileName, "rb");
+	if(!f)
+		return false;	// no file, no worry
+
+	char getHeader[FILE_HEADER_LENGTH + 1];
+	getHeader[FILE_HEADER_LENGTH] = 0;
+	
+	fread(getHeader, sizeof(char), FILE_HEADER_LENGTH, f);
+	
+	if(strcmp(getHeader, MASTERDIR_HEADER))
+	{
+		fclose(f);
+		return false;
+	}
+	
+	doReadFromFile(f);
+	
+	fclose(f);
+	
+	return true;
 }

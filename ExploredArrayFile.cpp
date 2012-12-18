@@ -14,7 +14,7 @@
 ExploredArrayFile::ExploredArrayFile()
 {
 	memset(explored, 0, sizeof(explored));
-	strcpy(header, "Explored");
+	strcpy(header, DATAFILE_EXPLORED_HEADER);
 }
 
 //
@@ -24,8 +24,19 @@ ExploredArrayFile::ExploredArrayFile()
 //
 void ExploredArrayFile::doWriteToFile(FILE *f)
 {
-	fputs(header, f);
+	fwrite(header, sizeof(char), 8, f);
 	fwrite(explored, sizeof(explored), 1, f);
+}
+
+//
+// ExploredArrayFile::doReadFromFile
+//
+// Execute reading from file
+//
+bool ExploredArrayFile::doReadFromFile(FILE *f)
+{
+	fread(explored, sizeof(explored), 1, f);	// that's it for now
+	return true;
 }
 
 //
@@ -37,7 +48,7 @@ void ExploredArrayFile::doWriteToFile(FILE *f)
 //
 uint64_t ExploredArrayFile::getSize()
 {
-	return 8 + sizeof(explored);
+	return FILE_HEADER_LENGTH + sizeof(explored);
 }
 
 //

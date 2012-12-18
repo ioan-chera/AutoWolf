@@ -70,14 +70,24 @@ void BotMan::MapInit()
 }
 
 //
-// BotMan::SaveExplored
+// BotMan::SaveData
 //
 // Saves explored to data file
 //
-void BotMan::SaveExplored()
+void BotMan::SaveData()
 {
 	PutExploredData(explored);
 	MasterDirectoryFile::MainDir().saveToFile();
+}
+
+//
+// BotMan::LoadData
+//
+// Loads data from file
+//
+void BotMan::LoadData()
+{
+	MasterDirectoryFile::MainDir().loadFromFile();
 }
 
 //

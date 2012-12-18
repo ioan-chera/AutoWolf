@@ -12,6 +12,7 @@
 #include "DirectoryFile.h"
 
 #define MASTERDIR_MAPSDIRECTORY "Maps"
+#define MASTERDIR_HEADER "AutoWolf"
 
 
 //
@@ -31,6 +32,9 @@ public:
 	static MasterDirectoryFile &MainDir();
 	// save it to file
 	void saveToFile();
+	
+	// load it from file
+	bool loadFromFile();
 };
 
 #endif

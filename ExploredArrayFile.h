@@ -13,6 +13,7 @@
 #include "DataFile.h"
 
 #define DATAFILE_EXPLORED_NAME "Explored"
+#define DATAFILE_EXPLORED_HEADER "Explored"
 
 //
 // ExploredArrayFile
@@ -33,6 +34,8 @@ protected:
 	void doWriteToFile(FILE *f);
 	// data stuff
 	boolean explored[MAPSIZE][MAPSIZE];
+	// Execute reading from file
+	bool doReadFromFile(FILE *f);
 public:
 	ExploredArrayFile();
 	// get file size

@@ -31,7 +31,6 @@
 //   uint16_t length of file name
 //   non-null-string file name
 //   uint64_t address of file within container
-//   uint64_t length of contained file
 //
 class DirectoryFile : public DataFile
 {
@@ -44,6 +43,8 @@ protected:
 	uint64_t addressOfList;
 	
 	void doWriteToFile(FILE *f);
+	// Execute reading from file
+	bool doReadFromFile(FILE *f);
 public:
 	DirectoryFile();
 	~DirectoryFile()

@@ -7,6 +7,7 @@
 //
 
 #include <string.h>
+#include "ExploredArrayFile.h"
 #include "DirectoryFile.h"
 
 //
@@ -122,7 +123,7 @@ uint64_t DirectoryFile::getSize()
 		ret += file->getSize();
 		
 		// directory entry
-		ret += sizeof(uint16_t) + file->getFilenameLen() + sizeof(uint64_t) + sizeof(uint64_t);
+		ret += sizeof(uint16_t) + file->getFilenameLen() + sizeof(uint64_t);
 	}
 	
 	return ret;
@@ -163,7 +164,78 @@ void DirectoryFile::doWriteToFile(FILE *f)
 		fwrite(&addr, sizeof(addr), 1, f);
 		size = file->getSize();
 		addr += size;
-		fwrite(&size, sizeof(size), 1, f);
 	}
+}
+
+//
+// ExploredArrayFile::doReadFromFile
+//
+// Execute reading from file
+//
+bool DirectoryFile::doReadFromFile(FILE *f)
+{
+	uint64_t baseaddr = ftell(f) - FILE_HEADER_LENGTH;
+	uint64_t fileaddr, curaddr;
+	// what have we here…
+	// 32 number of files
+	// 64 address of list. How do?
+	
+	// assume correctness, master
+	uint32_t numFiles;
+	fread(&numFiles, sizeof(uint32_t), 1, f);
+	fread(&addressOfList, sizeof(uint64_t), 1, f);
+	
+	fseek(f, baseaddr + addressOfList, SEEK_SET);
+	
+	uint32_t i;
+	uint16_t namelen, oldnamelen = 0;
+	char *fname = NULL;
+	char filehead[FILE_HEADER_LENGTH + 1];
+	filehead[FILE_HEADER_LENGTH] = 0;
+	
+	DataFile *newFile;
+	for(i = 0; i < numFiles; ++i)
+	{
+		// read length
+		fread(&namelen, sizeof(uint16_t), 1, f);
+		if(namelen > oldnamelen)
+		{
+			delete [] fname;
+			fname = new char[namelen];
+			oldnamelen = namelen;
+		}
+		fread(fname, sizeof(uint8_t), namelen, f);
+		fread(&fileaddr, sizeof(uint64_t), 1, f);
+		curaddr = ftell(f);	// address of next entry tag
+		
+		fseek(f, baseaddr + fileaddr, SEEK_SET);
+		
+		// read header
+		fread(filehead, sizeof(char), FILE_HEADER_LENGTH, f);
+		
+		// oh dear
+		
+		if(!strcmp(filehead, DATAFILE_EXPLORED_HEADER))
+		   newFile = new ExploredArrayFile;
+	    else if(!strcmp(filehead, DIRECTORY_HEADER))
+		   newFile = new DirectoryFile;
+		else// unknown, skip
+		{
+			fseek(f, curaddr, SEEK_SET);
+			continue;
+		}
+		
+		newFile->initialize(fname, namelen);
+		
+		newFile->doReadFromFile(f);
+		
+		addFile(newFile);
+		
+		// now back to business
+		fseek(f, curaddr, SEEK_SET);
+	}
+	
+	delete [] fname;
+	return true;
 }
 

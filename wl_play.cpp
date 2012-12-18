@@ -1361,7 +1361,7 @@ void PlayLoop (void)
 	
 	// IOAN 20121215
 	// Now is a time to save explored map data
-	BotMan::SaveExplored();
+	BotMan::SaveData();
 
     if (playstate != ex_died)
         FinishPaletteShifts ();

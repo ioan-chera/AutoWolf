@@ -1280,6 +1280,9 @@ static void InitGame()
     }
 #endif
 	VW_UpdateScreen();
+	
+	// IOAN 20121218: Load bot data
+	BotMan::LoadData();
 
     VH_Startup ();
     IN_Startup ();
