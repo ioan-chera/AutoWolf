@@ -7,6 +7,7 @@
 //
 
 #include "ioan_bas.h"
+#include "ioan_bot.h"
 
 // static members definition
 boolean Basic::nonazis, Basic::secretstep3;
@@ -344,6 +345,7 @@ objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
     newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
     newobj->dir = (dirtype)(dir * 2);
     newobj->flags |= FL_SHOOTABLE;
+
 	
 	return newobj;
 }
@@ -421,6 +423,7 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
     }
 
     actorat[newobj->tilex][newobj->tiley] = newobj;
+
 	
 	return newobj;
 }
@@ -633,6 +636,10 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 		break;
 #endif
 	}
+	
+	// IOAN 20121219: record enemy position
+	BotMan::RecordEnemyPosition(newobj);
+	
 	if(newenemy)
 		livingNazis.add(newenemy);
 }

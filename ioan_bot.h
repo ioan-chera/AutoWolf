@@ -61,8 +61,6 @@ protected:
 	static objtype *EnemyFound(int dx, int dy);
 	// Enemy targetted
 	static objtype *EnemyOnTarget();
-	// Update the enemy's known position record
-	static void RecordEnemyPosition(objtype *enemy);
 	// Enemy visible
 	static objtype *EnemyVisible(short *angle, int *distance);
 	// Enemy eager to follow
@@ -95,6 +93,10 @@ protected:
 	// Turn the player
 	static void TurnToAngle(int dangle);
 public:
+	// Update the enemy's known position record
+	static void RecordEnemyPosition(objtype *enemy);
+
+	
 	static boolean active;	// true if bots are activated
 	static objtype *damagetaken;
 	static HistoryRatio shootRatio;

@@ -57,7 +57,6 @@ void BotMan::MapInit()
 	GetExploredData(explored);
 	
 	
-	// FIXME: this should be taken from external file
 //	for(i = 0; i < MAPSIZE; ++i)
 //		for(j = 0; j < MAPSIZE; ++j)
 //			explored[i][j] = false;
@@ -150,26 +149,26 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 				return true;
 			break;
 		case    bo_machinegun:
-			if(gamestate.bestweapon < wp_machinegun || gamestate.ammo <= 93)
+			if(gamestate.bestweapon < wp_machinegun || gamestate.ammo <= 80)
 				return true;
 			break;
 		case    bo_chaingun:
-			if(gamestate.bestweapon < wp_chaingun || gamestate.ammo <= 93)
+			if(gamestate.bestweapon < wp_chaingun || gamestate.ammo <= 80)
 				return true;
 			break;
 		case    bo_fullheal:
 			return true;
 		case    bo_clip:
-			if(gamestate.ammo <= 91)
+			if(gamestate.ammo < 80)
 				return true;
 			break;
 		case    bo_clip2:
-			if (gamestate.ammo <= 95)
+			if (gamestate.ammo < 80)
 				return true;
 			break;
 #ifdef SPEAR
 		case    bo_25clip:
-			if (gamestate.ammo < 74)
+			if (gamestate.ammo <= 74)
 				return true;
 			break;
 		case    bo_spear:
@@ -184,11 +183,12 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 		}
 	}
 
+
+	// look for enemy in remembered record
 	check = enemyrecord[tx][ty].firstObject();
 	
-	
-	//if(gamestate.health > 75 && gamestate.ammo > 50 && check && ISPOINTER(check) && Basic::IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
-	if(gamestate.health > 75 && gamestate.ammo > 50 && check)
+	// only look for check stuff
+	if(gamestate.health > 75 && gamestate.ammo > 50 && explored[tx][ty] && check)
 	{
 		while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
 		{
@@ -570,7 +570,6 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 	
 	if(enemy->recordx == enemy->tilex && enemy->recordy == enemy->tiley)
 		return;	// change nothing
-	
 
 	if(enemy->recordx > 0 && enemy->recordy > 0)
 	{
@@ -683,7 +682,7 @@ objtype *BotMan::EnemyEager()
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
-		if(areabyplayer[ret->areanumber] && explored[ret->tilex][ret->tiley] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+		if(areabyplayer[ret->areanumber] && explored[ret->recordx][ret->recordy] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			return ret;
 	}
 	return NULL;
@@ -718,10 +717,10 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 	{
 		if(!areabyplayer[ret->areanumber] || ret == objignore)
 			continue;
-		k = ret->tilex - (x >> TILESHIFT);
-		j = ret->tiley - (y >> TILESHIFT);
+		k = ret->recordx - (x >> TILESHIFT);
+		j = ret->recordy - (y >> TILESHIFT);
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::GenericCheckLine(ret->x, ret->y, x, y))
+		if(dist > 16 || !Basic::GenericCheckLine(Basic::Major(ret->recordx), Basic::Major(ret->recordy), x, y))
 			continue;
 
 		if(Basic::IsDamaging(ret, dist) || justexists)
@@ -1565,6 +1564,7 @@ void BotMan::DoCommand()
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -2;
+//	static int reactiontime = 30;
 	
 	objtype *check0;
 	
@@ -1575,8 +1575,18 @@ void BotMan::DoCommand()
 	check0 = EnemyVisible(&eangle, &edist);
 	if(check0)
 	{
-		damagetaken = NULL;
-		DoCombatAI(eangle, edist);
+//		if(edist >= 10)
+//			reactiontime -= 1 * tics;
+//		else
+//			reactiontime -= ((11 - edist) >> 1) * tics;
+//		if(reactiontime <= 0)
+//		{
+//			reactiontime = 0;
+			damagetaken = NULL;
+			DoCombatAI(eangle, edist);
+//		}
+//		else
+//			DoNonCombatAI();
 	}
 	else if(retreat > 0)	// standard retreat, still moving
 	{
@@ -1603,6 +1613,10 @@ void BotMan::DoCommand()
 			damagetaken = NULL;
 		}
 		else
+		{
+//			if(reactiontime < 30)
+//				reactiontime+= tics;
 			DoNonCombatAI();
+		}
 	}
 }
