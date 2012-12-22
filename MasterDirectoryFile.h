@@ -13,7 +13,7 @@
 
 #define MASTERDIR_MAPSDIRECTORY "Maps"
 #define MASTERDIR_HEADER "AutoWolf"
-
+const char masterDirectoryFileName[14] = "AutoWolf.data";
 
 //
 // MasterDirectoryFile
@@ -23,7 +23,6 @@
 class MasterDirectoryFile : public DirectoryFile
 {
 protected:
-	const char masterDirectoryFileName[14] = "AutoWolf.data";
 	
 //	void doWriteToFile(FILE *f);
 public:

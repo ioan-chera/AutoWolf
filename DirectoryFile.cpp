@@ -148,10 +148,10 @@ void DirectoryFile::doWriteToFile(FILE *f)
 	}
 	addr = ftell(f);
 	
-	fseek(f, -size - sizeof(addressOfList), SEEK_CUR);
+	fseek(f, -(long)size - (long)sizeof(addressOfList), SEEK_CUR);
 	addressOfList = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList) + size;
 	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
-	fseek(f, size, SEEK_CUR);
+	fseek(f, (long)size, SEEK_CUR);
 	
 	addr = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
 	
@@ -185,7 +185,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 	fread(&numFiles, sizeof(uint32_t), 1, f);
 	fread(&addressOfList, sizeof(uint64_t), 1, f);
 	
-	fseek(f, baseaddr + addressOfList, SEEK_SET);
+	fseek(f, (long)(baseaddr + addressOfList), SEEK_SET);
 	
 	uint32_t i;
 	uint16_t namelen, oldnamelen = 0;
@@ -208,7 +208,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 		fread(&fileaddr, sizeof(uint64_t), 1, f);
 		curaddr = ftell(f);	// address of next entry tag
 		
-		fseek(f, baseaddr + fileaddr, SEEK_SET);
+		fseek(f, (long)(baseaddr + fileaddr), SEEK_SET);
 		
 		// read header
 		fread(filehead, sizeof(char), FILE_HEADER_LENGTH, f);
@@ -221,7 +221,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 		   newFile = new DirectoryFile;
 		else// unknown, skip
 		{
-			fseek(f, curaddr, SEEK_SET);
+			fseek(f, (long)curaddr, SEEK_SET);
 			continue;
 		}
 		
@@ -232,7 +232,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 		addFile(newFile);
 		
 		// now back to business
-		fseek(f, curaddr, SEEK_SET);
+		fseek(f, (long)curaddr, SEEK_SET);
 	}
 	
 	delete [] fname;
