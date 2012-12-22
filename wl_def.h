@@ -816,7 +816,7 @@ typedef struct objstruct
 
     fixed       x,y;
     word        tilex,tiley;
-	word		recordx, recordy;	// IOAN 20121211: record position for the bot
+	fixed		recordx, recordy;	// IOAN 20121211: record position for the bot
     byte        areanumber;
 
     short       viewx;

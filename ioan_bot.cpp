@@ -568,15 +568,15 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 {
 	// hack: recordx and recordy if 0 are handled as if not set. Bite me.
 	
-	if(enemy->recordx == enemy->tilex && enemy->recordy == enemy->tiley)
+	if(enemy->recordx >> TILESHIFT == enemy->tilex && enemy->recordy >> TILESHIFT == enemy->tiley)
 		return;	// change nothing
 
 	if(enemy->recordx > 0 && enemy->recordy > 0)
 	{
-		enemyrecord[enemy->recordx][enemy->recordy].remove(enemy);
+		enemyrecord[enemy->recordx >> TILESHIFT][enemy->recordy >> TILESHIFT].remove(enemy);
 	}
-	enemy->recordx = enemy->tilex;
-	enemy->recordy = enemy->tiley;
+	enemy->recordx = enemy->x;
+	enemy->recordy = enemy->y;
 	enemyrecord[enemy->tilex][enemy->tiley].add(enemy);
 }
 //
@@ -682,7 +682,7 @@ objtype *BotMan::EnemyEager()
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
-		if(areabyplayer[ret->areanumber] && explored[ret->recordx][ret->recordy] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+		if(areabyplayer[ret->areanumber] && explored[ret->recordx >> TILESHIFT][ret->recordy >> TILESHIFT] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			return ret;
 	}
 	return NULL;
@@ -717,10 +717,10 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 	{
 		if(!areabyplayer[ret->areanumber] || ret == objignore)
 			continue;
-		k = ret->recordx - (x >> TILESHIFT);
-		j = ret->recordy - (y >> TILESHIFT);
+		k = (ret->x - x) >> TILESHIFT;
+		j = (ret->y - y )>> TILESHIFT;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::GenericCheckLine(Basic::Major(ret->recordx), Basic::Major(ret->recordy), x, y))
+		if(dist > 16 || !Basic::GenericCheckLine(ret->recordx, ret->recordy, x, y))
 			continue;
 
 		if(Basic::IsDamaging(ret, dist) || justexists)
