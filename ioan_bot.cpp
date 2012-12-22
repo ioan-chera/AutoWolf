@@ -568,7 +568,7 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 {
 	// hack: recordx and recordy if 0 are handled as if not set. Bite me.
 	
-	if(enemy->recordx >> TILESHIFT == enemy->tilex && enemy->recordy >> TILESHIFT == enemy->tiley)
+	if(enemy->recordx == enemy->x && enemy->recordy == enemy->y)
 		return;	// change nothing
 
 	if(enemy->recordx > 0 && enemy->recordy > 0)
