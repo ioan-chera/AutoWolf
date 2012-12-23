@@ -1,6 +1,8 @@
 #ifndef __ID_CA__
 #define __ID_CA__
 
+// IOAN 20121223: Cleaned up this file
+
 //===========================================================================
 
 #define NUMMAPS         60
@@ -40,9 +42,9 @@ extern  char  audioext[5];
 boolean CA_LoadFile (const char *filename, memptr *ptr);
 boolean CA_WriteFile (const char *filename, void *ptr, int32_t length);
 
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
+// int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
 
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag);
+// void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag);
 
 void CA_Startup (void);
 void CA_Shutdown (void);

@@ -14,6 +14,8 @@ loaded into the data segment
 =============================================================================
 */
 
+// IOAN 20121223: Cleaned up this file
+
 #include <sys/types.h>
 #if defined _WIN32
     #include <io.h>
@@ -91,8 +93,6 @@ static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "audiohed.";
 static const char afilename[] = "audiot.";
 
-void CA_CannotOpen(const char *string);
-
 static int32_t  grstarts[NUMCHUNKS + 1];
 static int32_t* audiostarts; // array of offsets in audio / audiot
 
@@ -111,6 +111,9 @@ int32_t   chunkcomplen,chunkexplen;
 SDMode oldsoundmode;
 
 
+//
+// GRFILEPOS
+//
 static int32_t GRFILEPOS(const size_t idx)
 {
 	assert(idx < lengthof(grstarts));
@@ -125,80 +128,63 @@ static int32_t GRFILEPOS(const size_t idx)
 =============================================================================
 */
 
-/*
-============================
-=
-= CAL_GetGrChunkLength
-=
-= Gets the length of an explicit length chunk (not tiles)
-= The file pointer is positioned so the compressed data can be read in next.
-=
-============================
-*/
-
-void CAL_GetGrChunkLength (int chunk)
+//
+// CAL_GetGrChunkLength
+//
+// Gets the length of an explicit length chunk (not tiles)
+// The file pointer is positioned so the compressed data can be read in next.
+//
+static void CAL_GetGrChunkLength(int chunk)
 {
-    lseek(grhandle,GRFILEPOS(chunk),SEEK_SET);
-    read(grhandle,&chunkexplen,sizeof(chunkexplen));
-    chunkcomplen = GRFILEPOS(chunk+1)-GRFILEPOS(chunk)-4;
+    lseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
+    read(grhandle, &chunkexplen, sizeof(chunkexplen));
+    chunkcomplen = GRFILEPOS(chunk + 1) - GRFILEPOS(chunk) - 4;
 }
 
-
-/*
-==========================
-=
-= CA_WriteFile
-=
-= Writes a file from a memory buffer
-=
-==========================
-*/
-
-boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
+//
+// CA_WriteFile
+//
+// Writes a file from a memory buffer
+//
+boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
-    if (handle == -1)
+    if(handle == -1)
         return false;
 
-    if (!write (handle,ptr,length))
+    if(!write(handle, ptr, length))
     {
-        close (handle);
+        close(handle);
         return false;
     }
-    close (handle);
+    close(handle);
     return true;
 }
 
-
-
-/*
-==========================
-=
-= CA_LoadFile
-=
-= Allocate space for and load a file
-=
-==========================
-*/
-
-boolean CA_LoadFile (const char *filename, memptr *ptr)
+//
+// CA_LoadFile
+//
+// Allocate space for and load a file
+//
+boolean CA_LoadFile(const char *filename, memptr *ptr)
 {
     int32_t size;
 
     const int handle = open(filename, O_RDONLY | O_BINARY);
-    if (handle == -1)
+    if(handle == -1)
         return false;
 
     size = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
-    *ptr=malloc(size);
+    *ptr = malloc(size);
     CHECKMALLOCRESULT(*ptr);
-    if (!read (handle,*ptr,size))
+    if(!read(handle, *ptr, size))
     {
-        close (handle);
+        close(handle);
         return false;
     }
-    close (handle);
+
+    close(handle);
     return true;
 }
 
@@ -210,6 +196,9 @@ boolean CA_LoadFile (const char *filename, memptr *ptr)
 ============================================================================
 */
 
+//
+// CAL_HuffExpand
+//
 static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *hufftable)
 {
     byte *end;
@@ -221,11 +210,11 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
         return;
     }
 
-    headptr = hufftable+254;        // head node is always node 254
+    headptr = hufftable + 254;        // head node is always node 254
 
     int written = 0;
 
-    end=dest+length;
+    end = dest + length;
 
     byte val = *source++;
     byte mask = 1;
@@ -237,19 +226,20 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
             nodeval = huffptr->bit0;
         else
             nodeval = huffptr->bit1;
-        if(mask==0x80)
+
+        if(mask == 0x80)
         {
             val = *source++;
             mask = 1;
         }
         else mask <<= 1;
 
-        if(nodeval<256)
+        if(nodeval < 256)
         {
-            *dest++ = (byte) nodeval;
+            *dest++ = (byte)nodeval;
             written++;
             huffptr = headptr;
-            if(dest>=end) break;
+            if(dest >= end) break;
         }
         else
         {
@@ -258,38 +248,33 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *h
     }
 }
 
-/*
-======================
-=
-= CAL_CarmackExpand
-=
-= Length is the length of the EXPANDED data
-=
-======================
-*/
-
+//
+// CAL_CarmackExpand
+//
+// Length is the length of the EXPANDED data
+//
 #define NEARTAG 0xa7
 #define FARTAG  0xa8
 
-void CAL_CarmackExpand (byte *source, word *dest, int length)
+static void CAL_CarmackExpand(byte *source, word *dest, int length)
 {
-    word ch,chhigh,count,offset;
+    word ch, chhigh, count, offset;
     byte *inptr;
     word *copyptr, *outptr;
 
-    length/=2;
+    length /= 2;
 
-    inptr = (byte *) source;
+    inptr = (byte *)source;
     outptr = dest;
 
-    while (length>0)
+    while(length > 0)
     {
         ch = READWORD(inptr);
-        chhigh = ch>>8;
-        if (chhigh == NEARTAG)
+        chhigh = ch >> 8;
+        if(chhigh == NEARTAG)
         {
-            count = ch&0xff;
-            if (!count)
+            count = ch & 0xff;
+            if(!count)
             {                               // have to insert a word containing the tag byte
                 ch |= *inptr++;
                 *outptr++ = ch;
@@ -300,15 +285,17 @@ void CAL_CarmackExpand (byte *source, word *dest, int length)
                 offset = *inptr++;
                 copyptr = outptr - offset;
                 length -= count;
-                if(length<0) return;
+                if(length < 0) 
+					return;
+
                 while (count--)
                     *outptr++ = *copyptr++;
             }
         }
-        else if (chhigh == FARTAG)
+        else if(chhigh == FARTAG)
         {
-            count = ch&0xff;
-            if (!count)
+            count = ch & 0xff;
+            if(!count)
             {                               // have to insert a word containing the tag byte
                 ch |= *inptr++;
                 *outptr++ = ch;
@@ -319,86 +306,30 @@ void CAL_CarmackExpand (byte *source, word *dest, int length)
                 offset = READWORD(inptr);
                 copyptr = dest + offset;
                 length -= count;
-                if(length<0) return;
-                while (count--)
+                if(length<0) 
+					return;
+
+                while(count--)
                     *outptr++ = *copyptr++;
             }
         }
         else
         {
             *outptr++ = ch;
-            length --;
+            length--;
         }
     }
 }
 
-/*
-======================
-=
-= CA_RLEWcompress
-=
-======================
-*/
-
-int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag)
+//
+// CAL_RLEWexpand
+//
+// length is EXPANDED length
+//
+static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
-    word value,count;
-    unsigned i;
-    word *start,*end;
-
-    start = dest;
-
-    end = source + (length+1)/2;
-
-    //
-    // compress it
-    //
-    do
-    {
-        count = 1;
-        value = *source++;
-        while (*source == value && source<end)
-        {
-            count++;
-            source++;
-        }
-        if (count>3 || value == rlewtag)
-        {
-            //
-            // send a tag / count / value string
-            //
-            *dest++ = rlewtag;
-            *dest++ = count;
-            *dest++ = value;
-        }
-        else
-        {
-            //
-            // send word without compressing
-            //
-            for (i=1;i<=count;i++)
-                *dest++ = value;
-        }
-
-    } while (source<end);
-
-    return (int32_t)(2*(dest-start));
-}
-
-
-/*
-======================
-=
-= CA_RLEWexpand
-= length is EXPANDED length
-=
-======================
-*/
-
-void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
-{
-    word value,count,i;
-    word *end=dest+length/2;
+    word value, count, i;
+    word *end = dest + length / 2;
 
 //
 // expand it
@@ -407,10 +338,12 @@ void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
     {
         value = *source++;
         if (value != rlewtag)
+		{
             //
             // uncompressed
             //
-            *dest++=value;
+            *dest++ = value;
+		}
         else
         {
             //
@@ -418,10 +351,10 @@ void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
             //
             count = *source++;
             value = *source++;
-            for (i=1;i<=count;i++)
+            for (i = 1; i <= count; i++)
                 *dest++ = value;
         }
-    } while (dest<end);
+    } while(dest < end);
 }
 
 
@@ -434,16 +367,10 @@ void CA_RLEWexpand (word *source, word *dest, int32_t length, word rlewtag)
 =============================================================================
 */
 
-
-/*
-======================
-=
-= CAL_SetupGrFile
-=
-======================
-*/
-
-void CAL_SetupGrFile (void)
+//
+// CAL_SetupGrFile
+//
+static void CAL_SetupGrFile (void)
 {
     char fname[13];
     int handle;
@@ -454,7 +381,7 @@ void CAL_SetupGrFile (void)
     grhuffman = (huffnode *)&EGAdict;
     grstarts = (int32_t _seg *)FP_SEG(&EGAhead);
 
-#else
+#else	//  !defined(GRHEADERLINKED)
 
 //
 // load ???dict.ext (huffman dictionary for graphics files)
@@ -505,7 +432,7 @@ void CAL_SetupGrFile (void)
         *i = (val == 0x00FFFFFF ? -1 : val);
         d += 3;
     }
-#endif
+#endif	//  !defined(GRHEADERLINKED)
 
 //
 // Open the graphics file, leaving it open until the game is finished
@@ -533,16 +460,10 @@ void CAL_SetupGrFile (void)
 
 //==========================================================================
 
-
-/*
-======================
-=
-= CAL_SetupMapFile
-=
-======================
-*/
-
-void CAL_SetupMapFile (void)
+//
+// CAL_SetupMapFile
+//
+static void CAL_SetupMapFile (void)
 {
     int     i;
     int handle;
@@ -616,16 +537,10 @@ void CAL_SetupMapFile (void)
 
 //==========================================================================
 
-
-/*
-======================
-=
-= CAL_SetupAudioFile
-=
-======================
-*/
-
-void CAL_SetupAudioFile (void)
+//
+// CAL_SetupAudioFile
+//
+static void CAL_SetupAudioFile (void)
 {
     char fname[13];
 
@@ -653,17 +568,11 @@ void CAL_SetupAudioFile (void)
 
 //==========================================================================
 
-
-/*
-======================
-=
-= CA_Startup
-=
-= Open all files and load in headers
-=
-======================
-*/
-
+//
+// CA_Startup
+//
+// Open all files and load in headers
+//
 void CA_Startup (void)
 {
 #ifdef PROFILE
@@ -680,17 +589,11 @@ void CA_Startup (void)
 
 //==========================================================================
 
-
-/*
-======================
-=
-= CA_Shutdown
-=
-= Closes all files
-=
-======================
-*/
-
+//
+// CA_Shutdown
+//
+// Closes all files
+//
 void CA_Shutdown (void)
 {
     int i,start;
@@ -724,14 +627,9 @@ void CA_Shutdown (void)
 
 //===========================================================================
 
-/*
-======================
-=
-= CA_CacheAudioChunk
-=
-======================
-*/
-
+//
+// CA_CacheAudioChunk
+//
 int32_t CA_CacheAudioChunk (int chunk)
 {
     int32_t pos = audiostarts[chunk];
@@ -749,7 +647,10 @@ int32_t CA_CacheAudioChunk (int chunk)
     return size;
 }
 
-void CA_CacheAdlibSoundChunk (int chunk)
+//
+// CAL_CacheAdlibSoundChunk
+//
+static void CAL_CacheAdlibSoundChunk (int chunk)
 {
     int32_t pos = audiostarts[chunk];
     int32_t size = audiostarts[chunk+1]-pos;
@@ -791,16 +692,11 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
 //===========================================================================
 
-/*
-======================
-=
-= CA_LoadAllSounds
-=
-= Purges all sounds, then loads all new ones (mode switch)
-=
-======================
-*/
-
+//
+// CA_LoadAllSounds
+//
+// Purges all sounds, then loads all new ones (mode switch)
+//
 void CA_LoadAllSounds (void)
 {
     unsigned start,i;
@@ -840,7 +736,7 @@ cachein:
     if(start == STARTADLIBSOUNDS)
     {
         for (i=0;i<NUMSOUNDS;i++,start++)
-            CA_CacheAdlibSoundChunk(start);
+            CAL_CacheAdlibSoundChunk(start);
     }
     else
     {
@@ -851,18 +747,12 @@ cachein:
 
 //===========================================================================
 
-
-/*
-======================
-=
-= CAL_ExpandGrChunk
-=
-= Does whatever is needed with a pointer to a compressed chunk
-=
-======================
-*/
-
-void CAL_ExpandGrChunk (int chunk, int32_t *source)
+//
+// CAL_ExpandGrChunk
+//
+// Does whatever is needed with a pointer to a compressed chunk
+//
+static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
@@ -905,17 +795,11 @@ void CAL_ExpandGrChunk (int chunk, int32_t *source)
     CAL_HuffExpand((byte *) source, grsegs[chunk], expanded, grhuffman);
 }
 
-
-/*
-======================
-=
-= CA_CacheGrChunk
-=
-= Makes sure a given chunk is in memory, loadiing it if needed
-=
-======================
-*/
-
+//
+// CA_CacheGrChunk
+//
+// Makes sure a given chunk is in memory, loadiing it if needed
+//
 void CA_CacheGrChunk (int chunk)
 {
     int32_t pos,compressed;
@@ -963,16 +847,11 @@ void CA_CacheGrChunk (int chunk)
 
 //==========================================================================
 
-/*
-======================
-=
-= CA_CacheScreen
-=
-= Decompresses a chunk from disk straight onto the screen
-=
-======================
-*/
-
+//
+// CA_CacheScreen
+//
+// Decompresses a chunk from disk straight onto the screen
+//
 void CA_CacheScreen (int chunk)
 {
     int32_t    pos,compressed,expanded;
@@ -1030,16 +909,11 @@ void CA_CacheScreen (int chunk)
 
 //==========================================================================
 
-/*
-======================
-=
-= CA_CacheMap
-=
-= WOLF: This is specialized for a 64*64 map size
-=
-======================
-*/
-
+//
+// CA_CacheMap
+//
+// WOLF: This is specialized for a 64*64 map size
+//
 void CA_CacheMap (int mapnum)
 {
     int32_t   pos,compressed;
@@ -1090,14 +964,14 @@ void CA_CacheMap (int mapnum)
         buffer2seg = (word *) malloc(expanded);
         CHECKMALLOCRESULT(buffer2seg);
         CAL_CarmackExpand((byte *) source, buffer2seg,expanded);
-        CA_RLEWexpand(buffer2seg+1,dest,size,RLEWtag);
+        CAL_RLEWexpand(buffer2seg+1,dest,size,RLEWtag);
         free(buffer2seg);
 
 #else
         //
         // unRLEW, skipping expanded length
         //
-        CA_RLEWexpand (source+1,dest,size,RLEWtag);
+        CAL_RLEWexpand (source+1,dest,size,RLEWtag);
 #endif
 
         if (compressed>BUFFERSIZE)
@@ -1107,6 +981,9 @@ void CA_CacheMap (int mapnum)
 
 //===========================================================================
 
+//
+// CA_CannotOpen
+//
 void CA_CannotOpen(const char *string)
 {
     char str[30];
