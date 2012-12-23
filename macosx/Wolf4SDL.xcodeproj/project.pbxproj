@@ -44,6 +44,7 @@
 		D94B84D50FC0F2F800EADB6F /* wolf4sdl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D94B84D40FC0F2F800EADB6F /* wolf4sdl.icns */; };
 		FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */; };
 		FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */; };
+		FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3011E41687257D005D25A8 /* DictionaryFile.cpp */; };
 		FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */; };
 		FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7630A6159F6D9800610D61 /* PathArray.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
@@ -176,6 +177,8 @@
 		FA21BE12157412A800C23B4A /* ioan_bas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bas.h; path = ../ioan_bas.h; sourceTree = SOURCE_ROOT; };
 		FA21BE13157412A800C23B4A /* ioan_bot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_bot.cpp; path = ../ioan_bot.cpp; sourceTree = SOURCE_ROOT; };
 		FA21BE14157412A800C23B4A /* ioan_bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bot.h; path = ../ioan_bot.h; sourceTree = SOURCE_ROOT; };
+		FA3011E41687257D005D25A8 /* DictionaryFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DictionaryFile.cpp; path = ../DictionaryFile.cpp; sourceTree = "<group>"; };
+		FA3011E51687257D005D25A8 /* DictionaryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryFile.h; path = ../DictionaryFile.h; sourceTree = "<group>"; };
 		FA762D62159CD1FF00610D61 /* HistoryRatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryRatio.h; path = ../HistoryRatio.h; sourceTree = SOURCE_ROOT; };
 		FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HistoryRatio.cpp; path = ../HistoryRatio.cpp; sourceTree = SOURCE_ROOT; };
 		FA762DBA159D08A500610D61 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = List.h; path = ../List.h; sourceTree = "<group>"; };
@@ -318,6 +321,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FA3011E3168721AE005D25A8 /* Dictionary */ = {
+			isa = PBXGroup;
+			children = (
+				FAE778491684821400EBE363 /* Dictionary.h */,
+				FAE778481684821400EBE363 /* Dictionary.cpp */,
+			);
+			name = Dictionary;
+			sourceTree = "<group>";
+		};
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,6 +351,7 @@
 			isa = PBXGroup;
 			children = (
 				D901F4E40FC0DBCB0040C290 /* id_ca.h */,
+				D901F4FC0FC0DBCB0040C290 /* id_ca.cpp */,
 				D901F4E50FC0DBCB0040C290 /* id_us_1.cpp */,
 				D901F4E60FC0DBCB0040C290 /* id_us.h */,
 				D901F4E80FC0DBCB0040C290 /* id_sd.h */,
@@ -351,7 +364,6 @@
 				D901F4FB0FC0DBCB0040C290 /* id_vh.cpp */,
 				D901F4F50FC0DBCB0040C290 /* id_pm.h */,
 				D901F4F60FC0DBCB0040C290 /* id_vl.h */,
-				D901F4FC0FC0DBCB0040C290 /* id_ca.cpp */,
 			);
 			name = ID;
 			sourceTree = "<group>";
@@ -395,6 +407,8 @@
 				FAC97A4B167A08CE00949336 /* DataFile.cpp */,
 				FAC97A59167BD52100949336 /* ExploredArrayFile.h */,
 				FAC97A58167BD52100949336 /* ExploredArrayFile.cpp */,
+				FA3011E51687257D005D25A8 /* DictionaryFile.h */,
+				FA3011E41687257D005D25A8 /* DictionaryFile.cpp */,
 				FAC97A53167A696F00949336 /* DirectoryFile.h */,
 				FAC97A52167A696F00949336 /* DirectoryFile.cpp */,
 				FAC97A56167B3F0F00949336 /* MasterDirectoryFile.h */,
@@ -411,8 +425,7 @@
 				FA762DBA159D08A500610D61 /* List.h */,
 				FA7630A7159F6D9800610D61 /* PathArray.h */,
 				FA7630A6159F6D9800610D61 /* PathArray.cpp */,
-				FAE778491684821400EBE363 /* Dictionary.h */,
-				FAE778481684821400EBE363 /* Dictionary.cpp */,
+				FA3011E3168721AE005D25A8 /* Dictionary */,
 			);
 			name = DataStructure;
 			sourceTree = "<group>";
@@ -563,6 +576,7 @@
 				FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */,
 				FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */,
 				FAE7784A1684821400EBE363 /* Dictionary.cpp in Sources */,
+				FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

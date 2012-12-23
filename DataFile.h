@@ -70,9 +70,6 @@ public:
 		return filenamelen;
 	}
 	
-	// export contents to file
-	//virtual char *exportToString() const = 0;
-	
 	// do that other thing
 	void initialize(const char *fname, size_t nchar = 0);
 	
