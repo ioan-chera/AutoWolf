@@ -590,6 +590,7 @@
   <ItemGroup>
     <ClCompile Include="CheckSum.cpp" />
     <ClCompile Include="DataFile.cpp" />
+    <ClCompile Include="Dictionary.cpp" />
     <ClCompile Include="DirectoryFile.cpp" />
     <ClCompile Include="ExploredArrayFile.cpp" />
     <ClCompile Include="HistoryRatio.cpp" />
@@ -642,11 +643,11 @@
   <ItemGroup>
     <ClInclude Include="CheckSum.h" />
     <ClInclude Include="DataFile.h" />
+    <ClInclude Include="Dictionary.h" />
     <ClInclude Include="DirectoryFile.h" />
     <ClInclude Include="dosbox\dbopl.h" />
     <ClInclude Include="audiosod.h" />
     <ClInclude Include="audiowl6.h" />
-    <ClInclude Include="dc_vmu.h" />
     <ClInclude Include="ExploredArrayFile.h" />
     <ClInclude Include="f_spear.h" />
     <ClInclude Include="foreign.h" />
