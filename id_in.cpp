@@ -124,8 +124,7 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
 //		mouse driver
 //
 ///////////////////////////////////////////////////////////////////////////
-static int
-INL_GetMouseButtons(void)
+static int INL_GetMouseButtons(void)
 {
     int buttons = SDL_GetMouseState(NULL, NULL);
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
@@ -219,7 +218,6 @@ void IN_GetJoyFineDelta(int *dx, int *dy)
 =
 ===================
 */
-
 int IN_JoyButtons()
 {
     if(!Joystick) return 0;
@@ -232,11 +230,17 @@ int IN_JoyButtons()
     return res;
 }
 
+//
+// IN_JoyPresent
+//
 boolean IN_JoyPresent()
 {
     return Joystick != NULL;
 }
 
+//
+// processEvent
+//
 static void processEvent(SDL_Event *event)
 {
     switch (event->type)
@@ -358,6 +362,9 @@ static void processEvent(SDL_Event *event)
     }
 }
 
+//
+// IN_WaitAndProcessEvents
+//
 void IN_WaitAndProcessEvents()
 {
     SDL_Event event;
@@ -369,6 +376,9 @@ void IN_WaitAndProcessEvents()
     while(SDL_PollEvent(&event));
 }
 
+//
+// IN_ProcessEvents
+//
 void IN_ProcessEvents()
 {
     SDL_Event event;
@@ -385,8 +395,7 @@ void IN_ProcessEvents()
 //	IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Startup(void)
+void IN_Startup(void)
 {
 	if (IN_Started)
 		return;
@@ -431,8 +440,7 @@ IN_Startup(void)
 //	IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_Shutdown(void)
+void IN_Shutdown(void)
 {
 	if (!IN_Started)
 		return;
@@ -448,8 +456,7 @@ IN_Shutdown(void)
 //	IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ClearKeysDown(void)
+void IN_ClearKeysDown(void)
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
@@ -463,8 +470,7 @@ IN_ClearKeysDown(void)
 //		player and fills in the control info struct
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-IN_ReadControl(int player,ControlInfo *info)
+void IN_ReadControl(int player,ControlInfo *info)
 {
 	word		buttons;
 	int			dx,dy;
@@ -520,8 +526,7 @@ IN_ReadControl(int player,ControlInfo *info)
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-ScanCode
-IN_WaitForKey(void)
+ScanCode IN_WaitForKey(void)
 {
 	ScanCode	result;
 
@@ -537,8 +542,7 @@ IN_WaitForKey(void)
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
-char
-IN_WaitForASCII(void)
+char IN_WaitForASCII(void)
 {
 	char		result;
 
@@ -557,6 +561,9 @@ IN_WaitForASCII(void)
 
 boolean	btnstate[NUMBUTTONS];
 
+//
+// IN_StartAck
+//
 void IN_StartAck(void)
 {
     IN_ProcessEvents();
@@ -576,7 +583,9 @@ void IN_StartAck(void)
 			btnstate[i] = true;
 }
 
-
+//
+// IN_CheckAck
+//
 boolean IN_CheckAck (void)
 {
     IN_ProcessEvents();
@@ -618,7 +627,9 @@ boolean IN_CheckAck (void)
 	return false;
 }
 
-
+//
+// IN_Ack
+//
 void IN_Ack (void)
 {
 	IN_StartAck ();
@@ -672,11 +683,17 @@ int IN_MouseButtons (void)
 		return 0;
 }
 
+//
+// IN_IsInputGrabbed
+//
 bool IN_IsInputGrabbed()
 {
     return GrabInput;
 }
 
+//
+// IN_CenterMouse
+//
 void IN_CenterMouse()
 {
     SDL_WarpMouse(screenWidth / 2, screenHeight / 2);

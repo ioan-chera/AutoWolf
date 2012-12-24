@@ -100,8 +100,7 @@ void US_Startup()
 //	US_Shutdown() - Shuts down the User Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_Shutdown(void)
+void US_Shutdown(void)
 {
 	if (!US_Started)
 		return;
@@ -118,9 +117,7 @@ US_Shutdown(void)
 //		between masked and non-masked fonts
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
-    void (*print)(const char *))
+void US_SetPrintRoutines(void (*measure)(const char *,word *,word *), void (*print)(const char *))
 {
 	USL_MeasureString = measure;
 	USL_DrawString = print;
@@ -132,8 +129,7 @@ US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
 //		supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_Print(const char *sorg)
+void US_Print(const char *sorg)
 {
 	char c;
 	char *sstart = strdup(sorg);
@@ -173,8 +169,7 @@ US_Print(const char *sorg)
 //	US_PrintUnsigned() - Prints an unsigned long
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_PrintUnsigned(longword n)
+void US_PrintUnsigned(longword n)
 {
 	char	buffer[32];
 	sprintf(buffer, "%u", n);
@@ -187,8 +182,7 @@ US_PrintUnsigned(longword n)
 //	US_PrintSigned() - Prints a signed long
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_PrintSigned(int32_t n)
+void US_PrintSigned(int32_t n)
 {
 	char	buffer[32];
 
@@ -200,8 +194,7 @@ US_PrintSigned(int32_t n)
 //	USL_PrintInCenter() - Prints a string in the center of the given rect
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-USL_PrintInCenter(const char *s,Rect r)
+void USL_PrintInCenter(const char *s,Rect r)
 {
 	word	w,h,
 			rw,rh;
@@ -220,8 +213,7 @@ USL_PrintInCenter(const char *s,Rect r)
 //	US_PrintCentered() - Prints a string centered in the current window.
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_PrintCentered(const char *s)
+void US_PrintCentered(const char *s)
 {
 	Rect	r;
 
@@ -239,8 +231,7 @@ US_PrintCentered(const char *s)
 //		advances to the next line. Newlines are not supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_CPrintLine(const char *s)
+void US_CPrintLine(const char *s)
 {
 	word	w,h;
 
@@ -260,8 +251,7 @@ US_CPrintLine(const char *s)
 //      Newlines are supported.
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_CPrint(const char *sorg)
+void US_CPrint(const char *sorg)
 {
 	char	c;
 	char *sstart = strdup(sorg);
@@ -331,8 +321,7 @@ void US_CPrintf(const char *formatStr, ...)
 //		cursor
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_ClearWindow(void)
+void US_ClearWindow(void)
 {
 	VWB_Bar(WindowX,WindowY,WindowW,WindowH,WHITE);
 	PrintX = WindowX;
@@ -344,8 +333,7 @@ US_ClearWindow(void)
 //	US_DrawWindow() - Draws a frame and sets the current window parms
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_DrawWindow(word x,word y,word w,word h)
+void US_DrawWindow(word x,word y,word w,word h)
 {
 	word	i,
 			sx,sy,sw,sh;
@@ -380,8 +368,7 @@ US_DrawWindow(word x,word y,word w,word h)
 //		middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_CenterWindow(word w,word h)
+void US_CenterWindow(word w,word h)
 {
 	US_DrawWindow(((MaxX / 8) - w) / 2,((MaxY / 8) - h) / 2,w,h);
 }
@@ -392,8 +379,7 @@ US_CenterWindow(word w,word h)
 //		later restoration
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_SaveWindow(WindowRec *win)
+void US_SaveWindow(WindowRec *win)
 {
 	win->x = WindowX;
 	win->y = WindowY;
@@ -410,8 +396,7 @@ US_SaveWindow(WindowRec *win)
 //		record
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-US_RestoreWindow(WindowRec *win)
+void US_RestoreWindow(WindowRec *win)
 {
 	WindowX = win->x;
 	WindowY = win->y;
@@ -429,8 +414,7 @@ US_RestoreWindow(WindowRec *win)
 //	USL_XORICursor() - XORs the I-bar text cursor. Used by US_LineInput()
 //
 ///////////////////////////////////////////////////////////////////////////
-static void
-USL_XORICursor(int x,int y,const char *s,word cursor)
+static void USL_XORICursor(int x,int y,const char *s,word cursor)
 {
 	static	boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
@@ -454,6 +438,9 @@ USL_XORICursor(int x,int y,const char *s,word cursor)
 	}
 }
 
+//
+// USL_RotateChar
+//
 char USL_RotateChar(char ch, int dir)
 {
     static const char charSet[] = " ABCDEFGHIJKLMNOPQRSTUVWXYZ.,-!?0123456789";
@@ -482,9 +469,7 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean
-US_LineInput(int x,int y,char *buf,const char *def,boolean escok,
-				int maxchars,int maxwidth)
+boolean US_LineInput(int x,int y,char *buf,const char *def,boolean escok, int maxchars,int maxwidth)
 {
 	boolean		redraw,
 				cursorvis,cursormoved,

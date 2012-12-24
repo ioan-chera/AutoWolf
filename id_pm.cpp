@@ -14,6 +14,9 @@ size_t PMPageDataSize;
 // The last pointer points one byte after the last page.
 uint8_t **PMPages;
 
+//
+// PM_Startup
+//
 void PM_Startup()
 {
     char fname[13] = "vswap.";
@@ -118,6 +121,9 @@ void PM_Startup()
     fclose(file);
 }
 
+//
+// PM_Shutdown
+//
 void PM_Shutdown()
 {
     free(PMPages);

@@ -10,6 +10,9 @@ int	    fontnumber;
 
 //==========================================================================
 
+//
+// VWB_DrawPropString
+//
 void VWB_DrawPropString(const char* string)
 {
 	fontstruct  *font;
@@ -58,7 +61,6 @@ void VWB_DrawPropString(const char* string)
 =
 =================
 */
-
 void VL_MungePic (byte *source, unsigned width, unsigned height)
 {
 	unsigned x,y,plane,size,pwidth;
@@ -96,6 +98,9 @@ void VL_MungePic (byte *source, unsigned width, unsigned height)
 	free(temp);
 }
 
+//
+// VWL_MeasureString
+//
 void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
 {
 	*height = font->height;
@@ -103,6 +108,9 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 		*width += font->width[*((byte *)string)];	// proportional width
 }
 
+//
+// VW_MeasurePropString
+//
 void VW_MeasurePropString (const char *string, word *width, word *height)
 {
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
@@ -116,23 +124,34 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 =============================================================================
 */
 
+//
+// VH_UpdateScreen
+//
 void VH_UpdateScreen()
 {
 	SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
 	SDL_Flip(screen);
 }
 
-
+//
+// VWB_DrawTile8
+//
 void VWB_DrawTile8 (int x, int y, int tile)
 {
 	LatchDrawChar(x,y,tile);
 }
 
+//
+// VWB_DrawTile8M
+//
 void VWB_DrawTile8M (int x, int y, int tile)
 {
 	VL_MemToScreen (((byte *)grsegs[STARTTILE8M])+tile*64,8,8,x,y);
 }
 
+//
+// VWB_DrawPic
+//
 void VWB_DrawPic (int x, int y, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
@@ -146,6 +165,9 @@ void VWB_DrawPic (int x, int y, int chunknum)
 	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
 }
 
+//
+// VWB_DrawPicScaledCoord
+//
 void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 {
 	int	picnum = chunknum - STARTPICS;
@@ -157,12 +179,17 @@ void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
     VL_MemToScreenScaledCoord (grsegs[chunknum],width,height,scx,scy);
 }
 
-
+//
+// VWB_Bar
+//
 void VWB_Bar (int x, int y, int width, int height, int color)
 {
 	VW_Bar (x,y,width,height,color);
 }
 
+//
+// VWB_Plot
+//
 void VWB_Plot (int x, int y, int color)
 {
     if(scaleFactor == 1)
@@ -171,6 +198,9 @@ void VWB_Plot (int x, int y, int color)
         VW_Bar(x, y, 1, 1, color);
 }
 
+//
+// VWB_Hlin
+//
 void VWB_Hlin (int x1, int x2, int y, int color)
 {
     if(scaleFactor == 1)
@@ -179,6 +209,9 @@ void VWB_Hlin (int x1, int x2, int y, int color)
         VW_Bar(x1, y, x2-x1+1, 1, color);
 }
 
+//
+// VWB_Vlin
+//
 void VWB_Vlin (int y1, int y2, int x, int color)
 {
     if(scaleFactor == 1)
@@ -209,6 +242,9 @@ void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 	VL_LatchToScreen (latchpics[2+picnum-LATCHPICS_LUMP_START], x*8, y);
 }
 
+//
+// LatchDrawPicScaledCoord
+//
 void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 {
 	VL_LatchToScreenScaledCoord (latchpics[2+picnum-LATCHPICS_LUMP_START], scx*8, scy);
@@ -217,6 +253,9 @@ void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 
 //==========================================================================
 
+//
+// FreeLatchMem
+// 
 void FreeLatchMem()
 {
     int i;
@@ -325,7 +364,11 @@ static unsigned int rndmask;
 
 extern SDL_Color curpal[256];
 
+//
+// log2_ceil
+//
 // Returns the number of bits needed to represent the given value
+//
 static int log2_ceil(uint32_t x)
 {
     int n = 0;
@@ -338,6 +381,9 @@ static int log2_ceil(uint32_t x)
     return n;
 }
 
+//
+// VH_Startup
+//
 void VH_Startup()
 {
     int rndbits_x = log2_ceil(screenWidth);
@@ -352,8 +398,10 @@ void VH_Startup()
     rndmask = rndmasks[rndbits - 17];
 }
 
-boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable)
+//
+// FizzleFade
+//
+boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigned height, unsigned frames, boolean abortable)
 {
     unsigned x, y, frame, pixperframe;
     int32_t  rndval, lastrndval;

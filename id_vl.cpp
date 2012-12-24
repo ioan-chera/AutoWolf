@@ -578,8 +578,7 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 =================
 */
 
-void VL_MemToLatch(byte *source, int width, int height,
-    SDL_Surface *destSurface, int x, int y)
+void VL_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface, int x, int y)
 {
     byte *ptr;
     int xsrc, ysrc, pitch;
