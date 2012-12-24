@@ -20,12 +20,28 @@ ExploredArrayFile::ExploredArrayFile()
 //
 // ExploredArrayFile::doWriteToFile
 //
-// Execute writing to file
+// Execute writing to file. How is it done?
+// Bits are big-endian: first from the table is the MSB.
 //
 void ExploredArrayFile::doWriteToFile(FILE *f)
 {
-	fwrite(header, sizeof(char), 8, f);
-	fwrite(explored, sizeof(explored), 1, f);
+	fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
+	// for each component from explored, write the bits
+	size_t pos;
+	uint8_t charac = 0;
+
+	boolean *baseaddress = &(explored[0][0]);
+
+	for(pos = 0; pos < maparea; ++pos)
+	{
+		charac = (charac << 1) + *(baseaddress + pos);
+		if((pos + 1) % 8 == 0)	// reached eight bits
+		{
+			fwrite(&charac, sizeof(uint8_t), 1, f);
+			charac = 0;
+		}
+	}
+//	fwrite(explored, sizeof(explored), 1, f);
 }
 
 //
@@ -35,7 +51,22 @@ void ExploredArrayFile::doWriteToFile(FILE *f)
 //
 bool ExploredArrayFile::doReadFromFile(FILE *f)
 {
-	fread(explored, sizeof(explored), 1, f);	// that's it for now
+	int j;
+	size_t pos;
+	uint8_t mbyte;
+
+	boolean *baseaddress = &(explored[0][0]);
+
+	for(pos = 0; pos < maparea; pos += 8)
+	{
+		fread(&mbyte, sizeof(uint8_t), 1, f);
+		for(j = 7; j >= 0; --j)
+		{
+			*(baseaddress + pos + j) = mbyte & 1;
+			mbyte >>= 1;
+		}
+	}
+	//fread(explored, sizeof(explored), 1, f);	// that's it for now
 	return true;
 }
 
@@ -48,7 +79,8 @@ bool ExploredArrayFile::doReadFromFile(FILE *f)
 //
 uint64_t ExploredArrayFile::getSize()
 {
-	return FILE_HEADER_LENGTH + sizeof(explored);
+	// FIXME: NOT ROBUST TO HAVE SIZE SEPARATE!
+	return FILE_HEADER_LENGTH + (sizeof(explored) >> 3);
 }
 
 //

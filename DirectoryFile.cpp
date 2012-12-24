@@ -136,7 +136,7 @@ uint64_t DirectoryFile::getSize()
 //
 void DirectoryFile::doWriteToFile(FILE *f)
 {
-	fputs(header, f);
+	fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
 	fwrite(&numberOfFiles, sizeof(numberOfFiles), 1, f);
 	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
 	DataFile *file;
