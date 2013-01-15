@@ -1,0 +1,189 @@
+{\rtf1\mac\ansicpg10000\cocoartf1138\cocoasubrtf510
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red191\green191\blue191;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{lower-alpha\})}{\leveltext\leveltemplateid301\'02\'00);}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid5}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww16680\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+
+\f0\i\b\fs30 \cf0 Automatic Wolfenstein
+\i0\b0\fs24  alias 
+\i\b\fs30 AutoWolf
+\i0\b0\fs24  by 
+\i Ioan Chera
+\i0  ({\field{\*\fldinst{HYPERLINK "https://sourceforge.net/users/printz"}}{\fldrslt https://sourceforge.net/users/printz}})\
+\
+
+\i\b\fs28 Wolf4SDL
+\i0\b0\fs24  by 
+\i Moritz "Ripper" Kroll
+\i0  ({\field{\*\fldinst{HYPERLINK "http://www.chaos-software.de.vu"}}{\fldrslt http://www.chaos-software.de.vu}})\
+\
+Original 
+\i\b\fs28 Wolfenstein 3D
+\i0\b0\fs24  by 
+\i id Software
+\i0  ({\field{\*\fldinst{HYPERLINK "http://www.idsoftware.com"}}{\fldrslt http://www.idsoftware.com}})\
+\
+\
+AutoWolf is a modification of Ripper's Wolf4SDL port of id Software's classic first-person shooter Wolfenstein 3D, with the purpose of implementing competitive bots (computer controlled players) who should be able to solve any level, at maximum score.\
+\
+This version is alpha02. As such, there are some features that haven't been completed, but the bot should be able to survive and finish most of the maps, and even win some of the boss setups.\
+\
+This port, just like Wolf4SDL, comes in several variants, for each suitable Wolf3D version: 1.1, 1.4 Apogee, 1.4 Activision, Spear of Destiny. Make sure you use the right one for the Wolfenstein version you have. Otherwise, you'll see errors at startup and the program will abort.\
+\
+You can use this bot with mods too, as long as said mods do not have their own Wolf3D executables. If they have their own executables, it means you'll have to run those instead of AutoWolf for the game to work properly, and I haven't developed any way for the bot to work independent of the Wolf3D executable.\
+\
+
+\b Project homepage:
+\b0 \
+{\field{\*\fldinst{HYPERLINK "https://sourceforge.net/projects/autowolf/"}}{\fldrslt https://sourceforge.net/projects/autowolf/}}\
+\
+\
+
+\b\fs28 \ul Installing
+\b0\fs24 \ulnone \
+\
+Windows or OS X:\
+\
+Extract the contents of the archive into a folder, and place all Wolfenstein 3D data files (*.WL6 or *.SOD) in that same folder. Make sure that the data file versions match with the executable you downloaded! If they don't, the application will fail to start. Also, on Mac OS X, currently it's not viable to paste the application into the /Applications folder, but you can create a folder inside /Applications and paste Automatic Wolfenstein (or Spear of Destiny) there, along with the .WL6 or .SOD files.\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+
+\b \cf0 Important
+\b0 : please contact me (see email below) if the executable still doesn't work for you. I'm making this program as a hobby and I'm not normally spending too much time to test all the available versions on most systems.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\
+
+\b\fs28 \ul Updates over alpha01
+\b0\fs24 \ulnone \
+ \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\qj
+\ls1\ilvl0\cf0 {\listtext	\'95	}The bot can now search for cover, not just by moving backwards. For this, it strafes.\
+{\listtext	\'95	}Smooth movement, no longer auto-levelled on the centre of the tile.\
+{\listtext	\'95	}More conserving usage of ammo, by switching to the machinegun when wasteful with the chaingun.\
+{\listtext	\'95	}Now it will not get stuck, waiting for user input, if a threat remains stuck nearby but out of sight. It will stop waiting and will move ahead.\
+{\listtext	\'95	}Mac OSX binary available (10.5 minimum required).\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\
+
+\b\fs28 \ul Future plans
+\b0\fs24 \ulnone \
+\
+These features haven't been started or haven't been completed, and are probable to appear on the next alpha or beta:\
+\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\qj
+\ls2\ilvl0\cf0 {\listtext	\'95	}Screensaver that also lets the computer go into power saving mode.\
+{\listtext	\'95	}Intelligent pushwall puzzle solving;\
+{\listtext	\'95	}Integration into Blzut3's ECWolf port and therefore mod-aware behavior, as well as posibility to make the bot cooperative or deathmatch (if applicable);\
+{\listtext	\'95	}Speed-running behaviour;\
+{\listtext	\'95	}Optional human-like behaviour, especially if it happens in a proposed multiplayer;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\
+
+\b\fs28 \ul New command-line parameters
+\b0\fs24 \ulnone \
+\
+In addition to Wolf4SDL, AutoWolf supports the following command-line parameters. Note: they are prefixed with two hyphens.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth13040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 --nobot\cell 
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 Disables the bot. This makes the game act like regular Wolfenstein.\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth13040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 --nonazis\cell 
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 Disables spawning of enemies.\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3200\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth13040\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf2 \clbrdrl\brdrs\brdrw20\brdrcf2 \clbrdrb\brdrs\brdrw20\brdrcf2 \clbrdrr\brdrs\brdrw20\brdrcf2 \clpadl100 \clpadr100 \gaph\cellx8640
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 --secretstep3\cell 
+\pard\intbl\itap1\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 Emulates the Wolf3D bug of secret walls being pushed too far. Necessary for any custom map which relies on this behaviour.\cell \lastrow\row
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\
+
+\b\fs28 \ul Compiling from source code instructions
+\b0\fs24 \ulnone \
+\
+See Wolf4SDL's readme file (README-wolf4sdl.txt) for information on this topic. Most notably:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\qj
+\ls3\ilvl0\cf0 {\listtext	\'95	}You will need the SDL and SDL_mixer libraries to be able to build AutoWolf. Download SDL from {\field{\*\fldinst{HYPERLINK "http://www.libsdl.org"}}{\fldrslt http://www.libsdl.org}} and SDL_mixer from {\field{\*\fldinst{HYPERLINK "http://www.libsdl.org/projects/SDL_mixer/"}}{\fldrslt http://www.libsdl.org/projects/SDL_mixer/}}. Make sure to get the highest versions.\
+{\listtext	\'95	}You may need to build different binaries, depending on the target game. Look inside versions.h and change the #defines according to instructions.\
+{\listtext	\'95	}The program is licensed as GPL version 2. This means that you can make your own derivative of AutoWolf, but if you release it, you have to release the source code too. Read the accompanying license-gpl.txt file for full information on the license.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+
+\b\fs28 \ul Frequently asked questions
+\b0\fs24 \ulnone \
+\
+
+\b Q: 
+\b0 The bot has stopped moving, is this a problem with its AI?\
+
+\b A: 
+\b0 The bot will stop moving when there is nowhere to go, i.e. when it's stuck. This can happen because:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\qj
+\ls4\ilvl0\cf0 {\listtext	a)	}it failed to solve a pushwall puzzle critical to solving the level. Currently the bot does not know how to intelligently solve pushwall puzzles like those in E4M2 or E4M7 (the latter case being critical).\
+{\listtext	b)	}the map has been designed with the pushwall bug in mind, where the walls would move 3 steps instead of 2, in vanilla Wolf3D, when the frame rate would be large enough. To emulate this bug, you need to run AutoWolf with the --secretstep3 command-line switch.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+
+\b Q: 
+\b0 The bot has gone into a perpetual loop. It won't advance.\
+
+\b A: 
+\b0 Though I've tried fixing the more prominent cases, it can still occur. To budge it, simply try to move it forward (by running). Even if it's a bot, you still have some limited control over it.\
+\
+
+\b Q: 
+\b0 Does the bot learn as it goes?\
+
+\b A: 
+\b0 No, for now everything is programmed from the start. This also means that nothing needs to be stored in save-games, since the bot can set itself up immediately from the level's conditions. Learning algorithms are intended when AutoWolf gets ported to mod-friendly engines.\
+\
+
+\b Q: 
+\b0 Hey, the bot seems to die quite often now!\
+
+\b A: 
+\b0 Sometimes the bot may happen to get into quite risky behaviour, waking up too many Nazis and running back and forth into danger (surrounded) until it's capped to death. Even though I understand the error of this tactic, it makes the game more fun to watch.\
+\
+\
+
+\b\fs28 \ul Credits
+\b0\fs24 \ulnone \
+\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\qj
+\ls5\ilvl0\cf0 {\listtext	\'95	}id Software for Wolfenstein 3D, the pioneer of first-person shooters and one of the first computer games of my life.\
+{\listtext	\'95	}Moritz "Ripper" Kroll for his excellent port of DOS Wolfenstein to modern systems, which made this bot possible, or at least with better chances of success.\
+{\listtext	\'95	}Chris Ballinger for the Mac OS X port of Wolf4SDL, used as a base for my AutoWolf port for Mac.\
+{\listtext	\'95	}SourceForge for their hosting of open-source projects.\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qj
+\cf0 \
+\
+
+\b\fs28 \ul Contact\
+\
+
+\b0\fs24 \ulnone You can email me for questions regarding this project at ioan_chera@yahoo.com\
+You can find me posting at the Doomworld or ZDoom forums as the user "printz".}

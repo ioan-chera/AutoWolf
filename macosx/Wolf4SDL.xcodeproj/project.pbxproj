@@ -122,7 +122,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1107320486CEB800E47090 /* AutoWolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Automatic Wolfenstein.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = id_in.h; path = ../id_in.h; sourceTree = SOURCE_ROOT; };
 		D901F4C80FC0DBCB0040C290 /* f_spear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = f_spear.h; path = ../f_spear.h; sourceTree = SOURCE_ROOT; };
@@ -263,7 +263,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1107320486CEB800E47090 /* AutoWolf.app */,
+				8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -489,7 +489,7 @@
 			name = Wolf4SDL;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Untitled;
-			productReference = 8D1107320486CEB800E47090 /* AutoWolf.app */;
+			productReference = 8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -597,13 +597,9 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
 					/Library/Frameworks/SDL.framework/Headers,
@@ -614,9 +610,7 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				PRODUCT_NAME = AutoWolf;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -626,20 +620,14 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -654,8 +642,9 @@
 					/Library/Frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -667,7 +656,8 @@
 					/Library/Frameworks/SDL.framework/Versions/A/Headers,
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 			};
 			name = Debug;
@@ -684,8 +674,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -698,7 +688,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -716,8 +707,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -730,7 +721,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoSpear;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -739,20 +731,15 @@
 		FA01B27F159BAE9500AB5295 /* Release sod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoSpear;
+				PRODUCT_NAME = "Automatic Spear of Destiny";
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -770,8 +757,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -784,7 +771,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -793,20 +781,14 @@
 		FAECCE1B16568329002EAFBC /* Release v11 apogee */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -824,8 +806,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -838,7 +820,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -847,20 +830,14 @@
 		FAECCE1D1656834B002EAFBC /* Release v14 apogee */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -878,8 +855,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -892,7 +869,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -901,20 +879,14 @@
 		FAECCE1F16568355002EAFBC /* Release v14 activision */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -932,8 +904,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -946,7 +918,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -955,20 +928,14 @@
 		FAECCE211656835C002EAFBC /* Release v14 imagineer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -986,8 +953,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1000,7 +967,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -1009,20 +977,14 @@
 		FAECCE6B165687DC002EAFBC /* Release v10 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1040,8 +1002,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1054,7 +1016,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -1063,20 +1026,14 @@
 		FAECCE6D165687E6002EAFBC /* Release v11 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1094,8 +1051,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1108,7 +1065,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -1117,20 +1075,14 @@
 		FAECCE6F165687EE002EAFBC /* Release v12 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1148,8 +1100,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1162,7 +1114,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoWolf;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -1171,20 +1124,14 @@
 		FAECCE71165687F5002EAFBC /* Release v14 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoWolf;
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1202,8 +1149,8 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1216,7 +1163,8 @@
 					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
 				);
 				LLVM_LTO = YES;
-				PRODUCT_NAME = AutoSpear;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx10.7;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -1225,20 +1173,15 @@
 		FAECCE9016568912002EAFBC /* Release sod demo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				PRODUCT_NAME = AutoSpear;
+				PRODUCT_NAME = "Automatic Spear of Destiny";
 				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
