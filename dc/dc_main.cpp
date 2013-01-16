@@ -137,9 +137,9 @@ int DC_CheckForMaps(char *path) {
         SDL_Delay(5);
         disc_status = DC_CheckDrive();
 #ifdef SPEAR
-        DC_DrawString(4, 1, "Sod4SDL\\DC");
+        DC_DrawString(4, 1, "AutoSpr\\DC");	// IOAN 20130116: changed to AutoWolf
 #else
-        DC_DrawString(4, 1, "Wolf4SDL\\DC");
+        DC_DrawString(4, 1, "AutoWolf\\DC");
 #endif
         switch(disc_status) {
             //case CD_STATUS_BUSY:
@@ -198,62 +198,64 @@ void DC_LoadMaps() {
 
 #ifdef SPEAR
 #ifndef SPEARDEMO
-    fs_copy("audiohed.sod", "/ram/audiohed.sod");
-    fs_copy("audiot.sod", "/ram/audiot.sod");
-    fs_copy("vgadict.sod", "/ram/vgadict.sod");
-    fs_copy("vgagraph.sod", "/ram/vgagraph.sod");
-    fs_copy("vgahead.sod", "/ram/vgahead.sod");
+	// IOAN 20130116: make them uppercase
+	// FIXME: act case insensitive.
+    fs_copy("AUDIOHED.SOD", "/ram/AUDIOHED.SOD");
+    fs_copy("AUDIOT.SOD", "/ram/AUDIOT.SOD");
+    fs_copy("VGADICT.SOD", "/ram/VGADICT.SOD");
+    fs_copy("VGAGRAPH.SOD", "/ram/VGAGRAPH.SOD");
+    fs_copy("VGAHEAD.SOD", "/ram/VGAHEAD.SOD");
     switch(param_mission) {
         case 0:
-            fs_copy("gamemaps.sod", "/ram/gamemaps.sod");
-            fs_copy("maphead.sod", "/ram/maphead.sod");
-            fs_copy("vswap.sod", "/ram/vswap.sod");
+            fs_copy("GAMEMAPS.SOD", "/ram/GAMEMAPS.SOD");
+            fs_copy("MAPHEAD.SOD", "/ram/MAPHEAD.SOD");
+            fs_copy("VSWAP.SOD", "/ram/VSWAP.SOD");
             break;
         case 1:
-            fs_copy("gamemaps.sd1", "/ram/gamemaps.sd1");
-            fs_copy("maphead.sd1", "/ram/maphead.sd1");
-            fs_copy("vswap.sd1", "/ram/vswap.sd1");
+            fs_copy("GAMEMAPS.SD1", "/ram/GAMEMAPS.SD1");
+            fs_copy("MAPHEAD.SD1", "/ram/MAPHEAD.SD1");
+            fs_copy("VSWAP.SD1", "/ram/VSWAP.SD1");
             break;
         case 2:
-            fs_copy("gamemaps.sd2", "/ram/gamemaps.sd2");
-            fs_copy("maphead.sd2", "/ram/maphead.sd2");
-            fs_copy("vswap.sd2", "/ram/vswap.sd2");
+            fs_copy("GAMEMAPS.SD2", "/ram/GAMEMAPS.SD2");
+            fs_copy("MAPHEAD.SD2", "/ram/MAPHEAD.SD2");
+            fs_copy("VSWAP.SD2", "/ram/VSWAP.SD2");
             break;
         case 3:
-            fs_copy("gamemaps.sd3", "/ram/gamemaps.sd3");
-            fs_copy("maphead.sd3", "/ram/maphead.sd3");
-            fs_copy("vswap.sd3", "/ram/vswap.sd3");
+            fs_copy("GAMEMAPS.SD3", "/ram/GAMEMAPS.SD3");
+            fs_copy("MAPHEAD.SD3", "/ram/MAPHEAD.SD3");
+            fs_copy("VSWAP.SD3", "/ram/VSWAP.SD3");
             break;
     }
 #else
-    fs_copy("audiohed.sdm", "/ram/audiohed.sdm");
-    fs_copy("audiot.sdm", "/ram/audiot.sdm");
-    fs_copy("vgadict.sdm", "/ram/vgadict.sdm");
-    fs_copy("vgagraph.sdm", "/ram/vgagraph.sdm");
-    fs_copy("vgahead.sdm", "/ram/vgahead.sdm");
-    fs_copy("gamemaps.sdm", "/ram/gamemaps.sdm");
-    fs_copy("maphead.sdm", "/ram/maphead.sdm");
-    fs_copy("vswap.sdm", "/ram/vswap.sdm");
+    fs_copy("AUDIOHED.SDM", "/ram/AUDIOHED.SDM");
+    fs_copy("AUDIOT.SDM", "/ram/AUDIOT.SDM");
+    fs_copy("VGADICT.SDM", "/ram/VGADICT.SDM");
+    fs_copy("VGAGRAPH.SDM", "/ram/VGAGRAPH.SDM");
+    fs_copy("VGAHEAD.SDM", "/ram/VGAHEAD.SDM");
+    fs_copy("GAMEMAPS.SDM", "/ram/GAMEMAPS.SDM");
+    fs_copy("MAPHEAD.SDM", "/ram/MAPHEAD.SDM");
+    fs_copy("VSWAP.SDM", "/ram/VSWAP.SDM");
 #endif
 #else
 #ifndef UPLOAD
-    fs_copy("audiohed.wl6", "/ram/audiohed.wl6");
-    fs_copy("audiot.wl6", "/ram/audiot.wl6");
-    fs_copy("vgadict.wl6", "/ram/vgadict.wl6");
-    fs_copy("vgagraph.wl6", "/ram/vgagraph.wl6");
-    fs_copy("vgahead.wl6", "/ram/vgahead.wl6");
-    fs_copy("gamemaps.wl6", "/ram/gamemaps.wl6");
-    fs_copy("maphead.wl6", "/ram/maphead.wl6");
-    fs_copy("vswap.wl6", "/ram/vswap.wl6");
+    fs_copy("AUDIOHED.WL6", "/ram/AUDIOHED.WL6");
+    fs_copy("AUDIOT.WL6", "/ram/AUDIOT.WL6");
+    fs_copy("VGADICT.WL6", "/ram/VGADICT.WL6");
+    fs_copy("VGAGRAPH.WL6", "/ram/VGAGRAPH.WL6");
+    fs_copy("VGAHEAD.WL6", "/ram/VGAHEAD.WL6");
+    fs_copy("GAMEMAPS.WL6", "/ram/GAMEMAPS.WL6");
+    fs_copy("MAPHEAD.WL6", "/ram/MAPHEAD.WL6");
+    fs_copy("VSWAP.WL6", "/ram/VSWAP.WL6");
 #else
-    fs_copy("audiohed.wl1", "/ram/audiohed.wl1");
-    fs_copy("audiot.wl1", "/ram/audiot.wl1");
-    fs_copy("vgadict.wl1", "/ram/vgadict.wl1");
-    fs_copy("vgagraph.wl1", "/ram/vgagraph.wl1");
-    fs_copy("vgahead.wl1", "/ram/vgahead.wl1");
-    fs_copy("gamemaps.wl1", "/ram/gamemaps.wl1");
-    fs_copy("maphead.wl1", "/ram/maphead.wl1");
-    fs_copy("vswap.wl1", "/ram/vswap.wl1");
+    fs_copy("AUDIOHED.WL1", "/ram/AUDIOHED.WL1");
+    fs_copy("AUDIOT.WL1", "/ram/AUDIOT.WL1");
+    fs_copy("VGADICT.WL1", "/ram/VGADICT.WL1");
+    fs_copy("VGAGRAPH.WL1", "/ram/VGAGRAPH.WL1");
+    fs_copy("VGAHEAD.WL1", "/ram/VGAHEAD.WL1");
+    fs_copy("GAMEMAPS.WL1", "/ram/GAMEMAPS.WL1");
+    fs_copy("maphead.WL1", "/ram/maphead.WL1");
+    fs_copy("VSWAP.WL1", "/ram/VSWAP.WL1");
 #endif
 #endif
 
@@ -320,7 +322,7 @@ int DC_SetMission(char *path) {
             DC_DrawString(2, 6 + current_mission, ">");
 
             font_y = 6;
-            DC_DrawString(4, 1, "Sod4SDL\\DC");
+            DC_DrawString(4, 1, "AutoSpr\\DC");	// IOAN 20130116: changed name
             if(mission1 == 1) {
                 DC_DrawString(4, font_y, "Spear of Destiny (Original Mission)");
                 font_y++;

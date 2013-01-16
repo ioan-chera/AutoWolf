@@ -275,7 +275,7 @@ static int StartGame;
 static int SoundStatus = 1;
 static int pickquick;
 static char SaveGameNames[10][32];
-static char SaveName[13] = "savegam?.";
+static char SaveName[13] = "SAVEGAM?.";
 
 
 ////////////////////////////////////////////////////////////////////
@@ -4013,7 +4013,7 @@ CheckForEpisodes (void)
         {
             Quit("Your $HOME directory is not defined. You must set this before playing.");
         }
-        #define WOLFDIR "/.wolf4sdl"
+        #define WOLFDIR "/.autowolf"	// IOAN 20130116: changed name
         if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
         {
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
@@ -4043,14 +4043,14 @@ CheckForEpisodes (void)
 //
 #ifdef JAPAN
 #ifdef JAPDEMO
-    if(!stat("vswap.wj1", &statbuf))
+    if(!stat("VSWAP.WJ1", &statbuf))
     {
-        strcpy (extension, "wj1");
+        strcpy (extension, "WJ1");
         numEpisodesMissing = 5;
 #else
-    if(!stat("vswap.wj6", &statbuf))
+    if(!stat("VSWAP.WJ6", &statbuf))
     {
-        strcpy (extension, "wj6");
+        strcpy (extension, "WJ6");
 #endif
         strcat (configname, extension);
         strcat (SaveName, extension);
@@ -4068,18 +4068,18 @@ CheckForEpisodes (void)
 // ENGLISH
 //
 #ifdef UPLOAD
-    if(!stat("vswap.wl1", &statbuf))
+    if(!stat("VSWAP.WL1", &statbuf))
     {
-        strcpy (extension, "wl1");
+        strcpy (extension, "WL1");
         numEpisodesMissing = 5;
     }
     else
         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
 #else
 #ifndef SPEAR
-    if(!stat("vswap.wl6", &statbuf))
+    if(!stat("VSWAP.WL6", &statbuf))
     {
-        strcpy (extension, "wl6");
+        strcpy (extension, "WL6");
         NewEmenu[2].active =
             NewEmenu[4].active =
             NewEmenu[6].active =
@@ -4090,17 +4090,17 @@ CheckForEpisodes (void)
     }
     else
     {
-        if(!stat("vswap.wl3", &statbuf))
+        if(!stat("VSWAP.WL3", &statbuf))
         {
-            strcpy (extension, "wl3");
+            strcpy (extension, "WL3");
             numEpisodesMissing = 3;
             NewEmenu[2].active = NewEmenu[4].active = EpisodeSelect[1] = EpisodeSelect[2] = 1;
         }
         else
         {
-            if(!stat("vswap.wl1", &statbuf))
+            if(!stat("VSWAP.WL1", &statbuf))
             {
-                strcpy (extension, "wl1");
+                strcpy (extension, "WL1");
                 numEpisodesMissing = 5;
             }
             else
@@ -4115,45 +4115,45 @@ CheckForEpisodes (void)
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
-        if(!stat("vswap.sod", &statbuf))
-            strcpy (extension, "sod");
+        if(!stat("VSWAP.SOD", &statbuf))
+            strcpy (extension, "SOD");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 1)
     {
-        if(!stat("vswap.sd1", &statbuf))
-            strcpy (extension, "sd1");
+        if(!stat("VSWAP.SD1", &statbuf))
+            strcpy (extension, "SD1");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 2)
     {
-        if(!stat("vswap.sd2", &statbuf))
-            strcpy (extension, "sd2");
+        if(!stat("VSWAP.SD2", &statbuf))
+            strcpy (extension, "SD2");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 3)
     {
-        if(!stat("vswap.sd3", &statbuf))
-            strcpy (extension, "sd3");
+        if(!stat("VSWAP.SD3", &statbuf))
+            strcpy (extension, "SD3");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else
         Quit ("UNSUPPORTED MISSION!");
-    strcpy (graphext, "sod");
-    strcpy (audioext, "sod");
+    strcpy (graphext, "SOD");
+    strcpy (audioext, "SOD");
 #else
-    if(!stat("vswap.sdm", &statbuf))
+    if(!stat("VSWAP.SDM", &statbuf))
     {
-        strcpy (extension, "sdm");
+        strcpy (extension, "SDM");
     }
     else
         Quit ("NO SPEAR OF DESTINY DEMO DATA FILES TO BE FOUND!");
-    strcpy (graphext, "sdm");
-    strcpy (audioext, "sdm");
+    strcpy (graphext, "SDM");
+    strcpy (audioext, "SDM");
 #endif
 #else
     strcpy (graphext, extension);

@@ -2,36 +2,61 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Wolf4SDL" />
+		<Option title="AutoWolf" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="default">
-				<Option output="Wolf4SDL" prefix_auto="1" extension_auto="1" />
+				<Option output="../../autowolfbuildlinux/AutoWolf" prefix_auto="1" extension_auto="1" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Dmain=SDL_main" />
-			<Add directory="..\SDL-devel\include\SDL" />
+			<Add directory="../SDL-devel/include/SDL" />
 		</Compiler>
 		<Linker>
 			<Add library="mingw32" />
 			<Add library="SDL" />
 			<Add library="SDL_mixer" />
-			<Add directory="..\SDL-devel\lib" />
+			<Add directory="../SDL-devel/lib" />
 		</Linker>
+		<Unit filename="CheckSum.cpp" />
+		<Unit filename="CheckSum.h" />
+		<Unit filename="DataFile.cpp" />
+		<Unit filename="DataFile.h" />
+		<Unit filename="Dictionary.cpp" />
+		<Unit filename="Dictionary.h" />
+		<Unit filename="DictionaryFile.cpp" />
+		<Unit filename="DictionaryFile.h" />
+		<Unit filename="DirectoryFile.cpp" />
+		<Unit filename="DirectoryFile.h" />
+		<Unit filename="ExploredArrayFile.cpp" />
+		<Unit filename="ExploredArrayFile.h" />
+		<Unit filename="List.h" />
+		<Unit filename="MasterDirectoryFile.cpp" />
+		<Unit filename="MasterDirectoryFile.h" />
+		<Unit filename="PathArray.cpp" />
+		<Unit filename="PathArray.h" />
 		<Unit filename="audiosod.h" />
 		<Unit filename="audiowl6.h" />
+		<Unit filename="dc/dc_cd.cpp" />
+		<Unit filename="dc/dc_main.cpp" />
+		<Unit filename="dc/dc_main.h" />
+		<Unit filename="dc/dc_maple.cpp" />
+		<Unit filename="dc/dc_video.cpp" />
+		<Unit filename="dc/dc_vmu.cpp" />
+		<Unit filename="dc/dc_vmu.h" />
+		<Unit filename="dosbox/dbopl.cpp" />
+		<Unit filename="dosbox/dbopl.h" />
 		<Unit filename="f_spear.h" />
-		<Unit filename="mame\fmopl.cpp" />
-		<Unit filename="mame\fmopl.h" />
 		<Unit filename="foreign.h" />
 		<Unit filename="gfxv_apo.h" />
 		<Unit filename="gfxv_jap.h" />
 		<Unit filename="gfxv_sod.h" />
 		<Unit filename="gfxv_wl6.h" />
+		<Unit filename="gp2x.h" />
 		<Unit filename="id_ca.cpp" />
 		<Unit filename="id_ca.h" />
 		<Unit filename="id_in.cpp" />
@@ -45,28 +70,46 @@
 		<Unit filename="id_vh.h" />
 		<Unit filename="id_vl.cpp" />
 		<Unit filename="id_vl.h" />
+		<Unit filename="ioan_bas.cpp" />
+		<Unit filename="ioan_bas.h" />
+		<Unit filename="ioan_bot.cpp" />
+		<Unit filename="ioan_bot.h" />
+		<Unit filename="ioan_secret.cpp" />
+		<Unit filename="ioan_secret.h" />
 		<Unit filename="sdl_winmain.cpp" />
 		<Unit filename="signon.cpp" />
 		<Unit filename="version.h" />
 		<Unit filename="wl_act1.cpp" />
 		<Unit filename="wl_act2.cpp" />
 		<Unit filename="wl_agent.cpp" />
+		<Unit filename="wl_atmos.cpp" />
+		<Unit filename="wl_atmos.h" />
+		<Unit filename="wl_cloudsky.cpp" />
+		<Unit filename="wl_cloudsky.h" />
 		<Unit filename="wl_debug.cpp" />
 		<Unit filename="wl_def.h" />
+		<Unit filename="wl_dir3dspr.cpp" />
 		<Unit filename="wl_draw.cpp" />
+		<Unit filename="wl_floorceiling.cpp" />
 		<Unit filename="wl_game.cpp" />
 		<Unit filename="wl_inter.cpp" />
 		<Unit filename="wl_main.cpp" />
 		<Unit filename="wl_menu.cpp" />
 		<Unit filename="wl_menu.h" />
+		<Unit filename="wl_parallax.cpp" />
 		<Unit filename="wl_play.cpp" />
+		<Unit filename="wl_shade.cpp" />
+		<Unit filename="wl_shade.h" />
 		<Unit filename="wl_state.cpp" />
 		<Unit filename="wl_text.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<debugger />
-			<lib_finder />
+			<lib_finder>
+				<lib name="SDL" />
+				<lib name="SDL_mixer" />
+			</lib_finder>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

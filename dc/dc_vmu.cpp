@@ -94,11 +94,11 @@ void DC_SaveToVMU(char *fname, char *str) {
     DiskFlopAnim(102, 85);
 
 #ifdef SPEAR
-    strcpy(vmu_package.desc_short, "Sod4SDL\\DC");
-    strcpy(vmu_package.app_id, "Sod4SDL\\DC");
+    strcpy(vmu_package.desc_short, "AutoSpr\\DC");	// IOAN 20130116: changed name
+    strcpy(vmu_package.app_id, "AutoSpr\\DC");
 #else
-    strcpy(vmu_package.desc_short, "Wolf4SDL\\DC");
-    strcpy(vmu_package.app_id, "Wolf4SDL\\DC");
+    strcpy(vmu_package.desc_short, "AutoWolf\\DC");
+    strcpy(vmu_package.app_id, "AutoWolf\\DC");
 #endif
     if(str == NULL)
         strcpy(vmu_package.desc_long, "Configuration");

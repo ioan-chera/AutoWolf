@@ -2,7 +2,7 @@ CONFIG ?= config.default
 -include $(CONFIG)
 
 
-BINARY    ?= wolf3d
+BINARY    ?= autowolf
 PREFIX    ?= /usr/local
 MANPREFIX ?= $(PREFIX)
 
@@ -46,11 +46,7 @@ LDFLAGS += -static-libgcc
 endif
 
 SRCS :=
-ifndef GPL
-    SRCS += mame/fmopl.cpp
-else
-    SRCS += dosbox/dbopl.cpp
-endif
+SRCS += dosbox/dbopl.cpp
 SRCS += id_ca.cpp
 SRCS += id_in.cpp
 SRCS += id_pm.cpp
@@ -75,6 +71,24 @@ SRCS += wl_parallax.cpp
 SRCS += wl_play.cpp
 SRCS += wl_state.cpp
 SRCS += wl_text.cpp
+SRCS += CheckSum.cpp
+SRCS += DataFile.cpp
+SRCS += Dictionary.cpp
+SRCS += DictionaryFile.cpp
+SRCS += DirectoryFile.cpp
+SRCS += ExploredArrayFile.cpp
+SRCS += HistoryRatio.cpp
+SRCS += ioan_bas.cpp
+SRCS += ioan_bot.cpp
+SRCS += ioan_secret.cpp
+SRCS += MasterDirectoryFile.cpp
+SRCS += PathArray.cpp
+SRCS += wl_atmos.cpp
+SRCS += wl_cloudsky.cpp
+SRCS += wl_dir3dspr.cpp
+SRCS += wl_floorceiling.cpp
+SRCS += wl_parallax.cpp
+SRCS += wl_shade.cpp
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))

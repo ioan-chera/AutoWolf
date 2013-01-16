@@ -85,16 +85,16 @@ int     numEpisodesMissing = 0;
 char extension[5]; // Need a string, not constant to change cache files
 char graphext[5];
 char audioext[5];
-static const char gheadname[] = "vgahead.";
-static const char gfilename[] = "vgagraph.";
-static const char gdictname[] = "vgadict.";
-static const char mheadname[] = "maphead.";
+static const char gheadname[] = "VGAHEAD.";
+static const char gfilename[] = "VGAGRAPH.";
+static const char gdictname[] = "VGADICT.";
+static const char mheadname[] = "MAPHEAD.";
 static const char mfilename[] = "maptemp.";
-static const char aheadname[] = "audiohed.";
-static const char afilename[] = "audiot.";
+static const char aheadname[] = "AUDIOHED.";
+static const char afilename[] = "AUDIOT.";
 
 static int32_t  grstarts[NUMCHUNKS + 1];
-static int32_t* audiostarts; // array of offsets in audio / audiot
+static int32_t* audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
 huffnode *grhuffman;
@@ -414,8 +414,8 @@ static void CAL_SetupGrFile (void)
 	int expectedsize = lengthof(grstarts);
 #endif
 
-    if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)
-        Quit("Wolf4SDL was not compiled for these data files:\n"
+    if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOAN 20130116: changed name
+        Quit("AutoWolf was not compiled for these data files:\n"
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
@@ -492,7 +492,7 @@ static void CAL_SetupMapFile (void)
 // open the data file
 //
 #ifdef CARMACIZED
-    strcpy(fname, "gamemaps.");
+    strcpy(fname, "GAMEMAPS.");
     strcat(fname, extension);
 
     maphandle = open(fname, O_RDONLY | O_BINARY);
@@ -545,7 +545,7 @@ static void CAL_SetupAudioFile (void)
     char fname[13];
 
 //
-// load audiohed.ext (offsets for audio file)
+// load AUDIOHED.ext (offsets for audio file)
 //
     strcpy(fname,aheadname);
     strcat(fname,audioext);

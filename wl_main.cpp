@@ -78,7 +78,7 @@ boolean loadedgame;
 int     mouseadjustment;
 
 char    configdir[256] = "";
-char    configname[13] = "config.";
+char    configname[13] = "CONFIG.";
 
 //
 // Command line parameter variables
@@ -1968,11 +1968,11 @@ void CheckParameters(int argc, char *argv[])
 #if defined(_arch_dreamcast) || defined(_WIN32)
             "                        (default: current directory)\n"
 #else
-            "                        (default: $HOME/.wolf4sdl)\n"
+            "                        (default: $HOME/.autowolf)\n"	// IOAN 20130116: changed name
 #endif
 #if defined(SPEAR) && !defined(SPEARDEMO)
             " --mission <mission>    Mission number to play (0-3)\n"
-            "                        (default: 0 -> .sod, 1-3 -> .sd*)\n"
+            "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
             " --goodtimes            Disable copy protection quiz\n"
 #endif
             , defaultSampleRate
