@@ -55,22 +55,6 @@
 		FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */; };
 		FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A58167BD52100949336 /* ExploredArrayFile.cpp */; };
 		FAE7784A1684821400EBE363 /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE778481684821400EBE363 /* Dictionary.cpp */; };
-		FAE8D0FD166E3C58006B2EDE /* AUDIOHED.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */; };
-		FAE8D0FE166E3C58006B2EDE /* AUDIOT.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */; };
-		FAE8D0FF166E3C58006B2EDE /* CONFIG.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */; };
-		FAE8D100166E3C58006B2EDE /* GAMEMAPS.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */; };
-		FAE8D101166E3C58006B2EDE /* MAPHEAD.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */; };
-		FAE8D102166E3C58006B2EDE /* Savegam0.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */; };
-		FAE8D103166E3C58006B2EDE /* Savegam1.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */; };
-		FAE8D104166E3C58006B2EDE /* Savegam2.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */; };
-		FAE8D105166E3C58006B2EDE /* Savegam3.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */; };
-		FAE8D106166E3C58006B2EDE /* Savegam4.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */; };
-		FAE8D107166E3C58006B2EDE /* Savegam5.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */; };
-		FAE8D108166E3C58006B2EDE /* Savegam6.wl6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */; };
-		FAE8D109166E3C58006B2EDE /* VGADICT.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */; };
-		FAE8D10A166E3C58006B2EDE /* VGAGRAPH.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */; };
-		FAE8D10B166E3C58006B2EDE /* VGAHEAD.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */; };
-		FAE8D10C166E3C58006B2EDE /* VSWAP.WL6 in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,22 +76,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				FAE8D0FD166E3C58006B2EDE /* AUDIOHED.WL6 in CopyFiles */,
-				FAE8D0FE166E3C58006B2EDE /* AUDIOT.WL6 in CopyFiles */,
-				FAE8D0FF166E3C58006B2EDE /* CONFIG.WL6 in CopyFiles */,
-				FAE8D100166E3C58006B2EDE /* GAMEMAPS.WL6 in CopyFiles */,
-				FAE8D101166E3C58006B2EDE /* MAPHEAD.WL6 in CopyFiles */,
-				FAE8D102166E3C58006B2EDE /* Savegam0.wl6 in CopyFiles */,
-				FAE8D103166E3C58006B2EDE /* Savegam1.wl6 in CopyFiles */,
-				FAE8D104166E3C58006B2EDE /* Savegam2.wl6 in CopyFiles */,
-				FAE8D105166E3C58006B2EDE /* Savegam3.wl6 in CopyFiles */,
-				FAE8D106166E3C58006B2EDE /* Savegam4.wl6 in CopyFiles */,
-				FAE8D107166E3C58006B2EDE /* Savegam5.wl6 in CopyFiles */,
-				FAE8D108166E3C58006B2EDE /* Savegam6.wl6 in CopyFiles */,
-				FAE8D109166E3C58006B2EDE /* VGADICT.WL6 in CopyFiles */,
-				FAE8D10A166E3C58006B2EDE /* VGAGRAPH.WL6 in CopyFiles */,
-				FAE8D10B166E3C58006B2EDE /* VGAHEAD.WL6 in CopyFiles */,
-				FAE8D10C166E3C58006B2EDE /* VSWAP.WL6 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,22 +168,6 @@
 		FAC97A59167BD52100949336 /* ExploredArrayFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploredArrayFile.h; path = ../ExploredArrayFile.h; sourceTree = "<group>"; };
 		FAE778481684821400EBE363 /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Dictionary.cpp; path = ../Dictionary.cpp; sourceTree = "<group>"; };
 		FAE778491684821400EBE363 /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dictionary.h; path = ../Dictionary.h; sourceTree = "<group>"; };
-		FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOHED.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOHED.WL6; sourceTree = "<group>"; };
-		FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = AUDIOT.WL6; path = ../../../../../../Applications/Wolf4SDL/AUDIOT.WL6; sourceTree = "<group>"; };
-		FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = CONFIG.WL6; path = ../../../../../../Applications/Wolf4SDL/CONFIG.WL6; sourceTree = "<group>"; };
-		FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = GAMEMAPS.WL6; path = ../../../../../../Applications/Wolf4SDL/GAMEMAPS.WL6; sourceTree = "<group>"; };
-		FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = MAPHEAD.WL6; path = ../../../../../../Applications/Wolf4SDL/MAPHEAD.WL6; sourceTree = "<group>"; };
-		FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam0.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam0.wl6; sourceTree = "<group>"; };
-		FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam1.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam1.wl6; sourceTree = "<group>"; };
-		FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam2.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam2.wl6; sourceTree = "<group>"; };
-		FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam3.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam3.wl6; sourceTree = "<group>"; };
-		FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam4.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam4.wl6; sourceTree = "<group>"; };
-		FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam5.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam5.wl6; sourceTree = "<group>"; };
-		FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = Savegam6.wl6; path = ../../../../../../Applications/Wolf4SDL/Savegam6.wl6; sourceTree = "<group>"; };
-		FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGADICT.WL6; path = ../../../../../../Applications/Wolf4SDL/VGADICT.WL6; sourceTree = "<group>"; };
-		FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGAGRAPH.WL6; path = ../../../../../../Applications/Wolf4SDL/VGAGRAPH.WL6; sourceTree = "<group>"; };
-		FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VGAHEAD.WL6; path = ../../../../../../Applications/Wolf4SDL/VGAHEAD.WL6; sourceTree = "<group>"; };
-		FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */ = {isa = PBXFileReference; lastKnownFileType = file; name = VSWAP.WL6; path = ../../../../../../Applications/Wolf4SDL/VSWAP.WL6; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,7 +223,6 @@
 		29B97314FDCFA39411CA2CEA /* Untitled */ = {
 			isa = PBXGroup;
 			children = (
-				FAE8D0DB166E3BF0006B2EDE /* Wolfenstein 3D Data Files */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -428,29 +379,6 @@
 				FA3011E3168721AE005D25A8 /* Dictionary */,
 			);
 			name = DataStructure;
-			sourceTree = "<group>";
-		};
-		FAE8D0DB166E3BF0006B2EDE /* Wolfenstein 3D Data Files */ = {
-			isa = PBXGroup;
-			children = (
-				FAE8D0DC166E3C1F006B2EDE /* AUDIOHED.WL6 */,
-				FAE8D0DD166E3C1F006B2EDE /* AUDIOT.WL6 */,
-				FAE8D0DE166E3C1F006B2EDE /* CONFIG.WL6 */,
-				FAE8D0DF166E3C1F006B2EDE /* GAMEMAPS.WL6 */,
-				FAE8D0E0166E3C1F006B2EDE /* MAPHEAD.WL6 */,
-				FAE8D0E1166E3C1F006B2EDE /* Savegam0.wl6 */,
-				FAE8D0E2166E3C1F006B2EDE /* Savegam1.wl6 */,
-				FAE8D0E3166E3C1F006B2EDE /* Savegam2.wl6 */,
-				FAE8D0E4166E3C1F006B2EDE /* Savegam3.wl6 */,
-				FAE8D0E5166E3C1F006B2EDE /* Savegam4.wl6 */,
-				FAE8D0E6166E3C1F006B2EDE /* Savegam5.wl6 */,
-				FAE8D0E7166E3C1F006B2EDE /* Savegam6.wl6 */,
-				FAE8D0E8166E3C1F006B2EDE /* VGADICT.WL6 */,
-				FAE8D0E9166E3C1F006B2EDE /* VGAGRAPH.WL6 */,
-				FAE8D0EA166E3C1F006B2EDE /* VGAHEAD.WL6 */,
-				FAE8D0EB166E3C1F006B2EDE /* VSWAP.WL6 */,
-			);
-			name = "Wolfenstein 3D Data Files";
 			sourceTree = "<group>";
 		};
 		FAE8D10D166E3E1E006B2EDE /* Gimmicks */ = {
@@ -611,7 +539,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -628,7 +555,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -636,7 +562,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -665,7 +591,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -698,7 +624,7 @@
 		FA01B27E159BAE9500AB5295 /* Release sod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -740,7 +666,6 @@
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
 				PRODUCT_NAME = "Automatic Spear of Destiny";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release sod";
@@ -748,7 +673,7 @@
 		FAECCE1A16568329002EAFBC /* Release v11 apogee */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -789,7 +714,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v11 apogee";
@@ -797,7 +721,7 @@
 		FAECCE1C1656834B002EAFBC /* Release v14 apogee */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -838,7 +762,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v14 apogee";
@@ -846,7 +769,7 @@
 		FAECCE1E16568355002EAFBC /* Release v14 activision */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -887,7 +810,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v14 activision";
@@ -895,7 +817,7 @@
 		FAECCE201656835C002EAFBC /* Release v14 imagineer */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -936,7 +858,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v14 imagineer";
@@ -944,7 +865,7 @@
 		FAECCE6A165687DC002EAFBC /* Release v10 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -985,7 +906,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v10 shareware";
@@ -993,7 +913,7 @@
 		FAECCE6C165687E6002EAFBC /* Release v11 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -1034,7 +954,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v11 shareware";
@@ -1042,7 +961,7 @@
 		FAECCE6E165687EE002EAFBC /* Release v12 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -1083,7 +1002,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v12 shareware";
@@ -1091,7 +1009,7 @@
 		FAECCE70165687F5002EAFBC /* Release v14 shareware */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -1132,7 +1050,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release v14 shareware";
@@ -1140,7 +1057,7 @@
 		FAECCE8F16568912002EAFBC /* Release sod demo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(HOME)/Library/Frameworks",
 					/Library/Frameworks,
@@ -1182,7 +1099,6 @@
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
 				PRODUCT_NAME = "Automatic Spear of Destiny";
-				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Release sod demo";
