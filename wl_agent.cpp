@@ -305,20 +305,18 @@ void DrawFace (void)
         StatusDrawFace(GOTGATLINGPIC);
     else if (gamestate.health)
     {
-#ifdef SPEAR
-        if (godmode)
+        // IOANCH 20130202: unification process
+        if (SPEAR && godmode)
             StatusDrawFace(GODMODEFACE1PIC+gamestate.faceframe);
         else
-#endif
             StatusDrawFace(FACE1APIC+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
     }	// IOAN 25.10.2012: named constant
     else
     {
-#ifndef SPEAR
+        // IOANCH 20130202: unification process
         if (LastAttacker && LastAttacker->obclass == needleobj)
             StatusDrawFace(MUTANTBJPIC);
         else
-#endif
             StatusDrawFace(FACE8APIC);
     }
 }
@@ -455,13 +453,12 @@ void TakeDamage (int points,objtype *attacker)
     //
     // MAKE BJ'S EYES BUG IF MAJOR DAMAGE!
     //
-#ifdef SPEAR
-    if (points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
+    // IOANCH 20130202: unification process
+    if (SPEAR && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
     {
         StatusDrawFace(BJOUCHPIC);
         facecount = 0;
     }
-#endif
 }
 
 /*
@@ -497,11 +494,10 @@ void HealSelf (int points)
 void DrawLevel (void)
 {
     if(viewsize == 21 && ingame) return;
-#ifdef SPEAR
-    if (gamestate.mapon == 20)
+    // IOANCH 20130202: unification process
+    if (SPEAR && gamestate.mapon == 20)
         LatchNumber (2,16,2,18);
     else
-#endif
         LatchNumber (2,16,2,gamestate.mapon+1);
 }
 
@@ -762,7 +758,7 @@ void GetBonus (statobj_t *check)
             GiveAmmo (I_SEMICLIPAMMO);	// IOAN
             break;
 
-#ifdef SPEAR
+            // IOANCH 20130202: unification process
         case    bo_25clip:
             if (gamestate.ammo == I_MAXAMMO)	// IOAN
                 return;
@@ -770,7 +766,6 @@ void GetBonus (statobj_t *check)
             SD_PlaySound (GETAMMOBOXSND);
             GiveAmmo (I_BOXAMMO);	// IOAN
             break;
-#endif
 
         case    bo_machinegun:
             SD_PlaySound (GETMACHINESND);
@@ -818,14 +813,13 @@ void GetBonus (statobj_t *check)
             HealSelf (1);
             break;
 
-#ifdef SPEAR
+            // IOANCH 20130202: unification process
         case    bo_spear:
             spearflag = true;
             spearx = player->x;
             speary = player->y;
             spearangle = player->angle;
             playstate = ex_completed;
-#endif
     }
 
     StartBonusFlash ();
@@ -987,9 +981,9 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 
 void VictoryTile (void)
 {
-#ifndef SPEAR
-    SpawnBJVictory ();
-#endif
+    // IOANCH 20130202: unification process
+    if(!SPEAR)
+        SpawnBJVictory ();
 
     gamestate.victoryflag = true;
 }
@@ -1030,10 +1024,9 @@ void Thrust (int angle, int32_t speed)
     //
     // ZERO FUNNY COUNTER IF MOVED!
     //
-#ifdef SPEAR
-    if (speed)
+    // IOANCH 20130202: unification process
+    if (SPEAR && speed)
         funnyticount = 0;
-#endif
 
     thrustspeed += speed;
     //
