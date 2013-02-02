@@ -91,6 +91,7 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = sodpal.inc; path = ../sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = wolfpal.inc; path = ../wolfpal.inc; sourceTree = "<group>"; };
+		4FD9E7F416BDBF6D00B43091 /* gfxv_jap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_jap.h; path = ../gfxv_jap.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Automatic Wolfenstein.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
@@ -239,16 +240,14 @@
 			children = (
 				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
 				FAB104D21591AA9100393DE3 /* dbopl.h */,
-				FA8DFA991586930700EBBFB2 /* GFXV */,
+				FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */,
 				FA8DFA98158692FB00EBBFB2 /* WL */,
 				FA8DFA97158692EB00EBBFB2 /* ID */,
 				FA8DFA96158692E000EBBFB2 /* IOAN */,
 				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
-				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
 				D901F4E00FC0DBCB0040C290 /* version.h */,
 				D901F4E10FC0DBCB0040C290 /* signon.cpp */,
 				D901F4E20FC0DBCB0040C290 /* sdl_winmain.cpp */,
-				D901F4E30FC0DBCB0040C290 /* audiowl6.h */,
 				D901F4EA0FC0DBCB0040C290 /* gp2x.h */,
 				D901F4F40FC0DBCB0040C290 /* foreign.h */,
 			);
@@ -345,14 +344,17 @@
 			name = WL;
 			sourceTree = "<group>";
 		};
-		FA8DFA991586930700EBBFB2 /* GFXV */ = {
+		FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */ = {
 			isa = PBXGroup;
 			children = (
+				4FD9E7F416BDBF6D00B43091 /* gfxv_jap.h */,
 				D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */,
 				D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */,
 				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
+				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
+				D901F4E30FC0DBCB0040C290 /* audiowl6.h */,
 			);
-			name = GFXV;
+			name = GFXV_AUDIO;
 			sourceTree = "<group>";
 		};
 		FAC97A51167A679800949336 /* DataFile */ = {
