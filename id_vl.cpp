@@ -111,11 +111,11 @@ void	VL_Shutdown (void)
 void	VL_SetVGAPlaneMode (void)
 {
 	// IOAN 12.06.2012: bumped "Automatic" on the title bars
-#ifdef SPEAR
-    SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
-#else
-    SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
-#endif
+    // IOANCH 20130202: unification process
+    if( SPEAR)
+        SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
+    else
+        SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
 
     if(screenBits == -1)
     {
