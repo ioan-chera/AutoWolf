@@ -5,8 +5,7 @@
 //
 /////////////////////////////////////////////////
 
-#define NUMSOUNDS		    81
-#define NUMSNDCHUNKS	    267
+// IOANCH 20130202: reordered some macros
 
 //
 // Sound names & indexes
@@ -99,10 +98,11 @@ typedef enum {
 //
 // Base offsets
 //
+// IOANCH 20130202: named as symbols
 #define STARTPCSOUNDS		0
-#define STARTADLIBSOUNDS	81
-#define STARTDIGISOUNDS		162
-#define STARTMUSIC		    243
+#define STARTADLIBSOUNDS	LASTSOUND
+#define STARTDIGISOUNDS		(2*LASTSOUND)
+#define STARTMUSIC		    (3*LASTSOUND)
 
 //
 // Music names & indexes
@@ -134,6 +134,10 @@ typedef enum {
 	XTOWER2_MUS,             // 23
 	LASTMUSIC
 } musicnames;
+
+// IOANCH 20130202: named as symbols
+#define NUMSOUNDS		    LASTSOUND
+#define NUMSNDCHUNKS	    (STARTMUSIC + LASTMUSIC)
 
 /////////////////////////////////////////////////
 //
