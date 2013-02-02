@@ -27,10 +27,9 @@ protected:
 	static objtype *SpawnPatrol (enemy_t which, int tilex, int tiley, int dir);
 	static objtype *SpawnBoss (enemy_t which, int tilex, int tiley);
 	
-#ifndef SPEAR
+    // IOANCH 20130202: unification process
 	static void SpawnGhosts (int which, int tilex, int tiley);
-#endif
-
+    
 	static int markov[27][27], marktot[27];
 	
 	static List<byte> itemList[MAPSIZE][MAPSIZE];	// list of items per map tile
