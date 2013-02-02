@@ -289,7 +289,8 @@ void LoadLatchMem (void)
     {
         Quit("Unable to create surface for tiles!");
     }
-    SDL_SetColors(surf, gamepal, 0, 256);
+    // IOANCH 20130202: unification process
+    SDL_SetColors(surf, SPEAR ? sodpal : wolfpal, 0, 256);
 
 	latchpics[0] = surf;
 	CA_CacheGrChunk (STARTTILE8);
@@ -319,7 +320,8 @@ void LoadLatchMem (void)
         {
             Quit("Unable to create surface for picture!");
         }
-        SDL_SetColors(surf, gamepal, 0, 256);
+        // IOANCH 20130202: unification process
+        SDL_SetColors(surf, SPEAR ? sodpal : wolfpal, 0, 256);
 
 		latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);

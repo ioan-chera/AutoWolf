@@ -79,7 +79,8 @@ void VH_UpdateScreen();
 #define VW_Vlin(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
 #define VW_DrawPic		    VH_DrawPic
 #define VW_WaitVBL		    VL_WaitVBL
-#define VW_FadeIn()		    VL_FadeIn(0,255,gamepal,30);
+// IOANCH 20130202: unification process
+#define VW_FadeIn()		    VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30);
 #define VW_ScreenToScreen	VL_ScreenToScreen
 void	VW_MeasurePropString (const char *string, word *width, word *height);

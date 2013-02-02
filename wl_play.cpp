@@ -991,7 +991,8 @@ void InitRedShifts (void)
     for (i = 1; i <= NUMREDSHIFTS; i++)
     {
         workptr = redshifts[i - 1];
-        baseptr = gamepal;
+        // IOANCH 20130202: unification process
+        baseptr = SPEAR ? sodpal : wolfpal;
 
         for (j = 0; j <= 255; j++)
         {
@@ -1009,7 +1010,8 @@ void InitRedShifts (void)
     for (i = 1; i <= NUMWHITESHIFTS; i++)
     {
         workptr = whiteshifts[i - 1];
-        baseptr = gamepal;
+        // IOANCH 20130202: unification process
+        baseptr = SPEAR ? sodpal : wolfpal;
 
         for (j = 0; j <= 255; j++)
         {
@@ -1119,7 +1121,8 @@ void UpdatePaletteShifts (void)
     }
     else if (palshifted)
     {
-        VL_SetPalette (gamepal, false);        // back to normal
+        // IOANCH 20130202: unification process
+        VL_SetPalette (SPEAR ? sodpal : wolfpal, false);        // back to normal
         palshifted = false;
     }
 }
@@ -1140,7 +1143,8 @@ void FinishPaletteShifts (void)
     if (palshifted)
     {
         palshifted = 0;
-        VL_SetPalette (gamepal, true);
+        // IOANCH 20130202: unification process
+        VL_SetPalette (SPEAR ? sodpal : wolfpal, true);
     }
 }
 

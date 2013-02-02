@@ -665,7 +665,8 @@ void ShowArticle (char *article)
             VW_UpdateScreen ();
             if (firstpage)
             {
-                VL_FadeIn(0,255,gamepal,10);
+                // IOANCH 20130202: unification process
+                VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10);
                 firstpage = false;
             }
         }
