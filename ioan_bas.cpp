@@ -435,8 +435,9 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
 objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 {
 	// IOAN 29.06.2012: update this for ANY boss
-	statetype *spawnstate;
-	classtype obclass;
+	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
+	classtype obclass = guardobj;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
+
 	boolean setspeed = false, setdir = false, setbonus = false;
 	switch(which)
 	{

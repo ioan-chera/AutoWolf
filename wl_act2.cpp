@@ -310,7 +310,7 @@ boolean ProjectileTryMove (objtype *ob)
 void T_Projectile (objtype *ob)
 {
     int32_t deltax,deltay;
-    int     damage;
+    int     damage = 0; // IOANCH 20130202: set damage here to something whatever, to prevent undefined behaviour
     int32_t speed;
 
     speed = (int32_t)ob->speed*tics;
@@ -373,7 +373,7 @@ void T_Projectile (objtype *ob)
             damage = (US_RndT() >>3);
             break;
 		default:
-				;
+            ;
         }
 
         TakeDamage (damage,ob);
