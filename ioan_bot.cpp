@@ -166,7 +166,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 			if (gamestate.ammo < 80)
 				return true;
 			break;
-#ifdef SPEAR
+// IOANCH 20130202: unification process
 		case    bo_25clip:
 			if (gamestate.ammo <= 74)
 				return true;
@@ -175,7 +175,7 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 			if(searchstage >= SSSecretLift)
 				return true;
 			break;
-#endif
+                
 		case    bo_gibs:
 			if (gamestate.health <= 10)
 				return true;
@@ -908,7 +908,7 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 		{
 			switch(ret->obclass)
 			{
-#ifndef SPEAR
+                    // IOANCH 20130202: unification process
 			case needleobj:
 			case fireobj:
 				goto retok;
@@ -916,15 +916,14 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *dista
 				if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
 					goto retok;
 				break;
-#endif
-#ifdef SPEAR
+
 			case hrocketobj:
 				if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
 					goto retok;
 				break;
 			case sparkobj:
 				goto retok;
-#endif
+
 				default:
 					;
 			}
