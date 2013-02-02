@@ -39,6 +39,7 @@ int CP_ReadThis (int);
 #endif
 
 // ENDSTRx constants are defined in foreign.h
+// IOANCH 20130202: unification process
 char endStrings[9][80] = {
     ENDSTR1,
     ENDSTR2,
@@ -48,7 +49,16 @@ char endStrings[9][80] = {
     ENDSTR6,
     ENDSTR7,
     ENDSTR8,
-    ENDSTR9
+    ENDSTR9,
+    ENDSTR1SPEAR,
+    ENDSTR2SPEAR,
+    ENDSTR3SPEAR,
+    ENDSTR4SPEAR,
+    ENDSTR5SPEAR,
+    ENDSTR6SPEAR,
+    ENDSTR7SPEAR,
+    ENDSTR8SPEAR,
+    ENDSTR9SPEAR
 };
 
 CP_itemtype MainMenu[] = {
@@ -921,7 +931,8 @@ CP_CheckQuick (ScanCode scancode)
 #ifdef SPANISH
             if (Confirm (ENDGAMESTR))
 #else
-            if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1)]))
+            // IOANCH 20130202: unification process
+            if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR ? 9 : 0)]))
 #endif
 #endif
             {
@@ -2949,7 +2960,8 @@ CP_Quit (int)
 #ifdef SPANISH
     if (Confirm (ENDGAMESTR))
 #else
-    if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1)]))
+    // IOANCH 20130202: unification process
+    if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR ? 9 : 0)]))
 #endif
 
 #endif
