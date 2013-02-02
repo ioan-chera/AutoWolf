@@ -197,7 +197,7 @@ statetype s_boom1               = {false,SPR_BOOM_1,6,NULL,NULL,&s_boom2};
 statetype s_boom2               = {false,SPR_BOOM_2,6,NULL,NULL,&s_boom3};
 statetype s_boom3               = {false,SPR_BOOM_3,6,NULL,NULL,NULL};
 
-#ifdef SPEAR
+// IOANCH 20130202: unification process
 
 extern  statetype s_hrocket;
 extern  statetype s_hsmoke1;
@@ -206,8 +206,6 @@ extern  statetype s_hsmoke3;
 extern  statetype s_hsmoke4;
 extern  statetype s_hboom2;
 extern  statetype s_hboom3;
-
-void A_Smoke (objtype *ob);
 
 statetype s_hrocket             = {true,SPR_HROCKET_1,3,(statefunc)T_Projectile,(statefunc)A_Smoke,&s_hrocket};
 statetype s_hsmoke1             = {false,SPR_HSMOKE_1,3,NULL,NULL,&s_hsmoke2};
@@ -219,7 +217,6 @@ statetype s_hboom1              = {false,SPR_HBOOM_1,6,NULL,NULL,&s_hboom2};
 statetype s_hboom2              = {false,SPR_HBOOM_2,6,NULL,NULL,&s_hboom3};
 statetype s_hboom3              = {false,SPR_HBOOM_3,6,NULL,NULL,NULL};
 
-#endif
 
 void    T_ProjectileBossChase (objtype *ob);
 void    T_SchabbThrow (objtype *ob);
@@ -242,11 +239,10 @@ void A_MechaSound (objtype *ob);
 void A_Smoke (objtype *ob)
 {
     GetNewActor ();
-#ifdef SPEAR
+    // IOANCH 20130202: unification process
     if (ob->obclass == hrocketobj)
         newobj->state = &s_hsmoke1;
     else
-#endif
         newobj->state = &s_smoke1;
     newobj->ticcount = 6;
 
@@ -339,14 +335,12 @@ void T_Projectile (objtype *ob)
         {
             PlaySoundLocActor(MISSILEHITSND,ob);
             ob->state = &s_boom1;
-        }
-#ifdef SPEAR
+        } // IOANCH 20130202: unification process
         else if (ob->obclass == hrocketobj)
         {
             PlaySoundLocActor(MISSILEHITSND,ob);
             ob->state = &s_hboom1;
         }
-#endif
         else
 #endif
             ob->state = NULL;               // mark for removal
@@ -458,8 +452,7 @@ statetype s_grddie2             = {false,SPR_GRD_DIE_2,15,NULL,NULL,&s_grddie3};
 statetype s_grddie3             = {false,SPR_GRD_DIE_3,15,NULL,NULL,&s_grddie4};
 statetype s_grddie4             = {false,SPR_GRD_DEAD,0,NULL,NULL,&s_grddie4};
 
-
-#ifndef SPEAR
+// IOANCH 20130202: unification process
 //
 // ghosts
 //
@@ -483,7 +476,6 @@ statetype s_pinkychase2         = {false,SPR_PINKY_W2,10,(statefunc)T_Ghosts,NUL
 
 statetype s_clydechase1         = {false,SPR_CLYDE_W1,10,(statefunc)T_Ghosts,NULL,&s_clydechase2};
 statetype s_clydechase2         = {false,SPR_CLYDE_W2,10,(statefunc)T_Ghosts,NULL,&s_clydechase1};
-#endif
 
 //
 // dogs
@@ -747,7 +739,7 @@ statetype s_ssdie3              = {false,SPR_SS_DIE_3,15,NULL,NULL,&s_ssdie4};
 statetype s_ssdie4              = {false,SPR_SS_DEAD,0,NULL,NULL,&s_ssdie4};
 
 
-#ifndef SPEAR
+// IOANCH 20130202: unification process
 //
 // hans
 //
@@ -848,7 +840,6 @@ statetype s_gretelshoot5        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_
 statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot7};
 statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot8};
 statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelchase1};
-#endif
 
 // IOAN 17.05.2012: deleted SpawnStand and the rest, now they are protected members of Basic
 
@@ -881,11 +872,8 @@ void SpawnDeadGuard (int tilex, int tiley)
 void A_DeathScream (objtype *ob)
 {
 #ifndef UPLOAD
-#ifndef SPEAR
-    if (mapon==9 && !US_RndT())
-#else
-    if ((mapon==18 || mapon==19) && !US_RndT())
-#endif
+    // IOANCH 20130202: unification process
+    if (!US_RndT() && (!SPEAR && mapon==9 || SPEAR && (mapon == 18 || mapon == 19)))
     {
         switch(ob->obclass)
         {
@@ -938,7 +926,7 @@ void A_DeathScream (objtype *ob)
         case dogobj:
             PlaySoundLocActor(DOGDEATHSND,ob);      // JAB
             break;
-#ifndef SPEAR
+        // IOANCH 20130202: unification process
         case bossobj:
             SD_PlaySound(MUTTISND);                         // JAB
             break;
@@ -965,7 +953,6 @@ void A_DeathScream (objtype *ob)
             SD_PlaySound(ROSESND);
             break;
 #endif
-#else
         case spectreobj:
             SD_PlaySound(GHOSTFADESND);
             break;
@@ -984,7 +971,6 @@ void A_DeathScream (objtype *ob)
         case deathobj:
             SD_PlaySound(KNIGHTDEATHSND);
             break;
-#endif
 		default:
 			;
     }
@@ -999,7 +985,7 @@ void A_DeathScream (objtype *ob)
 =============================================================================
 */
 
-#ifdef SPEAR
+// IOANCH 20130202: unification process
 
 void T_Launch (objtype *ob);
 void T_ProjectileBossChase (objtype *ob);
@@ -1563,7 +1549,6 @@ moveok:
 }
 
 
-#endif
 
 /*
  =================
@@ -1598,7 +1583,7 @@ void T_ProjectileBossChase(objtype *ob)
 			
 			switch(ob->obclass)
 			{
-#ifdef SPEAR
+                    // IOANCH 20130202: unification process
 				case willobj:
 					NewState (ob,&s_willshoot1);
 					break;
@@ -1608,7 +1593,6 @@ void T_ProjectileBossChase(objtype *ob)
 				case deathobj:
 					NewState (ob,&s_deathshoot1);
 					break;
-#else
 				case schabbobj:
 					NewState(ob, &s_schabbshoot1);
 					break;
@@ -1619,7 +1603,6 @@ void T_ProjectileBossChase(objtype *ob)
 					NewState(ob, &s_fatshoot1);
 					break;
 					
-#endif
 				default:
 					;
 			}
@@ -1693,8 +1676,6 @@ void T_ProjectileBossChase(objtype *ob)
 
 =============================================================================
 */
-
-#ifndef SPEAR
 
 void    T_ProjectileBossChase (objtype *ob);
 void    T_GiftThrow (objtype *ob);
@@ -2289,7 +2270,6 @@ void T_Fake (objtype *ob)
     }
 }
 
-#endif
 /*
 ============================================================================
 
@@ -2394,7 +2374,7 @@ void T_Chase (objtype *ob)
                 case ssobj:
                     NewState (ob,&s_ssshoot1);
                     break;
-#ifndef SPEAR
+                    // IOANCH 20130202: unification process
                 case bossobj:
                     NewState (ob,&s_bossshoot1);
                     break;
@@ -2407,7 +2387,6 @@ void T_Chase (objtype *ob)
                 case realhitlerobj:
                     NewState (ob,&s_hitlershoot1);
                     break;
-#else
                 case angelobj:
                     NewState (ob,&s_angelshoot1);
                     break;
@@ -2423,7 +2402,6 @@ void T_Chase (objtype *ob)
                 case deathobj:
                     NewState (ob,&s_deathshoot1);
                     break;
-#endif
 				default:
 					;
             }
@@ -2788,7 +2766,7 @@ void T_Shoot (objtype *ob)
         case ssobj:
             PlaySoundLocActor(SSFIRESND,ob);
             break;
-#ifndef SPEAR
+            // IOANCH 20130202: unification process
 #ifndef APOGEE_1_0
         case giftobj:
         case fatobj:
@@ -2806,7 +2784,6 @@ void T_Shoot (objtype *ob)
         case fakeobj:
             PlaySoundLocActor(FLAMETHROWERSND,ob);
             break;
-#endif
         default:
             PlaySoundLocActor(NAZIFIRESND,ob);
     }
@@ -2848,8 +2825,7 @@ void T_Bite (objtype *ob)
     }
 }
 
-
-#ifndef SPEAR
+// IOANCH 20130202: unification process
 /*
 ============================================================================
 
@@ -3145,7 +3121,7 @@ void    A_StartDeathCam (objtype *ob)
 
     switch (ob->obclass)
     {
-#ifndef SPEAR
+            // IOANCH 20130202: unification process
         case schabbobj:
             NewState (ob,&s_schabbdeathcam);
             break;
@@ -3158,10 +3134,7 @@ void    A_StartDeathCam (objtype *ob)
         case fatobj:
             NewState (ob,&s_fatdeathcam);
             break;
-#endif
 		default:
 			;
     }
 }
-
-#endif
