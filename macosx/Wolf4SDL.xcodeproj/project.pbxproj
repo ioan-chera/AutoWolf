@@ -10,6 +10,7 @@
 		002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9E7F616BDD49600B43091 /* audioabstract.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D901F4C20FC0DB520040C290 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D901F4C10FC0DB520040C290 /* SDL_mixer.framework */; };
@@ -92,6 +93,8 @@
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = sodpal.inc; path = ../sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = wolfpal.inc; path = ../wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F416BDBF6D00B43091 /* gfxv_jap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_jap.h; path = ../gfxv_jap.h; sourceTree = "<group>"; };
+		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../audioabstract.h; sourceTree = "<group>"; };
+		4FD9E7F616BDD49600B43091 /* audioabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioabstract.cpp; path = ../audioabstract.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Automatic Wolfenstein.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
@@ -353,6 +356,8 @@
 				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
 				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
 				D901F4E30FC0DBCB0040C290 /* audiowl6.h */,
+				4FD9E7F516BDC61E00B43091 /* audioabstract.h */,
+				4FD9E7F616BDD49600B43091 /* audioabstract.cpp */,
 			);
 			name = GFXV_AUDIO;
 			sourceTree = "<group>";
@@ -511,6 +516,7 @@
 				FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */,
 				FAE7784A1684821400EBE363 /* Dictionary.cpp in Sources */,
 				FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */,
+				4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
