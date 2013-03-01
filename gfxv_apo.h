@@ -26,9 +26,7 @@ typedef enum {
     H_RIGHTWINDOWPIC,            // 19
     H_BOTTOMINFOPIC,             // 20
     // IOANCH 20130301: unification culling
-#if !defined(APOGEE_1_2)
     H_SPEARADPIC,                // 21
-#endif
     // Lump Start
     C_OPTIONSPIC,                // 22
     C_CURSOR1PIC,                // 23
@@ -64,10 +62,8 @@ typedef enum {
     C_NAMEPIC,                   // 51
     C_SCOREPIC,                  // 52
     // IOANCH 20130301: unification culling
-#if !defined(APOGEE_1_2)
     C_JOY1PIC,                   // 53
     C_JOY2PIC,                   // 54
-#endif
     // Lump Start
     L_GUYPIC,                    // 55
     L_COLONPIC,                  // 56
