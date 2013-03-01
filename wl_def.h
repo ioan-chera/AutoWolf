@@ -39,8 +39,12 @@
 
 #include "foreign.h"
 
+// IOANCH 20130301: unification
+#include "audiowl6.h"
+#include "audiosod.h"
+#include "audioabstract.h"
+
 #ifndef SPEAR
-    #include "audiowl6.h"
     #ifdef UPLOAD
         #include "gfxv_apo.h"
     #else
@@ -55,7 +59,6 @@
         #endif
     #endif
 #else
-    #include "audiosod.h"
     #include "gfxv_sod.h"
     #include "f_spear.h"
 #endif
