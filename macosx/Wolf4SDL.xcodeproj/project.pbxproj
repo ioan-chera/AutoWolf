@@ -92,7 +92,6 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = sodpal.inc; path = ../sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = wolfpal.inc; path = ../wolfpal.inc; sourceTree = "<group>"; };
-		4FD9E7F416BDBF6D00B43091 /* gfxv_jap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_jap.h; path = ../gfxv_jap.h; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../audioabstract.h; sourceTree = "<group>"; };
 		4FD9E7F616BDD49600B43091 /* audioabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioabstract.cpp; path = ../audioabstract.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -107,7 +106,6 @@
 		D901F4D00FC0DBCB0040C290 /* wl_game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_game.cpp; path = ../wl_game.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4D10FC0DBCB0040C290 /* wl_floorceiling.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_floorceiling.cpp; path = ../wl_floorceiling.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_wl6.h; path = ../gfxv_wl6.h; sourceTree = SOURCE_ROOT; };
-		D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_apo.h; path = ../gfxv_apo.h; sourceTree = SOURCE_ROOT; };
 		D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_draw.cpp; path = ../wl_draw.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4D60FC0DBCB0040C290 /* wl_dir3dspr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_dir3dspr.cpp; path = ../wl_dir3dspr.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4D70FC0DBCB0040C290 /* wl_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_def.h; path = ../wl_def.h; sourceTree = SOURCE_ROOT; };
@@ -350,10 +348,8 @@
 		FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */ = {
 			isa = PBXGroup;
 			children = (
-				4FD9E7F416BDBF6D00B43091 /* gfxv_jap.h */,
 				D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */,
 				D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */,
-				D901F4D30FC0DBCB0040C290 /* gfxv_apo.h */,
 				D901F4CA0FC0DBCB0040C290 /* audiosod.h */,
 				D901F4E30FC0DBCB0040C290 /* audiowl6.h */,
 				4FD9E7F516BDC61E00B43091 /* audioabstract.h */,
