@@ -43,11 +43,8 @@
 #define MENU_Y  55
 #define MENU_W  178
 #ifndef SPEAR
-#ifndef GOODTIMES
-#define MENU_H  13*10+6
-#else
+// IOANCH 20130301: unification culling
 #define MENU_H  13*9+6
-#endif
 #else
 #define MENU_H  13*9+6
 #endif
@@ -207,12 +204,7 @@ enum menuitems
         loadgame,
         savegame,
         changeview,
-
-#ifndef GOODTIMES
-#ifndef SPEAR
-        readthis,
-#endif
-#endif
+// IOANCH 20130301: unification culling
 
         viewscores,
         backtodemo,

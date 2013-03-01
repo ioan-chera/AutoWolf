@@ -46,11 +46,7 @@
 
 // IOANCH 20130301: unification culling
 #ifndef SPEAR
-    #ifdef GOODTIMES
-        #include "gfxv_wl6.h"
-    #else
-        #include "gfxv_apo.h"
-    #endif
+    #include "gfxv_wl6.h"
 #else
     #include "gfxv_sod.h"
     #include "f_spear.h"

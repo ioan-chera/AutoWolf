@@ -30,12 +30,9 @@ int CP_ReadThis (int);
 #define STARTITEM       newgame
 
 #else
-#ifdef GOODTIMES
+// IOANCH 20130301: unification culling
 #define STARTITEM       newgame
 
-#else
-#define STARTITEM       readthis
-#endif
 #endif
 
 // ENDSTRx constants are defined in foreign.h
@@ -71,17 +68,7 @@ CP_itemtype MainMenu[] = {
     {0, STR_SG, CP_SaveGame},
     {1, STR_CV, CP_ChangeView},
 
-#ifndef GOODTIMES
-#ifndef SPEAR
-
-#ifdef SPANISH
-    {2, "Ve esto!", CP_ReadThis},
-#else
-    {2, "Read This!", CP_ReadThis},
-#endif
-
-#endif
-#endif
+    // IOANCH 20130301: unification culling
 
     {1, STR_VS, CP_ViewScores},
     {1, STR_BD, 0},
@@ -358,11 +345,8 @@ US_ControlPanel (ScanCode scancode)
 #ifdef SPEAR
             BossKey ();
 #else
-#ifdef GOODTIMES
+            // IOANCH 20130301: unification culling
             BossKey ();
-#else
-            HelpScreens ();
-#endif
 #endif
             goto finishup;
 
@@ -578,27 +562,9 @@ DrawMainMenu (void)
     VW_UpdateScreen ();
 }
 
-#ifndef GOODTIMES
-#ifndef SPEAR
-////////////////////////////////////////////////////////////////////
-//
-// READ THIS!
-//
-////////////////////////////////////////////////////////////////////
-int
-CP_ReadThis (int)
-{
-                // IOANCH 20130301: unification music
-    StartCPMusic (CORNER_MUS_wl6);
-    HelpScreens ();
-    StartCPMusic (MENUSONG);
-    return true;
-}
-#endif
-#endif
+// IOANCH 20130301: unification culling
 
 
-#ifdef GOODTIMES
 ////////////////////////////////////////////////////////////////////
 //
 // BOSS KEY
@@ -630,36 +596,6 @@ BossKey (void)
     LoadLatchMem ();
 #endif
 }
-#else
-#ifdef SPEAR
-void
-BossKey (void)
-{
-#ifdef NOTYET
-    byte palette1[256][3];
-    SD_MusicOff ();
-/*       _AX = 3;
-        geninterrupt(0x10); */
-    _asm
-    {
-    mov eax, 3 int 0x10}
-    puts ("C>");
-    SetTextCursor (2, 0);
-//      while (!Keyboard[sc_Escape])
-    IN_Ack ();
-    IN_ClearKeysDown ();
-
-    SD_MusicOn ();
-    VL_SetVGAPlaneMode ();
-    for (int i = 0; i < 768; i++)
-        palette1[0][i] = 0;
-
-    VL_SetPalette (&palette1[0][0]);
-    LoadLatchMem ();
-#endif
-}
-#endif
-#endif
 
 
 ////////////////////////////////////////////////////////////////////
@@ -1039,9 +975,7 @@ CP_NewGame (int)
     // CHANGE "READ THIS!" TO NORMAL COLOR
     //
 #ifndef SPEAR
-#ifndef GOODTIMES
-    MainMenu[readthis].active = 1;
-#endif
+    // IOANCH 20130301: unification culling
 #endif
 
     pickquick = 0;
@@ -1491,9 +1425,7 @@ CP_LoadGame (int quick)
             //
 
 #ifndef SPEAR
-#ifndef GOODTIMES
-            MainMenu[readthis].active = 1;
-#endif
+            // IOANCH 20130301: unification culling
 #endif
 
             exit = 1;
@@ -3942,9 +3874,7 @@ CheckForEpisodes (void)
     strcat (demoname, extension);
 
 #ifndef SPEAR
-#ifndef GOODTIMES
-    strcat (helpfilename, extension);
-#endif
+    // IOANCH 20130301: unification culling
     strcat (endfilename, extension);
 #endif
 }

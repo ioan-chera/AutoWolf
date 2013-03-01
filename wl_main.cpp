@@ -1594,23 +1594,6 @@ static void DemoLoop()
 #ifndef DEMOTEST
 // IOANCH 20130301: unification culling
 
-        #ifndef GOODTIMES
-        #ifndef SPEAR
-    // IOANCH 20130301: unification culling
-
-        if (!param_nowait)
-            NonShareware();
-
-        #else
-            #ifndef GOODTIMES
-// IOANCH 20130301: unification culling
-            extern void CopyProtection(void);
-            if(!param_goodtimes)
-                CopyProtection();
-
-            #endif
-        #endif
-        #endif
 
     StartCPMusic(INTROSONG);
 // IOANCH 20130301: unification culling
