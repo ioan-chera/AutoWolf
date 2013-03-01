@@ -25,7 +25,8 @@ typedef enum {
     H_LEFTWINDOWPIC,             // 18
     H_RIGHTWINDOWPIC,            // 19
     H_BOTTOMINFOPIC,             // 20
-#if !defined(APOGEE_1_0) && !defined(APOGEE_1_1) && !defined(APOGEE_1_2)
+    // IOANCH 20130301: unification culling
+#if !defined(APOGEE_1_1) && !defined(APOGEE_1_2)
     H_SPEARADPIC,                // 21
 #endif
     // Lump Start
@@ -56,7 +57,8 @@ typedef enum {
     C_EPISODE5PIC,               // 46
     C_EPISODE6PIC,               // 47
     C_CODEPIC,                   // 48
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     C_TIMECODEPIC,               // 49
     C_LEVELPIC,                  // 50
     C_NAMEPIC,                   // 51
@@ -64,9 +66,6 @@ typedef enum {
 #if !defined(APOGEE_1_1) && !defined(APOGEE_1_2)
     C_JOY1PIC,                   // 53
     C_JOY2PIC,                   // 54
-#endif
-#else
-    C_TIMECODEPIC=C_CODEPIC,     // 47
 #endif
     // Lump Start
     L_GUYPIC,                    // 55
@@ -109,9 +108,10 @@ typedef enum {
     L_YPIC,                      // 92
     L_ZPIC,                      // 93
     L_EXPOINTPIC,                // 94
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     L_APOSTROPHEPIC,             // 95
-#endif
+
     L_GUY2PIC,                   // 96
     L_BJWINSPIC,                 // 97
     STATUSBARPIC,                // 98
@@ -170,21 +170,20 @@ typedef enum {
     ORDERSCREEN,                 // 148
     ERRORSCREEN,                 // 149
     T_HELPART,                   // 150
-#ifdef APOGEE_1_0
-    T_ENDART1,                   // 143
-#endif
+    // IOANCH 20130301: unification culling
     T_DEMO0,                     // 151
     T_DEMO1,                     // 152
     T_DEMO2,                     // 153
     T_DEMO3,                     // 154
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     T_ENDART1,                   // 155
     T_ENDART2,                   // 156
     T_ENDART3,                   // 157
     T_ENDART4,                   // 158
     T_ENDART5,                   // 159
     T_ENDART6,                   // 160
-#endif
+
 
     ENUMEND
 } graphicnums;

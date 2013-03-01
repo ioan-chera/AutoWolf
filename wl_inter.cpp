@@ -369,13 +369,13 @@ Write (int x, int y, const char *string)
                     VWB_DrawPic (nx, ny, L_EXPOINTPIC);
                     nx += 8;
                     continue;
+// IOANCH 20130301: unification culling
 
-#ifndef APOGEE_1_0
                 case '\'':
                     VWB_DrawPic (nx, ny, L_APOSTROPHEPIC);
                     nx += 8;
                     continue;
-#endif
+
 
                 case ' ':
                     break;
@@ -1032,13 +1032,14 @@ DrawHighScores (void)
 #ifndef SPEAR
     CA_CacheGrChunk (HIGHSCORESPIC);
     CA_CacheGrChunk (STARTFONT);
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     CA_CacheGrChunk (C_LEVELPIC);
     CA_CacheGrChunk (C_SCOREPIC);
     CA_CacheGrChunk (C_NAMEPIC);
-#else
-    CA_CacheGrChunk (C_CODEPIC);
-#endif
+
+
+
 
     ClearMScreen ();
     DrawStripes (10);
@@ -1046,13 +1047,14 @@ DrawHighScores (void)
     VWB_DrawPic (48, 0, HIGHSCORESPIC);
     UNCACHEGRCHUNK (HIGHSCORESPIC);
 
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     VWB_DrawPic (4 * 8, 68, C_NAMEPIC);
     VWB_DrawPic (20 * 8, 68, C_LEVELPIC);
     VWB_DrawPic (28 * 8, 68, C_SCOREPIC);
-#else
-    VWB_DrawPic(35*8,68,C_CODEPIC);
-#endif
+
+
+
     fontnumber = 0;
 
 #else
@@ -1135,33 +1137,8 @@ DrawHighScores (void)
 #endif
         US_Print (buffer);
 
-#ifdef APOGEE_1_0
         // IOANCH 20130301: unification culling
 
-#ifndef SPEAR
-        //
-        // verification #
-        //
-        if (!i)
-        {
-            char temp = (((s->score >> 28) & 0xf) ^ ((s->score >> 24) & 0xf)) + 'A';
-            char temp1 = (((s->score >> 20) & 0xf) ^ ((s->score >> 16) & 0xf)) + 'A';
-            char temp2 = (((s->score >> 12) & 0xf) ^ ((s->score >> 8) & 0xf)) + 'A';
-            char temp3 = (((s->score >> 4) & 0xf) ^ ((s->score >> 0) & 0xf)) + 'A';
-
-            SETFONTCOLOR (0x49, 0x29);
-            PrintX = 35 * 8;
-            buffer[0] = temp;
-            buffer[1] = temp1;
-            buffer[2] = temp2;
-            buffer[3] = temp3;
-            buffer[4] = 0;
-            US_Print (buffer);
-            SETFONTCOLOR (15, 0x29);
-        }
-#endif
-
-#endif
     }
 
     VW_UpdateScreen ();

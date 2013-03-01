@@ -968,10 +968,11 @@ void DrawPlayerWeapon (void)
 #ifndef SPEAR
     if (gamestate.victoryflag)
     {
-#ifndef APOGEE_1_0
+        // IOANCH 20130301: unification culling
+
         if (player->state == &s_deathcam && (GetTimeCount()&32) )
             SimpleScaleShape(viewwidth/2,SPR_DEATHCAM,viewheight+1);
-#endif
+
         return;
     }
 #endif

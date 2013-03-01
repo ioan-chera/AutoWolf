@@ -300,9 +300,10 @@ typedef enum
 enum
 {
     SPR_DEMO,
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
     SPR_DEATHCAM,
-#endif
+
 //
 // static sprites
 //
@@ -538,11 +539,11 @@ enum
 // bj
 //
     // IOANCH 20130301: unification culling
-#ifdef APOGEE_1_0
-    SPR_BJ_W1=360,
-#else
+
+
+
     SPR_BJ_W1,
-#endif
+
     SPR_BJ_W2,SPR_BJ_W3,SPR_BJ_W4,
     SPR_BJ_JUMP1,SPR_BJ_JUMP2,SPR_BJ_JUMP3,SPR_BJ_JUMP4,
 #else

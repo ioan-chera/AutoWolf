@@ -84,7 +84,8 @@ typedef enum {
 	MECHSTEPSND_wl6,             // 70
 	GOOBSSND_wl6,                // 71
 	YEAHSND_wl6,                 // 72
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
 	DEATHSCREAM4SND_wl6,         // 73
 	DEATHSCREAM5SND_wl6,         // 74
 	DEATHSCREAM6SND_wl6,         // 75
@@ -99,7 +100,7 @@ typedef enum {
 	ROSESND_wl6,                 // 84
 	MISSILEFIRESND_wl6,          // 85
 	MISSILEHITSND_wl6,           // 86
-#endif
+
 	LASTSOUND_wl6
 } soundnames_wl6;
 

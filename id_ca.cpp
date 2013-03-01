@@ -410,11 +410,12 @@ static void CAL_SetupGrFile (void)
     long headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
 
-#ifndef APOGEE_1_0
+    // IOANCH 20130301: unification culling
+
 	int expectedsize = lengthof(grstarts) - numEpisodesMissing;
-#else
-	int expectedsize = lengthof(grstarts);
-#endif
+
+
+
 
     if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOAN 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"

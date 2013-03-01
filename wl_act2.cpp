@@ -330,7 +330,8 @@ void T_Projectile (objtype *ob)
 		// IOAN 30.06.2012: remove link
 		Basic::thrownProjectiles.remove(ob);
 		
-#ifndef APOGEE_1_0          // actually the whole method is never reached in shareware 1.0
+        // IOANCH 20130301: unification culling
+
         if (ob->obclass == rocketobj)
         {
             PlaySoundLocActor(MISSILEHITSND,ob);
@@ -342,7 +343,6 @@ void T_Projectile (objtype *ob)
             ob->state = &s_hboom1;
         }
         else
-#endif
             ob->state = NULL;               // mark for removal
 
         return;
@@ -902,13 +902,14 @@ void A_DeathScream (objtype *ob)
             int sounds[9]={ DEATHSCREAM1SND,
                 DEATHSCREAM2SND,
                 DEATHSCREAM3SND,
-#ifndef APOGEE_1_0
+                // IOANCH 20130301: unification culling
+
                 DEATHSCREAM4SND,
                 DEATHSCREAM5SND,
                 DEATHSCREAM7SND,
                 DEATHSCREAM8SND,
                 DEATHSCREAM9SND
-#endif
+
             };
 // IOANCH 20130301: unification culling
 
@@ -940,7 +941,8 @@ void A_DeathScream (objtype *ob)
         case realhitlerobj:
             SD_PlaySound(EVASND);
             break;
-#ifndef APOGEE_1_0
+            // IOANCH 20130301: unification culling
+
         case gretelobj:
             SD_PlaySound(MEINSND);
             break;
@@ -950,7 +952,7 @@ void A_DeathScream (objtype *ob)
         case fatobj:
             SD_PlaySound(ROSESND);
             break;
-#endif
+
         case spectreobj:
             SD_PlaySound(GHOSTFADESND);
             break;
@@ -1934,9 +1936,10 @@ void T_GiftThrow (objtype *ob)
 	// IOAN 30.06.2012: link to projectile list
 	Basic::thrownProjectiles.add(newobj);
 
-#ifndef APOGEE_1_0          // T_GiftThrow will never be called in shareware v1.0
+    // IOANCH 20130301: unification culling
+
     PlaySoundLocActor (MISSILEFIRESND,newobj);
-#endif
+
 }
 
 
@@ -2765,12 +2768,13 @@ void T_Shoot (objtype *ob)
             PlaySoundLocActor(SSFIRESND,ob);
             break;
             // IOANCH 20130202: unification process
-#ifndef APOGEE_1_0
+            // IOANCH 20130301: unification culling
+
         case giftobj:
         case fatobj:
             PlaySoundLocActor(MISSILEFIRESND,ob);
             break;
-#endif
+
         case mechahitlerobj:
         case realhitlerobj:
         case bossobj:
