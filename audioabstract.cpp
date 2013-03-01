@@ -11,6 +11,11 @@
 #include "audiosod.h"
 #include "audiowl6.h"
 
+//
+// soundmap
+//
+// Maps generic (abstract) sound names to WL6 or SOD (the only different modes)
+//
 const unsigned int soundmap[][2] =
 {
     {AHHHGSND_wl6,          AHHHGSND_sod},

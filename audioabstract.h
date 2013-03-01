@@ -9,6 +9,11 @@
 #ifndef Wolf4SDL_audioabstract_h
 #define Wolf4SDL_audioabstract_h
 
+//
+// soundnames
+//
+// List of generic (abstract) names
+//
 typedef enum {
 	AHHHGSND,                // 52 DIGI
 	ANGELDEATHSND,           // 77 DIGI
