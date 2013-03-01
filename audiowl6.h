@@ -101,7 +101,7 @@ typedef enum {
 	MISSILEHITSND_wl6,           // 86
 #endif
 	LASTSOUND_wl6
-} soundnames;
+} soundnames_wl6;
 
 //
 // Base offsets
@@ -143,7 +143,7 @@ typedef enum {
 	VICMARCH_MUS_wl6,            // 25
 	PACMAN_MUS_wl6,              // 26
 	LASTMUSIC_wl6
-} musicnames;
+} musicnames_wl6;
 
 #define NUMSOUNDS_wl6		    LASTSOUND_wl6
 #define NUMSNDCHUNKS_wl6		(STARTMUSIC_wl6 + LASTMUSIC_wl6)
