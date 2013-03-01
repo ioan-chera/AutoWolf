@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\audioabstract.cpp" />
     <ClCompile Include="..\..\CheckSum.cpp" />
     <ClCompile Include="..\..\DataFile.cpp" />
     <ClCompile Include="..\..\Dictionary.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="..\..\wl_text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\audioabstract.h" />
     <ClInclude Include="..\..\audiosod.h" />
     <ClInclude Include="..\..\audiowl6.h" />
     <ClInclude Include="..\..\CheckSum.h" />
