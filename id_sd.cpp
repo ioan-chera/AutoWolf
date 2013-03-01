@@ -101,8 +101,9 @@ int DigiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod -
 //      Internal variables
 static  boolean                 SD_Started;
 static  boolean                 nextsoundpos;
-static  soundnames              SoundNumber;
-static  soundnames              DigiNumber;
+// IOANCH 20130301: unification
+static  unsigned int            SoundNumber;
+static  unsigned int            DigiNumber;
 static  word                    SoundPriority;
 static  word                    DigiPriority;
 static  int                     LeftPosition;
@@ -211,7 +212,8 @@ static const int oplChip = 0;
 //
 static void SD_L_SoundFinished(void)
 {
-	SoundNumber   = (soundnames)0;
+    // IOANCH 20130301: unification
+	SoundNumber   = 0;
 	SoundPriority = 0;
 }
 
@@ -266,7 +268,8 @@ void inline SDL_DoFX()
                 if(!pcLengthLeft)
                 {
                         pcSound=0;
-                        SoundNumber=(soundnames)0;
+                        // IOANCH 20130301: unification
+                        SoundNumber=0;
                         SoundPriority=0;
                         SDL_turnOffPCSpeaker();
                 }
@@ -571,7 +574,8 @@ SDL_ShutPC(void)
 void SD_StopDigitized(void)
 {
     DigiPlaying = false;
-    DigiNumber = (soundnames) 0;
+    // IOANCH 20130301: unification
+    DigiNumber = 0;
     DigiPriority = 0;
     SoundPositioned = false;
     if ((DigiMode == sds_PC) && (SoundMode == sdm_PC))
@@ -992,7 +996,8 @@ static void SD_L_StartDevice(void)
 		default:
 			;
     }
-    SoundNumber = (soundnames) 0;
+    // IOANCH 20130301: unification
+    SoundNumber = 0;
     SoundPriority = 0;
 }
 
@@ -1132,7 +1137,8 @@ void SD_L_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
                 if(!curAlLengthLeft)
                 {
                     curAlSound = alSound = 0;
-                    SoundNumber = (soundnames) 0;
+                    // IOANCH 20130301: unification
+                    SoundNumber = 0;
                     SoundPriority = 0;
                     alOut(alFreqH, 0);
                 }
@@ -1269,7 +1275,7 @@ boolean SD_PlaySound(soundnames sound_abstract)
     int             lp,rp;
 	
 	// IOAN 20130301: abstract sound
-	unsigned int sound = soundmap[sound_abstract];
+	unsigned int sound = soundmap[sound_abstract][SPEAR];
 
     lp = LeftPosition;
     rp = RightPosition;

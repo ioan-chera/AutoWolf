@@ -116,8 +116,6 @@ typedef enum {
     LASTSNDABSTRACT
 } soundnames;
 
-extern unsigned int *soundmap;
-
-void MakeSoundMap();
+extern const unsigned int soundmap[][2];
 
 #endif

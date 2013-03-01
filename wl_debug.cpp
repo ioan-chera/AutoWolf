@@ -245,7 +245,8 @@ void ShapeTest (void)
     int             i,j,k,x;
     longword        l;
     byte            *addr;
-    soundnames      sound;
+    // IOANCH 20130301: unification
+    unsigned int    sound;
     //      PageListStruct  far *page;
 
     CenterWindow(20,16);
