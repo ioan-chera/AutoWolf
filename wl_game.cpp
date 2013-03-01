@@ -1490,9 +1490,10 @@ startplayloop:
                     ClearMemory ();
 
                     CheckHighScore (gamestate.score,gamestate.mapon+1);
-#ifndef JAPAN
+// IOANCH 20130301: unification culling
+
                     strcpy(MainMenu[viewscores].string,STR_VS);
-#endif
+
                     MainMenu[viewscores].routine = CP_ViewScores;
                     return;
                 }
@@ -1562,9 +1563,10 @@ startplayloop:
                 ClearMemory ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
-#ifndef JAPAN
+                // IOANCH 20130301: unification culling
+
                 strcpy(MainMenu[viewscores].string,STR_VS);
-#endif
+
                 MainMenu[viewscores].routine = CP_ViewScores;
                 return;
 
@@ -1582,9 +1584,10 @@ startplayloop:
                 ClearMemory ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
-#ifndef JAPAN
+                // IOANCH 20130301: unification culling
+
                 strcpy(MainMenu[viewscores].string,STR_VS);
-#endif
+
                 MainMenu[viewscores].routine = CP_ViewScores;
                 return;
 

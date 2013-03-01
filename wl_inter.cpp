@@ -171,14 +171,7 @@ Victory (void)
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
-
-#ifdef JAPAN
-#ifndef JAPDEMO
-    CA_CacheGrChunk (C_ENDRATIOSPIC);
-    VWB_DrawPic (0, 0, C_ENDRATIOSPIC);
-    UNCACHEGRCHUNK (C_ENDRATIOSPIC);
-#endif
-#else
+// IOANCH 20130301: unification culling
     Write (18, 2, STR_YOUWIN);
 
     Write (TIMEX, TIMEY - 2, STR_TOTALTIME);
@@ -195,7 +188,7 @@ Victory (void)
     Write (RATIOX, RATIOY + 4, STR_RATTREASURE);
 #endif
 
-#endif
+
 
 #ifndef JAPDEMO
     VWB_DrawPic (8, 4, L_BJWINSPIC);
@@ -302,8 +295,8 @@ Victory (void)
 
 
 //==========================================================================
+// IOANCH 20130301: unification culling
 
-#ifndef JAPAN
 /*
 ==================
 =
@@ -329,7 +322,7 @@ PG13 (void)
 
     VW_FadeOut ();
 }
-#endif
+
 
 
 //==========================================================================
@@ -575,12 +568,7 @@ LevelCompleted (void)
 //
     IN_ClearKeysDown ();
     IN_StartAck ();
-
-#ifdef JAPAN
-    CA_CacheGrChunk (C_INTERMISSIONPIC);
-    VWB_DrawPic (0, 0, C_INTERMISSIONPIC);
-    UNCACHEGRCHUNK (C_INTERMISSIONPIC);
-#endif
+// IOANCH 20130301: unification culling
     VWB_DrawPic (0, 16, L_GUYPIC);
 
 #ifndef SPEAR
@@ -589,7 +577,7 @@ LevelCompleted (void)
     if (mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17)
 #endif
     {
-#ifndef JAPAN
+        // IOANCH 20130301: unification culling
 #ifdef SPANISH
         Write (14, 2, "piso\ncompletado");
 #else
@@ -611,7 +599,7 @@ LevelCompleted (void)
 #endif
 
         Write (26, 2, itoa (gamestate.mapon + 1, tempstr, 10));
-#endif
+
 
 #ifdef SPANISH
         Write (30, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
@@ -1248,7 +1236,7 @@ CheckHighScore (int32_t score, word other)
 // IOANCH 20130301: unification culling
 
 #ifndef SPEAR
-#ifndef JAPAN
+
 ////////////////////////////////////////////////////////
 //
 // NON-SHAREWARE NOTICE
@@ -1293,7 +1281,7 @@ NonShareware (void)
     VW_FadeIn ();
     IN_Ack ();
 }
-#endif
+
 #endif
 
 

@@ -46,14 +46,10 @@
 
 // IOANCH 20130301: unification culling
 #ifndef SPEAR
-    #ifdef JAPAN
-        #include "gfxv_jap.h"
+    #ifdef GOODTIMES
+        #include "gfxv_wl6.h"
     #else
-        #ifdef GOODTIMES
-            #include "gfxv_wl6.h"
-        #else
-            #include "gfxv_apo.h"
-        #endif
+        #include "gfxv_apo.h"
     #endif
 #else
     #include "gfxv_sod.h"

@@ -66,7 +66,7 @@ static boolean layoutdone;
 
 //===========================================================================
 
-#ifndef JAPAN
+// IOANCH 20130301: unification culling
 /*
 =====================
 =
@@ -580,8 +580,6 @@ void CacheLayoutGraphics (void)
 
     Quit ("CacheLayoutGraphics: No ^E to terminate file!");
 }
-#endif
-
 
 /*
 =====================
@@ -590,61 +588,22 @@ void CacheLayoutGraphics (void)
 =
 =====================
 */
-
-#ifdef JAPAN
-void ShowArticle (int which)
-#else
+// IOANCH 20130301: unification culling
 void ShowArticle (char *article)
-#endif
 {
-#ifdef JAPAN
-    int snames[10] = {
-        H_HELP1PIC,
-        H_HELP2PIC,
-        H_HELP3PIC,
-        H_HELP4PIC,
-        H_HELP5PIC,
-        H_HELP6PIC,
-        H_HELP7PIC,
-        H_HELP8PIC,
-        H_HELP9PIC,
-        H_HELP10PIC};
-    int enames[14] = {
-        0,0,
-#ifndef JAPDEMO
-        C_ENDGAME1APIC,
-        C_ENDGAME1BPIC,
-        C_ENDGAME2APIC,
-        C_ENDGAME2BPIC,
-        C_ENDGAME3APIC,
-        C_ENDGAME3BPIC,
-        C_ENDGAME4APIC,
-        C_ENDGAME4BPIC,
-        C_ENDGAME5APIC,
-        C_ENDGAME5BPIC,
-        C_ENDGAME6APIC,
-        C_ENDGAME6BPIC
-#endif
-    };
-#endif
+    // IOANCH 20130301: unification culling
+
     unsigned    oldfontnumber;
     boolean     newpage,firstpage;
     ControlInfo ci;
 
-#ifdef JAPAN
-    pagenum = 1;
-    if (!which)
-        numpages = 10;
-    else
-        numpages = 2;
-#else
+    // IOANCH 20130301: unification culling
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
     CA_CacheGrChunk(STARTFONT);
     VWB_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
-#endif
 
     newpage = true;
     firstpage = true;
@@ -654,14 +613,8 @@ void ShowArticle (char *article)
         if (newpage)
         {
             newpage = false;
-#ifdef JAPAN
-            if (!which)
-                CA_CacheScreen(snames[pagenum - 1]);
-            else
-                CA_CacheScreen(enames[which*2 + pagenum - 1]);
-#else
+            // IOANCH 20130301: unification culling
             PageLayout (true);
-#endif
             VW_UpdateScreen ();
             if (firstpage)
             {
@@ -707,12 +660,9 @@ void ShowArticle (char *article)
             case dir_West:
                 if (pagenum>1)
                 {
-#ifndef JAPAN
+                    // IOANCH 20130301: unification culling
                     BackPage ();
                     BackPage ();
-#else
-                  pagenum--;
-#endif
                     newpage = true;
                 }
                 TicDelay(20);
@@ -723,9 +673,7 @@ void ShowArticle (char *article)
                 if (pagenum<numpages)
                 {
                     newpage = true;
-#ifdef JAPAN
-                    pagenum++;
-#endif
+                    // IOANCH 20130301: unification culling
                 }
                 TicDelay(20);
                 break;
@@ -740,8 +688,7 @@ void ShowArticle (char *article)
 
 
 //===========================================================================
-
-#ifndef JAPAN
+// IOANCH 20130301: unification culling
 #ifdef ARTSEXTERN
 int     endextern = T_ENDART1;
 #ifndef SPEAR
@@ -750,7 +697,6 @@ int     helpextern = T_HELPART;
 #endif
 char helpfilename[13] = "HELPART.",
     endfilename[13] = "ENDART1.";
-#endif
 
 /*
 =================
@@ -768,12 +714,7 @@ void HelpScreens (void)
     memptr  layout;
 #endif
 
-
-#ifdef JAPAN
-    ShowArticle (0);
-    VW_FadeOut();
-    FreeMusic ();
-#else
+// IOANCH 20130301: unification culling
 
 #ifdef ARTSEXTERN
     artnum = helpextern;
@@ -795,7 +736,7 @@ void HelpScreens (void)
     VW_FadeOut();
 
     FreeMusic ();
-#endif
+
 }
 #endif
 
@@ -812,18 +753,7 @@ void EndText (void)
 
     ClearMemory ();
 
-#ifdef JAPAN
-    ShowArticle(gamestate.episode + 1);
-
-    VW_FadeOut();
-
-    SETFONTCOLOR(0,15);
-    IN_ClearKeysDown();
-    if (MousePresent && IN_IsInputGrabbed())
-        IN_CenterMouse();  // Clear accumulated mouse movement
-
-    FreeMusic ();
-#else
+    // IOANCH 20130301: unification culling
 
 
 
@@ -853,6 +783,6 @@ void EndText (void)
         IN_CenterMouse();  // Clear accumulated mouse movement
 
     FreeMusic ();
-#endif
+
 }
 #endif
