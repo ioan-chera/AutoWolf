@@ -1732,10 +1732,11 @@ CopyProtection (void)
                 case sdm_Off:
                     return;
                 case sdm_PC:
-                    start = STARTPCSOUNDS;
+					// IOAN 20130301: unification
+                    start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
                     break;
                 case sdm_AdLib:
-                    start = STARTADLIBSOUNDS;
+                    start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             }
 
 /*                        for (i=0;i<NUMSOUNDS;i++,start++)

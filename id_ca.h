@@ -30,7 +30,9 @@ typedef struct
 extern  int   mapon;
 
 extern  word *mapsegs[MAPPLANES];
-extern  byte *audiosegs[NUMSNDCHUNKS];
+// IOAN 20130301: unification
+extern  byte *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+						NUMSNDCHUNKS_wl6];
 extern  byte *grsegs[NUMCHUNKS];
 
 extern  char  extension[5];

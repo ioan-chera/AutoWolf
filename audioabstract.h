@@ -118,4 +118,6 @@ typedef enum {
 
 extern unsigned int *soundmap;
 
+void MakeSoundMap();
+
 #endif

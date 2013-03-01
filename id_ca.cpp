@@ -67,7 +67,9 @@ int     mapon;
 
 word    *mapsegs[MAPPLANES];
 static maptype* mapheaderseg[NUMMAPS];
-byte    *audiosegs[NUMSNDCHUNKS];
+// IOAN 20130301: unification
+byte    *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+				   NUMSNDCHUNKS_wl6];
 byte    *grsegs[NUMCHUNKS];
 
 word    RLEWtag;
@@ -614,14 +616,17 @@ void CA_Shutdown (void)
         case sdm_Off:
             return;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+			// IOANCH 20130301: unification
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    for(i=0; i<NUMSOUNDS; i++,start++)
+	// IOAN 20130301: unification
+	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+    for(i=0; i<NUMSOUNDS_cur; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }
 
@@ -706,14 +711,17 @@ void CA_LoadAllSounds (void)
         case sdm_Off:
             goto cachein;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+			// IOAN 20130301: unification
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    for (i=0;i<NUMSOUNDS;i++,start++)
+	// IOAN 20130301: unification
+	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+    for (i=0;i<NUMSOUNDS_cur;i++,start++)
         UNCACHEAUDIOCHUNK(start);
 
 cachein:
@@ -723,24 +731,28 @@ cachein:
     switch (SoundMode)
     {
         case sdm_Off:
-            start = STARTADLIBSOUNDS;   // needed for priorities...
+			// IOAN 20130301: unification
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+			// needed for priorities...
             break;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    if(start == STARTADLIBSOUNDS)
+	// IOAN 20130301: unification
+	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+    if(start == (SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6))
     {
-        for (i=0;i<NUMSOUNDS;i++,start++)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CAL_CacheAdlibSoundChunk(start);
     }
     else
     {
-        for (i=0;i<NUMSOUNDS;i++,start++)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CA_CacheAudioChunk(start);
     }
 }

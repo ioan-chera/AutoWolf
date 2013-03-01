@@ -3903,16 +3903,18 @@ StartCPMusic (int song)
 
     lastmusic = song;
     lastoffs = SD_MusicOff ();
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
+	// IOAN 20130301: unification
+	unsigned int STARTMUSIC_max = SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6
+    UNCACHEAUDIOCHUNK (STARTMUSIC_max + lastmusic);
 
-    SD_StartMusic(STARTMUSIC + song);
+    SD_StartMusic(STARTMUSIC_max + song);
     return lastoffs;
 }
 
 void
 FreeMusic (void)
 {
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusic);
+    UNCACHEAUDIOCHUNK (SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6 + lastmusic);
 }
 
 

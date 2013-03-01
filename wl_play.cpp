@@ -111,133 +111,133 @@ objtype dummyobj;
 //
 // LIST OF SONGS FOR EACH VERSION
 //
-int songs[] = {
-#ifndef SPEAR
+
+// IOAN 20130301: unification
+int songs_wl6[] = {
     //
     // Episode One
     //
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
-
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    CORNER_MUS_wl6,                 // Secret level
+	
     //
     // Episode Two
     //
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    GOINGAFT_MUS,
-    HEADACHE_MUS,
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    HEADACHE_MUS,
-    GOINGAFT_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
-
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    DUNGEON_MUS_wl6,                // Secret level
+	
     //
     // Episode Three
     //
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-
-    ULTIMATE_MUS,               // Boss level
-    PACMAN_MUS,                 // Secret level
-
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+	
+    ULTIMATE_MUS_wl6,               // Boss level
+    PACMAN_MUS_wl6,                 // Secret level
+	
     //
     // Episode Four
     //
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
-
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    CORNER_MUS_wl6,                 // Secret level
+	
     //
     // Episode Five
     //
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    GOINGAFT_MUS,
-    HEADACHE_MUS,
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    HEADACHE_MUS,
-    GOINGAFT_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
-
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    DUNGEON_MUS_wl6,                // Secret level
+	
     //
     // Episode Six
     //
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-
-    ULTIMATE_MUS,               // Boss level
-    FUNKYOU_MUS                 // Secret level
-#else
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+	
+    ULTIMATE_MUS_wl6,               // Boss level
+    FUNKYOU_MUS_wl6                 // Secret level
+};
+int songs_sod[] = {
 
     //////////////////////////////////////////////////////////////
     //
     // SPEAR OF DESTINY TRACKS
     //
     //////////////////////////////////////////////////////////////
-    XTIPTOE_MUS,
-    XFUNKIE_MUS,
-    XDEATH_MUS,
-    XGETYOU_MUS,                // DON'T KNOW
-    ULTIMATE_MUS,               // Trans Gr”sse
-
-    DUNGEON_MUS,
-    GOINGAFT_MUS,
-    POW_MUS,
-    TWELFTH_MUS,
-    ULTIMATE_MUS,               // Barnacle Wilhelm BOSS
-
-    NAZI_OMI_MUS,
-    GETTHEM_MUS,
-    SUSPENSE_MUS,
-    SEARCHN_MUS,
-    ZEROHOUR_MUS,
-    ULTIMATE_MUS,               // Super Mutant BOSS
-
-    XPUTIT_MUS,
-    ULTIMATE_MUS,               // Death Knight BOSS
-
-    XJAZNAZI_MUS,               // Secret level
-    XFUNKIE_MUS,                // Secret level (DON'T KNOW)
-
-    XEVIL_MUS                   // Angel of Death BOSS
-#endif
+    XTIPTOE_MUS_sod,
+    XFUNKIE_MUS_sod,
+    XDEATH_MUS_sod,
+    XGETYOU_MUS_sod,                // DON'T KNOW
+    ULTIMATE_MUS_sod,               // Trans Gr”sse
+	
+    DUNGEON_MUS_sod,
+    GOINGAFT_MUS_sod,
+    POW_MUS_sod,
+    TWELFTH_MUS_sod,
+    ULTIMATE_MUS_sod,               // Barnacle Wilhelm BOSS
+	
+    NAZI_OMI_MUS_sod,
+    GETTHEM_MUS_sod,
+    SUSPENSE_MUS_sod,
+    SEARCHN_MUS_sod,
+    ZEROHOUR_MUS_sod,
+    ULTIMATE_MUS_sod,               // Super Mutant BOSS
+	
+    XPUTIT_MUS_sod,
+    ULTIMATE_MUS_sod,               // Death Knight BOSS
+	
+    XJAZNAZI_MUS_sod,               // Secret level
+    XFUNKIE_MUS_sod,                // Secret level (DON'T KNOW)
+	
+    XEVIL_MUS_sod                   // Angel of Death BOSS
 };
-
 
 /*
 =============================================================================
@@ -919,7 +919,8 @@ int StopMusic (void)
 {
     int lastoffs = SD_MusicOff ();
 
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusicchunk);
+	// IOAN 20130301: unification
+    UNCACHEAUDIOCHUNK ((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 
     return lastoffs;
 }
@@ -938,15 +939,24 @@ int StopMusic (void)
 void StartMusic ()
 {
     SD_MusicOff ();
+	// IOAN 20130301: unification
+	int *songs = SPEAR ? songs_sod : songs_wl6;
     lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
-    SD_StartMusic(STARTMUSIC + lastmusicchunk);
+	
+	// IOAN 20130301: unification
+    SD_StartMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 }
 
 void ContinueMusic (int offs)
 {
     SD_MusicOff ();
+	// IOAN 20130301: unification
+	int *songs = SPEAR ? songs_sod : songs_wl6;
     lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
-    SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
+	
+	// IOAN 20130301: unification
+    SD_ContinueMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk, 
+					 offs);
 }
 
 /*

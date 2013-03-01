@@ -70,8 +70,15 @@ typedef struct
     uint32_t length;
 } digiinfo;
 
-static Mix_Chunk *SoundChunks[ STARTMUSIC - STARTDIGISOUNDS];
-static byte      *SoundBuffers[STARTMUSIC - STARTDIGISOUNDS];
+// IOAN 20130301: unification
+static Mix_Chunk *SoundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
+							  STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
+							  STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
+							  STARTMUSIC_sod - STARTDIGISOUNDS_sod];
+static byte      *SoundBuffers[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
+							   STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
+							   STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
+							   STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 
@@ -83,8 +90,13 @@ globalsoundpos channelSoundPos[MIX_CHANNELS];
         SMMode          MusicMode;
         SDSMode         DigiMode;
 static  byte          **SoundTable;
-        int             DigiMap[LASTSOUND];
-        int             DigiChannel[STARTMUSIC - STARTDIGISOUNDS];
+
+// IOAN 20130301: unification
+int             DigiMap[LASTSOUND_wl6 > LASTSOUND_sod ? LASTSOUND_wl6 : 
+						LASTSOUND_sod];
+int DigiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod - 
+				STARTDIGISOUNDS_sod ? STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
+				STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
 //      Internal variables
 static  boolean                 SD_Started;
@@ -803,7 +815,10 @@ void SD_L_SetupDigi(void)
         DigiList[i].length = size;
     }
 
-    for(i = 0; i < LASTSOUND; i++)
+	// IOANCH 20130301: unification
+	unsigned int LASTSOUND_max = LASTSOUND_sod > LASTSOUND_wl6 ? LASTSOUND_sod :
+	LASTSOUND_wl6;
+    for(i = 0; i < LASTSOUND_max; i++)
     {
         DigiMap[i] = -1;
         DigiChannel[i] = -1;
@@ -1001,15 +1016,16 @@ boolean SD_SetSoundMode(SDMode mode)
     switch (mode)
     {
         case sdm_Off:
-            tableoffset = STARTADLIBSOUNDS;
+			// IOAN 20130301: unification
+            tableoffset = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             result = true;
             break;
         case sdm_PC:
-            tableoffset = STARTPCSOUNDS;
+            tableoffset = SPEAR ? STARTPCSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             result = true;
             break;
         case sdm_AdLib:
-            tableoffset = STARTADLIBSOUNDS;
+            tableoffset = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             if (AdLibPresent)
                 result = true;
             break;
@@ -1212,7 +1228,12 @@ void SD_Shutdown(void)
     SD_MusicOff();
     SD_StopSound();
 
-    for(int i = 0; i < STARTMUSIC - STARTDIGISOUNDS; i++)
+	unsigned int lastvalue = STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
+	STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
+	STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
+	STARTMUSIC_sod - STARTDIGISOUNDS_sod
+	
+    for(int i = 0; i < lastvalue; i++)
     {
         if(SoundChunks[i]) Mix_FreeChunk(SoundChunks[i]);
         if(SoundBuffers[i]) free(SoundBuffers[i]);
@@ -1241,11 +1262,14 @@ void SD_PositionSound(int leftvol,int rightvol)
 //      SD_PlaySound() - plays the specified sound on the appropriate hardware
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_PlaySound(soundnames sound)
+boolean SD_PlaySound(soundnames sound_abstract)
 {
     boolean         ispos;
     SoundCommon     *s;
     int             lp,rp;
+	
+	// IOAN 20130301: abstract sound
+	unsigned int sound = soundmap[sound_abstract];
 
     lp = LeftPosition;
     rp = RightPosition;

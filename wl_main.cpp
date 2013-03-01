@@ -940,124 +940,134 @@ void FinishSignon (void)
 //   0: player weapons
 //   1: boss weapons
 
-static int wolfdigimap[] =
-    {
-        // These first sounds are in the upload version
-#ifndef SPEAR
-        HALTSND,                0,  -1,
-        DOGBARKSND,             1,  -1,
-        CLOSEDOORSND,           2,  -1,
-        OPENDOORSND,            3,  -1,
-        ATKMACHINEGUNSND,       4,   0,
-        ATKPISTOLSND,           5,   0,
-        ATKGATLINGSND,          6,   0,
-        SCHUTZADSND,            7,  -1,
-        GUTENTAGSND,            8,  -1,
-        MUTTISND,               9,  -1,
-        BOSSFIRESND,            10,  1,
-        SSFIRESND,              11, -1,
-        DEATHSCREAM1SND,        12, -1,
-        DEATHSCREAM2SND,        13, -1,
-        DEATHSCREAM3SND,        13, -1,
-        TAKEDAMAGESND,          14, -1,
-        PUSHWALLSND,            15, -1,
+// IOANCH 20130301: SPEAR unification
+static int wolfdigimap_wl6[] =
+{
+	// These first sounds are in the upload version
 
-        LEBENSND,               20, -1,
-        NAZIFIRESND,            21, -1,
-        SLURPIESND,             22, -1,
-
-        YEAHSND,                32, -1,
-
+	HALTSND_wl6,                0,  -1,
+	DOGBARKSND_wl6,             1,  -1,
+	CLOSEDOORSND_wl6,           2,  -1,
+	OPENDOORSND_wl6,            3,  -1,
+	ATKMACHINEGUNSND_wl6,       4,   0,
+	ATKPISTOLSND_wl6,           5,   0,
+	ATKGATLINGSND_wl6,          6,   0,
+	SCHUTZADSND_wl6,            7,  -1,
+	GUTENTAGSND_wl6,            8,  -1,
+	MUTTISND_wl6,               9,  -1,
+	BOSSFIRESND_wl6,            10,  1,
+	SSFIRESND_wl6,              11, -1,
+	DEATHSCREAM1SND_wl6,        12, -1,
+	DEATHSCREAM2SND_wl6,        13, -1,
+	DEATHSCREAM3SND_wl6,        13, -1,
+	TAKEDAMAGESND_wl6,          14, -1,
+	PUSHWALLSND_wl6,            15, -1,
+	
+	LEBENSND_wl6,               20, -1,
+	NAZIFIRESND_wl6,            21, -1,
+	SLURPIESND_wl6,             22, -1,
+	
+	YEAHSND_wl6,                32, -1,
+	
 #ifndef UPLOAD
-        // These are in all other episodes
-        DOGDEATHSND,            16, -1,
-        AHHHGSND,               17, -1,
-        DIESND,                 18, -1,
-        EVASND,                 19, -1,
-
-        TOT_HUNDSND,            23, -1,
-        MEINGOTTSND,            24, -1,
-        SCHABBSHASND,           25, -1,
-        HITLERHASND,            26, -1,
-        SPIONSND,               27, -1,
-        NEINSOVASSND,           28, -1,
-        DOGATTACKSND,           29, -1,
-        LEVELDONESND,           30, -1,
-        MECHSTEPSND,            31, -1,
-
-        SCHEISTSND,             33, -1,
-        DEATHSCREAM4SND,        34, -1,         // AIIEEE
-        DEATHSCREAM5SND,        35, -1,         // DEE-DEE
-        DONNERSND,              36, -1,         // EPISODE 4 BOSS DIE
-        EINESND,                37, -1,         // EPISODE 4 BOSS SIGHTING
-        ERLAUBENSND,            38, -1,         // EPISODE 6 BOSS SIGHTING
-        DEATHSCREAM6SND,        39, -1,         // FART
-        DEATHSCREAM7SND,        40, -1,         // GASP
-        DEATHSCREAM8SND,        41, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        42, -1,         // AH GEEZ!
-        KEINSND,                43, -1,         // EPISODE 5 BOSS SIGHTING
-        MEINSND,                44, -1,         // EPISODE 6 BOSS DIE
-        ROSESND,                45, -1,         // EPISODE 5 BOSS DIE
-
+	// These are in all other episodes
+	DOGDEATHSND_wl6,            16, -1,
+	AHHHGSND_wl6,               17, -1,
+	DIESND_wl6,                 18, -1,
+	EVASND_wl6,                 19, -1,
+	
+	TOT_HUNDSND_wl6,            23, -1,
+	MEINGOTTSND_wl6,            24, -1,
+	SCHABBSHASND_wl6,           25, -1,
+	HITLERHASND_wl6,            26, -1,
+	SPIONSND_wl6,               27, -1,
+	NEINSOVASSND_wl6,           28, -1,
+	DOGATTACKSND_wl6,           29, -1,
+	LEVELDONESND_wl6,           30, -1,
+	MECHSTEPSND_wl6,            31, -1,
+	
+	SCHEISTSND_wl6,             33, -1,
+	DEATHSCREAM4SND_wl6,        34, -1,         // AIIEEE
+	DEATHSCREAM5SND_wl6,        35, -1,         // DEE-DEE
+	DONNERSND_wl6,              36, -1,         // EPISODE 4 BOSS DIE
+	EINESND_wl6,                37, -1,         // EPISODE 4 BOSS SIGHTING
+	ERLAUBENSND_wl6,            38, -1,         // EPISODE 6 BOSS SIGHTING
+	DEATHSCREAM6SND_wl6,        39, -1,         // FART
+	DEATHSCREAM7SND_wl6,        40, -1,         // GASP
+	DEATHSCREAM8SND_wl6,        41, -1,         // GUH-BOY!
+	DEATHSCREAM9SND_wl6,        42, -1,         // AH GEEZ!
+	KEINSND_wl6,                43, -1,         // EPISODE 5 BOSS SIGHTING
+	MEINSND_wl6,                44, -1,         // EPISODE 6 BOSS DIE
+	ROSESND_wl6,                45, -1,         // EPISODE 5 BOSS DIE
+	
 #endif
-#else
-//
-// SPEAR OF DESTINY DIGISOUNDS
-//
-        HALTSND,                0,  -1,
-        CLOSEDOORSND,           2,  -1,
-        OPENDOORSND,            3,  -1,
-        ATKMACHINEGUNSND,       4,   0,
-        ATKPISTOLSND,           5,   0,
-        ATKGATLINGSND,          6,   0,
-        SCHUTZADSND,            7,  -1,
-        BOSSFIRESND,            8,   1,
-        SSFIRESND,              9,  -1,
-        DEATHSCREAM1SND,        10, -1,
-        DEATHSCREAM2SND,        11, -1,
-        TAKEDAMAGESND,          12, -1,
-        PUSHWALLSND,            13, -1,
-        AHHHGSND,               15, -1,
-        LEBENSND,               16, -1,
-        NAZIFIRESND,            17, -1,
-        SLURPIESND,             18, -1,
-        LEVELDONESND,           22, -1,
-        DEATHSCREAM4SND,        23, -1,         // AIIEEE
-        DEATHSCREAM3SND,        23, -1,         // DOUBLY-MAPPED!!!
-        DEATHSCREAM5SND,        24, -1,         // DEE-DEE
-        DEATHSCREAM6SND,        25, -1,         // FART
-        DEATHSCREAM7SND,        26, -1,         // GASP
-        DEATHSCREAM8SND,        27, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        28, -1,         // AH GEEZ!
-        GETGATLINGSND,          38, -1,         // Got Gat replacement
 
+	LASTSOUND_wl6
+};
+
+static int wolfdigimap_sod[] =
+{
+	// These first sounds are in the upload version
+
+	//
+	// SPEAR OF DESTINY DIGISOUNDS
+	//
+	HALTSND_sod,                0,  -1,
+	CLOSEDOORSND_sod,           2,  -1,
+	OPENDOORSND_sod,            3,  -1,
+	ATKMACHINEGUNSND_sod,       4,   0,
+	ATKPISTOLSND_sod,           5,   0,
+	ATKGATLINGSND_sod,          6,   0,
+	SCHUTZADSND_sod,            7,  -1,
+	BOSSFIRESND_sod,            8,   1,
+	SSFIRESND_sod,              9,  -1,
+	DEATHSCREAM1SND_sod,        10, -1,
+	DEATHSCREAM2SND_sod,        11, -1,
+	TAKEDAMAGESND_sod,          12, -1,
+	PUSHWALLSND_sod,            13, -1,
+	AHHHGSND_sod,               15, -1,
+	LEBENSND_sod,               16, -1,
+	NAZIFIRESND_sod,            17, -1,
+	SLURPIESND_sod,             18, -1,
+	LEVELDONESND_sod,           22, -1,
+	DEATHSCREAM4SND_sod,        23, -1,         // AIIEEE
+	DEATHSCREAM3SND_sod,        23, -1,         // DOUBLY-MAPPED!!!
+	DEATHSCREAM5SND_sod,        24, -1,         // DEE-DEE
+	DEATHSCREAM6SND_sod,        25, -1,         // FART
+	DEATHSCREAM7SND_sod,        26, -1,         // GASP
+	DEATHSCREAM8SND_sod,        27, -1,         // GUH-BOY!
+	DEATHSCREAM9SND_sod,        28, -1,         // AH GEEZ!
+	GETGATLINGSND_sod,          38, -1,         // Got Gat replacement
+	
 #ifndef SPEARDEMO
-        DOGBARKSND,             1,  -1,
-        DOGDEATHSND,            14, -1,
-        SPIONSND,               19, -1,
-        NEINSOVASSND,           20, -1,
-        DOGATTACKSND,           21, -1,
-        TRANSSIGHTSND,          29, -1,         // Trans Sight
-        TRANSDEATHSND,          30, -1,         // Trans Death
-        WILHELMSIGHTSND,        31, -1,         // Wilhelm Sight
-        WILHELMDEATHSND,        32, -1,         // Wilhelm Death
-        UBERDEATHSND,           33, -1,         // Uber Death
-        KNIGHTSIGHTSND,         34, -1,         // Death Knight Sight
-        KNIGHTDEATHSND,         35, -1,         // Death Knight Death
-        ANGELSIGHTSND,          36, -1,         // Angel Sight
-        ANGELDEATHSND,          37, -1,         // Angel Death
-        GETSPEARSND,            39, -1,         // Got Spear replacement
+	DOGBARKSND_sod,             1,  -1,
+	DOGDEATHSND_sod,            14, -1,
+	SPIONSND_sod,               19, -1,
+	NEINSOVASSND_sod,           20, -1,
+	DOGATTACKSND_sod,           21, -1,
+	TRANSSIGHTSND_sod,          29, -1,         // Trans Sight
+	TRANSDEATHSND_sod,          30, -1,         // Trans Death
+	WILHELMSIGHTSND_sod,        31, -1,         // Wilhelm Sight
+	WILHELMDEATHSND_sod,        32, -1,         // Wilhelm Death
+	UBERDEATHSND_sod,           33, -1,         // Uber Death
+	KNIGHTSIGHTSND_sod,         34, -1,         // Death Knight Sight
+	KNIGHTDEATHSND_sod,         35, -1,         // Death Knight Death
+	ANGELSIGHTSND_sod,          36, -1,         // Angel Sight
+	ANGELDEATHSND_sod,          37, -1,         // Angel Death
+	GETSPEARSND_sod,            39, -1,         // Got Spear replacement
 #endif
-#endif
-        LASTSOUND
-    };
-
+	LASTSOUND_sod
+};
 
 void InitDigiMap (void)
 {
     int *map;
+	
+	// IOAN 20130301: unification
+	map = SPEAR ? wolfdigimap_sod : wolfdigimap_wl6;
+	unsigned int lastvalue = SPEAR ? LASTSOUND_sod : LASTSOUND_wl6;
 
-    for (map = wolfdigimap; *map != LASTSOUND; map += 3)
+    for (; *map != lastvalue; map += 3)
     {
         DigiMap[map[0]] = map[1];
         DigiChannel[map[1]] = map[2];
