@@ -33,7 +33,7 @@ ClearSplitVWB (void)
 //==========================================================================
 
 #ifdef SPEAR
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
 ////////////////////////////////////////////////////////
 //
 // End of Spear of Destiny
@@ -101,7 +101,7 @@ EndSpear (void)
 
     MainMenu[savegame].active = 0;
 }
-#endif
+
 #endif
 
 //==========================================================================
@@ -117,7 +117,7 @@ EndSpear (void)
 void
 Victory (void)
 {
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     int32_t sec;
     int i, min, kr, sr, tr, x;
     char tempstr[8];
@@ -295,7 +295,7 @@ Victory (void)
     EndSpear ();
 #endif
 
-#endif // SPEARDEMO
+
 }
 
 
@@ -854,7 +854,7 @@ done:   itoa (kr, tempstr, 10);
     else
     {
 #ifdef SPEAR
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
         switch (mapon)
         {
             case 4:
@@ -876,7 +876,7 @@ done:   itoa (kr, tempstr, 10);
                 Write (13, 4, "secret castle\n" "    area\n" "  completed!");
                 break;
         }
-#endif
+
 #else
         Write (14, 4, "secret floor\n completed!");
 #endif
@@ -911,20 +911,7 @@ done:   itoa (kr, tempstr, 10);
 //
 // done
 //
-#ifdef SPEARDEMO
-    if (gamestate.mapon == 1)
-    {
-        SD_PlaySound (BONUS1UPSND);
-
-        CA_CacheGrChunk (STARTFONT + 1);
-        Message ("This concludes your demo\n"
-                 "of Spear of Destiny! Now,\n" "go to your local software\n" "store and buy it!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
-
-        IN_ClearKeysDown ();
-        IN_Ack ();
-    }
-#endif
+    // IOANCH 20130301: unification culling
 
 #ifdef JAPDEMO
     if (gamestate.mapon == 3)
@@ -1331,7 +1318,7 @@ NonShareware (void)
 
 #ifdef SPEAR
 #ifndef GOODTIMES
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
 ////////////////////////////////////////////////////////
 //
 // COPY PROTECTION FOR FormGen
@@ -1752,7 +1739,7 @@ CopyProtection (void)
     exit (1);
 }
 
-#endif // SPEARDEMO
+
 #endif // GOODTIMES
 #endif // SPEAR
 //===========================================================================

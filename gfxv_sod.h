@@ -41,14 +41,13 @@ typedef enum {
     // Lump Start
     HIGHSCORESPIC,                       // 29
     C_WONSPEARPIC,                       // 30
-#ifndef SPEARDEMO
+    // IOANCH 20130301: unification culling
     // Lump Start
     BJCOLLAPSE1PIC,                      // 31
     BJCOLLAPSE2PIC,                      // 32
     BJCOLLAPSE3PIC,                      // 33
     BJCOLLAPSE4PIC,                      // 34
     ENDPICPIC,                           // 35
-#endif
     // Lump Start
     L_GUYPIC,                            // 36
     L_COLONPIC,                          // 37
@@ -96,7 +95,8 @@ typedef enum {
     // Lump Start
     TITLE1PIC,                           // 79
     TITLE2PIC,                           // 80
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
+
     // Lump Start
     ENDSCREEN11PIC,                      // 81
     // Lump Start
@@ -108,11 +108,12 @@ typedef enum {
     ENDSCREEN7PIC,                       // 87
     ENDSCREEN8PIC,                       // 88
     ENDSCREEN9PIC,                       // 89
-#endif
+
     STATUSBARPIC,                        // 90
     PG13PIC,                             // 91
     CREDITSPIC,                          // 92
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
+
     // Lump Start
     IDGUYS1PIC,                          // 93
     IDGUYS2PIC,                          // 94
@@ -123,7 +124,7 @@ typedef enum {
     BOSSPIC2PIC,                         // 98
     BOSSPIC3PIC,                         // 99
     BOSSPIC4PIC,                         // 100
-#endif
+
     // Lump Start
     KNIFEPIC,                            // 101
     GUNPIC,                              // 102
@@ -180,7 +181,8 @@ typedef enum {
     ORDERSCREEN,                         // 151
     ERRORSCREEN,                         // 152
     TITLEPALETTE,                        // 153
-#ifndef SPEARDEMO
+    // IOANCH 20130301: unification culling
+
     END1PALETTE,                         // 154
     END2PALETTE,                         // 155
     END3PALETTE,                         // 156
@@ -191,14 +193,14 @@ typedef enum {
     END8PALETTE,                         // 161
     END9PALETTE,                         // 162
     IDGUYSPALETTE,                       // 163
-#endif
+
     T_DEMO0,                             // 164
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     T_DEMO1,                             // 165
     T_DEMO2,                             // 166
     T_DEMO3,                             // 167
     T_ENDART1,                           // 168
-#endif
+
     ENUMEND
 } graphicnums;
 

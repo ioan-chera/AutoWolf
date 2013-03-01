@@ -1177,11 +1177,8 @@ void PlayDemo (int demonumber)
     int length;
 #ifdef DEMOSEXTERN
 // debug: load chunk
-#ifndef SPEARDEMO
+    // IOANCH 20130301: unification culling
     int dems[4]={T_DEMO0,T_DEMO1,T_DEMO2,T_DEMO3};
-#else
-    int dems[1]={T_DEMO0};
-#endif
 
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];
@@ -1485,24 +1482,7 @@ startplayloop:
                 LevelCompleted ();              // do the intermission
                 if(viewsize == 21) DrawPlayScreen();
 
-#ifdef SPEARDEMO
-                if (gamestate.mapon == 1)
-                {
-                    died = true;                    // don't "get psyched!"
-
-                    VW_FadeOut ();
-
-                    ClearMemory ();
-
-                    CheckHighScore (gamestate.score,gamestate.mapon+1);
-#ifndef JAPAN
-                    strcpy(MainMenu[viewscores].string,STR_VS);
-#endif
-                    MainMenu[viewscores].routine = CP_ViewScores;
-                    return;
-                }
-#endif
-
+// IOANCH 20130301: unification culling
 #ifdef JAPDEMO
                 if (gamestate.mapon == 3)
                 {

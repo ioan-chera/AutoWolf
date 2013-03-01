@@ -482,7 +482,7 @@ US_ControlPanel (ScanCode scancode)
         which = HandleMenu (&MainItems, &MainMenu[0], NULL);
 
 #ifdef SPEAR
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
         IN_ProcessEvents();
 
         //
@@ -526,7 +526,7 @@ US_ControlPanel (ScanCode scancode)
             StartCPMusic (MENUSONG);
             MenuFadeIn ();
         }
-#endif
+
 #endif
 
         switch (which)
@@ -4126,7 +4126,7 @@ CheckForEpisodes (void)
 
 
 #ifdef SPEAR
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     if(param_mission == 0)
     {
         if(!stat("VSWAP.SOD", &statbuf))
@@ -4159,16 +4159,6 @@ CheckForEpisodes (void)
         Quit ("UNSUPPORTED MISSION!");
     strcpy (graphext, "SOD");
     strcpy (audioext, "SOD");
-#else
-    if(!stat("VSWAP.SDM", &statbuf))
-    {
-        strcpy (extension, "SDM");
-    }
-    else
-        Quit ("NO SPEAR OF DESTINY DEMO DATA FILES TO BE FOUND!");
-    strcpy (graphext, "SDM");
-    strcpy (audioext, "SDM");
-#endif
 #else
     strcpy (graphext, extension);
     strcpy (audioext, extension);

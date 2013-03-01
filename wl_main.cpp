@@ -1039,7 +1039,7 @@ static int wolfdigimap_sod[] =
 	DEATHSCREAM9SND_sod,        28, -1,         // AH GEEZ!
 	GETGATLINGSND_sod,          38, -1,         // Got Gat replacement
 	
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
 	DOGBARKSND_sod,             1,  -1,
 	DOGDEATHSND_sod,            14, -1,
 	SPIONSND_sod,               19, -1,
@@ -1055,7 +1055,7 @@ static int wolfdigimap_sod[] =
 	ANGELSIGHTSND_sod,          36, -1,         // Angel Sight
 	ANGELDEATHSND_sod,          37, -1,         // Angel Death
 	GETSPEARSND_sod,            39, -1,         // Got Spear replacement
-#endif
+
 	LASTSOUND_sod
 };
 
@@ -1116,7 +1116,7 @@ CP_itemtype MusicMenu[]=
     };
 #endif
 
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
 void DoJukebox(void)
 {
     int which,lastsong=-1;
@@ -1229,7 +1229,7 @@ void DoJukebox(void)
     UnCacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
 #endif
 }
-#endif
+
 
 /*
 ==========================
@@ -1243,9 +1243,9 @@ void DoJukebox(void)
 
 static void InitGame()
 {
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     boolean didjukebox=false;
-#endif
+
 
     // initialize SDL
 #if defined _WIN32
@@ -1335,14 +1335,14 @@ static void InitGame()
 //
 	IN_ProcessEvents();
 
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     if (Keyboard[sc_M])
     {
         DoJukebox();
         didjukebox=true;
     }
     else
-#endif
+
 
 //
 // draw intro screen stuff
@@ -1370,9 +1370,8 @@ static void InitGame()
 // initialize variables
 //
     InitRedShifts ();
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     if(!didjukebox)
-#endif
         FinishSignon();
 
 #ifdef NOTYET
@@ -1602,11 +1601,11 @@ static void DemoLoop()
         #endif
         #else
             #ifndef GOODTIMES
-            #ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
             extern void CopyProtection(void);
             if(!param_goodtimes)
                 CopyProtection();
-            #endif
+
             #endif
         #endif
         #endif
@@ -1677,11 +1676,11 @@ static void DemoLoop()
 // demo
 //
 
-            #ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
             PlayDemo (LastDemo++%4);
-            #else
-            PlayDemo (0);
-            #endif
+
+
+
 
             if (playstate == ex_abort)
                 break;
@@ -1980,7 +1979,8 @@ void CheckParameters(int argc, char *argv[])
 #else
             "                        (default: $HOME/.autowolf)\n"	// IOAN 20130116: changed name
 #endif
-#if defined(SPEAR) && !defined(SPEARDEMO)
+               // IOANCH 20130301: unification culling
+#if defined(SPEAR)
             " --mission <mission>    Mission number to play (0-3)\n"
             "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
             " --goodtimes            Disable copy protection quiz\n"
