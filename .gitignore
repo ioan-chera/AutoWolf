@@ -3,3 +3,13 @@ macosx/Wolf4SDL.xcodeproj/xcuserdata/ioan.xcuserdatad/xcschemes/Wolf4SDL.xcschem
 macosx/Wolf4SDL.xcodeproj/ioan.pbxuser
 macosx/Wolf4SDL.xcodeproj/ioan.perspectivev3
 macosx/build
+
+/vs2012/autowolf/Debug
+/vs2012/autowolf/Release
+/vs2012/autowolf/x64
+
+/vs2012/autowolf/autowolf.v11.suo
+/vs2012/autowolf/autowolf.sdf
+/vs2012/autowolf/autowolf.vcxproj.filters
+/vs2012/autowolf/autowolf.vcxproj.user
+/win/Thumbs.db

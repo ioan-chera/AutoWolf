@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E768F9AA-6569-4B0A-A1CF-62BD20068840}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>autowolf</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\include;C:\Users\ioan_chera\Development\SDL-1.2.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib;C:\Users\ioan_chera\Development\SDL-1.2.15\lib\x86\SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ioan_chera\Development\SDL-1.2.15\include;C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\lib\x64\SDL_mixer.lib;C:\Users\ioan_chera\Development\SDL-1.2.15\lib\x64\SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\include;C:\Users\ioan_chera\Development\SDL-1.2.15\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\lib\x86\SDL_mixer.lib;C:\Users\ioan_chera\Development\SDL-1.2.15\lib\x86\SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\ioan_chera\Development\SDL-1.2.15\include;C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>C:\Users\ioan_chera\Development\SDL_mixer-1.2.12\lib\x64\SDL_mixer.lib;C:\Users\ioan_chera\Development\SDL-1.2.15\lib\x64\SDL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\CheckSum.cpp" />
+    <ClCompile Include="..\..\DataFile.cpp" />
+    <ClCompile Include="..\..\Dictionary.cpp" />
+    <ClCompile Include="..\..\DictionaryFile.cpp" />
+    <ClCompile Include="..\..\DirectoryFile.cpp" />
+    <ClCompile Include="..\..\dosbox\dbopl.cpp" />
+    <ClCompile Include="..\..\ExploredArrayFile.cpp" />
+    <ClCompile Include="..\..\HistoryRatio.cpp" />
+    <ClCompile Include="..\..\id_ca.cpp" />
+    <ClCompile Include="..\..\id_in.cpp" />
+    <ClCompile Include="..\..\id_pm.cpp" />
+    <ClCompile Include="..\..\id_sd.cpp" />
+    <ClCompile Include="..\..\id_us_1.cpp" />
+    <ClCompile Include="..\..\id_vh.cpp" />
+    <ClCompile Include="..\..\id_vl.cpp" />
+    <ClCompile Include="..\..\ioan_bas.cpp" />
+    <ClCompile Include="..\..\ioan_bot.cpp" />
+    <ClCompile Include="..\..\ioan_secret.cpp" />
+    <ClCompile Include="..\..\MasterDirectoryFile.cpp" />
+    <ClCompile Include="..\..\PathArray.cpp" />
+    <ClCompile Include="..\..\sdl_winmain.cpp" />
+    <ClCompile Include="..\..\signon.cpp" />
+    <ClCompile Include="..\..\wl_act1.cpp" />
+    <ClCompile Include="..\..\wl_act2.cpp" />
+    <ClCompile Include="..\..\wl_agent.cpp" />
+    <ClCompile Include="..\..\wl_atmos.cpp" />
+    <ClCompile Include="..\..\wl_cloudsky.cpp" />
+    <ClCompile Include="..\..\wl_debug.cpp" />
+    <ClCompile Include="..\..\wl_dir3dspr.cpp" />
+    <ClCompile Include="..\..\wl_draw.cpp" />
+    <ClCompile Include="..\..\wl_floorceiling.cpp" />
+    <ClCompile Include="..\..\wl_game.cpp" />
+    <ClCompile Include="..\..\wl_inter.cpp" />
+    <ClCompile Include="..\..\wl_main.cpp" />
+    <ClCompile Include="..\..\wl_menu.cpp" />
+    <ClCompile Include="..\..\wl_parallax.cpp" />
+    <ClCompile Include="..\..\wl_play.cpp" />
+    <ClCompile Include="..\..\wl_shade.cpp" />
+    <ClCompile Include="..\..\wl_state.cpp" />
+    <ClCompile Include="..\..\wl_text.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\audiosod.h" />
+    <ClInclude Include="..\..\audiowl6.h" />
+    <ClInclude Include="..\..\CheckSum.h" />
+    <ClInclude Include="..\..\DataFile.h" />
+    <ClInclude Include="..\..\Dictionary.h" />
+    <ClInclude Include="..\..\DictionaryFile.h" />
+    <ClInclude Include="..\..\DirectoryFile.h" />
+    <ClInclude Include="..\..\dosbox\dbopl.h" />
+    <ClInclude Include="..\..\ExploredArrayFile.h" />
+    <ClInclude Include="..\..\foreign.h" />
+    <ClInclude Include="..\..\f_spear.h" />
+    <ClInclude Include="..\..\gfxv_apo.h" />
+    <ClInclude Include="..\..\gfxv_jap.h" />
+    <ClInclude Include="..\..\gfxv_sod.h" />
+    <ClInclude Include="..\..\gfxv_wl6.h" />
+    <ClInclude Include="..\..\HistoryRatio.h" />
+    <ClInclude Include="..\..\id_ca.h" />
+    <ClInclude Include="..\..\id_in.h" />
+    <ClInclude Include="..\..\id_pm.h" />
+    <ClInclude Include="..\..\id_sd.h" />
+    <ClInclude Include="..\..\id_us.h" />
+    <ClInclude Include="..\..\id_vh.h" />
+    <ClInclude Include="..\..\id_vl.h" />
+    <ClInclude Include="..\..\ioan_bas.h" />
+    <ClInclude Include="..\..\ioan_bot.h" />
+    <ClInclude Include="..\..\ioan_secret.h" />
+    <ClInclude Include="..\..\List.h" />
+    <ClInclude Include="..\..\MasterDirectoryFile.h" />
+    <ClInclude Include="..\..\PathArray.h" />
+    <ClInclude Include="..\..\version.h" />
+    <ClInclude Include="..\..\win\resource.h" />
+    <ClInclude Include="..\..\wl_atmos.h" />
+    <ClInclude Include="..\..\wl_cloudsky.h" />
+    <ClInclude Include="..\..\wl_def.h" />
+    <ClInclude Include="..\..\wl_menu.h" />
+    <ClInclude Include="..\..\wl_shade.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\sodpal.inc" />
+    <None Include="..\..\wolfpal.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\win\Wolf4SDL.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\win\Wolf4SDL.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
