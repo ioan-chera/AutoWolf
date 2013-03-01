@@ -4085,15 +4085,7 @@ CheckForEpisodes (void)
 //
 // ENGLISH
 //
-#ifdef UPLOAD
-    if(!stat("VSWAP.WL1", &statbuf))
-    {
-        strcpy (extension, "WL1");
-        numEpisodesMissing = 5;
-    }
-    else
-        Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
-#else
+        // IOANCH 20130301: unification culling
 #ifndef SPEAR
     if(!stat("VSWAP.WL6", &statbuf))
     {
@@ -4126,7 +4118,7 @@ CheckForEpisodes (void)
         }
     }
 #endif
-#endif
+
 
 
 #ifdef SPEAR

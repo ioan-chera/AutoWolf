@@ -968,8 +968,8 @@ static int wolfdigimap_wl6[] =
 	SLURPIESND_wl6,             22, -1,
 	
 	YEAHSND_wl6,                32, -1,
-	
-#ifndef UPLOAD
+	// IOANCH 20130301: unification culling
+
 	// These are in all other episodes
 	DOGDEATHSND_wl6,            16, -1,
 	AHHHGSND_wl6,               17, -1,
@@ -1000,7 +1000,7 @@ static int wolfdigimap_wl6[] =
 	MEINSND_wl6,                44, -1,         // EPISODE 6 BOSS DIE
 	ROSESND_wl6,                45, -1,         // EPISODE 5 BOSS DIE
 	
-#endif
+
 
 	LASTSOUND_wl6
 };
@@ -1165,11 +1165,8 @@ void DoJukebox(void)
     MenuFadeOut();
 
 #ifndef SPEAR
-#ifndef UPLOAD
+    // IOANCH 20130301: unification culling
     start = ((SDL_GetTicks()/10)%3)*6;
-#else
-    start = 0;
-#endif
 #else
     start = 0;
 #endif
@@ -1591,8 +1588,7 @@ static void DemoLoop()
 //
 
 #ifndef DEMOTEST
-
-    #ifndef UPLOAD
+// IOANCH 20130301: unification culling
 
         #ifndef GOODTIMES
         #ifndef SPEAR
@@ -1610,7 +1606,6 @@ static void DemoLoop()
             #endif
         #endif
         #endif
-    #endif
 
     StartCPMusic(INTROSONG);
 

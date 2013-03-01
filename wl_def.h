@@ -44,18 +44,15 @@
 #include "audiosod.h"
 #include "audioabstract.h"
 
+// IOANCH 20130301: unification culling
 #ifndef SPEAR
-    #ifdef UPLOAD
-        #include "gfxv_apo.h"
+    #ifdef JAPAN
+        #include "gfxv_jap.h"
     #else
-		#ifdef JAPAN
-			#include "gfxv_jap.h"
-		#else
-			#ifdef GOODTIMES
-	            #include "gfxv_wl6.h"
-		    #else
-			    #include "gfxv_apo.h"
-			#endif
+        #ifdef GOODTIMES
+            #include "gfxv_wl6.h"
+        #else
+            #include "gfxv_apo.h"
         #endif
     #endif
 #else
@@ -540,10 +537,9 @@ enum
 //
 // bj
 //
+    // IOANCH 20130301: unification culling
 #ifdef APOGEE_1_0
     SPR_BJ_W1=360,
-#elif defined(APOGEE_1_1) && defined(UPLOAD)
-    SPR_BJ_W1=406,
 #else
     SPR_BJ_W1,
 #endif

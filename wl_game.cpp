@@ -1099,11 +1099,8 @@ void RecordDemo (void)
     fontnumber=0;
     SETFONTCOLOR(0,15);
 #ifndef SPEAR
-#ifdef UPLOAD
-    US_Print("  Demo which level(1-10): "); maps = 10;
-#else
+    // IOANCH 20130301: unification culling
     US_Print("  Demo which level(1-60): "); maps = 60;
-#endif
 #else
     US_Print("  Demo which level(1-21): "); maps = 21;
 #endif

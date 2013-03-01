@@ -251,7 +251,8 @@ Victory (void)
     Write (x, RATIOY + 4, tempstr);
 
 #ifndef SPANISH
-#ifndef UPLOAD
+    // IOANCH 20130301: unification culling
+
 #ifndef SPEAR
     //
     // TOTAL TIME VERIFICATION CODE
@@ -270,7 +271,7 @@ Victory (void)
         tempstr[3] = 0;
         US_Print (tempstr);
     }
-#endif
+
 #endif
 #endif
 
@@ -1020,9 +1021,10 @@ DrawHighScores (void)
     char buffer[16];
 #ifndef SPEAR
     char *str;
-#ifndef UPLOAD
+    // IOANCH 20130301: unification culling
+
     char buffer1[5];
-#endif
+
 #endif
     word i, w, h;
     HighScore *s;
@@ -1100,15 +1102,15 @@ DrawHighScores (void)
         USL_MeasureString (buffer, &w, &h);
         PrintX = 194 - w;
 #endif
+// IOANCH 20130301: unification culling
 
-#ifndef UPLOAD
 #ifndef SPEAR
         PrintX -= 6;
         itoa (s->episode + 1, buffer1, 10);
         US_Print ("E");
         US_Print (buffer1);
         US_Print ("/L");
-#endif
+
 #endif
 
 #ifdef SPEAR
@@ -1134,7 +1136,8 @@ DrawHighScores (void)
         US_Print (buffer);
 
 #ifdef APOGEE_1_0
-//#ifndef UPLOAD
+        // IOANCH 20130301: unification culling
+
 #ifndef SPEAR
         //
         // verification #
@@ -1157,7 +1160,7 @@ DrawHighScores (void)
             SETFONTCOLOR (15, 0x29);
         }
 #endif
-//#endif
+
 #endif
     }
 
@@ -1265,8 +1268,8 @@ CheckHighScore (int32_t score, word other)
 
 }
 
+// IOANCH 20130301: unification culling
 
-#ifndef UPLOAD
 #ifndef SPEAR
 #ifndef JAPAN
 ////////////////////////////////////////////////////////
@@ -1315,7 +1318,7 @@ NonShareware (void)
 }
 #endif
 #endif
-#endif
+
 
 #ifdef SPEAR
 #ifndef GOODTIMES

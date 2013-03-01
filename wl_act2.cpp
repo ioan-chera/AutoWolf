@@ -871,7 +871,8 @@ void SpawnDeadGuard (int tilex, int tiley)
 
 void A_DeathScream (objtype *ob)
 {
-#ifndef UPLOAD
+    // IOANCH 20130301: unification culling
+
     // IOANCH 20130202: unification process
     if (!US_RndT() && (!SPEAR && mapon==9 || SPEAR && (mapon == 18 || mapon == 19)))
     {
@@ -888,7 +889,7 @@ void A_DeathScream (objtype *ob)
 				;
         }
     }
-#endif
+
 
     switch (ob->obclass)
     {
@@ -909,12 +910,9 @@ void A_DeathScream (objtype *ob)
                 DEATHSCREAM9SND
 #endif
             };
+// IOANCH 20130301: unification culling
 
-#ifndef UPLOAD
             PlaySoundLocActor(sounds[US_RndT()%8],ob);
-#else
-            PlaySoundLocActor(sounds[US_RndT()%2],ob);
-#endif
             break;
         }
         case officerobj:
