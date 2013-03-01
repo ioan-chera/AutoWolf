@@ -494,21 +494,13 @@ static void CAL_SetupMapFile (void)
 //
 // open the data file
 //
-#ifdef CARMACIZED
+    // IOANCH 20130301: unification culling
     strcpy(fname, "GAMEMAPS.");
     strcat(fname, extension);
 
     maphandle = open(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
-#else
-    strcpy(fname,mfilename);
-    strcat(fname,extension);
-
-    maphandle = open(fname, O_RDONLY | O_BINARY);
-    if (maphandle == -1)
-        CA_CannotOpen(fname);
-#endif
 
 //
 // load all map header
@@ -935,10 +927,9 @@ void CA_CacheMap (int mapnum)
     memptr    bigbufferseg;
     unsigned  size;
     word     *source;
-#ifdef CARMACIZED
+    // IOANCH 20130301: unification culling
     word     *buffer2seg;
     int32_t   expanded;
-#endif
 
     mapon = mapnum;
 
@@ -965,7 +956,7 @@ void CA_CacheMap (int mapnum)
         }
 
         read(maphandle,source,compressed);
-#ifdef CARMACIZED
+        // IOANCH 20130301: unification culling
         //
         // unhuffman, then unRLEW
         // The huffman'd chunk has a two byte expanded length first
@@ -980,12 +971,6 @@ void CA_CacheMap (int mapnum)
         CAL_RLEWexpand(buffer2seg+1,dest,size,RLEWtag);
         free(buffer2seg);
 
-#else
-        //
-        // unRLEW, skipping expanded length
-        //
-        CAL_RLEWexpand (source+1,dest,size,RLEWtag);
-#endif
 
         if (compressed>BUFFERSIZE)
             free(bigbufferseg);
