@@ -491,7 +491,8 @@ US_ControlPanel (ScanCode scancode)
         if (Keyboard[sc_I] && Keyboard[sc_D])
         {
             VW_FadeOut ();
-            StartCPMusic (XJAZNAZI_MUS);
+                        // IOANCH 20130301: unification music
+            StartCPMusic (XJAZNAZI_MUS_sod);
             UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
             UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
             ClearMemory ();
@@ -675,7 +676,8 @@ DrawMainMenu (void)
 int
 CP_ReadThis (int)
 {
-    StartCPMusic (CORNER_MUS);
+                // IOANCH 20130301: unification music
+    StartCPMusic (CORNER_MUS_wl6);
     HelpScreens ();
     StartCPMusic (MENUSONG);
     return true;
@@ -997,9 +999,11 @@ CP_ViewScores (int)
 
 #ifdef SPEAR
     UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-    StartCPMusic (XAWARD_MUS);
+                // IOANCH 20130301: unification music
+    StartCPMusic (XAWARD_MUS_sod);
 #else
-    StartCPMusic (ROSTER_MUS);
+                // IOANCH 20130301: unification music
+    StartCPMusic (ROSTER_MUS_wl6);
 #endif
 
     DrawHighScores ();

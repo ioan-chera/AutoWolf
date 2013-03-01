@@ -30,14 +30,10 @@
 #define HIGHLIGHT       0x13
 #define MenuFadeIn()    VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10)
 
+            // IOANCH 20130301: unification music
+#define MENUSONG        (SPEAR ? WONDERIN_MUS_sod : WONDERIN_MUS_wl6)
 
-#define MENUSONG        WONDERIN_MUS
-
-#ifndef SPEAR
-#define INTROSONG       NAZI_NOR_MUS
-#else
-#define INTROSONG       XTOWER2_MUS
-#endif
+#define INTROSONG       (SPEAR ? XTOWER2_MUS_sod : NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
 #define CENTERX         ((int) screenWidth / 2)

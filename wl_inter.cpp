@@ -129,7 +129,8 @@ Victory (void)
 
 
 #ifdef SPEAR
-    StartCPMusic (XTHEEND_MUS);
+                // IOANCH 20130301: unification music
+    StartCPMusic (XTHEEND_MUS_sod);
 
     CA_CacheGrChunk (BJCOLLAPSE1PIC);
     CA_CacheGrChunk (BJCOLLAPSE2PIC);
@@ -157,8 +158,8 @@ Victory (void)
     UNCACHEGRCHUNK (BJCOLLAPSE4PIC);
     VL_FadeOut (0, 255, 0, 17, 17, 5);
 #endif
-
-    StartCPMusic (URAHERO_MUS);
+            // IOANCH 20130301: unification music
+    StartCPMusic (SPEAR ? URAHERO_MUS_sod : URAHERO_MUS_wl6);
     ClearSplitVWB ();
     CacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
     CA_CacheGrChunk (STARTFONT);
@@ -565,8 +566,8 @@ LevelCompleted (void)
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
-
-    StartCPMusic (ENDLEVEL_MUS);
+            // IOANCH 20130301: unification music
+    StartCPMusic (SPEAR ? ENDLEVEL_MUS_sod : ENDLEVEL_MUS_wl6);
 
 //
 // do the intermission
@@ -1203,11 +1204,11 @@ CheckHighScore (int32_t score, word other)
             break;
         }
     }
-
+            // IOANCH 20130301: unification music
 #ifdef SPEAR
-    StartCPMusic (XAWARD_MUS);
+    StartCPMusic (XAWARD_MUS_sod);
 #else
-    StartCPMusic (ROSTER_MUS);
+    StartCPMusic (ROSTER_MUS_wl6);
 #endif
     DrawHighScores ();
 
@@ -1519,7 +1520,8 @@ CopyProtection (void)
     CacheLump (COPYPROT_LUMP_START, COPYPROT_LUMP_END);
     CA_CacheGrChunk (STARTFONT + 1);
     CA_LoadAllSounds ();
-    StartCPMusic (COPYPRO_MUS);
+                // IOANCH 20130301: unification music
+    StartCPMusic (COPYPRO_MUS_sod);
     US_InitRndT (true);
 
     while (attempt < 3)

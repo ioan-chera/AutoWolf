@@ -1123,37 +1123,38 @@ void DoJukebox(void)
     unsigned start;
     unsigned songs[]=
         {
+            // IOANCH 20130301: unification music
 #ifndef SPEAR
-            GETTHEM_MUS,
-            SEARCHN_MUS,
-            POW_MUS,
-            SUSPENSE_MUS,
-            WARMARCH_MUS,
-            CORNER_MUS,
+            GETTHEM_MUS_wl6,
+            SEARCHN_MUS_wl6,
+            POW_MUS_wl6,
+            SUSPENSE_MUS_wl6,
+            WARMARCH_MUS_wl6,
+            CORNER_MUS_wl6,
 
-            NAZI_OMI_MUS,
-            PREGNANT_MUS,
-            GOINGAFT_MUS,
-            HEADACHE_MUS,
-            DUNGEON_MUS,
-            ULTIMATE_MUS,
+            NAZI_OMI_MUS_wl6,
+            PREGNANT_MUS_wl6,
+            GOINGAFT_MUS_wl6,
+            HEADACHE_MUS_wl6,
+            DUNGEON_MUS_wl6,
+            ULTIMATE_MUS_wl6,
 
-            INTROCW3_MUS,
-            NAZI_RAP_MUS,
-            TWELFTH_MUS,
-            ZEROHOUR_MUS,
-            ULTIMATE_MUS,
-            PACMAN_MUS
+            INTROCW3_MUS_wl6,
+            NAZI_RAP_MUS_wl6,
+            TWELFTH_MUS_wl6,
+            ZEROHOUR_MUS_wl6,
+            ULTIMATE_MUS_wl6,
+            PACMAN_MUS_wl6
 #else
-            XFUNKIE_MUS,             // 0
-            XDEATH_MUS,              // 2
-            XTIPTOE_MUS,             // 4
-            XTHEEND_MUS,             // 7
-            XEVIL_MUS,               // 17
-            XJAZNAZI_MUS,            // 18
-            XPUTIT_MUS,              // 21
-            XGETYOU_MUS,             // 22
-            XTOWER2_MUS              // 23
+            XFUNKIE_MUS_sod,             // 0
+            XDEATH_MUS_sod,              // 2
+            XTIPTOE_MUS_sod,             // 4
+            XTHEEND_MUS_sod,             // 7
+            XEVIL_MUS_sod,               // 17
+            XJAZNAZI_MUS_sod,            // 18
+            XPUTIT_MUS_sod,              // 21
+            XGETYOU_MUS_sod,             // 22
+            XTOWER2_MUS_sod              // 23
 #endif
         };
 
