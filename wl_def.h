@@ -49,9 +49,7 @@
 #include "gfxv_sod.h"
 #include "gfxvabstract.h"
 
-#ifdef SPEAR
-    #include "f_spear.h"
-#endif
+#include "f_spear.h"
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -137,12 +135,10 @@ void Quit(const char *errorStr, ...);
 #define BORDERCOLOR     3
 #define FLASHCOLOR      5
 #define FLASHTICS       4
-
-#ifndef SPEAR
-    #define LRpack      8       // # of levels to store in endgame
-#else
-    #define LRpack      20
-#endif
+// IOANCH 20130302: unification
+#define LRpack_wl6 8
+#define LRpack_sod 20
+#define LRpack (SPEAR ? LRpack_sod : LRpack_wl6)
 
 #define PLAYERSIZE      MINDIST         // player radius
 #define MINACTORDIST    0x10000l        // minimum dist from player center
