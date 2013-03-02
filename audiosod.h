@@ -6,6 +6,8 @@
 /////////////////////////////////////////////////
 
 // IOANCH 20130202: reordered some macros
+#ifndef AUDIOSOD_H_
+#define AUDIOSOD_H_
 
 //
 // Sound names & indexes
@@ -146,3 +148,4 @@ typedef enum {
 // Thanks for playing with MUSE!
 //
 /////////////////////////////////////////////////
+#endif

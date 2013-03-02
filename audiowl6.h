@@ -10,6 +10,9 @@
 //
 
 // IOANCH 20130202: unification process
+#ifndef AUDIOWL6_H_
+#define AUDIOWL6_H_
+
 typedef enum {
 	HITWALLSND_wl6,              // 0
 	SELECTWPNSND_wl6,            // 1
@@ -154,3 +157,4 @@ typedef enum {
 // Thanks for playing with MUSE!
 //
 /////////////////////////////////////////////////
+#endif
