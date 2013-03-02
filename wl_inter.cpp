@@ -32,7 +32,7 @@ ClearSplitVWB (void)
 
 //==========================================================================
 
-#ifdef SPEAR
+
 // IOANCH 20130301: unification culling
 ////////////////////////////////////////////////////////
 //
@@ -102,7 +102,7 @@ EndSpear (void)
     MainMenu[savegame].active = 0;
 }
 
-#endif
+
 
 //==========================================================================
 
@@ -127,47 +127,47 @@ Victory (void)
 #define TIMEX   14
 #define TIMEY   8
 
-
-#ifdef SPEAR
-                // IOANCH 20130301: unification music
-    StartCPMusic (XTHEEND_MUS_sod);
-
     // IOANCH 20130302: unification
-    CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
+    if(SPEAR)
+    {
+        // IOANCH 20130301: unification music
+        StartCPMusic (XTHEEND_MUS_sod);
 
-    VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
-    VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
-    VW_UpdateScreen ();
-    VW_FadeIn ();
-    VW_WaitVBL (2 * 70);
-    VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
-    VW_UpdateScreen ();
-    VW_WaitVBL (105);
-    VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
-    VW_UpdateScreen ();
-    VW_WaitVBL (105);
-    VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
-    VW_UpdateScreen ();
-    VW_WaitVBL (3 * 70);
+        // IOANCH 20130302: unification
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
 
-    UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
-    UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
-    UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
-    UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
-    VL_FadeOut (0, 255, 0, 17, 17, 5);
-#endif
+        VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_FadeIn ();
+        VW_WaitVBL (2 * 70);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (105);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (105);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (3 * 70);
+
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
+        VL_FadeOut (0, 255, 0, 17, 17, 5);
+    }
             // IOANCH 20130301: unification music
     StartCPMusic (SPEAR ? URAHERO_MUS_sod : URAHERO_MUS_wl6);
     ClearSplitVWB ();
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
 
-#ifndef SPEAR
-    CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR]);
-#endif
+    if(!SPEAR)
+        CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR]);
 
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
@@ -202,15 +202,18 @@ Victory (void)
         tr += LevelRatios[i].treasure;
     }
 
-#ifndef SPEAR
-    kr /= LRpack;
-    sr /= LRpack;
-    tr /= LRpack;
-#else
-    kr /= 14;
-    sr /= 14;
-    tr /= 14;
-#endif
+    if(!SPEAR)
+    {
+        kr /= LRpack;
+        sr /= LRpack;
+        tr /= LRpack;
+    }
+    else
+    {
+        kr /= 14;
+        sr /= 14;
+        tr /= 14;
+    }
 
     min = sec / 60;
     sec %= 60;
@@ -245,26 +248,29 @@ Victory (void)
 #ifndef SPANISH
     // IOANCH 20130301: unification culling
 
-#ifndef SPEAR
-    //
-    // TOTAL TIME VERIFICATION CODE
-    //
-    if (gamestate.difficulty >= gd_medium)
+
+    if(!SPEAR)
     {
-        VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR]);
-        fontnumber = 0;
-        fontcolor = READHCOLOR;
-        PrintX = 30 * 8 - 3;
-        PrintY = TIMEY * 8 + 8;
-        PrintX += 4;
-        tempstr[0] = (((min / 10) ^ (min % 10)) ^ 0xa) + 'A';
-        tempstr[1] = (int) ((((sec / 10) ^ (sec % 10)) ^ 0xa) + 'A');
-        tempstr[2] = (tempstr[0] ^ tempstr[1]) + 'A';
-        tempstr[3] = 0;
-        US_Print (tempstr);
+        //
+        // TOTAL TIME VERIFICATION CODE
+        //
+        if (gamestate.difficulty >= gd_medium)
+        {
+            VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR]);
+            fontnumber = 0;
+            fontcolor = READHCOLOR;
+            PrintX = 30 * 8 - 3;
+            PrintY = TIMEY * 8 + 8;
+            PrintX += 4;
+            tempstr[0] = (((min / 10) ^ (min % 10)) ^ 0xa) + 'A';
+            tempstr[1] = (int) ((((sec / 10) ^ (sec % 10)) ^ 0xa) + 'A');
+            tempstr[2] = (tempstr[0] ^ tempstr[1]) + 'A';
+            tempstr[3] = 0;
+            US_Print (tempstr);
+        }
     }
 
-#endif
+
 #endif
 
     fontnumber = 1;
@@ -278,16 +284,16 @@ Victory (void)
     if(screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
-#ifndef SPEAR
-    UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR]);
-#endif
+    if(!SPEAR)
+        UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR]);
     UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
 
-#ifndef SPEAR
-    EndText ();
-#else
-    EndSpear ();
-#endif
+
+    if(!SPEAR)
+        EndText ();
+    else
+        EndSpear ();
+
 
 
 }
@@ -451,8 +457,8 @@ LevelCompleted (void)
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
     int32_t bonus, timeleft = 0;
-    times parTimes[] = {
-#ifndef SPEAR
+    // IOANCH 20130302: unification
+    times parTimes_wl6[] = {
         //
         // Episode One Par Times
         //
@@ -536,7 +542,9 @@ LevelCompleted (void)
         {8.5, "08:30"},
         {0, "??:??"},
         {0, "??:??"}
-#else
+    };
+    times parTimes_sod[] = {
+
         //
         // SPEAR OF DESTINY TIMES
         //
@@ -560,8 +568,8 @@ LevelCompleted (void)
         {0, "??:??"},           // Boss 4
         {0, "??:??"},           // Secret level 1
         {0, "??:??"},           // Secret level 2
-#endif
     };
+    times *parTimes = SPEAR ? parTimes_sod : parTimes_wl6;
 
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     ClearSplitVWB ();           // set up for double buffering in split screen
@@ -580,11 +588,7 @@ LevelCompleted (void)
 // IOANCH 20130301: unification culling
     VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR]);
 
-#ifndef SPEAR
-    if (mapon < 8)
-#else
-    if (mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17)
-#endif
+    if (!SPEAR && mapon < 8 || SPEAR && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17)
     {
         // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -852,33 +856,33 @@ done:   itoa (kr, tempstr, 10);
     }
     else
     {
-#ifdef SPEAR
 // IOANCH 20130301: unification culling
-        switch (mapon)
+        if(SPEAR) 
         {
-            case 4:
-                Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);
-                break;
-            case 9:
-                Write (14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
-                break;
-            case 15:
-                Write (14, 4, "ubermutant\n" STR_DEFEATED);
-                break;
-            case 17:
-                Write (14, 4, " death\n" " knight\n" STR_DEFEATED);
-                break;
-            case 18:
-                Write (13, 4, "secret tunnel\n" "    area\n" "  completed!");
-                break;
-            case 19:
-                Write (13, 4, "secret castle\n" "    area\n" "  completed!");
-                break;
+            switch (mapon)
+            {
+                case 4:
+                    Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);
+                    break;
+                case 9:
+                    Write (14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
+                    break;
+                case 15:
+                    Write (14, 4, "ubermutant\n" STR_DEFEATED);
+                    break;
+                case 17:
+                    Write (14, 4, " death\n" " knight\n" STR_DEFEATED);
+                    break;
+                case 18:
+                    Write (13, 4, "secret tunnel\n" "    area\n" "  completed!");
+                    break;
+                case 19:
+                    Write (13, 4, "secret castle\n" "    area\n" "  completed!");
+                    break;
+            }
         }
-
-#else
-        Write (14, 4, "secret floor\n completed!");
-#endif
+        else
+            Write (14, 4, "secret floor\n completed!");
 
         Write (10, 16, "15000 bonus!");
 
@@ -1003,63 +1007,67 @@ void
 DrawHighScores (void)
 {
     char buffer[16];
-#ifndef SPEAR
+
     char *str;
     // IOANCH 20130301: unification culling
 
     char buffer1[5];
 
-#endif
+
     word i, w, h;
     HighScore *s;
 
-#ifndef SPEAR
-    CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
-    // IOANCH 20130301: unification culling
+    if(!SPEAR)
+    {
+        CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
+        // IOANCH 20130301: unification culling
 
-    CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR]);
-
-
-
-
-    ClearMScreen ();
-    DrawStripes (10);
-
-    VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
-    UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR]);
-
-    // IOANCH 20130301: unification culling
-
-    VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR]);
-    VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR]);
-    VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR]);
 
 
 
-    fontnumber = 0;
 
-#else
-    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-    ClearMScreen ();
-    DrawStripes (10);
-    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+        ClearMScreen ();
+        DrawStripes (10);
 
-    CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
-    VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
+        VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR]);
 
-    fontnumber = 1;
-#endif
+        // IOANCH 20130301: unification culling
+
+        VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR]);
+        VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR]);
+        VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR]);
 
 
-#ifndef SPEAR
-    SETFONTCOLOR (15, 0x29);
-#else
-    SETFONTCOLOR (HIGHLIGHT, 0x29);
-#endif
+
+        fontnumber = 0;
+    }
+    else
+    {
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+        ClearMScreen ();
+        DrawStripes (10);
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+
+        CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
+        VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
+
+        fontnumber = 1;
+    }
+
+    if(!SPEAR)
+    {
+        SETFONTCOLOR (15, 0x29);
+    }
+    else
+    {
+        SETFONTCOLOR (HIGHLIGHT, 0x29);
+    }
 
     for (i = 0, s = Scores; i < MaxScores; i++, s++)
     {
@@ -1068,57 +1076,67 @@ DrawHighScores (void)
         //
         // name
         //
-#ifndef SPEAR
-        PrintX = 4 * 8;
-#else
-        PrintX = 16;
-#endif
+        if(!SPEAR)
+            PrintX = 4 * 8;
+        else
+            PrintX = 16;
+
         US_Print (s->name);
 
         //
         // level
         //
         itoa (s->completed, buffer, 10);
-#ifndef SPEAR
-        for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = (22 * 8) - w;
-#else
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = 194 - w;
-#endif
+        // IOANCH 20130303
+        if(!SPEAR)
+        {
+            for (str = buffer; *str; str++)
+                *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = (22 * 8) - w;
+        }
+        else
+        {
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = 194 - w;
+        }
 // IOANCH 20130301: unification culling
 
-#ifndef SPEAR
-        PrintX -= 6;
-        itoa (s->episode + 1, buffer1, 10);
-        US_Print ("E");
-        US_Print (buffer1);
-        US_Print ("/L");
+        if(!SPEAR)
+        {
+            PrintX -= 6;
+            itoa (s->episode + 1, buffer1, 10);
+            US_Print ("E");
+            US_Print (buffer1);
+            US_Print ("/L");
+        }
 
-#endif
-
-#ifdef SPEAR
-        if (s->completed == 21)
-            VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR]);
+        if(SPEAR)
+        {
+            if (s->completed == 21)
+                VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR]);
+            else
+                US_Print (buffer);
+        }
         else
-#endif
             US_Print (buffer);
 
         //
         // score
         //
         itoa (s->score, buffer, 10);
-#ifndef SPEAR
-        for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = (34 * 8) - 8 - w;
-#else
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = 292 - w;
-#endif
+        if(!SPEAR)
+        {
+            for (str = buffer; *str; str++)
+                *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = (34 * 8) - 8 - w;
+        }
+        else
+        {
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = 292 - w;
+        }
         US_Print (buffer);
 
         // IOANCH 20130301: unification culling
@@ -1127,10 +1145,11 @@ DrawHighScores (void)
 
     VW_UpdateScreen ();
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
-    fontnumber = 0;
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
+        fontnumber = 0;
+    }
 }
 
 //===========================================================================
@@ -1169,11 +1188,11 @@ CheckHighScore (int32_t score, word other)
         }
     }
             // IOANCH 20130301: unification music
-#ifdef SPEAR
-    StartCPMusic (XAWARD_MUS_sod);
-#else
-    StartCPMusic (ROSTER_MUS_wl6);
-#endif
+    if (SPEAR)
+        StartCPMusic (XAWARD_MUS_sod);
+    else
+        StartCPMusic (ROSTER_MUS_wl6);
+
     DrawHighScores ();
 
     VW_FadeIn ();
@@ -1184,42 +1203,48 @@ CheckHighScore (int32_t score, word other)
         // got a high score
         //
         PrintY = 76 + (16 * n);
-#ifndef SPEAR
-        PrintX = 4 * 8;
-        backcolor = BORDCOLOR;
-        fontcolor = 15;
-		  // IOAN 27.05.2012: let the bot write his random name
-		  if(BotMan::active)
-		  {
-			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
-			  US_Print(Scores[n].name);
-			  VW_UpdateScreen();
 
-			  IN_ClearKeysDown ();
-			  IN_UserInput (500);
-		  }
-		  else
-			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
-#else
-        PrintX = 16;
-        fontnumber = 1;
-        VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
-        VW_UpdateScreen ();
-        backcolor = 0x9c;
-        fontcolor = 15;
-		  // IOAN 27.05.2012: let the bot write his random name
-		  if(BotMan::active)
-		  {
-			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
-			  US_Print(Scores[n].name);
-			  VW_UpdateScreen();
+        if(!SPEAR)
+        {
+            PrintX = 4 * 8;
+            backcolor = BORDCOLOR;
+            fontcolor = 15;
+		      // IOAN 27.05.2012: let the bot write his random name
+		      if(BotMan::active)
+		      {
+			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			      US_Print(Scores[n].name);
+			      VW_UpdateScreen();
 
-			  IN_ClearKeysDown ();
-			  IN_UserInput (500);
-		  }
-		  else
-			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
-#endif
+			      IN_ClearKeysDown ();
+			      IN_UserInput (500);
+		      }
+		      else
+			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
+        }
+        else
+        {
+
+            PrintX = 16;
+            fontnumber = 1;
+            VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
+            VW_UpdateScreen ();
+            backcolor = 0x9c;
+            fontcolor = 15;
+		      // IOAN 27.05.2012: let the bot write his random name
+		      if(BotMan::active)
+		      {
+			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			      US_Print(Scores[n].name);
+			      VW_UpdateScreen();
+
+			      IN_ClearKeysDown ();
+			      IN_UserInput (500);
+		      }
+		      else
+			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
+        }
+
     }
     else
     {
@@ -1231,7 +1256,7 @@ CheckHighScore (int32_t score, word other)
 
 // IOANCH 20130301: unification culling
 
-#ifndef SPEAR
+
 
 ////////////////////////////////////////////////////////
 //
@@ -1278,7 +1303,7 @@ NonShareware (void)
     IN_Ack ();
 }
 
-#endif
+
 
 // IOANCH 20130301: unification culling
 //===========================================================================
