@@ -25,7 +25,8 @@ TEXT FORMATTING COMMANDS
 =============================================================================
 */
 
-#ifndef SPEAR
+// IOANCH 20130303: SPEAR unification
+// #ifndef SPEAR
 
 #define BACKCOLOR       0x11
 
@@ -787,4 +788,4 @@ void EndText (void)
     FreeMusic ();
 
 }
-#endif
+// #endif
