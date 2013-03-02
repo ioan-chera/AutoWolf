@@ -26,14 +26,9 @@ extern int numEpisodesMissing;
 //
 int CP_ReadThis (int);
 
-#ifdef SPEAR
-#define STARTITEM       newgame
-
-#else
 // IOANCH 20130301: unification culling
 #define STARTITEM       newgame
 
-#endif
 
 // ENDSTRx constants are defined in foreign.h
 // IOANCH 20130202: unification process
@@ -102,7 +97,7 @@ CP_itemtype CtlMenu[] = {
     {1, STR_CUSTOM, CustomControls}
 };
 
-#ifndef SPEAR
+// IOANCH 20130303: unification
 CP_itemtype NewEmenu[] = {
     // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -131,7 +126,7 @@ CP_itemtype NewEmenu[] = {
     {3, "Episode 6\n" "Confrontation", 0}
 #endif
 };
-#endif
+
 
 
 CP_itemtype NewMenu[] = {
@@ -168,14 +163,13 @@ CP_itemtype CusMenu[] = {
 };
 
 // CP_iteminfo struct format: short x, y, amount, curpos, indent;
+// IOANCH 20130303: unification
 CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             SndItems  = { SM_X, SM_Y1, lengthof(SndMenu), 0, 52 },
             LSItems   = { LSM_X, LSM_Y, lengthof(LSMenu), 0, 24 },
             CtlItems  = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
             CusItems  = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0},
-#ifndef SPEAR
             NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
-#endif
             NewItems  = { NM_X, NM_Y, lengthof(NewMenu), 2, 24 };
 // IOANCH 20130302: unification
 int color_hlite_wl6[] = {
@@ -353,12 +347,9 @@ US_ControlPanel (ScanCode scancode)
     switch (scancode)
     {
         case sc_F1:
-#ifdef SPEAR
-            BossKey ();
-#else
+
             // IOANCH 20130301: unification culling
             BossKey ();
-#endif
             goto finishup;
 
         case sc_F2:
@@ -383,15 +374,14 @@ US_ControlPanel (ScanCode scancode)
 
         finishup:
             CleanupControlPanel ();
-#ifdef SPEAR
-            UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+            // IOANCH 20130303: unification
+            if(SPEAR) 
+                UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
             return;
     }
 
-#ifdef SPEAR
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 
     DrawMainMenu ();
     MenuFadeIn ();
@@ -404,54 +394,54 @@ US_ControlPanel (ScanCode scancode)
     {
         which = HandleMenu (&MainItems, &MainMenu[0], NULL);
 
-#ifdef SPEAR
 // IOANCH 20130301: unification culling
-        IN_ProcessEvents();
-
-        //
-        // EASTER EGG FOR SPEAR OF DESTINY!
-        //
-        if (Keyboard[sc_I] && Keyboard[sc_D])
+        if(SPEAR)
         {
-            VW_FadeOut ();
-                        // IOANCH 20130301: unification music
-            StartCPMusic (XJAZNAZI_MUS_sod);
-            UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-            UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-            ClearMemory ();
+            IN_ProcessEvents();
+
+            //
+            // EASTER EGG FOR SPEAR OF DESTINY!
+            //
+            if (Keyboard[sc_I] && Keyboard[sc_D])
+            {
+                VW_FadeOut ();
+                            // IOANCH 20130301: unification music
+                StartCPMusic (XJAZNAZI_MUS_sod);
+                UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+                UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                ClearMemory ();
 
 
-            CA_CacheGrChunk (gfxvmap[IDGUYS1PIC][SPEAR]);
-            VWB_DrawPic (0, 0, gfxvmap[IDGUYS1PIC][SPEAR]);
-            UNCACHEGRCHUNK (gfxvmap[IDGUYS1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[IDGUYS1PIC][SPEAR]);
+                VWB_DrawPic (0, 0, gfxvmap[IDGUYS1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[IDGUYS1PIC][SPEAR]);
 
-            CA_CacheGrChunk (gfxvmap[IDGUYS2PIC][SPEAR]);
-            VWB_DrawPic (0, 80, gfxvmap[IDGUYS2PIC][SPEAR]);
-            UNCACHEGRCHUNK (gfxvmap[IDGUYS2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[IDGUYS2PIC][SPEAR]);
+                VWB_DrawPic (0, 80, gfxvmap[IDGUYS2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[IDGUYS2PIC][SPEAR]);
 
-            VW_UpdateScreen ();
+                VW_UpdateScreen ();
 
-            SDL_Color pal[256];
-            CA_CacheGrChunk (gfxvmap[IDGUYSPALETTE][SPEAR]);
-            VL_ConvertPalette(grsegs[gfxvmap[IDGUYSPALETTE][SPEAR]], pal, 256);
-            VL_FadeIn (0, 255, pal, 30);
-            UNCACHEGRCHUNK (gfxvmap[IDGUYSPALETTE][SPEAR]);
+                SDL_Color pal[256];
+                CA_CacheGrChunk (gfxvmap[IDGUYSPALETTE][SPEAR]);
+                VL_ConvertPalette(grsegs[gfxvmap[IDGUYSPALETTE][SPEAR]], pal, 256);
+                VL_FadeIn (0, 255, pal, 30);
+                UNCACHEGRCHUNK (gfxvmap[IDGUYSPALETTE][SPEAR]);
 
-            while (Keyboard[sc_I] || Keyboard[sc_D])
-                IN_WaitAndProcessEvents();
-            IN_ClearKeysDown ();
-            IN_Ack ();
+                while (Keyboard[sc_I] || Keyboard[sc_D])
+                    IN_WaitAndProcessEvents();
+                IN_ClearKeysDown ();
+                IN_Ack ();
 
-            VW_FadeOut ();
+                VW_FadeOut ();
 
-            CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-            CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-            DrawMainMenu ();
-            StartCPMusic (MENUSONG);
-            MenuFadeIn ();
+                CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+                DrawMainMenu ();
+                StartCPMusic (MENUSONG);
+                MenuFadeIn ();
+            }
         }
-
-#endif
 
         switch (which)
         {
@@ -507,9 +497,8 @@ US_ControlPanel (ScanCode scancode)
 
     // RETURN/START GAME EXECUTION
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 }
 
 void EnableEndGameMenuItem()
@@ -653,19 +642,23 @@ CP_CheckQuick (ScanCode scancode)
             }
             else
             {
-#ifndef SPEAR
+
                 // IOANCH 20130302: unification
-                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
-                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
-#else
-                CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
-#endif
+                if(!SPEAR)
+                {
+                    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
+                }
+                else
+                {
+                    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                }
 
                 VW_FadeOut ();
                 if(screenHeight % 200 != 0)
@@ -690,17 +683,20 @@ CP_CheckQuick (ScanCode scancode)
                 if (MousePresent && IN_IsInputGrabbed())
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
-#ifndef SPEAR
-                // IOANCH 20130302: unification
-                UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
-#else
-                UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#endif
+                if(!SPEAR)
+                {
+                    // IOANCH 20130302: unification
+                    UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
+                }
+                else
+                {
+                    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                }
             }
             return 1;
 
@@ -726,19 +722,22 @@ CP_CheckQuick (ScanCode scancode)
             }
             else
             {
-#ifndef SPEAR
-                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
-                // IOANCH 20130302: unification
-                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_LOADGAMEPIC][SPEAR]);
-                CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
-#else
-                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#endif
+                if(!SPEAR)
+                {
+                    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
+                    // IOANCH 20130302: unification
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_LOADGAMEPIC][SPEAR]);
+                    CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
+                }
+                else
+                {
+                    CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                }
 
                 VW_FadeOut ();
                 if(screenHeight % 200 != 0)
@@ -764,17 +763,20 @@ CP_CheckQuick (ScanCode scancode)
                 if (MousePresent && IN_IsInputGrabbed())
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
-#ifndef SPEAR
                 // IOANCH 20130302: unification
-                UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_LOADGAMEPIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
-#else
-                UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#endif
+                if(!SPEAR)
+                {
+                    UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_LOADGAMEPIC][SPEAR]);
+                    UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
+                }
+                else
+                {
+                    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+                }
             }
             return 1;
 
@@ -852,14 +854,19 @@ CP_ViewScores (int)
 {
     fontnumber = 0;
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-                // IOANCH 20130301: unification music
-    StartCPMusic (XAWARD_MUS_sod);
-#else
-                // IOANCH 20130301: unification music
-    StartCPMusic (ROSTER_MUS_wl6);
-#endif
+    // IOANCH 20130303: unification
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+                    // IOANCH 20130301: unification music
+        StartCPMusic (XAWARD_MUS_sod);
+    }
+
+    else
+    {
+                    // IOANCH 20130301: unification music
+        StartCPMusic (ROSTER_MUS_wl6);
+    }
 
     DrawHighScores ();
     VW_UpdateScreen ();
@@ -871,10 +878,11 @@ CP_ViewScores (int)
     StartCPMusic (MENUSONG);
     MenuFadeOut ();
 
-#ifdef SPEAR
-    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
     return 0;
 }
 
@@ -889,96 +897,97 @@ CP_NewGame (int)
 {
     int which, episode;
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 
 
-#ifndef SPEAR
-  firstpart:
-
-    DrawNewEpisode ();
-    do
+    if(!SPEAR)
     {
-        which = HandleMenu (&NewEitems, &NewEmenu[0], NULL);
-        switch (which)
+firstpart:
+
+        DrawNewEpisode ();
+        do
         {
-            case -1:
+            which = HandleMenu (&NewEitems, &NewEmenu[0], NULL);
+            switch (which)
+            {
+                case -1:
+                    MenuFadeOut ();
+                    return 0;
+
+                default:
+                    if (!EpisodeSelect[which / 2])
+                    {
+                        SD_PlaySound (NOWAYSND);
+                        Message ("Please select \"Read This!\"\n"
+                                 "from the Options menu to\n"
+                                 "find out how to order this\n" "episode from Apogee.");
+                        IN_ClearKeysDown ();
+                        IN_Ack ();
+                        DrawNewEpisode ();
+                        which = 0;
+                    }
+                    else
+                    {
+                        episode = which / 2;
+                        which = 1;
+                    }
+                    break;
+            }
+
+        }
+        while (!which);
+
+        ShootSnd ();
+
+        //
+        // ALREADY IN A GAME?
+        //
+        if (ingame)
+            // IOANCH 20130301: unification culling
+
+
+
+            if (!Confirm (CURGAME))
+            {
                 MenuFadeOut ();
                 return 0;
+            }
 
-            default:
-                if (!EpisodeSelect[which / 2])
-                {
-                    SD_PlaySound (NOWAYSND);
-                    Message ("Please select \"Read This!\"\n"
-                             "from the Options menu to\n"
-                             "find out how to order this\n" "episode from Apogee.");
-                    IN_ClearKeysDown ();
-                    IN_Ack ();
-                    DrawNewEpisode ();
-                    which = 0;
-                }
-                else
-                {
-                    episode = which / 2;
-                    which = 1;
-                }
-                break;
-        }
-
+        MenuFadeOut ();
     }
-    while (!which);
+    else
+    {
+        episode = 0;
 
-    ShootSnd ();
-
-    //
-    // ALREADY IN A GAME?
-    //
-    if (ingame)
-        // IOANCH 20130301: unification culling
-
-
-
-        if (!Confirm (CURGAME))
-        {
-            MenuFadeOut ();
-            return 0;
-        }
-
-    MenuFadeOut ();
-
-#else
-    episode = 0;
-
-    //
-    // ALREADY IN A GAME?
-    //
-    CacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
-    DrawNewGame ();
-    if (ingame)
-        if (!Confirm (CURGAME))
-        {
-            MenuFadeOut ();
-            UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
-            CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-            return 0;
-        }
-
-#endif
+        //
+        // ALREADY IN A GAME?
+        //
+        CacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+        DrawNewGame ();
+        if (ingame)
+            if (!Confirm (CURGAME))
+            {
+                MenuFadeOut ();
+                UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+                CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+                return 0;
+            }
+    }
 
     DrawNewGame ();
     which = HandleMenu (&NewItems, &NewMenu[0], DrawNewGameDiff);
     if (which < 0)
     {
         MenuFadeOut ();
-#ifndef SPEAR
-        goto firstpart;
-#else
-        UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
-        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-        return 0;
-#endif
+        if(!SPEAR)
+            goto firstpart;
+        else
+        {
+            UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+            CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+            return 0;
+        }
     }
 
     ShootSnd ();
@@ -989,22 +998,19 @@ CP_NewGame (int)
     //
     // CHANGE "READ THIS!" TO NORMAL COLOR
     //
-#ifndef SPEAR
-    // IOANCH 20130301: unification culling
-#endif
 
     pickquick = 0;
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
 
     return 0;
 }
 
 
-#ifndef SPEAR
 /////////////////////
 //
 // DRAW NEW EPISODE MENU
@@ -1038,7 +1044,6 @@ DrawNewEpisode (void)
     MenuFadeIn ();
     WaitKeyUp ();
 }
-#endif
 
 /////////////////////
 //
@@ -1055,16 +1060,19 @@ DrawNewGame (void)
     PrintX = NM_X + 20;
     PrintY = NM_Y - 32;
 
-#ifndef SPEAR
+    if(!SPEAR)
+    {
 #ifdef SPANISH
-    US_Print ("Eres macho?");
+        US_Print ("Eres macho?");
 #else
-    US_Print ("How tough are you?");
+        US_Print ("How tough are you?");
 #endif
-#else
-    // IOANCH 20130302: unification
-    VWB_DrawPic (PrintX, PrintY, gfxvmap[C_HOWTOUGHPIC][SPEAR]);
-#endif
+    }
+    else
+    {
+        // IOANCH 20130302: unification
+        VWB_DrawPic (PrintX, PrintY, gfxvmap[C_HOWTOUGHPIC][SPEAR]);
+    }
 
     DrawWindow (NM_X - 5, NM_Y - 10, NM_W, NM_H, BKGDCOLOR);
 
@@ -1099,10 +1107,11 @@ CP_Sound (int)
     int which;
 
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
+    }
 
     DrawSoundMenu ();
     MenuFadeIn ();
@@ -1201,10 +1210,11 @@ CP_Sound (int)
 
     MenuFadeOut ();
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
     return 0;
 }
 
@@ -1403,10 +1413,11 @@ CP_LoadGame (int quick)
     }
 
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+    }
 
     DrawLoadSaveScreen (0);
 
@@ -1442,9 +1453,6 @@ CP_LoadGame (int quick)
             // CHANGE "READ THIS!" TO NORMAL COLOR
             //
 
-#ifndef SPEAR
-            // IOANCH 20130301: unification culling
-#endif
 
             exit = 1;
             break;
@@ -1455,10 +1463,11 @@ CP_LoadGame (int quick)
 
     MenuFadeOut ();
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
 
     return exit;
 }
@@ -1588,10 +1597,11 @@ CP_SaveGame (int quick)
     }
 
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+    }
 
     DrawLoadSaveScreen (1);
 
@@ -1678,10 +1688,11 @@ CP_SaveGame (int quick)
 
     MenuFadeOut ();
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
 
     return exit;
 }
@@ -1696,10 +1707,11 @@ CP_Control (int)
 {
     int which;
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
+    }
 
     DrawCtlScreen ();
     MenuFadeIn ();
@@ -1738,10 +1750,11 @@ CP_Control (int)
 
     MenuFadeOut ();
 
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
-    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    }
     return 0;
 }
 
@@ -2293,13 +2306,16 @@ FixupCustom (int w)
 
     VWB_Hlin (7, 32, y - 1, DEACTIVE);
     VWB_Hlin (7, 32, y + 12, BORD2COLOR);
-#ifndef SPEAR
-    VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-    VWB_Hlin (7, 32, y + 13, BORDCOLOR);
-#else
-    VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-    VWB_Hlin (7, 32, y + 13, BORD2COLOR);
-#endif
+    if(!SPEAR)
+    {
+        VWB_Hlin (7, 32, y - 2, BORDCOLOR);
+        VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+    }
+    else
+    {
+        VWB_Hlin (7, 32, y - 2, BORD2COLOR);
+        VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+    }
 
     switch (w)
     {
@@ -2322,13 +2338,16 @@ FixupCustom (int w)
         y = CST_Y + 26 + lastwhich * 13;
         VWB_Hlin (7, 32, y - 1, DEACTIVE);
         VWB_Hlin (7, 32, y + 12, BORD2COLOR);
-#ifndef SPEAR
-        VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-        VWB_Hlin (7, 32, y + 13, BORDCOLOR);
-#else
-        VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-        VWB_Hlin (7, 32, y + 13, BORD2COLOR);
-#endif
+        if(!SPEAR)
+        {
+            VWB_Hlin (7, 32, y - 2, BORDCOLOR);
+            VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+        }
+        else
+        {
+            VWB_Hlin (7, 32, y - 2, BORD2COLOR);
+            VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+        }
 
         if (lastwhich != w)
             switch (lastwhich)
@@ -2375,13 +2394,16 @@ DrawCustomScreen (void)
     WindowX = 0;
     WindowW = 320;
 
-#ifndef SPEAR
-    PrintY = CST_Y;
-    US_CPrint ("Mouse\n");
-#else
-    PrintY = CST_Y + 13;
-    VWB_DrawPic (128, 48, gfxvmap[C_MOUSEPIC][SPEAR]);
-#endif
+    if(!SPEAR)
+    {
+        PrintY = CST_Y;
+        US_CPrint ("Mouse\n");
+    }
+    else
+    {
+        PrintY = CST_Y + 13;
+        VWB_DrawPic (128, 48, gfxvmap[C_MOUSEPIC][SPEAR]);
+    }
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
@@ -2412,18 +2434,22 @@ DrawCustomScreen (void)
     //
     // JOYSTICK/PAD
     //
-#ifndef SPEAR
-    SETFONTCOLOR (READCOLOR, BKGDCOLOR);
-    US_CPrint ("Joystick/Gravis GamePad\n");
-#else
-    PrintY += 13;
-    // IOANCH 20130302: unification
-    VWB_DrawPic (40, 88, gfxvmap[C_JOYSTICKPIC][SPEAR]);
-#endif
+    if(!SPEAR)
+    {
+        SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+        US_CPrint ("Joystick/Gravis GamePad\n");
+    }
+    else
+    {
+        PrintY += 13;
+        // IOANCH 20130302: unification
+        VWB_DrawPic (40, 88, gfxvmap[C_JOYSTICKPIC][SPEAR]);
+    }
 
-#ifdef SPEAR
-    VWB_DrawPic (112, 120, gfxvmap[C_KEYBOARDPIC][SPEAR]);
-#endif
+    if(SPEAR)
+    {
+        VWB_DrawPic (112, 120, gfxvmap[C_KEYBOARDPIC][SPEAR]);
+    }
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
@@ -2453,12 +2479,15 @@ DrawCustomScreen (void)
     //
     // KEYBOARD
     //
-#ifndef SPEAR
-    SETFONTCOLOR (READCOLOR, BKGDCOLOR);
-    US_CPrint ("Keyboard\n");
-#else
-    PrintY += 13;
-#endif
+    if(!SPEAR)
+    {
+        SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+        US_CPrint ("Keyboard\n");
+    }
+    else
+    {
+        PrintY += 13;
+    }
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 #ifdef SPANISH
     PrintX = CST_START - 16;
@@ -2798,19 +2827,10 @@ CP_Quit (int)
 void
 IntroScreen (void)
 {
-#ifdef SPEAR
-
-#define MAINCOLOR       0x4f
-#define EMSCOLOR        0x4f
-#define XMSCOLOR        0x4f
-
-#else
-
-#define MAINCOLOR       0x6c
-#define EMSCOLOR        0x6c    // 0x4f
-#define XMSCOLOR        0x6c    // 0x7f
-
-#endif
+    // IOANCH 20130303: unification
+#define MAINCOLOR (SPEAR ? 0x4f : 0x6c)
+#define EMSCOLOR (SPEAR ? 0x4f : 0x6c)
+#define XMSCOLOR (SPEAR ? 0x4f : 0x6c)
 #define FILLCOLOR       14
 
 //      long memory;
@@ -2897,12 +2917,11 @@ IntroScreen (void)
 void
 ClearMScreen (void)
 {
-#ifndef SPEAR
-    VWB_Bar (0, 0, 320, 200, BORDCOLOR);
-#else
+    if(!SPEAR)
+        VWB_Bar (0, 0, 320, 200, BORDCOLOR);
+    else
     // IOANCH 20130302: unification
-    VWB_DrawPic (0, 0, gfxvmap[C_BACKDROPPIC][SPEAR]);
-#endif
+        VWB_DrawPic (0, 0, gfxvmap[C_BACKDROPPIC][SPEAR]);
 }
 
 
@@ -2967,11 +2986,10 @@ SetupControlPanel (void)
     // CACHE GRAPHICS & SOUNDS
     //
     CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
-#ifndef SPEAR
-    CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
-#else
-    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#endif
+    if(!SPEAR)
+        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+    else
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
     fontnumber = 1;
@@ -3041,11 +3059,10 @@ void SetupSaveGames()
 void
 CleanupControlPanel (void)
 {
-#ifndef SPEAR
-    UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
-#else
-    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#endif
+    if(!SPEAR)
+        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+    else
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 
     fontnumber = 0;
 }
@@ -3751,13 +3768,16 @@ DrawMenuGun (CP_iteminfo * iteminfo)
 void
 DrawStripes (int y)
 {
-#ifndef SPEAR
-    VWB_Bar (0, y, 320, 24, 0);
-    VWB_Hlin (0, 319, y + 22, STRIPE);
-#else
-    VWB_Bar (0, y, 320, 22, 0);
-    VWB_Hlin (0, 319, y + 23, 0);
-#endif
+    if(!SPEAR)
+    {
+        VWB_Bar (0, y, 320, 24, 0);
+        VWB_Hlin (0, 319, y + 22, STRIPE);
+    }
+    else
+    {
+        VWB_Bar (0, y, 320, 22, 0);
+        VWB_Hlin (0, 319, y + 23, 0);
+    }
 }
 
 void
@@ -3821,86 +3841,89 @@ CheckForEpisodes (void)
 // ENGLISH
 //
         // IOANCH 20130301: unification culling
-#ifndef SPEAR
-    if(!stat("VSWAP.WL6", &statbuf))
+    if(!SPEAR)
     {
-        strcpy (extension, "WL6");
-        NewEmenu[2].active =
-            NewEmenu[4].active =
-            NewEmenu[6].active =
-            NewEmenu[8].active =
-            NewEmenu[10].active =
-            EpisodeSelect[1] =
-            EpisodeSelect[2] = EpisodeSelect[3] = EpisodeSelect[4] = EpisodeSelect[5] = 1;
-    }
-    else
-    {
-        if(!stat("VSWAP.WL3", &statbuf))
+        if(!stat("VSWAP.WL6", &statbuf))
         {
-            strcpy (extension, "WL3");
-            numEpisodesMissing = 3;
-            NewEmenu[2].active = NewEmenu[4].active = EpisodeSelect[1] = EpisodeSelect[2] = 1;
+            strcpy (extension, "WL6");
+            NewEmenu[2].active =
+                NewEmenu[4].active =
+                NewEmenu[6].active =
+                NewEmenu[8].active =
+                NewEmenu[10].active =
+                EpisodeSelect[1] =
+                EpisodeSelect[2] = EpisodeSelect[3] = EpisodeSelect[4] = EpisodeSelect[5] = 1;
         }
         else
         {
-            if(!stat("VSWAP.WL1", &statbuf))
+            if(!stat("VSWAP.WL3", &statbuf))
             {
-                strcpy (extension, "WL1");
-                numEpisodesMissing = 5;
+                strcpy (extension, "WL3");
+                numEpisodesMissing = 3;
+                NewEmenu[2].active = NewEmenu[4].active = EpisodeSelect[1] = EpisodeSelect[2] = 1;
             }
             else
-                Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+            {
+                if(!stat("VSWAP.WL1", &statbuf))
+                {
+                    strcpy (extension, "WL1");
+                    numEpisodesMissing = 5;
+                }
+                else
+                    Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+            }
         }
     }
-#endif
 
 
 
-#ifdef SPEAR
+    if(SPEAR)
+    {
 // IOANCH 20130301: unification culling
-    if(param_mission == 0)
-    {
-        if(!stat("VSWAP.SOD", &statbuf))
-            strcpy (extension, "SOD");
+        if(param_mission == 0)
+        {
+            if(!stat("VSWAP.SOD", &statbuf))
+                strcpy (extension, "SOD");
+            else
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+        }
+        else if(param_mission == 1)
+        {
+            if(!stat("VSWAP.SD1", &statbuf))
+                strcpy (extension, "SD1");
+            else
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+        }
+        else if(param_mission == 2)
+        {
+            if(!stat("VSWAP.SD2", &statbuf))
+                strcpy (extension, "SD2");
+            else
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+        }
+        else if(param_mission == 3)
+        {
+            if(!stat("VSWAP.SD3", &statbuf))
+                strcpy (extension, "SD3");
+            else
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+        }
         else
-            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-    }
-    else if(param_mission == 1)
-    {
-        if(!stat("VSWAP.SD1", &statbuf))
-            strcpy (extension, "SD1");
-        else
-            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-    }
-    else if(param_mission == 2)
-    {
-        if(!stat("VSWAP.SD2", &statbuf))
-            strcpy (extension, "SD2");
-        else
-            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-    }
-    else if(param_mission == 3)
-    {
-        if(!stat("VSWAP.SD3", &statbuf))
-            strcpy (extension, "SD3");
-        else
-            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            Quit ("UNSUPPORTED MISSION!");
+        strcpy (graphext, "SOD");
+        strcpy (audioext, "SOD");
     }
     else
-        Quit ("UNSUPPORTED MISSION!");
-    strcpy (graphext, "SOD");
-    strcpy (audioext, "SOD");
-#else
-    strcpy (graphext, extension);
-    strcpy (audioext, extension);
-#endif
+    {
+        strcpy (graphext, extension);
+        strcpy (audioext, extension);
+    }
 
     strcat (configname, extension);
     strcat (SaveName, extension);
     strcat (demoname, extension);
 
-#ifndef SPEAR
+    if(!SPEAR)
     // IOANCH 20130301: unification culling
-    strcat (endfilename, extension);
-#endif
+        strcat (endfilename, extension);
 }
