@@ -81,7 +81,7 @@ void VH_UpdateScreen();
 #define VW_WaitVBL		    VL_WaitVBL
 // IOANCH 20130202: unification process
 #define VW_FadeIn()		    VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,30);
-#define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30);
+#define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30)
 #define VW_ScreenToScreen	VL_ScreenToScreen
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 

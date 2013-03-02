@@ -304,13 +304,13 @@ static void ScanInfoPlane(void)
                 case 70:
                 case 71:
                 case 72:
-#ifdef SPEAR
-                case 73:                        // TRUCK AND SPEAR!
-                case 74:
-#elif defined(USE_DIR3DSPR)                     // just for the example
-                case 73:
-#endif
+                    // IOANCH 20130302: unification
                     SpawnStatic(x,y,tile-23);
+                    break;
+                case 73:
+                case 74:
+                    if(SPEAR)
+                        SpawnStatic(x,y,tile-23);
                     break;
 
 //
@@ -506,55 +506,56 @@ static void ScanInfoPlane(void)
                 case 139:
                 case 140:
                 case 141:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_dog, x, y, tile - 138, true);
+					Basic::SpawnEnemy(en_dog, x, y, tile - 138, true);
                     break;
 
 //
 // boss
 //
-#ifndef SPEAR
+                    // IOANCH 20130302: unification
+
                 case 214:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_boss, x, y);
+				    if(!SPEAR) Basic::SpawnEnemy(en_boss, x, y);
                     break;
                 case 197:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_gretel, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_gretel, x, y);
                     break;
                 case 215:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_gift, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_gift, x, y);
                     break;
                 case 179:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_fat, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_fat, x, y);
                     break;
                 case 196:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_schabbs, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_schabbs, x, y);
                     break;
                 case 160:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_fake, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_fake, x, y);
                     break;
                 case 178:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_hitler, x, y);
-                    break;
-#else
-                case 106:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_spectre, x, y);
-                    break;
-                case 107:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_angel, x, y);
-                    break;
-                case 125:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_trans, x, y);
-                    break;
-                case 142:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_uber, x, y);
-                    break;
-                case 143:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_will, x, y);
-                    break;
-                case 161:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_death, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_hitler, x, y);
                     break;
 
-#endif
+                case 106:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_spectre, x, y);
+                    break;
+                case 107:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_angel, x, y);
+                    break;
+                case 125:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_trans, x, y);
+                    break;
+                case 142:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_uber, x, y);
+                    break;
+                case 143:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_will, x, y);
+                    break;
+                case 161:	// IOAN 17.05.2012: use centralized function
+					if(SPEAR) Basic::SpawnEnemy(en_death, x, y);
+                    break;
+
+
 
 //
 // mutants
@@ -604,20 +605,20 @@ static void ScanInfoPlane(void)
 //
 // ghosts
 //
-#ifndef SPEAR
+                    // IOANCH 20130302: unification
+
                 case 224:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_blinky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_blinky, x, y);
                     break;
                 case 225:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_clyde, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_clyde, x, y);
                     break;
                 case 226:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_pinky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_pinky, x, y);
                     break;
                 case 227:	// IOAN 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_inky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(en_inky, x, y);
                     break;
-#endif
             }
         }
     }
@@ -1098,12 +1099,18 @@ void RecordDemo (void)
     CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
     fontnumber=0;
     SETFONTCOLOR(0,15);
-#ifndef SPEAR
+    if(!SPEAR)
+    {
     // IOANCH 20130301: unification culling
-    US_Print("  Demo which level(1-60): "); maps = 60;
-#else
-    US_Print("  Demo which level(1-21): "); maps = 21;
-#endif
+        US_Print("  Demo which level(1-60): ");
+        maps = 60;
+    }
+    else
+    {
+        US_Print("  Demo which level(1-21): ");
+        maps = 21;
+    }
+
     VW_UpdateScreen();
     VW_FadeIn ();
     esc = !US_LineInput (px,py,str,NULL,true,2,0);
@@ -1117,14 +1124,17 @@ void RecordDemo (void)
         return;
 
     VW_FadeOut ();
-
-#ifndef SPEAR
-    NewGame (gd_hard,level/10);
-    gamestate.mapon = level%10;
-#else
-    NewGame (gd_hard,0);
-    gamestate.mapon = level;
-#endif
+    // IOANCH 20130302: unification
+    if(!SPEAR)
+    {
+        NewGame (gd_hard,level/10);
+        gamestate.mapon = level%10;
+    }
+    else
+    {
+        NewGame (gd_hard,0);
+        gamestate.mapon = level;
+    }
 
     StartDemoRecord (level);
 
@@ -1398,14 +1408,12 @@ restartgame:
         startgame = false;
         if (!loadedgame)
             SetupGameLevel ();
-
-#ifdef SPEAR
-        if (gamestate.mapon == 20)      // give them the key allways
+        // IOANCH 20130302: unification
+        if (SPEAR && gamestate.mapon == 20)      // give them the key allways
         {
             gamestate.keys |= 1;
             DrawKeys ();
         }
-#endif
 
         ingame = true;
         if(loadedgame)
@@ -1424,14 +1432,11 @@ restartgame:
         }
 
         DrawLevel ();
-
-#ifdef SPEAR
+        // IOANCH 20130302: unification
 startplayloop:
-#endif
         PlayLoop ();
 
-#ifdef SPEAR
-        if (spearflag)
+        if (SPEAR && spearflag)
         {
             SD_StopSound();
             SD_PlaySound(GETSPEARSND);
@@ -1454,7 +1459,6 @@ startplayloop:
             Thrust (0,0);
             goto startplayloop;
         }
-#endif
 
         StopMusic ();
         ingame = false;
@@ -1480,69 +1484,66 @@ startplayloop:
                 if(viewsize == 21) DrawPlayScreen();
 
 // IOANCH 20130301: unification culling
-#ifdef JAPDEMO
-                if (gamestate.mapon == 3)
-                {
-                    died = true;                    // don't "get psyched!"
 
-                    VW_FadeOut ();
-
-                    ClearMemory ();
-
-                    CheckHighScore (gamestate.score,gamestate.mapon+1);
-// IOANCH 20130301: unification culling
-
-                    strcpy(MainMenu[viewscores].string,STR_VS);
-
-                    MainMenu[viewscores].routine = CP_ViewScores;
-                    return;
-                }
-#endif
 
                 gamestate.oldscore = gamestate.score;
+                // IOANCH 20130302: unification
+                if(!SPEAR)
+                {
+                    if (gamestate.mapon == 9)
+                        gamestate.mapon = ElevatorBackTo[gamestate.episode];    // back from secret
+                    else
+                    {
+                        //
+                        // GOING TO SECRET LEVEL
+                        //
+                        if (playstate == ex_secretlevel)
+                            gamestate.mapon = 9;
+                        else
+                        {
 
-#ifndef SPEAR
-                //
-                // COMING BACK FROM SECRET LEVEL
-                //
-                if (gamestate.mapon == 9)
-                    gamestate.mapon = ElevatorBackTo[gamestate.episode];    // back from secret
+                            //
+                            // GOING TO NEXT LEVEL
+                            //
+                            gamestate.mapon++; 
+                        }
+                    }
+                }
                 else
+                {
+                    
+#define FROMSECRET1             3
+#define FROMSECRET2             11
+
                     //
                     // GOING TO SECRET LEVEL
                     //
                     if (playstate == ex_secretlevel)
-                        gamestate.mapon = 9;
-#else
-
-#define FROMSECRET1             3
-#define FROMSECRET2             11
-
-                //
-                // GOING TO SECRET LEVEL
-                //
-                if (playstate == ex_secretlevel)
-                    switch(gamestate.mapon)
-                {
-                    case FROMSECRET1: gamestate.mapon = 18; break;
-                    case FROMSECRET2: gamestate.mapon = 19; break;
-                }
-                else
-                    //
-                    // COMING BACK FROM SECRET LEVEL
-                    //
-                    if (gamestate.mapon == 18 || gamestate.mapon == 19)
                         switch(gamestate.mapon)
                     {
-                        case 18: gamestate.mapon = FROMSECRET1+1; break;
-                        case 19: gamestate.mapon = FROMSECRET2+1; break;
+                        case FROMSECRET1: gamestate.mapon = 18; break;
+                        case FROMSECRET2: gamestate.mapon = 19; break;
                     }
-#endif
                     else
+                    {
                         //
-                        // GOING TO NEXT LEVEL
+                        // COMING BACK FROM SECRET LEVEL
                         //
-                        gamestate.mapon++;
+                        if (gamestate.mapon == 18 || gamestate.mapon == 19)
+                            switch(gamestate.mapon)
+                        {
+                            case 18: gamestate.mapon = FROMSECRET1+1; break;
+                            case 19: gamestate.mapon = FROMSECRET2+1; break;
+                        }
+                        else
+                        {
+                            //
+                            // GOING TO NEXT LEVEL
+                            //
+                            gamestate.mapon++;
+                        }
+                    }
+                }
                 break;
 
             case ex_died:
@@ -1572,11 +1573,11 @@ startplayloop:
 
             case ex_victorious:
                 if(viewsize == 21) DrawPlayScreen();
-#ifndef SPEAR
-                VW_FadeOut ();
-#else
-                VL_FadeOut (0,255,0,17,17,300);
-#endif
+                // IOANCH 20130302: unification
+                if(!SPEAR)
+                    VW_FadeOut ();
+                else
+                    VL_FadeOut (0,255,0,17,17,300);
                 ClearMemory ();
 
                 Victory ();

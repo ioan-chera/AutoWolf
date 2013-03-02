@@ -191,9 +191,7 @@ Victory (void)
 
 
 
-#ifndef JAPDEMO
     VWB_DrawPic (8, 4, gfxvmap[L_BJWINSPIC][SPEAR]);
-#endif
 
 
     for (kr = sr = tr = sec = i = 0; i < LRpack; i++)
@@ -914,20 +912,7 @@ done:   itoa (kr, tempstr, 10);
 //
     // IOANCH 20130301: unification culling
 
-#ifdef JAPDEMO
-    if (gamestate.mapon == 3)
-    {
-        SD_PlaySound (BONUS1UPSND);
 
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
-        Message ("This concludes your demo\n"
-                 "of Wolfenstein 3-D! Now,\n" "go to your local software\n" "store and buy it!");
-        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
-
-        IN_ClearKeysDown ();
-        IN_Ack ();
-    }
-#endif
 
     VW_FadeOut ();
     DrawPlayBorder();
