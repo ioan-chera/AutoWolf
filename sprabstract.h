@@ -491,6 +491,7 @@ enum
     SPR_STAT_45,
     SPR_STAT_46,
     SPR_STAT_47,
+    SPR_STAT_48,
     SPR_STAT_49,
     SPR_STAT_4,
     SPR_STAT_50,

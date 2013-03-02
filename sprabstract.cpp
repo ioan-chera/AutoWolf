@@ -492,6 +492,7 @@ const unsigned int sprmap[][2] =
     {SPR_STAT_45_wl6, SPR_STAT_45_sod},
     {SPR_STAT_46_wl6, SPR_STAT_46_sod},
     {SPR_STAT_47_wl6, SPR_STAT_47_sod},
+    {0, SPR_STAT_48_sod},
     {0, SPR_STAT_49_sod},
     {SPR_STAT_4_wl6, SPR_STAT_4_sod},
     {0, SPR_STAT_50_sod},
