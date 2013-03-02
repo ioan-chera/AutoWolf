@@ -177,16 +177,27 @@ CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
 #endif
             NewItems  = { NM_X, NM_Y, lengthof(NewMenu), 2, 24 };
-
-int color_hlite[] = {
-    DEACTIVE,
+// IOANCH 20130302: unification
+int color_hlite_wl6[] = {
+    DEACTIVE_wl6,
     HIGHLIGHT,
     READHCOLOR,
     0x67
 };
-
-int color_norml[] = {
-    DEACTIVE,
+int color_hlite_sod[] = {
+    DEACTIVE_sod,
+    HIGHLIGHT,
+    READHCOLOR,
+    0x67
+};
+int color_norml_wl6[] = {
+    DEACTIVE_wl6,
+    TEXTCOLOR,
+    READCOLOR,
+    0x6b
+};
+int color_norml_sod[] = {
+    DEACTIVE_sod,
     TEXTCOLOR,
     READCOLOR,
     0x6b
@@ -3403,13 +3414,14 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
 void
 SetTextColor (CP_itemtype * items, int hlight)
 {
+    // IOANCH 20130302: unification
     if (hlight)
     {
-        SETFONTCOLOR (color_hlite[items->active], BKGDCOLOR);
+        SETFONTCOLOR (SPEAR ? color_hlite_sod[items->active] : color_hlite_wl6[items->active], BKGDCOLOR);
     }
     else
     {
-        SETFONTCOLOR (color_norml[items->active], BKGDCOLOR);
+        SETFONTCOLOR (SPEAR ? color_norml_sod[items->active] : color_norml_wl6[items->active], BKGDCOLOR);
     }
 }
 

@@ -1,27 +1,15 @@
 //
 // WL_MENU.H
 //
-#ifdef SPEAR
-
-#define BORDCOLOR       0x99
-#define BORD2COLOR      0x93
-#define DEACTIVE        0x9b
-#define BKGDCOLOR       0x9d
-//#define STRIPE                0x9c
-
-#define MenuFadeOut()   VL_FadeOut(0,255,0,0,51,10)
-
-#else
-
-#define BORDCOLOR       0x29
-#define BORD2COLOR      0x23
-#define DEACTIVE        0x2b
-#define BKGDCOLOR       0x2d
-#define STRIPE          0x2c
-
-#define MenuFadeOut()   VL_FadeOut(0,255,43,0,0,10)
-
-#endif
+// IOANCH 20130302: unification
+#define BORDCOLOR (SPEAR ? 0x99 : 0x29)
+#define BORD2COLOR (SPEAR ? 0x93 : 0x23)
+#define DEACTIVE_sod 0x9b
+#define DEACTIVE_wl6 0x2b
+#define DEACTIVE (SPEAR ? DEACTIVE_sod : DEACTIVE_wl6)
+#define BKGDCOLOR (SPEAR ? 0x9d : 0x2d)
+#define STRIPE 0x2c
+#define MenuFadeOut() VL_FadeOut(0, 255, SPEAR ? 0 : 43, 0, SPEAR ? 51 : 0, 10)
 
 #define READCOLOR       0x4a
 #define READHCOLOR      0x47
@@ -42,12 +30,8 @@
 #define MENU_X  76
 #define MENU_Y  55
 #define MENU_W  178
-#ifndef SPEAR
 // IOANCH 20130301: unification culling
 #define MENU_H  13*9+6
-#else
-#define MENU_H  13*9+6
-#endif
 
 #define SM_X    48
 #define SM_W    250
