@@ -891,8 +891,7 @@ void KillActor (objtype *ob)
             GivePoints (I_DOGSCORE);
             NewState (ob,&s_dogdie1);
             break;
-
-#ifndef SPEAR
+            // IOANCH 20130303: unification
         case bossobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_bossdie1);
@@ -940,7 +939,6 @@ void KillActor (objtype *ob)
             gamestate.killy = player->y;
             NewState (ob,&s_hitlerdie1);
             break;
-#else
         case spectreobj:
             if (ob->flags&FL_BONUS)
             {
@@ -978,7 +976,6 @@ void KillActor (objtype *ob)
             NewState (ob,&s_deathdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
-#endif
 		default:
 			;
     }
@@ -1354,7 +1351,6 @@ void FirstSighting (objtype *ob)
             ob->speed *= 2;                 // go faster when chasing player
             break;
 
-#ifndef SPEAR
         case bossobj:
             SD_PlaySound(GUTENTAGSND);
             NewState (ob,&s_bosschase1);
@@ -1409,7 +1405,6 @@ void FirstSighting (objtype *ob)
             NewState (ob,&s_blinkychase1);
             ob->speed *= 2;                 // go faster when chasing player
             break;
-#else
         case spectreobj:
             SD_PlaySound(GHOSTSIGHTSND);
             NewState (ob,&s_spectrechase1);
@@ -1444,7 +1439,6 @@ void FirstSighting (objtype *ob)
             NewState (ob,&s_deathchase1);
             ob->speed = 2048;                       // go faster when chasing player
             break;
-#endif
 		default:
 			;
     }
