@@ -674,10 +674,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
 			case rocketobj:
 			case hrocketobj:
 			case sparkobj:
+                // IOANCH 20130303: unification
 				if(obj->state != &s_boom1 && obj->state != &s_boom2 && obj->state != &s_boom3
-#ifdef SPEAR
 				   && obj->state != &s_hboom1 && obj->state != &s_hboom2 && obj->state != &s_hboom3
-#endif
 				   )
 				{
 					Basic::thrownProjectiles.add(obj);
@@ -880,52 +879,57 @@ void SignonScreen (void)                        // VGA version
 
 void FinishSignon (void)
 {
-#ifndef SPEAR
-    VW_Bar (0,189,300,11,VL_GetPixel(0,0));
-    WindowX = 0;
-    WindowW = 320;
-    PrintY = 190;
+    // IOANCH 20130303: unification
+    if(!SPEAR)
+    {
+        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+        WindowX = 0;
+        WindowW = 320;
+        PrintY = 190;
 
-    // IOANCH 20130301: unification culling
+        // IOANCH 20130301: unification culling
 
-    SETFONTCOLOR(14,4);
+        SETFONTCOLOR(14,4);
 
-    #ifdef SPANISH
-    US_CPrint ("Oprima una tecla");
-    #else
-    US_CPrint ("Press a key");
-    #endif
-
-
-
-    VH_UpdateScreen();
-
-    if (!param_nowait)
-        IN_Ack ();
-
-    // IOANCH 20130301: unification culling
-
-    VW_Bar (0,189,300,11,VL_GetPixel(0,0));
-
-    PrintY = 190;
-    SETFONTCOLOR(10,4);
-
-    #ifdef SPANISH
-    US_CPrint ("pensando...");
-    #else
-    US_CPrint ("Working...");
-    #endif
-
-    VH_UpdateScreen();
+        #ifdef SPANISH
+        US_CPrint ("Oprima una tecla");
+        #else
+        US_CPrint ("Press a key");
+        #endif
 
 
-    SETFONTCOLOR(0,15);
-#else
-    VH_UpdateScreen();
 
-    if (!param_nowait)
-        VW_WaitVBL(3*70);
-#endif
+        VH_UpdateScreen();
+
+        if (!param_nowait)
+            IN_Ack ();
+
+        // IOANCH 20130301: unification culling
+
+        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+
+        PrintY = 190;
+        SETFONTCOLOR(10,4);
+
+        #ifdef SPANISH
+        US_CPrint ("pensando...");
+        #else
+        US_CPrint ("Working...");
+        #endif
+
+        VH_UpdateScreen();
+
+
+        SETFONTCOLOR(0,15);
+    }
+    else
+    {
+        VH_UpdateScreen();
+
+        if (!param_nowait)
+            VW_WaitVBL(3*70);
+    }
+
 }
 
 //===========================================================================
@@ -1078,9 +1082,9 @@ void InitDigiMap (void)
     }
 }
 
-#ifndef SPEAR
-CP_iteminfo MusicItems={CTL_X,CTL_Y,6,0,32};
-CP_itemtype MusicMenu[]=
+// IOANCH 20130303: unification
+CP_iteminfo MusicItems_wl6={CTL_X,CTL_Y,6,0,32};
+CP_itemtype MusicMenu_wl6[]=
     {
         {1,"Get Them!",0},
         {1,"Searching",0},
@@ -1103,9 +1107,8 @@ CP_itemtype MusicMenu[]=
         {1,"Ultimate Conquest",0},
         {1,"Wolfpack",0}
     };
-#else
-CP_iteminfo MusicItems={CTL_X,CTL_Y-20,9,0,32};
-CP_itemtype MusicMenu[]=
+CP_iteminfo MusicItems_sod={CTL_X,CTL_Y-20,9,0,32};
+CP_itemtype MusicMenu_sod[]=
     {
         {1,"Funky Colonel Bill",0},
         {1,"Death To The Nazis",0},
@@ -1117,49 +1120,53 @@ CP_itemtype MusicMenu[]=
         {1,"The SS Gonna Get You",0},
         {1,"Towering Above",0}
     };
-#endif
+
 
 // IOANCH 20130301: unification culling
 void DoJukebox(void)
 {
     int which,lastsong=-1;
     unsigned start;
-    unsigned songs[]=
-        {
-            // IOANCH 20130301: unification music
-#ifndef SPEAR
-            GETTHEM_MUS_wl6,
-            SEARCHN_MUS_wl6,
-            POW_MUS_wl6,
-            SUSPENSE_MUS_wl6,
-            WARMARCH_MUS_wl6,
-            CORNER_MUS_wl6,
+    // IOANCH 20130303: unification
+    unsigned songs_wl6[]=
+    {
+        GETTHEM_MUS_wl6,
+        SEARCHN_MUS_wl6,
+        POW_MUS_wl6,
+        SUSPENSE_MUS_wl6,
+        WARMARCH_MUS_wl6,
+        CORNER_MUS_wl6,
 
-            NAZI_OMI_MUS_wl6,
-            PREGNANT_MUS_wl6,
-            GOINGAFT_MUS_wl6,
-            HEADACHE_MUS_wl6,
-            DUNGEON_MUS_wl6,
-            ULTIMATE_MUS_wl6,
+        NAZI_OMI_MUS_wl6,
+        PREGNANT_MUS_wl6,
+        GOINGAFT_MUS_wl6,
+        HEADACHE_MUS_wl6,
+        DUNGEON_MUS_wl6,
+        ULTIMATE_MUS_wl6,
 
-            INTROCW3_MUS_wl6,
-            NAZI_RAP_MUS_wl6,
-            TWELFTH_MUS_wl6,
-            ZEROHOUR_MUS_wl6,
-            ULTIMATE_MUS_wl6,
-            PACMAN_MUS_wl6
-#else
-            XFUNKIE_MUS_sod,             // 0
-            XDEATH_MUS_sod,              // 2
-            XTIPTOE_MUS_sod,             // 4
-            XTHEEND_MUS_sod,             // 7
-            XEVIL_MUS_sod,               // 17
-            XJAZNAZI_MUS_sod,            // 18
-            XPUTIT_MUS_sod,              // 21
-            XGETYOU_MUS_sod,             // 22
-            XTOWER2_MUS_sod              // 23
-#endif
-        };
+        INTROCW3_MUS_wl6,
+        NAZI_RAP_MUS_wl6,
+        TWELFTH_MUS_wl6,
+        ZEROHOUR_MUS_wl6,
+        ULTIMATE_MUS_wl6,
+        PACMAN_MUS_wl6
+    };
+    unsigned songs_sod[]=
+    {
+        XFUNKIE_MUS_sod,             // 0
+        XDEATH_MUS_sod,              // 2
+        XTIPTOE_MUS_sod,             // 4
+        XTHEEND_MUS_sod,             // 7
+        XEVIL_MUS_sod,               // 17
+        XJAZNAZI_MUS_sod,            // 18
+        XPUTIT_MUS_sod,              // 21
+        XGETYOU_MUS_sod,             // 22
+        XTOWER2_MUS_sod              // 23
+    };
+    unsigned *&songs = SPEAR ? songs_sod : songs_wl6;
+    // IOANCH 20130303: unification
+    CP_iteminfo &MusicItems = SPEAR ? MusicItems_sod : MusicItems_wl6;
+    CP_iteminfo *&MusicMenu = SPEAR ? MusicMenu_sod : MusicMenu_wl6;
 
     IN_ClearKeysDown();
     if (!AdLibPresent && !SoundBlasterPresent)
@@ -1167,19 +1174,15 @@ void DoJukebox(void)
 
     MenuFadeOut();
 
-#ifndef SPEAR
     // IOANCH 20130301: unification culling
-    start = ((SDL_GetTicks()/10)%3)*6;
-#else
-    start = 0;
-#endif
+    start = SPEAR ? 0 : ((SDL_GetTicks()/10)%3)*6;
 
     CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]+1);
-#ifdef SPEAR
-    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#else
-    CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
-#endif
+    
+    if(SPEAR)
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    else
+        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
     CA_LoadAllSounds ();
     // IOANCH 20130302: unification
     fontnumber=1;
@@ -1188,11 +1191,10 @@ void DoJukebox(void)
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
 
-#ifndef SPEAR
-    DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
-#else
-    DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
-#endif
+    if(!SPEAR)
+        DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
+    else
+        DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
 
     DrawMenu (&MusicItems,&MusicMenu[start]);
 
@@ -1224,11 +1226,13 @@ void DoJukebox(void)
 
     MenuFadeOut();
     IN_ClearKeysDown();
-#ifdef SPEAR
-    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
-#else
-    UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
-#endif
+    // IOANCH 20130303: unification
+
+    if(SPEAR)
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    else
+        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+
 }
 
 
@@ -1304,11 +1308,8 @@ static void InitGame()
 
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
-#ifndef SPEAR
-    if (mminfo.mainmem < 235000L)
-#else
-    if (mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
-#endif
+    // IOANCH 20130303: unification
+    if (!SPEAR && mminfo.mainmem < 235000L || SPEAR && mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
     {
         byte *screen;
 
@@ -1576,13 +1577,17 @@ static void DemoLoop()
         EnableEndGameMenuItem();
         NewGame(param_difficulty,0);
 
-#ifndef SPEAR
-        gamestate.episode = param_tedlevel/10;
-        gamestate.mapon = param_tedlevel%10;
-#else
-        gamestate.episode = 0;
-        gamestate.mapon = param_tedlevel;
-#endif
+        // IOANCH 20130303: unification
+        if(!SPEAR)
+        {
+            gamestate.episode = param_tedlevel/10;
+            gamestate.mapon = param_tedlevel%10;
+        }
+        else
+        {
+            gamestate.episode = 0;
+            gamestate.mapon = param_tedlevel;
+        }
         GameLoop();
         Quit (NULL);
     }
@@ -1614,27 +1619,31 @@ static void DemoLoop()
 //
 #ifndef DEMOTEST
 
-#ifdef SPEAR
-            SDL_Color pal[256];
-            CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR]);
-            VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR]], pal, 256);
+            // IOANCH 20130303: unification
+            if(SPEAR)
+            {
+                SDL_Color pal[256];
+                CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR]);
+                VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR]], pal, 256);
 
-            CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR]);
-            VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR]);
-            UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR]);
+                VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR]);
 
-            CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR]);
-            VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR]);
-            UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR]);
-            VW_UpdateScreen ();
-            VL_FadeIn(0,255,pal,30);
+                CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR]);
+                VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR]);
+                VW_UpdateScreen ();
+                VL_FadeIn(0,255,pal,30);
 
-            UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR]);
-#else
-            CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR]);
-            VW_UpdateScreen ();
-            VW_FadeIn();
-#endif
+                UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR]);
+            }
+            else
+            {
+                CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR]);
+                VW_UpdateScreen ();
+                VW_FadeIn();
+            }
             if (IN_UserInput(TickBase*15))
                 break;
             VW_FadeOut();
@@ -1713,12 +1722,13 @@ void CheckParameters(int argc, char *argv[])
     for(int i = 1; i < argc; i++)
     {
         char *arg = argv[i];
-#ifndef SPEAR
-        IFARG("--goobers")
-#else
-        IFARG("--debugmode")
-#endif
-            param_debugmode = true;
+        // IOANCH 20130303: unification
+        if(!SPEAR)
+            IFARG("--goobers")
+                param_debugmode = true;
+        else
+            IFARG("--debugmode")
+                param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
         else IFARG("--easy")
@@ -1965,13 +1975,17 @@ void CheckParameters(int argc, char *argv[])
             "                        (default: $HOME/.autowolf)\n"	// IOAN 20130116: changed name
 #endif
                // IOANCH 20130301: unification culling
-#if defined(SPEAR)
+            , defaultSampleRate);
+        if(SPEAR)
+        {
+            printf(
             " --mission <mission>    Mission number to play (0-3)\n"
             "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
             " --goodtimes            Disable copy protection quiz\n"
-#endif
-            , defaultSampleRate
-        );
+
+            
+            );
+        }
         exit(1);
     }
 
