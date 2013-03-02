@@ -202,8 +202,6 @@
     <ClInclude Include="..\..\ExploredArrayFile.h" />
     <ClInclude Include="..\..\foreign.h" />
     <ClInclude Include="..\..\f_spear.h" />
-    <ClInclude Include="..\..\gfxv_apo.h" />
-    <ClInclude Include="..\..\gfxv_jap.h" />
     <ClInclude Include="..\..\gfxv_sod.h" />
     <ClInclude Include="..\..\gfxv_wl6.h" />
     <ClInclude Include="..\..\HistoryRatio.h" />

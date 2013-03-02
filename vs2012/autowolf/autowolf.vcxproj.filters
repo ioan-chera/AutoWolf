@@ -197,12 +197,6 @@
     <ClInclude Include="..\..\foreign.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gfxv_apo.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxv_jap.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gfxv_sod.h">
       <Filter>Header Files\GFXAUDIO</Filter>
     </ClInclude>
