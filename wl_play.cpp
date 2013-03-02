@@ -571,31 +571,32 @@ void CheckKeys (void)
     scan = LastScan;
 
 
-#ifdef SPEAR
-    //
-    // SECRET CHEAT CODE: TAB-G-F10
-    //
-    if (Keyboard[sc_Tab] && Keyboard[sc_G] && Keyboard[sc_F10])
+    if(SPEAR)
     {
-        WindowH = 160;
-        if (godmode)
+        //
+        // SECRET CHEAT CODE: TAB-G-F10
+        //
+        if (Keyboard[sc_Tab] && Keyboard[sc_G] && Keyboard[sc_F10])
         {
-            Message ("God mode OFF");
-            SD_PlaySound (NOBONUSSND);
-        }
-        else
-        {
-            Message ("God mode ON");
-            SD_PlaySound (ENDBONUS2SND);
-        }
+            WindowH = 160;
+            if (godmode)
+            {
+                Message ("God mode OFF");
+                SD_PlaySound (NOBONUSSND);
+            }
+            else
+            {
+                Message ("God mode ON");
+                SD_PlaySound (ENDBONUS2SND);
+            }
 
-        IN_Ack ();
-        godmode ^= 1;
-        DrawPlayBorderSides ();
-        IN_ClearKeysDown ();
-        return;
+            IN_Ack ();
+            godmode ^= 1;
+            DrawPlayBorderSides ();
+            IN_ClearKeysDown ();
+            return;
+        }
     }
-#endif
 
 
     //
@@ -1332,17 +1333,18 @@ void PlayLoop (void)
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
         //
-#ifdef SPEAR
-        funnyticount += tics;
-        if (funnyticount > 30l * 70)
+        if(SPEAR)
         {
-            funnyticount = 0;
-            // IOANCH 20130302: unification
-            if(viewsize != 21)
-                StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR] + (US_RndT () & 1));
-            facecount = 0;
+            funnyticount += tics;
+            if (funnyticount > 30l * 70)
+            {
+                funnyticount = 0;
+                // IOANCH 20130302: unification
+                if(viewsize != 21)
+                    StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR] + (US_RndT () & 1));
+                facecount = 0;
+            }
         }
-#endif
 
         gamestate.TimeCount += tics;
 
