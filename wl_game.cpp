@@ -36,11 +36,11 @@ boolean         ingame,fizzlein;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
-#ifdef SPEAR
+// IOANCH 20130302: unification
 int32_t         spearx,speary;
 unsigned        spearangle;
 boolean         spearflag;
-#endif
+
 
 #ifdef USE_FEATUREFLAGS
 int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;

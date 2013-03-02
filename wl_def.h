@@ -671,12 +671,12 @@ void    ShowActStatus();
 void    PlayDemo (int demonumber);
 void    RecordDemo (void);
 
+// IOANCH 20130302: unification
 
-#ifdef SPEAR
 extern  int32_t            spearx,speary;
 extern  unsigned        spearangle;
 extern  boolean         spearflag;
-#endif
+
 
 
 #define ClearMemory SD_StopDigitized
@@ -761,9 +761,8 @@ void    ContinueMusic(int offs);
 void    StartDamageFlash (int damage);
 void    StartBonusFlash (void);
 
-#ifdef SPEAR
+// IOANCH 20130302: unification
 extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
-#endif
 
 extern  objtype     *objfreelist;     // *obj,*player,*lastobj,
 
@@ -1213,7 +1212,7 @@ extern statetype s_boom1;
 extern statetype s_boom2;
 extern statetype s_boom3;
 
-#ifndef SPEAR
+// IOANCH 20130302: unification
 extern statetype s_bossstand;
 extern statetype s_gretelstand;
 extern statetype s_schabbdie2;
@@ -1277,7 +1276,7 @@ extern  statetype s_fatshoot3;
 extern  statetype s_fatshoot4;
 extern  statetype s_fatshoot5;
 extern  statetype s_fatshoot6;
-#else
+
 extern  statetype s_angelshoot1;
 extern  statetype s_angelshoot2;
 extern  statetype s_angelshoot3;
@@ -1321,7 +1320,6 @@ extern statetype s_spectrewait1;
 extern statetype s_hboom1;
 extern statetype s_hboom2;
 extern statetype s_hboom3;
-#endif
 
 // IOAN 26.05.2012
 extern objtype *lastobj;
