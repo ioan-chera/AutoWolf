@@ -1174,11 +1174,11 @@ void DoJukebox(void)
     start = 0;
 #endif
 
-    CA_CacheGrChunk (STARTFONT+1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]+1);
 #ifdef SPEAR
-    CacheLump (BACKDROP_LUMP_START,BACKDROP_LUMP_END);
+    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #else
-    CacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
+    CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
 #endif
     CA_LoadAllSounds ();
     // IOANCH 20130302: unification
@@ -1225,9 +1225,9 @@ void DoJukebox(void)
     MenuFadeOut();
     IN_ClearKeysDown();
 #ifdef SPEAR
-    UnCacheLump (BACKDROP_LUMP_START,BACKDROP_LUMP_END);
+    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #else
-    UnCacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
+    UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
 #endif
 }
 
@@ -1358,7 +1358,7 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    CA_CacheGrChunk(STARTFONT);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
     CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR]);
 
     LoadLatchMem ();

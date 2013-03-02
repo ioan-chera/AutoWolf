@@ -166,52 +166,52 @@ typedef enum {
 //
 // Data LUMPs
 //
-#define README_LUMP_START		3
-#define README_LUMP_END			9
+#define README_LUMP_START_wl6		3
+#define README_LUMP_END_wl6			9
 
-#define CONTROLS_LUMP_START		10
-#define CONTROLS_LUMP_END		42
+#define CONTROLS_LUMP_START_wl6		10
+#define CONTROLS_LUMP_END_wl6		42
 
-#define LEVELEND_LUMP_START		43
-#define LEVELEND_LUMP_END		85
+#define LEVELEND_LUMP_START_wl6		43
+#define LEVELEND_LUMP_END_wl6		85
 
-#define LATCHPICS_LUMP_START	91
-#define LATCHPICS_LUMP_END		134
+#define LATCHPICS_LUMP_START_wl6	91
+#define LATCHPICS_LUMP_END_wl6		134
 
 
 //
 // Amount of each data item
 //
-#define NUMCHUNKS    149
-#define NUMFONT      2
-#define NUMFONTM     0
-#define NUMPICS      132
-#define NUMPICM      0
-#define NUMSPRITES   0
-#define NUMTILE8     72
-#define NUMTILE8M    0
-#define NUMTILE16    0
-#define NUMTILE16M   0
-#define NUMTILE32    0
-#define NUMTILE32M   0
-#define NUMEXTERNS   13
+#define NUMCHUNKS_wl6    149
+#define NUMFONT_wl6      2
+#define NUMFONTM_wl6     0
+#define NUMPICS_wl6      132
+#define NUMPICM_wl6      0
+#define NUMSPRITES_wl6   0
+#define NUMTILE8_wl6     72
+#define NUMTILE8M_wl6    0
+#define NUMTILE16_wl6    0
+#define NUMTILE16M_wl6   0
+#define NUMTILE32_wl6    0
+#define NUMTILE32M_wl6   0
+#define NUMEXTERNS_wl6   13
 //
 // File offsets for data items
 //
-#define STRUCTPIC    0
+#define STRUCTPIC_wl6    0
 
-#define STARTFONT    1
-#define STARTFONTM   3
-#define STARTPICS    3
-#define STARTPICM    135
-#define STARTSPRITES 135
-#define STARTTILE8   135
-#define STARTTILE8M  136
-#define STARTTILE16  136
-#define STARTTILE16M 136
-#define STARTTILE32  136
-#define STARTTILE32M 136
-#define STARTEXTERNS 136
+#define STARTFONT_wl6    1
+#define STARTFONTM_wl6   3
+#define STARTPICS_wl6    3
+#define STARTPICM_wl6    135
+#define STARTSPRITES_wl6 135
+#define STARTTILE8_wl6   135
+#define STARTTILE8M_wl6  136
+#define STARTTILE16_wl6  136
+#define STARTTILE16M_wl6 136
+#define STARTTILE32_wl6  136
+#define STARTTILE32M_wl6 136
+#define STARTEXTERNS_wl6 136
 
 //
 // Thank you for using IGRAB!

@@ -25,7 +25,7 @@ void VWB_DrawPropString(const char* string)
 	byte *vbuf = VL_LockSurface(curSurface);
 	if(vbuf == NULL) return;
 
-	font = (fontstruct *) grsegs[STARTFONT+fontnumber];
+	font = (fontstruct *) grsegs[gfxvmap[STARTFONT][SPEAR]+fontnumber];
 	height = font->height;
 	dest = vbuf + scaleFactor * (py * curPitch + px);
 
@@ -113,7 +113,7 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 //
 void VW_MeasurePropString (const char *string, word *width, word *height)
 {
-	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[STARTFONT+fontnumber]);
+	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[gfxvmap[STARTFONT][SPEAR]+fontnumber]);
 }
 
 /*
@@ -146,7 +146,7 @@ void VWB_DrawTile8 (int x, int y, int tile)
 //
 void VWB_DrawTile8M (int x, int y, int tile)
 {
-	VL_MemToScreen (((byte *)grsegs[STARTTILE8M])+tile*64,8,8,x,y);
+	VL_MemToScreen (((byte *)grsegs[gfxvmap[STARTTILE8M][SPEAR]])+tile*64,8,8,x,y);
 }
 
 //
@@ -154,7 +154,7 @@ void VWB_DrawTile8M (int x, int y, int tile)
 //
 void VWB_DrawPic (int x, int y, int chunknum)
 {
-	int	picnum = chunknum - STARTPICS;
+	int	picnum = chunknum - gfxvmap[STARTPICS][SPEAR];
 	unsigned width,height;
 
 	x &= ~7;
@@ -170,7 +170,7 @@ void VWB_DrawPic (int x, int y, int chunknum)
 //
 void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 {
-	int	picnum = chunknum - STARTPICS;
+	int	picnum = chunknum - gfxvmap[STARTPICS][SPEAR];
 	unsigned width,height;
 
 	width = pictable[picnum].width;
@@ -239,7 +239,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 
 void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-	VL_LatchToScreen (latchpics[2+picnum-LATCHPICS_LUMP_START], x*8, y);
+	VL_LatchToScreen (latchpics[2+picnum-gfxvmap[LATCHPICS_LUMP_START][SPEAR]], x*8, y);
 }
 
 //
@@ -247,7 +247,7 @@ void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 //
 void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 {
-	VL_LatchToScreenScaledCoord (latchpics[2+picnum-LATCHPICS_LUMP_START], scx*8, scy);
+	VL_LatchToScreenScaledCoord (latchpics[2+picnum-gfxvmap[LATCHPICS_LUMP_START][SPEAR]], scx*8, scy);
 }
 
 
@@ -259,7 +259,7 @@ void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 void FreeLatchMem()
 {
     int i;
-    for(i = 0; i < 2 + LATCHPICS_LUMP_END - LATCHPICS_LUMP_START; i++)
+    for(i = 0; i < 2 + gfxvmap[LATCHPICS_LUMP_END][SPEAR] - gfxvmap[LATCHPICS_LUMP_START][SPEAR]; i++)
     {
         SDL_FreeSurface(latchpics[i]);
         latchpics[i] = NULL;
@@ -284,7 +284,7 @@ void LoadLatchMem (void)
 // tile 8s
 //
     surf = SDL_CreateRGBSurface(SDL_HWSURFACE, 8*8,
-        ((NUMTILE8 + 7) / 8) * 8, 8, 0, 0, 0, 0);
+        ((gfxvmap[NUMTILE8][SPEAR] + 7) / 8) * 8, 8, 0, 0, 0, 0);
     if(surf == NULL)
     {
         Quit("Unable to create surface for tiles!");
@@ -293,28 +293,28 @@ void LoadLatchMem (void)
     SDL_SetColors(surf, SPEAR ? sodpal : wolfpal, 0, 256);
 
 	latchpics[0] = surf;
-	CA_CacheGrChunk (STARTTILE8);
-	src = grsegs[STARTTILE8];
+	CA_CacheGrChunk (gfxvmap[STARTTILE8][SPEAR]);
+	src = grsegs[gfxvmap[STARTTILE8][SPEAR]];
 
-	for (i=0;i<NUMTILE8;i++)
+	for (i=0;i<gfxvmap[NUMTILE8][SPEAR];i++)
 	{
 		VL_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
 		src += 64;
 	}
-	UNCACHEGRCHUNK (STARTTILE8);
+	UNCACHEGRCHUNK (gfxvmap[STARTTILE8][SPEAR]);
 
 	latchpics[1] = NULL;  // not used
 
 //
 // pics
 //
-	start = LATCHPICS_LUMP_START;
-	end = LATCHPICS_LUMP_END;
+	start = gfxvmap[LATCHPICS_LUMP_START][SPEAR];
+	end = gfxvmap[LATCHPICS_LUMP_END][SPEAR];
 
 	for (i=start;i<=end;i++)
 	{
-		width = pictable[i-STARTPICS].width;
-		height = pictable[i-STARTPICS].height;
+		width = pictable[i-gfxvmap[STARTPICS][SPEAR]].width;
+		height = pictable[i-gfxvmap[STARTPICS][SPEAR]].height;
 		surf = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 8, 0, 0, 0, 0);
         if(surf == NULL)
         {

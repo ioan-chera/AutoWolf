@@ -70,7 +70,7 @@ static maptype* mapheaderseg[NUMMAPS];
 // IOAN 20130301: unification
 byte    *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 				   NUMSNDCHUNKS_wl6];
-byte    *grsegs[NUMCHUNKS];
+byte    *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 word    RLEWtag;
 
@@ -95,7 +95,7 @@ static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "AUDIOHED.";
 static const char afilename[] = "AUDIOT.";
 
-static int32_t  grstarts[NUMCHUNKS + 1];
+static int32_t  grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
 static int32_t* audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
@@ -451,13 +451,14 @@ static void CAL_SetupGrFile (void)
 //
 // load the pic and sprite headers into the arrays in the data segment
 //
-    pictable=(pictabletype *) malloc(NUMPICS*sizeof(pictabletype));
+    
+    pictable=(pictabletype *) malloc(gfxvmap[NUMPICS][SPEAR]*sizeof(pictabletype));
     CHECKMALLOCRESULT(pictable);
-    CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
+    CAL_GetGrChunkLength(gfxvmap[STRUCTPIC][SPEAR]);                // position file pointer
     compseg=(byte *) malloc(chunkcomplen);
     CHECKMALLOCRESULT(compseg);
     read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
+    CAL_HuffExpand(compseg, (byte*)pictable, gfxvmap[NUMPICS][SPEAR] * sizeof(pictabletype), grhuffman);
     free(compseg);
 }
 
@@ -600,7 +601,7 @@ void CA_Shutdown (void)
     if(audiohandle != -1)
         close(audiohandle);
 
-    for(i=0; i<NUMCHUNKS; i++)
+    for(i=0; i<gfxvmap[NUMCHUNKS][SPEAR]; i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
@@ -761,7 +762,7 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
-    if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
+    if (chunk >= gfxvmap[STARTTILE8][SPEAR] && chunk < gfxvmap[STARTEXTERNS][SPEAR])
     {
         //
         // expanded sizes of tile8/16/32 are implicit
@@ -770,15 +771,15 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<STARTTILE8M)          // tile 8s are all in one chunk!
-            expanded = BLOCK*NUMTILE8;
-        else if (chunk<STARTTILE16)
-            expanded = MASKBLOCK*NUMTILE8M;
-        else if (chunk<STARTTILE16M)    // all other tiles are one/chunk
+        if (chunk<gfxvmap[STARTTILE8M][SPEAR])          // tile 8s are all in one chunk!
+            expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR];
+        else if (chunk<gfxvmap[STARTTILE16][SPEAR])
+            expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR];
+        else if (chunk<gfxvmap[STARTTILE16M][SPEAR])    // all other tiles are one/chunk
             expanded = BLOCK*4;
-        else if (chunk<STARTTILE32)
+        else if (chunk<gfxvmap[STARTTILE32][SPEAR])
             expanded = MASKBLOCK*4;
-        else if (chunk<STARTTILE32M)
+        else if (chunk<gfxvmap[STARTTILE32M][SPEAR])
             expanded = BLOCK*16;
         else
             expanded = MASKBLOCK*16;

@@ -373,13 +373,13 @@ US_ControlPanel (ScanCode scancode)
         finishup:
             CleanupControlPanel ();
 #ifdef SPEAR
-            UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+            UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
             return;
     }
 
 #ifdef SPEAR
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 
     DrawMainMenu ();
@@ -405,8 +405,8 @@ US_ControlPanel (ScanCode scancode)
             VW_FadeOut ();
                         // IOANCH 20130301: unification music
             StartCPMusic (XJAZNAZI_MUS_sod);
-            UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-            UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+            UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+            UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
             ClearMemory ();
 
 
@@ -433,8 +433,8 @@ US_ControlPanel (ScanCode scancode)
 
             VW_FadeOut ();
 
-            CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
-            CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+            CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+            CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
             DrawMainMenu ();
             StartCPMusic (MENUSONG);
             MenuFadeIn ();
@@ -497,7 +497,7 @@ US_ControlPanel (ScanCode scancode)
     // RETURN/START GAME EXECUTION
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 }
 
@@ -612,7 +612,7 @@ CP_CheckQuick (ScanCode scancode)
         // END GAME
         //
         case sc_F7:
-            CA_CacheGrChunk (STARTFONT + 1);
+            CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
 
             WindowH = 160;
             // IOANCH 20130301: unification culling
@@ -634,7 +634,7 @@ CP_CheckQuick (ScanCode scancode)
         case sc_F8:
             if (SaveGamesAvail[LSItems.curpos] && pickquick)
             {
-                CA_CacheGrChunk (STARTFONT + 1);
+                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
                 fontnumber = 1;
                 Message (STR_SAVING "...");
                 CP_SaveGame (1);
@@ -644,7 +644,7 @@ CP_CheckQuick (ScanCode scancode)
             {
 #ifndef SPEAR
                 // IOANCH 20130302: unification
-                CA_CacheGrChunk (STARTFONT + 1);
+                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
                 CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
                 CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
                 CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
@@ -652,7 +652,7 @@ CP_CheckQuick (ScanCode scancode)
                 CA_CacheGrChunk (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
                 CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
-                CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+                CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
                 CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
 #endif
 
@@ -688,7 +688,7 @@ CP_CheckQuick (ScanCode scancode)
                 UNCACHEGRCHUNK (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
                 UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
-                UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+                UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #endif
             }
             return 1;
@@ -702,7 +702,7 @@ CP_CheckQuick (ScanCode scancode)
                 char string[100] = STR_LGC;
 
 
-                CA_CacheGrChunk (STARTFONT + 1);
+                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
                 fontnumber = 1;
 
                 strcat (string, SaveGameNames[LSItems.curpos]);
@@ -716,7 +716,7 @@ CP_CheckQuick (ScanCode scancode)
             else
             {
 #ifndef SPEAR
-                CA_CacheGrChunk (STARTFONT + 1);
+                CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
                 // IOANCH 20130302: unification
                 CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
                 CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
@@ -726,7 +726,7 @@ CP_CheckQuick (ScanCode scancode)
                 CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
                 CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
-                CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+                CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #endif
 
                 VW_FadeOut ();
@@ -762,7 +762,7 @@ CP_CheckQuick (ScanCode scancode)
                 UNCACHEGRCHUNK (gfxvmap[C_LOADGAMEPIC][SPEAR]);
                 UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
-                UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+                UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #endif
             }
             return 1;
@@ -771,7 +771,7 @@ CP_CheckQuick (ScanCode scancode)
         // QUIT
         //
         case sc_F10:
-            CA_CacheGrChunk (STARTFONT + 1);
+            CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
 
             WindowX = WindowY = 0;
             WindowW = 320;
@@ -842,7 +842,7 @@ CP_ViewScores (int)
     fontnumber = 0;
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
                 // IOANCH 20130301: unification music
     StartCPMusic (XAWARD_MUS_sod);
 #else
@@ -861,8 +861,8 @@ CP_ViewScores (int)
     MenuFadeOut ();
 
 #ifdef SPEAR
-    CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
     return 0;
 }
@@ -879,7 +879,7 @@ CP_NewGame (int)
     int which, episode;
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 
 
@@ -943,14 +943,14 @@ CP_NewGame (int)
     //
     // ALREADY IN A GAME?
     //
-    CacheLump (NEWGAME_LUMP_START, NEWGAME_LUMP_END);
+    CacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
     DrawNewGame ();
     if (ingame)
         if (!Confirm (CURGAME))
         {
             MenuFadeOut ();
-            UnCacheLump (NEWGAME_LUMP_START, NEWGAME_LUMP_END);
-            CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+            UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+            CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
             return 0;
         }
 
@@ -964,8 +964,8 @@ CP_NewGame (int)
 #ifndef SPEAR
         goto firstpart;
 #else
-        UnCacheLump (NEWGAME_LUMP_START, NEWGAME_LUMP_END);
-        CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+        UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
         return 0;
 #endif
     }
@@ -985,8 +985,8 @@ CP_NewGame (int)
     pickquick = 0;
 
 #ifdef SPEAR
-    UnCacheLump (NEWGAME_LUMP_START, NEWGAME_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[NEWGAME_LUMP_START][SPEAR], gfxvmap[NEWGAME_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 
     return 0;
@@ -1089,8 +1089,8 @@ CP_Sound (int)
 
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-    CacheLump (SOUND_LUMP_START, SOUND_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
 #endif
 
     DrawSoundMenu ();
@@ -1191,8 +1191,8 @@ CP_Sound (int)
     MenuFadeOut ();
 
 #ifdef SPEAR
-    UnCacheLump (SOUND_LUMP_START, SOUND_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[SOUND_LUMP_START][SPEAR], gfxvmap[SOUND_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
     return 0;
 }
@@ -1393,8 +1393,8 @@ CP_LoadGame (int quick)
 
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-    CacheLump (LOADSAVE_LUMP_START, LOADSAVE_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
 #endif
 
     DrawLoadSaveScreen (0);
@@ -1445,8 +1445,8 @@ CP_LoadGame (int quick)
     MenuFadeOut ();
 
 #ifdef SPEAR
-    UnCacheLump (LOADSAVE_LUMP_START, LOADSAVE_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 
     return exit;
@@ -1578,8 +1578,8 @@ CP_SaveGame (int quick)
 
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-    CacheLump (LOADSAVE_LUMP_START, LOADSAVE_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
 #endif
 
     DrawLoadSaveScreen (1);
@@ -1668,8 +1668,8 @@ CP_SaveGame (int quick)
     MenuFadeOut ();
 
 #ifdef SPEAR
-    UnCacheLump (LOADSAVE_LUMP_START, LOADSAVE_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[LOADSAVE_LUMP_START][SPEAR], gfxvmap[LOADSAVE_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
 
     return exit;
@@ -1686,8 +1686,8 @@ CP_Control (int)
     int which;
 
 #ifdef SPEAR
-    UnCacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
-    CacheLump (CONTROL_LUMP_START, CONTROL_LUMP_END);
+    UnCacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
 #endif
 
     DrawCtlScreen ();
@@ -1728,8 +1728,8 @@ CP_Control (int)
     MenuFadeOut ();
 
 #ifdef SPEAR
-    UnCacheLump (CONTROL_LUMP_START, CONTROL_LUMP_END);
-    CacheLump (OPTIONS_LUMP_START, OPTIONS_LUMP_END);
+    UnCacheLump (gfxvmap[CONTROL_LUMP_START][SPEAR], gfxvmap[CONTROL_LUMP_END][SPEAR]);
+    CacheLump (gfxvmap[OPTIONS_LUMP_START][SPEAR], gfxvmap[OPTIONS_LUMP_END][SPEAR]);
 #endif
     return 0;
 }
@@ -2955,11 +2955,11 @@ SetupControlPanel (void)
     //
     // CACHE GRAPHICS & SOUNDS
     //
-    CA_CacheGrChunk (STARTFONT + 1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
 #ifndef SPEAR
-    CacheLump (CONTROLS_LUMP_START, CONTROLS_LUMP_END);
+    CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
 #else
-    CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #endif
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
@@ -3031,9 +3031,9 @@ void
 CleanupControlPanel (void)
 {
 #ifndef SPEAR
-    UnCacheLump (CONTROLS_LUMP_START, CONTROLS_LUMP_END);
+    UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR], gfxvmap[CONTROLS_LUMP_END][SPEAR]);
 #else
-    UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 #endif
 
     fontnumber = 0;
@@ -3606,9 +3606,9 @@ Message (const char *string)
     fontstruct *font;
 
 
-    CA_CacheGrChunk (STARTFONT + 1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
     fontnumber = 1;
-    font = (fontstruct *) grsegs[STARTFONT + fontnumber];
+    font = (fontstruct *) grsegs[gfxvmap[STARTFONT][SPEAR] + fontnumber];
     h = font->height;
     for (i = 0; i < len; i++)
     {

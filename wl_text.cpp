@@ -250,8 +250,8 @@ void HandleCommand (void)
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
             VWB_DrawPic (picx&~7,picy,picnum);
-            picwidth = pictable[picnum-STARTPICS].width;
-            picheight = pictable[picnum-STARTPICS].height;
+            picwidth = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].width;
+            picheight = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].height;
             //
             // adjust margins
             //
@@ -601,7 +601,7 @@ void ShowArticle (char *article)
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
-    CA_CacheGrChunk(STARTFONT);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
     VWB_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
 

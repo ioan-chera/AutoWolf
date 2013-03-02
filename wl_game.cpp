@@ -987,7 +987,7 @@ void ShowActStatus()
 {
     // Draw status bar without borders
     byte *source = grsegs[gfxvmap[STATUSBARPIC][SPEAR]];
-    int	picnum = gfxvmap[STATUSBARPIC][SPEAR] - STARTPICS;
+    int	picnum = gfxvmap[STATUSBARPIC][SPEAR] - gfxvmap[STARTPICS][SPEAR];
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
     int destx = (screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
@@ -1095,7 +1095,7 @@ void RecordDemo (void)
 
     CenterWindow(26,3);
     PrintY+=6;
-    CA_CacheGrChunk(STARTFONT);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
     fontnumber=0;
     SETFONTCOLOR(0,15);
 #ifndef SPEAR

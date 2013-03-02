@@ -162,8 +162,8 @@ Victory (void)
             // IOANCH 20130301: unification music
     StartCPMusic (SPEAR ? URAHERO_MUS_sod : URAHERO_MUS_wl6);
     ClearSplitVWB ();
-    CacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
-    CA_CacheGrChunk (STARTFONT);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
 
 #ifndef SPEAR
     CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR]);
@@ -283,7 +283,7 @@ Victory (void)
 #ifndef SPEAR
     UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR]);
 #endif
-    UnCacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
 
 #ifndef SPEAR
     EndText ();
@@ -565,7 +565,7 @@ LevelCompleted (void)
 #endif
     };
 
-    CacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     ClearSplitVWB ();           // set up for double buffering in split screen
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
@@ -919,10 +919,10 @@ done:   itoa (kr, tempstr, 10);
     {
         SD_PlaySound (BONUS1UPSND);
 
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         Message ("This concludes your demo\n"
                  "of Wolfenstein 3-D! Now,\n" "go to your local software\n" "store and buy it!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
 
         IN_ClearKeysDown ();
         IN_Ack ();
@@ -932,7 +932,7 @@ done:   itoa (kr, tempstr, 10);
     VW_FadeOut ();
     DrawPlayBorder();
 
-    UnCacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
 }
 
 
@@ -1030,7 +1030,7 @@ DrawHighScores (void)
 
 #ifndef SPEAR
     CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR]);
-    CA_CacheGrChunk (STARTFONT);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
     // IOANCH 20130301: unification culling
 
     CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR]);
@@ -1057,13 +1057,13 @@ DrawHighScores (void)
     fontnumber = 0;
 
 #else
-    CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+    CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
     ClearMScreen ();
     DrawStripes (10);
-    UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
+    UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
 
-    CacheLump (HIGHSCORES_LUMP_START, HIGHSCORES_LUMP_END);
-    CA_CacheGrChunk (STARTFONT + 1);
+    CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
     VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
 
     fontnumber = 1;
@@ -1143,7 +1143,7 @@ DrawHighScores (void)
     VW_UpdateScreen ();
 
 #ifdef SPEAR
-    UnCacheLump (HIGHSCORES_LUMP_START, HIGHSCORES_LUMP_END);
+    UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
     fontnumber = 0;
 #endif
 }
@@ -1261,7 +1261,7 @@ NonShareware (void)
     ClearMScreen ();
     DrawStripes (10);
 
-    CA_CacheGrChunk (STARTFONT + 1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
     fontnumber = 1;
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);

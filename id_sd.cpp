@@ -820,8 +820,7 @@ void SD_L_SetupDigi(void)
     }
 
 	// IOANCH 20130301: unification
-	unsigned int LASTSOUND_max = LASTSOUND_sod > LASTSOUND_wl6 ? LASTSOUND_sod :
-	LASTSOUND_wl6;
+	unsigned int LASTSOUND_max =  SPEAR ? LASTSOUND_sod : :ASTSOUND_wl6;
     for(i = 0; i < LASTSOUND_max; i++)
     {
         DigiMap[i] = -1;

@@ -33,7 +33,7 @@ extern  word *mapsegs[MAPPLANES];
 // IOAN 20130301: unification
 extern  byte *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 						NUMSNDCHUNKS_wl6];
-extern  byte *grsegs[NUMCHUNKS];
+extern  byte *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 extern  char  extension[5];
 extern  char  graphext[5];

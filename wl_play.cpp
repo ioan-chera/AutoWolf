@@ -616,13 +616,13 @@ void CheckKeys (void)
         DrawScore ();
 
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -637,11 +637,11 @@ void CheckKeys (void)
     if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && param_debugmode)
     {
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -656,14 +656,14 @@ void CheckKeys (void)
     if (Keyboard[sc_B] && Keyboard[sc_A] && Keyboard[sc_T])
     {
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message ("Commander Keen is also\n"
                  "available from Apogee, but\n"
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -741,7 +741,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (Keyboard[sc_Tab] && DebugOk)
     {
-        CA_CacheGrChunk (STARTFONT);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
