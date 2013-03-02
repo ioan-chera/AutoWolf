@@ -155,6 +155,7 @@
     <ClCompile Include="..\..\DirectoryFile.cpp" />
     <ClCompile Include="..\..\dosbox\dbopl.cpp" />
     <ClCompile Include="..\..\ExploredArrayFile.cpp" />
+    <ClCompile Include="..\..\gfxvabstract.cpp" />
     <ClCompile Include="..\..\HistoryRatio.cpp" />
     <ClCompile Include="..\..\id_ca.cpp" />
     <ClCompile Include="..\..\id_in.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\..\ExploredArrayFile.h" />
     <ClInclude Include="..\..\foreign.h" />
     <ClInclude Include="..\..\f_spear.h" />
+    <ClInclude Include="..\..\gfxvabstract.h" />
     <ClInclude Include="..\..\gfxv_sod.h" />
     <ClInclude Include="..\..\gfxv_wl6.h" />
     <ClInclude Include="..\..\HistoryRatio.h" />

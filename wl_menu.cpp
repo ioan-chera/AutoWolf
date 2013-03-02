@@ -410,21 +410,21 @@ US_ControlPanel (ScanCode scancode)
             ClearMemory ();
 
 
-            CA_CacheGrChunk (IDGUYS1PIC);
-            VWB_DrawPic (0, 0, IDGUYS1PIC);
-            UNCACHEGRCHUNK (IDGUYS1PIC);
+            CA_CacheGrChunk (gfxvmap[IDGUYS1PIC][SPEAR]);
+            VWB_DrawPic (0, 0, gfxvmap[IDGUYS1PIC][SPEAR]);
+            UNCACHEGRCHUNK (gfxvmap[IDGUYS1PIC][SPEAR]);
 
-            CA_CacheGrChunk (IDGUYS2PIC);
-            VWB_DrawPic (0, 80, IDGUYS2PIC);
-            UNCACHEGRCHUNK (IDGUYS2PIC);
+            CA_CacheGrChunk (gfxvmap[IDGUYS2PIC][SPEAR]);
+            VWB_DrawPic (0, 80, gfxvmap[IDGUYS2PIC][SPEAR]);
+            UNCACHEGRCHUNK (gfxvmap[IDGUYS2PIC][SPEAR]);
 
             VW_UpdateScreen ();
 
             SDL_Color pal[256];
-            CA_CacheGrChunk (IDGUYSPALETTE);
-            VL_ConvertPalette(grsegs[IDGUYSPALETTE], pal, 256);
+            CA_CacheGrChunk (gfxvmap[IDGUYSPALETTE][SPEAR]);
+            VL_ConvertPalette(grsegs[gfxvmap[IDGUYSPALETTE][SPEAR]], pal, 256);
             VL_FadeIn (0, 255, pal, 30);
-            UNCACHEGRCHUNK (IDGUYSPALETTE);
+            UNCACHEGRCHUNK (gfxvmap[IDGUYSPALETTE][SPEAR]);
 
             while (Keyboard[sc_I] || Keyboard[sc_D])
                 IN_WaitAndProcessEvents();
@@ -520,9 +520,9 @@ DrawMainMenu (void)
     // IOANCH 20130301: unification culling
     ClearMScreen ();
 
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawStripes (10);
-    VWB_DrawPic (84, 0, C_OPTIONSPIC);
+    VWB_DrawPic (84, 0, gfxvmap[C_OPTIONSPIC][SPEAR]);
 
 #ifdef SPANISH
     DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W + 8, MENU_H, BKGDCOLOR);
@@ -643,16 +643,17 @@ CP_CheckQuick (ScanCode scancode)
             else
             {
 #ifndef SPEAR
+                // IOANCH 20130302: unification
                 CA_CacheGrChunk (STARTFONT + 1);
-                CA_CacheGrChunk (C_CURSOR1PIC);
-                CA_CacheGrChunk (C_CURSOR2PIC);
-                CA_CacheGrChunk (C_DISKLOADING1PIC);
-                CA_CacheGrChunk (C_DISKLOADING2PIC);
-                CA_CacheGrChunk (C_SAVEGAMEPIC);
-                CA_CacheGrChunk (C_MOUSELBACKPIC);
+                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
                 CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
-                CA_CacheGrChunk (C_CURSOR1PIC);
+                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
 #endif
 
                 VW_FadeOut ();
@@ -679,12 +680,13 @@ CP_CheckQuick (ScanCode scancode)
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
 #ifndef SPEAR
-                UNCACHEGRCHUNK (C_CURSOR1PIC);
-                UNCACHEGRCHUNK (C_CURSOR2PIC);
-                UNCACHEGRCHUNK (C_DISKLOADING1PIC);
-                UNCACHEGRCHUNK (C_DISKLOADING2PIC);
-                UNCACHEGRCHUNK (C_SAVEGAMEPIC);
-                UNCACHEGRCHUNK (C_MOUSELBACKPIC);
+                // IOANCH 20130302: unification
+                UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_SAVEGAMEPIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
                 UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -715,14 +717,15 @@ CP_CheckQuick (ScanCode scancode)
             {
 #ifndef SPEAR
                 CA_CacheGrChunk (STARTFONT + 1);
-                CA_CacheGrChunk (C_CURSOR1PIC);
-                CA_CacheGrChunk (C_CURSOR2PIC);
-                CA_CacheGrChunk (C_DISKLOADING1PIC);
-                CA_CacheGrChunk (C_DISKLOADING2PIC);
-                CA_CacheGrChunk (C_LOADGAMEPIC);
-                CA_CacheGrChunk (C_MOUSELBACKPIC);
+                // IOANCH 20130302: unification
+                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_LOADGAMEPIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
-                CA_CacheGrChunk (C_CURSOR1PIC);
+                CA_CacheGrChunk (gfxvmap[C_CURSOR1PIC][SPEAR]);
                 CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
 
@@ -751,12 +754,13 @@ CP_CheckQuick (ScanCode scancode)
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
 #ifndef SPEAR
-                UNCACHEGRCHUNK (C_CURSOR1PIC);
-                UNCACHEGRCHUNK (C_CURSOR2PIC);
-                UNCACHEGRCHUNK (C_DISKLOADING1PIC);
-                UNCACHEGRCHUNK (C_DISKLOADING2PIC);
-                UNCACHEGRCHUNK (C_LOADGAMEPIC);
-                UNCACHEGRCHUNK (C_MOUSELBACKPIC);
+                // IOANCH 20130302: unification
+                UNCACHEGRCHUNK (gfxvmap[C_CURSOR1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_CURSOR2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_DISKLOADING2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_LOADGAMEPIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #else
                 UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
 #endif
@@ -1001,7 +1005,7 @@ DrawNewEpisode (void)
 
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 
     DrawWindow (NE_X - 4, NE_Y - 4, NE_W + 8, NE_H + 8, BKGDCOLOR);
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
@@ -1015,9 +1019,9 @@ DrawNewEpisode (void)
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
     DrawMenu (&NewEitems, &NewEmenu[0]);
-
+    // IOANCH 20130302: unification
     for (i = 0; i < 6; i++)
-        VWB_DrawPic (NE_X + 32, NE_Y + i * 26, C_EPISODE1PIC + i);
+        VWB_DrawPic (NE_X + 32, NE_Y + i * 26, gfxvmap[C_EPISODE1PIC][SPEAR] + i);
 
     VW_UpdateScreen ();
     MenuFadeIn ();
@@ -1034,7 +1038,7 @@ DrawNewGame (void)
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
     PrintX = NM_X + 20;
@@ -1047,7 +1051,8 @@ DrawNewGame (void)
     US_Print ("How tough are you?");
 #endif
 #else
-    VWB_DrawPic (PrintX, PrintY, C_HOWTOUGHPIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (PrintX, PrintY, gfxvmap[C_HOWTOUGHPIC][SPEAR]);
 #endif
 
     DrawWindow (NM_X - 5, NM_Y - 10, NM_W, NM_H, BKGDCOLOR);
@@ -1067,7 +1072,8 @@ DrawNewGame (void)
 void
 DrawNewGameDiff (int w)
 {
-    VWB_DrawPic (NM_X + 185, NM_Y + 7, w + C_BABYMODEPIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (NM_X + 185, NM_Y + 7, w + gfxvmap[C_BABYMODEPIC][SPEAR]);
 }
 
 
@@ -1206,7 +1212,7 @@ DrawSoundMenu (void)
     // DRAW SOUND MENU
     //
     ClearMScreen ();
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 
     DrawWindow (SM_X - 8, SM_Y1 - 3, SM_W, SM_H1, BKGDCOLOR);
     DrawWindow (SM_X - 8, SM_Y2 - 3, SM_W, SM_H2, BKGDCOLOR);
@@ -1229,9 +1235,9 @@ DrawSoundMenu (void)
     DrawMenu (&SndItems, &SndMenu[0]);
     // IOANCH 20130301: unification culling
 
-    VWB_DrawPic (100, SM_Y1 - 20, C_FXTITLEPIC);
-    VWB_DrawPic (100, SM_Y2 - 20, C_DIGITITLEPIC);
-    VWB_DrawPic (100, SM_Y3 - 20, C_MUSICTITLEPIC);
+    VWB_DrawPic (100, SM_Y1 - 20, gfxvmap[C_FXTITLEPIC][SPEAR]);
+    VWB_DrawPic (100, SM_Y2 - 20, gfxvmap[C_DIGITITLEPIC][SPEAR]);
+    VWB_DrawPic (100, SM_Y3 - 20, gfxvmap[C_MUSICTITLEPIC][SPEAR]);
 
 
     for (i = 0; i < SndItems.amount; i++)
@@ -1290,9 +1296,9 @@ DrawSoundMenu (void)
             }
 
             if (on)
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_SELECTEDPIC);
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, gfxvmap[C_SELECTEDPIC][SPEAR]);
             else
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, C_NOTSELECTEDPIC);
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, gfxvmap[C_NOTSELECTEDPIC][SPEAR]);
         }
 
     DrawMenuGun (&SndItems);
@@ -1313,7 +1319,8 @@ DrawLSAction (int which)
 
     DrawWindow (LSA_X, LSA_Y, LSA_W, LSA_H, TEXTCOLOR);
     DrawOutline (LSA_X, LSA_Y, LSA_W, LSA_H, 0, HIGHLIGHT);
-    VWB_DrawPic (LSA_X + 8, LSA_Y + 5, C_DISKLOADING1PIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (LSA_X + 8, LSA_Y + 5, gfxvmap[C_DISKLOADING1PIC][SPEAR]);
 
     fontnumber = 1;
     SETFONTCOLOR (0, TEXTCOLOR);
@@ -1477,14 +1484,14 @@ DrawLoadSaveScreen (int loadsave)
 
     ClearMScreen ();
     fontnumber = 1;
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawWindow (LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, BKGDCOLOR);
     DrawStripes (10);
-
+    // IOANCH 20130302: unification
     if (!loadsave)
-        VWB_DrawPic (60, 0, C_LOADGAMEPIC);
+        VWB_DrawPic (60, 0, gfxvmap[C_LOADGAMEPIC][SPEAR]);
     else
-        VWB_DrawPic (60, 0, C_SAVEGAMEPIC);
+        VWB_DrawPic (60, 0, gfxvmap[C_SAVEGAMEPIC][SPEAR]);
 
     for (i = 0; i < 10; i++)
         PrintLSEntry (i, TEXTCOLOR);
@@ -1737,7 +1744,7 @@ DrawMouseSens (void)
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
 #ifdef SPANISH
     DrawWindow (10, 80, 300, 43, BKGDCOLOR);
 #else
@@ -1862,8 +1869,8 @@ DrawCtlScreen (void)
 // IOANCH 20130301: unification culling
     ClearMScreen ();
     DrawStripes (10);
-    VWB_DrawPic (80, 0, C_CONTROLPIC);
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (80, 0, gfxvmap[C_CONTROLPIC][SPEAR]);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawWindow (CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, BKGDCOLOR);
     WindowX = 0;
     WindowW = 320;
@@ -1886,15 +1893,15 @@ DrawCtlScreen (void)
     x = CTL_X + CtlItems.indent - 24;
     y = CTL_Y + 3;
     if (mouseenabled)
-        VWB_DrawPic (x, y, C_SELECTEDPIC);
+        VWB_DrawPic (x, y, gfxvmap[C_SELECTEDPIC][SPEAR]);
     else
-        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
+        VWB_DrawPic (x, y, gfxvmap[C_NOTSELECTEDPIC][SPEAR]);
 
     y = CTL_Y + 29;
     if (joystickenabled)
-        VWB_DrawPic (x, y, C_SELECTEDPIC);
+        VWB_DrawPic (x, y, gfxvmap[C_SELECTEDPIC][SPEAR);
     else
-        VWB_DrawPic (x, y, C_NOTSELECTEDPIC);
+        VWB_DrawPic (x, y, gfxvmap[C_NOTSELECTEDPIC][SPEAR]);
 
     //
     // PICK FIRST AVAILABLE SPOT
@@ -2346,9 +2353,9 @@ DrawCustomScreen (void)
     ClearMScreen ();
     WindowX = 0;
     WindowW = 320;
-    VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
+    VWB_DrawPic (112, 184, gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawStripes (10);
-    VWB_DrawPic (80, 0, C_CUSTOMIZEPIC);
+    VWB_DrawPic (80, 0, gfxvmap[C_CUSTOMIZEPIC][SPEAR]);
 
     //
     // MOUSE
@@ -2362,7 +2369,7 @@ DrawCustomScreen (void)
     US_CPrint ("Mouse\n");
 #else
     PrintY = CST_Y + 13;
-    VWB_DrawPic (128, 48, C_MOUSEPIC);
+    VWB_DrawPic (128, 48, gfxvmap[C_MOUSEPIC][SPEAR]);
 #endif
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
@@ -2399,11 +2406,12 @@ DrawCustomScreen (void)
     US_CPrint ("Joystick/Gravis GamePad\n");
 #else
     PrintY += 13;
-    VWB_DrawPic (40, 88, C_JOYSTICKPIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (40, 88, gfxvmap[C_JOYSTICKPIC][SPEAR]);
 #endif
 
 #ifdef SPEAR
-    VWB_DrawPic (112, 120, C_KEYBOARDPIC);
+    VWB_DrawPic (112, 120, gfxvmap[C_KEYBOARDPIC][SPEAR]);
 #endif
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
@@ -2881,7 +2889,8 @@ ClearMScreen (void)
 #ifndef SPEAR
     VWB_Bar (0, 0, 320, 200, BORDCOLOR);
 #else
-    VWB_DrawPic (0, 0, C_BACKDROPPIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (0, 0, gfxvmap[C_BACKDROPPIC][SPEAR]);
 #endif
 }
 
@@ -3051,7 +3060,8 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     basey = item_i->y - 2;
     y = basey + which * 13;
 
-    VWB_DrawPic (x, y, C_CURSOR1PIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (x, y, gfxvmap[C_CURSOR1PIC][SPEAR]);
     SetTextColor (items + which, 1);
     if (redrawitem)
     {
@@ -3066,7 +3076,8 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         routine (which);
     VW_UpdateScreen ();
 
-    shape = C_CURSOR1PIC;
+    // IOANCH 20130302: unification
+    shape = gfxvmap[C_CURSOR1PIC][SPEAR];
     timer = 8;
     exit = 0;
     lastBlinkTime = GetTimeCount ();
@@ -3081,14 +3092,15 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         if ((int32_t)GetTimeCount () - lastBlinkTime > timer)
         {
             lastBlinkTime = GetTimeCount ();
-            if (shape == C_CURSOR1PIC)
+            // IOANCH 20130302: unification
+            if (shape == gfxvmap[C_CURSOR1PIC][SPEAR])
             {
-                shape = C_CURSOR2PIC;
+                shape = gfxvmap[C_CURSOR2PIC][SPEAR];
                 timer = 8;
             }
             else
             {
-                shape = C_CURSOR1PIC;
+                shape = gfxvmap[C_CURSOR1PIC][SPEAR];
                 timer = 70;
             }
             VWB_DrawPic (x, y, shape);
@@ -3295,7 +3307,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 void
 DrawHalfStep (int x, int y)
 {
-    VWB_DrawPic (x, y, C_CURSOR1PIC);
+    VWB_DrawPic (x, y, gfxvmap[C_CURSOR1PIC][SPEAR]);
     VW_UpdateScreen ();
     SD_PlaySound (MOVEGUN1SND);
     SDL_Delay (8 * 100 / 7);
@@ -3311,7 +3323,8 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 {
     VWB_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
     *y = basey + which * 13;
-    VWB_DrawPic (x, *y, C_CURSOR1PIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (x, *y, gfxvmap[C_CURSOR1PIC][SPEAR]);
     SetTextColor (items + which, 1);
 
     PrintX = item_i->x + item_i->indent;
@@ -3713,7 +3726,8 @@ DrawMenuGun (CP_iteminfo * iteminfo)
 
     x = iteminfo->x;
     y = iteminfo->y + iteminfo->curpos * 13 - 2;
-    VWB_DrawPic (x, y, C_CURSOR1PIC);
+    // IOANCH 20130302: unification
+    VWB_DrawPic (x, y, gfxvmap[C_CURSOR1PIC][SPEAR]);
 }
 
 

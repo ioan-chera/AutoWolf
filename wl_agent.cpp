@@ -302,22 +302,22 @@ void DrawFace (void)
 {
     if(viewsize == 21 && ingame) return;
     if (SD_SoundPlaying() == GETGATLINGSND)
-        StatusDrawFace(GOTGATLINGPIC);
+        StatusDrawFace(gfxvmap[GOTGATLINGPIC][SPEAR]);
     else if (gamestate.health)
     {
         // IOANCH 20130202: unification process
         if (SPEAR && godmode)
-            StatusDrawFace(GODMODEFACE1PIC+gamestate.faceframe);
+            StatusDrawFace(gfxvmap[GODMODEFACE1PIC][SPEAR]+gamestate.faceframe);
         else
-            StatusDrawFace(FACE1APIC+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
+            StatusDrawFace(gfxvmap[FACE1APIC][SPEAR]+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
     }	// IOAN 25.10.2012: named constant
     else
     {
         // IOANCH 20130202: unification process
         if (LastAttacker && LastAttacker->obclass == needleobj)
-            StatusDrawFace(MUTANTBJPIC);
+            StatusDrawFace(gfxvmap[MUTANTBJPIC][SPEAR]);
         else
-            StatusDrawFace(FACE8APIC);
+            StatusDrawFace(gfxvmap[FACE8APIC][SPEAR]);
     }
 }
 
@@ -383,7 +383,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        StatusDrawPic (x,y,N_BLANKPIC);
+        StatusDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR]);
         x++;
         width--;
     }
@@ -392,7 +392,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        StatusDrawPic (x,y,str[c]-'0'+ N_0PIC);
+        StatusDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR]);
         x++;
         c++;
     }
@@ -456,7 +456,8 @@ void TakeDamage (int points,objtype *attacker)
     // IOANCH 20130202: unification process
     if (SPEAR && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
     {
-        StatusDrawFace(BJOUCHPIC);
+        // IOANCH 20130302: unification
+        StatusDrawFace(gfxvmap[BJOUCHPIC][SPEAR]);
         facecount = 0;
     }
 }
@@ -583,7 +584,7 @@ void GivePoints (int32_t points)
 void DrawWeapon (void)
 {
     if(viewsize == 21 && ingame) return;
-    StatusDrawPic (32,8,KNIFEPIC+gamestate.weapon);
+    StatusDrawPic (32,8,gfxvmap[KNIFEPIC][SPEAR]+gamestate.weapon);
 }
 
 
@@ -599,14 +600,14 @@ void DrawKeys (void)
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
-        StatusDrawPic (30,4,GOLDKEYPIC);
+        StatusDrawPic (30,4,gfxvmap[GOLDKEYPIC][SPEAR]);
     else
-        StatusDrawPic (30,4,NOKEYPIC);
+        StatusDrawPic (30,4,gfxvmap[NOKEYPIC][SPEAR]);
 
     if (gamestate.keys & 2)
-        StatusDrawPic (30,20,SILVERKEYPIC);
+        StatusDrawPic (30,20,gfxvmap[SILVERKEYPIC][SPEAR]);
     else
-        StatusDrawPic (30,20,NOKEYPIC);
+        StatusDrawPic (30,20,gfxvmap[NOKEYPIC][SPEAR]);
 }
 
 /*
@@ -777,7 +778,7 @@ void GetBonus (statobj_t *check)
             GiveWeapon (wp_chaingun);
 
             if(viewsize != 21)
-                StatusDrawFace (GOTGATLINGPIC);
+                StatusDrawFace (gfxvmap[GOTGATLINGPIC][SPEAR]);
             facecount = 0;
             break;
 

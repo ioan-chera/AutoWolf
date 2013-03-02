@@ -678,7 +678,7 @@ void CheckKeys (void)
     if(Paused)
     {
         int lastoffs = StopMusic();
-        LatchDrawPic (20 - 4, 80 - 2 * 8, PAUSEDPIC);
+        LatchDrawPic (20 - 4, 80 - 2 * 8, gfxvmap[PAUSEDPIC][SPEAR]);
         VH_UpdateScreen();
         IN_Ack ();
         Paused = false;
@@ -1337,8 +1337,9 @@ void PlayLoop (void)
         if (funnyticount > 30l * 70)
         {
             funnyticount = 0;
+            // IOANCH 20130302: unification
             if(viewsize != 21)
-                StatusDrawFace(BJWAITING1PIC + (US_RndT () & 1));
+                StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR] + (US_RndT () & 1));
             facecount = 0;
         }
 #endif

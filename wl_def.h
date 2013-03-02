@@ -45,10 +45,11 @@
 #include "audioabstract.h"
 
 // IOANCH 20130301: unification culling
-#ifndef SPEAR
-    #include "gfxv_wl6.h"
-#else
-    #include "gfxv_sod.h"
+#include "gfxv_wl6.h"
+#include "gfxv_sod.h"
+#include "gfxvabstract.h"
+
+#ifdef SPEAR
     #include "f_spear.h"
 #endif
 

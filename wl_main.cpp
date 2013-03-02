@@ -336,7 +336,8 @@ void DiskFlopAnim(int x,int y)
     static int8_t which=0;
     if (!x && !y)
         return;
-    VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
+    // IOANCH 20130302: unification
+    VWB_DrawPic(x,y,gfxvmap[C_DISKLOADING1PIC][SPEAR]+which);
     VW_UpdateScreen();
     which^=1;
 }
@@ -1180,10 +1181,10 @@ void DoJukebox(void)
     CacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
 #endif
     CA_LoadAllSounds ();
-
+    // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
-    VWB_DrawPic(112,184,C_MOUSELBACKPIC);
+    VWB_DrawPic(112,184,gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
 
@@ -1311,8 +1312,8 @@ static void InitGame()
     {
         byte *screen;
 
-        CA_CacheGrChunk (ERRORSCREEN);
-        screen = grsegs[ERRORSCREEN];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1358,7 +1359,7 @@ static void InitGame()
 //
 
     CA_CacheGrChunk(STARTFONT);
-    CA_CacheGrChunk(STATUSBARPIC);
+    CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR]);
 
     LoadLatchMem ();
     BuildTables ();          // trig tables
@@ -1505,8 +1506,8 @@ void Quit (const char *errorStr, ...)
 #ifdef NOTYET
         // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (ORDERSCREEN);
-        screen = grsegs[ORDERSCREEN];
+        CA_CacheGrChunk (gfxvmap[ORDERSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ORDERSCREEN][SPEAR]];
 
 #endif
         WriteConfig ();
@@ -1514,8 +1515,8 @@ void Quit (const char *errorStr, ...)
 #ifdef NOTYET
     else
     {
-        CA_CacheGrChunk (ERRORSCREEN);
-        screen = grsegs[ERRORSCREEN];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
     }
 #endif
 
@@ -1615,22 +1616,22 @@ static void DemoLoop()
 
 #ifdef SPEAR
             SDL_Color pal[256];
-            CA_CacheGrChunk (TITLEPALETTE);
-            VL_ConvertPalette(grsegs[TITLEPALETTE], pal, 256);
+            CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR]);
+            VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR]], pal, 256);
 
-            CA_CacheGrChunk (TITLE1PIC);
-            VWB_DrawPic (0,0,TITLE1PIC);
-            UNCACHEGRCHUNK (TITLE1PIC);
+            CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR]);
+            VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR]);
+            UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR]);
 
-            CA_CacheGrChunk (TITLE2PIC);
-            VWB_DrawPic (0,80,TITLE2PIC);
-            UNCACHEGRCHUNK (TITLE2PIC);
+            CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR]);
+            VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR]);
+            UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR]);
             VW_UpdateScreen ();
             VL_FadeIn(0,255,pal,30);
 
-            UNCACHEGRCHUNK (TITLEPALETTE);
+            UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR]);
 #else
-            CA_CacheScreen (TITLEPIC);
+            CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR]);
             VW_UpdateScreen ();
             VW_FadeIn();
 #endif
@@ -1640,7 +1641,7 @@ static void DemoLoop()
 //
 // credits page
 //
-            CA_CacheScreen (CREDITSPIC);
+            CA_CacheScreen (gfxvmap[CREDITSPIC][SPEAR]);
             VW_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))

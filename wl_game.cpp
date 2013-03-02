@@ -943,7 +943,7 @@ void DrawPlayBorder (void)
 
 void DrawPlayScreen (void)
 {
-    VWB_DrawPicScaledCoord ((screenWidth-scaleFactor*320)/2,screenHeight-scaleFactor*STATUSLINES,STATUSBARPIC);
+    VWB_DrawPicScaledCoord ((screenWidth-scaleFactor*320)/2,screenHeight-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR]);
     DrawPlayBorder ();
 
     DrawFace ();
@@ -968,7 +968,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        LatchDrawPic (x,y,N_BLANKPIC);
+        LatchDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR]);
         x++;
         width--;
     }
@@ -977,7 +977,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        LatchDrawPic (x,y,str[c]-'0'+ N_0PIC);
+        LatchDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR]);
         x++;
         c++;
     }
@@ -986,8 +986,8 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[STATUSBARPIC];
-    int	picnum = STATUSBARPIC - STARTPICS;
+    byte *source = grsegs[gfxvmap[STATUSBARPIC][SPEAR]];
+    int	picnum = gfxvmap[STATUSBARPIC][SPEAR] - STARTPICS;
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
     int destx = (screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
@@ -1175,7 +1175,7 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
     // IOANCH 20130301: unification culling
-    int dems[4]={T_DEMO0,T_DEMO1,T_DEMO2,T_DEMO3};
+    int dems[4]={gfxvmap[T_DEMO0][SPEAR],gfxvmap[T_DEMO1][SPEAR],gfxvmap[T_DEMO2][SPEAR],gfxvmap[T_DEMO3][SPEAR]};
 
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];

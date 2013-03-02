@@ -425,10 +425,10 @@ void PageLayout (boolean shownumber)
     // clear the screen
     //
     VWB_Bar (0,0,320,200,BACKCOLOR);
-    VWB_DrawPic (0,0,H_TOPWINDOWPIC);
-    VWB_DrawPic (0,8,H_LEFTWINDOWPIC);
-    VWB_DrawPic (312,8,H_RIGHTWINDOWPIC);
-    VWB_DrawPic (8,176,H_BOTTOMINFOPIC);
+    VWB_DrawPic (0,0,gfxvmap[H_TOPWINDOWPIC][SPEAR]);
+    VWB_DrawPic (0,8,gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
+    VWB_DrawPic (312,8,gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
+    VWB_DrawPic (8,176,gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
 
 
     for (i=0; i<TEXTROWS; i++)
@@ -553,10 +553,10 @@ void CacheLayoutGraphics (void)
             if (ch == 'E')          // end of file, so load graphics and return
             {
 #ifndef SPEAR
-                CA_CacheGrChunk(H_TOPWINDOWPIC);
-                CA_CacheGrChunk(H_LEFTWINDOWPIC);
-                CA_CacheGrChunk(H_RIGHTWINDOWPIC);
-                CA_CacheGrChunk(H_BOTTOMINFOPIC);
+                CA_CacheGrChunk(gfxvmap[H_TOPWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
 #endif
                 //                              CA_CacheMarks ();
                 text = textstart;
@@ -717,7 +717,8 @@ void HelpScreens (void)
 // IOANCH 20130301: unification culling
 
 #ifdef ARTSEXTERN
-    artnum = helpextern;
+    // IOANCH 20130302: helpextern used to be here
+    artnum = gfxvmap[T_HELPART][SPEAR];
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
@@ -758,7 +759,8 @@ void EndText (void)
 
 
 #ifdef ARTSEXTERN
-    artnum = endextern+gamestate.episode;
+    // IOANCH 20130302: unification: map it here. (endextern used to be gfxvmap[T_ENDART1][SPEAR]
+    artnum = gfxvmap[T_ENDART1][SPEAR]+gamestate.episode;
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
