@@ -171,6 +171,9 @@
     <ClCompile Include="..\..\gfxvabstract.cpp">
       <Filter>Source Files\GFXVAUDIO</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sprabstract.cpp">
+      <Filter>Source Files\GFXVAUDIO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\audiosod.h">
@@ -279,6 +282,15 @@
       <Filter>Header Files\GFXAUDIO</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gfxvabstract.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_wl6.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_sod.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sprabstract.h">
       <Filter>Header Files\GFXAUDIO</Filter>
     </ClInclude>
   </ItemGroup>

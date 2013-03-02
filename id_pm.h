@@ -47,6 +47,8 @@ static inline byte *PM_GetTexture(int wallpic)
 static inline uint16_t *PM_GetSprite(int shapenum)
 {
     // correct alignment is enforced by PM_Startup()
+    // IOANCH 20130302: unification
+    shapenum = sprmap[shapenum][SPEAR];
     return (uint16_t *) (void *) PM_GetPage(PMSpriteStart + shapenum);
 }
 

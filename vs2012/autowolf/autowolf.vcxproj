@@ -171,6 +171,7 @@
     <ClCompile Include="..\..\PathArray.cpp" />
     <ClCompile Include="..\..\sdl_winmain.cpp" />
     <ClCompile Include="..\..\signon.cpp" />
+    <ClCompile Include="..\..\sprabstract.cpp" />
     <ClCompile Include="..\..\wl_act1.cpp" />
     <ClCompile Include="..\..\wl_act2.cpp" />
     <ClCompile Include="..\..\wl_agent.cpp" />
@@ -220,6 +221,9 @@
     <ClInclude Include="..\..\List.h" />
     <ClInclude Include="..\..\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\PathArray.h" />
+    <ClInclude Include="..\..\sprabstract.h" />
+    <ClInclude Include="..\..\spr_sod.h" />
+    <ClInclude Include="..\..\spr_wl6.h" />
     <ClInclude Include="..\..\version.h" />
     <ClInclude Include="..\..\win\resource.h" />
     <ClInclude Include="..\..\wl_atmos.h" />
