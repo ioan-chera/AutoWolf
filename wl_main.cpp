@@ -2004,6 +2004,7 @@ void CheckParameters(int argc, char *argv[])
 ==========================
 */
 
+// IOANCH 20130303: unification
 unsigned char InitializeSPEAR()
 {
     // FIXME: look in better locations, not just working dir.
@@ -2047,6 +2048,7 @@ int main (int argc, char *argv[])
 {
     // IOANCH: unification
     SPEAR = InitializeSPEAR();
+
 #if defined(_arch_dreamcast)
     DC_Init();
 #else

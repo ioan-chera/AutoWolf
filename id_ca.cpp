@@ -95,7 +95,10 @@ static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "AUDIOHED.";
 static const char afilename[] = "AUDIOT.";
 
-static int32_t  grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
+static int32_t  grstarts_wl6[NUMCHUNKS_wl6 + 1];
+static int32_t  grstarts_sod[NUMCHUNKS_sod + 1];
+
+// static int32_t  grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
 static int32_t* audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
@@ -118,8 +121,11 @@ SDMode oldsoundmode;
 //
 static int32_t GRFILEPOS(const size_t idx)
 {
-	assert(idx < lengthof(grstarts));
-	return grstarts[idx];
+    if(SPEAR)
+        assert(idx < lengthof(grstarts_sod));
+    else
+        assert(idx < lengthof(grstarts_wl6));
+	return SPEAR ? grstarts_sod[idx] : grstarts_wl6[idx];
 }
 
 /*
@@ -381,7 +387,10 @@ static void CAL_SetupGrFile (void)
 #ifdef GRHEADERLINKED
 
     grhuffman = (huffnode *)&EGAdict;
-    grstarts = (int32_t _seg *)FP_SEG(&EGAhead);
+    if(SPEAR)
+        grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
+    else
+        grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
 
 #else	//  !defined(GRHEADERLINKED)
 
@@ -411,9 +420,12 @@ static void CAL_SetupGrFile (void)
     lseek(handle, 0, SEEK_SET);
 
     // IOANCH 20130301: unification culling
-
-	int expectedsize = lengthof(grstarts) - numEpisodesMissing;
-
+//    int testexp = sizeof(grstarts_wl6);
+	int expectedsize;
+    if(SPEAR)
+        expectedsize = lengthof(grstarts_sod) - numEpisodesMissing;
+    else
+        expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
 
 
 
@@ -424,16 +436,33 @@ static void CAL_SetupGrFile (void)
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
             fname, headersize / 3, expectedsize);
 
-    byte data[lengthof(grstarts) * 3];
-    read(handle, data, sizeof(data));
-    close(handle);
-
-    const byte* d = data;
-    for (int32_t* i = grstarts; i != endof(grstarts); ++i)
+    if(SPEAR)
     {
-        const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
-        *i = (val == 0x00FFFFFF ? -1 : val);
-        d += 3;
+        byte data[lengthof(grstarts_sod) * 3];
+        read(handle, data, sizeof(data));
+        close(handle);
+
+        const byte* d = data;
+        for (int32_t* i = grstarts_sod; i != endof(grstarts_sod); ++i)
+        {
+            const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+            *i = (val == 0x00FFFFFF ? -1 : val);
+            d += 3;
+        }
+    }
+    else
+    {
+        byte data[lengthof(grstarts_wl6) * 3];
+        read(handle, data, sizeof(data));
+        close(handle);
+        
+        const byte* d = data;
+        for (int32_t* i = grstarts_wl6; i != endof(grstarts_wl6); ++i)
+        {
+            const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+            *i = (val == 0x00FFFFFF ? -1 : val);
+            d += 3;
+        }
     }
 #endif	//  !defined(GRHEADERLINKED)
 
