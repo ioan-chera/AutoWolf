@@ -2152,11 +2152,6 @@ void A_MechaSound (objtype *ob)
         PlaySoundLocActor (MECHSTEPSND,ob);
 }
 
-void A_Slurpie (objtype *)
-{
-    SD_PlaySound(SLURPIESND);
-}
-
 /*
 =================
 =

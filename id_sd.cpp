@@ -820,8 +820,8 @@ void SD_L_SetupDigi(void)
     }
 
 	// IOANCH 20130301: unification
-	unsigned int LASTSOUND_max =  SPEAR ? LASTSOUND_sod : :ASTSOUND_wl6;
-    for(i = 0; i < LASTSOUND_max; i++)
+	unsigned int LASTSOUND_max =  SPEAR ? LASTSOUND_sod : LASTSOUND_wl6;
+    for(i = 0; i < (signed int)LASTSOUND_max; i++)
     {
         DigiMap[i] = -1;
         DigiChannel[i] = -1;
@@ -1236,9 +1236,9 @@ void SD_Shutdown(void)
 	unsigned int lastvalue = STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
 	STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
 	STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
-	STARTMUSIC_sod - STARTDIGISOUNDS_sod
+	STARTMUSIC_sod - STARTDIGISOUNDS_sod;
 	
-    for(int i = 0; i < lastvalue; i++)
+    for(int i = 0; i < (signed int)lastvalue; i++)
     {
         if(SoundChunks[i]) Mix_FreeChunk(SoundChunks[i]);
         if(SoundBuffers[i]) free(SoundBuffers[i]);

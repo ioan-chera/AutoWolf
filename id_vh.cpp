@@ -259,7 +259,7 @@ void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 void FreeLatchMem()
 {
     int i;
-    for(i = 0; i < 2 + gfxvmap[LATCHPICS_LUMP_END][SPEAR] - gfxvmap[LATCHPICS_LUMP_START][SPEAR]; i++)
+    for(i = 0; i < (2 + (signed int)gfxvmap[LATCHPICS_LUMP_END][SPEAR] - (signed int)gfxvmap[LATCHPICS_LUMP_START][SPEAR]); i++)
     {
         SDL_FreeSurface(latchpics[i]);
         latchpics[i] = NULL;
@@ -296,7 +296,7 @@ void LoadLatchMem (void)
 	CA_CacheGrChunk (gfxvmap[STARTTILE8][SPEAR]);
 	src = grsegs[gfxvmap[STARTTILE8][SPEAR]];
 
-	for (i=0;i<gfxvmap[NUMTILE8][SPEAR];i++)
+	for (i=0;i<(signed int)gfxvmap[NUMTILE8][SPEAR];i++)
 	{
 		VL_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
 		src += 64;

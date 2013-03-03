@@ -32,7 +32,7 @@ int CP_ReadThis (int);
 
 // ENDSTRx constants are defined in foreign.h
 // IOANCH 20130202: unification process
-char endStrings[9][80] = {
+char endStrings[18][80] = {
     ENDSTR1,
     ENDSTR2,
     ENDSTR3,
@@ -1923,7 +1923,7 @@ DrawCtlScreen (void)
 
     y = CTL_Y + 29;
     if (joystickenabled)
-        VWB_DrawPic (x, y, gfxvmap[C_SELECTEDPIC][SPEAR);
+        VWB_DrawPic (x, y, gfxvmap[C_SELECTEDPIC][SPEAR]);
     else
         VWB_DrawPic (x, y, gfxvmap[C_NOTSELECTEDPIC][SPEAR]);
 
@@ -3680,7 +3680,7 @@ StartCPMusic (int song)
     lastmusic = song;
     lastoffs = SD_MusicOff ();
 	// IOAN 20130301: unification
-	unsigned int STARTMUSIC_max = SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6
+	unsigned int STARTMUSIC_max = SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6;
     UNCACHEAUDIOCHUNK (STARTMUSIC_max + lastmusic);
 
     SD_StartMusic(STARTMUSIC_max + song);

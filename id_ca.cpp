@@ -601,7 +601,7 @@ void CA_Shutdown (void)
     if(audiohandle != -1)
         close(audiohandle);
 
-    for(i=0; i<gfxvmap[NUMCHUNKS][SPEAR]; i++)
+    for(i=0; i<(signed int)gfxvmap[NUMCHUNKS][SPEAR]; i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
@@ -620,7 +620,7 @@ void CA_Shutdown (void)
 
 	// IOAN 20130301: unification
 	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
-    for(i=0; i<NUMSOUNDS_cur; i++,start++)
+    for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }
 
@@ -738,7 +738,6 @@ cachein:
     }
 
 	// IOAN 20130301: unification
-	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
     if(start == (SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6))
     {
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
@@ -762,7 +761,7 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
-    if (chunk >= gfxvmap[STARTTILE8][SPEAR] && chunk < gfxvmap[STARTEXTERNS][SPEAR])
+    if (chunk >= (signed int)gfxvmap[STARTTILE8][SPEAR] && chunk < (signed int)gfxvmap[STARTEXTERNS][SPEAR])
     {
         //
         // expanded sizes of tile8/16/32 are implicit
@@ -771,15 +770,15 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<gfxvmap[STARTTILE8M][SPEAR])          // tile 8s are all in one chunk!
+        if (chunk<(signed int)gfxvmap[STARTTILE8M][SPEAR])          // tile 8s are all in one chunk!
             expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR];
-        else if (chunk<gfxvmap[STARTTILE16][SPEAR])
+        else if (chunk<(signed int)gfxvmap[STARTTILE16][SPEAR])
             expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR];
-        else if (chunk<gfxvmap[STARTTILE16M][SPEAR])    // all other tiles are one/chunk
+        else if (chunk<(signed int)gfxvmap[STARTTILE16M][SPEAR])    // all other tiles are one/chunk
             expanded = BLOCK*4;
-        else if (chunk<gfxvmap[STARTTILE32][SPEAR])
+        else if (chunk<(signed int)gfxvmap[STARTTILE32][SPEAR])
             expanded = MASKBLOCK*4;
-        else if (chunk<gfxvmap[STARTTILE32M][SPEAR])
+        else if (chunk<(signed int)gfxvmap[STARTTILE32M][SPEAR])
             expanded = BLOCK*16;
         else
             expanded = MASKBLOCK*16;

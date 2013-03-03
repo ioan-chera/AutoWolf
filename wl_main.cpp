@@ -28,7 +28,9 @@
 =============================================================================
 */
 
-extern byte signon[];
+// IOANCH 20130303: unification
+extern byte signon_wl6[];
+extern byte signon_sod[];
 
 /*
 =============================================================================
@@ -54,7 +56,7 @@ extern byte signon[];
 */
 
 // IOANCH 20130303: SPEAR variable
-extern unsigned char SPEAR;
+unsigned char SPEAR;
 
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
@@ -867,8 +869,8 @@ void SignonScreen (void)                        // VGA version
 {
     VL_SetVGAPlaneMode ();
 
-    VL_MungePic (signon,320,200);
-    VL_MemToScreen (signon,320,200,0,0);
+    VL_MungePic (SPEAR ? signon_sod : signon_wl6,320,200);
+    VL_MemToScreen (SPEAR ? signon_sod : signon_wl6,320,200,0,0);
 }
 
 
@@ -1166,10 +1168,10 @@ void DoJukebox(void)
         XGETYOU_MUS_sod,             // 22
         XTOWER2_MUS_sod              // 23
     };
-    unsigned *&songs = SPEAR ? songs_sod : songs_wl6;
+    unsigned *songs = (SPEAR ? songs_sod : songs_wl6);
     // IOANCH 20130303: unification
     CP_iteminfo &MusicItems = SPEAR ? MusicItems_sod : MusicItems_wl6;
-    CP_iteminfo *&MusicMenu = SPEAR ? MusicMenu_sod : MusicMenu_wl6;
+    CP_itemtype *MusicMenu = SPEAR ? MusicMenu_sod : MusicMenu_wl6;
 
     IN_ClearKeysDown();
     if (!AdLibPresent && !SoundBlasterPresent)

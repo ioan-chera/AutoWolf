@@ -30,7 +30,7 @@ boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
-static musicnames lastmusicchunk = (musicnames) 0;
+static int lastmusicchunk = 0;
 
 static int DebugOk;
 
@@ -942,7 +942,7 @@ void StartMusic ()
     SD_MusicOff ();
 	// IOAN 20130301: unification
 	int *songs = SPEAR ? songs_sod : songs_wl6;
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+    lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
 	// IOAN 20130301: unification
     SD_StartMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
@@ -953,7 +953,7 @@ void ContinueMusic (int offs)
     SD_MusicOff ();
 	// IOAN 20130301: unification
 	int *songs = SPEAR ? songs_sod : songs_wl6;
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
+    lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
 	// IOAN 20130301: unification
     SD_ContinueMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk, 
