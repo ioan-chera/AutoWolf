@@ -588,7 +588,7 @@ LevelCompleted (void)
 // IOANCH 20130301: unification culling
     VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR]);
 
-    if (!SPEAR && mapon < 8 || SPEAR && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17)
+    if ((!SPEAR && mapon < 8) || (SPEAR && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
     {
         // IOANCH 20130301: unification culling
 #ifdef SPANISH

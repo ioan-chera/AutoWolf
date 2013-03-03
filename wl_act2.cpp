@@ -874,7 +874,7 @@ void A_DeathScream (objtype *ob)
     // IOANCH 20130301: unification culling
 
     // IOANCH 20130202: unification process
-    if (!US_RndT() && (!SPEAR && mapon==9 || SPEAR && (mapon == 18 || mapon == 19)))
+    if (!US_RndT() && ((!SPEAR && mapon==9) || (SPEAR && (mapon == 18 || mapon == 19))))
     {
         switch(ob->obclass)
         {

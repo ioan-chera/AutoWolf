@@ -699,11 +699,14 @@ static void CAL_CacheAdlibSoundChunk (int chunk)
 void CA_LoadAllSounds (void)
 {
     unsigned start,i;
+    unsigned char cachein = 0;
+    // IOANCH 20130303: don't use label use variable
 
     switch (oldsoundmode)
     {
         case sdm_Off:
-            goto cachein;
+            cachein = 1;
+            break;
         case sdm_PC:
 			// IOAN 20130301: unification
             start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
@@ -715,10 +718,10 @@ void CA_LoadAllSounds (void)
 
 	// IOAN 20130301: unification
 	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
-    for (i=0;i<NUMSOUNDS_cur;i++,start++)
-        UNCACHEAUDIOCHUNK(start);
-
-cachein:
+    
+    if(!cachein)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
+            UNCACHEAUDIOCHUNK(start);
 
     oldsoundmode = SoundMode;
 

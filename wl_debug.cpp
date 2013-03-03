@@ -683,7 +683,7 @@ again:
         {
             level = atoi (str);
             // IOANCH 20130202: unification process
-            if (!SPEAR && level>0 && level<11 || SPEAR && level > 0 && level < 22)
+            if ((!SPEAR && level>0 && level<11) || (SPEAR && level > 0 && level < 22))
             {
                 gamestate.mapon = level-1;
                 playstate = ex_warped;

@@ -1728,12 +1728,10 @@ void CheckParameters(int argc, char *argv[])
     {
         char *arg = argv[i];
         // IOANCH 20130303: unification
-        if(!SPEAR)
-            IFARG("--goobers")
-                param_debugmode = true;
-        else
-            IFARG("--debugmode")
-                param_debugmode = true;
+        if(!SPEAR && !strcmp(arg, "--goobers"))
+            param_debugmode = true;
+        else if(SPEAR && !strcmp(arg, "--debugmode"))
+            param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
         else IFARG("--easy")
