@@ -158,7 +158,7 @@ void DirectoryFile::doWriteToFile(FILE *f)
 	uint16_t len;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
-		len = file->getFilenameLen();
+		len = (uint16_t)file->getFilenameLen();
 		fwrite(&len, sizeof(len), 1, f);
 		fwrite(file->getFilename(), sizeof(uint8_t), len, f);
 		fwrite(&addr, sizeof(addr), 1, f);

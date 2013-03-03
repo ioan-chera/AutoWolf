@@ -67,8 +67,10 @@ int     mapon;
 
 word    *mapsegs[MAPPLANES];
 static maptype* mapheaderseg[NUMMAPS];
-byte    *audiosegs[NUMSNDCHUNKS];
-byte    *grsegs[NUMCHUNKS];
+// IOAN 20130301: unification
+byte    *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+				   NUMSNDCHUNKS_wl6];
+byte    *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 word    RLEWtag;
 
@@ -93,7 +95,10 @@ static const char mfilename[] = "maptemp.";
 static const char aheadname[] = "AUDIOHED.";
 static const char afilename[] = "AUDIOT.";
 
-static int32_t  grstarts[NUMCHUNKS + 1];
+static int32_t  grstarts_wl6[NUMCHUNKS_wl6 + 1];
+static int32_t  grstarts_sod[NUMCHUNKS_sod + 1];
+
+// static int32_t  grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
 static int32_t* audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
@@ -116,8 +121,11 @@ SDMode oldsoundmode;
 //
 static int32_t GRFILEPOS(const size_t idx)
 {
-	assert(idx < lengthof(grstarts));
-	return grstarts[idx];
+    if(SPEAR)
+        assert(idx < lengthof(grstarts_sod));
+    else
+        assert(idx < lengthof(grstarts_wl6));
+	return SPEAR ? grstarts_sod[idx] : grstarts_wl6[idx];
 }
 
 /*
@@ -379,7 +387,10 @@ static void CAL_SetupGrFile (void)
 #ifdef GRHEADERLINKED
 
     grhuffman = (huffnode *)&EGAdict;
-    grstarts = (int32_t _seg *)FP_SEG(&EGAhead);
+    if(SPEAR)
+        grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
+    else
+        grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
 
 #else	//  !defined(GRHEADERLINKED)
 
@@ -408,11 +419,15 @@ static void CAL_SetupGrFile (void)
     long headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
 
-#ifndef APOGEE_1_0
-	int expectedsize = lengthof(grstarts) - numEpisodesMissing;
-#else
-	int expectedsize = lengthof(grstarts);
-#endif
+    // IOANCH 20130301: unification culling
+//    int testexp = sizeof(grstarts_wl6);
+	int expectedsize;
+    if(SPEAR)
+        expectedsize = lengthof(grstarts_sod) - numEpisodesMissing;
+    else
+        expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
+
+
 
     if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOAN 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
@@ -421,16 +436,33 @@ static void CAL_SetupGrFile (void)
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
             fname, headersize / 3, expectedsize);
 
-    byte data[lengthof(grstarts) * 3];
-    read(handle, data, sizeof(data));
-    close(handle);
-
-    const byte* d = data;
-    for (int32_t* i = grstarts; i != endof(grstarts); ++i)
+    if(SPEAR)
     {
-        const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
-        *i = (val == 0x00FFFFFF ? -1 : val);
-        d += 3;
+        byte data[lengthof(grstarts_sod) * 3];
+        read(handle, data, sizeof(data));
+        close(handle);
+
+        const byte* d = data;
+        for (int32_t* i = grstarts_sod; i != endof(grstarts_sod); ++i)
+        {
+            const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+            *i = (val == 0x00FFFFFF ? -1 : val);
+            d += 3;
+        }
+    }
+    else
+    {
+        byte data[lengthof(grstarts_wl6) * 3];
+        read(handle, data, sizeof(data));
+        close(handle);
+        
+        const byte* d = data;
+        for (int32_t* i = grstarts_wl6; i != endof(grstarts_wl6); ++i)
+        {
+            const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
+            *i = (val == 0x00FFFFFF ? -1 : val);
+            d += 3;
+        }
     }
 #endif	//  !defined(GRHEADERLINKED)
 
@@ -448,13 +480,14 @@ static void CAL_SetupGrFile (void)
 //
 // load the pic and sprite headers into the arrays in the data segment
 //
-    pictable=(pictabletype *) malloc(NUMPICS*sizeof(pictabletype));
+    
+    pictable=(pictabletype *) malloc(gfxvmap[NUMPICS][SPEAR]*sizeof(pictabletype));
     CHECKMALLOCRESULT(pictable);
-    CAL_GetGrChunkLength(STRUCTPIC);                // position file pointer
+    CAL_GetGrChunkLength(gfxvmap[STRUCTPIC][SPEAR]);                // position file pointer
     compseg=(byte *) malloc(chunkcomplen);
     CHECKMALLOCRESULT(compseg);
     read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, NUMPICS * sizeof(pictabletype), grhuffman);
+    CAL_HuffExpand(compseg, (byte*)pictable, gfxvmap[NUMPICS][SPEAR] * sizeof(pictabletype), grhuffman);
     free(compseg);
 }
 
@@ -491,21 +524,13 @@ static void CAL_SetupMapFile (void)
 //
 // open the data file
 //
-#ifdef CARMACIZED
+    // IOANCH 20130301: unification culling
     strcpy(fname, "GAMEMAPS.");
     strcat(fname, extension);
 
     maphandle = open(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
-#else
-    strcpy(fname,mfilename);
-    strcat(fname,extension);
-
-    maphandle = open(fname, O_RDONLY | O_BINARY);
-    if (maphandle == -1)
-        CA_CannotOpen(fname);
-#endif
 
 //
 // load all map header
@@ -605,7 +630,7 @@ void CA_Shutdown (void)
     if(audiohandle != -1)
         close(audiohandle);
 
-    for(i=0; i<NUMCHUNKS; i++)
+    for(i=0; i<(signed int)gfxvmap[NUMCHUNKS][SPEAR]; i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
@@ -614,14 +639,17 @@ void CA_Shutdown (void)
         case sdm_Off:
             return;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+			// IOANCH 20130301: unification
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    for(i=0; i<NUMSOUNDS; i++,start++)
+	// IOAN 20130301: unification
+	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+    for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }
 
@@ -700,47 +728,56 @@ static void CAL_CacheAdlibSoundChunk (int chunk)
 void CA_LoadAllSounds (void)
 {
     unsigned start,i;
+    unsigned char cachein = 0;
+    // IOANCH 20130303: don't use label use variable
 
     switch (oldsoundmode)
     {
         case sdm_Off:
-            goto cachein;
+            cachein = 1;
+            break;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+			// IOAN 20130301: unification
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    for (i=0;i<NUMSOUNDS;i++,start++)
-        UNCACHEAUDIOCHUNK(start);
-
-cachein:
+	// IOAN 20130301: unification
+	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+    
+    if(!cachein)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
+            UNCACHEAUDIOCHUNK(start);
 
     oldsoundmode = SoundMode;
 
     switch (SoundMode)
     {
         case sdm_Off:
-            start = STARTADLIBSOUNDS;   // needed for priorities...
+			// IOAN 20130301: unification
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+			// needed for priorities...
             break;
         case sdm_PC:
-            start = STARTPCSOUNDS;
+            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = STARTADLIBSOUNDS;
+            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
             break;
     }
 
-    if(start == STARTADLIBSOUNDS)
+	// IOAN 20130301: unification
+    if(start == (SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6))
     {
-        for (i=0;i<NUMSOUNDS;i++,start++)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CAL_CacheAdlibSoundChunk(start);
     }
     else
     {
-        for (i=0;i<NUMSOUNDS;i++,start++)
+        for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CA_CacheAudioChunk(start);
     }
 }
@@ -756,7 +793,7 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
-    if (chunk >= STARTTILE8 && chunk < STARTEXTERNS)
+    if (chunk >= (signed int)gfxvmap[STARTTILE8][SPEAR] && chunk < (signed int)gfxvmap[STARTEXTERNS][SPEAR])
     {
         //
         // expanded sizes of tile8/16/32 are implicit
@@ -765,15 +802,15 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<STARTTILE8M)          // tile 8s are all in one chunk!
-            expanded = BLOCK*NUMTILE8;
-        else if (chunk<STARTTILE16)
-            expanded = MASKBLOCK*NUMTILE8M;
-        else if (chunk<STARTTILE16M)    // all other tiles are one/chunk
+        if (chunk<(signed int)gfxvmap[STARTTILE8M][SPEAR])          // tile 8s are all in one chunk!
+            expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR];
+        else if (chunk<(signed int)gfxvmap[STARTTILE16][SPEAR])
+            expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR];
+        else if (chunk<(signed int)gfxvmap[STARTTILE16M][SPEAR])    // all other tiles are one/chunk
             expanded = BLOCK*4;
-        else if (chunk<STARTTILE32)
+        else if (chunk<(signed int)gfxvmap[STARTTILE32][SPEAR])
             expanded = MASKBLOCK*4;
-        else if (chunk<STARTTILE32M)
+        else if (chunk<(signed int)gfxvmap[STARTTILE32M][SPEAR])
             expanded = BLOCK*16;
         else
             expanded = MASKBLOCK*16;
@@ -922,10 +959,9 @@ void CA_CacheMap (int mapnum)
     memptr    bigbufferseg;
     unsigned  size;
     word     *source;
-#ifdef CARMACIZED
+    // IOANCH 20130301: unification culling
     word     *buffer2seg;
     int32_t   expanded;
-#endif
 
     mapon = mapnum;
 
@@ -952,7 +988,7 @@ void CA_CacheMap (int mapnum)
         }
 
         read(maphandle,source,compressed);
-#ifdef CARMACIZED
+        // IOANCH 20130301: unification culling
         //
         // unhuffman, then unRLEW
         // The huffman'd chunk has a two byte expanded length first
@@ -967,12 +1003,6 @@ void CA_CacheMap (int mapnum)
         CAL_RLEWexpand(buffer2seg+1,dest,size,RLEWtag);
         free(buffer2seg);
 
-#else
-        //
-        // unRLEW, skipping expanded length
-        //
-        CAL_RLEWexpand (source+1,dest,size,RLEWtag);
-#endif
 
         if (compressed>BUFFERSIZE)
             free(bigbufferseg);

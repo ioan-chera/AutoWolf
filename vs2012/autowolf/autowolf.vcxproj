@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\audioabstract.cpp" />
     <ClCompile Include="..\..\CheckSum.cpp" />
     <ClCompile Include="..\..\DataFile.cpp" />
     <ClCompile Include="..\..\Dictionary.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="..\..\DirectoryFile.cpp" />
     <ClCompile Include="..\..\dosbox\dbopl.cpp" />
     <ClCompile Include="..\..\ExploredArrayFile.cpp" />
+    <ClCompile Include="..\..\gfxvabstract.cpp" />
     <ClCompile Include="..\..\HistoryRatio.cpp" />
     <ClCompile Include="..\..\id_ca.cpp" />
     <ClCompile Include="..\..\id_in.cpp" />
@@ -169,6 +171,7 @@
     <ClCompile Include="..\..\PathArray.cpp" />
     <ClCompile Include="..\..\sdl_winmain.cpp" />
     <ClCompile Include="..\..\signon.cpp" />
+    <ClCompile Include="..\..\sprabstract.cpp" />
     <ClCompile Include="..\..\wl_act1.cpp" />
     <ClCompile Include="..\..\wl_act2.cpp" />
     <ClCompile Include="..\..\wl_agent.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="..\..\wl_text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\audioabstract.h" />
     <ClInclude Include="..\..\audiosod.h" />
     <ClInclude Include="..\..\audiowl6.h" />
     <ClInclude Include="..\..\CheckSum.h" />
@@ -200,8 +204,7 @@
     <ClInclude Include="..\..\ExploredArrayFile.h" />
     <ClInclude Include="..\..\foreign.h" />
     <ClInclude Include="..\..\f_spear.h" />
-    <ClInclude Include="..\..\gfxv_apo.h" />
-    <ClInclude Include="..\..\gfxv_jap.h" />
+    <ClInclude Include="..\..\gfxvabstract.h" />
     <ClInclude Include="..\..\gfxv_sod.h" />
     <ClInclude Include="..\..\gfxv_wl6.h" />
     <ClInclude Include="..\..\HistoryRatio.h" />
@@ -218,6 +221,9 @@
     <ClInclude Include="..\..\List.h" />
     <ClInclude Include="..\..\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\PathArray.h" />
+    <ClInclude Include="..\..\sprabstract.h" />
+    <ClInclude Include="..\..\spr_sod.h" />
+    <ClInclude Include="..\..\spr_wl6.h" />
     <ClInclude Include="..\..\version.h" />
     <ClInclude Include="..\..\win\resource.h" />
     <ClInclude Include="..\..\wl_atmos.h" />

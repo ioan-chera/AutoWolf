@@ -77,7 +77,7 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			ret->state == &s_mutshoot4)))
 			return true;
 		break;
-#ifndef SPEAR
+    // IOANCH 20130202: unification process
 	case bossobj:
 		if(dist <= 16 && (ret->state == &s_bossshoot1 || ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
 			|| ret->state == &s_bossshoot5 || ret->state == &s_bossshoot6 || ret->state == &s_bossshoot7
@@ -110,7 +110,6 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			|| ret->state == &s_fatshoot5 || ret->state == &s_fatshoot6))
 			return true;
 		break;
-#else
 	case transobj:
 		if(dist <= 16 && (ret->state == &s_transshoot1 || ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
 			|| ret->state == &s_transshoot4
@@ -133,7 +132,6 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 			|| ret->state == &s_deathshoot5))
 			return true;
 		break;
-#endif
 		default:
 			;
 	}
@@ -441,7 +439,7 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 	boolean setspeed = false, setdir = false, setbonus = false;
 	switch(which)
 	{
-#ifndef SPEAR
+            // IOANCH 20130202: unification process
 		case en_boss:
 			spawnstate = &s_bossstand;
 			obclass = bossobj;
@@ -494,7 +492,6 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 			else
 				s_hitlerdie2.tictime = 5;
 			break;
-#else
 		case en_trans:
 			spawnstate = &s_transstand;
 			obclass = transobj;
@@ -531,7 +528,6 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 			setbonus = true;
 			break;
 			
-#endif
 		default:
 			;
 	}
@@ -553,7 +549,7 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 	return newobj;
 }
 
-#ifndef SPEAR
+// IOANCH 20130202: unification process
 //
 // Basic::SpawnGhosts
 //
@@ -587,7 +583,6 @@ void Basic::SpawnGhosts (int which, int tilex, int tiley)
     }
 }
 
-#endif
 
 //
 // Basic::SpawnEnemy
@@ -628,14 +623,13 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 	case en_death:
 		newenemy = SpawnBoss(which, tilex, tiley);
 		break;
-#ifndef SPEAR
+            // IOANCH 20130202: unification process
 	case en_blinky:
 	case en_clyde:
 	case en_pinky:
 	case en_inky:
 		SpawnGhosts(which, tilex, tiley);
 		break;
-#endif
 	}
 	
 	// IOAN 20121219: record enemy position

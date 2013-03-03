@@ -25,7 +25,8 @@ TEXT FORMATTING COMMANDS
 =============================================================================
 */
 
-#ifndef SPEAR
+// IOANCH 20130303: SPEAR unification
+// #ifndef SPEAR
 
 #define BACKCOLOR       0x11
 
@@ -66,7 +67,7 @@ static boolean layoutdone;
 
 //===========================================================================
 
-#ifndef JAPAN
+// IOANCH 20130301: unification culling
 /*
 =====================
 =
@@ -250,8 +251,8 @@ void HandleCommand (void)
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
             VWB_DrawPic (picx&~7,picy,picnum);
-            picwidth = pictable[picnum-STARTPICS].width;
-            picheight = pictable[picnum-STARTPICS].height;
+            picwidth = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].width;
+            picheight = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].height;
             //
             // adjust margins
             //
@@ -425,10 +426,10 @@ void PageLayout (boolean shownumber)
     // clear the screen
     //
     VWB_Bar (0,0,320,200,BACKCOLOR);
-    VWB_DrawPic (0,0,H_TOPWINDOWPIC);
-    VWB_DrawPic (0,8,H_LEFTWINDOWPIC);
-    VWB_DrawPic (312,8,H_RIGHTWINDOWPIC);
-    VWB_DrawPic (8,176,H_BOTTOMINFOPIC);
+    VWB_DrawPic (0,0,gfxvmap[H_TOPWINDOWPIC][SPEAR]);
+    VWB_DrawPic (0,8,gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
+    VWB_DrawPic (312,8,gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
+    VWB_DrawPic (8,176,gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
 
 
     for (i=0; i<TEXTROWS; i++)
@@ -553,10 +554,10 @@ void CacheLayoutGraphics (void)
             if (ch == 'E')          // end of file, so load graphics and return
             {
 #ifndef SPEAR
-                CA_CacheGrChunk(H_TOPWINDOWPIC);
-                CA_CacheGrChunk(H_LEFTWINDOWPIC);
-                CA_CacheGrChunk(H_RIGHTWINDOWPIC);
-                CA_CacheGrChunk(H_BOTTOMINFOPIC);
+                CA_CacheGrChunk(gfxvmap[H_TOPWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
+                CA_CacheGrChunk(gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
 #endif
                 //                              CA_CacheMarks ();
                 text = textstart;
@@ -580,8 +581,6 @@ void CacheLayoutGraphics (void)
 
     Quit ("CacheLayoutGraphics: No ^E to terminate file!");
 }
-#endif
-
 
 /*
 =====================
@@ -590,61 +589,22 @@ void CacheLayoutGraphics (void)
 =
 =====================
 */
-
-#ifdef JAPAN
-void ShowArticle (int which)
-#else
+// IOANCH 20130301: unification culling
 void ShowArticle (char *article)
-#endif
 {
-#ifdef JAPAN
-    int snames[10] = {
-        H_HELP1PIC,
-        H_HELP2PIC,
-        H_HELP3PIC,
-        H_HELP4PIC,
-        H_HELP5PIC,
-        H_HELP6PIC,
-        H_HELP7PIC,
-        H_HELP8PIC,
-        H_HELP9PIC,
-        H_HELP10PIC};
-    int enames[14] = {
-        0,0,
-#ifndef JAPDEMO
-        C_ENDGAME1APIC,
-        C_ENDGAME1BPIC,
-        C_ENDGAME2APIC,
-        C_ENDGAME2BPIC,
-        C_ENDGAME3APIC,
-        C_ENDGAME3BPIC,
-        C_ENDGAME4APIC,
-        C_ENDGAME4BPIC,
-        C_ENDGAME5APIC,
-        C_ENDGAME5BPIC,
-        C_ENDGAME6APIC,
-        C_ENDGAME6BPIC
-#endif
-    };
-#endif
+    // IOANCH 20130301: unification culling
+
     unsigned    oldfontnumber;
     boolean     newpage,firstpage;
     ControlInfo ci;
 
-#ifdef JAPAN
-    pagenum = 1;
-    if (!which)
-        numpages = 10;
-    else
-        numpages = 2;
-#else
+    // IOANCH 20130301: unification culling
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
-    CA_CacheGrChunk(STARTFONT);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
     VWB_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
-#endif
 
     newpage = true;
     firstpage = true;
@@ -654,18 +614,13 @@ void ShowArticle (char *article)
         if (newpage)
         {
             newpage = false;
-#ifdef JAPAN
-            if (!which)
-                CA_CacheScreen(snames[pagenum - 1]);
-            else
-                CA_CacheScreen(enames[which*2 + pagenum - 1]);
-#else
+            // IOANCH 20130301: unification culling
             PageLayout (true);
-#endif
             VW_UpdateScreen ();
             if (firstpage)
             {
-                VL_FadeIn(0,255,gamepal,10);
+                // IOANCH 20130202: unification process
+                VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10);
                 firstpage = false;
             }
         }
@@ -706,12 +661,9 @@ void ShowArticle (char *article)
             case dir_West:
                 if (pagenum>1)
                 {
-#ifndef JAPAN
+                    // IOANCH 20130301: unification culling
                     BackPage ();
                     BackPage ();
-#else
-                  pagenum--;
-#endif
                     newpage = true;
                 }
                 TicDelay(20);
@@ -722,9 +674,7 @@ void ShowArticle (char *article)
                 if (pagenum<numpages)
                 {
                     newpage = true;
-#ifdef JAPAN
-                    pagenum++;
-#endif
+                    // IOANCH 20130301: unification culling
                 }
                 TicDelay(20);
                 break;
@@ -739,8 +689,7 @@ void ShowArticle (char *article)
 
 
 //===========================================================================
-
-#ifndef JAPAN
+// IOANCH 20130301: unification culling
 #ifdef ARTSEXTERN
 int     endextern = T_ENDART1;
 #ifndef SPEAR
@@ -749,7 +698,6 @@ int     helpextern = T_HELPART;
 #endif
 char helpfilename[13] = "HELPART.",
     endfilename[13] = "ENDART1.";
-#endif
 
 /*
 =================
@@ -767,15 +715,11 @@ void HelpScreens (void)
     memptr  layout;
 #endif
 
-
-#ifdef JAPAN
-    ShowArticle (0);
-    VW_FadeOut();
-    FreeMusic ();
-#else
+// IOANCH 20130301: unification culling
 
 #ifdef ARTSEXTERN
-    artnum = helpextern;
+    // IOANCH 20130302: helpextern used to be here
+    artnum = gfxvmap[T_HELPART][SPEAR];
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
@@ -794,7 +738,7 @@ void HelpScreens (void)
     VW_FadeOut();
 
     FreeMusic ();
-#endif
+
 }
 #endif
 
@@ -811,23 +755,13 @@ void EndText (void)
 
     ClearMemory ();
 
-#ifdef JAPAN
-    ShowArticle(gamestate.episode + 1);
-
-    VW_FadeOut();
-
-    SETFONTCOLOR(0,15);
-    IN_ClearKeysDown();
-    if (MousePresent && IN_IsInputGrabbed())
-        IN_CenterMouse();  // Clear accumulated mouse movement
-
-    FreeMusic ();
-#else
+    // IOANCH 20130301: unification culling
 
 
 
 #ifdef ARTSEXTERN
-    artnum = endextern+gamestate.episode;
+    // IOANCH 20130302: unification: map it here. (endextern used to be gfxvmap[T_ENDART1][SPEAR]
+    artnum = gfxvmap[T_ENDART1][SPEAR]+gamestate.episode;
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
@@ -852,6 +786,6 @@ void EndText (void)
         IN_CenterMouse();  // Clear accumulated mouse movement
 
     FreeMusic ();
-#endif
+
 }
-#endif
+// #endif

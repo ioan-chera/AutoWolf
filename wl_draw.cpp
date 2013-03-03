@@ -541,10 +541,9 @@ void HitDoor (hitwall_t orient)
 // IOAN 20121204: deleted useless defines
 
 //==========================================================================
-
-byte vgaCeiling[]=
+// IOANCH 20130302: unification
+byte vgaCeiling_wl6[]=
 {
-#ifndef SPEAR
  0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0x1d,0xbf,
  0x4e,0x4e,0x4e,0x1d,0x8d,0x4e,0x1d,0x2d,0x1d,0x8d,
  0x1d,0x1d,0x1d,0x1d,0x1d,0x2d,0xdd,0x1d,0x1d,0x98,
@@ -552,11 +551,13 @@ byte vgaCeiling[]=
  0x1d,0x9d,0x2d,0xdd,0xdd,0x9d,0x2d,0x4d,0x1d,0xdd,
  0x7d,0x1d,0x2d,0x2d,0xdd,0xd7,0x1d,0x1d,0x1d,0x2d,
  0x1d,0x1d,0x1d,0x1d,0xdd,0xdd,0x7d,0xdd,0xdd,0xdd
-#else
+};
+byte vgaCeiling_sod[]=
+{
  0x6f,0x4f,0x1d,0xde,0xdf,0x2e,0x7f,0x9e,0xae,0x7f,
  0x1d,0xde,0xdf,0xde,0xdf,0xde,0xe1,0xdc,0x2e,0x1d,0xdc
-#endif
 };
+
 
 /*
 =====================
@@ -568,7 +569,9 @@ byte vgaCeiling[]=
 
 void VGAClearScreen (void)
 {
-    byte ceiling=vgaCeiling[gamestate.episode*10+mapon];
+    // IOANCH 20130302: unification
+    byte ceiling=SPEAR ? vgaCeiling_sod[gamestate.episode*10+mapon] :
+        vgaCeiling_wl6[gamestate.episode*10+mapon];
 
     int y;
     byte *ptr = vbuf;
@@ -727,7 +730,8 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
     byte col;
     byte *vmem;
 
-    shape = (t_compshape *) PM_GetSprite(shapenum);
+    // IOANCH 20130303: don't remap
+    shape = (t_compshape *) PM_GetSprite(shapenum, false);
 
     scale=height>>1;
     pixheight=scale*SPRITESCALEFACTOR;
@@ -965,25 +969,26 @@ void DrawPlayerWeapon (void)
 {
     int shapenum;
 
-#ifndef SPEAR
-    if (gamestate.victoryflag)
+    // IOANCH 20130302: unification
+    // IOANCH 20130303: do sprite remapping here
+    if (!SPEAR && gamestate.victoryflag)
     {
-#ifndef APOGEE_1_0
+        // IOANCH 20130301: unification culling
+
         if (player->state == &s_deathcam && (GetTimeCount()&32) )
-            SimpleScaleShape(viewwidth/2,SPR_DEATHCAM,viewheight+1);
-#endif
+            SimpleScaleShape(viewwidth/2,sprmap[SPR_DEATHCAM][SPEAR],viewheight+1);
+
         return;
     }
-#endif
 
     if (gamestate.weapon != -1)
     {
-        shapenum = weaponscale[gamestate.weapon]+gamestate.weaponframe;
+        shapenum = sprmap[weaponscale[gamestate.weapon]][SPEAR]+gamestate.weaponframe;
         SimpleScaleShape(viewwidth/2,shapenum,viewheight+1);
     }
 
     if (demorecord || demoplayback)
-        SimpleScaleShape(viewwidth/2,SPR_DEMO,viewheight+1);
+        SimpleScaleShape(viewwidth/2,sprmap[SPR_DEMO][SPEAR],viewheight+1);
 }
 
 

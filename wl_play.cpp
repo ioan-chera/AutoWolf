@@ -30,7 +30,7 @@ boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
-static musicnames lastmusicchunk = (musicnames) 0;
+static int lastmusicchunk = 0;
 
 static int DebugOk;
 
@@ -111,133 +111,133 @@ objtype dummyobj;
 //
 // LIST OF SONGS FOR EACH VERSION
 //
-int songs[] = {
-#ifndef SPEAR
+
+// IOAN 20130301: unification
+int songs_wl6[] = {
     //
     // Episode One
     //
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
-
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    CORNER_MUS_wl6,                 // Secret level
+	
     //
     // Episode Two
     //
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    GOINGAFT_MUS,
-    HEADACHE_MUS,
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    HEADACHE_MUS,
-    GOINGAFT_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
-
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    DUNGEON_MUS_wl6,                // Secret level
+	
     //
     // Episode Three
     //
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-
-    ULTIMATE_MUS,               // Boss level
-    PACMAN_MUS,                 // Secret level
-
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+	
+    ULTIMATE_MUS_wl6,               // Boss level
+    PACMAN_MUS_wl6,                 // Secret level
+	
     //
     // Episode Four
     //
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-    GETTHEM_MUS,
-    SEARCHN_MUS,
-    POW_MUS,
-    SUSPENSE_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    CORNER_MUS,                 // Secret level
-
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+    GETTHEM_MUS_wl6,
+    SEARCHN_MUS_wl6,
+    POW_MUS_wl6,
+    SUSPENSE_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    CORNER_MUS_wl6,                 // Secret level
+	
     //
     // Episode Five
     //
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    GOINGAFT_MUS,
-    HEADACHE_MUS,
-    NAZI_OMI_MUS,
-    PREGNANT_MUS,
-    HEADACHE_MUS,
-    GOINGAFT_MUS,
-
-    WARMARCH_MUS,               // Boss level
-    DUNGEON_MUS,                // Secret level
-
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    NAZI_OMI_MUS_wl6,
+    PREGNANT_MUS_wl6,
+    HEADACHE_MUS_wl6,
+    GOINGAFT_MUS_wl6,
+	
+    WARMARCH_MUS_wl6,               // Boss level
+    DUNGEON_MUS_wl6,                // Secret level
+	
     //
     // Episode Six
     //
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-    INTROCW3_MUS,
-    NAZI_RAP_MUS,
-    TWELFTH_MUS,
-    ZEROHOUR_MUS,
-
-    ULTIMATE_MUS,               // Boss level
-    FUNKYOU_MUS                 // Secret level
-#else
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+    INTROCW3_MUS_wl6,
+    NAZI_RAP_MUS_wl6,
+    TWELFTH_MUS_wl6,
+    ZEROHOUR_MUS_wl6,
+	
+    ULTIMATE_MUS_wl6,               // Boss level
+    FUNKYOU_MUS_wl6                 // Secret level
+};
+int songs_sod[] = {
 
     //////////////////////////////////////////////////////////////
     //
     // SPEAR OF DESTINY TRACKS
     //
     //////////////////////////////////////////////////////////////
-    XTIPTOE_MUS,
-    XFUNKIE_MUS,
-    XDEATH_MUS,
-    XGETYOU_MUS,                // DON'T KNOW
-    ULTIMATE_MUS,               // Trans Gr”sse
-
-    DUNGEON_MUS,
-    GOINGAFT_MUS,
-    POW_MUS,
-    TWELFTH_MUS,
-    ULTIMATE_MUS,               // Barnacle Wilhelm BOSS
-
-    NAZI_OMI_MUS,
-    GETTHEM_MUS,
-    SUSPENSE_MUS,
-    SEARCHN_MUS,
-    ZEROHOUR_MUS,
-    ULTIMATE_MUS,               // Super Mutant BOSS
-
-    XPUTIT_MUS,
-    ULTIMATE_MUS,               // Death Knight BOSS
-
-    XJAZNAZI_MUS,               // Secret level
-    XFUNKIE_MUS,                // Secret level (DON'T KNOW)
-
-    XEVIL_MUS                   // Angel of Death BOSS
-#endif
+    XTIPTOE_MUS_sod,
+    XFUNKIE_MUS_sod,
+    XDEATH_MUS_sod,
+    XGETYOU_MUS_sod,                // DON'T KNOW
+    ULTIMATE_MUS_sod,               // Trans Gr”sse
+	
+    DUNGEON_MUS_sod,
+    GOINGAFT_MUS_sod,
+    POW_MUS_sod,
+    TWELFTH_MUS_sod,
+    ULTIMATE_MUS_sod,               // Barnacle Wilhelm BOSS
+	
+    NAZI_OMI_MUS_sod,
+    GETTHEM_MUS_sod,
+    SUSPENSE_MUS_sod,
+    SEARCHN_MUS_sod,
+    ZEROHOUR_MUS_sod,
+    ULTIMATE_MUS_sod,               // Super Mutant BOSS
+	
+    XPUTIT_MUS_sod,
+    ULTIMATE_MUS_sod,               // Death Knight BOSS
+	
+    XJAZNAZI_MUS_sod,               // Secret level
+    XFUNKIE_MUS_sod,                // Secret level (DON'T KNOW)
+	
+    XEVIL_MUS_sod                   // Angel of Death BOSS
 };
-
 
 /*
 =============================================================================
@@ -571,31 +571,32 @@ void CheckKeys (void)
     scan = LastScan;
 
 
-#ifdef SPEAR
-    //
-    // SECRET CHEAT CODE: TAB-G-F10
-    //
-    if (Keyboard[sc_Tab] && Keyboard[sc_G] && Keyboard[sc_F10])
+    if(SPEAR)
     {
-        WindowH = 160;
-        if (godmode)
+        //
+        // SECRET CHEAT CODE: TAB-G-F10
+        //
+        if (Keyboard[sc_Tab] && Keyboard[sc_G] && Keyboard[sc_F10])
         {
-            Message ("God mode OFF");
-            SD_PlaySound (NOBONUSSND);
-        }
-        else
-        {
-            Message ("God mode ON");
-            SD_PlaySound (ENDBONUS2SND);
-        }
+            WindowH = 160;
+            if (godmode)
+            {
+                Message ("God mode OFF");
+                SD_PlaySound (NOBONUSSND);
+            }
+            else
+            {
+                Message ("God mode ON");
+                SD_PlaySound (ENDBONUS2SND);
+            }
 
-        IN_Ack ();
-        godmode ^= 1;
-        DrawPlayBorderSides ();
-        IN_ClearKeysDown ();
-        return;
+            IN_Ack ();
+            godmode ^= 1;
+            DrawPlayBorderSides ();
+            IN_ClearKeysDown ();
+            return;
+        }
     }
-#endif
 
 
     //
@@ -616,13 +617,13 @@ void CheckKeys (void)
         DrawScore ();
 
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -637,11 +638,11 @@ void CheckKeys (void)
     if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && param_debugmode)
     {
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -656,14 +657,14 @@ void CheckKeys (void)
     if (Keyboard[sc_B] && Keyboard[sc_A] && Keyboard[sc_T])
     {
         ClearMemory ();
-        CA_CacheGrChunk (STARTFONT + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
         ClearSplitVWB ();
 
         Message ("Commander Keen is also\n"
                  "available from Apogee, but\n"
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
-        UNCACHEGRCHUNK (STARTFONT + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -678,7 +679,7 @@ void CheckKeys (void)
     if(Paused)
     {
         int lastoffs = StopMusic();
-        LatchDrawPic (20 - 4, 80 - 2 * 8, PAUSEDPIC);
+        LatchDrawPic (20 - 4, 80 - 2 * 8, gfxvmap[PAUSEDPIC][SPEAR]);
         VH_UpdateScreen();
         IN_Ack ();
         Paused = false;
@@ -741,7 +742,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (Keyboard[sc_Tab] && DebugOk)
     {
-        CA_CacheGrChunk (STARTFONT);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
@@ -919,7 +920,8 @@ int StopMusic (void)
 {
     int lastoffs = SD_MusicOff ();
 
-    UNCACHEAUDIOCHUNK (STARTMUSIC + lastmusicchunk);
+	// IOAN 20130301: unification
+    UNCACHEAUDIOCHUNK ((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 
     return lastoffs;
 }
@@ -938,15 +940,24 @@ int StopMusic (void)
 void StartMusic ()
 {
     SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
-    SD_StartMusic(STARTMUSIC + lastmusicchunk);
+	// IOAN 20130301: unification
+	int *songs = SPEAR ? songs_sod : songs_wl6;
+    lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
+	
+	// IOAN 20130301: unification
+    SD_StartMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 }
 
 void ContinueMusic (int offs)
 {
     SD_MusicOff ();
-    lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
-    SD_ContinueMusic(STARTMUSIC + lastmusicchunk, offs);
+	// IOAN 20130301: unification
+	int *songs = SPEAR ? songs_sod : songs_wl6;
+    lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
+	
+	// IOAN 20130301: unification
+    SD_ContinueMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk, 
+					 offs);
 }
 
 /*
@@ -991,7 +1002,8 @@ void InitRedShifts (void)
     for (i = 1; i <= NUMREDSHIFTS; i++)
     {
         workptr = redshifts[i - 1];
-        baseptr = gamepal;
+        // IOANCH 20130202: unification process
+        baseptr = SPEAR ? sodpal : wolfpal;
 
         for (j = 0; j <= 255; j++)
         {
@@ -1009,7 +1021,8 @@ void InitRedShifts (void)
     for (i = 1; i <= NUMWHITESHIFTS; i++)
     {
         workptr = whiteshifts[i - 1];
-        baseptr = gamepal;
+        // IOANCH 20130202: unification process
+        baseptr = SPEAR ? sodpal : wolfpal;
 
         for (j = 0; j <= 255; j++)
         {
@@ -1119,7 +1132,8 @@ void UpdatePaletteShifts (void)
     }
     else if (palshifted)
     {
-        VL_SetPalette (gamepal, false);        // back to normal
+        // IOANCH 20130202: unification process
+        VL_SetPalette (SPEAR ? sodpal : wolfpal, false);        // back to normal
         palshifted = false;
     }
 }
@@ -1140,7 +1154,8 @@ void FinishPaletteShifts (void)
     if (palshifted)
     {
         palshifted = 0;
-        VL_SetPalette (gamepal, true);
+        // IOANCH 20130202: unification process
+        VL_SetPalette (SPEAR ? sodpal : wolfpal, true);
     }
 }
 
@@ -1318,16 +1333,18 @@ void PlayLoop (void)
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
         //
-#ifdef SPEAR
-        funnyticount += tics;
-        if (funnyticount > 30l * 70)
+        if(SPEAR)
         {
-            funnyticount = 0;
-            if(viewsize != 21)
-                StatusDrawFace(BJWAITING1PIC + (US_RndT () & 1));
-            facecount = 0;
+            funnyticount += tics;
+            if (funnyticount > 30l * 70)
+            {
+                funnyticount = 0;
+                // IOANCH 20130302: unification
+                if(viewsize != 21)
+                    StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR] + (US_RndT () & 1));
+                facecount = 0;
+            }
         }
-#endif
 
         gamestate.TimeCount += tics;
 

@@ -4,8 +4,8 @@
 #pragma hdrstop
 #include "ioan_bot.h"	// IOAN 27.05.2012
 #include "ioan_bas.h"
-
-LRstruct LevelRatios[LRpack];
+// IOANCH 20130302: unification
+LRstruct LevelRatios[LRpack_wl6 > LRpack_sod ? LRpack_wl6 : LRpack_sod];
 int32_t lastBreathTime = 0;
 
 void Write (int x, int y, const char *string);
@@ -32,8 +32,8 @@ ClearSplitVWB (void)
 
 //==========================================================================
 
-#ifdef SPEAR
-#ifndef SPEARDEMO
+
+// IOANCH 20130301: unification culling
 ////////////////////////////////////////////////////////
 //
 // End of Spear of Destiny
@@ -61,14 +61,14 @@ EndSpear (void)
 {
     SDL_Color pal[256];
 
-    EndScreen (END1PALETTE, ENDSCREEN11PIC);
+    EndScreen (gfxvmap[END1PALETTE][SPEAR], gfxvmap[ENDSCREEN11PIC][SPEAR]);
 
-    CA_CacheScreen (ENDSCREEN3PIC);
+    CA_CacheScreen (gfxvmap[ENDSCREEN3PIC][SPEAR]);
     VW_UpdateScreen ();
-    CA_CacheGrChunk (END3PALETTE);
-    VL_ConvertPalette(grsegs[END3PALETTE], pal, 256);
+    CA_CacheGrChunk (gfxvmap[END3PALETTE][SPEAR]);
+    VL_ConvertPalette(grsegs[gfxvmap[END3PALETTE][SPEAR]], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    UNCACHEGRCHUNK (END3PALETTE);
+    UNCACHEGRCHUNK (gfxvmap[END3PALETTE][SPEAR]);
     fontnumber = 0;
     fontcolor = 0xd0;
     WindowX = 0;
@@ -90,19 +90,19 @@ EndSpear (void)
 
     VW_FadeOut ();
 
-    EndScreen (END4PALETTE, ENDSCREEN4PIC);
-    EndScreen (END5PALETTE, ENDSCREEN5PIC);
-    EndScreen (END6PALETTE, ENDSCREEN6PIC);
-    EndScreen (END7PALETTE, ENDSCREEN7PIC);
-    EndScreen (END8PALETTE, ENDSCREEN8PIC);
-    EndScreen (END9PALETTE, ENDSCREEN9PIC);
+    EndScreen (gfxvmap[END4PALETTE][SPEAR], gfxvmap[ENDSCREEN4PIC][SPEAR]);
+    EndScreen (gfxvmap[END5PALETTE][SPEAR], gfxvmap[ENDSCREEN5PIC][SPEAR]);
+    EndScreen (gfxvmap[END6PALETTE][SPEAR], gfxvmap[ENDSCREEN6PIC][SPEAR]);
+    EndScreen (gfxvmap[END7PALETTE][SPEAR], gfxvmap[ENDSCREEN7PIC][SPEAR]);
+    EndScreen (gfxvmap[END8PALETTE][SPEAR], gfxvmap[ENDSCREEN8PIC][SPEAR]);
+    EndScreen (gfxvmap[END9PALETTE][SPEAR], gfxvmap[ENDSCREEN9PIC][SPEAR]);
 
-    EndScreen (END2PALETTE, ENDSCREEN12PIC);
+    EndScreen (gfxvmap[END2PALETTE][SPEAR], gfxvmap[ENDSCREEN12PIC][SPEAR]);
 
     MainMenu[savegame].active = 0;
 }
-#endif
-#endif
+
+
 
 //==========================================================================
 
@@ -117,7 +117,7 @@ EndSpear (void)
 void
 Victory (void)
 {
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     int32_t sec;
     int i, min, kr, sr, tr, x;
     char tempstr[8];
@@ -127,57 +127,52 @@ Victory (void)
 #define TIMEX   14
 #define TIMEY   8
 
+    // IOANCH 20130302: unification
+    if(SPEAR)
+    {
+        // IOANCH 20130301: unification music
+        StartCPMusic (XTHEEND_MUS_sod);
 
-#ifdef SPEAR
-    StartCPMusic (XTHEEND_MUS);
+        // IOANCH 20130302: unification
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
 
-    CA_CacheGrChunk (BJCOLLAPSE1PIC);
-    CA_CacheGrChunk (BJCOLLAPSE2PIC);
-    CA_CacheGrChunk (BJCOLLAPSE3PIC);
-    CA_CacheGrChunk (BJCOLLAPSE4PIC);
+        VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_FadeIn ();
+        VW_WaitVBL (2 * 70);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (105);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (105);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
+        VW_UpdateScreen ();
+        VW_WaitVBL (3 * 70);
 
-    VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
-    VWB_DrawPic (124, 44, BJCOLLAPSE1PIC);
-    VW_UpdateScreen ();
-    VW_FadeIn ();
-    VW_WaitVBL (2 * 70);
-    VWB_DrawPic (124, 44, BJCOLLAPSE2PIC);
-    VW_UpdateScreen ();
-    VW_WaitVBL (105);
-    VWB_DrawPic (124, 44, BJCOLLAPSE3PIC);
-    VW_UpdateScreen ();
-    VW_WaitVBL (105);
-    VWB_DrawPic (124, 44, BJCOLLAPSE4PIC);
-    VW_UpdateScreen ();
-    VW_WaitVBL (3 * 70);
-
-    UNCACHEGRCHUNK (BJCOLLAPSE1PIC);
-    UNCACHEGRCHUNK (BJCOLLAPSE2PIC);
-    UNCACHEGRCHUNK (BJCOLLAPSE3PIC);
-    UNCACHEGRCHUNK (BJCOLLAPSE4PIC);
-    VL_FadeOut (0, 255, 0, 17, 17, 5);
-#endif
-
-    StartCPMusic (URAHERO_MUS);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR]);
+        VL_FadeOut (0, 255, 0, 17, 17, 5);
+    }
+            // IOANCH 20130301: unification music
+    StartCPMusic (SPEAR ? URAHERO_MUS_sod : URAHERO_MUS_wl6);
     ClearSplitVWB ();
-    CacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
-    CA_CacheGrChunk (STARTFONT);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
 
-#ifndef SPEAR
-    CA_CacheGrChunk (C_TIMECODEPIC);
-#endif
+    if(!SPEAR)
+        CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR]);
 
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
-
-#ifdef JAPAN
-#ifndef JAPDEMO
-    CA_CacheGrChunk (C_ENDRATIOSPIC);
-    VWB_DrawPic (0, 0, C_ENDRATIOSPIC);
-    UNCACHEGRCHUNK (C_ENDRATIOSPIC);
-#endif
-#else
+// IOANCH 20130301: unification culling
     Write (18, 2, STR_YOUWIN);
 
     Write (TIMEX, TIMEY - 2, STR_TOTALTIME);
@@ -194,11 +189,9 @@ Victory (void)
     Write (RATIOX, RATIOY + 4, STR_RATTREASURE);
 #endif
 
-#endif
 
-#ifndef JAPDEMO
-    VWB_DrawPic (8, 4, L_BJWINSPIC);
-#endif
+
+    VWB_DrawPic (8, 4, gfxvmap[L_BJWINSPIC][SPEAR]);
 
 
     for (kr = sr = tr = sec = i = 0; i < LRpack; i++)
@@ -209,15 +202,18 @@ Victory (void)
         tr += LevelRatios[i].treasure;
     }
 
-#ifndef SPEAR
-    kr /= LRpack;
-    sr /= LRpack;
-    tr /= LRpack;
-#else
-    kr /= 14;
-    sr /= 14;
-    tr /= 14;
-#endif
+    if(!SPEAR)
+    {
+        kr /= LRpack;
+        sr /= LRpack;
+        tr /= LRpack;
+    }
+    else
+    {
+        kr /= 14;
+        sr /= 14;
+        tr /= 14;
+    }
 
     min = sec / 60;
     sec %= 60;
@@ -226,15 +222,15 @@ Victory (void)
         min = sec = 99;
 
     i = TIMEX * 8 + 1;
-    VWB_DrawPic (i, TIMEY * 8, L_NUM0PIC + (min / 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR] + (min / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, L_NUM0PIC + (min % 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR] + (min % 10));
     i += 2 * 8;
     Write (i / 8, TIMEY, ":");
     i += 1 * 8;
-    VWB_DrawPic (i, TIMEY * 8, L_NUM0PIC + (sec / 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR] + (sec / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, L_NUM0PIC + (sec % 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR] + (sec % 10));
     VW_UpdateScreen ();
 
     itoa (kr, tempstr, 10);
@@ -250,27 +246,31 @@ Victory (void)
     Write (x, RATIOY + 4, tempstr);
 
 #ifndef SPANISH
-#ifndef UPLOAD
-#ifndef SPEAR
-    //
-    // TOTAL TIME VERIFICATION CODE
-    //
-    if (gamestate.difficulty >= gd_medium)
+    // IOANCH 20130301: unification culling
+
+
+    if(!SPEAR)
     {
-        VWB_DrawPic (30 * 8, TIMEY * 8, C_TIMECODEPIC);
-        fontnumber = 0;
-        fontcolor = READHCOLOR;
-        PrintX = 30 * 8 - 3;
-        PrintY = TIMEY * 8 + 8;
-        PrintX += 4;
-        tempstr[0] = (((min / 10) ^ (min % 10)) ^ 0xa) + 'A';
-        tempstr[1] = (int) ((((sec / 10) ^ (sec % 10)) ^ 0xa) + 'A');
-        tempstr[2] = (tempstr[0] ^ tempstr[1]) + 'A';
-        tempstr[3] = 0;
-        US_Print (tempstr);
+        //
+        // TOTAL TIME VERIFICATION CODE
+        //
+        if (gamestate.difficulty >= gd_medium)
+        {
+            VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR]);
+            fontnumber = 0;
+            fontcolor = READHCOLOR;
+            PrintX = 30 * 8 - 3;
+            PrintY = TIMEY * 8 + 8;
+            PrintX += 4;
+            tempstr[0] = (((min / 10) ^ (min % 10)) ^ 0xa) + 'A';
+            tempstr[1] = (int) ((((sec / 10) ^ (sec % 10)) ^ 0xa) + 'A');
+            tempstr[2] = (tempstr[0] ^ tempstr[1]) + 'A';
+            tempstr[3] = 0;
+            US_Print (tempstr);
+        }
     }
-#endif
-#endif
+
+
 #endif
 
     fontnumber = 1;
@@ -284,24 +284,24 @@ Victory (void)
     if(screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
-#ifndef SPEAR
-    UNCACHEGRCHUNK (C_TIMECODEPIC);
-#endif
-    UnCacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    if(!SPEAR)
+        UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR]);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
 
-#ifndef SPEAR
-    EndText ();
-#else
-    EndSpear ();
-#endif
 
-#endif // SPEARDEMO
+    if(!SPEAR)
+        EndText ();
+    else
+        EndSpear ();
+
+
+
 }
 
 
 //==========================================================================
+// IOANCH 20130301: unification culling
 
-#ifndef JAPAN
 /*
 ==================
 =
@@ -316,18 +316,18 @@ PG13 (void)
     VW_FadeOut ();
     VWB_Bar (0, 0, 320, 200, 0x82);     // background
 
-    CA_CacheGrChunk (PG13PIC);
-    VWB_DrawPic (216, 110, PG13PIC);
+    CA_CacheGrChunk (gfxvmap[PG13PIC][SPEAR]);
+    VWB_DrawPic (216, 110, gfxvmap[PG13PIC][SPEAR]);
     VW_UpdateScreen ();
 
-    UNCACHEGRCHUNK (PG13PIC);
+    UNCACHEGRCHUNK (gfxvmap[PG13PIC][SPEAR]);
 
     VW_FadeIn ();
     IN_UserInput (TickBase * 7);
 
     VW_FadeOut ();
 }
-#endif
+
 
 
 //==========================================================================
@@ -335,11 +335,21 @@ PG13 (void)
 void
 Write (int x, int y, const char *string)
 {
-    static const int alpha[] = { L_NUM0PIC, L_NUM1PIC, L_NUM2PIC, L_NUM3PIC, L_NUM4PIC, L_NUM5PIC,
-        L_NUM6PIC, L_NUM7PIC, L_NUM8PIC, L_NUM9PIC, L_COLONPIC, 0, 0, 0, 0, 0, 0, L_APIC, L_BPIC,
-        L_CPIC, L_DPIC, L_EPIC, L_FPIC, L_GPIC, L_HPIC, L_IPIC, L_JPIC, L_KPIC,
-        L_LPIC, L_MPIC, L_NPIC, L_OPIC, L_PPIC, L_QPIC, L_RPIC, L_SPIC, L_TPIC,
-        L_UPIC, L_VPIC, L_WPIC, L_XPIC, L_YPIC, L_ZPIC
+    static const int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR], 
+        gfxvmap[L_NUM1PIC][SPEAR], gfxvmap[L_NUM2PIC][SPEAR], 
+        gfxvmap[L_NUM3PIC][SPEAR], gfxvmap[L_NUM4PIC][SPEAR], 
+        gfxvmap[L_NUM5PIC][SPEAR], gfxvmap[L_NUM6PIC][SPEAR], 
+        gfxvmap[L_NUM7PIC][SPEAR], gfxvmap[L_NUM8PIC][SPEAR], 
+        gfxvmap[L_NUM9PIC][SPEAR], gfxvmap[L_COLONPIC][SPEAR], 0, 0, 0, 0, 0, 0, 
+        gfxvmap[L_APIC][SPEAR], gfxvmap[L_BPIC][SPEAR], gfxvmap[L_CPIC][SPEAR], 
+        gfxvmap[L_DPIC][SPEAR], gfxvmap[L_EPIC][SPEAR], gfxvmap[L_FPIC][SPEAR], 
+        gfxvmap[L_GPIC][SPEAR], gfxvmap[L_HPIC][SPEAR], gfxvmap[L_IPIC][SPEAR], 
+        gfxvmap[L_JPIC][SPEAR], gfxvmap[L_KPIC][SPEAR], gfxvmap[L_LPIC][SPEAR], 
+        gfxvmap[L_MPIC][SPEAR], gfxvmap[L_NPIC][SPEAR], gfxvmap[L_OPIC][SPEAR], 
+        gfxvmap[L_PPIC][SPEAR], gfxvmap[L_QPIC][SPEAR], gfxvmap[L_RPIC][SPEAR], 
+        gfxvmap[L_SPIC][SPEAR], gfxvmap[L_TPIC][SPEAR], gfxvmap[L_UPIC][SPEAR], 
+        gfxvmap[L_VPIC][SPEAR], gfxvmap[L_WPIC][SPEAR], gfxvmap[L_XPIC][SPEAR], 
+        gfxvmap[L_YPIC][SPEAR], gfxvmap[L_ZPIC][SPEAR]
     };
 
     int i, ox, nx, ny, len = (int) strlen(string);
@@ -364,27 +374,27 @@ Write (int x, int y, const char *string)
             switch (string[i])
             {
                 case '!':
-                    VWB_DrawPic (nx, ny, L_EXPOINTPIC);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_EXPOINTPIC][SPEAR]);
+                    nx += 8;
+                    continue;
+// IOANCH 20130301: unification culling
+
+                case '\'':
+                    VWB_DrawPic (nx, ny, gfxvmap[L_APOSTROPHEPIC][SPEAR]);
                     nx += 8;
                     continue;
 
-#ifndef APOGEE_1_0
-                case '\'':
-                    VWB_DrawPic (nx, ny, L_APOSTROPHEPIC);
-                    nx += 8;
-                    continue;
-#endif
 
                 case ' ':
                     break;
 
                 case 0x3a:     // ':'
-                    VWB_DrawPic (nx, ny, L_COLONPIC);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_COLONPIC][SPEAR]);
                     nx += 8;
                     continue;
 
                 case '%':
-                    VWB_DrawPic (nx, ny, L_PERCENTPIC);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_PERCENTPIC][SPEAR]);
                     break;
 
                 default:
@@ -403,7 +413,7 @@ void
 BJ_Breathe (void)
 {
     static int which = 0, max = 10;
-    int pics[2] = { L_GUYPIC, L_GUY2PIC };
+    int pics[2] = { gfxvmap[L_GUYPIC][SPEAR], gfxvmap[L_GUY2PIC][SPEAR] };
 
     SDL_Delay(5);
 
@@ -447,8 +457,8 @@ LevelCompleted (void)
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
     int32_t bonus, timeleft = 0;
-    times parTimes[] = {
-#ifndef SPEAR
+    // IOANCH 20130302: unification
+    times parTimes_wl6[] = {
         //
         // Episode One Par Times
         //
@@ -532,7 +542,9 @@ LevelCompleted (void)
         {8.5, "08:30"},
         {0, "??:??"},
         {0, "??:??"}
-#else
+    };
+    times parTimes_sod[] = {
+
         //
         // SPEAR OF DESTINY TIMES
         //
@@ -556,38 +568,29 @@ LevelCompleted (void)
         {0, "??:??"},           // Boss 4
         {0, "??:??"},           // Secret level 1
         {0, "??:??"},           // Secret level 2
-#endif
     };
+    times *parTimes = SPEAR ? parTimes_sod : parTimes_wl6;
 
-    CacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     ClearSplitVWB ();           // set up for double buffering in split screen
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
-
-    StartCPMusic (ENDLEVEL_MUS);
+            // IOANCH 20130301: unification music
+    StartCPMusic (SPEAR ? ENDLEVEL_MUS_sod : ENDLEVEL_MUS_wl6);
 
 //
 // do the intermission
 //
     IN_ClearKeysDown ();
     IN_StartAck ();
+// IOANCH 20130301: unification culling
+    VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR]);
 
-#ifdef JAPAN
-    CA_CacheGrChunk (C_INTERMISSIONPIC);
-    VWB_DrawPic (0, 0, C_INTERMISSIONPIC);
-    UNCACHEGRCHUNK (C_INTERMISSIONPIC);
-#endif
-    VWB_DrawPic (0, 16, L_GUYPIC);
-
-#ifndef SPEAR
-    if (mapon < 8)
-#else
-    if (mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17)
-#endif
+    if ((!SPEAR && mapon < 8) || (SPEAR && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
     {
-#ifndef JAPAN
+        // IOANCH 20130301: unification culling
 #ifdef SPANISH
         Write (14, 2, "piso\ncompletado");
 #else
@@ -609,7 +612,7 @@ LevelCompleted (void)
 #endif
 
         Write (26, 2, itoa (gamestate.mapon + 1, tempstr, 10));
-#endif
+
 
 #ifdef SPANISH
         Write (30, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
@@ -636,15 +639,15 @@ LevelCompleted (void)
 #else
         i = 26 * 8;
 #endif
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (min / 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR] + (min / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (min % 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR] + (min % 10));
         i += 2 * 8;
         Write (i / 8, 10, ":");
         i += 1 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (sec / 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR] + (sec / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, L_NUM0PIC + (sec % 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR] + (sec % 10));
 
         VW_UpdateScreen ();
         VW_FadeIn ();
@@ -853,33 +856,33 @@ done:   itoa (kr, tempstr, 10);
     }
     else
     {
-#ifdef SPEAR
-#ifndef SPEARDEMO
-        switch (mapon)
+// IOANCH 20130301: unification culling
+        if(SPEAR) 
         {
-            case 4:
-                Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);
-                break;
-            case 9:
-                Write (14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
-                break;
-            case 15:
-                Write (14, 4, "ubermutant\n" STR_DEFEATED);
-                break;
-            case 17:
-                Write (14, 4, " death\n" " knight\n" STR_DEFEATED);
-                break;
-            case 18:
-                Write (13, 4, "secret tunnel\n" "    area\n" "  completed!");
-                break;
-            case 19:
-                Write (13, 4, "secret castle\n" "    area\n" "  completed!");
-                break;
+            switch (mapon)
+            {
+                case 4:
+                    Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);
+                    break;
+                case 9:
+                    Write (14, 4, "barnacle\n" "wilhelm\n" STR_DEFEATED);
+                    break;
+                case 15:
+                    Write (14, 4, "ubermutant\n" STR_DEFEATED);
+                    break;
+                case 17:
+                    Write (14, 4, " death\n" " knight\n" STR_DEFEATED);
+                    break;
+                case 18:
+                    Write (13, 4, "secret tunnel\n" "    area\n" "  completed!");
+                    break;
+                case 19:
+                    Write (13, 4, "secret castle\n" "    area\n" "  completed!");
+                    break;
+            }
         }
-#endif
-#else
-        Write (14, 4, "secret floor\n completed!");
-#endif
+        else
+            Write (14, 4, "secret floor\n completed!");
 
         Write (10, 16, "15000 bonus!");
 
@@ -911,40 +914,14 @@ done:   itoa (kr, tempstr, 10);
 //
 // done
 //
-#ifdef SPEARDEMO
-    if (gamestate.mapon == 1)
-    {
-        SD_PlaySound (BONUS1UPSND);
+    // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (STARTFONT + 1);
-        Message ("This concludes your demo\n"
-                 "of Spear of Destiny! Now,\n" "go to your local software\n" "store and buy it!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
 
-        IN_ClearKeysDown ();
-        IN_Ack ();
-    }
-#endif
-
-#ifdef JAPDEMO
-    if (gamestate.mapon == 3)
-    {
-        SD_PlaySound (BONUS1UPSND);
-
-        CA_CacheGrChunk (STARTFONT + 1);
-        Message ("This concludes your demo\n"
-                 "of Wolfenstein 3-D! Now,\n" "go to your local software\n" "store and buy it!");
-        UNCACHEGRCHUNK (STARTFONT + 1);
-
-        IN_ClearKeysDown ();
-        IN_Ack ();
-    }
-#endif
 
     VW_FadeOut ();
     DrawPlayBorder();
 
-    UnCacheLump (LEVELEND_LUMP_START, LEVELEND_LUMP_END);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
 }
 
 
@@ -996,7 +973,7 @@ PreloadGraphics (void)
 
     VWB_BarScaledCoord (0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
     LatchDrawPicScaledCoord ((screenWidth-scaleFactor*224)/16,
-        (screenHeight-scaleFactor*(STATUSLINES+48))/2, GETPSYCHEDPIC);
+        (screenHeight-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR]);
 
     WindowX = (screenWidth - scaleFactor*224)/2;
     WindowY = (screenHeight - scaleFactor*(STATUSLINES+48))/2;
@@ -1030,60 +1007,67 @@ void
 DrawHighScores (void)
 {
     char buffer[16];
-#ifndef SPEAR
+
     char *str;
-#ifndef UPLOAD
+    // IOANCH 20130301: unification culling
+
     char buffer1[5];
-#endif
-#endif
+
+
     word i, w, h;
     HighScore *s;
 
-#ifndef SPEAR
-    CA_CacheGrChunk (HIGHSCORESPIC);
-    CA_CacheGrChunk (STARTFONT);
-#ifndef APOGEE_1_0
-    CA_CacheGrChunk (C_LEVELPIC);
-    CA_CacheGrChunk (C_SCOREPIC);
-    CA_CacheGrChunk (C_NAMEPIC);
-#else
-    CA_CacheGrChunk (C_CODEPIC);
-#endif
+    if(!SPEAR)
+    {
+        CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
+        // IOANCH 20130301: unification culling
 
-    ClearMScreen ();
-    DrawStripes (10);
-
-    VWB_DrawPic (48, 0, HIGHSCORESPIC);
-    UNCACHEGRCHUNK (HIGHSCORESPIC);
-
-#ifndef APOGEE_1_0
-    VWB_DrawPic (4 * 8, 68, C_NAMEPIC);
-    VWB_DrawPic (20 * 8, 68, C_LEVELPIC);
-    VWB_DrawPic (28 * 8, 68, C_SCOREPIC);
-#else
-    VWB_DrawPic(35*8,68,C_CODEPIC);
-#endif
-    fontnumber = 0;
-
-#else
-    CacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
-    ClearMScreen ();
-    DrawStripes (10);
-    UnCacheLump (BACKDROP_LUMP_START, BACKDROP_LUMP_END);
-
-    CacheLump (HIGHSCORES_LUMP_START, HIGHSCORES_LUMP_END);
-    CA_CacheGrChunk (STARTFONT + 1);
-    VWB_DrawPic (0, 0, HIGHSCORESPIC);
-
-    fontnumber = 1;
-#endif
+        CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR]);
 
 
-#ifndef SPEAR
-    SETFONTCOLOR (15, 0x29);
-#else
-    SETFONTCOLOR (HIGHLIGHT, 0x29);
-#endif
+
+
+        ClearMScreen ();
+        DrawStripes (10);
+
+        VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
+        UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR]);
+
+        // IOANCH 20130301: unification culling
+
+        VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR]);
+        VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR]);
+        VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR]);
+
+
+
+        fontnumber = 0;
+    }
+    else
+    {
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+        ClearMScreen ();
+        DrawStripes (10);
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR], gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+
+        CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
+        VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR]);
+
+        fontnumber = 1;
+    }
+
+    if(!SPEAR)
+    {
+        SETFONTCOLOR (15, 0x29);
+    }
+    else
+    {
+        SETFONTCOLOR (HIGHLIGHT, 0x29);
+    }
 
     for (i = 0, s = Scores; i < MaxScores; i++, s++)
     {
@@ -1092,93 +1076,80 @@ DrawHighScores (void)
         //
         // name
         //
-#ifndef SPEAR
-        PrintX = 4 * 8;
-#else
-        PrintX = 16;
-#endif
+        if(!SPEAR)
+            PrintX = 4 * 8;
+        else
+            PrintX = 16;
+
         US_Print (s->name);
 
         //
         // level
         //
         itoa (s->completed, buffer, 10);
-#ifndef SPEAR
-        for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = (22 * 8) - w;
-#else
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = 194 - w;
-#endif
-
-#ifndef UPLOAD
-#ifndef SPEAR
-        PrintX -= 6;
-        itoa (s->episode + 1, buffer1, 10);
-        US_Print ("E");
-        US_Print (buffer1);
-        US_Print ("/L");
-#endif
-#endif
-
-#ifdef SPEAR
-        if (s->completed == 21)
-            VWB_DrawPic (PrintX + 8, PrintY - 1, C_WONSPEARPIC);
+        // IOANCH 20130303
+        if(!SPEAR)
+        {
+            for (str = buffer; *str; str++)
+                *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = (22 * 8) - w;
+        }
         else
-#endif
+        {
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = 194 - w;
+        }
+// IOANCH 20130301: unification culling
+
+        if(!SPEAR)
+        {
+            PrintX -= 6;
+            itoa (s->episode + 1, buffer1, 10);
+            US_Print ("E");
+            US_Print (buffer1);
+            US_Print ("/L");
+        }
+
+        if(SPEAR)
+        {
+            if (s->completed == 21)
+                VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR]);
+            else
+                US_Print (buffer);
+        }
+        else
             US_Print (buffer);
 
         //
         // score
         //
         itoa (s->score, buffer, 10);
-#ifndef SPEAR
-        for (str = buffer; *str; str++)
-            *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = (34 * 8) - 8 - w;
-#else
-        USL_MeasureString (buffer, &w, &h);
-        PrintX = 292 - w;
-#endif
+        if(!SPEAR)
+        {
+            for (str = buffer; *str; str++)
+                *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = (34 * 8) - 8 - w;
+        }
+        else
+        {
+            USL_MeasureString (buffer, &w, &h);
+            PrintX = 292 - w;
+        }
         US_Print (buffer);
 
-#ifdef APOGEE_1_0
-//#ifndef UPLOAD
-#ifndef SPEAR
-        //
-        // verification #
-        //
-        if (!i)
-        {
-            char temp = (((s->score >> 28) & 0xf) ^ ((s->score >> 24) & 0xf)) + 'A';
-            char temp1 = (((s->score >> 20) & 0xf) ^ ((s->score >> 16) & 0xf)) + 'A';
-            char temp2 = (((s->score >> 12) & 0xf) ^ ((s->score >> 8) & 0xf)) + 'A';
-            char temp3 = (((s->score >> 4) & 0xf) ^ ((s->score >> 0) & 0xf)) + 'A';
+        // IOANCH 20130301: unification culling
 
-            SETFONTCOLOR (0x49, 0x29);
-            PrintX = 35 * 8;
-            buffer[0] = temp;
-            buffer[1] = temp1;
-            buffer[2] = temp2;
-            buffer[3] = temp3;
-            buffer[4] = 0;
-            US_Print (buffer);
-            SETFONTCOLOR (15, 0x29);
-        }
-#endif
-//#endif
-#endif
     }
 
     VW_UpdateScreen ();
 
-#ifdef SPEAR
-    UnCacheLump (HIGHSCORES_LUMP_START, HIGHSCORES_LUMP_END);
-    fontnumber = 0;
-#endif
+    if(SPEAR)
+    {
+        UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR], gfxvmap[HIGHSCORES_LUMP_END][SPEAR]);
+        fontnumber = 0;
+    }
 }
 
 //===========================================================================
@@ -1216,12 +1187,12 @@ CheckHighScore (int32_t score, word other)
             break;
         }
     }
+            // IOANCH 20130301: unification music
+    if (SPEAR)
+        StartCPMusic (XAWARD_MUS_sod);
+    else
+        StartCPMusic (ROSTER_MUS_wl6);
 
-#ifdef SPEAR
-    StartCPMusic (XAWARD_MUS);
-#else
-    StartCPMusic (ROSTER_MUS);
-#endif
     DrawHighScores ();
 
     VW_FadeIn ();
@@ -1232,42 +1203,48 @@ CheckHighScore (int32_t score, word other)
         // got a high score
         //
         PrintY = 76 + (16 * n);
-#ifndef SPEAR
-        PrintX = 4 * 8;
-        backcolor = BORDCOLOR;
-        fontcolor = 15;
-		  // IOAN 27.05.2012: let the bot write his random name
-		  if(BotMan::active)
-		  {
-			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
-			  US_Print(Scores[n].name);
-			  VW_UpdateScreen();
 
-			  IN_ClearKeysDown ();
-			  IN_UserInput (500);
-		  }
-		  else
-			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
-#else
-        PrintX = 16;
-        fontnumber = 1;
-        VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
-        VW_UpdateScreen ();
-        backcolor = 0x9c;
-        fontcolor = 15;
-		  // IOAN 27.05.2012: let the bot write his random name
-		  if(BotMan::active)
-		  {
-			  Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
-			  US_Print(Scores[n].name);
-			  VW_UpdateScreen();
+        if(!SPEAR)
+        {
+            PrintX = 4 * 8;
+            backcolor = BORDCOLOR;
+            fontcolor = 15;
+		      // IOAN 27.05.2012: let the bot write his random name
+		      if(BotMan::active)
+		      {
+			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			      US_Print(Scores[n].name);
+			      VW_UpdateScreen();
 
-			  IN_ClearKeysDown ();
-			  IN_UserInput (500);
-		  }
-		  else
-			US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
-#endif
+			      IN_ClearKeysDown ();
+			      IN_UserInput (500);
+		      }
+		      else
+			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
+        }
+        else
+        {
+
+            PrintX = 16;
+            fontnumber = 1;
+            VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
+            VW_UpdateScreen ();
+            backcolor = 0x9c;
+            fontcolor = 15;
+		      // IOAN 27.05.2012: let the bot write his random name
+		      if(BotMan::active)
+		      {
+			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
+			      US_Print(Scores[n].name);
+			      VW_UpdateScreen();
+
+			      IN_ClearKeysDown ();
+			      IN_UserInput (500);
+		      }
+		      else
+			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
+        }
+
     }
     else
     {
@@ -1277,10 +1254,10 @@ CheckHighScore (int32_t score, word other)
 
 }
 
+// IOANCH 20130301: unification culling
 
-#ifndef UPLOAD
-#ifndef SPEAR
-#ifndef JAPAN
+
+
 ////////////////////////////////////////////////////////
 //
 // NON-SHAREWARE NOTICE
@@ -1294,7 +1271,7 @@ NonShareware (void)
     ClearMScreen ();
     DrawStripes (10);
 
-    CA_CacheGrChunk (STARTFONT + 1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR] + 1);
     fontnumber = 1;
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
@@ -1325,433 +1302,8 @@ NonShareware (void)
     VW_FadeIn ();
     IN_Ack ();
 }
-#endif
-#endif
-#endif
 
-#ifdef SPEAR
-#ifndef GOODTIMES
-#ifndef SPEARDEMO
-////////////////////////////////////////////////////////
-//
-// COPY PROTECTION FOR FormGen
-//
-////////////////////////////////////////////////////////
-char CopyProFailedStrs[][100] = {
-    STR_COPY1,
-    STR_COPY2,
 
-    STR_COPY3,
-    STR_COPY4,
 
-    STR_COPY5,
-    STR_COPY6,
-
-    STR_COPY7,
-    STR_COPY8,
-
-    STR_COPY9,
-    "",
-
-    STR_COPY10,
-    STR_COPY11,
-
-    STR_COPY12,
-    "",
-
-    STR_COPY13,
-    "",
-
-    STR_COPY14,
-    ""
-};
-
-char BackDoorStrs[5][16] = {
-    "a spoon?",
-    "bite me!",
-    "joshua",
-    "pelt",
-    "snoops"
-};
-
-char GoodBoyStrs[10][40] = {
-    "...is the CORRECT ANSWER!",
-    "",
-
-    "Consider yourself bitten, sir.",
-    "",
-
-    "Greetings Professor Falken, would you",
-    "like to play Spear of Destiny?",
-
-    "Do you have any gold spray paint?",
-    "",
-
-    "I wish I had a 21\" monitor...",
-    ""
-};
-
-char bossstrs[4][24] = {
-    "DEATH KNIGHT",
-    "BARNACLE WILHELM",
-    "UBERMUTANTUBER MUTANT",
-    "TRANS GROSSE"
-};
-
-char WordStr[5][20] = {
-    "New Game",
-    "Sound...F4",
-    "Control...F6",
-    "Change View...F5",
-    "Quit...F10"
-};
-
-char WordCorrect[5][2] = { "3", "4", "4", "5", "5" };
-
-char MemberStr[10][40] = {
-    STR_COPY15,
-    "",
-
-    STR_COPY16,
-    "",
-
-    STR_COPY17,
-    STR_COPY18,
-
-    STR_COPY19,
-    STR_COPY20,
-
-    STR_COPY21,
-    STR_COPY22
-};
-
-char MemberCorrect[5][24] = {
-    "adrian carmack",
-    "john carmackjohn romero",
-    "tom hall",
-    "jay wilbur",
-    "kevin cloud"
-};
-
-char DosMessages[9][80] = {
-    STR_NOPE1,
-    STR_NOPE2,
-    STR_NOPE3,
-    STR_NOPE4,
-    STR_NOPE5,
-    STR_NOPE6,
-    STR_NOPE7,
-    STR_NOPE8,
-    STR_NOPE9
-};
-
-char MiscTitle[4][20] = {
-    "BLOOD TEST",
-    "STRAIGHT-LACED",
-    "QUITE SHAPELY",
-    "I AM WHAT I AMMO"
-};
-
-char MiscStr[12][40] = {
-    STR_MISC1,
-    STR_MISC2,
-    "",
-
-    STR_MISC3,
-    STR_MISC4,
-    "",
-
-    STR_MISC5,
-    STR_MISC6,
-    "",
-
-    STR_MISC7,
-    STR_MISC8,
-    STR_MISC9
-};
-
-char MiscCorrect[4][5] = { "ss", "8", STR_STAR, "45" };
-
-
-int
-BackDoor (char *s)
-{
-    for (int i = 0; i < 5; i++)
-    {
-        if (!strcasecmp (s, BackDoorStrs[i]))
-        {
-            SETFONTCOLOR (14, 15);
-            fontnumber = 0;
-            PrintY = 175;
-            VWB_DrawPic (0, 20 * 8, COPYPROTBOXPIC);
-            US_CPrint (GoodBoyStrs[i * 2]);
-            US_CPrint (GoodBoyStrs[i * 2 + 1]);
-            VW_UpdateScreen ();
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-
-void
-CopyProtection (void)
-{
-#define TYPEBOX_Y       177
-#define TYPEBOX_BKGD    0x9c
-#define PRINTCOLOR      HIGHLIGHT
-
-    unsigned i;
-    int match, whichboss, bossnum, attempt, whichline;
-    int enemypicked[4] = { 0, 0, 0, 0 };
-    int bosses[4] = { BOSSPIC1PIC, BOSSPIC2PIC, BOSSPIC3PIC, BOSSPIC4PIC };
-    int whichpicked[4] = { 0, 0, 0, 0 };
-    int whichone, quiztype, whichmem, whichword;
-    int memberpicked[5] = { 0, 0, 0, 0, 0 };
-    int wordpicked[5] = { 0, 0, 0, 0, 0 };
-
-    char inputbuffer[20];
-    char message[80];
-
-    enum
-    {
-        debriefing,
-        checkmanual,
-        staffquiz,
-        miscquiz,
-
-        totaltypes
-    };
-
-
-
-    attempt = 0;
-    VW_FadeOut ();
-    CA_CacheGrChunk (C_BACKDROPPIC);
-    CacheLump (COPYPROT_LUMP_START, COPYPROT_LUMP_END);
-    CA_CacheGrChunk (STARTFONT + 1);
-    CA_LoadAllSounds ();
-    StartCPMusic (COPYPRO_MUS);
-    US_InitRndT (true);
-
-    while (attempt < 3)
-    {
-        fontnumber = 1;
-        SETFONTCOLOR (PRINTCOLOR - 2, 15);
-        VWB_DrawPic (0, 0, C_BACKDROPPIC);
-        VWB_DrawPic (0, 0, COPYPROTTOPPIC);
-        VWB_DrawPic (0, 20 * 8, COPYPROTBOXPIC);
-        WindowX = WindowY = 0;
-        WindowW = 320;
-        WindowH = 200;
-        PrintY = 65;
-
-        quiztype = US_RndT () % totaltypes;
-        switch (quiztype)
-        {
-            //
-            // BOSSES QUIZ
-            //
-            case debriefing:
-            {
-                PrintX = 0;
-                US_Print (STR_DEBRIEF);
-                SETFONTCOLOR (PRINTCOLOR, 15);
-
-                while (enemypicked[whichboss = US_RndT () & 3]);
-                enemypicked[whichboss] = 1;
-                bossnum = bosses[whichboss];
-                VWB_DrawPic (128, 60, bossnum);
-                fontnumber = 0;
-                PrintY = 130;
-                US_CPrint (STR_ENEMY1 "\n");
-                US_CPrint (STR_ENEMY2 "\n\n");
-
-                VW_UpdateScreen ();
-                VW_FadeIn ();
-
-                PrintX = 100;
-                fontcolor = 15;
-                backcolor = TYPEBOX_BKGD;
-                inputbuffer[0] = 0;
-                PrintY = TYPEBOX_Y;
-                fontnumber = 1;
-                US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 20, 100);
-
-                match = 0;
-                size_t inputlen = strlen(inputbuffer);
-                if(inputlen > 3)
-                {
-                    size_t bosslen = strlen(bossstrs[whichboss]);
-                    for (i = 0; i < bosslen; i++)
-                    {
-                        if (!strncasecmp (inputbuffer, bossstrs[whichboss] + i, inputlen))
-                        {
-                            match = 1;
-                            break;
-                        }
-                    }
-                }
-
-                match += BackDoor (inputbuffer);
-                break;
-            }
-
-            //
-            // MANUAL CHECK
-            //
-            case checkmanual:
-            {
-                while (wordpicked[whichword = US_RndT () % 5]);
-                wordpicked[whichword] = 1;
-                US_CPrint (STR_CHECKMAN);
-                SETFONTCOLOR (PRINTCOLOR, 15);
-                PrintY += 25;
-                US_CPrint (STR_MAN1);
-                US_CPrint (STR_MAN2);
-                sprintf(message, STR_MAN3 " \"%s\" " STR_MAN4, WordStr[whichword]);
-                US_CPrint (message);
-                VW_UpdateScreen ();
-                VW_FadeIn ();
-
-                PrintX = 146;
-                fontcolor = 15;
-                backcolor = TYPEBOX_BKGD;
-                inputbuffer[0] = 0;
-                PrintY = TYPEBOX_Y;
-                US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 6, 100);
-
-                match = 1 - (strcasecmp (inputbuffer, WordCorrect[whichword]) != 0);
-                match += BackDoor (inputbuffer);
-                break;
-            }
-
-            //
-            // STAFF QUIZ
-            //
-            case staffquiz:
-            {
-                while (memberpicked[whichmem = US_RndT () % 5]);
-                memberpicked[whichmem] = 1;
-                US_CPrint (STR_ID1);
-                SETFONTCOLOR (PRINTCOLOR, 15);
-                PrintY += 25;
-                US_CPrint (MemberStr[whichmem * 2]);
-                US_CPrint (MemberStr[whichmem * 2 + 1]);
-                VW_UpdateScreen ();
-                VW_FadeIn ();
-
-                PrintX = 100;
-                fontcolor = 15;
-                backcolor = TYPEBOX_BKGD;
-                inputbuffer[0] = 0;
-                PrintY = TYPEBOX_Y;
-                US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 20, 120);
-
-                match = 0;
-                size_t inputlen = strlen(inputbuffer);
-                if(inputlen > 2)
-                {
-                    size_t memberlen = strlen(MemberCorrect[whichmem]);
-                    for (i = 0; i < memberlen; i++)
-                    {
-                        if (!strncasecmp (inputbuffer, MemberCorrect[whichmem] + i, inputlen))
-                        {
-                            match = 1;
-                            break;
-                        }
-                    }
-                }
-
-                match += BackDoor (inputbuffer);
-                break;
-            }
-
-            //
-            // MISCELLANEOUS QUESTIONS
-            //
-            case miscquiz:
-            {
-                while (whichpicked[whichone = US_RndT () & 3]);
-                whichpicked[whichone] = 1;
-                US_CPrint (MiscTitle[whichone]);
-                SETFONTCOLOR (PRINTCOLOR, 15);
-                PrintY += 25;
-                US_CPrint (MiscStr[whichone * 3]);
-                US_CPrint (MiscStr[whichone * 3 + 1]);
-                US_CPrint (MiscStr[whichone * 3 + 2]);
-                VW_UpdateScreen ();
-                VW_FadeIn ();
-
-                PrintX = 146;
-                fontcolor = 15;
-                backcolor = TYPEBOX_BKGD;
-                inputbuffer[0] = 0;
-                PrintY = TYPEBOX_Y;
-                US_LineInput (PrintX, PrintY, inputbuffer, 0, true, 6, 100);
-
-                match = 1 - (strcasecmp (inputbuffer, MiscCorrect[whichone]) != 0);
-                match += BackDoor (inputbuffer);
-                break;
-            }
-        }
-
-        //
-        // IF NO MATCH, WE'VE GOT A (MINOR) PROBLEM!
-        //
-
-        if (!match)
-        {
-            whichline = 2 * (US_RndT () % 9);
-            SETFONTCOLOR (14, 15);
-            fontnumber = 0;
-            PrintY = 175;
-            VWB_DrawPic (0, 20 * 8, COPYPROTBOXPIC);
-            US_CPrint (CopyProFailedStrs[whichline]);
-            US_CPrint (CopyProFailedStrs[whichline + 1]);
-
-            VW_UpdateScreen ();
-            SD_PlaySound (NOWAYSND);
-            IN_UserInput (TickBase * 6);
-            VW_FadeOut ();
-            attempt++;
-        }
-        else
-        {
-            int start;
-
-            SD_PlaySound (BONUS1UPSND);
-            SD_WaitSoundDone ();
-            UNCACHEGRCHUNK (STARTFONT + 1);
-            UNCACHEGRCHUNK (C_BACKDROPPIC);
-            UnCacheLump (COPYPROT_LUMP_START, COPYPROT_LUMP_END);
-
-            switch (SoundMode)
-            {
-                case sdm_Off:
-                    return;
-                case sdm_PC:
-                    start = STARTPCSOUNDS;
-                    break;
-                case sdm_AdLib:
-                    start = STARTADLIBSOUNDS;
-            }
-
-/*                        for (i=0;i<NUMSOUNDS;i++,start++)
-                                MM_FreePtr ((memptr *)&audiosegs[start]); */
-            return;
-        }
-    }
-
-    ClearMemory ();
-    ShutdownId ();
-
-    printf ("%s\n", DosMessages[US_RndT () % 9]);
-    exit (1);
-}
-
-#endif // SPEARDEMO
-#endif // GOODTIMES
-#endif // SPEAR
+// IOANCH 20130301: unification culling
 //===========================================================================

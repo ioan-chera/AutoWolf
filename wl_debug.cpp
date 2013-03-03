@@ -245,7 +245,8 @@ void ShapeTest (void)
     int             i,j,k,x;
     longword        l;
     byte            *addr;
-    soundnames      sound;
+    // IOANCH 20130301: unification
+    unsigned int    sound;
     //      PageListStruct  far *page;
 
     CenterWindow(20,16);
@@ -670,21 +671,19 @@ again:
     {
         CenterWindow(26,3);
         PrintY+=6;
-#ifndef SPEAR
-        US_Print("  Warp to which level(1-10): ");
-#else
-        US_Print("  Warp to which level(1-21): ");
-#endif
+        // IOANCH 20130202: unification process
+        if(!SPEAR)
+            US_Print("  Warp to which level(1-10): ");
+        else
+            US_Print("  Warp to which level(1-21): ");
+
         VW_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
             level = atoi (str);
-#ifndef SPEAR
-            if (level>0 && level<11)
-#else
-            if (level>0 && level<22)
-#endif
+            // IOANCH 20130202: unification process
+            if ((!SPEAR && level>0 && level<11) || (SPEAR && level > 0 && level < 22))
             {
                 gamestate.mapon = level-1;
                 playstate = ex_warped;

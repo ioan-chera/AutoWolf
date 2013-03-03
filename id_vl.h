@@ -20,7 +20,9 @@ extern  unsigned scaleFactor;
 extern	boolean  screenfaded;
 extern	unsigned bordercolor;
 
-extern SDL_Color gamepal[256];
+// IOANCH 20130202: unification process
+extern SDL_Color sodpal[256];
+extern SDL_Color wolfpal[256];
 
 //===========================================================================
 

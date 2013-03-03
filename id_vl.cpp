@@ -16,14 +16,9 @@
 #define assert_ret(x) assert(x)
 #endif
 
-// IOAN 20121116: Set fullscreen default to false on __APPLE__, due to stability issues
-// (not crash, but no ability to exit out of a locked up application)
-// Use --fullscreen parameter to put it back on.
-#ifdef __APPLE__
-boolean fullscreen = false;
-#else
+
 boolean fullscreen = true;
-#endif
+
 
 
 #if defined(_arch_dreamcast)
@@ -68,15 +63,20 @@ SDL_Color curpal[256];
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
 #define RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
 
-SDL_Color gamepal[]={
-#ifdef SPEAR
+// IOANCH 20130202: unification process
+// SDL_Color gamepal[]={
+SDL_Colour sodpal[]={
+// #ifdef SPEAR
     #include "sodpal.inc"
-#else
+};
+// #else
+SDL_Colour wolfpal[]={
     #include "wolfpal.inc"
-#endif
+// #endif
 };
 
-CASSERT(lengthof(gamepal) == 256)
+// IOANCH 20130202: unification process
+CASSERT(lengthof(sodpal) == 256 && lengthof(wolfpal) == 256)
 
 //===========================================================================
 
@@ -106,11 +106,11 @@ void	VL_Shutdown (void)
 void	VL_SetVGAPlaneMode (void)
 {
 	// IOAN 12.06.2012: bumped "Automatic" on the title bars
-#ifdef SPEAR
-    SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
-#else
-    SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
-#endif
+    // IOANCH 20130202: unification process
+    if( SPEAR)
+        SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
+    else
+        SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
 
     if(screenBits == -1)
     {
@@ -132,8 +132,9 @@ void	VL_SetVGAPlaneMode (void)
         usedoublebuffering = false;
     SDL_ShowCursor(SDL_DISABLE);
 
-    SDL_SetColors(screen, gamepal, 0, 256);
-    memcpy(curpal, gamepal, sizeof(SDL_Color) * 256);
+    // IOANCH 20130202: unification process
+    SDL_SetColors(screen, SPEAR ? sodpal : wolfpal, 0, 256);
+    memcpy(curpal, SPEAR ? sodpal : wolfpal, sizeof(SDL_Color) * 256);
 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
@@ -142,7 +143,9 @@ void	VL_SetVGAPlaneMode (void)
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
         exit(1);
     }
-    SDL_SetColors(screenBuffer, gamepal, 0, 256);
+    
+    // IOANCH 20130202: unification process
+    SDL_SetColors(screenBuffer, SPEAR ? sodpal : wolfpal, 0, 256);
 
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;

@@ -40,6 +40,9 @@
     <Filter Include="Header Files\DOSBOX">
       <UniqueIdentifier>{5023bf65-b5bb-4c01-b5c2-daeda3489464}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GFXVAUDIO">
+      <UniqueIdentifier>{2bc6c889-8044-466d-93f9-ac3a0e18f7b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\CheckSum.cpp">
@@ -163,7 +166,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\audioabstract.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GFXVAUDIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\gfxvabstract.cpp">
+      <Filter>Source Files\GFXVAUDIO</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sprabstract.cpp">
+      <Filter>Source Files\GFXVAUDIO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,12 +205,6 @@
     </ClInclude>
     <ClInclude Include="..\..\foreign.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxv_apo.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxv_jap.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
     </ClInclude>
     <ClInclude Include="..\..\gfxv_sod.h">
       <Filter>Header Files\GFXAUDIO</Filter>
@@ -276,6 +279,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\audioabstract.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gfxvabstract.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_wl6.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_sod.h">
+      <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sprabstract.h">
       <Filter>Header Files\GFXAUDIO</Filter>
     </ClInclude>
   </ItemGroup>

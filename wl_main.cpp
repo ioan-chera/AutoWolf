@@ -28,7 +28,9 @@
 =============================================================================
 */
 
-extern byte signon[];
+// IOANCH 20130303: unification
+extern byte signon_wl6[];
+extern byte signon_sod[];
 
 /*
 =============================================================================
@@ -52,6 +54,9 @@ extern byte signon[];
 
 =============================================================================
 */
+
+// IOANCH 20130303: SPEAR variable
+unsigned char SPEAR;
 
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
@@ -336,7 +341,8 @@ void DiskFlopAnim(int x,int y)
     static int8_t which=0;
     if (!x && !y)
         return;
-    VWB_DrawPic(x,y,C_DISKLOADING1PIC+which);
+    // IOANCH 20130302: unification
+    VWB_DrawPic(x,y,gfxvmap[C_DISKLOADING1PIC][SPEAR]+which);
     VW_UpdateScreen();
     which^=1;
 }
@@ -673,10 +679,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
 			case rocketobj:
 			case hrocketobj:
 			case sparkobj:
+                // IOANCH 20130303: unification
 				if(obj->state != &s_boom1 && obj->state != &s_boom2 && obj->state != &s_boom3
-#ifdef SPEAR
 				   && obj->state != &s_hboom1 && obj->state != &s_hboom2 && obj->state != &s_hboom3
-#endif
 				   )
 				{
 					Basic::thrownProjectiles.add(obj);
@@ -864,8 +869,8 @@ void SignonScreen (void)                        // VGA version
 {
     VL_SetVGAPlaneMode ();
 
-    VL_MungePic (signon,320,200);
-    VL_MemToScreen (signon,320,200,0,0);
+    VL_MungePic (SPEAR ? signon_sod : signon_wl6,320,200);
+    VL_MemToScreen (SPEAR ? signon_sod : signon_wl6,320,200,0,0);
 }
 
 
@@ -879,50 +884,57 @@ void SignonScreen (void)                        // VGA version
 
 void FinishSignon (void)
 {
-#ifndef SPEAR
-    VW_Bar (0,189,300,11,VL_GetPixel(0,0));
-    WindowX = 0;
-    WindowW = 320;
-    PrintY = 190;
+    // IOANCH 20130303: unification
+    if(!SPEAR)
+    {
+        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+        WindowX = 0;
+        WindowW = 320;
+        PrintY = 190;
 
-    #ifndef JAPAN
-    SETFONTCOLOR(14,4);
+        // IOANCH 20130301: unification culling
 
-    #ifdef SPANISH
-    US_CPrint ("Oprima una tecla");
-    #else
-    US_CPrint ("Press a key");
-    #endif
+        SETFONTCOLOR(14,4);
 
-    #endif
+        #ifdef SPANISH
+        US_CPrint ("Oprima una tecla");
+        #else
+        US_CPrint ("Press a key");
+        #endif
 
-    VH_UpdateScreen();
 
-    if (!param_nowait)
-        IN_Ack ();
 
-    #ifndef JAPAN
-    VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+        VH_UpdateScreen();
 
-    PrintY = 190;
-    SETFONTCOLOR(10,4);
+        if (!param_nowait)
+            IN_Ack ();
 
-    #ifdef SPANISH
-    US_CPrint ("pensando...");
-    #else
-    US_CPrint ("Working...");
-    #endif
+        // IOANCH 20130301: unification culling
 
-    VH_UpdateScreen();
-    #endif
+        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
 
-    SETFONTCOLOR(0,15);
-#else
-    VH_UpdateScreen();
+        PrintY = 190;
+        SETFONTCOLOR(10,4);
 
-    if (!param_nowait)
-        VW_WaitVBL(3*70);
-#endif
+        #ifdef SPANISH
+        US_CPrint ("pensando...");
+        #else
+        US_CPrint ("Working...");
+        #endif
+
+        VH_UpdateScreen();
+
+
+        SETFONTCOLOR(0,15);
+    }
+    else
+    {
+        VH_UpdateScreen();
+
+        if (!param_nowait)
+            VW_WaitVBL(3*70);
+    }
+
 }
 
 //===========================================================================
@@ -940,124 +952,134 @@ void FinishSignon (void)
 //   0: player weapons
 //   1: boss weapons
 
-static int wolfdigimap[] =
-    {
-        // These first sounds are in the upload version
-#ifndef SPEAR
-        HALTSND,                0,  -1,
-        DOGBARKSND,             1,  -1,
-        CLOSEDOORSND,           2,  -1,
-        OPENDOORSND,            3,  -1,
-        ATKMACHINEGUNSND,       4,   0,
-        ATKPISTOLSND,           5,   0,
-        ATKGATLINGSND,          6,   0,
-        SCHUTZADSND,            7,  -1,
-        GUTENTAGSND,            8,  -1,
-        MUTTISND,               9,  -1,
-        BOSSFIRESND,            10,  1,
-        SSFIRESND,              11, -1,
-        DEATHSCREAM1SND,        12, -1,
-        DEATHSCREAM2SND,        13, -1,
-        DEATHSCREAM3SND,        13, -1,
-        TAKEDAMAGESND,          14, -1,
-        PUSHWALLSND,            15, -1,
+// IOANCH 20130301: SPEAR unification
+static int wolfdigimap_wl6[] =
+{
+	// These first sounds are in the upload version
 
-        LEBENSND,               20, -1,
-        NAZIFIRESND,            21, -1,
-        SLURPIESND,             22, -1,
+	HALTSND_wl6,                0,  -1,
+	DOGBARKSND_wl6,             1,  -1,
+	CLOSEDOORSND_wl6,           2,  -1,
+	OPENDOORSND_wl6,            3,  -1,
+	ATKMACHINEGUNSND_wl6,       4,   0,
+	ATKPISTOLSND_wl6,           5,   0,
+	ATKGATLINGSND_wl6,          6,   0,
+	SCHUTZADSND_wl6,            7,  -1,
+	GUTENTAGSND_wl6,            8,  -1,
+	MUTTISND_wl6,               9,  -1,
+	BOSSFIRESND_wl6,            10,  1,
+	SSFIRESND_wl6,              11, -1,
+	DEATHSCREAM1SND_wl6,        12, -1,
+	DEATHSCREAM2SND_wl6,        13, -1,
+	DEATHSCREAM3SND_wl6,        13, -1,
+	TAKEDAMAGESND_wl6,          14, -1,
+	PUSHWALLSND_wl6,            15, -1,
+	
+	LEBENSND_wl6,               20, -1,
+	NAZIFIRESND_wl6,            21, -1,
+	SLURPIESND_wl6,             22, -1,
+	
+	YEAHSND_wl6,                32, -1,
+	// IOANCH 20130301: unification culling
 
-        YEAHSND,                32, -1,
+	// These are in all other episodes
+	DOGDEATHSND_wl6,            16, -1,
+	AHHHGSND_wl6,               17, -1,
+	DIESND_wl6,                 18, -1,
+	EVASND_wl6,                 19, -1,
+	
+	TOT_HUNDSND_wl6,            23, -1,
+	MEINGOTTSND_wl6,            24, -1,
+	SCHABBSHASND_wl6,           25, -1,
+	HITLERHASND_wl6,            26, -1,
+	SPIONSND_wl6,               27, -1,
+	NEINSOVASSND_wl6,           28, -1,
+	DOGATTACKSND_wl6,           29, -1,
+	LEVELDONESND_wl6,           30, -1,
+	MECHSTEPSND_wl6,            31, -1,
+	
+	SCHEISTSND_wl6,             33, -1,
+	DEATHSCREAM4SND_wl6,        34, -1,         // AIIEEE
+	DEATHSCREAM5SND_wl6,        35, -1,         // DEE-DEE
+	DONNERSND_wl6,              36, -1,         // EPISODE 4 BOSS DIE
+	EINESND_wl6,                37, -1,         // EPISODE 4 BOSS SIGHTING
+	ERLAUBENSND_wl6,            38, -1,         // EPISODE 6 BOSS SIGHTING
+	DEATHSCREAM6SND_wl6,        39, -1,         // FART
+	DEATHSCREAM7SND_wl6,        40, -1,         // GASP
+	DEATHSCREAM8SND_wl6,        41, -1,         // GUH-BOY!
+	DEATHSCREAM9SND_wl6,        42, -1,         // AH GEEZ!
+	KEINSND_wl6,                43, -1,         // EPISODE 5 BOSS SIGHTING
+	MEINSND_wl6,                44, -1,         // EPISODE 6 BOSS DIE
+	ROSESND_wl6,                45, -1,         // EPISODE 5 BOSS DIE
+	
 
-#ifndef UPLOAD
-        // These are in all other episodes
-        DOGDEATHSND,            16, -1,
-        AHHHGSND,               17, -1,
-        DIESND,                 18, -1,
-        EVASND,                 19, -1,
 
-        TOT_HUNDSND,            23, -1,
-        MEINGOTTSND,            24, -1,
-        SCHABBSHASND,           25, -1,
-        HITLERHASND,            26, -1,
-        SPIONSND,               27, -1,
-        NEINSOVASSND,           28, -1,
-        DOGATTACKSND,           29, -1,
-        LEVELDONESND,           30, -1,
-        MECHSTEPSND,            31, -1,
+	LASTSOUND_wl6
+};
 
-        SCHEISTSND,             33, -1,
-        DEATHSCREAM4SND,        34, -1,         // AIIEEE
-        DEATHSCREAM5SND,        35, -1,         // DEE-DEE
-        DONNERSND,              36, -1,         // EPISODE 4 BOSS DIE
-        EINESND,                37, -1,         // EPISODE 4 BOSS SIGHTING
-        ERLAUBENSND,            38, -1,         // EPISODE 6 BOSS SIGHTING
-        DEATHSCREAM6SND,        39, -1,         // FART
-        DEATHSCREAM7SND,        40, -1,         // GASP
-        DEATHSCREAM8SND,        41, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        42, -1,         // AH GEEZ!
-        KEINSND,                43, -1,         // EPISODE 5 BOSS SIGHTING
-        MEINSND,                44, -1,         // EPISODE 6 BOSS DIE
-        ROSESND,                45, -1,         // EPISODE 5 BOSS DIE
+static int wolfdigimap_sod[] =
+{
+	// These first sounds are in the upload version
 
-#endif
-#else
-//
-// SPEAR OF DESTINY DIGISOUNDS
-//
-        HALTSND,                0,  -1,
-        CLOSEDOORSND,           2,  -1,
-        OPENDOORSND,            3,  -1,
-        ATKMACHINEGUNSND,       4,   0,
-        ATKPISTOLSND,           5,   0,
-        ATKGATLINGSND,          6,   0,
-        SCHUTZADSND,            7,  -1,
-        BOSSFIRESND,            8,   1,
-        SSFIRESND,              9,  -1,
-        DEATHSCREAM1SND,        10, -1,
-        DEATHSCREAM2SND,        11, -1,
-        TAKEDAMAGESND,          12, -1,
-        PUSHWALLSND,            13, -1,
-        AHHHGSND,               15, -1,
-        LEBENSND,               16, -1,
-        NAZIFIRESND,            17, -1,
-        SLURPIESND,             18, -1,
-        LEVELDONESND,           22, -1,
-        DEATHSCREAM4SND,        23, -1,         // AIIEEE
-        DEATHSCREAM3SND,        23, -1,         // DOUBLY-MAPPED!!!
-        DEATHSCREAM5SND,        24, -1,         // DEE-DEE
-        DEATHSCREAM6SND,        25, -1,         // FART
-        DEATHSCREAM7SND,        26, -1,         // GASP
-        DEATHSCREAM8SND,        27, -1,         // GUH-BOY!
-        DEATHSCREAM9SND,        28, -1,         // AH GEEZ!
-        GETGATLINGSND,          38, -1,         // Got Gat replacement
+	//
+	// SPEAR OF DESTINY DIGISOUNDS
+	//
+	HALTSND_sod,                0,  -1,
+	CLOSEDOORSND_sod,           2,  -1,
+	OPENDOORSND_sod,            3,  -1,
+	ATKMACHINEGUNSND_sod,       4,   0,
+	ATKPISTOLSND_sod,           5,   0,
+	ATKGATLINGSND_sod,          6,   0,
+	SCHUTZADSND_sod,            7,  -1,
+	BOSSFIRESND_sod,            8,   1,
+	SSFIRESND_sod,              9,  -1,
+	DEATHSCREAM1SND_sod,        10, -1,
+	DEATHSCREAM2SND_sod,        11, -1,
+	TAKEDAMAGESND_sod,          12, -1,
+	PUSHWALLSND_sod,            13, -1,
+	AHHHGSND_sod,               15, -1,
+	LEBENSND_sod,               16, -1,
+	NAZIFIRESND_sod,            17, -1,
+	SLURPIESND_sod,             18, -1,
+	LEVELDONESND_sod,           22, -1,
+	DEATHSCREAM4SND_sod,        23, -1,         // AIIEEE
+	DEATHSCREAM3SND_sod,        23, -1,         // DOUBLY-MAPPED!!!
+	DEATHSCREAM5SND_sod,        24, -1,         // DEE-DEE
+	DEATHSCREAM6SND_sod,        25, -1,         // FART
+	DEATHSCREAM7SND_sod,        26, -1,         // GASP
+	DEATHSCREAM8SND_sod,        27, -1,         // GUH-BOY!
+	DEATHSCREAM9SND_sod,        28, -1,         // AH GEEZ!
+	GETGATLINGSND_sod,          38, -1,         // Got Gat replacement
+	
+// IOANCH 20130301: unification culling
+	DOGBARKSND_sod,             1,  -1,
+	DOGDEATHSND_sod,            14, -1,
+	SPIONSND_sod,               19, -1,
+	NEINSOVASSND_sod,           20, -1,
+	DOGATTACKSND_sod,           21, -1,
+	TRANSSIGHTSND_sod,          29, -1,         // Trans Sight
+	TRANSDEATHSND_sod,          30, -1,         // Trans Death
+	WILHELMSIGHTSND_sod,        31, -1,         // Wilhelm Sight
+	WILHELMDEATHSND_sod,        32, -1,         // Wilhelm Death
+	UBERDEATHSND_sod,           33, -1,         // Uber Death
+	KNIGHTSIGHTSND_sod,         34, -1,         // Death Knight Sight
+	KNIGHTDEATHSND_sod,         35, -1,         // Death Knight Death
+	ANGELSIGHTSND_sod,          36, -1,         // Angel Sight
+	ANGELDEATHSND_sod,          37, -1,         // Angel Death
+	GETSPEARSND_sod,            39, -1,         // Got Spear replacement
 
-#ifndef SPEARDEMO
-        DOGBARKSND,             1,  -1,
-        DOGDEATHSND,            14, -1,
-        SPIONSND,               19, -1,
-        NEINSOVASSND,           20, -1,
-        DOGATTACKSND,           21, -1,
-        TRANSSIGHTSND,          29, -1,         // Trans Sight
-        TRANSDEATHSND,          30, -1,         // Trans Death
-        WILHELMSIGHTSND,        31, -1,         // Wilhelm Sight
-        WILHELMDEATHSND,        32, -1,         // Wilhelm Death
-        UBERDEATHSND,           33, -1,         // Uber Death
-        KNIGHTSIGHTSND,         34, -1,         // Death Knight Sight
-        KNIGHTDEATHSND,         35, -1,         // Death Knight Death
-        ANGELSIGHTSND,          36, -1,         // Angel Sight
-        ANGELDEATHSND,          37, -1,         // Angel Death
-        GETSPEARSND,            39, -1,         // Got Spear replacement
-#endif
-#endif
-        LASTSOUND
-    };
-
+	LASTSOUND_sod
+};
 
 void InitDigiMap (void)
 {
     int *map;
+	
+	// IOAN 20130301: unification
+	map = SPEAR ? wolfdigimap_sod : wolfdigimap_wl6;
+	unsigned int lastvalue = SPEAR ? LASTSOUND_sod : LASTSOUND_wl6;
 
-    for (map = wolfdigimap; *map != LASTSOUND; map += 3)
+    for (; *map != lastvalue; map += 3)
     {
         DigiMap[map[0]] = map[1];
         DigiChannel[map[1]] = map[2];
@@ -1065,9 +1087,9 @@ void InitDigiMap (void)
     }
 }
 
-#ifndef SPEAR
-CP_iteminfo MusicItems={CTL_X,CTL_Y,6,0,32};
-CP_itemtype MusicMenu[]=
+// IOANCH 20130303: unification
+CP_iteminfo MusicItems_wl6={CTL_X,CTL_Y,6,0,32};
+CP_itemtype MusicMenu_wl6[]=
     {
         {1,"Get Them!",0},
         {1,"Searching",0},
@@ -1090,9 +1112,8 @@ CP_itemtype MusicMenu[]=
         {1,"Ultimate Conquest",0},
         {1,"Wolfpack",0}
     };
-#else
-CP_iteminfo MusicItems={CTL_X,CTL_Y-20,9,0,32};
-CP_itemtype MusicMenu[]=
+CP_iteminfo MusicItems_sod={CTL_X,CTL_Y-20,9,0,32};
+CP_itemtype MusicMenu_sod[]=
     {
         {1,"Funky Colonel Bill",0},
         {1,"Death To The Nazis",0},
@@ -1104,48 +1125,53 @@ CP_itemtype MusicMenu[]=
         {1,"The SS Gonna Get You",0},
         {1,"Towering Above",0}
     };
-#endif
 
-#ifndef SPEARDEMO
+
+// IOANCH 20130301: unification culling
 void DoJukebox(void)
 {
     int which,lastsong=-1;
     unsigned start;
-    unsigned songs[]=
-        {
-#ifndef SPEAR
-            GETTHEM_MUS,
-            SEARCHN_MUS,
-            POW_MUS,
-            SUSPENSE_MUS,
-            WARMARCH_MUS,
-            CORNER_MUS,
+    // IOANCH 20130303: unification
+    unsigned songs_wl6[]=
+    {
+        GETTHEM_MUS_wl6,
+        SEARCHN_MUS_wl6,
+        POW_MUS_wl6,
+        SUSPENSE_MUS_wl6,
+        WARMARCH_MUS_wl6,
+        CORNER_MUS_wl6,
 
-            NAZI_OMI_MUS,
-            PREGNANT_MUS,
-            GOINGAFT_MUS,
-            HEADACHE_MUS,
-            DUNGEON_MUS,
-            ULTIMATE_MUS,
+        NAZI_OMI_MUS_wl6,
+        PREGNANT_MUS_wl6,
+        GOINGAFT_MUS_wl6,
+        HEADACHE_MUS_wl6,
+        DUNGEON_MUS_wl6,
+        ULTIMATE_MUS_wl6,
 
-            INTROCW3_MUS,
-            NAZI_RAP_MUS,
-            TWELFTH_MUS,
-            ZEROHOUR_MUS,
-            ULTIMATE_MUS,
-            PACMAN_MUS
-#else
-            XFUNKIE_MUS,             // 0
-            XDEATH_MUS,              // 2
-            XTIPTOE_MUS,             // 4
-            XTHEEND_MUS,             // 7
-            XEVIL_MUS,               // 17
-            XJAZNAZI_MUS,            // 18
-            XPUTIT_MUS,              // 21
-            XGETYOU_MUS,             // 22
-            XTOWER2_MUS              // 23
-#endif
-        };
+        INTROCW3_MUS_wl6,
+        NAZI_RAP_MUS_wl6,
+        TWELFTH_MUS_wl6,
+        ZEROHOUR_MUS_wl6,
+        ULTIMATE_MUS_wl6,
+        PACMAN_MUS_wl6
+    };
+    unsigned songs_sod[]=
+    {
+        XFUNKIE_MUS_sod,             // 0
+        XDEATH_MUS_sod,              // 2
+        XTIPTOE_MUS_sod,             // 4
+        XTHEEND_MUS_sod,             // 7
+        XEVIL_MUS_sod,               // 17
+        XJAZNAZI_MUS_sod,            // 18
+        XPUTIT_MUS_sod,              // 21
+        XGETYOU_MUS_sod,             // 22
+        XTOWER2_MUS_sod              // 23
+    };
+    unsigned *songs = (SPEAR ? songs_sod : songs_wl6);
+    // IOANCH 20130303: unification
+    CP_iteminfo &MusicItems = SPEAR ? MusicItems_sod : MusicItems_wl6;
+    CP_itemtype *MusicMenu = SPEAR ? MusicMenu_sod : MusicMenu_wl6;
 
     IN_ClearKeysDown();
     if (!AdLibPresent && !SoundBlasterPresent)
@@ -1153,35 +1179,27 @@ void DoJukebox(void)
 
     MenuFadeOut();
 
-#ifndef SPEAR
-#ifndef UPLOAD
-    start = ((SDL_GetTicks()/10)%3)*6;
-#else
-    start = 0;
-#endif
-#else
-    start = 0;
-#endif
+    // IOANCH 20130301: unification culling
+    start = SPEAR ? 0 : ((SDL_GetTicks()/10)%3)*6;
 
-    CA_CacheGrChunk (STARTFONT+1);
-#ifdef SPEAR
-    CacheLump (BACKDROP_LUMP_START,BACKDROP_LUMP_END);
-#else
-    CacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
-#endif
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]+1);
+    
+    if(SPEAR)
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    else
+        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
     CA_LoadAllSounds ();
-
+    // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
-    VWB_DrawPic(112,184,C_MOUSELBACKPIC);
+    VWB_DrawPic(112,184,gfxvmap[C_MOUSELBACKPIC][SPEAR]);
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
 
-#ifndef SPEAR
-    DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
-#else
-    DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
-#endif
+    if(!SPEAR)
+        DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
+    else
+        DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
 
     DrawMenu (&MusicItems,&MusicMenu[start]);
 
@@ -1213,13 +1231,15 @@ void DoJukebox(void)
 
     MenuFadeOut();
     IN_ClearKeysDown();
-#ifdef SPEAR
-    UnCacheLump (BACKDROP_LUMP_START,BACKDROP_LUMP_END);
-#else
-    UnCacheLump (CONTROLS_LUMP_START,CONTROLS_LUMP_END);
-#endif
+    // IOANCH 20130303: unification
+
+    if(SPEAR)
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    else
+        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+
 }
-#endif
+
 
 /*
 ==========================
@@ -1233,9 +1253,9 @@ void DoJukebox(void)
 
 static void InitGame()
 {
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     boolean didjukebox=false;
-#endif
+
 
     // initialize SDL
 #if defined _WIN32
@@ -1293,16 +1313,13 @@ static void InitGame()
 
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
-#ifndef SPEAR
-    if (mminfo.mainmem < 235000L)
-#else
-    if (mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
-#endif
+    // IOANCH 20130303: unification
+    if (!SPEAR && mminfo.mainmem < 235000L || SPEAR && mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
     {
         byte *screen;
 
-        CA_CacheGrChunk (ERRORSCREEN);
-        screen = grsegs[ERRORSCREEN];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1325,14 +1342,14 @@ static void InitGame()
 //
 	IN_ProcessEvents();
 
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     if (Keyboard[sc_M])
     {
         DoJukebox();
         didjukebox=true;
     }
     else
-#endif
+
 
 //
 // draw intro screen stuff
@@ -1347,8 +1364,8 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    CA_CacheGrChunk(STARTFONT);
-    CA_CacheGrChunk(STATUSBARPIC);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
+    CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR]);
 
     LoadLatchMem ();
     BuildTables ();          // trig tables
@@ -1360,9 +1377,8 @@ static void InitGame()
 // initialize variables
 //
     InitRedShifts ();
-#ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
     if(!didjukebox)
-#endif
         FinishSignon();
 
 #ifdef NOTYET
@@ -1494,18 +1510,19 @@ void Quit (const char *errorStr, ...)
     if (!error || !*error)
     {
 #ifdef NOTYET
-        #ifndef JAPAN
-        CA_CacheGrChunk (ORDERSCREEN);
-        screen = grsegs[ORDERSCREEN];
-        #endif
+        // IOANCH 20130301: unification culling
+
+        CA_CacheGrChunk (gfxvmap[ORDERSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ORDERSCREEN][SPEAR]];
+
 #endif
         WriteConfig ();
     }
 #ifdef NOTYET
     else
     {
-        CA_CacheGrChunk (ERRORSCREEN);
-        screen = grsegs[ERRORSCREEN];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
     }
 #endif
 
@@ -1528,9 +1545,10 @@ void Quit (const char *errorStr, ...)
     if (!error || !(*error))
     {
 #ifdef NOTYET
-        #ifndef JAPAN
+        // IOANCH 20130301: unification culling
+
         memcpy((byte *)0xb8000,screen+7,24*160); // 24 for SPEAR/UPLOAD compatibility
-        #endif
+
         SetTextCursor(0,23);
 #endif
     }
@@ -1564,13 +1582,17 @@ static void DemoLoop()
         EnableEndGameMenuItem();
         NewGame(param_difficulty,0);
 
-#ifndef SPEAR
-        gamestate.episode = param_tedlevel/10;
-        gamestate.mapon = param_tedlevel%10;
-#else
-        gamestate.episode = 0;
-        gamestate.mapon = param_tedlevel;
-#endif
+        // IOANCH 20130303: unification
+        if(!SPEAR)
+        {
+            gamestate.episode = param_tedlevel/10;
+            gamestate.mapon = param_tedlevel%10;
+        }
+        else
+        {
+            gamestate.episode = 0;
+            gamestate.mapon = param_tedlevel;
+        }
         GameLoop();
         Quit (NULL);
     }
@@ -1581,33 +1603,15 @@ static void DemoLoop()
 //
 
 #ifndef DEMOTEST
+// IOANCH 20130301: unification culling
 
-    #ifndef UPLOAD
-
-        #ifndef GOODTIMES
-        #ifndef SPEAR
-        #ifndef JAPAN
-        if (!param_nowait)
-            NonShareware();
-        #endif
-        #else
-            #ifndef GOODTIMES
-            #ifndef SPEARDEMO
-            extern void CopyProtection(void);
-            if(!param_goodtimes)
-                CopyProtection();
-            #endif
-            #endif
-        #endif
-        #endif
-    #endif
 
     StartCPMusic(INTROSONG);
+// IOANCH 20130301: unification culling
 
-#ifndef JAPAN
     if (!param_nowait)
         PG13 ();
-#endif
+
 
 #endif
 
@@ -1620,34 +1624,38 @@ static void DemoLoop()
 //
 #ifndef DEMOTEST
 
-#ifdef SPEAR
-            SDL_Color pal[256];
-            CA_CacheGrChunk (TITLEPALETTE);
-            VL_ConvertPalette(grsegs[TITLEPALETTE], pal, 256);
+            // IOANCH 20130303: unification
+            if(SPEAR)
+            {
+                SDL_Color pal[256];
+                CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR]);
+                VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR]], pal, 256);
 
-            CA_CacheGrChunk (TITLE1PIC);
-            VWB_DrawPic (0,0,TITLE1PIC);
-            UNCACHEGRCHUNK (TITLE1PIC);
+                CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR]);
+                VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR]);
 
-            CA_CacheGrChunk (TITLE2PIC);
-            VWB_DrawPic (0,80,TITLE2PIC);
-            UNCACHEGRCHUNK (TITLE2PIC);
-            VW_UpdateScreen ();
-            VL_FadeIn(0,255,pal,30);
+                CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR]);
+                VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR]);
+                VW_UpdateScreen ();
+                VL_FadeIn(0,255,pal,30);
 
-            UNCACHEGRCHUNK (TITLEPALETTE);
-#else
-            CA_CacheScreen (TITLEPIC);
-            VW_UpdateScreen ();
-            VW_FadeIn();
-#endif
+                UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR]);
+            }
+            else
+            {
+                CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR]);
+                VW_UpdateScreen ();
+                VW_FadeIn();
+            }
             if (IN_UserInput(TickBase*15))
                 break;
             VW_FadeOut();
 //
 // credits page
 //
-            CA_CacheScreen (CREDITSPIC);
+            CA_CacheScreen (gfxvmap[CREDITSPIC][SPEAR]);
             VW_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))
@@ -1667,11 +1675,11 @@ static void DemoLoop()
 // demo
 //
 
-            #ifndef SPEARDEMO
+// IOANCH 20130301: unification culling
             PlayDemo (LastDemo++%4);
-            #else
-            PlayDemo (0);
-            #endif
+
+
+
 
             if (playstate == ex_abort)
                 break;
@@ -1719,11 +1727,10 @@ void CheckParameters(int argc, char *argv[])
     for(int i = 1; i < argc; i++)
     {
         char *arg = argv[i];
-#ifndef SPEAR
-        IFARG("--goobers")
-#else
-        IFARG("--debugmode")
-#endif
+        // IOANCH 20130303: unification
+        if(!SPEAR && !strcmp(arg, "--goobers"))
+            param_debugmode = true;
+        else if(SPEAR && !strcmp(arg, "--debugmode"))
             param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
@@ -1970,13 +1977,18 @@ void CheckParameters(int argc, char *argv[])
 #else
             "                        (default: $HOME/.autowolf)\n"	// IOAN 20130116: changed name
 #endif
-#if defined(SPEAR) && !defined(SPEARDEMO)
+               // IOANCH 20130301: unification culling
+            , defaultSampleRate);
+        if(SPEAR)
+        {
+            printf(
             " --mission <mission>    Mission number to play (0-3)\n"
             "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
             " --goodtimes            Disable copy protection quiz\n"
-#endif
-            , defaultSampleRate
-        );
+
+            
+            );
+        }
         exit(1);
     }
 
@@ -1992,8 +2004,51 @@ void CheckParameters(int argc, char *argv[])
 ==========================
 */
 
+// IOANCH 20130303: unification
+unsigned char InitializeSPEAR()
+{
+    // FIXME: look in better locations, not just working dir.
+    FILE *f;
+    f = fopen("VSWAP.WL6", "rb");
+    if(!f)
+    {
+        f = fopen("VSWAP.WL3", "rb");
+        if(!f)
+        {
+            f = fopen("VSWAP.WL1", "rb");
+            if(!f)
+            {
+                f = fopen("VSWAP.SOD", "rb");
+                if(!f)
+                {
+                    f = fopen("VSWAP.SD1", "rb");
+                    if(!f)
+                    {
+                        f = fopen("VSWAP.SD2", "rb");
+                        if(!f)
+                        {
+                            f = fopen("VSWAP.SD3", "rb");
+                            if(!f)
+                            {
+                                return 0;
+                            }
+                        }
+                    }
+                }
+                fclose(f);
+                return 1;
+            }
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
 int main (int argc, char *argv[])
 {
+    // IOANCH: unification
+    SPEAR = InitializeSPEAR();
+
 #if defined(_arch_dreamcast)
     DC_Init();
 #else
