@@ -53,6 +53,9 @@ extern byte signon[];
 =============================================================================
 */
 
+// IOANCH 20130303: SPEAR variable
+extern unsigned char SPEAR;
+
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
@@ -2001,8 +2004,49 @@ void CheckParameters(int argc, char *argv[])
 ==========================
 */
 
+unsigned char InitializeSPEAR()
+{
+    // FIXME: look in better locations, not just working dir.
+    FILE *f;
+    f = fopen("VSWAP.WL6", "rb");
+    if(!f)
+    {
+        f = fopen("VSWAP.WL3", "rb");
+        if(!f)
+        {
+            f = fopen("VSWAP.WL1", "rb");
+            if(!f)
+            {
+                f = fopen("VSWAP.SOD", "rb");
+                if(!f)
+                {
+                    f = fopen("VSWAP.SD1", "rb");
+                    if(!f)
+                    {
+                        f = fopen("VSWAP.SD2", "rb");
+                        if(!f)
+                        {
+                            f = fopen("VSWAP.SD3", "rb");
+                            if(!f)
+                            {
+                                return 0;
+                            }
+                        }
+                    }
+                }
+                fclose(f);
+                return 1;
+            }
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
 int main (int argc, char *argv[])
 {
+    // IOANCH: unification
+    SPEAR = InitializeSPEAR();
 #if defined(_arch_dreamcast)
     DC_Init();
 #else

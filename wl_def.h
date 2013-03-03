@@ -1,6 +1,9 @@
 #ifndef WL_DEF_H
 #define WL_DEF_H
 
+// IOANCH 20130303: SPEAR variable
+extern unsigned char SPEAR;
+
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
