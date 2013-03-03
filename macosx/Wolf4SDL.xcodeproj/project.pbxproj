@@ -12,6 +12,7 @@
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
+		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9E7F616BDD49600B43091 /* audioabstract.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -98,6 +99,8 @@
 		4F9E982016E33FC000B632BB /* spr_wl6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_wl6.h; path = ../spr_wl6.h; sourceTree = "<group>"; };
 		4F9E982116E33FC000B632BB /* sprabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sprabstract.cpp; path = ../sprabstract.cpp; sourceTree = "<group>"; };
 		4F9E982216E33FC000B632BB /* sprabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sprabstract.h; path = ../sprabstract.h; sourceTree = "<group>"; };
+		4F9E982616E3669F00B632BB /* CocoaFun.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CocoaFun.mm; sourceTree = "<group>"; };
+		4F9E982816E366C100B632BB /* CocoaFun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CocoaFun.h; sourceTree = "<group>"; };
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = sodpal.inc; path = ../sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = wolfpal.inc; path = ../wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../audioabstract.h; sourceTree = "<group>"; };
@@ -247,6 +250,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4F9E982516E3666D00B632BB /* CocoaFun */,
 				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
 				FAB104D21591AA9100393DE3 /* dbopl.h */,
 				FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */,
@@ -282,6 +286,15 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4F9E982516E3666D00B632BB /* CocoaFun */ = {
+			isa = PBXGroup;
+			children = (
+				4F9E982616E3669F00B632BB /* CocoaFun.mm */,
+				4F9E982816E366C100B632BB /* CocoaFun.h */,
+			);
+			name = CocoaFun;
 			sourceTree = "<group>";
 		};
 		FA3011E3168721AE005D25A8 /* Dictionary */ = {
@@ -529,6 +542,7 @@
 				4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */,
 				4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */,
 				4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */,
+				4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
