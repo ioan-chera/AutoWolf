@@ -16,14 +16,9 @@
 #define assert_ret(x) assert(x)
 #endif
 
-// IOAN 20121116: Set fullscreen default to false on __APPLE__, due to stability issues
-// (not crash, but no ability to exit out of a locked up application)
-// Use --fullscreen parameter to put it back on.
-#ifdef __APPLE__
-boolean fullscreen = false;
-#else
+
 boolean fullscreen = true;
-#endif
+
 
 
 #if defined(_arch_dreamcast)
