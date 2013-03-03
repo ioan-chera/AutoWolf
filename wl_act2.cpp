@@ -1546,6 +1546,8 @@ moveok:
         ob->flags &= ~FL_NONMARK;      // stuck bugfix 1
         ob->dir = nodir;
         NewState (ob,&s_spectrewait1);
+    // IOANCH reregister it
+    Basic::livingNazis.add(ob);
 }
 
 
@@ -2137,6 +2139,9 @@ void A_HitlerMorph (objtype *ob)
 
     newobj->obclass = realhitlerobj;
     newobj->hitpoints = hitpoints[gamestate.difficulty];
+    
+    // IOANCH 20130303: add him to livingNazis list
+    Basic::livingNazis.add(newobj);
 }
 
 
