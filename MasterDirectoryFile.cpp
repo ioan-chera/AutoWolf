@@ -7,7 +7,10 @@
 //
 
 #include <string.h>
+#include "wl_def.h"
 #include "MasterDirectoryFile.h"
+
+char masterDirectoryFilePath[256];
 
 ////////////
 //
@@ -31,6 +34,8 @@ MasterDirectoryFile::MasterDirectoryFile()
 	filename = strdup(masterDirectoryFileName);
 	filenamelen = strlen(filename);
 	initialized = true;
+    
+
 	
 	strcpy(header, MASTERDIR_HEADER);
 }
@@ -46,6 +51,30 @@ MasterDirectoryFile &MasterDirectoryFile::MainDir()
 }
 
 //
+// MasterDirectoryFile::initializeConfigLocation
+//
+void MasterDirectoryFile::initializeConfigLocation()
+{
+    if(configdir[0] == '\0')
+    {
+        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath), "%s"
+                 , masterDirectoryFileName);
+    }
+    else
+    {
+        if(sizeof(masterDirectoryFileName) + 1 + strlen(configdir) > sizeof
+           (masterDirectoryFilePath))
+        {
+            Quit("Your Autowolf.data directory path is too long. It cannot be used"
+                 " for saving bot knowledge.");
+        }
+        
+        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath),
+                 "%s/%s", configdir, masterDirectoryFileName);
+    }
+}
+
+//
 // MasterDirectoryFile::saveToFile
 //
 // save it to file
@@ -54,7 +83,7 @@ void MasterDirectoryFile::saveToFile()
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFileName, "wb");
+	f = fopen(masterDirectoryFilePath, "wb");
 	this->MasterDirectoryFile::doWriteToFile(f);
 	fclose(f);
 }
@@ -75,7 +104,7 @@ bool MasterDirectoryFile::loadFromFile()
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFileName, "rb");
+	f = fopen(masterDirectoryFilePath, "rb");
 	if(!f)
 		return false;	// no file, no worry
 

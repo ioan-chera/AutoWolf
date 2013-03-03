@@ -13,7 +13,8 @@
 
 #define MASTERDIR_MAPSDIRECTORY "Maps"
 #define MASTERDIR_HEADER "AutoWolf"
-const char masterDirectoryFileName[14] = "AutoWolf.data";
+const char masterDirectoryFileName[] = "AutoWolf.data";
+
 
 //
 // MasterDirectoryFile
@@ -34,6 +35,9 @@ public:
 	
 	// load it from file
 	bool loadFromFile();
+    
+    // Initialize location
+    void initializeConfigLocation();
 };
 
 #endif

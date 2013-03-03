@@ -19,6 +19,7 @@
 #include "ioan_bot.h"	// IOAN 20121217: bot
 // IOAN 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
+#include "MasterDirectoryFile.h"
 
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;
@@ -3812,6 +3813,10 @@ CheckForEpisodes (void)
         // IOANCH 20130303: do it correctly
 #ifdef __APPLE__
         const char *WOLFDIR = Cocoa_ApplicationSupportDirectory();
+        if(strlen(WOLFDIR) > sizeof(configdir))
+        {
+            Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
+        }
         snprintf(configdir, sizeof(configdir), "%s", WOLFDIR);
 //        free((const char *)WOLFDIR);
 #else
@@ -3843,6 +3848,8 @@ CheckForEpisodes (void)
             }
         }
     }
+    
+    MasterDirectoryFile::MainDir().initializeConfigLocation();
 
 //
 // JAPANESE VERSION
