@@ -921,7 +921,7 @@ int StopMusic (void)
     int lastoffs = SD_MusicOff ();
 
 	// IOANCH 20130301: unification
-    UNCACHEAUDIOCHUNK ((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
+    UNCACHEAUDIOCHUNK (IMPALE(STARTMUSIC) + lastmusicchunk);
 
     return lastoffs;
 }
@@ -941,22 +941,22 @@ void StartMusic ()
 {
     SD_MusicOff ();
 	// IOANCH 20130301: unification
-	int *songs = SPEAR ? songs_sod : songs_wl6;
+	int *songs = IMPALE(songs);
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
 	// IOANCH 20130301: unification
-    SD_StartMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
+    SD_StartMusic(IMPALE(STARTMUSIC) + lastmusicchunk);
 }
 
 void ContinueMusic (int offs)
 {
     SD_MusicOff ();
 	// IOANCH 20130301: unification
-	int *songs = SPEAR ? songs_sod : songs_wl6;
+	int *songs = IMPALE(songs);
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
 	// IOANCH 20130301: unification
-    SD_ContinueMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk, 
+    SD_ContinueMusic(IMPALE(STARTMUSIC) + lastmusicchunk, 
 					 offs);
 }
 
@@ -1003,7 +1003,7 @@ void InitRedShifts (void)
     {
         workptr = redshifts[i - 1];
         // IOANCH 20130202: unification process
-        baseptr = SPEAR ? sodpal : wolfpal;
+        baseptr = IMPALE(palette);
 
         for (j = 0; j <= 255; j++)
         {
@@ -1022,7 +1022,7 @@ void InitRedShifts (void)
     {
         workptr = whiteshifts[i - 1];
         // IOANCH 20130202: unification process
-        baseptr = SPEAR ? sodpal : wolfpal;
+        baseptr = IMPALE(palette);
 
         for (j = 0; j <= 255; j++)
         {
@@ -1133,7 +1133,7 @@ void UpdatePaletteShifts (void)
     else if (palshifted)
     {
         // IOANCH 20130202: unification process
-        VL_SetPalette (SPEAR ? sodpal : wolfpal, false);        // back to normal
+        VL_SetPalette (IMPALE(palette), false);        // back to normal
         palshifted = false;
     }
 }
@@ -1155,7 +1155,7 @@ void FinishPaletteShifts (void)
     {
         palshifted = 0;
         // IOANCH 20130202: unification process
-        VL_SetPalette (SPEAR ? sodpal : wolfpal, true);
+        VL_SetPalette (IMPALE(palette), true);
     }
 }
 

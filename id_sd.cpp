@@ -822,8 +822,7 @@ void SD_L_SetupDigi(void)
     }
 
 	// IOANCH 20130301: unification
-	unsigned int LASTSOUND_max =  SPEAR ? (unsigned int)LASTSOUND_sod : 
-											(unsigned int)LASTSOUND_wl6;
+	unsigned int LASTSOUND_max = IMPALE((unsigned int)LASTSOUND);
     for(i = 0; i < (signed int)LASTSOUND_max; i++)
     {
         DigiMap[i] = -1;
@@ -1024,18 +1023,15 @@ boolean SD_SetSoundMode(SDMode mode)
     {
         case sdm_Off:
 			// IOANCH 20130301: unification
-            tableoffset = SPEAR ? (word)STARTADLIBSOUNDS_sod : 
-			(word)STARTADLIBSOUNDS_wl6;
+            tableoffset = IMPALE((word)STARTADLIBSOUNDS);
             result = true;
             break;
         case sdm_PC:
-            tableoffset = SPEAR ? (word)STARTPCSOUNDS_sod : 
-			(word)STARTADLIBSOUNDS_wl6;
+            tableoffset = IMPALE((word)STARTPCSOUNDS);
             result = true;
             break;
         case sdm_AdLib:
-            tableoffset = SPEAR ? (word)STARTADLIBSOUNDS_sod : 
-			(word)STARTADLIBSOUNDS_wl6;
+            tableoffset = IMPALE((word)STARTADLIBSOUNDS);
             if (AdLibPresent)
                 result = true;
             break;

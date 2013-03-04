@@ -65,18 +65,18 @@ SDL_Color curpal[256];
 
 // IOANCH 20130202: unification process
 // SDL_Color gamepal[]={
-SDL_Colour sodpal[]={
+SDL_Colour palette_sod[]={
 // #ifdef SPEAR
     #include "sodpal.inc"
 };
 // #else
-SDL_Colour wolfpal[]={
+SDL_Colour palette_wl6[]={
     #include "wolfpal.inc"
 // #endif
 };
 
 // IOANCH 20130202: unification process
-CASSERT(lengthof(sodpal) == 256 && lengthof(wolfpal) == 256)
+CASSERT(lengthof(palette_sod) == 256 && lengthof(palette_wl6) == 256)
 
 //===========================================================================
 
@@ -133,8 +133,8 @@ void	VL_SetVGAPlaneMode (void)
     SDL_ShowCursor(SDL_DISABLE);
 
     // IOANCH 20130202: unification process
-    SDL_SetColors(screen, SPEAR ? sodpal : wolfpal, 0, 256);
-    memcpy(curpal, SPEAR ? sodpal : wolfpal, sizeof(SDL_Color) * 256);
+    SDL_SetColors(screen, IMPALE(palette), 0, 256);
+    memcpy(curpal, IMPALE(palette), sizeof(SDL_Color) * 256);
 
     screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, screenWidth,
         screenHeight, 8, 0, 0, 0, 0);
@@ -145,7 +145,7 @@ void	VL_SetVGAPlaneMode (void)
     }
     
     // IOANCH 20130202: unification process
-    SDL_SetColors(screenBuffer, SPEAR ? sodpal : wolfpal, 0, 256);
+    SDL_SetColors(screenBuffer, IMPALE(palette), 0, 256);
 
     screenPitch = screen->pitch;
     bufferPitch = screenBuffer->pitch;

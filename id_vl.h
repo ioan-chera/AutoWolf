@@ -21,8 +21,8 @@ extern	boolean  screenfaded;
 extern	unsigned bordercolor;
 
 // IOANCH 20130202: unification process
-extern SDL_Color sodpal[256];
-extern SDL_Color wolfpal[256];
+extern SDL_Color palette_sod[256];
+extern SDL_Color palette_wl6[256];
 
 //===========================================================================
 

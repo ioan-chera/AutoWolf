@@ -3437,11 +3437,11 @@ SetTextColor (CP_itemtype * items, int hlight)
     // IOANCH 20130302: unification
     if (hlight)
     {
-        SETFONTCOLOR (SPEAR ? color_hlite_sod[items->active] : color_hlite_wl6[items->active], BKGDCOLOR);
+        SETFONTCOLOR (IMPALED(color_hlite, [items->active]), BKGDCOLOR);
     }
     else
     {
-        SETFONTCOLOR (SPEAR ? color_norml_sod[items->active] : color_norml_wl6[items->active], BKGDCOLOR);
+        SETFONTCOLOR (IMPALED(color_norml, [items->active]), BKGDCOLOR);
     }
 }
 
@@ -3683,7 +3683,7 @@ StartCPMusic (int song)
     lastmusic = song;
     lastoffs = SD_MusicOff ();
 	// IOANCH 20130301: unification
-	unsigned int STARTMUSIC_max = SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6;
+	unsigned int STARTMUSIC_max = IMPALE(STARTMUSIC);
     UNCACHEAUDIOCHUNK (STARTMUSIC_max + lastmusic);
 
     SD_StartMusic(STARTMUSIC_max + song);
@@ -3693,7 +3693,7 @@ StartCPMusic (int song)
 void
 FreeMusic (void)
 {
-    UNCACHEAUDIOCHUNK (SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6 + lastmusic);
+    UNCACHEAUDIOCHUNK (IMPALE(STARTMUSIC) + lastmusic);
 }
 
 
@@ -3795,8 +3795,7 @@ ShootSnd (void)
 // CHECK FOR EPISODES
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-CheckForEpisodes (void)
+void CheckForEpisodes (void)
 {
     struct stat statbuf;
 
@@ -3818,7 +3817,6 @@ CheckForEpisodes (void)
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
         }
         snprintf(configdir, sizeof(configdir), "%s", WOLFDIR);
-//        free((const char *)WOLFDIR);
 #else
 #define WOLFDIR "/.autowolf"	// IOANCH 20130116: changed name
         if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
@@ -3849,29 +3847,25 @@ CheckForEpisodes (void)
         }
     }
     
+    // IOANCH 20130304: initialize bot master directory file location
     MasterDirectoryFile::MainDir().initializeConfigLocation();
 
-//
-// JAPANESE VERSION
-//
     // IOANCH 20130301: unification culling
-
-//
-// ENGLISH
-//
-        // IOANCH 20130301: unification culling
     if(!SPEAR)
     {
         if(!stat("VSWAP.WL6", &statbuf))
         {
             strcpy (extension, "WL6");
-            NewEmenu[2].active =
-                NewEmenu[4].active =
-                NewEmenu[6].active =
-                NewEmenu[8].active =
-                NewEmenu[10].active =
-                EpisodeSelect[1] =
-                EpisodeSelect[2] = EpisodeSelect[3] = EpisodeSelect[4] = EpisodeSelect[5] = 1;
+            NewEmenu[2].active = 
+            NewEmenu[4].active = 
+            NewEmenu[6].active =
+            NewEmenu[8].active = 
+            NewEmenu[10].active = 
+            EpisodeSelect[1] =
+            EpisodeSelect[2] = 
+            EpisodeSelect[3] = 
+            EpisodeSelect[4] = 
+            EpisodeSelect[5] = 1;
         }
         else
         {
@@ -3893,9 +3887,7 @@ CheckForEpisodes (void)
             }
         }
     }
-
-
-
+    
     if(SPEAR)
     {
 // IOANCH 20130301: unification culling
@@ -3943,6 +3935,8 @@ CheckForEpisodes (void)
     strcat (demoname, extension);
 
     if(!SPEAR)
+    {
     // IOANCH 20130301: unification culling
         strcat (endfilename, extension);
+    }
 }

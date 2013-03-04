@@ -6,7 +6,7 @@
 #define BORD2COLOR (SPEAR ? 0x93 : 0x23)
 #define DEACTIVE_sod 0x9b
 #define DEACTIVE_wl6 0x2b
-#define DEACTIVE (SPEAR ? DEACTIVE_sod : DEACTIVE_wl6)
+#define DEACTIVE IMPALE(DEACTIVE)
 #define BKGDCOLOR (SPEAR ? 0x9d : 0x2d)
 #define STRIPE 0x2c
 #define MenuFadeOut() VL_FadeOut(0, 255, SPEAR ? 0 : 43, 0, SPEAR ? 51 : 0, 10)
@@ -16,10 +16,10 @@
 #define VIEWCOLOR       0x7f
 #define TEXTCOLOR       0x17
 #define HIGHLIGHT       0x13
-#define MenuFadeIn()    VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10)
+#define MenuFadeIn()    VL_FadeIn(0,255,IMPALE(palette),10)
 
             // IOANCH 20130301: unification music
-#define MENUSONG        (SPEAR ? (int)WONDERIN_MUS_sod : (int)WONDERIN_MUS_wl6)
+#define MENUSONG        IMPALE((int)WONDERIN_MUS)
 
 #define INTROSONG       (SPEAR ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 

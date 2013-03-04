@@ -3,6 +3,8 @@
 
 // IOANCH 20130303: SPEAR variable
 extern unsigned char SPEAR;
+#define IMPALE(a) (SPEAR ? a##_sod : a##_wl6)
+#define IMPALED(a, b) (SPEAR ? a##_sod b : a##_wl6 b)
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
@@ -145,7 +147,7 @@ void Quit(const char *errorStr, ...);
 // IOANCH 20130302: unification
 #define LRpack_wl6 8
 #define LRpack_sod 20
-#define LRpack (SPEAR ? LRpack_sod : LRpack_wl6)
+#define LRpack IMPALE(LRpack)
 
 #define PLAYERSIZE      MINDIST         // player radius
 #define MINACTORDIST    0x10000l        // minimum dist from player center

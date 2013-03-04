@@ -620,7 +620,7 @@ void ShowArticle (char *article)
             if (firstpage)
             {
                 // IOANCH 20130202: unification process
-                VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10);
+                VL_FadeIn(0,255,IMPALE(palette),10);
                 firstpage = false;
             }
         }

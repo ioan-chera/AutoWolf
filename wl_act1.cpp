@@ -25,7 +25,7 @@ struct _statinfo_t
 }
 
 // IOANCH 20130202: unification process
-statinfo_wolf[] =
+statinfo_wl6[] =
 {
     {SPR_STAT_0},                           // puddle          spr1v
     {SPR_STAT_1,block},                     // Green Barrel    "
@@ -218,7 +218,7 @@ void SpawnStatic (int tilex, int tiley, int type)
 {
     // IOANCH 20130202: unification process
     struct _statinfo_t *statinfo;
-    statinfo = SPEAR ? statinfo_sod : statinfo_wolf;
+    statinfo = IMPALE(statinfo);
     
     laststatobj->shapenum = statinfo[type].picnum;
     laststatobj->tilex = tilex;
@@ -292,7 +292,7 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     
     // IOANCH 20130202: unification process
     struct _statinfo_t *statinfo;
-    statinfo = SPEAR ? statinfo_sod : statinfo_wolf;
+    statinfo = IMPALE(statinfo);
 
     //
     // find the item number

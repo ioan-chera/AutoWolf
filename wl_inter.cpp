@@ -161,7 +161,7 @@ Victory (void)
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
-    StartCPMusic (SPEAR ? (int)URAHERO_MUS_sod : (int)URAHERO_MUS_wl6);
+    StartCPMusic (IMPALE((int)URAHERO_MUS));
     ClearSplitVWB ();
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
@@ -569,7 +569,7 @@ LevelCompleted (void)
         {0, "??:??"},           // Secret level 1
         {0, "??:??"},           // Secret level 2
     };
-    times *parTimes = SPEAR ? parTimes_sod : parTimes_wl6;
+    times *parTimes = IMPALE(parTimes);
 
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     ClearSplitVWB ();           // set up for double buffering in split screen
@@ -578,7 +578,7 @@ LevelCompleted (void)
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
             // IOANCH 20130301: unification music
-    StartCPMusic (SPEAR ? (int)ENDLEVEL_MUS_sod : (int)ENDLEVEL_MUS_wl6);
+    StartCPMusic (IMPALE((int)ENDLEVEL_MUS));
 
 //
 // do the intermission

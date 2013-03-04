@@ -125,7 +125,7 @@ static int32_t GRFILEPOS(const size_t idx)
         assert(idx < lengthof(grstarts_sod));
     else
         assert(idx < lengthof(grstarts_wl6));
-	return SPEAR ? grstarts_sod[idx] : grstarts_wl6[idx];
+	return IMPALED(grstarts, [idx]);
 }
 
 /*
@@ -640,16 +640,15 @@ void CA_Shutdown (void)
             return;
         case sdm_PC:
 			// IOANCH 20130301: unification
-            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
+            start = IMPALE(STARTPCSOUNDS);
             break;
         case sdm_AdLib:
-            start = SPEAR ? (int)STARTADLIBSOUNDS_sod : (int)STARTADLIBSOUNDS_wl6;
+            start = IMPALE((int)STARTADLIBSOUNDS);
             break;
     }
 
 	// IOANCH 20130301: unification
-	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : 
-	(unsigned int)NUMSOUNDS_wl6;
+	unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
     for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }
@@ -739,15 +738,15 @@ void CA_LoadAllSounds (void)
             break;
         case sdm_PC:
 			// IOANCH 20130301: unification
-            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
+            start = IMPALE(STARTPCSOUNDS);
             break;
         case sdm_AdLib:
-            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
+            start = IMPALE((unsigned)STARTADLIBSOUNDS);
             break;
     }
 
 	// IOANCH 20130301: unification
-	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : (unsigned int)NUMSOUNDS_wl6;
+	unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
     
     if(!cachein)
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
@@ -759,19 +758,19 @@ void CA_LoadAllSounds (void)
     {
         case sdm_Off:
 			// IOANCH 20130301: unification
-            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
+            start = IMPALE((unsigned)STARTADLIBSOUNDS);
 			// needed for priorities...
             break;
         case sdm_PC:
-            start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
+            start = IMPALE(STARTPCSOUNDS);
             break;
         case sdm_AdLib:
-            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
+            start = IMPALE((unsigned)STARTADLIBSOUNDS);
             break;
     }
 
 	// IOANCH 20130301: unification
-    if(start == (SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6))
+    if(start == IMPALE((unsigned)STARTADLIBSOUNDS))
     {
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CAL_CacheAdlibSoundChunk(start);

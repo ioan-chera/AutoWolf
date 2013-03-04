@@ -869,8 +869,8 @@ void SignonScreen (void)                        // VGA version
 {
     VL_SetVGAPlaneMode ();
 
-    VL_MungePic (SPEAR ? signon_sod : signon_wl6,320,200);
-    VL_MemToScreen (SPEAR ? signon_sod : signon_wl6,320,200,0,0);
+    VL_MungePic (IMPALE(signon),320,200);
+    VL_MemToScreen (IMPALE(signon),320,200,0,0);
 }
 
 
@@ -1076,9 +1076,8 @@ void InitDigiMap (void)
     int *map;
 	
 	// IOANCH 20130301: unification
-	map = SPEAR ? wolfdigimap_sod : wolfdigimap_wl6;
-	unsigned int lastvalue = SPEAR ? (unsigned int)LASTSOUND_sod : 
-	(unsigned int)LASTSOUND_wl6;
+	map = IMPALE(wolfdigimap);
+	unsigned int lastvalue = IMPALE((unsigned int)LASTSOUND);
 
     for (; *map != lastvalue; map += 3)
     {
@@ -1169,10 +1168,10 @@ void DoJukebox(void)
         XGETYOU_MUS_sod,             // 22
         XTOWER2_MUS_sod              // 23
     };
-    unsigned *songs = (SPEAR ? songs_sod : songs_wl6);
+    unsigned *songs = IMPALE(songs);
     // IOANCH 20130303: unification
-    CP_iteminfo &MusicItems = SPEAR ? MusicItems_sod : MusicItems_wl6;
-    CP_itemtype *MusicMenu = SPEAR ? MusicMenu_sod : MusicMenu_wl6;
+    CP_iteminfo &MusicItems = IMPALE(MusicItems);
+    CP_itemtype *MusicMenu = IMPALE(MusicMenu);
 
     IN_ClearKeysDown();
     if (!AdLibPresent && !SoundBlasterPresent)
@@ -1257,7 +1256,6 @@ static void InitGame()
 // IOANCH 20130301: unification culling
     boolean didjukebox=false;
 
-
     // initialize SDL
 #if defined _WIN32
     putenv("SDL_VIDEODRIVER=directx");
@@ -1270,12 +1268,14 @@ static void InitGame()
     atexit(SDL_Quit);
 
     int numJoysticks = SDL_NumJoysticks();
-    if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
+    if(param_joystickindex && (param_joystickindex < -1 || 
+                               param_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
             printf("No joysticks are available to SDL!\n");
         else
-            printf("The joystick index must be between -1 and %i!\n", numJoysticks - 1);
+            printf("The joystick index must be between -1 and %i!\n", 
+                   numJoysticks - 1);
         exit(1);
     }
 
@@ -1296,7 +1296,8 @@ static void InitGame()
             HWND hwndSDL = wmInfo.window;
             DWORD style = GetWindowLong(hwndSDL, GWL_STYLE) & ~WS_SYSMENU;
             SetWindowLong(hwndSDL, GWL_STYLE, style);
-            SetWindowPos(hwndSDL, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+            SetWindowPos(hwndSDL, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | 
+                         SWP_NOZORDER | SWP_FRAMECHANGED);
         }
     }
 #endif
@@ -1734,9 +1735,7 @@ void CheckParameters(int argc, char *argv[])
     {
         char *arg = argv[i];
         // IOANCH 20130303: unification
-        if(!SPEAR && !strcmp(arg, "--goobers"))
-            param_debugmode = true;
-        else if(SPEAR && !strcmp(arg, "--debugmode"))
+        if(!strcmp(arg, SPEAR ? "--debugmode" : "--goobers"))
             param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
@@ -1759,8 +1758,8 @@ void CheckParameters(int argc, char *argv[])
         }
         else IFARG("--windowed")
             fullscreen = false;
-       else IFARG("--fullscreen")
-          fullscreen = true;  // IOANCH 20121611: added --fullscreen option for Macs
+        else IFARG("--fullscreen")
+            fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
         else IFARG("--windowed-mouse")
         {
             fullscreen = false;
@@ -1770,7 +1769,8 @@ void CheckParameters(int argc, char *argv[])
         {
             if(i + 2 >= argc)
             {
-                printf("The res option needs the width and/or the height argument!\n");
+                printf("The res option needs the width and/or the height "
+                       "argument!\n");
                 hasError = true;
             }
             else
@@ -1778,15 +1778,21 @@ void CheckParameters(int argc, char *argv[])
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
                 unsigned factor = screenWidth / 320;
-                if(screenWidth % 320 || (screenHeight != 200 * factor && screenHeight != 240 * factor))
-                    printf("Screen size must be a multiple of 320x200 or 320x240!\n"), hasError = true;
+                if(screenWidth % 320 || (screenHeight != 200 * factor && 
+                                         screenHeight != 240 * factor))
+                {
+                    printf("Screen size must be a multiple of 320x200 or "
+                           "320x240!\n"); 
+                    hasError = true;
+                }
             }
         }
         else IFARG("--resf")
         {
             if(i + 2 >= argc)
             {
-                printf("The resf option needs the width and/or the height argument!\n");
+                printf("The resf option needs the width and/or the height "
+                       "argument!\n");
                 hasError = true;
             }
             else
@@ -1794,16 +1800,23 @@ void CheckParameters(int argc, char *argv[])
                 screenWidth = atoi(argv[++i]);
                 screenHeight = atoi(argv[++i]);
                 if(screenWidth < 320)
-                    printf("Screen width must be at least 320!\n"), hasError = true;
+                {
+                    printf("Screen width must be at least 320!\n");
+                    hasError = true;
+                }
                 if(screenHeight < 200)
-                    printf("Screen height must be at least 200!\n"), hasError = true;
+                {
+                    printf("Screen height must be at least 200!\n"); 
+                    hasError = true;
+                }
             }
         }
         else IFARG("--bits")
         {
             if(++i >= argc)
             {
-                printf("The bits option is missing the color depth argument!\n");
+                printf("The bits option is missing the color depth "
+                       "argument!\n");
                 hasError = true;
             }
             else
@@ -1850,7 +1863,9 @@ void CheckParameters(int argc, char *argv[])
                 printf("The joystick option is missing the index argument!\n");
                 hasError = true;
             }
-            else param_joystickindex = atoi(argv[i]);   // index is checked in InitGame
+            else 
+                param_joystickindex = atoi(argv[i]);   
+            // index is checked in InitGame
         }
         else IFARG("--joystickhat")
         {
@@ -1928,29 +1943,30 @@ void CheckParameters(int argc, char *argv[])
         else IFARG("--help")
             showHelp = true;
 			// IOANCH 17.05.2012: added --nobot parameter
-			else IFARG("--nobot")
-				BotMan::active = false;
+        else IFARG("--nobot")
+            BotMan::active = false;
 			// IOANCH 17.05.2012: added --nonazis
-			else IFARG("--nonazis")
-				Basic::nonazis = true;
+        else IFARG("--nonazis")
+            Basic::nonazis = true;
 			// IOANCH 29.09.2012: added --secretstep3
-			else IFARG("--secretstep3")
-				Basic::secretstep3 = true;
-        else hasError = true;
+        else IFARG("--secretstep3")
+            Basic::secretstep3 = true;
+        else 
+            hasError = true;
     }
     if(hasError || showHelp)
     {
         if(hasError) printf("\n");	// IOANCH 26.05.2012: updated title and info
         printf(
             "AutoWolf v0.1\n"
-				"By Ioan Chera on Wolf4SDL codebase"
-				"Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
+            "By Ioan Chera on Wolf4SDL codebase"
+            "Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
             "Original Wolfenstein 3D by id Software\n\n"
             "Usage: AutoWolf [options]\n"
             "Options:\n"
-				" --nobot                Do not use bot\n"
-				" --nonazis              Maps without Nazis spawned\n"
-			    " --secretstep3          Emulate 3-step secret wall bug\n"
+            " --nobot                Do not use bot\n"
+            " --nonazis              Maps without Nazis spawned\n"
+            " --secretstep3          Emulate 3-step secret wall bug\n"
             " --help                 This help page\n"
             " --tedlevel <level>     Starts the game in the given level\n"
             " --baby                 Sets the difficulty to baby for tedlevel\n"
