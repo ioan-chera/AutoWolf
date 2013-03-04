@@ -27,7 +27,7 @@
 //                      NeedsMusic - load music?
 //
 
-// IOAN 20121223: Cleaned up this file
+// IOANCH 20121223: Cleaned up this file
 
 #include "wl_def.h"
 #include <SDL_mixer.h>
@@ -70,7 +70,7 @@ typedef struct
     uint32_t length;
 } digiinfo;
 
-// IOAN 20130301: unification
+// IOANCH 20130301: unification
 static Mix_Chunk *SoundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
 							  STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
 							  STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
@@ -91,7 +91,7 @@ globalsoundpos channelSoundPos[MIX_CHANNELS];
         SDSMode         DigiMode;
 static  byte          **SoundTable;
 
-// IOAN 20130301: unification
+// IOANCH 20130301: unification
 int             DigiMap[(unsigned int)LASTSOUND_wl6 > 
 						(unsigned int)LASTSOUND_sod ? 
 						(unsigned int)LASTSOUND_wl6 : 
@@ -118,7 +118,7 @@ static  boolean                 DigiPlaying;
 //      PC Sound variables
 // static  volatile byte           pcLastSample;
 static  byte * volatile         pcSound;
-// IOAN 11.06.2012: commented to made compiler stop complaining
+// IOANCH 11.06.2012: commented to made compiler stop complaining
 //static  longword                pcLengthLeft;
 
 //      AdLib variables
@@ -1023,7 +1023,7 @@ boolean SD_SetSoundMode(SDMode mode)
     switch (mode)
     {
         case sdm_Off:
-			// IOAN 20130301: unification
+			// IOANCH 20130301: unification
             tableoffset = SPEAR ? (word)STARTADLIBSOUNDS_sod : 
 			(word)STARTADLIBSOUNDS_wl6;
             result = true;
@@ -1277,7 +1277,7 @@ boolean SD_PlaySound(soundnames sound_abstract)
     SoundCommon     *s;
     int             lp,rp;
 	
-	// IOAN 20130301: abstract sound
+	// IOANCH 20130301: abstract sound
 	unsigned int sound = soundmap[sound_abstract][SPEAR];
 
     lp = LeftPosition;

@@ -261,7 +261,7 @@ typedef enum
 } objflag_t;
 
 //
-// IOAN 25.10.2012
+// IOANCH 25.10.2012
 // Other constants that had to be named
 //
 #define I_PLAYERHEALTH		100
@@ -492,7 +492,7 @@ typedef struct objstruct
 
     fixed       x,y;
     word        tilex,tiley;
-	fixed		recordx, recordy;	// IOAN 20121211: record position for the bot
+	fixed		recordx, recordy;	// IOANCH 20121211: record position for the bot
     byte        areanumber;
 
     short       viewx;
@@ -1014,7 +1014,7 @@ extern  statetype s_hitlerdeathcam2;
 extern  statetype s_giftdeathcam2;
 extern  statetype s_fatdeathcam2;
 
-// IOAN 29.06.2012: deleted global ghosts moved to Basic
+// IOANCH 29.06.2012: deleted global ghosts moved to Basic
 void KillActor (objtype *ob);
 
 void SpawnDeadGuard (int tilex, int tiley);
@@ -1172,7 +1172,7 @@ static inline longword READLONGWORD(byte *&ptr)
 #endif
 
 //
-// IOAN 17.05.2012
+// IOANCH 17.05.2012
 //
 // Other externs
 //
@@ -1190,7 +1190,7 @@ extern statetype s_sspath1;
 extern statetype s_mutpath1;
 extern statetype s_dogpath1;
 
-// IOAN 20.05.2012
+// IOANCH 20.05.2012
 extern  statetype s_grdshoot1;
 extern  statetype s_grdshoot2;
 extern  statetype s_grdshoot3;
@@ -1231,7 +1231,7 @@ extern statetype s_hitlerdie2;
 extern statetype s_fakestand;
 extern statetype s_mechastand;
 
-// IOAN 20.05.2012
+// IOANCH 20.05.2012
 extern  statetype s_bossshoot1;
 extern  statetype s_bossshoot2;
 extern  statetype s_bossshoot3;
@@ -1324,7 +1324,7 @@ extern statetype s_hboom1;
 extern statetype s_hboom2;
 extern statetype s_hboom3;
 
-// IOAN 26.05.2012
+// IOANCH 26.05.2012
 extern objtype *lastobj;
 
 #endif

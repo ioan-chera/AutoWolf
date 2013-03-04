@@ -4,7 +4,7 @@
 #include "wl_def.h"
 #include <SDL_mixer.h>
 #pragma hdrstop
-// IOAN 17.05.2012
+// IOANCH 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "List.h"
@@ -341,7 +341,7 @@ static void ScanInfoPlane(void)
                 case 108:
                 case 109:
                 case 110:
-                case 111:	// IOAN 17.05.2012: use centralized function
+                case 111:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_guard, x, y, tile - 108);
                     break;
 
@@ -363,7 +363,7 @@ static void ScanInfoPlane(void)
                 case 112:
                 case 113:
                 case 114:
-                case 115:	// IOAN 17.05.2012: use centralized function
+                case 115:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_guard, x, y, tile - 112, true);
                     break;
 
@@ -390,7 +390,7 @@ static void ScanInfoPlane(void)
                 case 116:
                 case 117:
                 case 118:
-                case 119:	// IOAN 17.05.2012: use centralized function
+                case 119:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_officer, x, y, tile - 116);
                     break;
 
@@ -412,7 +412,7 @@ static void ScanInfoPlane(void)
                 case 120:
                 case 121:
                 case 122:
-                case 123:	// IOAN 17.05.2012: use centralized function
+                case 123:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_officer, x, y, tile - 120, true);
                     break;
 
@@ -437,7 +437,7 @@ static void ScanInfoPlane(void)
                 case 126:
                 case 127:
                 case 128:
-                case 129:	// IOAN 17.05.2012: use centralized function
+                case 129:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_ss, x, y, tile - 126);
                     break;
 
@@ -459,7 +459,7 @@ static void ScanInfoPlane(void)
                 case 130:
                 case 131:
                 case 132:
-                case 133:	// IOAN 17.05.2012: use centralized function
+                case 133:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_ss, x, y, tile - 130, true);
                     break;
 
@@ -483,7 +483,7 @@ static void ScanInfoPlane(void)
                 case 134:
                 case 135:
                 case 136:
-                case 137:	// IOAN 17.05.2012: use centralized function
+                case 137:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_dog, x, y, tile - 134);
                     break;
 
@@ -505,7 +505,7 @@ static void ScanInfoPlane(void)
                 case 138:
                 case 139:
                 case 140:
-                case 141:	// IOAN 17.05.2012: use centralized function
+                case 141:	// IOANCH 17.05.2012: use centralized function
 					Basic::SpawnEnemy(en_dog, x, y, tile - 138, true);
                     break;
 
@@ -514,44 +514,44 @@ static void ScanInfoPlane(void)
 //
                     // IOANCH 20130302: unification
 
-                case 214:	// IOAN 17.05.2012: use centralized function
+                case 214:	// IOANCH 17.05.2012: use centralized function
 				    if(!SPEAR) Basic::SpawnEnemy(en_boss, x, y);
                     break;
-                case 197:	// IOAN 17.05.2012: use centralized function
+                case 197:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_gretel, x, y);
                     break;
-                case 215:	// IOAN 17.05.2012: use centralized function
+                case 215:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_gift, x, y);
                     break;
-                case 179:	// IOAN 17.05.2012: use centralized function
+                case 179:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_fat, x, y);
                     break;
-                case 196:	// IOAN 17.05.2012: use centralized function
+                case 196:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_schabbs, x, y);
                     break;
-                case 160:	// IOAN 17.05.2012: use centralized function
+                case 160:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_fake, x, y);
                     break;
-                case 178:	// IOAN 17.05.2012: use centralized function
+                case 178:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_hitler, x, y);
                     break;
 
-                case 106:	// IOAN 17.05.2012: use centralized function
+                case 106:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_spectre, x, y);
                     break;
-                case 107:	// IOAN 17.05.2012: use centralized function
+                case 107:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_angel, x, y);
                     break;
-                case 125:	// IOAN 17.05.2012: use centralized function
+                case 125:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_trans, x, y);
                     break;
-                case 142:	// IOAN 17.05.2012: use centralized function
+                case 142:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_uber, x, y);
                     break;
-                case 143:	// IOAN 17.05.2012: use centralized function
+                case 143:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_will, x, y);
                     break;
-                case 161:	// IOAN 17.05.2012: use centralized function
+                case 161:	// IOANCH 17.05.2012: use centralized function
 					if(SPEAR) Basic::SpawnEnemy(en_death, x, y);
                     break;
 
@@ -577,7 +577,7 @@ static void ScanInfoPlane(void)
                 case 216:
                 case 217:
                 case 218:
-                case 219:	// IOAN 17.05.2012: use centralized function
+                case 219:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_mutant, x, y, tile - 216);
                     break;
 
@@ -598,7 +598,7 @@ static void ScanInfoPlane(void)
                 case 220:
                 case 221:
                 case 222:
-                case 223:	// IOAN 17.05.2012: use centralized function
+                case 223:	// IOANCH 17.05.2012: use centralized function
 						 Basic::SpawnEnemy(en_mutant, x, y, tile - 220, true);
                     break;
 
@@ -607,16 +607,16 @@ static void ScanInfoPlane(void)
 //
                     // IOANCH 20130302: unification
 
-                case 224:	// IOAN 17.05.2012: use centralized function
+                case 224:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_blinky, x, y);
                     break;
-                case 225:	// IOAN 17.05.2012: use centralized function
+                case 225:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_clyde, x, y);
                     break;
-                case 226:	// IOAN 17.05.2012: use centralized function
+                case 226:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_pinky, x, y);
                     break;
-                case 227:	// IOAN 17.05.2012: use centralized function
+                case 227:	// IOANCH 17.05.2012: use centralized function
 					if(!SPEAR) Basic::SpawnEnemy(en_inky, x, y);
                     break;
             }
@@ -679,7 +679,7 @@ void SetupGameLevel (void)
     #undef MXX
 #endif
 	
-	// IOAN 17.05.2012: initialize bot
+	// IOANCH 17.05.2012: initialize bot
 	BotMan::MapInit();
 
 //
@@ -712,7 +712,7 @@ void SetupGameLevel (void)
 // spawn doors
 //
 
-	// IOAN: reset lists
+	// IOANCH: reset lists
 	Basic::livingNazis.removeAll();
 	Basic::thrownProjectiles.removeAll();
 	Basic::EmptyItemList();
@@ -1355,7 +1355,7 @@ void Died (void)
 
     if (gamestate.lives > -1)
     {
-        gamestate.health = I_PLAYERHEALTH;	// IOAN
+        gamestate.health = I_PLAYERHEALTH;	// IOANCH
         gamestate.weapon = gamestate.bestweapon
             = gamestate.chosenweapon = wp_pistol;
         gamestate.ammo = STARTAMMO;

@@ -2,7 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
-#include "ioan_bot.h"	// IOAN 27.05.2012
+#include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"
 // IOANCH 20130302: unification
 LRstruct LevelRatios[LRpack_wl6 > LRpack_sod ? LRpack_wl6 : LRpack_sod];
@@ -899,7 +899,7 @@ done:   itoa (kr, tempstr, 10);
     lastBreathTime = GetTimeCount();
     IN_StartAck ();
 
-	 // IOAN 27.05.2012: let bots automatically hit after 3 seconds
+	 // IOANCH 27.05.2012: let bots automatically hit after 3 seconds
 	 int botcount = 0;
     while (!IN_CheckAck ())
 	 {
@@ -1209,7 +1209,7 @@ CheckHighScore (int32_t score, word other)
             PrintX = 4 * 8;
             backcolor = BORDCOLOR;
             fontcolor = 15;
-		      // IOAN 27.05.2012: let the bot write his random name
+		      // IOANCH 27.05.2012: let the bot write his random name
 		      if(BotMan::active)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
@@ -1231,7 +1231,7 @@ CheckHighScore (int32_t score, word other)
             VW_UpdateScreen ();
             backcolor = 0x9c;
             fontcolor = 15;
-		      // IOAN 27.05.2012: let the bot write his random name
+		      // IOANCH 27.05.2012: let the bot write his random name
 		      if(BotMan::active)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars

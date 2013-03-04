@@ -105,7 +105,7 @@ void	VL_Shutdown (void)
 
 void	VL_SetVGAPlaneMode (void)
 {
-	// IOAN 12.06.2012: bumped "Automatic" on the title bars
+	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
     // IOANCH 20130202: unification process
     if( SPEAR)
         SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);

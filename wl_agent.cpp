@@ -3,7 +3,7 @@
 #include "wl_def.h"
 #pragma hdrstop
 #include "ioan_bas.h"
-#include "ioan_bot.h"	// IOAN
+#include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
 
 /*
@@ -310,7 +310,7 @@ void DrawFace (void)
             StatusDrawFace(gfxvmap[GODMODEFACE1PIC][SPEAR]+gamestate.faceframe);
         else
             StatusDrawFace(gfxvmap[FACE1APIC][SPEAR]+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
-    }	// IOAN 25.10.2012: named constant
+    }	// IOANCH 25.10.2012: named constant
     else
     {
         // IOANCH 20130202: unification process
@@ -431,7 +431,7 @@ void TakeDamage (int points,objtype *attacker)
     if (gamestate.difficulty==gd_baby)
         points>>=2;
 	
-	// IOAN 02.07.2012: alert the bot that damage was taken
+	// IOANCH 02.07.2012: alert the bot that damage was taken
 	BotMan::damagetaken = attacker;
 
     if (!godmode)
@@ -474,7 +474,7 @@ void HealSelf (int points)
 {
     gamestate.health += points;
     if (gamestate.health>I_PLAYERHEALTH)
-        gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
+        gamestate.health = I_PLAYERHEALTH;	// IOANCH 25.10.2012: named constants
 
     DrawHealth ();
     DrawFace ();
@@ -620,7 +620,7 @@ void DrawKeys (void)
 
 void GiveWeapon (int weapon)
 {
-    GiveAmmo (I_GUNAMMO);	// IOAN 25.10.2012: named constants
+    GiveAmmo (I_GUNAMMO);	// IOANCH 25.10.2012: named constants
 
     if (gamestate.bestweapon<weapon)
         gamestate.bestweapon = gamestate.weapon
@@ -664,7 +664,7 @@ void GiveAmmo (int ammo)
         }
     }
     gamestate.ammo += ammo;
-    if (gamestate.ammo > I_MAXAMMO)	// IOAN 25.10.2012: named constants
+    if (gamestate.ammo > I_MAXAMMO)	// IOANCH 25.10.2012: named constants
         gamestate.ammo = I_MAXAMMO;
     DrawAmmo ();
 }
@@ -708,11 +708,11 @@ void GetBonus (statobj_t *check)
     switch (check->itemnumber)
     {
         case    bo_firstaid:
-            if (gamestate.health == I_PLAYERHEALTH)	// IOAN 25.10.2012: named constant
+            if (gamestate.health == I_PLAYERHEALTH)	// IOANCH 25.10.2012: named constant
                 return;
 
             SD_PlaySound (HEALTH2SND);
-            HealSelf (I_FIRSTAIDHEALTH);	// IOAN
+            HealSelf (I_FIRSTAIDHEALTH);	// IOANCH
             break;
 
         case    bo_key1:
@@ -725,47 +725,47 @@ void GetBonus (statobj_t *check)
 
         case    bo_cross:
             SD_PlaySound (BONUS1SND);
-            GivePoints (I_CROSSSCORE);	// IOAN
+            GivePoints (I_CROSSSCORE);	// IOANCH
             gamestate.treasurecount++;
             break;
         case    bo_chalice:
             SD_PlaySound (BONUS2SND);
-            GivePoints (I_CHALICESCORE);	// IOAN
+            GivePoints (I_CHALICESCORE);	// IOANCH
             gamestate.treasurecount++;
             break;
         case    bo_bible:
             SD_PlaySound (BONUS3SND);
-            GivePoints (I_TREASURESCORE);	// IOAN
+            GivePoints (I_TREASURESCORE);	// IOANCH
             gamestate.treasurecount++;
             break;
         case    bo_crown:
             SD_PlaySound (BONUS4SND);
-            GivePoints (I_CROWNSCORE);	// IOAN
+            GivePoints (I_CROWNSCORE);	// IOANCH
             gamestate.treasurecount++;
             break;
 
         case    bo_clip:
-            if (gamestate.ammo == I_MAXAMMO)	// IOAN
+            if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
             SD_PlaySound (GETAMMOSND);
-            GiveAmmo (I_CLIPAMMO);	// IOAN
+            GiveAmmo (I_CLIPAMMO);	// IOANCH
             break;
         case    bo_clip2:
-            if (gamestate.ammo == I_MAXAMMO)	// IOAN
+            if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
             SD_PlaySound (GETAMMOSND);
-            GiveAmmo (I_SEMICLIPAMMO);	// IOAN
+            GiveAmmo (I_SEMICLIPAMMO);	// IOANCH
             break;
 
             // IOANCH 20130202: unification process
         case    bo_25clip:
-            if (gamestate.ammo == I_MAXAMMO)	// IOAN
+            if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
             SD_PlaySound (GETAMMOBOXSND);
-            GiveAmmo (I_BOXAMMO);	// IOAN
+            GiveAmmo (I_BOXAMMO);	// IOANCH
             break;
 
         case    bo_machinegun:
@@ -784,30 +784,30 @@ void GetBonus (statobj_t *check)
 
         case    bo_fullheal:
             SD_PlaySound (BONUS1UPSND);
-            HealSelf (I_PLAYERHEALTH - 1);	// IOAN
-            GiveAmmo (I_BONUSAMMO);	// IOAN
+            HealSelf (I_PLAYERHEALTH - 1);	// IOANCH
+            GiveAmmo (I_BONUSAMMO);	// IOANCH
             GiveExtraMan ();
             gamestate.treasurecount++;
             break;
 
         case    bo_food:
-            if (gamestate.health == I_PLAYERHEALTH)	// IOAN
+            if (gamestate.health == I_PLAYERHEALTH)	// IOANCH
                 return;
 
             SD_PlaySound (HEALTH1SND);
-            HealSelf (I_FOODHEALTH);	// IOAN
+            HealSelf (I_FOODHEALTH);	// IOANCH
             break;
 
         case    bo_alpo:
-            if (gamestate.health == I_PLAYERHEALTH)	// IOAN
+            if (gamestate.health == I_PLAYERHEALTH)	// IOANCH
                 return;
 
             SD_PlaySound (HEALTH1SND);
-            HealSelf (I_DOGFOODHEALTH);	// IOAN
+            HealSelf (I_DOGFOODHEALTH);	// IOANCH
             break;
 
         case    bo_gibs:
-            if (gamestate.health > I_BLOODHEALTHTHRESHOLD)	// IOAN
+            if (gamestate.health > I_BLOODHEALTHTHRESHOLD)	// IOANCH
                 return;
 
             SD_PlaySound (SLURPIESND);
@@ -826,7 +826,7 @@ void GetBonus (statobj_t *check)
     StartBonusFlash ();
     check->shapenum = -1;                   // remove from list
 	
-	// IOAN 26.10.2012: remove item from list
+	// IOANCH 26.10.2012: remove item from list
 	Basic::RemoveItemFromList(check->tilex, check->tiley, check->itemnumber);
 }
 
@@ -1302,7 +1302,7 @@ void    GunAttack (objtype *ob)
 
         if (closest == oldclosest)
 		{
-			// IOAN 26.06.2012: efficiency
+			// IOANCH 26.06.2012: efficiency
 			BotMan::shootRatio.addFail();
             return;                                         // no more targets, all missed
 		}
@@ -1329,13 +1329,13 @@ void    GunAttack (objtype *ob)
     {
         if ( (US_RndT() / 12) < dist)           // missed
 		{
-			// IOAN 26.06.2012: efficiency
+			// IOANCH 26.06.2012: efficiency
 			BotMan::shootRatio.addFail();
             return;
 		}
         damage = US_RndT() / 6;
     }
-	// IOAN 26.06.2012: efficiency
+	// IOANCH 26.06.2012: efficiency
 	BotMan::shootRatio.addSuccess();
     DamageActor (closest,damage);
 }

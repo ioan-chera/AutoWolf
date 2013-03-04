@@ -345,7 +345,7 @@ void GlobalScalePost(byte *vidbuf, unsigned pitch)
 /*
 ====================
 =
-= IOAN 20121204
+= IOANCH 20121204
 = HitWall
 =
 = Merged HitVertWall and HitHorizWall into one
@@ -465,7 +465,7 @@ void HitWall (hitwall_t orient)
 /*
  ====================
  =
- = IOAN 20121204
+ = IOANCH 20121204
  = HitDoor
  =
  = Merged HitVertDoor and HitHorizDoor into one
@@ -538,7 +538,7 @@ void HitDoor (hitwall_t orient)
 
 //==========================================================================
 
-// IOAN 20121204: deleted useless defines
+// IOANCH 20121204: deleted useless defines
 
 //==========================================================================
 // IOANCH 20130302: unification

@@ -49,7 +49,7 @@ void BotMan::MapInit()
 	int i, j;
 	
 	
-	// IOAN 20121213
+	// IOANCH 20121213
 	// calculate checksum of it
 	memset(explored, 0, sizeof(explored));
 	CalculateMapsegsChecksum();

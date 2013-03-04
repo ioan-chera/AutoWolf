@@ -16,8 +16,8 @@
 
 #include "wl_def.h"
 #pragma hdrstop
-#include "ioan_bot.h"	// IOAN 20121217: bot
-// IOAN 20130303: Cocoa functions for Apple computers
+#include "ioan_bot.h"	// IOANCH 20121217: bot
+// IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 #include "MasterDirectoryFile.h"
 
@@ -2806,7 +2806,7 @@ CP_Quit (int)
 #endif
 
     {
-		// IOAN 20121217: save data
+		// IOANCH 20121217: save data
 		if(ingame)
 			BotMan::SaveData();
 		
@@ -3682,7 +3682,7 @@ StartCPMusic (int song)
 
     lastmusic = song;
     lastoffs = SD_MusicOff ();
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	unsigned int STARTMUSIC_max = SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6;
     UNCACHEAUDIOCHUNK (STARTMUSIC_max + lastmusic);
 
@@ -3820,7 +3820,7 @@ CheckForEpisodes (void)
         snprintf(configdir, sizeof(configdir), "%s", WOLFDIR);
 //        free((const char *)WOLFDIR);
 #else
-#define WOLFDIR "/.autowolf"	// IOAN 20130116: changed name
+#define WOLFDIR "/.autowolf"	// IOANCH 20130116: changed name
         if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
         {
             Quit("Your $HOME directory path is too long. It cannot be used for saving games.");

@@ -50,7 +50,7 @@
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
 
-// IOAN 11.06.2012: don't define that now if Max OSX mode
+// IOANCH 11.06.2012: don't define that now if Max OSX mode
 //#ifndef __AUTOWOLF_DEBUG_MAX_OS_X__
 #define USE_GPL             // Replaces the MAME OPL emulator by the DosBox one, which is under a GPL license
 //#endif

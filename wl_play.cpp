@@ -5,7 +5,7 @@
 
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
-// IOAN 17.05.2012
+// IOANCH 17.05.2012
 #include "ioan_bot.h"
 
 /*
@@ -112,7 +112,7 @@ objtype dummyobj;
 // LIST OF SONGS FOR EACH VERSION
 //
 
-// IOAN 20130301: unification
+// IOANCH 20130301: unification
 int songs_wl6[] = {
     //
     // Episode One
@@ -452,7 +452,7 @@ void PollControls (void)
     }
 
 
-	 //if(!BotMan::active)	// IOAN 17.05.2012: if bot active, don't poll the user.
+	 //if(!BotMan::active)	// IOANCH 17.05.2012: if bot active, don't poll the user.
 	 {
 	//
 	// get button states
@@ -604,8 +604,8 @@ void CheckKeys (void)
     //
     if (Keyboard[sc_M] && Keyboard[sc_L] && Keyboard[sc_I])
     {
-        gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
-        gamestate.ammo = I_MAXAMMO;	// IOAN
+        gamestate.health = I_PLAYERHEALTH;	// IOANCH 25.10.2012: named constants
+        gamestate.ammo = I_MAXAMMO;	// IOANCH
         gamestate.keys = 3;
         gamestate.score = 0;
         gamestate.TimeCount += 42000L;
@@ -699,7 +699,7 @@ void CheckKeys (void)
 #endif
            scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
     {
-		// IOAN 11.06.2012: commented to made compiler stop complaining
+		// IOANCH 11.06.2012: commented to made compiler stop complaining
         //short oldmapon = gamestate.mapon;
         //short oldepisode = gamestate.episode;
         ClearMemory ();
@@ -920,7 +920,7 @@ int StopMusic (void)
 {
     int lastoffs = SD_MusicOff ();
 
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
     UNCACHEAUDIOCHUNK ((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 
     return lastoffs;
@@ -940,22 +940,22 @@ int StopMusic (void)
 void StartMusic ()
 {
     SD_MusicOff ();
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	int *songs = SPEAR ? songs_sod : songs_wl6;
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
     SD_StartMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk);
 }
 
 void ContinueMusic (int offs)
 {
     SD_MusicOff ();
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	int *songs = SPEAR ? songs_sod : songs_wl6;
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
 	
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
     SD_ContinueMusic((SPEAR ? STARTMUSIC_sod : STARTMUSIC_wl6) + lastmusicchunk, 
 					 offs);
 }
@@ -1376,7 +1376,7 @@ void PlayLoop (void)
     }
     while (!playstate && !startgame);
 	
-	// IOAN 20121215
+	// IOANCH 20121215
 	// Now is a time to save explored map data
 	if(ingame)
 		BotMan::SaveData();

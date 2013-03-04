@@ -158,7 +158,7 @@ static void cleanup_output(void)
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
-                MessageBox(NULL, buf, "AutoWolf", MB_OK);	// IOAN 26.05.2012: updated title
+                MessageBox(NULL, buf, "AutoWolf", MB_OK);	// IOANCH 26.05.2012: updated title
             }
             else
                 remove(stdoutPath);     // remove empty file
@@ -174,7 +174,7 @@ static void cleanup_output(void)
             if(readbytes != 0)
             {
                 buf[readbytes] = 0;     // cut after last byte (<=16383)
-                MessageBox(NULL, buf, "AutoWolf", MB_OK);	// IOAN 26.05.2012: updated title
+                MessageBox(NULL, buf, "AutoWolf", MB_OK);	// IOANCH 26.05.2012: updated title
             }
             else
                 remove(stderrPath);     // remove empty file

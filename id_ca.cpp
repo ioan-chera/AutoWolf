@@ -14,7 +14,7 @@ loaded into the data segment
 =============================================================================
 */
 
-// IOAN 20121223: Cleaned up this file
+// IOANCH 20121223: Cleaned up this file
 
 #include <sys/types.h>
 #if defined _WIN32
@@ -67,7 +67,7 @@ int     mapon;
 
 word    *mapsegs[MAPPLANES];
 static maptype* mapheaderseg[NUMMAPS];
-// IOAN 20130301: unification
+// IOANCH 20130301: unification
 byte    *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 				   NUMSNDCHUNKS_wl6];
 byte    *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
@@ -429,7 +429,7 @@ static void CAL_SetupGrFile (void)
 
 
 
-    if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOAN 20130116: changed name
+    if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"
@@ -647,7 +647,7 @@ void CA_Shutdown (void)
             break;
     }
 
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : 
 	(unsigned int)NUMSOUNDS_wl6;
     for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
@@ -738,7 +738,7 @@ void CA_LoadAllSounds (void)
             cachein = 1;
             break;
         case sdm_PC:
-			// IOAN 20130301: unification
+			// IOANCH 20130301: unification
             start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
@@ -746,7 +746,7 @@ void CA_LoadAllSounds (void)
             break;
     }
 
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : (unsigned int)NUMSOUNDS_wl6;
     
     if(!cachein)
@@ -758,7 +758,7 @@ void CA_LoadAllSounds (void)
     switch (SoundMode)
     {
         case sdm_Off:
-			// IOAN 20130301: unification
+			// IOANCH 20130301: unification
             start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
 			// needed for priorities...
             break;
@@ -770,7 +770,7 @@ void CA_LoadAllSounds (void)
             break;
     }
 
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
     if(start == (SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6))
     {
         for (i=0;i<NUMSOUNDS_cur;i++,start++)

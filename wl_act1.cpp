@@ -2,7 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
-#include "ioan_bas.h"	// IOAN 29.09.2012
+#include "ioan_bas.h"	// IOANCH 29.09.2012
 
 /*
 =============================================================================
@@ -16,7 +16,7 @@
 statobj_t       statobjlist[MAXSTATS];
 statobj_t       *laststatobj;
 
-// IOAN 11.06.2012: added name to made compiler stop complaining
+// IOANCH 11.06.2012: added name to made compiler stop complaining
 struct _statinfo_t
 {
     short      picnum;
@@ -256,7 +256,7 @@ void SpawnStatic (int tilex, int tiley, int type)
         case    bo_spear:
             laststatobj->flags = FL_BONUS;
             laststatobj->itemnumber = statinfo[type].type;
-			// IOAN 26.10.2012: add to list
+			// IOANCH 26.10.2012: add to list
 			//assert(tilex != 38 || tiley != 25);
 			Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
             break;
@@ -330,7 +330,7 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     spot->visspot = &spotvis[tilex][tiley];
     spot->flags = FL_BONUS | statinfo[type].specialFlags;
     spot->itemnumber = statinfo[type].type;
-	// IOAN: add item to list
+	// IOANCH: add item to list
 	Basic::AddItemToList(spot->tilex, spot->tiley, spot->itemnumber);
 }
 
@@ -910,7 +910,7 @@ void MovePWalls (void)
         //
         // see if it should be pushed farther
         //
-		// IOAN 29.09.2012: secretstep3 parameter in action
+		// IOANCH 29.09.2012: secretstep3 parameter in action
         if (pwallstate>= (Basic::secretstep3 ? 384 : 256))            // only move two tiles fix
         {
             //

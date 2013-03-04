@@ -2,7 +2,7 @@
 
 #include "wl_def.h"
 #pragma hdrstop
-#include "ioan_bas.h"	// IOAN 29.06.2012
+#include "ioan_bas.h"	// IOANCH 29.06.2012
 #include "List.h"
 
 /*
@@ -861,7 +861,7 @@ void KillActor (objtype *ob)
     switch (ob->obclass)
     {
         case guardobj:
-            GivePoints (I_GUARDSCORE);	// IOAN 25.10.2012: all constants started with I_
+            GivePoints (I_GUARDSCORE);	// IOANCH 25.10.2012: all constants started with I_
             NewState (ob,&s_grddie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
@@ -981,7 +981,7 @@ void KillActor (objtype *ob)
     }
 
     gamestate.killcount++;
-	// IOAN 29.06.2012: remove object from living set
+	// IOANCH 29.06.2012: remove object from living set
 	Basic::livingNazis.remove(ob);
 	
     ob->flags &= ~FL_SHOOTABLE;
@@ -1093,7 +1093,7 @@ boolean CheckLine (objtype *ob)
     xt1 = x1 >> 8;
     yt1 = y1 >> 8;
 
-	 // IOAN 20.05.2012: set x2, y2 directly instead of plux, pluy
+	 // IOANCH 20.05.2012: set x2, y2 directly instead of plux, pluy
 	 x2 = (int)((word)(player->x >> UNSIGNEDSHIFT));
 	 y2 = (int)((word)(player->y >> UNSIGNEDSHIFT));
     xt2 = player->tilex;

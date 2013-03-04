@@ -278,7 +278,8 @@ boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
 //
 // Made protected.
 //
-// IOAN 29.06.2012: made objtype *
+// IOANCH 29.06.2012: made objtype *
+//
 objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
 {
     word *map;
@@ -352,7 +353,8 @@ objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
 //
 // Basic::SpawnPatrol
 //
-// IOAN 29.06.2012: made objtype *
+// IOANCH 29.06.2012: made objtype *
+//
 objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
 {
     switch (which)
@@ -429,10 +431,11 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
 //
 // Basic::SpawnBoss
 //
-// IOAN 29.06.2012: made objtype *
+// IOANCH 29.06.2012: made objtype *
+//
 objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 {
-	// IOAN 29.06.2012: update this for ANY boss
+	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 	classtype obclass = guardobj;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
@@ -632,7 +635,7 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 		break;
 	}
 	
-	// IOAN 20121219: record enemy position
+	// IOANCH 20121219: record enemy position
 	BotMan::RecordEnemyPosition(newobj);
 	
 	if(newenemy)

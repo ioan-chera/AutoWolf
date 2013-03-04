@@ -327,7 +327,7 @@ void T_Projectile (objtype *ob)
 
     if (!ProjectileTryMove (ob))
     {
-		// IOAN 30.06.2012: remove link
+		// IOANCH 30.06.2012: remove link
 		Basic::thrownProjectiles.remove(ob);
 		
         // IOANCH 20130301: unification culling
@@ -350,7 +350,7 @@ void T_Projectile (objtype *ob)
 
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {       // hit the player
-		// IOAN 30.06.2012: remove link
+		// IOANCH 30.06.2012: remove link
 		Basic::thrownProjectiles.remove(ob);
 		
         switch (ob->obclass)
@@ -841,7 +841,7 @@ statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_
 statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot8};
 statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelchase1};
 
-// IOAN 17.05.2012: deleted SpawnStand and the rest, now they are protected members of Basic
+// IOANCH 17.05.2012: deleted SpawnStand and the rest, now they are protected members of Basic
 
 /*
 ===============
@@ -1303,7 +1303,7 @@ void T_Launch (objtype *ob)
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
 	
-	// IOAN 30.06.2012: link proj
+	// IOANCH 30.06.2012: link proj
 	Basic::thrownProjectiles.add(newobj);
 }
 
@@ -1555,7 +1555,7 @@ moveok:
 /*
  =================
  =
- = IOAN 20121204
+ = IOANCH 20121204
  = Merged T_Will, T_Schabb and T_Gift here
  =
  = T_ProjectileBossChase
@@ -1893,7 +1893,7 @@ void T_SchabbThrow (objtype *ob)
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
 	
-	// IOAN 30.06.2012: link to projectile list
+	// IOANCH 30.06.2012: link to projectile list
 	Basic::thrownProjectiles.add(newobj);
 
     PlaySoundLocActor (SCHABBSTHROWSND,newobj);
@@ -1935,7 +1935,7 @@ void T_GiftThrow (objtype *ob)
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
 	
-	// IOAN 30.06.2012: link to projectile list
+	// IOANCH 30.06.2012: link to projectile list
 	Basic::thrownProjectiles.add(newobj);
 
     // IOANCH 20130301: unification culling
@@ -2199,7 +2199,7 @@ void T_FakeFire (objtype *ob)
     newobj->flags = FL_NEVERMARK;
     newobj->active = ac_yes;
 	
-	// IOAN 30.06.2012: link fire
+	// IOANCH 30.06.2012: link fire
 	Basic::thrownProjectiles.add(newobj);
 
     PlaySoundLocActor (FLAMETHROWERSND,newobj);
@@ -2219,7 +2219,7 @@ void T_Fake (objtype *ob)
 {
     int32_t move;
 
-	 // IOAN 20.05.2012: modif func
+	 // IOANCH 20.05.2012: modif func
     if (CheckLine(ob))                      // got a shot at player?
     {
         ob->hidden = false;
@@ -2320,7 +2320,7 @@ void T_Chase (objtype *ob)
         return;
 
     dodge = false;
-// IOAN 20.05.2012: modif func
+// IOANCH 20.05.2012: modif func
 	 if (CheckLine(ob))      // got a shot at player?
     {
         ob->hidden = false;

@@ -52,7 +52,7 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height);
 
 int     maporgx;
 int     maporgy;
-// IOAN 11.06.2012: added name to made compiler stop complaining
+// IOANCH 11.06.2012: added name to made compiler stop complaining
 enum _viewtype_t {mapview,tilemapview,actoratview,visview}  viewtype;
 
 void ViewMap (void);
@@ -540,11 +540,11 @@ int DebugKeys (void)
         US_PrintCentered ("Free items!");
         VW_UpdateScreen();
         GivePoints (100000);
-        HealSelf (I_PLAYERHEALTH - 1);	// IOAN 25.10.2012: named constants
+        HealSelf (I_PLAYERHEALTH - 1);	// IOANCH 25.10.2012: named constants
         if (gamestate.bestweapon<wp_chaingun)
             GiveWeapon (gamestate.bestweapon+1);
         gamestate.ammo += 50;
-        if (gamestate.ammo > I_MAXAMMO)	// IOAN
+        if (gamestate.ammo > I_MAXAMMO)	// IOANCH
             gamestate.ammo = I_MAXAMMO;
         DrawAmmo ();
         IN_Ack ();

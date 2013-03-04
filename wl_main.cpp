@@ -10,7 +10,7 @@
 #pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>
-// IOAN 17.05.2012
+// IOANCH 17.05.2012
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "List.h"
@@ -325,7 +325,7 @@ void NewGame (int difficulty,int episode)
     gamestate.difficulty = difficulty;
     gamestate.weapon = gamestate.bestweapon
             = gamestate.chosenweapon = wp_pistol;
-    gamestate.health = I_PLAYERHEALTH;	// IOAN 25.10.2012: named constants
+    gamestate.health = I_PLAYERHEALTH;	// IOANCH 25.10.2012: named constants
     gamestate.ammo = STARTAMMO;
     gamestate.lives = 3;
     gamestate.nextextra = EXTRAPOINTS;
@@ -667,7 +667,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
         gamestate.ammo = 8;
     }
 	
-	// IOAN 30.06.2012: unlink all dead Nazis from the list
+	// IOANCH 30.06.2012: unlink all dead Nazis from the list
 	for(objtype *obj = lastobj; obj; obj = obj->prev)
 	{
 		if(obj->hitpoints <= 0)
@@ -1075,7 +1075,7 @@ void InitDigiMap (void)
 {
     int *map;
 	
-	// IOAN 20130301: unification
+	// IOANCH 20130301: unification
 	map = SPEAR ? wolfdigimap_sod : wolfdigimap_wl6;
 	unsigned int lastvalue = SPEAR ? (unsigned int)LASTSOUND_sod : 
 	(unsigned int)LASTSOUND_wl6;
@@ -1302,7 +1302,7 @@ static void InitGame()
 #endif
 	VW_UpdateScreen();
 	
-	// IOAN 20121218: Load bot data
+	// IOANCH 20121218: Load bot data
 	BotMan::LoadData();
 
     VH_Startup ();
@@ -1718,13 +1718,18 @@ static void DemoLoop()
 
 #define IFARG(str) if(!strcmp(arg, (str)))
 
+//
+// CheckParameters
+//
+// Do it early.
+//
 void CheckParameters(int argc, char *argv[])
 {
     bool hasError = false, showHelp = false;
     bool sampleRateGiven = false, audioBufferGiven = false;
     int defaultSampleRate = param_samplerate;
 
-	 BotMan::active = true;	// IOAN 26.05.2012: initialize with true, not false
+    BotMan::active = true;	// IOANCH 26.05.2012: initialize with true, not false
     for(int i = 1; i < argc; i++)
     {
         char *arg = argv[i];
@@ -1755,7 +1760,7 @@ void CheckParameters(int argc, char *argv[])
         else IFARG("--windowed")
             fullscreen = false;
        else IFARG("--fullscreen")
-          fullscreen = true;  // IOAN 20121611: added --fullscreen option for Macs
+          fullscreen = true;  // IOANCH 20121611: added --fullscreen option for Macs
         else IFARG("--windowed-mouse")
         {
             fullscreen = false;
@@ -1922,20 +1927,20 @@ void CheckParameters(int argc, char *argv[])
             param_ignorenumchunks = true;
         else IFARG("--help")
             showHelp = true;
-			// IOAN 17.05.2012: added --nobot parameter
+			// IOANCH 17.05.2012: added --nobot parameter
 			else IFARG("--nobot")
 				BotMan::active = false;
-			// IOAN 17.05.2012: added --nonazis
+			// IOANCH 17.05.2012: added --nonazis
 			else IFARG("--nonazis")
 				Basic::nonazis = true;
-			// IOAN 29.09.2012: added --secretstep3
+			// IOANCH 29.09.2012: added --secretstep3
 			else IFARG("--secretstep3")
 				Basic::secretstep3 = true;
         else hasError = true;
     }
     if(hasError || showHelp)
     {
-        if(hasError) printf("\n");	// IOAN 26.05.2012: updated title and info
+        if(hasError) printf("\n");	// IOANCH 26.05.2012: updated title and info
         printf(
             "AutoWolf v0.1\n"
 				"By Ioan Chera on Wolf4SDL codebase"
@@ -1976,7 +1981,7 @@ void CheckParameters(int argc, char *argv[])
 #if defined(_arch_dreamcast) || defined(_WIN32)
             "                        (default: current directory)\n"
 #else
-            "                        (default: $HOME/.autowolf)\n"	// IOAN 20130116: changed name
+            "                        (default: $HOME/.autowolf)\n"	// IOANCH 20130116: changed name
 #endif
                // IOANCH 20130301: unification culling
             , defaultSampleRate);
@@ -2039,9 +2044,14 @@ unsigned char InitializeSPEAR()
     return 1;
 }
 
+//
+// main
+//
+// Main program start
+//
 int main (int argc, char *argv[])
 {
-    // IOANCH: unification
+    // IOANCH: unification: set the SPEAR global var
     SPEAR = InitializeSPEAR();
 
 #if defined(_arch_dreamcast)
