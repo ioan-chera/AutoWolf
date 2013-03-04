@@ -2005,44 +2005,38 @@ void CheckParameters(int argc, char *argv[])
 ==========================
 */
 
+//
+// InitializeSPEAR
+//
 // IOANCH 20130303: unification
+// Return the global SPEAR variable depending on sanity autodetect
+// It later looks for the entire package, but will be guided by this quick
+// detection
+//
 unsigned char InitializeSPEAR()
 {
     // FIXME: look in better locations, not just working dir.
     FILE *f;
-    f = fopen("VSWAP.WL6", "rb");
+    f = fopen("VSWAP.SD3", "rb");
     if(!f)
     {
-        f = fopen("VSWAP.WL3", "rb");
+        f = fopen("VSWAP.SD2", "rb");
         if(!f)
         {
-            f = fopen("VSWAP.WL1", "rb");
+            f = fopen("VSWAP.SD1", "rb");
             if(!f)
             {
                 f = fopen("VSWAP.SOD", "rb");
                 if(!f)
-                {
-                    f = fopen("VSWAP.SD1", "rb");
-                    if(!f)
-                    {
-                        f = fopen("VSWAP.SD2", "rb");
-                        if(!f)
-                        {
-                            f = fopen("VSWAP.SD3", "rb");
-                            if(!f)
-                            {
-                                return 0;
-                            }
-                        }
-                    }
+                {                    
+					return 0;	// none found: assume Wolf3D
                 }
-                fclose(f);
-                return 1;
             }
         }
     }
     fclose(f);
-    return 0;
+	// One of the ifs failed - fall here and return SPEAR 1
+    return 1;
 }
 
 int main (int argc, char *argv[])
