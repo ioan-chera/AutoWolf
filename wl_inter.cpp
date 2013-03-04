@@ -161,7 +161,7 @@ Victory (void)
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
-    StartCPMusic (SPEAR ? URAHERO_MUS_sod : URAHERO_MUS_wl6);
+    StartCPMusic (SPEAR ? (int)URAHERO_MUS_sod : (int)URAHERO_MUS_wl6);
     ClearSplitVWB ();
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR], gfxvmap[LEVELEND_LUMP_END][SPEAR]);
     CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]);
@@ -578,7 +578,7 @@ LevelCompleted (void)
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
             // IOANCH 20130301: unification music
-    StartCPMusic (SPEAR ? ENDLEVEL_MUS_sod : ENDLEVEL_MUS_wl6);
+    StartCPMusic (SPEAR ? (int)ENDLEVEL_MUS_sod : (int)ENDLEVEL_MUS_wl6);
 
 //
 // do the intermission

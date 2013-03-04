@@ -19,9 +19,9 @@
 #define MenuFadeIn()    VL_FadeIn(0,255,SPEAR ? sodpal : wolfpal,10)
 
             // IOANCH 20130301: unification music
-#define MENUSONG        (SPEAR ? WONDERIN_MUS_sod : WONDERIN_MUS_wl6)
+#define MENUSONG        (SPEAR ? (int)WONDERIN_MUS_sod : (int)WONDERIN_MUS_wl6)
 
-#define INTROSONG       (SPEAR ? XTOWER2_MUS_sod : NAZI_NOR_MUS_wl6)
+#define INTROSONG       (SPEAR ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
 #define CENTERX         ((int) screenWidth / 2)

@@ -1077,7 +1077,8 @@ void InitDigiMap (void)
 	
 	// IOAN 20130301: unification
 	map = SPEAR ? wolfdigimap_sod : wolfdigimap_wl6;
-	unsigned int lastvalue = SPEAR ? LASTSOUND_sod : LASTSOUND_wl6;
+	unsigned int lastvalue = SPEAR ? (unsigned int)LASTSOUND_sod : 
+	(unsigned int)LASTSOUND_wl6;
 
     for (; *map != lastvalue; map += 3)
     {

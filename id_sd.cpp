@@ -92,8 +92,10 @@ globalsoundpos channelSoundPos[MIX_CHANNELS];
 static  byte          **SoundTable;
 
 // IOAN 20130301: unification
-int             DigiMap[LASTSOUND_wl6 > LASTSOUND_sod ? LASTSOUND_wl6 : 
-						LASTSOUND_sod];
+int             DigiMap[(unsigned int)LASTSOUND_wl6 > 
+						(unsigned int)LASTSOUND_sod ? 
+						(unsigned int)LASTSOUND_wl6 : 
+						(unsigned int)LASTSOUND_sod];
 int DigiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod - 
 				STARTDIGISOUNDS_sod ? STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
 				STARTMUSIC_sod - STARTDIGISOUNDS_sod];
@@ -820,7 +822,8 @@ void SD_L_SetupDigi(void)
     }
 
 	// IOANCH 20130301: unification
-	unsigned int LASTSOUND_max =  SPEAR ? LASTSOUND_sod : LASTSOUND_wl6;
+	unsigned int LASTSOUND_max =  SPEAR ? (unsigned int)LASTSOUND_sod : 
+											(unsigned int)LASTSOUND_wl6;
     for(i = 0; i < (signed int)LASTSOUND_max; i++)
     {
         DigiMap[i] = -1;
@@ -1021,15 +1024,18 @@ boolean SD_SetSoundMode(SDMode mode)
     {
         case sdm_Off:
 			// IOAN 20130301: unification
-            tableoffset = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            tableoffset = SPEAR ? (word)STARTADLIBSOUNDS_sod : 
+			(word)STARTADLIBSOUNDS_wl6;
             result = true;
             break;
         case sdm_PC:
-            tableoffset = SPEAR ? STARTPCSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            tableoffset = SPEAR ? (word)STARTPCSOUNDS_sod : 
+			(word)STARTADLIBSOUNDS_wl6;
             result = true;
             break;
         case sdm_AdLib:
-            tableoffset = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            tableoffset = SPEAR ? (word)STARTADLIBSOUNDS_sod : 
+			(word)STARTADLIBSOUNDS_wl6;
             if (AdLibPresent)
                 result = true;
             break;

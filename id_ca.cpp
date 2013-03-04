@@ -643,12 +643,13 @@ void CA_Shutdown (void)
             start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            start = SPEAR ? (int)STARTADLIBSOUNDS_sod : (int)STARTADLIBSOUNDS_wl6;
             break;
     }
 
 	// IOAN 20130301: unification
-	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : 
+	(unsigned int)NUMSOUNDS_wl6;
     for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
         UNCACHEAUDIOCHUNK(start);
 }
@@ -741,12 +742,12 @@ void CA_LoadAllSounds (void)
             start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
             break;
     }
 
 	// IOAN 20130301: unification
-	unsigned int NUMSOUNDS_cur = SPEAR ? NUMSOUNDS_sod : NUMSOUNDS_wl6;
+	unsigned int NUMSOUNDS_cur = SPEAR ? (unsigned int)NUMSOUNDS_sod : (unsigned int)NUMSOUNDS_wl6;
     
     if(!cachein)
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
@@ -758,19 +759,19 @@ void CA_LoadAllSounds (void)
     {
         case sdm_Off:
 			// IOAN 20130301: unification
-            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
 			// needed for priorities...
             break;
         case sdm_PC:
             start = SPEAR ? STARTPCSOUNDS_sod : STARTPCSOUNDS_wl6;
             break;
         case sdm_AdLib:
-            start = SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6;
+            start = SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6;
             break;
     }
 
 	// IOAN 20130301: unification
-    if(start == (SPEAR ? STARTADLIBSOUNDS_sod : STARTADLIBSOUNDS_wl6))
+    if(start == (SPEAR ? (unsigned)STARTADLIBSOUNDS_sod : (unsigned)STARTADLIBSOUNDS_wl6))
     {
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
             CAL_CacheAdlibSoundChunk(start);
