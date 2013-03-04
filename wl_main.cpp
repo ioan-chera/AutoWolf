@@ -7,6 +7,9 @@
 #endif
 
 #include "wl_def.h"
+#if defined(__APPLE__) || defined(UNIX)
+    #include <wordexp.h>
+#endif
 #pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>
@@ -1735,7 +1738,7 @@ void CheckParameters(int argc, char *argv[])
     {
         char *arg = argv[i];
         // IOANCH 20130303: unification
-        if(!strcmp(arg, SPEAR ? "--debugmode" : "--goobers"))
+        if(!strcmp(arg, "--debugmode") || !strcmp(arg, "--goobers"))
             param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
@@ -1951,7 +1954,33 @@ void CheckParameters(int argc, char *argv[])
 			// IOANCH 29.09.2012: added --secretstep3
         else IFARG("--secretstep3")
             Basic::secretstep3 = true;
-        else 
+        else IFARG("--wolfdir")
+        {
+            // IOANCH 20130304: added --wolfdir
+            if(++i >= argc)
+            {
+                printf("The wolfdir option is missing the dir argument!\n");
+                hasError = true;
+            }
+            else
+            {
+#if defined(UNIX) || defined(__APPLE__)
+                wordexp_t exp_result;
+                wordexp(argv[i], &exp_result, 0);
+                const char *trans = exp_result.we_wordv[0];
+#else
+                const char *trans = argv[i];
+#endif
+                
+                int cdres = chdir(trans);
+                if(cdres)
+                {
+                    printf("Cannot change directory to %s!\n", trans);
+                    hasError = true;
+                }
+            }
+        }
+        else
             hasError = true;
     }
     if(hasError || showHelp)
@@ -2001,8 +2030,6 @@ void CheckParameters(int argc, char *argv[])
 #endif
                // IOANCH 20130301: unification culling
             , defaultSampleRate);
-        if(SPEAR)
-        {
             printf(
             " --mission <mission>    Mission number to play (0-3)\n"
             "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
@@ -2010,7 +2037,6 @@ void CheckParameters(int argc, char *argv[])
 
             
             );
-        }
         exit(1);
     }
 
@@ -2067,15 +2093,14 @@ unsigned char InitializeSPEAR()
 //
 int main (int argc, char *argv[])
 {
-    // IOANCH: unification: set the SPEAR global var
-    SPEAR = InitializeSPEAR();
-
 #if defined(_arch_dreamcast)
     DC_Init();
 #else
     CheckParameters(argc, argv);
 #endif
-
+    // IOANCH: unification: set the SPEAR global var
+    SPEAR = InitializeSPEAR();
+    
     CheckForEpisodes();
 
     InitGame();

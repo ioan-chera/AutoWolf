@@ -11,6 +11,8 @@
 #include "CocoaFun.h"
 #import <Cocoa/Cocoa.h>
 
+#define APPLICATION_UTI @"com.ichera.autowolf"
+
 //
 // Cocoa_ApplicationSupportDirectory
 //
@@ -34,7 +36,7 @@ const char *Cocoa_ApplicationSupportDirectory()
     // app's bundle ID to it to specify the final directory.
     if (appSupportDir)
     {
-        NSString* appBundleID = [[NSBundle mainBundle] bundleIdentifier];
+        NSString* appBundleID = APPLICATION_UTI;
         appDirectory = [appSupportDir URLByAppendingPathComponent:appBundleID];
     }
     
