@@ -596,6 +596,12 @@ boolean LoadTheGame(FILE *file,int x,int y)
         checksum = DoChecksum((byte *)&nullstat,sizeof(nullstat),checksum);
         nullstat.visspot=(byte *) ((uintptr_t)nullstat.visspot+(uintptr_t)spotvis);
         memcpy(statobjlist+i,&nullstat,sizeof(nullstat));
+        // IOANCH 20130304: Add newly dropped items to list
+        if(nullstat.flags & FL_BONUS && nullstat.shapenum != -1)
+        {
+            Basic::AddItemToList(nullstat.tilex, nullstat.tiley,
+                                 nullstat.itemnumber);
+        }
     }
 
     DiskFlopAnim(x,y);
@@ -673,7 +679,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
 	// IOANCH 30.06.2012: unlink all dead Nazis from the list
 	for(objtype *obj = lastobj; obj; obj = obj->prev)
 	{
-		if(obj->hitpoints <= 0)
+		if(!(obj->flags & FL_SHOOTABLE))
 			Basic::livingNazis.remove(obj);
 		switch(obj->obclass)
 		{

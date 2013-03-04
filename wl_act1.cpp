@@ -257,8 +257,9 @@ void SpawnStatic (int tilex, int tiley, int type)
             laststatobj->flags = FL_BONUS;
             laststatobj->itemnumber = statinfo[type].type;
 			// IOANCH 26.10.2012: add to list
-			//assert(tilex != 38 || tiley != 25);
-			Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
+            // ONLY if on startup, otherwise let LoadTheGame add it to list
+            if(!loadedgame)
+                Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
             break;
 		default:
 			;
