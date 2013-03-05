@@ -10,6 +10,7 @@
 		002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
@@ -93,6 +94,7 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../gfxvabstract.h; sourceTree = "<group>"; };
 		4F9E981F16E33FC000B632BB /* spr_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_sod.h; path = ../spr_sod.h; sourceTree = "<group>"; };
@@ -253,7 +255,7 @@
 				4F9E982516E3666D00B632BB /* CocoaFun */,
 				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
 				FAB104D21591AA9100393DE3 /* dbopl.h */,
-				FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */,
+				FA8DFA991586930700EBBFB2 /* INFO */,
 				FA8DFA98158692FB00EBBFB2 /* WL */,
 				FA8DFA97158692EB00EBBFB2 /* ID */,
 				FA8DFA96158692E000EBBFB2 /* IOAN */,
@@ -366,9 +368,10 @@
 			name = WL;
 			sourceTree = "<group>";
 		};
-		FA8DFA991586930700EBBFB2 /* GFXV_AUDIO */ = {
+		FA8DFA991586930700EBBFB2 /* INFO */ = {
 			isa = PBXGroup;
 			children = (
+				4F1ECC2016E6579400A37742 /* obattrib.cpp */,
 				4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */,
 				4F9E981E16E33FC000B632BB /* gfxvabstract.h */,
 				4F9E981F16E33FC000B632BB /* spr_sod.h */,
@@ -382,7 +385,7 @@
 				4FD9E7F516BDC61E00B43091 /* audioabstract.h */,
 				4FD9E7F616BDD49600B43091 /* audioabstract.cpp */,
 			);
-			name = GFXV_AUDIO;
+			name = INFO;
 			sourceTree = "<group>";
 		};
 		FAC97A51167A679800949336 /* DataFile */ = {
@@ -543,6 +546,7 @@
 				4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */,
 				4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */,
 				4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */,
+				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

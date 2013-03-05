@@ -362,16 +362,6 @@ typedef enum {
     sparkobj
 } classtype;
 
-// IOANCH 20130305: class attributes
-struct objattrib
-{
-    int patrolspeed;
-    int sightsound;         // -1 for no sound
-    const statetype *patrolstate;
-    const statetype *sightstate;  // NULL for none
-};
-extern const objattrib objattribs[];
-
 typedef enum {
     none,
     block,
@@ -446,6 +436,16 @@ typedef struct statestruct
     struct  statestruct *next;
 } statetype;
 
+// IOANCH 20130305: class attributes
+struct objattrib
+{
+    int chasespeed;
+    int sightsound;
+    statetype *chasestate;
+    statetype *painstate;
+    statetype *altpainstate;
+};
+extern const objattrib objattribs[];
 
 //---------------------
 //
