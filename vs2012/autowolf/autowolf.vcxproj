@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\ioan_bot.cpp" />
     <ClCompile Include="..\..\ioan_secret.cpp" />
     <ClCompile Include="..\..\MasterDirectoryFile.cpp" />
+    <ClCompile Include="..\..\obattrib.cpp" />
     <ClCompile Include="..\..\PathArray.cpp" />
     <ClCompile Include="..\..\sdl_winmain.cpp" />
     <ClCompile Include="..\..\signon.cpp" />
