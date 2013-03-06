@@ -2528,44 +2528,46 @@ void T_Shoot (objtype *ob)
     if (!areabyplayer[ob->areanumber])
         return;
 
-    if (CheckLine (ob))                    // player is not behind a wall
+    // IOANCH 20130306: restored old behaviour, now shot sound means hit.
+    if (!CheckLine (ob))                    // player is not behind a wall
+        return;
+        
+    dx = abs(ob->tilex - player->tilex);
+    dy = abs(ob->tiley - player->tiley);
+    dist = dx>dy ? dx:dy;
+
+    if (ob->obclass == ssobj || ob->obclass == bossobj)
+        dist = dist*2/3;                                        // ss are better shots
+
+    if (thrustspeed >= RUNSPEED)
     {
-        dx = abs(ob->tilex - player->tilex);
-        dy = abs(ob->tiley - player->tiley);
-        dist = dx>dy ? dx:dy;
-
-        if (ob->obclass == ssobj || ob->obclass == bossobj)
-            dist = dist*2/3;                                        // ss are better shots
-
-        if (thrustspeed >= RUNSPEED)
-        {
-            if (ob->flags&FL_VISABLE)
-                hitchance = 160-dist*16;                // player can see to dodge
-            else
-                hitchance = 160-dist*8;
-        }
+        if (ob->flags&FL_VISABLE)
+            hitchance = 160-dist*16;                // player can see to dodge
         else
-        {
-            if (ob->flags&FL_VISABLE)
-                hitchance = 256-dist*16;                // player can see to dodge
-            else
-                hitchance = 256-dist*8;
-        }
-
-        // see if the shot was a hit
-
-        if (US_RndT()<hitchance)
-        {
-            if (dist<2)
-                damage = US_RndT()>>2;
-            else if (dist<4)
-                damage = US_RndT()>>3;
-            else
-                damage = US_RndT()>>4;
-
-            TakeDamage (damage,ob);
-        }
+            hitchance = 160-dist*8;
     }
+    else
+    {
+        if (ob->flags&FL_VISABLE)
+            hitchance = 256-dist*16;                // player can see to dodge
+        else
+            hitchance = 256-dist*8;
+    }
+
+    // see if the shot was a hit
+
+    if (US_RndT()<hitchance)
+    {
+        if (dist<2)
+            damage = US_RndT()>>2;
+        else if (dist<4)
+            damage = US_RndT()>>3;
+        else
+            damage = US_RndT()>>4;
+
+        TakeDamage (damage,ob);
+    }
+    
 
     switch(ob->obclass)
     {
