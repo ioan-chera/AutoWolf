@@ -1718,6 +1718,48 @@ statetype s_fatshoot4           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Sho
 statetype s_fatshoot5           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_fatshoot6,STF_DAMAGING};
 statetype s_fatshoot6           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_fatchase1,STF_DAMAGING};
 
+//
+// T_MissileThrow
+//
+// IOANCH 20130306: generic missile throw
+//
+void T_MissileThrow(objtype *ob, statetype *state, classtype cl,
+                    soundnames snd)
+{
+    int32_t deltax,deltay;
+    float   angle;
+    int     iangle;
+    
+    deltax = player->x - ob->x;
+    deltay = ob->y - player->y;
+    angle = (float) atan2((float) deltay, (float) deltax);
+    if (angle<0)
+        angle = (float) (M_PI*2+angle);
+    iangle = (int) (angle/(M_PI*2)*ANGLES);
+    
+    GetNewActor ();
+    newobj->state = state;
+    newobj->ticcount = 1;
+    
+    newobj->tilex = ob->tilex;
+    newobj->tiley = ob->tiley;
+    newobj->x = ob->x;
+    newobj->y = ob->y;
+    newobj->obclass = cl;
+    newobj->dir = nodir;
+    newobj->angle = iangle;
+    newobj->speed = 0x2000l;
+    newobj->flags = FL_NEVERMARK;
+    newobj->active = ac_yes;
+	
+	// IOANCH 30.06.2012: link to projectile list
+	Basic::thrownProjectiles.add(newobj);
+    
+    // IOANCH 20130301: unification culling
+    
+    PlaySoundLocActor (snd,newobj);
+}
+
 /*
 =================
 =
@@ -1728,37 +1770,7 @@ statetype s_fatshoot6           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Sho
 
 void T_SchabbThrow (objtype *ob)
 {
-    int32_t deltax,deltay;
-    float   angle;
-    int     iangle;
-
-    deltax = player->x - ob->x;
-    deltay = ob->y - player->y;
-    angle = (float) atan2((float) deltay, (float) deltax);
-    if (angle<0)
-        angle = (float) (M_PI*2+angle);
-    iangle = (int) (angle/(M_PI*2)*ANGLES);
-
-    GetNewActor ();
-    newobj->state = &s_needle1;
-    newobj->ticcount = 1;
-
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
-    newobj->x = ob->x;
-    newobj->y = ob->y;
-    newobj->obclass = needleobj;
-    newobj->dir = nodir;
-    newobj->angle = iangle;
-    newobj->speed = 0x2000l;
-
-    newobj->flags = FL_NEVERMARK;
-    newobj->active = ac_yes;
-	
-	// IOANCH 30.06.2012: link to projectile list
-	Basic::thrownProjectiles.add(newobj);
-
-    PlaySoundLocActor (SCHABBSTHROWSND,newobj);
+    T_MissileThrow(ob, &s_needle1, needleobj, SCHABBSTHROWSND);
 }
 
 /*
@@ -1771,39 +1783,7 @@ void T_SchabbThrow (objtype *ob)
 
 void T_GiftThrow (objtype *ob)
 {
-    int32_t deltax,deltay;
-    float   angle;
-    int     iangle;
-
-    deltax = player->x - ob->x;
-    deltay = ob->y - player->y;
-    angle = (float) atan2((float) deltay, (float) deltax);
-    if (angle<0)
-        angle = (float) (M_PI*2+angle);
-    iangle = (int) (angle/(M_PI*2)*ANGLES);
-
-    GetNewActor ();
-    newobj->state = &s_rocket;
-    newobj->ticcount = 1;
-
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
-    newobj->x = ob->x;
-    newobj->y = ob->y;
-    newobj->obclass = rocketobj;
-    newobj->dir = nodir;
-    newobj->angle = iangle;
-    newobj->speed = 0x2000l;
-    newobj->flags = FL_NEVERMARK;
-    newobj->active = ac_yes;
-	
-	// IOANCH 30.06.2012: link to projectile list
-	Basic::thrownProjectiles.add(newobj);
-
-    // IOANCH 20130301: unification culling
-
-    PlaySoundLocActor (MISSILEFIRESND,newobj);
-
+    T_MissileThrow(ob, &s_rocket, rocketobj, MISSILEFIRESND);
 }
 
 
