@@ -1209,7 +1209,7 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
     // IOANCH 20130301: unification culling
-    int dems[4]={gfxvmap[T_DEMO0][SPEAR],gfxvmap[T_DEMO1][SPEAR],gfxvmap[T_DEMO2][SPEAR],gfxvmap[T_DEMO3][SPEAR]};
+    int dems[4]={static_cast<int>(gfxvmap[T_DEMO0][SPEAR]),static_cast<int>(gfxvmap[T_DEMO1][SPEAR]),static_cast<int>(gfxvmap[T_DEMO2][SPEAR]),static_cast<int>(gfxvmap[T_DEMO3][SPEAR])};
 
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];

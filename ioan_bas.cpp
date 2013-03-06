@@ -285,17 +285,14 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
     word *map;
     word tile;
     
-    const objattrib &atr = objattribs[which];
-    if(atr.standstate)
+    if(atrstates[which].stand)
     {
-        SpawnNewObj(tilex, tiley, atr.standstate);
-        if(atr.patrolspeed >= 0)
-            newobj->speed = atr.patrolspeed;
+        SpawnNewObj(tilex, tiley, atrstates[which].stand);
+        if(atrspeeds[which].patrol >= 0)
+            newobj->speed = atrspeeds[which].patrol;
         if(!loadedgame)
             gamestate.killtotal++;
     
-
-
         map = mapsegs[0]+(tiley<<mapshift)+tilex;
         tile = *map;
         if (tile == AMBUSHTILE)
@@ -318,10 +315,9 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
         }
 
         newobj->obclass = which;
-        newobj->hitpoints = atr.hitpoints[gamestate.difficulty];
+        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
         newobj->dir = (dirtype)(dir * 2);
         newobj->flags |= FL_SHOOTABLE;
-
         
         return newobj;
     }
@@ -336,19 +332,17 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
 //
 objtype *Basic::SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 {
-    const objattrib &atr = objattribs[which];
-    if(atr.patrolstate)
+    if(atrstates[which].patrol)
     {
-        SpawnNewObj(tilex, tiley, atr.patrolstate);
-        if(atr.patrolspeed >= 0)
-            newobj->speed = atr.patrolspeed;
+        SpawnNewObj(tilex, tiley, atrstates[which].patrol);
+        if(atrspeeds[which].patrol >= 0)
+            newobj->speed = atrspeeds[which].patrol;
         if (!loadedgame)
             gamestate.killtotal++;
     
-
         newobj->obclass = which;
         newobj->dir = (dirtype)(dir*2);
-        newobj->hitpoints = atr.hitpoints[gamestate.difficulty];
+        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
         newobj->distance = TILEGLOBAL;
         newobj->flags |= FL_SHOOTABLE;
         newobj->active = ac_yes;
@@ -389,99 +383,25 @@ objtype *Basic::SpawnBoss (classtype which, int tilex, int tiley)
 	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
-	boolean setspeed = false, setdir = false, setbonus = false;
-    const objattrib &atr = objattribs[which];
-	switch(which)
-	{
-            // IOANCH 20130202: unification process
-		case bossobj:
-		case gretelobj:
-		case fakeobj:
-			spawnstate = atr.standstate;
-			setspeed = setdir = true;
-			break;
-		case schabbobj:
-			spawnstate = atr.standstate;
-			setspeed = setdir = true;
-			// TODO: this should be elsewhere methinks
-			if (DigiMode != sds_Off)
-				s_schabbdie2.tictime = 140;
-			else
-				s_schabbdie2.tictime = 5;
-			break;
-		case giftobj:
-			spawnstate = atr.standstate;
-			setspeed = setdir = true;
-			if (DigiMode != sds_Off)
-				s_giftdie2.tictime = 140;
-			else
-				s_giftdie2.tictime = 5;
-			break;
-		case fatobj:
-			spawnstate = atr.standstate;
-			setspeed = setdir = true;
-			if (DigiMode != sds_Off)
-				s_fatdie2.tictime = 140;
-			else
-				s_fatdie2.tictime = 5;
-			break;
-		case mechahitlerobj:
-			spawnstate = atr.standstate;
-			setspeed = setdir = true;
-			if (DigiMode != sds_Off)
-				s_hitlerdie2.tictime = 140;
-			else
-				s_hitlerdie2.tictime = 5;
-			break;
-		case transobj:
-			spawnstate = atr.standstate;
-			if (SoundBlasterPresent && DigiMode != sds_Off)
-				s_transdie01.tictime = 105;
-			break;
-		case uberobj:
-			spawnstate = atr.standstate;
-			if (SoundBlasterPresent && DigiMode != sds_Off)
-				s_uberdie01.tictime = 70;
-			break;
-		case willobj:
-			spawnstate = atr.standstate;
-			if (SoundBlasterPresent && DigiMode != sds_Off)
-				s_willdie2.tictime = 70;
-			break;
-		case deathobj:
-			spawnstate = atr.standstate;
-			if (SoundBlasterPresent && DigiMode != sds_Off)
-				s_deathdie2.tictime = 105;
-			break;
-		case angelobj:
-			spawnstate = atr.standstate;
-			if (SoundBlasterPresent && DigiMode != sds_Off)
-				s_angeldie11.tictime = 105;
-			break;
-		case spectreobj:
-			spawnstate = atr.standstate;
-			setbonus = true;
-			break;
-			
-		default:
-			;
-	}
+    if(atrstates[which].stand)
+    {
+        SpawnNewObj (tilex,tiley,atrstates[which].stand);
+
+        spawnstate = atrstates[which].stand;
+        if(atractions[which].spawn)
+        {
+            atractions[which].spawn();
+        }
     
-    SpawnNewObj (tilex,tiley,spawnstate);
-	if(setspeed)
-		newobj->speed = SPDPATROL;
-    
-    newobj->obclass = which;
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
-	if(setdir)
-		newobj->dir = nodir;
-    newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
-	if(setbonus)
-		newobj->flags |= FL_BONUS;
-    if (!loadedgame)
-        gamestate.killtotal++;
-	
-	return newobj;
+        newobj->obclass = which;
+        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
+        newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+        if (!loadedgame)
+            gamestate.killtotal++;
+        
+        return newobj;
+    }
+    return NULL;
 }
 
 // IOANCH 20130202: unification process
@@ -564,6 +484,8 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
 	case ghostobj:
 		SpawnGhosts(ghosttype, tilex, tiley);
 		break;
+    default:
+        return;
 	}
 	
 	// IOANCH 20121219: record enemy position

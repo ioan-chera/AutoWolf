@@ -457,21 +457,41 @@ typedef struct statestruct
     struct  statestruct *next;
 } statetype;
 
+//
 // IOANCH 20130305: class attributes
-struct objattrib
+//
+// Hit points
+extern const int atrhitpoints[][4];
+// Moving speeds
+struct atrspeed
 {
-    int hitpoints[4];
-    int patrolspeed;
-    int chasespeed;
-    int sightsound;
-    statetype *standstate;
-    statetype *patrolstate;
-    statetype *chasestate;
-    statetype *painstate;
-    statetype *altpainstate;
+    int patrol;
+    int chase;
 };
-extern const objattrib objattribs[];
-
+extern const atrspeed atrspeeds[];
+// Sounds
+struct atrsound
+{
+    int sight;
+};
+extern const atrsound atrsounds[];
+// States
+struct atrstate
+{
+    statetype *stand;
+    statetype *patrol;
+    statetype *chase;
+    statetype *pain;
+    statetype *altpain;
+};
+extern const atrstate atrstates[];
+// Spawn actions
+struct atraction
+{
+    void (* spawn)();
+    void (* die)();
+};
+extern const atraction atractions[];
 //---------------------
 //
 // trivial actor structure

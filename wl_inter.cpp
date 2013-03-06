@@ -355,7 +355,7 @@ PG13 (void)
 void
 Write (int x, int y, const char *string)
 {
-    static const int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR], 
+    static const unsigned int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR],
         gfxvmap[L_NUM1PIC][SPEAR], gfxvmap[L_NUM2PIC][SPEAR], 
         gfxvmap[L_NUM3PIC][SPEAR], gfxvmap[L_NUM4PIC][SPEAR], 
         gfxvmap[L_NUM5PIC][SPEAR], gfxvmap[L_NUM6PIC][SPEAR], 
@@ -363,7 +363,7 @@ Write (int x, int y, const char *string)
         gfxvmap[L_NUM9PIC][SPEAR], gfxvmap[L_COLONPIC][SPEAR], 0, 0, 0, 0, 0, 0, 
         gfxvmap[L_APIC][SPEAR], gfxvmap[L_BPIC][SPEAR], gfxvmap[L_CPIC][SPEAR], 
         gfxvmap[L_DPIC][SPEAR], gfxvmap[L_EPIC][SPEAR], gfxvmap[L_FPIC][SPEAR], 
-        gfxvmap[L_GPIC][SPEAR], gfxvmap[L_HPIC][SPEAR], gfxvmap[L_IPIC][SPEAR], 
+        gfxvmap[L_GPIC][SPEAR], gfxvmap[L_HPIC][SPEAR], gfxvmap[L_IPIC][SPEAR],
         gfxvmap[L_JPIC][SPEAR], gfxvmap[L_KPIC][SPEAR], gfxvmap[L_LPIC][SPEAR], 
         gfxvmap[L_MPIC][SPEAR], gfxvmap[L_NPIC][SPEAR], gfxvmap[L_OPIC][SPEAR], 
         gfxvmap[L_PPIC][SPEAR], gfxvmap[L_QPIC][SPEAR], gfxvmap[L_RPIC][SPEAR], 
@@ -433,7 +433,7 @@ void
 BJ_Breathe (void)
 {
     static int which = 0, max = 10;
-    int pics[2] = { gfxvmap[L_GUYPIC][SPEAR], gfxvmap[L_GUY2PIC][SPEAR] };
+    int pics[2] = { static_cast<int>(gfxvmap[L_GUYPIC][SPEAR]), static_cast<int>(gfxvmap[L_GUY2PIC][SPEAR]) };
 
     SDL_Delay(5);
 

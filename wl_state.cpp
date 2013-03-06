@@ -1044,11 +1044,13 @@ void DamageActor (objtype *ob, unsigned damage)
             FirstSighting (ob);             // put into combat mode
         
         // IOANCH 20130305: wrap them
-        const objattrib &atr = objattribs[ob->obclass];
-        if(atr.painstate && ob->hitpoints & 1)
-            NewState(ob, atr.painstate);
-        else if(atr.altpainstate)
-            NewState(ob, atr.altpainstate);
+        statetype *pain = atrstates[ob->obclass].pain,
+               *altpain = atrstates[ob->obclass].altpain;
+        
+        if(pain && ob->hitpoints & 1)
+            NewState(ob, pain);
+        else if(altpain)
+            NewState(ob, altpain);
 
     }
 }
@@ -1192,13 +1194,12 @@ void FirstSighting (objtype *ob)
     
     // IOANCH 20130305: wrap them to objattribs
     classtype &cls = ob->obclass;
-    if(objattribs[cls].sightsound >= 0)
-        PlaySoundLocActor(objattribs[cls].sightsound, ob);
-    if(objattribs[cls].chasestate)
-        NewState(ob, objattribs[cls].chasestate);
-    if(objattribs[cls].chasespeed >= 0)
-        ob->speed = objattribs[cls].chasespeed;
-    
+    if(atrsounds[cls].sight >= 0)
+        PlaySoundLocActor(atrsounds[cls].sight, ob);
+    if(atrstates[cls].chase)
+        NewState(ob, atrstates[cls].chase);
+    if(atrspeeds[cls].chase >= 0)
+        ob->speed = atrspeeds[cls].chase;
 
     if (ob->distance < 0)
         ob->distance = 0;       // ignore the door opening command
