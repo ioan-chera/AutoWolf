@@ -59,6 +59,7 @@ namespace atr
         statetype *pain;
         statetype *altpain;
         statetype *shoot;
+        statetype *die;
     };
     extern const state states[];
     // Spawn actions
@@ -72,6 +73,9 @@ namespace atr
     extern const int threatrange[];
     // other flags
     extern const uint64_t flags[];
+    // points
+    extern const int32_t points[];
+    
 };
 
 
