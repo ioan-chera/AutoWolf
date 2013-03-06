@@ -460,8 +460,12 @@ typedef struct statestruct
 // IOANCH 20130305: class attributes
 struct objattrib
 {
+    int hitpoints[4];
+    int patrolspeed;
     int chasespeed;
     int sightsound;
+    statetype *standstate;
+    statetype *patrolstate;
     statetype *chasestate;
     statetype *painstate;
     statetype *altpainstate;

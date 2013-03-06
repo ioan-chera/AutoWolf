@@ -362,7 +362,7 @@ static void ScanInfoPlane(void)
                 case 109:
                 case 110:
                 case 111:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_guard, x, y, tile - 108);
+						 Basic::SpawnEnemy(guardobj, x, y, tile - 108);
                     break;
 
 
@@ -384,7 +384,7 @@ static void ScanInfoPlane(void)
                 case 113:
                 case 114:
                 case 115:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_guard, x, y, tile - 112, true);
+						 Basic::SpawnEnemy(guardobj, x, y, tile - 112, true);
                     break;
 
                 case 124:
@@ -411,7 +411,7 @@ static void ScanInfoPlane(void)
                 case 117:
                 case 118:
                 case 119:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_officer, x, y, tile - 116);
+						 Basic::SpawnEnemy(officerobj, x, y, tile - 116);
                     break;
 
 
@@ -433,7 +433,7 @@ static void ScanInfoPlane(void)
                 case 121:
                 case 122:
                 case 123:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_officer, x, y, tile - 120, true);
+						 Basic::SpawnEnemy(officerobj, x, y, tile - 120, true);
                     break;
 
 
@@ -458,7 +458,7 @@ static void ScanInfoPlane(void)
                 case 127:
                 case 128:
                 case 129:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_ss, x, y, tile - 126);
+						 Basic::SpawnEnemy(ssobj, x, y, tile - 126);
                     break;
 
 
@@ -480,7 +480,7 @@ static void ScanInfoPlane(void)
                 case 131:
                 case 132:
                 case 133:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_ss, x, y, tile - 130, true);
+						 Basic::SpawnEnemy(ssobj, x, y, tile - 130, true);
                     break;
 
 //
@@ -504,7 +504,7 @@ static void ScanInfoPlane(void)
                 case 135:
                 case 136:
                 case 137:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_dog, x, y, tile - 134);
+						 Basic::SpawnEnemy(dogobj, x, y, tile - 134);
                     break;
 
 
@@ -526,7 +526,7 @@ static void ScanInfoPlane(void)
                 case 139:
                 case 140:
                 case 141:	// IOANCH 17.05.2012: use centralized function
-					Basic::SpawnEnemy(en_dog, x, y, tile - 138, true);
+					Basic::SpawnEnemy(dogobj, x, y, tile - 138, true);
                     break;
 
 //
@@ -535,44 +535,44 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 214:	// IOANCH 17.05.2012: use centralized function
-				    if(!SPEAR) Basic::SpawnEnemy(en_boss, x, y);
+				    if(!SPEAR) Basic::SpawnEnemy(bossobj, x, y);
                     break;
                 case 197:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_gretel, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(gretelobj, x, y);
                     break;
                 case 215:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_gift, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(giftobj, x, y);
                     break;
                 case 179:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_fat, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(fatobj, x, y);
                     break;
                 case 196:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_schabbs, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(schabbobj, x, y);
                     break;
                 case 160:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_fake, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(fakeobj, x, y);
                     break;
                 case 178:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_hitler, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(mechahitlerobj, x, y);
                     break;
 
                 case 106:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_spectre, x, y);
+					if(SPEAR) Basic::SpawnEnemy(spectreobj, x, y);
                     break;
                 case 107:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_angel, x, y);
+					if(SPEAR) Basic::SpawnEnemy(angelobj, x, y);
                     break;
                 case 125:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_trans, x, y);
+					if(SPEAR) Basic::SpawnEnemy(transobj, x, y);
                     break;
                 case 142:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_uber, x, y);
+					if(SPEAR) Basic::SpawnEnemy(uberobj, x, y);
                     break;
                 case 143:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_will, x, y);
+					if(SPEAR) Basic::SpawnEnemy(willobj, x, y);
                     break;
                 case 161:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(en_death, x, y);
+					if(SPEAR) Basic::SpawnEnemy(deathobj, x, y);
                     break;
 
 
@@ -598,7 +598,7 @@ static void ScanInfoPlane(void)
                 case 217:
                 case 218:
                 case 219:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_mutant, x, y, tile - 216);
+						 Basic::SpawnEnemy(mutantobj, x, y, tile - 216);
                     break;
 
                 case 256:
@@ -619,7 +619,7 @@ static void ScanInfoPlane(void)
                 case 221:
                 case 222:
                 case 223:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(en_mutant, x, y, tile - 220, true);
+						 Basic::SpawnEnemy(mutantobj, x, y, tile - 220, true);
                     break;
 
 //
@@ -628,16 +628,20 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 224:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_blinky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+                                                 en_blinky);
                     break;
                 case 225:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_clyde, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+                                                 en_clyde);
                     break;
                 case 226:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_pinky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+                                                 en_pinky);
                     break;
                 case 227:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(en_inky, x, y);
+					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+                                                 en_inky);
                     break;
             }
         }

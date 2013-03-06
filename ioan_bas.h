@@ -23,9 +23,9 @@ class Basic
 {
 protected:
 	// Moved some global functions here
-	static objtype *SpawnStand (enemy_t which, int tilex, int tiley, int dir);
-	static objtype *SpawnPatrol (enemy_t which, int tilex, int tiley, int dir);
-	static objtype *SpawnBoss (enemy_t which, int tilex, int tiley);
+	static objtype *SpawnStand (classtype which, int tilex, int tiley, int dir);
+	static objtype *SpawnPatrol (classtype which, int tilex, int tiley, int dir);
+	static objtype *SpawnBoss (classtype which, int tilex, int tiley);
 	
     // IOANCH 20130202: unification process
 	static void SpawnGhosts (int which, int tilex, int tiley);
@@ -59,7 +59,8 @@ public:
 
 
 	// Spawns a Nazi (originally they were separate functions; no more)
-	static void SpawnEnemy(enemy_t which, int tilex, int tiley, int dir = 0, boolean patrol = false);
+	static void SpawnEnemy(classtype cl, int tilex, int tiley, int dir = 0, 
+                           boolean patrol = false, enemy_t ghost = en_blinky);
 
 	// Checks if it's an enemy
 	static boolean IsEnemy(classtype cls)

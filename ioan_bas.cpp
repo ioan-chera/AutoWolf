@@ -280,73 +280,52 @@ boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
+objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
 {
     word *map;
     word tile;
-
-    switch (which)
+    
+    const objattrib &atr = objattribs[which];
+    if(atr.standstate)
     {
-        case en_guard:
-            SpawnNewObj (tilex,tiley,&s_grdstand);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        SpawnNewObj(tilex, tiley, atr.standstate);
+        if(atr.patrolspeed >= 0)
+            newobj->speed = atr.patrolspeed;
+        if(!loadedgame)
+            gamestate.killtotal++;
+    
 
-        case en_officer:
-            SpawnNewObj (tilex,tiley,&s_ofcstand);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
 
-        case en_mutant:
-            SpawnNewObj (tilex,tiley,&s_mutstand);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        map = mapsegs[0]+(tiley<<mapshift)+tilex;
+        tile = *map;
+        if (tile == AMBUSHTILE)
+        {
+            tilemap[tilex][tiley] = 0;
 
-        case en_ss:
-            SpawnNewObj (tilex,tiley,&s_ssstand);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
-		default:
-			;
+            if (*(map+1) >= AREATILE)
+                tile = *(map+1);
+            if (*(map-mapwidth) >= AREATILE)
+                tile = *(map-mapwidth);
+            if (*(map+mapwidth) >= AREATILE)
+                tile = *(map+mapwidth);
+            if ( *(map-1) >= AREATILE)
+                tile = *(map-1);
+
+            *map = tile;
+            newobj->areanumber = tile-AREATILE;
+
+            newobj->flags |= FL_AMBUSH;
+        }
+
+        newobj->obclass = which;
+        newobj->hitpoints = atr.hitpoints[gamestate.difficulty];
+        newobj->dir = (dirtype)(dir * 2);
+        newobj->flags |= FL_SHOOTABLE;
+
+        
+        return newobj;
     }
-
-
-    map = mapsegs[0]+(tiley<<mapshift)+tilex;
-    tile = *map;
-    if (tile == AMBUSHTILE)
-    {
-        tilemap[tilex][tiley] = 0;
-
-        if (*(map+1) >= AREATILE)
-            tile = *(map+1);
-        if (*(map-mapwidth) >= AREATILE)
-            tile = *(map-mapwidth);
-        if (*(map+mapwidth) >= AREATILE)
-            tile = *(map+mapwidth);
-        if ( *(map-1) >= AREATILE)
-            tile = *(map-1);
-
-        *map = tile;
-        newobj->areanumber = tile-AREATILE;
-
-        newobj->flags |= FL_AMBUSH;
-    }
-
-    newobj->obclass = (classtype)(guardobj + which);
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
-    newobj->dir = (dirtype)(dir * 2);
-    newobj->flags |= FL_SHOOTABLE;
-
-	
-	return newobj;
+    return NULL;
 }
 
 
@@ -355,77 +334,49 @@ objtype *Basic::SpawnStand (enemy_t which, int tilex, int tiley, int dir)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
+objtype *Basic::SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 {
-    switch (which)
+    const objattrib &atr = objattribs[which];
+    if(atr.patrolstate)
     {
-        case en_guard:
-            SpawnNewObj (tilex,tiley,&s_grdpath1);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        SpawnNewObj(tilex, tiley, atr.patrolstate);
+        if(atr.patrolspeed >= 0)
+            newobj->speed = atr.patrolspeed;
+        if (!loadedgame)
+            gamestate.killtotal++;
+    
 
-        case en_officer:
-            SpawnNewObj (tilex,tiley,&s_ofcpath1);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        newobj->obclass = which;
+        newobj->dir = (dirtype)(dir*2);
+        newobj->hitpoints = atr.hitpoints[gamestate.difficulty];
+        newobj->distance = TILEGLOBAL;
+        newobj->flags |= FL_SHOOTABLE;
+        newobj->active = ac_yes;
 
-        case en_ss:
-            SpawnNewObj (tilex,tiley,&s_sspath1);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
 
-        case en_mutant:
-            SpawnNewObj (tilex,tiley,&s_mutpath1);
-            newobj->speed = SPDPATROL;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
+        switch (dir)
+        {
+            case 0:
+                newobj->tilex++;
+                break;
+            case 1:
+                newobj->tiley--;
+                break;
+            case 2:
+                newobj->tilex--;
+                break;
+            case 3:
+                newobj->tiley++;
+                break;
+        }
 
-        case en_dog:
-            SpawnNewObj (tilex,tiley,&s_dogpath1);
-            newobj->speed = SPDDOG;
-            if (!loadedgame)
-                gamestate.killtotal++;
-            break;
-		default:
-			;
+        actorat[newobj->tilex][newobj->tiley] = newobj;
+
+        
+        return newobj;
     }
-
-    newobj->obclass = (classtype)(guardobj+which);
-    newobj->dir = (dirtype)(dir*2);
-    newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
-    newobj->distance = TILEGLOBAL;
-    newobj->flags |= FL_SHOOTABLE;
-    newobj->active = ac_yes;
-
-    actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
-
-    switch (dir)
-    {
-        case 0:
-            newobj->tilex++;
-            break;
-        case 1:
-            newobj->tiley--;
-            break;
-        case 2:
-            newobj->tilex--;
-            break;
-        case 3:
-            newobj->tiley++;
-            break;
-    }
-
-    actorat[newobj->tilex][newobj->tiley] = newobj;
-
-	
-	return newobj;
+    return NULL;
 }
 
 //
@@ -433,29 +384,24 @@ objtype *Basic::SpawnPatrol (enemy_t which, int tilex, int tiley, int dir)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
+objtype *Basic::SpawnBoss (classtype which, int tilex, int tiley)
 {
 	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
-	classtype obclass = guardobj;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
 	boolean setspeed = false, setdir = false, setbonus = false;
+    const objattrib &atr = objattribs[which];
 	switch(which)
 	{
             // IOANCH 20130202: unification process
-		case en_boss:
-			spawnstate = &s_bossstand;
-			obclass = bossobj;
+		case bossobj:
+		case gretelobj:
+		case fakeobj:
+			spawnstate = atr.standstate;
 			setspeed = setdir = true;
 			break;
-		case en_gretel:
-			spawnstate = &s_gretelstand;
-			obclass = gretelobj;
-			setspeed = setdir = true;
-			break;
-		case en_schabbs:
-			spawnstate = &s_schabbstand;
-			obclass = schabbobj;
+		case schabbobj:
+			spawnstate = atr.standstate;
 			setspeed = setdir = true;
 			// TODO: this should be elsewhere methinks
 			if (DigiMode != sds_Off)
@@ -463,83 +409,69 @@ objtype *Basic::SpawnBoss (enemy_t which, int tilex, int tiley)
 			else
 				s_schabbdie2.tictime = 5;
 			break;
-		case en_gift:
-			spawnstate = &s_giftstand;
-			obclass = giftobj;
+		case giftobj:
+			spawnstate = atr.standstate;
 			setspeed = setdir = true;
 			if (DigiMode != sds_Off)
 				s_giftdie2.tictime = 140;
 			else
 				s_giftdie2.tictime = 5;
 			break;
-		case en_fat:
-			spawnstate = &s_fatstand;
-			obclass = fatobj;
+		case fatobj:
+			spawnstate = atr.standstate;
 			setspeed = setdir = true;
 			if (DigiMode != sds_Off)
 				s_fatdie2.tictime = 140;
 			else
 				s_fatdie2.tictime = 5;
 			break;
-		case en_fake:
-			spawnstate = &s_fakestand;
-			obclass = fakeobj;
-			setspeed = setdir = true;
-			break;
-		case en_hitler:
-			spawnstate = &s_mechastand;
-			obclass = mechahitlerobj;
+		case mechahitlerobj:
+			spawnstate = atr.standstate;
 			setspeed = setdir = true;
 			if (DigiMode != sds_Off)
 				s_hitlerdie2.tictime = 140;
 			else
 				s_hitlerdie2.tictime = 5;
 			break;
-		case en_trans:
-			spawnstate = &s_transstand;
-			obclass = transobj;
+		case transobj:
+			spawnstate = atr.standstate;
 			if (SoundBlasterPresent && DigiMode != sds_Off)
 				s_transdie01.tictime = 105;
 			break;
-		case en_uber:
-			spawnstate = &s_uberstand;
-			obclass = uberobj;
+		case uberobj:
+			spawnstate = atr.standstate;
 			if (SoundBlasterPresent && DigiMode != sds_Off)
 				s_uberdie01.tictime = 70;
 			break;
-		case en_will:
-			spawnstate = &s_willstand;
-			obclass = willobj;
+		case willobj:
+			spawnstate = atr.standstate;
 			if (SoundBlasterPresent && DigiMode != sds_Off)
 				s_willdie2.tictime = 70;
 			break;
-		case en_death:
-			spawnstate = &s_deathstand;
-			obclass = deathobj;
+		case deathobj:
+			spawnstate = atr.standstate;
 			if (SoundBlasterPresent && DigiMode != sds_Off)
 				s_deathdie2.tictime = 105;
 			break;
-		case en_angel:
-			spawnstate = &s_angelstand;
-			obclass = angelobj;
+		case angelobj:
+			spawnstate = atr.standstate;
 			if (SoundBlasterPresent && DigiMode != sds_Off)
 				s_angeldie11.tictime = 105;
 			break;
-		case en_spectre:
-			spawnstate = &s_spectrewait1;
-			obclass = spectreobj;
+		case spectreobj:
+			spawnstate = atr.standstate;
 			setbonus = true;
 			break;
 			
 		default:
 			;
 	}
-	
+    
     SpawnNewObj (tilex,tiley,spawnstate);
 	if(setspeed)
 		newobj->speed = SPDPATROL;
-
-    newobj->obclass = obclass;
+    
+    newobj->obclass = which;
     newobj->hitpoints = starthitpoints[gamestate.difficulty][which];
 	if(setdir)
 		newobj->dir = nodir;
@@ -592,7 +524,8 @@ void Basic::SpawnGhosts (int which, int tilex, int tiley)
 //
 // Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
 //
-void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean patrol)
+void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
+                       boolean patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
 	if(nonazis && !loadedgame)
@@ -602,37 +535,34 @@ void Basic::SpawnEnemy(enemy_t which, int tilex, int tiley, int dir, boolean pat
 
 	switch(which)
 	{
-	case en_guard:
-	case en_officer:
-	case en_ss:
-	case en_mutant:
-	case en_dog:
+	case guardobj:
+	case officerobj:
+	case ssobj:
+	case mutantobj:
+	case dogobj:
 		if(patrol)
 			newenemy = SpawnPatrol(which, tilex, tiley, dir);
 		else
 			newenemy = SpawnStand(which, tilex, tiley, dir);
 		break;
-	case en_boss:
-	case en_schabbs:
-	case en_fake:
-	case en_hitler:
-	case en_gretel:
-	case en_gift:
-	case en_fat:
-	case en_spectre:
-	case en_angel:
-	case en_trans:
-	case en_uber:
-	case en_will:
-	case en_death:
+	case bossobj:
+	case schabbobj:
+	case fakeobj:
+	case mechahitlerobj:
+	case gretelobj:
+	case giftobj:
+	case fatobj:
+	case spectreobj:
+	case angelobj:
+	case transobj:
+	case uberobj:
+	case willobj:
+	case deathobj:
 		newenemy = SpawnBoss(which, tilex, tiley);
 		break;
             // IOANCH 20130202: unification process
-	case en_blinky:
-	case en_clyde:
-	case en_pinky:
-	case en_inky:
-		SpawnGhosts(which, tilex, tiley);
+	case ghostobj:
+		SpawnGhosts(ghosttype, tilex, tiley);
 		break;
 	}
 	
