@@ -822,63 +822,15 @@ void A_DeathScream (objtype *ob)
             PlaySoundLocActor(sounds[US_RndT()%8],ob);
             break;
         }
-        case officerobj:
-            PlaySoundLocActor(NEINSOVASSND,ob);
-            break;
-        case ssobj:
-            PlaySoundLocActor(LEBENSND,ob); // JAB
-            break;
-        case dogobj:
-            PlaySoundLocActor(DOGDEATHSND,ob);      // JAB
-            break;
-        // IOANCH 20130202: unification process
-        case bossobj:
-            SD_PlaySound(MUTTISND);                         // JAB
-            break;
-        case schabbobj:
-            SD_PlaySound(MEINGOTTSND);
-            break;
-        case fakeobj:
-            SD_PlaySound(HITLERHASND);
-            break;
-        case mechahitlerobj:
-            SD_PlaySound(SCHEISTSND);
-            break;
-        case realhitlerobj:
-            SD_PlaySound(EVASND);
-            break;
-            // IOANCH 20130301: unification culling
-
-        case gretelobj:
-            SD_PlaySound(MEINSND);
-            break;
-        case giftobj:
-            SD_PlaySound(DONNERSND);
-            break;
-        case fatobj:
-            SD_PlaySound(ROSESND);
-            break;
-
-        case spectreobj:
-            SD_PlaySound(GHOSTFADESND);
-            break;
-        case angelobj:
-            SD_PlaySound(ANGELDEATHSND);
-            break;
-        case transobj:
-            SD_PlaySound(TRANSDEATHSND);
-            break;
-        case uberobj:
-            SD_PlaySound(UBERDEATHSND);
-            break;
-        case willobj:
-            SD_PlaySound(WILHELMDEATHSND);
-            break;
-        case deathobj:
-            SD_PlaySound(KNIGHTDEATHSND);
-            break;
-		default:
-			;
+        default:
+            if(atr::sounds[ob->obclass].death >= 0)
+            {
+                if(atr::flags[ob->obclass] & ATR_BOSS_SOUNDS)
+                    SD_PlaySound((soundnames)atr::sounds[ob->obclass].death);
+                else
+                    PlaySoundLocActor(atr::sounds[ob->obclass].death, ob);
+            }
+            
     }
 }
 

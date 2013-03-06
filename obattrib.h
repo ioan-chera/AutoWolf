@@ -22,6 +22,7 @@
 #include "wl_def.h"
 
 #define ATR_NEARBY_THREAT 1
+#define ATR_BOSS_SOUNDS   2
 
 //
 // atr
@@ -46,6 +47,7 @@ namespace atr
     struct sound
     {
         int sight;
+        int death;
     };
     extern const sound sounds[];
     // States

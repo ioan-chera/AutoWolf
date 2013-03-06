@@ -1196,7 +1196,12 @@ void FirstSighting (objtype *ob)
     // IOANCH 20130305: wrap them to objattribs
     classtype &cls = ob->obclass;
     if(atr::sounds[cls].sight >= 0)
-        PlaySoundLocActor(atr::sounds[cls].sight, ob);
+    {
+        if(atr::flags[cls] & ATR_BOSS_SOUNDS)
+            SD_PlaySound((soundnames)atr::sounds[cls].sight);
+        else
+            PlaySoundLocActor(atr::sounds[cls].sight, ob);
+    }
     if(atr::states[cls].chase)
         NewState(ob, atr::states[cls].chase);
     if(atr::speeds[cls].chase >= 0)
