@@ -16,9 +16,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include "wl_def.h"
 
-const int atrhitpoints[][4]=
+#include "obattrib.h"
+
+const int atr::hitpoints[][4]=
 {
     {-1,   -1,   -1,   -1},     // nothing,
     {-1,   -1,   -1,   -1},     // playerobj,
@@ -51,7 +52,7 @@ const int atrhitpoints[][4]=
     {-1,   -1,   -1,   -1},     // sparkobj
 };
 
-const atrspeed atrspeeds[]=
+const atr::speed atr::speeds[]=
 {
 	{-1,        -1,         },	// nothing,
 	{-1,        -1,         },	// playerobj,
@@ -84,7 +85,7 @@ const atrspeed atrspeeds[]=
 	{-1,        -1,         },	// sparkobj
 };
 
-const atrsound atrsounds[] =
+const atr::sound atr::sounds[] =
 {
 	{-1,             },	// nothing,
 	{-1,             },	// playerobj,
@@ -117,7 +118,7 @@ const atrsound atrsounds[] =
 	{-1,             },	// sparkobj
 };
 
-const atrstate atrstates[] =
+const atr::state atr::states[] =
 {
 	{NULL,            NULL,        NULL,             NULL,       NULL},        // nothing,
 	{NULL,            NULL,        NULL,             NULL,       NULL},        // playerobj,
@@ -150,7 +151,7 @@ const atrstate atrstates[] =
 	{NULL,            NULL,        NULL,             NULL,       NULL},        // sparkobj
 };
 
-const atraction atractions[] =
+const atr::action atr::actions[] =
 {
 	{[]{}, []{}},	// nothing,
 	{[]{}, []{}},	// playerobj,
@@ -244,3 +245,68 @@ const atraction atractions[] =
 	{[]{}, []{}},	// sparkobj
 };
 
+const int atr::threatrange[] =
+{
+    -1,     // nothing,
+    -1,     // playerobj,
+    -1,     // inertobj,
+    12,     // guardobj,
+    14,     // officerobj,
+    16,     // ssobj,
+    -1,     // dogobj,
+    16,     // bossobj,
+    -1,     // schabbobj,
+    -1,     // fakeobj,
+    16,     // mechahitlerobj,
+    14,     // mutantobj, !!!NEARBY_THREAT
+    -1,     // needleobj,
+    -1,     // fireobj,
+    -1,     // bjobj,
+    -1,     // ghostobj,   !!!NEARBY_THREAT
+    16,     // realhitlerobj,
+    16,     // gretelobj,
+    -1,     // giftobj,
+    16,     // fatobj,
+    -1,     // rocketobj,
+    -1,     // spectreobj,
+    -1,     // angelobj,
+    16,     // transobj,
+    16,     // uberobj,
+    16,     // willobj,
+    16,     // deathobj,
+    -1,     // hrocketobj,
+    -1,     // sparkobj
+};
+
+const uint64_t atr::flags[] =
+{
+    0,      // nothing,
+    0,      // playerobj,
+    0,      // inertobj,
+    0,      // guardobj,
+    0,      // officerobj,
+    0,      // ssobj,
+    0,      // dogobj,
+    0,      // bossobj,
+    0,      // schabbobj,
+    0,      // fakeobj,
+    0,      // mechahitlerobj,
+    ATR_NEARBY_THREAT,      // mutantobj, !!!NEARBY_THREAT
+    0,      // needleobj,
+    0,      // fireobj,
+    0,      // bjobj,
+    ATR_NEARBY_THREAT,      // ghostobj,   !!!NEARBY_THREAT
+    0,      // realhitlerobj,
+    0,      // gretelobj,
+    0,      // giftobj,
+    0,      // fatobj,
+    0,      // rocketobj,
+    0,      // spectreobj,
+    0,      // angelobj,
+    0,      // transobj,
+    0,      // uberobj,
+    0,      // willobj,
+    0,      // deathobj,
+    0,      // hrocketobj,
+    0,      // sparkobj
+};

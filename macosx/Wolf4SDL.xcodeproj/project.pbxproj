@@ -95,6 +95,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
+		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../obattrib.h; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../gfxvabstract.h; sourceTree = "<group>"; };
 		4F9E981F16E33FC000B632BB /* spr_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_sod.h; path = ../spr_sod.h; sourceTree = "<group>"; };
@@ -371,6 +372,7 @@
 		FA8DFA991586930700EBBFB2 /* INFO */ = {
 			isa = PBXGroup;
 			children = (
+				4F1ECC2216E7BEAB00A37742 /* obattrib.h */,
 				4F1ECC2016E6579400A37742 /* obattrib.cpp */,
 				4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */,
 				4F9E981E16E33FC000B632BB /* gfxvabstract.h */,

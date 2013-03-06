@@ -24,6 +24,7 @@
 #pragma hdrstop
 #include "ioan_bas.h"	// IOANCH 29.06.2012
 #include "List.h"
+#include "obattrib.h"
 
 /*
 =============================================================================
@@ -1044,8 +1045,8 @@ void DamageActor (objtype *ob, unsigned damage)
             FirstSighting (ob);             // put into combat mode
         
         // IOANCH 20130305: wrap them
-        statetype *pain = atrstates[ob->obclass].pain,
-               *altpain = atrstates[ob->obclass].altpain;
+        statetype *pain = atr::states[ob->obclass].pain,
+               *altpain = atr::states[ob->obclass].altpain;
         
         if(pain && ob->hitpoints & 1)
             NewState(ob, pain);
@@ -1194,12 +1195,12 @@ void FirstSighting (objtype *ob)
     
     // IOANCH 20130305: wrap them to objattribs
     classtype &cls = ob->obclass;
-    if(atrsounds[cls].sight >= 0)
-        PlaySoundLocActor(atrsounds[cls].sight, ob);
-    if(atrstates[cls].chase)
-        NewState(ob, atrstates[cls].chase);
-    if(atrspeeds[cls].chase >= 0)
-        ob->speed = atrspeeds[cls].chase;
+    if(atr::sounds[cls].sight >= 0)
+        PlaySoundLocActor(atr::sounds[cls].sight, ob);
+    if(atr::states[cls].chase)
+        NewState(ob, atr::states[cls].chase);
+    if(atr::speeds[cls].chase >= 0)
+        ob->speed = atr::speeds[cls].chase;
 
     if (ob->distance < 0)
         ob->distance = 0;       // ignore the door opening command

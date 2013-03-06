@@ -448,6 +448,9 @@ typedef enum {
 
 typedef void (* statefunc) (void *);
 
+// IOANCH 20130306: added state flags
+#define STF_DAMAGING 1
+
 typedef struct statestruct
 {
     boolean rotate;
@@ -455,43 +458,11 @@ typedef struct statestruct
     short   tictime;
     void    (*think) (void *),(*action) (void *);
     struct  statestruct *next;
+    // IOANCH 20130306: added state flags
+    uint64_t flags;
 } statetype;
 
-//
-// IOANCH 20130305: class attributes
-//
-// Hit points
-extern const int atrhitpoints[][4];
-// Moving speeds
-struct atrspeed
-{
-    int patrol;
-    int chase;
-};
-extern const atrspeed atrspeeds[];
-// Sounds
-struct atrsound
-{
-    int sight;
-};
-extern const atrsound atrsounds[];
-// States
-struct atrstate
-{
-    statetype *stand;
-    statetype *patrol;
-    statetype *chase;
-    statetype *pain;
-    statetype *altpain;
-};
-extern const atrstate atrstates[];
-// Spawn actions
-struct atraction
-{
-    void (* spawn)();
-    void (* die)();
-};
-extern const atraction atractions[];
+
 //---------------------
 //
 // trivial actor structure
@@ -1240,7 +1211,7 @@ extern statetype s_grdstand;
 extern statetype s_ofcstand;
 extern statetype s_mutstand;
 extern statetype s_ssstand;
-extern short starthitpoints[4][NUMENEMIES];
+
 extern statetype s_grdpath1;
 extern statetype s_ofcpath1;
 extern statetype s_sspath1;

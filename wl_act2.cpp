@@ -64,125 +64,6 @@
 dirtype dirtable[9] = {northwest,north,northeast,west,nodir,east,
     southwest,south,southeast};
 
-short starthitpoints[4][NUMENEMIES] =
-//
-// BABY MODE
-//
-{
-    {
-        25,   // guards
-        50,   // officer
-        100,  // SS
-        1,    // dogs
-        850,  // Hans
-        850,  // Schabbs
-        200,  // fake hitler
-        800,  // mecha hitler
-        45,   // mutants
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-
-        850,  // Gretel
-        850,  // Gift
-        850,  // Fat
-        5,    // en_spectre,
-        1450, // en_angel,
-        850,  // en_trans,
-        1050, // en_uber,
-        950,  // en_will,
-        1250  // en_death
-    },
-    //
-    // DON'T HURT ME MODE
-    //
-    {
-        25,   // guards
-        50,   // officer
-        100,  // SS
-        1,    // dogs
-        950,  // Hans
-        950,  // Schabbs
-        300,  // fake hitler
-        950,  // mecha hitler
-        55,   // mutants
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-
-        950,  // Gretel
-        950,  // Gift
-        950,  // Fat
-        10,   // en_spectre,
-        1550, // en_angel,
-        950,  // en_trans,
-        1150, // en_uber,
-        1050, // en_will,
-        1350  // en_death
-    },
-    //
-    // BRING 'EM ON MODE
-    //
-    {
-        25,   // guards
-        50,   // officer
-        100,  // SS
-        1,    // dogs
-
-        1050, // Hans
-        1550, // Schabbs
-        400,  // fake hitler
-        1050, // mecha hitler
-
-        55,   // mutants
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-
-        1050, // Gretel
-        1050, // Gift
-        1050, // Fat
-        15,   // en_spectre,
-        1650, // en_angel,
-        1050, // en_trans,
-        1250, // en_uber,
-        1150, // en_will,
-        1450  // en_death
-    },
-    //
-    // DEATH INCARNATE MODE
-    //
-    {
-        25,   // guards
-        50,   // officer
-        100,  // SS
-        1,    // dogs
-
-        1200, // Hans
-        2400, // Schabbs
-        500,  // fake hitler
-        1200, // mecha hitler
-
-        65,   // mutants
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-        25,   // ghosts
-
-        1200, // Gretel
-        1200, // Gift
-        1200, // Fat
-        25,   // en_spectre,
-        2000, // en_angel,
-        1200, // en_trans,
-        1400, // en_uber,
-        1300, // en_will,
-        1600  // en_death
-    }
-};
 
 void    A_StartDeathCam (objtype *ob);
 
@@ -457,7 +338,7 @@ statetype s_grdpain             = {2,SPR_GRD_PAIN_1,10,NULL,NULL,&s_grdchase1};
 statetype s_grdpain1            = {2,SPR_GRD_PAIN_2,10,NULL,NULL,&s_grdchase1};
 
 statetype s_grdshoot1           = {false,SPR_GRD_SHOOT1,20,NULL,NULL,&s_grdshoot2};
-statetype s_grdshoot2           = {false,SPR_GRD_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_grdshoot3};
+statetype s_grdshoot2           = {false,SPR_GRD_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_grdshoot3, STF_DAMAGING};
 statetype s_grdshoot3           = {false,SPR_GRD_SHOOT3,20,NULL,NULL,&s_grdchase1};
 
 statetype s_grdchase1           = {true,SPR_GRD_W1_1,10,(statefunc)T_Chase,NULL,&s_grdchase1s};
@@ -602,7 +483,7 @@ statetype s_ofcpain             = {2,SPR_OFC_PAIN_1,10,NULL,NULL,&s_ofcchase1};
 statetype s_ofcpain1            = {2,SPR_OFC_PAIN_2,10,NULL,NULL,&s_ofcchase1};
 
 statetype s_ofcshoot1           = {false,SPR_OFC_SHOOT1,6,NULL,NULL,&s_ofcshoot2};
-statetype s_ofcshoot2           = {false,SPR_OFC_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_ofcshoot3};
+statetype s_ofcshoot2           = {false,SPR_OFC_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_ofcshoot3,STF_DAMAGING};
 statetype s_ofcshoot3           = {false,SPR_OFC_SHOOT3,10,NULL,NULL,&s_ofcchase1};
 
 statetype s_ofcchase1           = {true,SPR_OFC_W1_1,10,(statefunc)T_Chase,NULL,&s_ofcchase1s};
@@ -667,9 +548,9 @@ statetype s_mutpath4            = {true,SPR_MUT_W4_1,15,(statefunc)T_Path,NULL,&
 statetype s_mutpain             = {2,SPR_MUT_PAIN_1,10,NULL,NULL,&s_mutchase1};
 statetype s_mutpain1            = {2,SPR_MUT_PAIN_2,10,NULL,NULL,&s_mutchase1};
 
-statetype s_mutshoot1           = {false,SPR_MUT_SHOOT1,6,NULL,(statefunc)T_Shoot,&s_mutshoot2};
-statetype s_mutshoot2           = {false,SPR_MUT_SHOOT2,20,NULL,NULL,&s_mutshoot3};
-statetype s_mutshoot3           = {false,SPR_MUT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mutshoot4};
+statetype s_mutshoot1           = {false,SPR_MUT_SHOOT1,6,NULL,(statefunc)T_Shoot,&s_mutshoot2,STF_DAMAGING};
+statetype s_mutshoot2           = {false,SPR_MUT_SHOOT2,20,NULL,NULL,&s_mutshoot3,STF_DAMAGING};
+statetype s_mutshoot3           = {false,SPR_MUT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mutshoot4,STF_DAMAGING};
 statetype s_mutshoot4           = {false,SPR_MUT_SHOOT4,20,NULL,NULL,&s_mutchase1};
 
 statetype s_mutchase1           = {true,SPR_MUT_W1_1,10,(statefunc)T_Chase,NULL,&s_mutchase1s};
@@ -737,13 +618,13 @@ statetype s_sspain              = {2,SPR_SS_PAIN_1,10,NULL,NULL,&s_sschase1};
 statetype s_sspain1             = {2,SPR_SS_PAIN_2,10,NULL,NULL,&s_sschase1};
 
 statetype s_ssshoot1            = {false,SPR_SS_SHOOT1,20,NULL,NULL,&s_ssshoot2};
-statetype s_ssshoot2            = {false,SPR_SS_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_ssshoot3};
-statetype s_ssshoot3            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot4};
-statetype s_ssshoot4            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot5};
-statetype s_ssshoot5            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot6};
-statetype s_ssshoot6            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot7};
-statetype s_ssshoot7            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot8};
-statetype s_ssshoot8            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot9};
+statetype s_ssshoot2            = {false,SPR_SS_SHOOT2,20,NULL,(statefunc)T_Shoot,&s_ssshoot3,STF_DAMAGING};
+statetype s_ssshoot3            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot4,STF_DAMAGING};
+statetype s_ssshoot4            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot5,STF_DAMAGING};
+statetype s_ssshoot5            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot6,STF_DAMAGING};
+statetype s_ssshoot6            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot7,STF_DAMAGING};
+statetype s_ssshoot7            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_ssshoot8,STF_DAMAGING};
+statetype s_ssshoot8            = {false,SPR_SS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_ssshoot9,STF_DAMAGING};
 statetype s_ssshoot9            = {false,SPR_SS_SHOOT3,10,NULL,NULL,&s_sschase1};
 
 statetype s_sschase1            = {true,SPR_SS_W1_1,10,(statefunc)T_Chase,NULL,&s_sschase1s};
@@ -778,6 +659,7 @@ extern  statetype s_bossdie3;
 extern  statetype s_bossdie4;
 
 extern  statetype s_bossshoot1;
+extern  statetype s_bossshoot1b;
 extern  statetype s_bossshoot2;
 extern  statetype s_bossshoot3;
 extern  statetype s_bossshoot4;
@@ -801,13 +683,14 @@ statetype s_bossdie2            = {false,SPR_BOSS_DIE2,15,NULL,NULL,&s_bossdie3}
 statetype s_bossdie3            = {false,SPR_BOSS_DIE3,15,NULL,NULL,&s_bossdie4};
 statetype s_bossdie4            = {false,SPR_BOSS_DEAD,0,NULL,NULL,&s_bossdie4};
 
-statetype s_bossshoot1          = {false,SPR_BOSS_SHOOT1,30,NULL,NULL,&s_bossshoot2};
-statetype s_bossshoot2          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot3};
-statetype s_bossshoot3          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot4};
-statetype s_bossshoot4          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot5};
-statetype s_bossshoot5          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot6};
-statetype s_bossshoot6          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot7};
-statetype s_bossshoot7          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot8};
+statetype s_bossshoot1          = {false,SPR_BOSS_SHOOT1,20,NULL,NULL,&s_bossshoot1b};
+statetype s_bossshoot1b         = {false,SPR_BOSS_SHOOT1,10,NULL,NULL,&s_bossshoot2,STF_DAMAGING};
+statetype s_bossshoot2          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot3,STF_DAMAGING};
+statetype s_bossshoot3          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot4,STF_DAMAGING};
+statetype s_bossshoot4          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot5,STF_DAMAGING};
+statetype s_bossshoot5          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot6,STF_DAMAGING};
+statetype s_bossshoot6          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_bossshoot7,STF_DAMAGING};
+statetype s_bossshoot7          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_bossshoot8,STF_DAMAGING};
 statetype s_bossshoot8          = {false,SPR_BOSS_SHOOT1,10,NULL,NULL,&s_bosschase1};
 
 
@@ -829,6 +712,7 @@ extern  statetype s_greteldie3;
 extern  statetype s_greteldie4;
 
 extern  statetype s_gretelshoot1;
+extern  statetype s_gretelshoot1b;
 extern  statetype s_gretelshoot2;
 extern  statetype s_gretelshoot3;
 extern  statetype s_gretelshoot4;
@@ -852,13 +736,14 @@ statetype s_greteldie2          = {false,SPR_GRETEL_DIE2,15,NULL,NULL,&s_greteld
 statetype s_greteldie3          = {false,SPR_GRETEL_DIE3,15,NULL,NULL,&s_greteldie4};
 statetype s_greteldie4          = {false,SPR_GRETEL_DEAD,0,NULL,NULL,&s_greteldie4};
 
-statetype s_gretelshoot1        = {false,SPR_GRETEL_SHOOT1,30,NULL,NULL,&s_gretelshoot2};
-statetype s_gretelshoot2        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot3};
-statetype s_gretelshoot3        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot4};
-statetype s_gretelshoot4        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot5};
-statetype s_gretelshoot5        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot6};
-statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot7};
-statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot8};
+statetype s_gretelshoot1        = {false,SPR_GRETEL_SHOOT1,20,NULL,NULL,&s_gretelshoot1b};
+statetype s_gretelshoot1b       = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelshoot2,STF_DAMAGING};
+statetype s_gretelshoot2        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot3,STF_DAMAGING};
+statetype s_gretelshoot3        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot4,STF_DAMAGING};
+statetype s_gretelshoot4        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot5,STF_DAMAGING};
+statetype s_gretelshoot5        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot6,STF_DAMAGING};
+statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_gretelshoot7,STF_DAMAGING};
+statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_gretelshoot8,STF_DAMAGING};
 statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelchase1};
 
 // IOANCH 17.05.2012: deleted SpawnStand and the rest, now they are protected members of Basic
@@ -1034,6 +919,7 @@ extern  statetype s_transdie3;
 extern  statetype s_transdie4;
 
 extern  statetype s_transshoot1;
+extern  statetype s_transshoot1b;
 extern  statetype s_transshoot2;
 extern  statetype s_transshoot3;
 extern  statetype s_transshoot4;
@@ -1059,13 +945,14 @@ statetype s_transdie2           = {false,SPR_TRANS_DIE2,15,NULL,NULL,&s_transdie
 statetype s_transdie3           = {false,SPR_TRANS_DIE3,15,NULL,NULL,&s_transdie4};
 statetype s_transdie4           = {false,SPR_TRANS_DEAD,0,NULL,NULL,&s_transdie4};
 
-statetype s_transshoot1         = {false,SPR_TRANS_SHOOT1,30,NULL,NULL,&s_transshoot2};
-statetype s_transshoot2         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot3};
-statetype s_transshoot3         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot4};
-statetype s_transshoot4         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot5};
-statetype s_transshoot5         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot6};
-statetype s_transshoot6         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot7};
-statetype s_transshoot7         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot8};
+statetype s_transshoot1         = {false,SPR_TRANS_SHOOT1,20,NULL,NULL,&s_transshoot1b};
+statetype s_transshoot1b        = {false,SPR_TRANS_SHOOT1,10,NULL,NULL,&s_transshoot2,STF_DAMAGING};
+statetype s_transshoot2         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot3,STF_DAMAGING};
+statetype s_transshoot3         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot4,STF_DAMAGING};
+statetype s_transshoot4         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot5,STF_DAMAGING};
+statetype s_transshoot5         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot6,STF_DAMAGING};
+statetype s_transshoot6         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_transshoot7,STF_DAMAGING};
+statetype s_transshoot7         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_transshoot8,STF_DAMAGING};
 statetype s_transshoot8         = {false,SPR_TRANS_SHOOT1,10,NULL,NULL,&s_transchase1};
 
 //
@@ -1091,6 +978,7 @@ extern  statetype s_uberdie4;
 extern  statetype s_uberdie5;
 
 extern  statetype s_ubershoot1;
+extern  statetype s_ubershoot1b;
 extern  statetype s_ubershoot2;
 extern  statetype s_ubershoot3;
 extern  statetype s_ubershoot4;
@@ -1116,12 +1004,13 @@ statetype s_uberdie3            = {false,SPR_UBER_DIE3,15,NULL,NULL,&s_uberdie4}
 statetype s_uberdie4            = {false,SPR_UBER_DIE4,15,NULL,NULL,&s_uberdie5};
 statetype s_uberdie5            = {false,SPR_UBER_DEAD,0,NULL,NULL,&s_uberdie5};
 
-statetype s_ubershoot1          = {false,SPR_UBER_SHOOT1,30,NULL,NULL,&s_ubershoot2};
-statetype s_ubershoot2          = {false,SPR_UBER_SHOOT2,12,NULL,(statefunc)T_UShoot,&s_ubershoot3};
-statetype s_ubershoot3          = {false,SPR_UBER_SHOOT3,12,NULL,(statefunc)T_UShoot,&s_ubershoot4};
-statetype s_ubershoot4          = {false,SPR_UBER_SHOOT4,12,NULL,(statefunc)T_UShoot,&s_ubershoot5};
-statetype s_ubershoot5          = {false,SPR_UBER_SHOOT3,12,NULL,(statefunc)T_UShoot,&s_ubershoot6};
-statetype s_ubershoot6          = {false,SPR_UBER_SHOOT2,12,NULL,(statefunc)T_UShoot,&s_ubershoot7};
+statetype s_ubershoot1          = {false,SPR_UBER_SHOOT1,22,NULL,NULL,&s_ubershoot1b};
+statetype s_ubershoot1b         = {false,SPR_UBER_SHOOT1,8, NULL,NULL,&s_ubershoot2,STF_DAMAGING};
+statetype s_ubershoot2          = {false,SPR_UBER_SHOOT2,12,NULL,(statefunc)T_UShoot,&s_ubershoot3,STF_DAMAGING};
+statetype s_ubershoot3          = {false,SPR_UBER_SHOOT3,12,NULL,(statefunc)T_UShoot,&s_ubershoot4,STF_DAMAGING};
+statetype s_ubershoot4          = {false,SPR_UBER_SHOOT4,12,NULL,(statefunc)T_UShoot,&s_ubershoot5,STF_DAMAGING};
+statetype s_ubershoot5          = {false,SPR_UBER_SHOOT3,12,NULL,(statefunc)T_UShoot,&s_ubershoot6,STF_DAMAGING};
+statetype s_ubershoot6          = {false,SPR_UBER_SHOOT2,12,NULL,(statefunc)T_UShoot,&s_ubershoot7,STF_DAMAGING};
 statetype s_ubershoot7          = {false,SPR_UBER_SHOOT1,12,NULL,NULL,&s_uberchase1};
 
 /*
@@ -1192,11 +1081,11 @@ statetype s_willdie5            = {false,SPR_WILL_DIE3,10,NULL,NULL,&s_willdie6}
 statetype s_willdie6            = {false,SPR_WILL_DEAD,20,NULL,NULL,&s_willdie6};
 
 statetype s_willshoot1          = {false,SPR_WILL_SHOOT1,30,NULL,NULL,&s_willshoot2};
-statetype s_willshoot2          = {false,SPR_WILL_SHOOT2,10,NULL,(statefunc)T_Launch,&s_willshoot3};
-statetype s_willshoot3          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_willshoot4};
-statetype s_willshoot4          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willshoot5};
-statetype s_willshoot5          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_willshoot6};
-statetype s_willshoot6          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willchase1};
+statetype s_willshoot2          = {false,SPR_WILL_SHOOT2,10,NULL,(statefunc)T_Launch,&s_willshoot3,STF_DAMAGING};
+statetype s_willshoot3          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_willshoot4,STF_DAMAGING};
+statetype s_willshoot4          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willshoot5,STF_DAMAGING};
+statetype s_willshoot5          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_willshoot6,STF_DAMAGING};
+statetype s_willshoot6          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_willchase1,STF_DAMAGING};
 
 
 //
@@ -1250,10 +1139,10 @@ statetype s_deathdie8           = {false,SPR_DEATH_DIE6,10,NULL,NULL,&s_deathdie
 statetype s_deathdie9           = {false,SPR_DEATH_DEAD,0,NULL,NULL,&s_deathdie9};
 
 statetype s_deathshoot1         = {false,SPR_DEATH_SHOOT1,30,NULL,NULL,&s_deathshoot2};
-statetype s_deathshoot2         = {false,SPR_DEATH_SHOOT2,10,NULL,(statefunc)T_Launch,&s_deathshoot3};
-statetype s_deathshoot3         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_deathshoot4};
-statetype s_deathshoot4         = {false,SPR_DEATH_SHOOT3,10,NULL,(statefunc)T_Launch,&s_deathshoot5};
-statetype s_deathshoot5         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_deathchase1};
+statetype s_deathshoot2         = {false,SPR_DEATH_SHOOT2,10,NULL,(statefunc)T_Launch,&s_deathshoot3,STF_DAMAGING};
+statetype s_deathshoot3         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_deathshoot4,STF_DAMAGING};
+statetype s_deathshoot4         = {false,SPR_DEATH_SHOOT3,10,NULL,(statefunc)T_Launch,&s_deathshoot5,STF_DAMAGING};
+statetype s_deathshoot5         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_deathchase1,STF_DAMAGING};
 
 /*
 ===============
@@ -1870,11 +1759,11 @@ statetype s_fatdie5             = {false,SPR_FAT_DIE3,10,NULL,NULL,&s_fatdie6};
 statetype s_fatdie6             = {false,SPR_FAT_DEAD,20,NULL,(statefunc)A_StartDeathCam,&s_fatdie6};
 
 statetype s_fatshoot1           = {false,SPR_FAT_SHOOT1,30,NULL,NULL,&s_fatshoot2};
-statetype s_fatshoot2           = {false,SPR_FAT_SHOOT2,10,NULL,(statefunc)T_GiftThrow,&s_fatshoot3};
-statetype s_fatshoot3           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_fatshoot4};
-statetype s_fatshoot4           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_fatshoot5};
-statetype s_fatshoot5           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_fatshoot6};
-statetype s_fatshoot6           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_fatchase1};
+statetype s_fatshoot2           = {false,SPR_FAT_SHOOT2,10,NULL,(statefunc)T_GiftThrow,&s_fatshoot3,STF_DAMAGING};
+statetype s_fatshoot3           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_fatshoot4,STF_DAMAGING};
+statetype s_fatshoot4           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_fatshoot5,STF_DAMAGING};
+statetype s_fatshoot5           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_fatshoot6,STF_DAMAGING};
+statetype s_fatshoot6           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)T_Shoot,&s_fatchase1,STF_DAMAGING};
 
 /*
 =================
@@ -2051,6 +1940,7 @@ extern  statetype s_mechadie3;
 extern  statetype s_mechadie4;
 
 extern  statetype s_mechashoot1;
+extern  statetype s_mechashoot1b;
 extern  statetype s_mechashoot2;
 extern  statetype s_mechashoot3;
 extern  statetype s_mechashoot4;
@@ -2077,6 +1967,7 @@ extern  statetype s_hitlerdie9;
 extern  statetype s_hitlerdie10;
 
 extern  statetype s_hitlershoot1;
+extern  statetype s_hitlershoot1b;
 extern  statetype s_hitlershoot2;
 extern  statetype s_hitlershoot3;
 extern  statetype s_hitlershoot4;
@@ -2099,12 +1990,13 @@ statetype s_mechadie2           = {false,SPR_MECHA_DIE2,10,NULL,NULL,&s_mechadie
 statetype s_mechadie3           = {false,SPR_MECHA_DIE3,10,NULL,(statefunc)A_HitlerMorph,&s_mechadie4};
 statetype s_mechadie4           = {false,SPR_MECHA_DEAD,0,NULL,NULL,&s_mechadie4};
 
-statetype s_mechashoot1         = {false,SPR_MECHA_SHOOT1,30,NULL,NULL,&s_mechashoot2};
-statetype s_mechashoot2         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechashoot3};
-statetype s_mechashoot3         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mechashoot4};
-statetype s_mechashoot4         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechashoot5};
-statetype s_mechashoot5         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mechashoot6};
-statetype s_mechashoot6         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechachase1};
+statetype s_mechashoot1         = {false,SPR_MECHA_SHOOT1,20,NULL,NULL,&s_mechashoot1b};
+statetype s_mechashoot1b        = {false,SPR_MECHA_SHOOT1,10,NULL,NULL,&s_mechashoot2,STF_DAMAGING};
+statetype s_mechashoot2         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechashoot3,STF_DAMAGING};
+statetype s_mechashoot3         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mechashoot4,STF_DAMAGING};
+statetype s_mechashoot4         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechashoot5,STF_DAMAGING};
+statetype s_mechashoot5         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_mechashoot6,STF_DAMAGING};
+statetype s_mechashoot6         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_mechachase1,STF_DAMAGING};
 
 
 statetype s_hitlerchase1        = {false,SPR_HITLER_W1,6,(statefunc)T_Chase,NULL,&s_hitlerchase1s};
@@ -2127,12 +2019,13 @@ statetype s_hitlerdie8          = {false,SPR_HITLER_DIE6,10,NULL,NULL,&s_hitlerd
 statetype s_hitlerdie9          = {false,SPR_HITLER_DIE7,10,NULL,NULL,&s_hitlerdie10};
 statetype s_hitlerdie10         = {false,SPR_HITLER_DEAD,20,NULL,(statefunc)A_StartDeathCam,&s_hitlerdie10};
 
-statetype s_hitlershoot1        = {false,SPR_HITLER_SHOOT1,30,NULL,NULL,&s_hitlershoot2};
-statetype s_hitlershoot2        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlershoot3};
-statetype s_hitlershoot3        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_hitlershoot4};
-statetype s_hitlershoot4        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlershoot5};
-statetype s_hitlershoot5        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_hitlershoot6};
-statetype s_hitlershoot6        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlerchase1};
+statetype s_hitlershoot1        = {false,SPR_HITLER_SHOOT1,20,NULL,NULL,&s_hitlershoot1b};
+statetype s_hitlershoot1b       = {false,SPR_HITLER_SHOOT1,10,NULL,NULL,&s_hitlershoot2,STF_DAMAGING};
+statetype s_hitlershoot2        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlershoot3,STF_DAMAGING};
+statetype s_hitlershoot3        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_hitlershoot4,STF_DAMAGING};
+statetype s_hitlershoot4        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlershoot5,STF_DAMAGING};
+statetype s_hitlershoot5        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)T_Shoot,&s_hitlershoot6,STF_DAMAGING};
+statetype s_hitlershoot6        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)T_Shoot,&s_hitlerchase1,STF_DAMAGING};
 
 /*
 ===============

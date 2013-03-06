@@ -8,6 +8,7 @@
 
 #include "ioan_bas.h"
 #include "ioan_bot.h"
+#include "obattrib.h"
 
 // static members definition
 boolean Basic::nonazis, Basic::secretstep3;
@@ -55,86 +56,11 @@ int Basic::marktot[27] =
 //
 boolean Basic::IsDamaging(objtype *ret, int dist)
 {
-	switch(ret->obclass)
-	{
-	case guardobj:
-		if(dist <= 12 && (ret->state == &s_grdshoot2 || ret->state == &s_grdshoot3))
-			return true;
-		break;
-	case officerobj:
-		if(dist <= 14 && (ret->state == &s_ofcshoot2 || ret->state == &s_ofcshoot3))
-			return true;
-		break;
-	case ssobj:
-		if(dist <= 16 && (ret->state == &s_ssshoot2 || ret->state == &s_ssshoot3 || ret->state == &s_ssshoot4
-			|| ret->state == &s_ssshoot5 || ret->state == &s_ssshoot6 || ret->state == &s_ssshoot7
-			|| ret->state == &s_ssshoot8 || ret->state == &s_ssshoot9))
-			return true;
-		break;
-	case mutantobj:
-		if((dist <= 2 && ret->flags & FL_ATTACKMODE)
-			|| (dist <= 14 && (ret->state == &s_mutshoot1 || ret->state == &s_mutshoot2 || ret->state == &s_mutshoot3 || 
-			ret->state == &s_mutshoot4)))
-			return true;
-		break;
-    // IOANCH 20130202: unification process
-	case bossobj:
-		if(dist <= 16 && (ret->state == &s_bossshoot1 || ret->state == &s_bossshoot2 || ret->state == &s_bossshoot3 || ret->state == &s_bossshoot4
-			|| ret->state == &s_bossshoot5 || ret->state == &s_bossshoot6 || ret->state == &s_bossshoot7
-			|| ret->state == &s_bossshoot8))
-			return true;
-		break;
-	case ghostobj:
-		if(dist <= 2 && ret->flags & FL_ATTACKMODE)
-			return true;
-		break;
-	case mechahitlerobj:
-		if(dist <= 16 && (ret->state == &s_mechashoot1 || ret->state == &s_mechashoot2 || ret->state == &s_mechashoot3 || ret->state == &s_mechashoot4
-			|| ret->state == &s_mechashoot5 || ret->state == &s_mechashoot6))
-			return true;
-		break;
-	case realhitlerobj:
-		if(dist <= 16 && (ret->state == &s_hitlershoot1 || ret->state == &s_hitlershoot2 || ret->state == &s_hitlershoot3 || ret->state == &s_hitlershoot4
-			|| ret->state == &s_hitlershoot5 || ret->state == &s_hitlershoot6))
-			return true;
-		break;
-	case gretelobj:
-		if(dist <= 16 && (ret->state == &s_gretelshoot1 || ret->state == &s_gretelshoot2 || ret->state == &s_gretelshoot3 
-			|| ret->state == &s_gretelshoot4
-			|| ret->state == &s_gretelshoot5 || ret->state == &s_gretelshoot6 || ret->state == &s_gretelshoot7
-			|| ret->state == &s_gretelshoot8))
-			return true;
-		break;
-	case fatobj:
-		if(dist <= 16 && (ret->state == &s_fatshoot1 || ret->state == &s_fatshoot2 || ret->state == &s_fatshoot3 || ret->state == &s_fatshoot4
-			|| ret->state == &s_fatshoot5 || ret->state == &s_fatshoot6))
-			return true;
-		break;
-	case transobj:
-		if(dist <= 16 && (ret->state == &s_transshoot1 || ret->state == &s_transshoot2 || ret->state == &s_transshoot3 
-			|| ret->state == &s_transshoot4
-			|| ret->state == &s_transshoot5 || ret->state == &s_transshoot6 || ret->state == &s_transshoot7
-			|| ret->state == &s_transshoot8))
-			return true;
-		break;
-	case willobj:
-		if(dist <= 16 && (ret->state == &s_willshoot1 || ret->state == &s_willshoot2 || ret->state == &s_willshoot3 || ret->state == &s_willshoot4
-			|| ret->state == &s_willshoot5 || ret->state == &s_willshoot6))
-			return true;
-		break;
-	case uberobj:
-		if(dist <= 16 && (ret->state == &s_ubershoot1 || ret->state == &s_ubershoot2 || ret->state == &s_ubershoot3 || ret->state == &s_ubershoot4
-			|| ret->state == &s_ubershoot5 || ret->state == &s_ubershoot6 || ret->state == &s_ubershoot7))
-			return true;
-		break;
-	case deathobj:
-		if(dist <= 16 && (ret->state == &s_deathshoot1 || ret->state == &s_deathshoot2 || ret->state == &s_deathshoot3 || ret->state == &s_deathshoot4
-			|| ret->state == &s_deathshoot5))
-			return true;
-		break;
-		default:
-			;
-	}
+    if((dist <= 2 && atr::flags[ret->obclass] & ATR_NEARBY_THREAT && ret->flags & FL_ATTACKMODE) || (dist <= atr::threatrange[ret->obclass] && ret->state->flags & STF_DAMAGING))
+    {
+        return true;
+    }
+    
 	return false;
 }
 
@@ -285,11 +211,11 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
     word *map;
     word tile;
     
-    if(atrstates[which].stand)
+    if(atr::states[which].stand)
     {
-        SpawnNewObj(tilex, tiley, atrstates[which].stand);
-        if(atrspeeds[which].patrol >= 0)
-            newobj->speed = atrspeeds[which].patrol;
+        SpawnNewObj(tilex, tiley, atr::states[which].stand);
+        if(atr::speeds[which].patrol >= 0)
+            newobj->speed = atr::speeds[which].patrol;
         if(!loadedgame)
             gamestate.killtotal++;
     
@@ -315,7 +241,7 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
         }
 
         newobj->obclass = which;
-        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
         newobj->dir = (dirtype)(dir * 2);
         newobj->flags |= FL_SHOOTABLE;
         
@@ -332,17 +258,17 @@ objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
 //
 objtype *Basic::SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 {
-    if(atrstates[which].patrol)
+    if(atr::states[which].patrol)
     {
-        SpawnNewObj(tilex, tiley, atrstates[which].patrol);
-        if(atrspeeds[which].patrol >= 0)
-            newobj->speed = atrspeeds[which].patrol;
+        SpawnNewObj(tilex, tiley, atr::states[which].patrol);
+        if(atr::speeds[which].patrol >= 0)
+            newobj->speed = atr::speeds[which].patrol;
         if (!loadedgame)
             gamestate.killtotal++;
     
         newobj->obclass = which;
         newobj->dir = (dirtype)(dir*2);
-        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
         newobj->distance = TILEGLOBAL;
         newobj->flags |= FL_SHOOTABLE;
         newobj->active = ac_yes;
@@ -383,18 +309,15 @@ objtype *Basic::SpawnBoss (classtype which, int tilex, int tiley)
 	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
-    if(atrstates[which].stand)
+    if(atr::states[which].stand)
     {
-        SpawnNewObj (tilex,tiley,atrstates[which].stand);
+        SpawnNewObj (tilex,tiley,atr::states[which].stand);
 
-        spawnstate = atrstates[which].stand;
-        if(atractions[which].spawn)
-        {
-            atractions[which].spawn();
-        }
+        spawnstate = atr::states[which].stand;
+        atr::actions[which].spawn();
     
         newobj->obclass = which;
-        newobj->hitpoints = atrhitpoints[which][gamestate.difficulty];
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
         newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
         if (!loadedgame)
             gamestate.killtotal++;
