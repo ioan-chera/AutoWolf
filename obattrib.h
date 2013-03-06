@@ -56,6 +56,7 @@ namespace atr
         statetype *chase;
         statetype *pain;
         statetype *altpain;
+        statetype *shoot;
     };
     extern const state states[];
     // Spawn actions

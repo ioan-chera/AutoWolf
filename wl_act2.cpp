@@ -27,6 +27,7 @@
 #include "ioan_bot.h"	// include bot
 #include "ioan_bas.h"
 #include "List.h"
+#include "obattrib.h"   // IOANCH 20130306
 
 /*
 =============================================================================
@@ -2274,51 +2275,10 @@ void T_Chase (objtype *ob)
             //
             // go into attack frame
             //
-            switch (ob->obclass)
-            {
-                case guardobj:
-                    NewState (ob,&s_grdshoot1);
-                    break;
-                case officerobj:
-                    NewState (ob,&s_ofcshoot1);
-                    break;
-                case mutantobj:
-                    NewState (ob,&s_mutshoot1);
-                    break;
-                case ssobj:
-                    NewState (ob,&s_ssshoot1);
-                    break;
-                    // IOANCH 20130202: unification process
-                case bossobj:
-                    NewState (ob,&s_bossshoot1);
-                    break;
-                case gretelobj:
-                    NewState (ob,&s_gretelshoot1);
-                    break;
-                case mechahitlerobj:
-                    NewState (ob,&s_mechashoot1);
-                    break;
-                case realhitlerobj:
-                    NewState (ob,&s_hitlershoot1);
-                    break;
-                case angelobj:
-                    NewState (ob,&s_angelshoot1);
-                    break;
-                case transobj:
-                    NewState (ob,&s_transshoot1);
-                    break;
-                case uberobj:
-                    NewState (ob,&s_ubershoot1);
-                    break;
-                case willobj:
-                    NewState (ob,&s_willshoot1);
-                    break;
-                case deathobj:
-                    NewState (ob,&s_deathshoot1);
-                    break;
-				default:
-					;
-            }
+            // IOANCH 20130306: wrap
+            if(atr::states[ob->obclass].shoot)
+                NewState(ob, atr::states[ob->obclass].shoot);
+            
             return;
         }
         dodge = true;
