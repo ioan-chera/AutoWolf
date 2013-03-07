@@ -11,6 +11,7 @@
 		002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
+		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
@@ -59,7 +60,6 @@
 		FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A52167A696F00949336 /* DirectoryFile.cpp */; };
 		FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */; };
 		FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAC97A58167BD52100949336 /* ExploredArrayFile.cpp */; };
-		FAE7784A1684821400EBE363 /* Dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAE778481684821400EBE363 /* Dictionary.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -99,6 +99,8 @@
 		4F1ECC2316E8FF6B00A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hash.h; path = ../e_hash.h; sourceTree = "<group>"; };
 		4F1ECC2416E8FF6B00A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hashkeys.h; path = ../e_hashkeys.h; sourceTree = "<group>"; };
 		4F1ECC2516E8FF6B00A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_dllist.h; path = ../m_dllist.h; sourceTree = "<group>"; };
+		4F1ECC2716E922B500A37742 /* Property.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Property.cpp; path = ../Property.cpp; sourceTree = "<group>"; };
+		4F1ECC2816E922B500A37742 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Property.h; path = ../Property.h; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../gfxvabstract.h; sourceTree = "<group>"; };
 		4F9E981F16E33FC000B632BB /* spr_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_sod.h; path = ../spr_sod.h; sourceTree = "<group>"; };
@@ -187,8 +189,6 @@
 		FAC97A56167B3F0F00949336 /* MasterDirectoryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MasterDirectoryFile.h; path = ../MasterDirectoryFile.h; sourceTree = "<group>"; };
 		FAC97A58167BD52100949336 /* ExploredArrayFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExploredArrayFile.cpp; path = ../ExploredArrayFile.cpp; sourceTree = "<group>"; };
 		FAC97A59167BD52100949336 /* ExploredArrayFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExploredArrayFile.h; path = ../ExploredArrayFile.h; sourceTree = "<group>"; };
-		FAE778481684821400EBE363 /* Dictionary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Dictionary.cpp; path = ../Dictionary.cpp; sourceTree = "<group>"; };
-		FAE778491684821400EBE363 /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dictionary.h; path = ../Dictionary.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,15 +314,6 @@
 			name = CocoaFun;
 			sourceTree = "<group>";
 		};
-		FA3011E3168721AE005D25A8 /* Dictionary */ = {
-			isa = PBXGroup;
-			children = (
-				FAE778491684821400EBE363 /* Dictionary.h */,
-				FAE778481684821400EBE363 /* Dictionary.cpp */,
-			);
-			name = Dictionary;
-			sourceTree = "<group>";
-		};
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,7 +420,8 @@
 				FA762DBA159D08A500610D61 /* List.h */,
 				FA7630A7159F6D9800610D61 /* PathArray.h */,
 				FA7630A6159F6D9800610D61 /* PathArray.cpp */,
-				FA3011E3168721AE005D25A8 /* Dictionary */,
+				4F1ECC2716E922B500A37742 /* Property.cpp */,
+				4F1ECC2816E922B500A37742 /* Property.h */,
 			);
 			name = DataStructure;
 			sourceTree = "<group>";
@@ -556,13 +548,13 @@
 				FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */,
 				FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */,
 				FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */,
-				FAE7784A1684821400EBE363 /* Dictionary.cpp in Sources */,
 				FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */,
 				4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */,
 				4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */,
 				4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */,
 				4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */,
 				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
+				4F1ECC2916E922B500A37742 /* Property.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

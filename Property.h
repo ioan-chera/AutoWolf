@@ -17,13 +17,9 @@
 //
 
 
-#ifndef CHECKSUM_H_
-#define CHECKSUM_H_
+#ifndef __Wolf4SDL__Property__
+#define __Wolf4SDL__Property__
 
-void CalculateMapsegsChecksum();
-void GetExploredData(void *exploredTarget);
-void PutExploredData(const void *explored);
+#include <iostream>
 
-extern char digeststring[17];
-
-#endif
+#endif /* defined(__Wolf4SDL__Property__) */
