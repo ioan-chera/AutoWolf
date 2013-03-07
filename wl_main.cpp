@@ -1951,18 +1951,30 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-                size_t len = strlen(argv[i]);
-                if(len + 2 > sizeof(configdir))
+                // IOANCH 20130307: expand tilde
+                char *trans = Basic::NewStringTildeExpand(argv[i]);
+                if(trans)
                 {
-                    printf("The config directory is too long!\n");
-                    hasError = true;
+                    size_t len = strlen(trans);
+                    if(len + 2 > sizeof(configdir))
+                    {
+                        printf("The config directory is too long!\n");
+                        hasError = true;
+                    }
+                    else
+                    {
+                        strcpy(configdir, trans);
+                        if(trans[len] != '/' && trans[len] != '\\')
+                            strcat(configdir, "/");
+                    }
+                    free(trans);
                 }
                 else
                 {
-                    strcpy(configdir, argv[i]);
-                    if(argv[i][len] != '/' && argv[i][len] != '\\')
-                        strcat(configdir, "/");
+                    printf("The config directory couldn't be set!\n");
+                    hasError = true;
                 }
+
             }
         }
         else IFARG("--goodtimes")
