@@ -1990,20 +1990,20 @@ void CheckParameters(int argc, char *argv[])
             }
             else
             {
-#if defined(UNIX) || defined(__APPLE__)
-                wordexp_t exp_result;
-                wordexp(argv[i], &exp_result, 0);
-                const char *trans = exp_result.we_wordv[0];
-                int cdres = chdir(trans);
-#else
-                const char *trans = argv[i];
+                char *trans = Basic::NewStringTildeExpand(argv[i]);
+#if defined(_WIN32)
                 int cdres = !::SetCurrentDirectory(trans);
+#else
+                int cdres = chdir(trans);
+                // FIXME: don't just assume UNIX/Linux/Apple
 #endif
                 if(cdres)
                 {
                     printf("Cannot change directory to %s!\n", trans);
                     hasError = true;
                 }
+                if(trans)
+                    free(trans);
             }
         }
         else

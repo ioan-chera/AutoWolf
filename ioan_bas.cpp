@@ -481,31 +481,27 @@ void Basic::EmptyItemList()
 }
 
 //
-// D_ExpandTilde
-//     expand tilde in base path name for linux home dir
+// Basic::NewStringTildeExpand
+//     
+// Create new string with 
 //
-#if 0
-static const char *D_ExpandTilde(const char *basedir)
+char *Basic::NewStringTildeExpand(const char *basedir)
 {
     if(basedir[0] == '~')
     {
         const char *home = getenv("HOME");
         if(home)
         {
-            char *newalloc = (char *)alloca(strlen(home) + strlen(basedir));
-            
-            M_StringAlloca(&newalloc, 2, 0, home, basedir);
-            
-            strcpy(newalloc, home);
-            strcpy(newalloc + strlen(home), basedir + 1);
-            
-            if(home)
-                free(home);
-            
+            size_t newlen = strlen(home) + strlen(basedir);
+            char *newalloc = (char *)malloc(newlen * sizeof(char));
+            strlcat(newalloc, home, newlen);
+            strlcat(newalloc, basedir + 1, newlen);
+                        
             return newalloc;
         }
     }
     
-    return basedir;
+    // Make sure it is always new
+    return strdup(basedir);
 }
-#endif
+

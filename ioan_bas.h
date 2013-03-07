@@ -206,6 +206,9 @@ public:
 	
 	// ApproximateDistance
 	static int ApproxDist(int dx, int dy);
+    
+    static char *NewStringTildeExpand(const char *basedir);
+
 };
 
 #endif
