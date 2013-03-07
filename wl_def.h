@@ -74,6 +74,9 @@ extern unsigned char SPEAR;
 #define LAMDECL *
 #endif
 
+// IOANCH 20130307: path length
+#define MAX_PATH_LENGTH 2048
+
 // IOANCH 20130301: unification
 #include "audiowl6.h"
 #include "audiosod.h"
@@ -658,7 +661,7 @@ extern  unsigned screenofs;
 
 extern  boolean  startgame;
 extern  char     str[80];
-extern  char     configdir[256];
+extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
 extern  char     configname[13];
 
 //

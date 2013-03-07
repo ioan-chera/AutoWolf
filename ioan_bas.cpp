@@ -479,3 +479,30 @@ void Basic::EmptyItemList()
 		for(j = 0; j < MAPSIZE; ++j)
 			itemList[i][j].removeAll();
 }
+
+//
+// D_ExpandTilde
+//     expand tilde in base path name for linux home dir
+//
+#if 0
+static char *D_ExpandTilde(const char *basedir)
+{
+    if(basedir[0] == '~')
+    {
+        char *home = strdup(getenv("HOME"));
+        char *newalloc = NULL;
+        
+        M_StringAlloca(&newalloc, 2, 0, home, basedir);
+        
+        strcpy(newalloc, home);
+        strcpy(newalloc + strlen(home), basedir + 1);
+        
+        if(home)
+            efree(home);
+        
+        return newalloc;
+    }
+    
+    return Z_Strdupa(basedir);
+}
+#endif

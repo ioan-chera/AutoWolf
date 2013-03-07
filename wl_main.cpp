@@ -105,7 +105,7 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
-char    configdir[256] = "";
+char    configdir[MAX_PATH_LENGTH] = "";
 char    configname[13] = "CONFIG.";
 
 //

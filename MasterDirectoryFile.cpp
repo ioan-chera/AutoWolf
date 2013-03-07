@@ -10,7 +10,7 @@
 #include "wl_def.h"
 #include "MasterDirectoryFile.h"
 
-char masterDirectoryFilePath[256];
+char masterDirectoryFilePath[MAX_PATH_LENGTH];
 
 ////////////
 //
