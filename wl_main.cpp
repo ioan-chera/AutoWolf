@@ -2025,7 +2025,7 @@ void CheckParameters(int argc, char *argv[])
     {
         if(hasError) printf("\n");	// IOANCH 26.05.2012: updated title and info
         printf(
-            "AutoWolf v0.1\n"
+            "AutoWolf v0.3\n"
             "By Ioan Chera on Wolf4SDL codebase"
             "Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
             "Original Wolfenstein 3D by id Software\n\n"
