@@ -41,6 +41,18 @@ void ExploredArrayFile::doWriteToFile(FILE *f)
 			charac = 0;
 		}
 	}
+#ifdef DEBUG_EXPLORED
+    int i, j;
+    puts("---");
+    for(i = 0; i < MAPSIZE; ++i)
+    {
+        for(j = 0; j < MAPSIZE; ++j)
+        {
+            printf("%c", explored[i][j] ? 'O' : ' ');
+        }
+        printf("\n");
+    }
+#endif
 //	fwrite(explored, sizeof(explored), 1, f);
 }
 
