@@ -1,0 +1,9 @@
+Authors:
+
+id Software: Wolfenstein 3D original
+Moritz "Ripper" Kroll: Wolf4SDL port
+Ioan Chera: Automatic Wolfenstein port
+
+Other credits:
+
+James Haley, Lee Killough, Team TNT for the hash table and linked list codes
