@@ -65,6 +65,15 @@ extern unsigned char SPEAR;
 
 #include "foreign.h"
 
+// IOANCH 20130307: block definition
+#ifdef APPLE_NON_CPP11
+#define LAM ^
+#define LAMDECL ^
+#else
+#define LAM []
+#define LAMDECL *
+#endif
+
 // IOANCH 20130301: unification
 #include "audiowl6.h"
 #include "audiosod.h"

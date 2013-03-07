@@ -64,8 +64,8 @@ namespace atr
     // Spawn actions
     struct action
     {
-        void (* spawn)();
-        void (* die)();
+        void (LAMDECL spawn)();
+        void (LAMDECL die)();
     };
     extern const action actions[];
     // threat range

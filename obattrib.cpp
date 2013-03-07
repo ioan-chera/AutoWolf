@@ -153,18 +153,18 @@ const atr::state atr::states[] =
 
 const atr::action atr::actions[] =
 {
-	{[]{}, []{}},	// nothing,
-	{[]{}, []{}},	// playerobj,
-	{[]{}, []{}},	// inertobj,
-	{[]{}, []{}},	// guardobj,
-	{[]{}, []{}},	// officerobj,
-	{[]{}, []{}},	// ssobj,
-	{[]{}, []{}},	// dogobj,
-	{[]{
+	{LAM{}, LAM{}},	// nothing,
+	{LAM{}, LAM{}},	// playerobj,
+	{LAM{}, LAM{}},	// inertobj,
+	{LAM{}, LAM{}},	// guardobj,
+	{LAM{}, LAM{}},	// officerobj,
+	{LAM{}, LAM{}},	// ssobj,
+	{LAM{}, LAM{}},	// dogobj,
+	{LAM{
         newobj->speed = SPDPATROL;
         newobj->dir = nodir;
-    }, []{}},	// bossobj,
-	{[]{
+    }, LAM{}},	// bossobj,
+	{LAM{
 		newobj->speed = SPDPATROL;
         newobj->dir = nodir;
 		if (DigiMode != sds_Off)
@@ -172,12 +172,12 @@ const atr::action atr::actions[] =
 		else
 			s_schabbdie2.tictime = 5;
 	}, 
-	[]{}},	// schabbobj,
-	{[]{
+        LAM{}},	// schabbobj,
+	{LAM{
         newobj->speed = SPDPATROL;
         newobj->dir = nodir;
-    }, []{}},	// fakeobj,
-	{[]{
+    }, LAM{}},	// fakeobj,
+	{LAM{
 		newobj->speed = SPDPATROL;
         newobj->dir = nodir;
 		if (DigiMode != sds_Off)
@@ -185,64 +185,64 @@ const atr::action atr::actions[] =
 		else
 			s_hitlerdie2.tictime = 5;
 	}, 
-	[]{}},	// mechahitlerobj,
-	{[]{}, []{}},	// mutantobj,
-	{[]{}, []{}},	// needleobj,
-	{[]{}, []{}},	// fireobj,
-	{[]{}, []{}},	// bjobj,
-	{[]{}, []{}},	// ghostobj,
-	{[]{}, []{}},	// realhitlerobj,
-	{[]{
+        LAM{}},	// mechahitlerobj,
+	{LAM{}, LAM{}},	// mutantobj,
+	{LAM{}, LAM{}},	// needleobj,
+	{LAM{}, LAM{}},	// fireobj,
+	{LAM{}, LAM{}},	// bjobj,
+	{LAM{}, LAM{}},	// ghostobj,
+	{LAM{}, LAM{}},	// realhitlerobj,
+	{LAM{
         newobj->speed = SPDPATROL;
         newobj->dir = nodir;
-    }, []{}},	// gretelobj,
-	{[]{
+    }, LAM{}},	// gretelobj,
+	{LAM{
         newobj->speed = SPDPATROL;
         newobj->dir = nodir;
 		if (DigiMode != sds_Off)
 			s_giftdie2.tictime = 140;
 		else
 			s_giftdie2.tictime = 5;
-    }, []{}},	// giftobj,
-	{[]{
+    }, LAM{}},	// giftobj,
+	{LAM{
         newobj->speed = SPDPATROL;
         newobj->dir = nodir;
         if (DigiMode != sds_Off)
             s_fatdie2.tictime = 140;
         else
             s_fatdie2.tictime = 5;
-    }, []{}},	// fatobj,
-	{[]{}, []{}},	// rocketobj,
-	{[]{
+    }, LAM{}},	// fatobj,
+	{LAM{}, LAM{}},	// rocketobj,
+	{LAM{
         newobj->flags |= FL_BONUS;
-    }, []{}},	// spectreobj,
-	{[]{
+    }, LAM{}},	// spectreobj,
+	{LAM{
 		if (SoundBlasterPresent && DigiMode != sds_Off)
 			s_angeldie11.tictime = 105;
 	}, 
-	[]{}},	// angelobj,
-	{[]{
+        LAM{}},	// angelobj,
+	{LAM{
 		if (SoundBlasterPresent && DigiMode != sds_Off)
 			s_transdie01.tictime = 105;
 	}, 
-	[]{}},	// transobj,
-	{[]{
+        LAM{}},	// transobj,
+	{LAM{
 		if (SoundBlasterPresent && DigiMode != sds_Off)
 			s_uberdie01.tictime = 70;
 	}, 
-	[]{}},	// uberobj,
-	{[]{
+        LAM{}},	// uberobj,
+	{LAM{
 		if (SoundBlasterPresent && DigiMode != sds_Off)
 			s_willdie2.tictime = 70;
 	}, 
-	[]{}},	// willobj,
-	{[]{
+        LAM{}},	// willobj,
+	{LAM{
 		if (SoundBlasterPresent && DigiMode != sds_Off)
 			s_deathdie2.tictime = 105;
 	}, 
-	[]{}},	// deathobj,
-	{[]{}, []{}},	// hrocketobj,
-	{[]{}, []{}},	// sparkobj
+        LAM{}},	// deathobj,
+	{LAM{}, LAM{}},	// hrocketobj,
+	{LAM{}, LAM{}},	// sparkobj
 };
 
 const int atr::threatrange[] =
