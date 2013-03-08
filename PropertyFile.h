@@ -31,7 +31,7 @@ class PropertyFile : public DataFile
 {
 protected:
     // Execute writing to file
-	void doWriteToFile(FILE *f) ;
+	void doWriteToFile(FILE *f);
 	// Execute reading from file
 	bool doReadFromFile(FILE *f);
 public:
@@ -40,7 +40,7 @@ public:
         propertyTable;
     
     // get file size
-	uint64_t getSize() ;
+	uint64_t getSize();
 };
 
 #endif

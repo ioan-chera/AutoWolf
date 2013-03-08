@@ -81,6 +81,9 @@ public:
       : chains(NULL), isInit(false), numChains(0), numItems(0), 
         loadFactor(0.0f), iteratorPos(-1)
    {
+       // IOANCH 20130308: just call it here now, that i don't depend on Doom
+       //                  zones
+       initialize(127);
    }
 
    EHashTable(unsigned int pNumChains)
@@ -122,7 +125,8 @@ public:
    // destructor, but it should remain here until/unless initialization is moved
    // into the constructor, so it remains balanced.
    //
-   void destroy()
+   // IOANCH 20130308: replace with destructor
+   ~EHashTable()
    {
       if(chains)
          free(chains);
