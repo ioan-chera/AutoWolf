@@ -16,17 +16,26 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include <string.h>
 
 #include "Property.h"
 
 #define NEW_ALLOC_2_RATIO 3
 
 //
+// Property::Property
+//
+Property::Property(const char *key) : _stringAllocLen(0), _stringValue(0)
+{
+    _key = new char[strlen(key) + 1];
+    strcpy(_key, key);
+}
+
+//
 // Property::setStringValue
 //
 // Sets the _stringValue destination to a string
 //
-
 void Property::setStringValue(const char *newValue)
 {
     size_t newAllocLen = strlen(newValue) + 1;

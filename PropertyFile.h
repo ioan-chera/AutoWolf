@@ -19,7 +19,7 @@
 #ifndef PROPERTYFILE_H_
 #define PROPERTYFILE_H_
 
-
+#include "e_hash.h"
 #include "Property.h"
 #include "DataFile.h"
 
@@ -36,8 +36,8 @@ protected:
 	bool doReadFromFile(FILE *f);
 public:
     // the content
- //   EHashTable<Property, EStringHashKey, &Property::_key, &Property::link> 
- //       propertyTable;
+    EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
+        propertyTable;
     
     // get file size
 	uint64_t getSize() ;

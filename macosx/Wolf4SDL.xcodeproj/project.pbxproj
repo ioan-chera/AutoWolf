@@ -13,6 +13,7 @@
 		4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
+		4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
@@ -100,6 +101,10 @@
 		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../obattrib.h; sourceTree = "<group>"; };
 		4F1ECC2716E922B500A37742 /* Property.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Property.cpp; path = ../Property.cpp; sourceTree = "<group>"; };
 		4F1ECC2816E922B500A37742 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Property.h; path = ../Property.h; sourceTree = "<group>"; };
+		4F1ECC2F16EA4F5600A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hash.h; path = ../e_hash.h; sourceTree = "<group>"; };
+		4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hashkeys.h; path = ../e_hashkeys.h; sourceTree = "<group>"; };
+		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_dllist.h; path = ../m_dllist.h; sourceTree = "<group>"; };
+		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../e_hashkeys.cpp; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../gfxvabstract.h; sourceTree = "<group>"; };
 		4F9E981F16E33FC000B632BB /* spr_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_sod.h; path = ../spr_sod.h; sourceTree = "<group>"; };
@@ -291,6 +296,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4F1ECC3216EA503800A37742 /* Eternity */ = {
+			isa = PBXGroup;
+			children = (
+				4F1ECC2F16EA4F5600A37742 /* e_hash.h */,
+				4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */,
+				4F1ECC3116EA4F5600A37742 /* m_dllist.h */,
+				4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */,
+			);
+			name = Eternity;
+			sourceTree = "<group>";
+		};
 		4F9E982516E3666D00B632BB /* CocoaFun */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,6 +417,7 @@
 		FAE77847168481E900EBE363 /* DataStructure */ = {
 			isa = PBXGroup;
 			children = (
+				4F1ECC3216EA503800A37742 /* Eternity */,
 				FA762D62159CD1FF00610D61 /* HistoryRatio.h */,
 				FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */,
 				FA762DBA159D08A500610D61 /* List.h */,
@@ -541,6 +558,7 @@
 				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
 				4F1ECC2916E922B500A37742 /* Property.cpp in Sources */,
 				4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */,
+				4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

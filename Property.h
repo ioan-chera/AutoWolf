@@ -20,10 +20,9 @@
 #ifndef __Wolf4SDL__Property__
 #define __Wolf4SDL__Property__
 
-#include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
+#include "m_dllist.h"
 
 //
 // Meant to be part of a PropertyFile, also addressed by a hash table
@@ -61,7 +60,6 @@
 class Property
 {
 protected:
-    
     // Length of string value (for quick changing)
     size_t _stringAllocLen;
     
@@ -72,18 +70,13 @@ public:
     char *_key;    
     
     // link of itself in hash table
-//    DLListItem <Property> link;
+    DLListItem <Property> link;
     
     // Integer value
     int32_t intValue;
     
     // Constructor
-    Property(const char *key) : _stringAllocLen(0), _stringValue(0)
-    {
-        _key = new char[strlen(key) + 1];
-        strcpy(_key, key);
-    }
-    
+    Property(const char *key);
     // Destructor
     ~Property()
     {
