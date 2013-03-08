@@ -20,6 +20,17 @@
 #ifndef __Wolf4SDL__Property__
 #define __Wolf4SDL__Property__
 
-#include <iostream>
+#include <stdint.h>
+
+class Property
+{
+protected:
+    const char *_key;
+    
+    const char *_stringValue;
+public:
+    int32_t intValue;
+    
+};
 
 #endif /* defined(__Wolf4SDL__Property__) */
