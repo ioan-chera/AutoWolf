@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2004 James Haley
+// Copyright(C) 2013 Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,14 +34,10 @@
 //
 //-----------------------------------------------------------------------------
 
-#include "z_zone.h"
-#include "d_dehtbl.h"     // for D_HashTableKey
-#include "i_system.h"
+// IOANCH 20130308: deleted external Eternity dependencies
+#include "wl_def.h"
 #include "m_qstr.h"
-#include "m_misc.h"       // for M_Strupr/M_Strlwr
-#include "m_strcasestr.h" // for M_StrCaseStr
-#include "p_saveg.h"
-#include "d_io.h"         // for strcasecmp
+#include "e_hashkeys.h"
 
 const size_t qstring::npos = ((size_t) -1);
 const size_t qstring::basesize = 16;
@@ -54,7 +51,7 @@ void qstring::unLocalize(size_t pSize)
 {
    if(isLocal())
    {
-      buffer = ecalloc(char *, 1, pSize);
+      buffer = calloc(char *, 1, pSize);
       size   = pSize;
       strcpy(buffer, local);
 
@@ -81,7 +78,7 @@ qstring &qstring::createSize(size_t pSize)
       // Don't realloc if not needed
       if(size < pSize)
       {
-         buffer = erealloc(char *, buffer, pSize);
+         buffer = realloc(char *, buffer, pSize);
          size   = pSize;
       }
       clear();
@@ -143,7 +140,7 @@ qstring &qstring::initCreateSize(size_t pSize)
 void qstring::freeBuffer()
 {
    if(buffer && !isLocal())
-      efree(buffer);
+      free(buffer);
 
    // return to being local
    buffer = local;
@@ -165,7 +162,7 @@ void qstring::freeBuffer()
 char qstring::charAt(size_t idx) const
 {
    if(idx >= size)
-      I_Error("qstring::charAt: index out of range\n");
+      Quit("qstring::charAt: index out of range\n");
 
    return buffer[idx];
 }
@@ -189,7 +186,7 @@ char *qstring::bufferAt(size_t idx)
 char &qstring::operator [] (size_t idx)
 {
    if(idx >= size)
-      I_Error("qstring::operator []: index out of range\n");
+      Quit("qstring::operator []: index out of range\n");
 
    return buffer[idx];
 }
@@ -202,7 +199,7 @@ char &qstring::operator [] (size_t idx)
 const char &qstring::operator [] (size_t idx) const
 {
    if(idx >= size)
-      I_Error("qstring::operator []: index out of range\n");
+      Quit("qstring::operator []: index out of range\n");
 
    return buffer[idx];
 }
@@ -257,7 +254,7 @@ qstring &qstring::grow(size_t len)
       }
       else
       {
-         buffer = erealloc(char *, buffer, newsize);
+         buffer = realloc(char *, buffer, newsize);
          memset(buffer + size, 0, len);
          size += len;
       }
@@ -379,7 +376,7 @@ qstring &qstring::insert(const char *insertstr, size_t pos)
    
    // pos must be between 0 and dest->index - 1
    if(pos >= index)
-      I_Error("qstring::insert: position out of range\n");
+      Quit("qstring::insert: position out of range\n");
 
    // grow the buffer to hold the resulting string if necessary
    if(totalsize > size)
@@ -567,7 +564,7 @@ qstring &qstring::truncate(size_t pos)
 {
    // pos must be between 0 and qstr->index - 1
    if(pos >= index)
-      I_Error("qstring::truncate: position out of range\n");
+      Quit("qstring::truncate: position out of range\n");
 
    memset(buffer + pos, 0, index - pos);
    index = pos;
@@ -590,7 +587,7 @@ qstring &qstring::erase(size_t pos, size_t n)
 
    // pos must be between 0 and qstr->index - 1
    if(pos >= index)
-      I_Error("qstring::erase: position out of range\n");
+      Quit("qstring::erase: position out of range\n");
 
    size_t endPos = pos + n;
    if(endPos > index)
@@ -636,14 +633,14 @@ qstring &qstring::operator << (char ch)
 qstring &qstring::operator << (int i)
 {
    char buf[33];
-   M_Itoa(i, buf, 10);
+   itoa(i, buf, 10);
    return concat(buf);
 }
 
 qstring &qstring::operator << (double d)
 {
    char buf[1079]; // srsly...
-   psnprintf(buf, sizeof(buf), "%f", d);
+   snprintf(buf, sizeof(buf), "%f", d);
    return concat(buf);
 }
 
@@ -935,7 +932,7 @@ size_t qstring::find(const char *s, size_t pos) const
 {
    // pos must be between 0 and index - 1
    if(pos >= index)
-      I_Error("qstring::find: position out of range\n");
+      Quit("qstring::find: position out of range\n");
 
    char *base   = buffer + pos;
    char *substr = strstr(base, s);
@@ -997,19 +994,22 @@ double qstring::toDouble(char **endptr)
 //
 char *qstring::duplicate(int tag) const
 {
-   return Z_Strdup(buffer, tag, NULL);
+   return strdup(buffer, tag, NULL);
 }
 
+// IOANCH 20130308: deleted
 //
 // qstring::duplicateAuto
 //
 // Creates an automatic allocation (disposable) copy of the qstring's
 // contents.
 //
+#if 0
 char *qstring::duplicateAuto() const
 {
-   return Z_Strdupa(buffer);
+   return strdupa(buffer);
 }
+#endif
 
 //=============================================================================
 //

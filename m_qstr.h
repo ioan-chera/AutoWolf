@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2005 James Haley
+// Copyright(C) 2013 Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -36,11 +37,13 @@
 #ifndef M_QSTR_H__
 #define M_QSTR_H__
 
+#include <string.h>
 #include "z_zone.h"
 
 class SaveArchive;
 
-class qstring : public ZoneObject
+// IOANCH 20130308: deleted Eternity references
+class qstring
 {
 private:
    char    local[16];
@@ -56,26 +59,22 @@ public:
    static const size_t basesize;
 
    // Constructors / Destructor
-   qstring(size_t startSize = 0, int tag = PU_STATIC) 
-      : ZoneObject(), index(0), size(16)
+   qstring(size_t startSize = 0) : index(0), size(16)
    {
-      ChangeTag(tag);
       buffer = local;
       memset(local, 0, sizeof(local));
       if(startSize)
          initCreateSize(startSize);
    }
 
-   qstring(const qstring &other) 
-      : ZoneObject(), index(0), size(16)
+   qstring(const qstring &other) : index(0), size(16)
    {
       buffer = local;
       memset(local, 0, sizeof(local));
       copy(other);
    }
 
-   explicit qstring(const char *cstr)
-      : ZoneObject(), index(0), size(16)
+   explicit qstring(const char *cstr) : index(0), size(16)
    {
       buffer = local;
       memset(local, 0, sizeof(local));
