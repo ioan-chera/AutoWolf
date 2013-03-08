@@ -11,6 +11,7 @@
 		002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */; };
+		4F14DD4D16E9E87200606BD4 /* m_qstr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD4A16E9E87200606BD4 /* m_qstr.cpp */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
@@ -96,6 +97,9 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		4F14DD1E16E9E18A00606BD4 /* PropertyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyFile.h; path = ../PropertyFile.h; sourceTree = SOURCE_ROOT; };
 		4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyFile.cpp; path = ../PropertyFile.cpp; sourceTree = SOURCE_ROOT; };
+		4F14DD4A16E9E87200606BD4 /* m_qstr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = m_qstr.cpp; path = ../m_qstr.cpp; sourceTree = "<group>"; };
+		4F14DD4B16E9E87200606BD4 /* m_qstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_qstr.h; path = ../m_qstr.h; sourceTree = "<group>"; };
+		4F14DD4C16E9E87200606BD4 /* m_qstrkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_qstrkeys.h; path = ../m_qstrkeys.h; sourceTree = "<group>"; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
 		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../obattrib.h; sourceTree = "<group>"; };
 		4F1ECC2316E8FF6B00A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hash.h; path = ../e_hash.h; sourceTree = "<group>"; };
@@ -297,6 +301,9 @@
 		4F1ECC2616E906EE00A37742 /* FromEE */ = {
 			isa = PBXGroup;
 			children = (
+				4F14DD4A16E9E87200606BD4 /* m_qstr.cpp */,
+				4F14DD4B16E9E87200606BD4 /* m_qstr.h */,
+				4F14DD4C16E9E87200606BD4 /* m_qstrkeys.h */,
 				4F1ECC2316E8FF6B00A37742 /* e_hash.h */,
 				4F1ECC2416E8FF6B00A37742 /* e_hashkeys.h */,
 				4F1ECC2516E8FF6B00A37742 /* m_dllist.h */,
@@ -555,6 +562,7 @@
 				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
 				4F1ECC2916E922B500A37742 /* Property.cpp in Sources */,
 				4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */,
+				4F14DD4D16E9E87200606BD4 /* m_qstr.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
