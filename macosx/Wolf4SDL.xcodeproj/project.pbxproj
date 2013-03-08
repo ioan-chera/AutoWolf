@@ -10,6 +10,7 @@
 		002F39FA09D0881F00EBEB88 /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A0009D0884600EBEB88 /* SDL.framework in Copy Frameworks into .app bundle */ = {isa = PBXBuildFile; fileRef = 002F39F909D0881F00EBEB88 /* SDL.framework */; };
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
@@ -50,7 +51,6 @@
 		D94B84D50FC0F2F800EADB6F /* wolf4sdl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D94B84D40FC0F2F800EADB6F /* wolf4sdl.icns */; };
 		FA21BE15157412A800C23B4A /* ioan_bas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE11157412A800C23B4A /* ioan_bas.cpp */; };
 		FA21BE16157412A800C23B4A /* ioan_bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA21BE13157412A800C23B4A /* ioan_bot.cpp */; };
-		FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3011E41687257D005D25A8 /* DictionaryFile.cpp */; };
 		FA762D64159CD1FF00610D61 /* HistoryRatio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */; };
 		FA7630A8159F6D9800610D61 /* PathArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7630A6159F6D9800610D61 /* PathArray.cpp */; };
 		FAB104D31591AA9100393DE3 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB104D11591AA9100393DE3 /* dbopl.cpp */; };
@@ -94,6 +94,8 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4F14DD1E16E9E18A00606BD4 /* PropertyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyFile.h; path = ../PropertyFile.h; sourceTree = SOURCE_ROOT; };
+		4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyFile.cpp; path = ../PropertyFile.cpp; sourceTree = SOURCE_ROOT; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
 		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../obattrib.h; sourceTree = "<group>"; };
 		4F1ECC2316E8FF6B00A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hash.h; path = ../e_hash.h; sourceTree = "<group>"; };
@@ -168,8 +170,6 @@
 		FA21BE12157412A800C23B4A /* ioan_bas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bas.h; path = ../ioan_bas.h; sourceTree = SOURCE_ROOT; };
 		FA21BE13157412A800C23B4A /* ioan_bot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ioan_bot.cpp; path = ../ioan_bot.cpp; sourceTree = SOURCE_ROOT; };
 		FA21BE14157412A800C23B4A /* ioan_bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioan_bot.h; path = ../ioan_bot.h; sourceTree = SOURCE_ROOT; };
-		FA3011E41687257D005D25A8 /* DictionaryFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DictionaryFile.cpp; path = ../DictionaryFile.cpp; sourceTree = "<group>"; };
-		FA3011E51687257D005D25A8 /* DictionaryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DictionaryFile.h; path = ../DictionaryFile.h; sourceTree = "<group>"; };
 		FA762D62159CD1FF00610D61 /* HistoryRatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryRatio.h; path = ../HistoryRatio.h; sourceTree = SOURCE_ROOT; };
 		FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HistoryRatio.cpp; path = ../HistoryRatio.cpp; sourceTree = SOURCE_ROOT; };
 		FA762DBA159D08A500610D61 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = List.h; path = ../List.h; sourceTree = "<group>"; };
@@ -256,7 +256,6 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				4F1ECC2616E906EE00A37742 /* FromEE */,
 				4F9E982516E3666D00B632BB /* CocoaFun */,
 				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
 				FAB104D21591AA9100393DE3 /* dbopl.h */,
@@ -402,12 +401,12 @@
 				FAC97A4B167A08CE00949336 /* DataFile.cpp */,
 				FAC97A59167BD52100949336 /* ExploredArrayFile.h */,
 				FAC97A58167BD52100949336 /* ExploredArrayFile.cpp */,
-				FA3011E51687257D005D25A8 /* DictionaryFile.h */,
-				FA3011E41687257D005D25A8 /* DictionaryFile.cpp */,
 				FAC97A53167A696F00949336 /* DirectoryFile.h */,
 				FAC97A52167A696F00949336 /* DirectoryFile.cpp */,
 				FAC97A56167B3F0F00949336 /* MasterDirectoryFile.h */,
 				FAC97A55167B3F0F00949336 /* MasterDirectoryFile.cpp */,
+				4F14DD1E16E9E18A00606BD4 /* PropertyFile.h */,
+				4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */,
 			);
 			name = DataFile;
 			sourceTree = "<group>";
@@ -415,6 +414,7 @@
 		FAE77847168481E900EBE363 /* DataStructure */ = {
 			isa = PBXGroup;
 			children = (
+				4F1ECC2616E906EE00A37742 /* FromEE */,
 				FA762D62159CD1FF00610D61 /* HistoryRatio.h */,
 				FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */,
 				FA762DBA159D08A500610D61 /* List.h */,
@@ -548,13 +548,13 @@
 				FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */,
 				FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */,
 				FAC97A5A167BD52200949336 /* ExploredArrayFile.cpp in Sources */,
-				FA3011E61687257D005D25A8 /* DictionaryFile.cpp in Sources */,
 				4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */,
 				4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */,
 				4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */,
 				4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */,
 				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
 				4F1ECC2916E922B500A37742 /* Property.cpp in Sources */,
+				4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

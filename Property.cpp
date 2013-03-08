@@ -18,3 +18,39 @@
 
 
 #include "Property.h"
+
+#define NEW_ALLOC_2_RATIO 3
+
+//
+// Property::setStringValue
+//
+// Sets the _stringValue destination to a string
+//
+#if 0
+void Property::setStringValue(const char *newValue)
+{
+    size_t newAllocLen = strlen(newValue) + 1;
+    
+    if(newAllocLen > _stringAllocLen || newAllocLen << NEW_ALLOC_2_RATIO < 
+       _stringAllocLen)
+    {
+        delete []_stringValue;
+        _stringValue = new char[newAllocLen];
+        _stringAllocLen = newAllocLen;
+    }
+    strcpy(_stringValue, newValue);
+}
+
+//
+// Property::setKey
+//
+// Sets the _key destination to a string
+//
+void setKey(const char *newKey)
+{
+    // FIXME: this isn't optimized at all
+    delete [] _key;
+    _key = new char[strlen(newKey) + 1];
+    strcpy(_key, newKey);
+}
+#endif

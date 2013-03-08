@@ -16,5 +16,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-
-#include "DictionaryFile.h"
+// How to declare a hash table
+//
+// EHashTable<ACSScript, EIntHashKey, &ACSScript::number, 
+// &ACSScript::numberLinks> acsScriptsByNumber;
+#if 0
+class PropertyFile : public DataFile
+{
+public:
+    EHashTable<Property, EStringHashKey, &Property::_key, &Property::_keyLinks>
+    propertyTable;
+};
+#endif

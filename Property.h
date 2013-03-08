@@ -22,15 +22,86 @@
 
 #include <stdint.h>
 
+//
+// Meant to be part of a PropertyFile, also addressed by a hash table
+//
+// Retrieving properties from disk file:
+// - Free all properties from file (if any, unlikely)
+// - Read serialized data.
+// - Create Property objects from serialized data (key and value)
+// - Add them to hash table of the file
+//
+// Accessing a property with a given name
+// - Use objectforkey on hash table of file, choose string/number value
+//
+// Changing property in a file:
+// - directly change number value, or set string value from accessor
+//
+// Adding a property to a file:
+// - Create new property with new key and value
+// - Link it to hash table
+//
+// Removing property from a file:
+// - Unlink property from hash table
+// - Free it
+//
+// Writing property to file:
+// - access each object from hash table
+// - serialize and write its contents
+
+//
+// Property
+//
+// Keyed string/number value
+//
+#if 0
 class Property
 {
 protected:
+    // Key string for hashing
     const char *_key;
     
-    const char *_stringValue;
+    // Length of string value (for quick changing)
+    size_t _stringAllocLen;
+    
+    // Pointer to string value
+    char *_stringValue;
 public:
+    // Integer value
     int32_t intValue;
     
+    // Constructor
+    Property(const char *key) : _stringAllocLen(0), _stringValue(0)
+    {
+        _key = new char[strlen(key) + 1];
+        strcpy(_key, key);
+    }
+    
+    // Destructor
+    ~Property()
+    {
+        delete [] _key;
+        delete [] _stringValue;
+    }
+    
+    // Getter of string value
+    const char *stringValue() const
+    {
+        return _stringValue;
+    }
+    
+    // Getter of key
+    const char *key() const
+    {
+        return _key;
+    }
+    
+    // Setter of key
+    void setKey(const char *newKey);
+    
+    // Setter to string value
+    void setStringValue(const char *newValue);
 };
+#endif
 
 #endif /* defined(__Wolf4SDL__Property__) */
