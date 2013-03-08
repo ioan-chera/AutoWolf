@@ -16,15 +16,31 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#ifndef PROPERTYFILE_H_
+#define PROPERTYFILE_H_
+
+
+#include "Property.h"
+#include "DataFile.h"
+
 // How to declare a hash table
 //
 // EHashTable<ACSScript, EIntHashKey, &ACSScript::number, 
 // &ACSScript::numberLinks> acsScriptsByNumber;
-#if 0
 class PropertyFile : public DataFile
 {
+protected:
+    // Execute writing to file
+	void doWriteToFile(FILE *f) ;
+	// Execute reading from file
+	bool doReadFromFile(FILE *f);
 public:
-    EHashTable<Property, EStringHashKey, &Property::_key, &Property::_keyLinks>
-    propertyTable;
+    // the content
+ //   EHashTable<Property, EStringHashKey, &Property::_key, &Property::link> 
+ //       propertyTable;
+    
+    // get file size
+	uint64_t getSize() ;
 };
+
 #endif

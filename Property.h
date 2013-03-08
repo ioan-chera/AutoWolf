@@ -21,6 +21,9 @@
 #define __Wolf4SDL__Property__
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 //
 // Meant to be part of a PropertyFile, also addressed by a hash table
@@ -54,12 +57,10 @@
 //
 // Keyed string/number value
 //
-#if 0
+
 class Property
 {
 protected:
-    // Key string for hashing
-    const char *_key;
     
     // Length of string value (for quick changing)
     size_t _stringAllocLen;
@@ -67,6 +68,12 @@ protected:
     // Pointer to string value
     char *_stringValue;
 public:
+    // Key string for hashing
+    char *_key;    
+    
+    // link of itself in hash table
+//    DLListItem <Property> link;
+    
     // Integer value
     int32_t intValue;
     
@@ -102,6 +109,6 @@ public:
     // Setter to string value
     void setStringValue(const char *newValue);
 };
-#endif
+
 
 #endif /* defined(__Wolf4SDL__Property__) */

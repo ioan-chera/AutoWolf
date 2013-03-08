@@ -98,9 +98,6 @@
 		4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyFile.cpp; path = ../PropertyFile.cpp; sourceTree = SOURCE_ROOT; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
 		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../obattrib.h; sourceTree = "<group>"; };
-		4F1ECC2316E8FF6B00A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hash.h; path = ../e_hash.h; sourceTree = "<group>"; };
-		4F1ECC2416E8FF6B00A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hashkeys.h; path = ../e_hashkeys.h; sourceTree = "<group>"; };
-		4F1ECC2516E8FF6B00A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_dllist.h; path = ../m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC2716E922B500A37742 /* Property.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Property.cpp; path = ../Property.cpp; sourceTree = "<group>"; };
 		4F1ECC2816E922B500A37742 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Property.h; path = ../Property.h; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
@@ -294,16 +291,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4F1ECC2616E906EE00A37742 /* FromEE */ = {
-			isa = PBXGroup;
-			children = (
-				4F1ECC2316E8FF6B00A37742 /* e_hash.h */,
-				4F1ECC2416E8FF6B00A37742 /* e_hashkeys.h */,
-				4F1ECC2516E8FF6B00A37742 /* m_dllist.h */,
-			);
-			name = FromEE;
-			sourceTree = "<group>";
-		};
 		4F9E982516E3666D00B632BB /* CocoaFun */ = {
 			isa = PBXGroup;
 			children = (
@@ -414,7 +401,6 @@
 		FAE77847168481E900EBE363 /* DataStructure */ = {
 			isa = PBXGroup;
 			children = (
-				4F1ECC2616E906EE00A37742 /* FromEE */,
 				FA762D62159CD1FF00610D61 /* HistoryRatio.h */,
 				FA762D63159CD1FF00610D61 /* HistoryRatio.cpp */,
 				FA762DBA159D08A500610D61 /* List.h */,

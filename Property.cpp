@@ -26,7 +26,7 @@
 //
 // Sets the _stringValue destination to a string
 //
-#if 0
+
 void Property::setStringValue(const char *newValue)
 {
     size_t newAllocLen = strlen(newValue) + 1;
@@ -46,11 +46,11 @@ void Property::setStringValue(const char *newValue)
 //
 // Sets the _key destination to a string
 //
-void setKey(const char *newKey)
+void Property::setKey(const char *newKey)
 {
     // FIXME: this isn't optimized at all
     delete [] _key;
     _key = new char[strlen(newKey) + 1];
     strcpy(_key, newKey);
 }
-#endif
+
