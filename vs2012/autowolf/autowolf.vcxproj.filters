@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -22,44 +18,20 @@
     <Filter Include="Source Files\WL_">
       <UniqueIdentifier>{04c8e4dd-e642-43dc-b6d0-96fe712ed526}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\IOAN">
-      <UniqueIdentifier>{4b336954-f1c1-4bdc-ae3a-185f5db1182e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ID_">
-      <UniqueIdentifier>{e3d996ed-1bfc-45e0-8d0a-80f1faf73c0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\WL_">
-      <UniqueIdentifier>{f80b3954-23f0-4bf6-a450-8e2cfee803d4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\DOSBOX">
       <UniqueIdentifier>{e9bd912b-f843-4be1-95b8-29ddacabf789}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GFXAUDIO">
-      <UniqueIdentifier>{d1fc7c26-fedc-4d7c-92ff-d1d9d1a35ecd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\DOSBOX">
-      <UniqueIdentifier>{5023bf65-b5bb-4c01-b5c2-daeda3489464}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\TABLES">
       <UniqueIdentifier>{2bc6c889-8044-466d-93f9-ac3a0e18f7b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IOAN\DataStruct">
+      <UniqueIdentifier>{64f7c98b-47cb-4454-a636-35a716592682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IOAN\FileSystem">
+      <UniqueIdentifier>{150697d0-607e-4274-8e85-29d418d1346e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\CheckSum.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DataFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DirectoryFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ExploredArrayFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\HistoryRatio.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\id_ca.cpp">
       <Filter>Source Files\ID_</Filter>
     </ClCompile>
@@ -89,15 +61,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ioan_secret.cpp">
       <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\MasterDirectoryFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\PathArray.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\signon.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wl_act1.cpp">
       <Filter>Source Files\WL_</Filter>
@@ -171,156 +134,180 @@
     <ClCompile Include="..\..\obattrib.cpp">
       <Filter>Source Files\TABLES</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\PString.cpp">
-      <Filter>Source Files\IOAN</Filter>
+    <ClCompile Include="..\..\HistoryRatio.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\e_hashkeys.cpp">
-      <Filter>Source Files\IOAN</Filter>
+    <ClCompile Include="..\..\PathArray.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Property.cpp">
-      <Filter>Source Files\IOAN</Filter>
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PString.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DataFile.cpp">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DirectoryFile.cpp">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ExploredArrayFile.cpp">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MasterDirectoryFile.cpp">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\PropertyFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CheckSum.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e_hashkeys.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\signon.cpp">
+      <Filter>Source Files\TABLES</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\audiosod.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\audiowl6.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\CheckSum.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DataFile.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DirectoryFile.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ExploredArrayFile.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\f_spear.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\foreign.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxv_sod.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxv_wl6.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\HistoryRatio.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_ca.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_in.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_pm.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_sd.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_us.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_vh.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\id_vl.h">
-      <Filter>Header Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ioan_bot.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ioan_secret.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ioan_bas.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\List.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\MasterDirectoryFile.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\PathArray.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_atmos.h">
-      <Filter>Header Files\WL_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_cloudsky.h">
-      <Filter>Header Files\WL_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_def.h">
-      <Filter>Header Files\WL_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_menu.h">
-      <Filter>Header Files\WL_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_shade.h">
-      <Filter>Header Files\WL_</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\dosbox\dbopl.h">
-      <Filter>Header Files\DOSBOX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\win\resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\audioabstract.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gfxvabstract.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\spr_wl6.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\spr_sod.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
+      <Filter>Source Files\DOSBOX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sprabstract.h">
-      <Filter>Header Files\GFXAUDIO</Filter>
+      <Filter>Source Files\TABLES</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\PString.h">
-      <Filter>Header Files\IOAN</Filter>
+    <ClInclude Include="..\..\audioabstract.h">
+      <Filter>Source Files\TABLES</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\e_hash.h">
-      <Filter>Header Files\IOAN</Filter>
+    <ClInclude Include="..\..\audiosod.h">
+      <Filter>Source Files\TABLES</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\e_hashkeys.h">
-      <Filter>Header Files\IOAN</Filter>
+    <ClInclude Include="..\..\audiowl6.h">
+      <Filter>Source Files\TABLES</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\m_dllist.h">
-      <Filter>Header Files\IOAN</Filter>
+    <ClInclude Include="..\..\gfxv_sod.h">
+      <Filter>Source Files\TABLES</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Property.h">
-      <Filter>Header Files\IOAN</Filter>
+    <ClInclude Include="..\..\gfxv_wl6.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\gfxvabstract.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_sod.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\spr_wl6.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_ca.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_in.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_pm.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_sd.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_us.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_vh.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\id_vl.h">
+      <Filter>Source Files\ID_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_atmos.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_cloudsky.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_def.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_menu.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_shade.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\f_spear.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\foreign.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\win\resource.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\version.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\CheckSum.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DataFile.h">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DirectoryFile.h">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ExploredArrayFile.h">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MasterDirectoryFile.h">
+      <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\PropertyFile.h">
-      <Filter>Header Files\IOAN</Filter>
+      <Filter>Source Files\IOAN\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e_hash.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e_hashkeys.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ioan_bas.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ioan_bot.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ioan_secret.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\HistoryRatio.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\List.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\m_dllist.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PathArray.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Property.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PString.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\wolfpal.inc">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="..\..\sodpal.inc">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\TABLES</Filter>
+    </None>
+    <None Include="..\..\wolfpal.inc">
+      <Filter>Source Files\TABLES</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
