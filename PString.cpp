@@ -19,6 +19,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "e_hashkeys.h"
 
@@ -254,6 +255,43 @@ PString &PString::Delc()
 }
 
 //
+// PString::erase
+//
+// std::string-compatible erasure function.
+//
+PString &PString::erase(size_t pos, size_t n)
+{
+    // truncate handles the case of n == qstring::npos
+    if(!n)
+        return *this;
+    else if(n == npos)
+        return truncate(pos);
+    
+    // pos must be between 0 and qstr->index - 1
+    if(pos >= _index)
+        return *this;
+    
+    size_t endPos = pos + n;
+    if(endPos > _index)
+        endPos = _index;
+    
+    char *to   = _buffer + pos;
+    char *from = _buffer + endPos;
+    char *end  = _buffer + _index;
+    
+    while(to != end)
+    {
+        *to = *from;
+        ++to;
+        if(from != end)
+            ++from;
+    }
+    
+    _index -= (endPos - pos);
+    return *this;
+}
+
+//
 // PString::extractFileBase
 //
 // This one is not limited to 8 character file names, and will include any
@@ -388,6 +426,51 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
     _index = totalsize;
     
     return *this;
+}
+
+//
+// PString::lstrip
+//
+// Removes occurrences of a specified character at the beginning of a PString.
+//
+PString &PString::lstrip(char c)
+{
+    size_t i   = 0;
+    size_t len = _index;
+    
+    while(i < _index && _buffer[i] == c)
+        ++i;
+    
+    if(i)
+    {
+        if((len -= i) == 0)
+            clear();
+        else
+        {
+            memmove(_buffer, _buffer + i, len);
+            memset(_buffer + len, 0, _size - len);
+            _index -= i;
+        }
+    }
+    
+    return *this;
+}
+
+//
+// PString::makeQuoted
+//
+// Adds quotation marks to the PString.
+//
+PString &PString::makeQuoted()
+{
+    // if the string is empty, make it "", else add quotes around the contents
+    if(index == 0)
+        return concat("\"\"", 2);
+    else
+    {
+        insert("\"", 1, 0);
+        return Putc('\"');
+    }
 }
 
 //
@@ -576,6 +659,19 @@ size_t PString::replaceNotOf(const char *filter, size_t inLength, char repl)
 }
 
 //
+// PString::rstrip
+//
+// Removes occurrences of a specified character at the end of a PString.
+//
+PString &PString::rstrip(char c)
+{
+    while(_index && _buffer[_index - 1] == c)
+        Delc();
+    
+    return *this;
+}
+
+//
 // PString::swapWith
 //
 // Exchanges the contents of two PStrings.
@@ -704,12 +800,13 @@ char PString::charAt(size_t idx) const
 //
 bool PString::compare(const char *str, size_t inLength) const
 {
-    return !memcmp(_buffer, str, inLength);
+    return !memcmp(_buffer, str, _index < inLength ? _index : inLength);
 }
 
 bool PString::compare(const PString &other) const
 {
-    return !memcmp(_buffer, other._buffer, _index);
+    return !memcmp(_buffer, other._buffer, _index < other._index ? _index :
+                   other._index);
 }
 
 //
@@ -728,6 +825,23 @@ PString &PString::copyInto(PString &dest) const
         dest.clear();
     
     return dest.concat(*this);
+}
+
+//
+// PString::find
+//
+// std::string-compatible find function.
+//
+size_t PString::find(const char *s, size_t inLength, size_t pos) const
+{
+    // pos must be between 0 and index - 1
+    if(pos >= _index)
+        return npos;
+    
+    char *base   = _buffer + pos;
+    char *substr =  (char *)memmem(base, _index - pos, s, inLength);
+    
+    return substr ? substr - _buffer : npos;
 }
 
 //
@@ -807,46 +921,14 @@ size_t PString::findLastOf(char c) const
 }
 
 //
-// _memstr
-//
-// find string in memory, even with nulls
-//
-static char *_memstr(const char *in, size_t inLength, const char *str, size_t
-                     inLength2)
-{
-    char c;
-    
-    // IOANCH 20130309: return in address
-    if(inLength <= 0)
-        return (char *)in;
-    
-    c = *str++;
-    
-    do
-    {
-        char sc;
-        do
-        {
-            sc = *in++;
-            if (!sc)
-                return NULL;
-        }
-        while(sc != c);
-    }
-    while(strncmp(in, str, inLength2));
-    
-    return (char *)(in - 1);
-}
-
-//
 // PString::findSubStr
 //
 // Calls strstr on the PString. If the passed-in string is found, then the
 // return value points to the location of the first instance of that substring.
 //
-const char *PString::findSubStr(const char *substr) const
+const char *PString::findSubStr(const char *substr, size_t inLength) const
 {
-    return strstr(_buffer, substr);
+    return (const char *)memmem(_buffer, _index, substr, inLength);
 }
 
 //
@@ -872,13 +954,23 @@ unsigned int PString::hashCodeCase() const
 }
 
 //
+// PString::strChr
+//
+// Calls strchr on the PString ("find first of", C-style).
+//
+const char *PString::strChr(char c) const
+{
+    return (const char *)memchr(_buffer, c, _index);
+}
+
+//
 // PString::strCmp
 //
 // C-style string comparison/collation ordering.
 //
 int PString::strCmp(const char *str, size_t inLength) const
 {
-    return memcmp(_buffer, str, inLength);
+    return memcmp(_buffer, str, _index < inLength ? _index : inLength);
 }
 
 //
@@ -909,7 +1001,36 @@ static int _memcasecmp(const void* buf1, const void* buf2, size_t count)
 //
 int PString::strCaseCmp(const char *str, size_t inLength) const
 {
-    return _memcasecmp(_buffer, str, inLength);
+    return _memcasecmp(_buffer, str, _index < inLength ? _index : inLength);
+}
+
+//
+// _memrchr
+//
+char *_memrchr(const char *s, char c, size_t n)
+{
+    // Look right to left for a character. If found, return its address. If not,
+    // return NULL
+    if(n == 0)
+        return  NULL;
+    const char *e = s + n - 1;
+    do
+    {
+        if(*e == c)
+            return (char *)e;
+    }
+    while (e-- != s);
+    return NULL;
+}
+
+//
+// PString::strRChr
+//
+// Calls strrchr on the PString ("find last of", C-style)
+//
+const char *PString::strRChr(char c) const
+{
+    return _memrchr(_buffer, c, _index);
 }
 
 //
@@ -926,6 +1047,48 @@ int PString::toInt() const
 ////////////////////////////////////////////////////////////////////////////////
 
 //
+// PString::operator ==
+//
+// Overloaded comparison operator for PString &
+//
+bool PString::operator == (const PString &other) const
+{
+    return !memcmp(_buffer, other._buffer, _index < other._index ? _index :
+                   other._index);
+}
+
+//
+// PString::operator !=
+//
+// Overloaded comparison operator for PString &
+//
+bool PString::operator != (const PString &other) const
+{
+    return memcmp(_buffer, other._buffer, _index < other._index ? _index :
+                   other._index) != 0;
+}
+
+//
+// PString::operator =
+//
+// Assignment from a PString &
+//
+PString &PString::operator = (const PString &other)
+{
+    return copy(other);
+}
+
+//
+// PString::operator +=
+//
+// Overloaded += for PString &
+//
+PString &PString::operator += (const PString &other)
+{
+    return concat(other);
+}
+
+//
 // PString::operator +=
 //
 // Overloaded += for characters
@@ -933,4 +1096,38 @@ int PString::toInt() const
 PString &PString::operator += (char ch)
 {
     return Putc(ch);
+}
+
+//
+// Stream Insertion Operators
+//
+
+PString &PString::operator << (const PString &other)
+{
+    return concat(other);
+}
+
+PString &PString::operator << (char ch)
+{
+    return Putc(ch);
+}
+
+//
+// PString::operator []
+//
+// Read-write variant.
+//
+char &PString::operator [] (size_t idx)
+{
+    return _buffer[idx];
+}
+
+//
+// PString::operator []
+//
+// Read-only variant.
+//
+const char &PString::operator [] (size_t idx) const
+{
+    return _buffer[idx];
 }
