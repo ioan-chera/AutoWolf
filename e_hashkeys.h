@@ -32,6 +32,9 @@
 
 unsigned int D_HashTableKey(const char *str);
 unsigned int D_HashTableKeyCase(const char *str);
+// IOANCH 20130309: PString variants
+unsigned int D_HashTablePKey(const char *str, size_t inLength);
+unsigned int D_HashTablePKeyCase(const char *str, size_t inLength);
 
 //
 // E*HashKey

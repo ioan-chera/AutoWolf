@@ -2,6 +2,7 @@
 //-----------------------------------------------------------------------------
 //
 // Copyright(C) 2002 James Haley
+// Copyright(C) 2013 Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -54,6 +55,26 @@ unsigned int D_HashTableKey(const char *str)
 }
 
 //
+// D_HashTablePKey
+//
+// IOANCH 20130309: updated for PStrings
+//
+unsigned int D_HashTablePKey(const char *str, size_t inLength)
+{
+    const char *c = str;
+    unsigned int h = 0;
+    size_t i;
+    
+    for(i = 0; i < inLength; ++i)
+    {
+        h = 5 * h + toupper(*c);
+        ++c;
+    }
+    
+    return h;
+}
+
+//
 // D_HashTableKeyCase
 //
 // haleyjd 09/09/09: as above, but case-sensitive
@@ -67,6 +88,26 @@ unsigned int D_HashTableKeyCase(const char *str)
         Quit("D_HashTableKeyCase: cannot hash NULL string!\n");
     
     while(*c)
+    {
+        h = 5 * h + *c;
+        ++c;
+    }
+    
+    return h;
+}
+
+//
+// D_HashTablePKeyCase
+//
+// IOANCH 20130309: updated for PStrings
+//
+unsigned int D_HashTablePKeyCase(const char *str, size_t inLength)
+{
+    const char *c = str;
+    unsigned int h = 0;
+    size_t i;
+    
+    for(i = 0; i < inLength; ++i)
     {
         h = 5 * h + *c;
         ++c;

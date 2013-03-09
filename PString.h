@@ -33,6 +33,7 @@
 // Largely inspired on Quasar's Eternity Engine qstring class
 // IMPORTANT: no strcmp, strcat, strcpy, strlen allowed!
 //            no null terminator!
+// ALSO: no errors allowed.
 //
 class PString
 {
@@ -48,20 +49,47 @@ protected:
 public:
     static const size_t basesize;
     
+    // Statics
+    static unsigned int HashCodeCaseStatic(const char *str, size_t inLength);
+    static unsigned int HashCodeStatic(const char *str, size_t inLength);
+    
     // Constructor
     PString(const char *cstr, size_t inLength);
+    PString(const PString &other);
+    PString(size_t startSize = 0);
     
     // Destructor
-    ~PString()
-    {
-        delete [] _buffer;
-    }
+    ~PString() { freeBuffer(); }
     
-    // Functions
+    // Manipulators
     PString &clear();
+    PString &clearOrCreate(size_t size);
     PString &concat(const char *str, size_t inLength);
+    PString &concat(const PString &src);
     PString &copy(const char *str, size_t inLength);
+    PString &copy(const PString &src);
+    PString &create();
+    PString &createSize(size_t size);
+    PString &Delc();
+    void     freeBuffer();
     PString &grow(size_t len);
+    PString &initCreate();
+    PString &initCreateSize(size_t size);
+    PString &insert(const char *insertstr, size_t inLength, size_t pos);
+    PString &Putc(char ch);
+    
+    // Accessors
+    const char *buffer() const { return _buffer; }
+    char        charAt(size_t idx) const;
+    bool        compare(const char *str, size_t inLength) const;
+    bool        compare(const PString &other) const;
+    unsigned int hashCode() const;      // case-insensitive
+    unsigned int hashCodeCase() const;  // case-considering
+    size_t      length() const { return _index;  }
+    size_t      size() const { return _size;  }
+    int         strCmp(const char *str, size_t inLength) const;
+    int         strCaseCmp(const char *str, size_t inLength) const;
+
     
     // Returns string length
 //    size_t length() {return _length;}
