@@ -66,6 +66,14 @@ protected:
     // Pointer to string value
     char *_stringValue;
 public:
+    
+    enum Type
+    {
+        Unknown,
+        Int32,
+        PString,
+    };
+    
     // Key string for hashing
     char *_key;    
     
@@ -74,6 +82,9 @@ public:
     
     // Integer value
     int32_t intValue;
+    
+    // Data type
+    Type type;
     
     // Constructor
     Property(const char *key);

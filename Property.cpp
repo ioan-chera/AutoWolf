@@ -25,7 +25,8 @@
 //
 // Property::Property
 //
-Property::Property(const char *key) : _stringAllocLen(0), _stringValue(0)
+Property::Property(const char *key) : _stringAllocLen(0), _stringValue(0),
+type(Unknown)
 {
     _key = new char[strlen(key) + 1];
     strcpy(_key, key);

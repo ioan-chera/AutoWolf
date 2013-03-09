@@ -19,6 +19,8 @@
 #ifndef PROPERTYFILE_H_
 #define PROPERTYFILE_H_
 
+#define PROPERTY_FILE_HEADER "Property"
+
 #include "e_hash.h"
 #include "Property.h"
 #include "DataFile.h"
@@ -27,6 +29,13 @@
 //
 // EHashTable<ACSScript, EIntHashKey, &ACSScript::number, 
 // &ACSScript::numberLinks> acsScriptsByNumber;
+
+//
+// PropertyFile
+//
+// File containing a hash table of Property objects. Thanks to Quasar for the
+// hash table structure.
+//
 class PropertyFile : public DataFile
 {
 protected:
@@ -35,6 +44,7 @@ protected:
 	// Execute reading from file
 	bool doReadFromFile(FILE *f);
 public:
+    PropertyFile();
     // the content
     EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
         propertyTable;
