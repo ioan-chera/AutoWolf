@@ -30,7 +30,7 @@
 // "Pascal" string, i.e. string with attached length value, so it can contain
 // null characters and whose size can be expected early from disk reading.
 //
-// Largely inspired on Quasar's Eternity Engine qstring class
+// Largely based on Quasar's Eternity Engine qstring class
 // IMPORTANT: no strcmp, strcat, strcpy, strlen allowed!
 //            no null terminator!
 // ALSO: no errors allowed.
@@ -46,7 +46,10 @@ protected:
     bool _isLocal() const { return (_buffer == _local); }
     void _unLocalize(size_t pSize);
     
+    friend size_t _PStrReplaceInternal(PString *pstr, char repl);
+    
 public:
+    static const size_t npos;
     static const size_t basesize;
     
     // Statics
@@ -62,6 +65,7 @@ public:
     ~PString() { freeBuffer(); }
     
     // Manipulators
+    PString &addDefaultExtension(const char *ext, size_t inLength);
     PString &clear();
     PString &clearOrCreate(size_t size);
     PString &concat(const char *str, size_t inLength);
@@ -71,25 +75,43 @@ public:
     PString &create();
     PString &createSize(size_t size);
     PString &Delc();
+    void     extractFileBase(PString &dest);
     void     freeBuffer();
     PString &grow(size_t len);
     PString &initCreate();
     PString &initCreateSize(size_t size);
     PString &insert(const char *insertstr, size_t inLength, size_t pos);
+    PString &normalizeSlashes();
+    PString &pathConcatenate(const char *addend, size_t inLength);
     PString &Putc(char ch);
+    PString &removeFileSpec();
+    size_t   replace(const char *filter, size_t inLength, char repl);
+    size_t   replaceNotOf(const char *filter, size_t inLength, char repl);
+    void     swapWith(PString &str2);
+    PString &toLower();
+    PString &toUpper();
+    PString &truncate(size_t pos);
     
     // Accessors
-    const char *buffer() const { return _buffer; }
-    char        charAt(size_t idx) const;
-    bool        compare(const char *str, size_t inLength) const;
-    bool        compare(const PString &other) const;
+    const char  *buffer() const { return _buffer; }
+    char         charAt(size_t idx) const;
+    bool         compare(const char *str, size_t inLength) const;
+    bool         compare(const PString &other) const;
+    void        *copyInto(char *dest, size_t size) const;
+    PString     &copyInto(PString &dest) const;
+    size_t       findFirstNotOf(char c) const;
+    size_t       findFirstOf(char c) const;
+    size_t       findLastOf(char c) const;
     unsigned int hashCode() const;      // case-insensitive
     unsigned int hashCodeCase() const;  // case-considering
-    size_t      length() const { return _index;  }
-    size_t      size() const { return _size;  }
-    int         strCmp(const char *str, size_t inLength) const;
-    int         strCaseCmp(const char *str, size_t inLength) const;
+    size_t       length() const { return _index;  }
+    size_t       size() const { return _size;  }
+    int          strCmp(const char *str, size_t inLength) const;
+    int          strCaseCmp(const char *str, size_t inLength) const;
+    int          toInt() const;
 
+    // Operators
+    PString &operator += (char  ch);
     
     // Returns string length
 //    size_t length() {return _length;}

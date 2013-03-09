@@ -24,7 +24,12 @@
 
 #include "PString.h"
 
+const size_t PString::npos     = ((size_t)-1);
 const size_t PString::basesize = PSTRING_LOCAL_LENGTH;
+
+#define PSTRING_REPLACE_LENGTH 256
+
+static unsigned char pstr_repltable[PSTRING_REPLACE_LENGTH];
 
 // Many of the functions here have been taken from Eternity Engine's qstring
 // class and updated to work on pstrings, thus the copyright notice above.
@@ -165,6 +170,33 @@ PString &PString::copy(const PString &src)
     return concat(src);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// PString::addDefaultExtension
+//
+// Note: an empty string will not be modified.
+//
+PString &PString::addDefaultExtension(const char *ext, size_t inLength)
+{
+    char *p = _buffer;
+    
+    if(_index > 0)
+    {
+        p = p + _index - 1;
+        while(p-- > _buffer && *p != '/' && *p != '\\')
+        {
+            if(*p == '.')
+                return *this; // has an extension already.
+        }
+        if(*ext != '.') // need a dot?
+            *this += '.';
+        concat(ext, inLength);   // add the extension
+    }
+    
+    return *this;
+}
+
 //
 // PString::create
 //
@@ -219,6 +251,31 @@ PString &PString::Delc()
     }
     
     return *this;
+}
+
+//
+// PString::extractFileBase
+//
+// This one is not limited to 8 character file names, and will include any
+// file extension, however, so it is not strictly equivalent.
+//
+void PString::extractFileBase(PString &dest)
+{
+    const char *src = _buffer + _index - 1;
+    dest.copy("", 0);
+    
+    // back up until a \ or the start
+
+    while(src != _buffer &&
+          *(src - 1) != ':' &&
+          *(src - 1) != '\\' &&
+          *(src - 1) != '/')
+    {
+
+        --src;
+    }
+    
+    dest.copy(src, _index - (size_t)src);
 }
 
 //
@@ -334,6 +391,91 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
 }
 
 //
+// _NormalizeSlashes
+//
+// Remove trailing slashes, translate backslashes to slashes
+// The string to normalize is passed and returned in str
+//
+// killough 11/98: rewritten
+// IOANCH 20130309: copied from Eternity
+//
+static void _NormalizeSlashes(char *str, size_t inLength)
+{
+    char *p;
+    char useSlash      = '/'; // The slash type to use for normalization.
+    char replaceSlash = '\\'; // The kind of slash to replace.
+    bool isUNC = false;
+    
+#ifdef _WIN32
+
+    // This is an UNC path; it should use backslashes.
+    // NB: We check for both in the event one was changed earlier by mistake.
+    if(strlen(str) > 2 &&
+       ((str[0] == '\\' || str[0] == '/') && str[0] == str[1]))
+    {
+        useSlash = '\\';
+        replaceSlash = '/';
+        isUNC = true;
+    }
+
+#endif
+    
+    // Convert all replaceSlashes to useSlashes
+    size_t i;
+    for(p = str, i = 0; i < inLength; p++, i++)
+    {
+        if(*p == replaceSlash)
+            *p = useSlash;
+    }
+    
+    // Remove trailing slashes
+    while(p > str && *--p == useSlash)
+        *p = 0;
+    
+    // Collapse multiple slashes
+    const char *endpos = str + inLength;
+    // IOANCH: I hope it works...
+    for(p = str + (isUNC ? 2 : 0); (*str++ = *p), str != endpos; )
+        if(*p++ == useSlash)
+            while(*p == useSlash)
+                p++;
+}
+
+//
+// PString::normalizeSlashes
+//
+// Calls M_NormalizeSlashes on a PString, which replaces \ characters with /
+// and eliminates any duplicate slashes. This isn't simply a convenience
+// method, as the PString structure requires a fix-up after this function is
+// used on it, in order to keep the string length correct.
+//
+PString &PString::normalizeSlashes()
+{
+    _NormalizeSlashes(_buffer, _index);
+    _index = strlen(_buffer);
+    
+    return *this;
+}
+
+//
+// PString::pathConcatenate
+//
+// Concatenate a C string assuming the PString's current contents are a file
+// path. Slashes will be normalized.
+//
+PString &PString::pathConcatenate(const char *addend, size_t inLength)
+{
+    // Only add a slash if this is not the initial path component.
+    if(_index > 0)
+        *this += '/';
+    
+    concat(addend, inLength);
+    normalizeSlashes();
+    
+    return *this;
+}
+
+//
 // PString::Putc
 //
 // Adds a character to the end of the PString, reallocating via buffer doubling
@@ -341,10 +483,199 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
 //
 PString &PString::Putc(char ch)
 {
-    if(_index >= _size - 1) // leave room for \0
+    if(_index >= _size)     // leave room for \0
         grow(_size);        // double buffer size
     
     _buffer[_index++] = ch;
+    
+    return *this;
+}
+
+//
+// PString::removeFileSpec
+//
+// Removes a filespec from a path.
+// If called on a path without a file, the last path component is removed.
+//
+PString &PString::removeFileSpec()
+{
+    size_t lastSlash;
+    
+    lastSlash = findLastOf('/');
+    if(lastSlash == npos)
+        lastSlash = findLastOf('\\');
+    if(lastSlash != npos)
+        truncate(lastSlash);
+    
+    return *this;
+}
+
+//
+// _PStrReplaceInternal
+//
+// Static routine for replacement functions.
+//
+size_t _PStrReplaceInternal(PString *pstr, char repl)
+{
+    size_t repcount = 0;
+    unsigned char *rptr = (unsigned char *)(pstr->_buffer);
+    
+    // now scan through the qstring buffer and replace any characters that
+    // match characters in the filter table.
+    size_t i;
+    for(i = 0; i < pstr->_index; ++i)
+    {
+        if(pstr_repltable[*rptr])
+        {
+            *rptr = (unsigned char)repl;
+            ++repcount; // count characters replaced
+        }
+        ++rptr;
+    }
+    
+    return repcount;
+}
+
+//
+// PString::replace
+//
+// Replaces characters in the PString that match any character in the filter
+// string with the character specified by the final parameter.
+//
+size_t PString::replace(const char *filter, size_t inLength, char repl)
+{
+    const unsigned char *fptr = (unsigned char *)filter;
+    
+    memset(pstr_repltable, 0, sizeof(pstr_repltable));
+    
+    // first scan the filter string and build the replacement filter table
+    size_t i;
+    for(i = 0; i < inLength; ++i)
+        pstr_repltable[*fptr++] = 1;
+    
+    return _PStrReplaceInternal(this, repl);
+}
+
+//
+// PString::replaceNotOf
+//
+// As above, but replaces all characters NOT in the filter string.
+//
+size_t PString::replaceNotOf(const char *filter, size_t inLength, char repl)
+{
+    const unsigned char *fptr = (unsigned char *)filter;
+    
+    memset(pstr_repltable, 1, sizeof(pstr_repltable));
+    
+    // first scan the filter string and build the replacement filter table
+    size_t i;
+    for(i = 0; i < inLength; ++i)
+        pstr_repltable[*fptr++] = 0;
+    
+    return _PStrReplaceInternal(this, repl);
+}
+
+//
+// PString::swapWith
+//
+// Exchanges the contents of two PStrings.
+//
+void PString::swapWith(PString &str2)
+{
+    char   *tmpbuffer;
+    size_t  tmpsize;
+    size_t  tmpindex;
+    
+    // Both must be unlocalized.
+    _unLocalize(_size);
+    str2._unLocalize(str2._size);
+    
+    tmpbuffer = this->_buffer; // make a shallow copy
+    tmpsize   = this->_size;
+    tmpindex  = this->_index;
+    
+    this->_buffer = str2._buffer;
+    this->_size   = str2._size;
+    this->_index  = str2._index;
+    
+    str2._buffer = tmpbuffer;
+    str2._size   = tmpsize;
+    str2._index  = tmpindex;
+}
+
+//
+// _memlwr
+//
+// IOANCH 20130309: portable strlwr function, copied from Eternity
+//
+char *_memlwr(char *string, size_t inLength)
+{
+    char *s = string;
+    size_t i;
+    
+    for(i = 0; i < inLength; ++i)
+    {
+        char c = *s;
+        *s++ = tolower(c);
+    }
+    
+    return string;
+}
+
+//
+// PString::toLower
+//
+// Converts the string to lowercase.
+//
+PString &PString::toLower()
+{
+    _memlwr(_buffer, _index);
+    return *this;
+}
+
+//
+// _memupr
+//
+// IOANCH 20130309: portable strupr function, copied from Eternity
+//
+char *_memupr(char *string, size_t inLength)
+{
+    char *s = string;
+    size_t i;
+    
+    for(i = 0; i < inLength; ++i)
+    {
+        char c = *s;
+        *s++ = toupper(c);
+    }
+    
+    return string;
+}
+
+//
+// PString::toUpper
+//
+// Converts the string to uppercase.
+//
+PString &PString::toUpper()
+{
+    _memupr(_buffer, _index);
+    return *this;
+}
+
+//
+// PString::truncate
+//
+// Truncates the PString to the indicated position.
+//
+PString &PString::truncate(size_t pos)
+{
+    // pos must be between 0 and qstr->index - 1
+    if(pos >= _index)
+        return *this;
+    
+    memset(_buffer + pos, 0, _index - pos);
+    _index = pos;
     
     return *this;
 }
@@ -379,6 +710,100 @@ bool PString::compare(const char *str, size_t inLength) const
 bool PString::compare(const PString &other) const
 {
     return !memcmp(_buffer, other._buffer, _index);
+}
+
+//
+// PString::copyInto
+//
+// Copies the PString into a C string buffer.
+//
+void *PString::copyInto(char *dest, size_t pSize) const
+{
+    return memcpy(dest, _buffer, pSize);
+}
+
+PString &PString::copyInto(PString &dest) const
+{
+    if(dest._index > 0)
+        dest.clear();
+    
+    return dest.concat(*this);
+}
+
+//
+// PString::findFirstNotOf
+//
+// Finds the first occurance of a character in the PString which does not
+// match the provided character. Returns PString::npos if not found.
+//
+size_t PString::findFirstNotOf(char c) const
+{
+    const char *rover = _buffer, *endbuf = _buffer + _index;
+    bool found = false;
+    
+    while(rover != endbuf)
+    {
+        if(*rover != c)
+        {
+            found = true;
+            break;
+        }
+        ++rover;
+    }
+    
+    return found ? rover - _buffer : npos;
+}
+
+//
+// PString::findFirstOf
+//
+// Finds the first occurance of a character in the PString and returns its
+// position. Returns PString::npos if not found.
+//
+size_t PString::findFirstOf(char c) const
+{
+    const char *rover = _buffer, *endbuf = _buffer + _index;
+    bool found = false;
+    
+    while(rover != endbuf)
+    {
+        if(*rover == c)
+        {
+            found = true;
+            break;
+        }
+        ++rover;
+    }
+    
+    return found ? rover - _buffer : npos;
+}
+
+//
+// PString::findLastOf
+//
+// Find the last occurrance of a character in the PString which matches
+// the provided character. Returns PString::npos if not found.
+//
+size_t PString::findLastOf(char c) const
+{
+    const char *rover;
+    bool found = false;
+    
+    if(!index)
+        return npos;
+    
+    rover = _buffer + _index - 1;
+    do
+    {
+        if(*rover == c)
+        {
+            found = true;
+            break;
+        }
+    }
+    while((rover == _buffer) ? false : (--rover, true));
+    
+    return found ? rover - _buffer : npos;
 }
 
 //
@@ -442,4 +867,27 @@ static int _memcasecmp(const void* buf1, const void* buf2, size_t count)
 int PString::strCaseCmp(const char *str, size_t inLength) const
 {
     return _memcasecmp(_buffer, str, inLength);
+}
+
+//
+// PString::toInt
+//
+// Returns the PString converted to an integer via atoi.
+//
+int PString::toInt() const
+{
+    return atoi(_buffer);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// PString::operator +=
+//
+// Overloaded += for characters
+//
+PString &PString::operator += (char ch)
+{
+    return Putc(ch);
 }
