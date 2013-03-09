@@ -62,6 +62,12 @@ unsigned int D_HashTablePKeyCase(const char *str, size_t inLength);
 // insensitive C strings.
 //
 
+#ifdef _WIN32
+    #define strcasecmp stricmp
+    #define strncasecmp strnicmp
+    #define snprintf _snprintf
+#endif
+
 //
 // POD integer hash key
 //

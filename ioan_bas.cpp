@@ -505,8 +505,13 @@ char *Basic::NewStringTildeExpand(const char *basedir)
         {
             size_t newlen = strlen(home) + strlen(basedir);
             char *newalloc = (char *)malloc(newlen * sizeof(char));
+#ifndef _WIN32
             strlcat(newalloc, home, newlen);
             strlcat(newalloc, basedir + 1, newlen);
+#else
+            strcat(newalloc, home);
+            strcat(newalloc, basedir + 1);
+#endif
                         
             return newalloc;
         }

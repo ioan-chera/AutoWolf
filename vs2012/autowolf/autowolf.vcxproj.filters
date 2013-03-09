@@ -51,12 +51,6 @@
     <ClCompile Include="..\..\DataFile.cpp">
       <Filter>Source Files\IOAN</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Dictionary.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\DictionaryFile.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\DirectoryFile.cpp">
       <Filter>Source Files\IOAN</Filter>
     </ClCompile>
@@ -177,6 +171,18 @@
     <ClCompile Include="..\..\obattrib.cpp">
       <Filter>Source Files\TABLES</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\PString.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e_hashkeys.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Property.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PropertyFile.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\audiosod.h">
@@ -189,12 +195,6 @@
       <Filter>Header Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DataFile.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Dictionary.h">
-      <Filter>Header Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\DictionaryFile.h">
       <Filter>Header Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DirectoryFile.h">
@@ -295,6 +295,24 @@
     </ClInclude>
     <ClInclude Include="..\..\sprabstract.h">
       <Filter>Header Files\GFXAUDIO</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PString.h">
+      <Filter>Header Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e_hash.h">
+      <Filter>Header Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e_hashkeys.h">
+      <Filter>Header Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\m_dllist.h">
+      <Filter>Header Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Property.h">
+      <Filter>Header Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PropertyFile.h">
+      <Filter>Header Files\IOAN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -58,6 +58,7 @@ public:
     
     // Constructor
     PString(const char *cstr, size_t inLength);
+    PString(const char *cstr);
     PString(const PString &other);
     PString(size_t startSize = 0);
     
@@ -66,11 +67,14 @@ public:
     
     // Manipulators
     PString &addDefaultExtension(const char *ext, size_t inLength);
+    PString &addDefaultExtension(const char *ext);
     PString &clear();
     PString &clearOrCreate(size_t size);
     PString &concat(const char *str, size_t inLength);
+    PString &concat(const char *str);
     PString &concat(const PString &src);
     PString &copy(const char *str, size_t inLength);
+    PString &copy(const char *str);
     PString &copy(const PString &src);
     PString &create();
     PString &createSize(size_t size);
@@ -82,14 +86,18 @@ public:
     PString &initCreate();
     PString &initCreateSize(size_t size);
     PString &insert(const char *insertstr, size_t inLength, size_t pos);
+    PString &insert(const char *insertstr, size_t pos);
     PString &lstrip(char c);
     PString &makeQuoted();
     PString &normalizeSlashes();
     PString &pathConcatenate(const char *addend, size_t inLength);
+    PString &pathConcatenate(const char *addend);
     PString &Putc(char ch);
     PString &removeFileSpec();
     size_t   replace(const char *filter, size_t inLength, char repl);
+    size_t   replace(const char *filter, char repl);
     size_t   replaceNotOf(const char *filter, size_t inLength, char repl);
+    size_t   replaceNotOf(const char *filter, char repl);
     PString &rstrip(char c);
     void     swapWith(PString &str2);
     PString &toLower();
@@ -100,14 +108,17 @@ public:
     const char  *buffer() const { return _buffer; }
     char         charAt(size_t idx) const;
     bool         compare(const char *str, size_t inLength) const;
+    bool         compare(const char *str) const;
     bool         compare(const PString &other) const;
     void        *copyInto(char *dest, size_t size) const;
     PString     &copyInto(PString &dest) const;
     size_t       find(const char *s, size_t inLength, size_t pos = 0) const;
+    size_t       find(const char *s, size_t pos = 0) const;
     size_t       findFirstNotOf(char c) const;
     size_t       findFirstOf(char c) const;
     size_t       findLastOf(char c) const;
     const char  *findSubStr(const char *substr, size_t inLength) const;
+    const char  *findSubStr(const char *substr) const;
     unsigned int hashCode() const;      // case-insensitive
     unsigned int hashCodeCase() const;  // case-considering
     size_t       length() const { return _index;  }
@@ -115,16 +126,22 @@ public:
     const char  *strChr(char c) const;
     int          strCmp(const char *str, size_t inLength) const;
     int          strCaseCmp(const char *str, size_t inLength) const;
+    int          strCaseCmp(const char *str) const;
     const char  *strRChr(char c) const;
     int          toInt() const;
 
     // Operators
     bool     operator == (const PString &other) const;
+    bool     operator == (const char    *other) const;
     bool     operator != (const PString &other) const;
+    bool     operator != (const char    *other) const;
     PString &operator  = (const PString &other);
+    PString &operator  = (const char    *other);
     PString &operator += (const PString &other);
+    PString &operator += (const char    *other);
     PString &operator += (char  ch);
     PString &operator << (const PString &other);
+    PString &operator << (const char    *other);
     PString &operator << (char   ch);
     
     char       &operator [] (size_t idx);

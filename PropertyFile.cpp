@@ -124,7 +124,7 @@ void PropertyFile::doWriteToFile(FILE *f)
                 fwrite(&prop->intValue, sizeof(int32_t), 1, f);
                 break;
             case Property::PString:
-                propValLen = strlen(prop->stringValue());
+                propValLen = (uint32_t)strlen(prop->stringValue());
                 fwrite(&propValLen, sizeof(uint32_t), 1, f);
                 fwrite(prop->stringValue(), sizeof(char), propValLen, f);
             default:

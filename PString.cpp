@@ -25,6 +25,43 @@
 
 #include "PString.h"
 
+#ifdef _WIN32
+    #define strcasecmp stricmp
+    #define strncasecmp strnicmp
+    #define snprintf _snprintf
+
+//
+// memmem
+//
+// Missing from Windows; copied and edited from:
+// http://stackoverflow.com/questions/2188914/c-searching-for-a-string-in-a-file
+//
+void *memmem(const void *str, size_t hlen, const void *substr, size_t nlen)
+{
+    int needle_first;
+    const char *p = (const char *)str;
+    size_t plen = hlen;
+
+    if (!nlen)
+        return NULL;
+
+    needle_first = *(unsigned char *)substr;
+
+    while (plen >= nlen && (p = (const char *)memchr(p, needle_first, 
+        plen - nlen + 1)))
+    {
+        if (!memcmp(p, substr, nlen))
+            return (void *)p;
+
+        p++;
+        plen = hlen - (p - (const char *)str);
+    }
+
+    return NULL;
+}
+
+#endif
+
 const size_t PString::npos     = ((size_t)-1);
 const size_t PString::basesize = PSTRING_LOCAL_LENGTH;
 
@@ -86,6 +123,13 @@ _size(PSTRING_LOCAL_LENGTH)
     copy(cstr, inLength);
 }
 
+PString::PString(const char *cstr) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+{
+    _buffer = _local;
+    memset(_local, 0, sizeof(_local));
+    copy(cstr);
+}
+
 PString::PString(const PString &other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 {
     _buffer = _local;
@@ -144,6 +188,11 @@ PString &PString::concat(const char *str, size_t inLength)
     return *this;
 }
 
+PString &PString::concat(const char *str)
+{
+    return concat(str, strlen(str));
+}
+
 PString &PString::concat(const PString &src)
 {
     return concat(src._buffer, src._index);
@@ -161,6 +210,13 @@ PString &PString::copy(const char *str, size_t inLength)
         clear();
     
     return concat(str, inLength);
+}
+
+PString &PString::copy(const char *str)
+{
+    if(_index > 0)
+        clear();
+    return concat(str);
 }
 
 PString &PString::copy(const PString &src)
@@ -196,6 +252,11 @@ PString &PString::addDefaultExtension(const char *ext, size_t inLength)
     }
     
     return *this;
+}
+
+PString &PString::addDefaultExtension(const char *ext)
+{
+    return addDefaultExtension(ext, strlen(ext));
 }
 
 //
@@ -427,6 +488,10 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
     
     return *this;
 }
+PString &PString::insert(const char *insertstr, size_t pos)
+{
+    return insert(insertstr, strlen(insertstr), pos);
+}
 
 //
 // PString::lstrip
@@ -464,7 +529,7 @@ PString &PString::lstrip(char c)
 PString &PString::makeQuoted()
 {
     // if the string is empty, make it "", else add quotes around the contents
-    if(index == 0)
+    if(_index == 0)
         return concat("\"\"", 2);
     else
     {
@@ -557,6 +622,10 @@ PString &PString::pathConcatenate(const char *addend, size_t inLength)
     
     return *this;
 }
+PString &PString::pathConcatenate(const char *addend)
+{
+    return pathConcatenate(addend, strlen(addend));
+}
 
 //
 // PString::Putc
@@ -638,6 +707,10 @@ size_t PString::replace(const char *filter, size_t inLength, char repl)
     
     return _PStrReplaceInternal(this, repl);
 }
+size_t PString::replace(const char *filter, char repl)
+{
+    return replace(filter, strlen(filter), repl);
+}
 
 //
 // PString::replaceNotOf
@@ -656,6 +729,10 @@ size_t PString::replaceNotOf(const char *filter, size_t inLength, char repl)
         pstr_repltable[*fptr++] = 0;
     
     return _PStrReplaceInternal(this, repl);
+}
+size_t PString::replaceNotOf(const char *filter, char repl)
+{
+    return replaceNotOf(filter, strlen(filter), repl);
 }
 
 //
@@ -803,6 +880,11 @@ bool PString::compare(const char *str, size_t inLength) const
     return !memcmp(_buffer, str, _index < inLength ? _index : inLength);
 }
 
+bool PString::compare(const char *str) const
+{
+    return !strcmp(_buffer, str);
+}
+
 bool PString::compare(const PString &other) const
 {
     return !memcmp(_buffer, other._buffer, _index < other._index ? _index :
@@ -840,6 +922,17 @@ size_t PString::find(const char *s, size_t inLength, size_t pos) const
     
     char *base   = _buffer + pos;
     char *substr =  (char *)memmem(base, _index - pos, s, inLength);
+    
+    return substr ? substr - _buffer : npos;
+}
+size_t PString::find(const char *s, size_t pos) const
+{
+    // pos must be between 0 and index - 1
+    if(pos >= _index)
+        return npos;
+    
+    char *base   = _buffer + pos;
+    char *substr =  strstr(base, s);
     
     return substr ? substr - _buffer : npos;
 }
@@ -903,7 +996,7 @@ size_t PString::findLastOf(char c) const
     const char *rover;
     bool found = false;
     
-    if(!index)
+    if(!_index)
         return npos;
     
     rover = _buffer + _index - 1;
@@ -929,6 +1022,10 @@ size_t PString::findLastOf(char c) const
 const char *PString::findSubStr(const char *substr, size_t inLength) const
 {
     return (const char *)memmem(_buffer, _index, substr, inLength);
+}
+const char *PString::findSubStr(const char *substr) const
+{
+    return (const char *)strstr(_buffer, substr);
 }
 
 //
@@ -1003,6 +1100,10 @@ int PString::strCaseCmp(const char *str, size_t inLength) const
 {
     return _memcasecmp(_buffer, str, _index < inLength ? _index : inLength);
 }
+int PString::strCaseCmp(const char *str) const
+{
+    return strcasecmp(_buffer, str);
+}
 
 //
 // _memrchr
@@ -1056,6 +1157,10 @@ bool PString::operator == (const PString &other) const
     return !memcmp(_buffer, other._buffer, _index < other._index ? _index :
                    other._index);
 }
+bool PString::operator == (const char *other) const
+{
+   return !strcmp(_buffer, other);
+}
 
 //
 // PString::operator !=
@@ -1067,6 +1172,10 @@ bool PString::operator != (const PString &other) const
     return memcmp(_buffer, other._buffer, _index < other._index ? _index :
                    other._index) != 0;
 }
+bool PString::operator != (const char *other) const
+{
+    return strcmp(_buffer, other) != 0;
+}
 
 //
 // PString::operator =
@@ -1077,6 +1186,10 @@ PString &PString::operator = (const PString &other)
 {
     return copy(other);
 }
+PString &PString::operator = (const char *other)
+{
+    return copy(other);
+}
 
 //
 // PString::operator +=
@@ -1084,6 +1197,10 @@ PString &PString::operator = (const PString &other)
 // Overloaded += for PString &
 //
 PString &PString::operator += (const PString &other)
+{
+    return concat(other);
+}
+PString &PString::operator += (const char *other)
 {
     return concat(other);
 }
@@ -1103,6 +1220,10 @@ PString &PString::operator += (char ch)
 //
 
 PString &PString::operator << (const PString &other)
+{
+    return concat(other);
+}
+PString &PString::operator << (const char *other)
 {
     return concat(other);
 }

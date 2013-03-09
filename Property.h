@@ -21,6 +21,9 @@
 #define __Wolf4SDL__Property__
 
 #include <stdlib.h>
+#ifdef _WIN32
+#include <stdint.h>
+#endif
 
 #include "m_dllist.h"
 
