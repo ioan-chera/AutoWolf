@@ -807,6 +807,49 @@ size_t PString::findLastOf(char c) const
 }
 
 //
+// _memstr
+//
+// find string in memory, even with nulls
+//
+static char *_memstr(const char *in, size_t inLength, const char *str, size_t
+                     inLength2)
+{
+    char c;
+    
+    // IOANCH 20130309: return in address
+    if(inLength <= 0)
+        return (char *)in;
+    
+    c = *str++;
+    
+    do
+    {
+        char sc;
+        do
+        {
+            sc = *in++;
+            if (!sc)
+                return NULL;
+        }
+        while(sc != c);
+    }
+    while(strncmp(in, str, inLength2));
+    
+    return (char *)(in - 1);
+}
+
+//
+// PString::findSubStr
+//
+// Calls strstr on the PString. If the passed-in string is found, then the
+// return value points to the location of the first instance of that substring.
+//
+const char *PString::findSubStr(const char *substr) const
+{
+    return strstr(_buffer, substr);
+}
+
+//
 // PString::hashCode
 //
 // Calls the standard D_HashTablePKey that is used for the vast majority of

@@ -102,6 +102,7 @@ public:
     size_t       findFirstNotOf(char c) const;
     size_t       findFirstOf(char c) const;
     size_t       findLastOf(char c) const;
+    const char  *findSubStr(const char *substr) const;
     unsigned int hashCode() const;      // case-insensitive
     unsigned int hashCodeCase() const;  // case-considering
     size_t       length() const { return _index;  }
