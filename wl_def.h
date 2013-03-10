@@ -111,6 +111,7 @@ typedef struct
 
 void Quit(const char *errorStr, ...);
 
+
 #include "id_pm.h"
 #include "id_sd.h"
 #include "id_in.h"
@@ -118,8 +119,6 @@ void Quit(const char *errorStr, ...);
 #include "id_vh.h"
 #include "id_us.h"
 #include "id_ca.h"
-
-#include "wl_menu.h"
 
 #define MAPSPOT(x,y,plane) (mapsegs[plane][((y)<<mapshift)+(x)])
 

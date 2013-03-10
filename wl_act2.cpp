@@ -28,6 +28,7 @@
 #include "wl_draw.h"
 #include "wl_game.h"
 #include "wl_main.h"
+#include "wl_menu.h"
 #include "wl_play.h"
 #include "wl_state.h"
 #pragma hdrstop
