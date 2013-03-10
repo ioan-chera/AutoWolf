@@ -301,6 +301,9 @@
     <ClInclude Include="..\..\PString.h">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\obattrib.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\sodpal.inc">

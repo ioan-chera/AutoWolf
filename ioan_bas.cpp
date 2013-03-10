@@ -24,9 +24,18 @@
 // static members definition
 boolean Basic::nonazis, Basic::secretstep3;
 List<void *> Basic::livingNazis, Basic::thrownProjectiles;
-List<byte> Basic::itemList[MAPSIZE][MAPSIZE];
+static List<byte> _itemList[MAPSIZE][MAPSIZE];
 
-int Basic::markov[27][27] =
+//
+// _markov
+//
+// Structure for random text generation.
+// Markov transition matrix.
+// Each column is A to Z then space (' '), each row likewise. Each cell 
+// describes the probability weight of going from letter of row to letter of 
+// column.
+//
+static int _markov[27][27] =
 {
 	{0,26,45,16,0,2,8,0,25,1,14,74,93,202,0,20,0,120,47,137,13,13,5,0,25,0,64},
 	{16,0,0,0,26,0,0,0,8,5,0,46,0,0,10,0,0,7,3,1,60,0,0,0,29,0,3},
@@ -57,8 +66,292 @@ int Basic::markov[27][27] =
 	{322,81,189,95,66,117,45,34,224,3,6,87,93,73,269,199,1,74,170,482,44,24,152,0,100,0,0,}
 };
 
-int Basic::marktot[27] =
+//
+// _marktot
+//
+// Sum of each row from _markov. Required to calculate the normalized 
+// probabilities.
+//
+static int _marktot[27] =
 	{950,214,536,476,1644,365,269,599,1131,9,56,424,350,919,1315,381,10,1090,880,1350,434,120,228,26,353,0,2950};
+
+//
+// Basic::EmptyItemList
+//
+// empty itemList
+//
+void Basic::EmptyItemList()
+{
+	int i, j;
+	for(i = 0; i < MAPSIZE; ++i)
+		for(j = 0; j < MAPSIZE; ++j)
+			_itemList[i][j].removeAll();
+}
+
+//
+// Basic::AddItemToList
+//
+void Basic::AddItemToList(int tx, int ty, byte itemtype)
+{
+    _itemList[tx][ty].add(itemtype);
+}
+
+//
+// Basic::RemoveItemFromList
+//
+void Basic::RemoveItemFromList(int tx, int ty, byte itemtype)
+{
+	_itemList[tx][ty].remove(itemtype);
+}
+
+//
+// Basic::FirstObjectAt
+//
+byte Basic::FirstObjectAt(int tx, int ty)
+{
+	return _itemList[tx][ty].firstObject();
+}
+
+//
+// Basic::NextObjectAt
+//
+byte Basic::NextObjectAt(int tx, int ty)
+{
+	return _itemList[tx][ty].nextObject();
+}
+
+//
+// _SpawnStand
+//
+// Made protected.
+//
+// IOANCH 29.06.2012: made objtype *
+//
+static objtype *_SpawnStand (classtype which, int tilex, int tiley, int dir)
+{
+    word *map;
+    word tile;
+    
+    if(atr::states[which].stand)
+    {
+        SpawnNewObj(tilex, tiley, atr::states[which].stand);
+        if(atr::speeds[which].patrol >= 0)
+            newobj->speed = atr::speeds[which].patrol;
+        if(!loadedgame)
+            gamestate.killtotal++;
+    
+        map = mapsegs[0]+(tiley<<mapshift)+tilex;
+        tile = *map;
+        if (tile == AMBUSHTILE)
+        {
+            tilemap[tilex][tiley] = 0;
+
+            if (*(map+1) >= AREATILE)
+                tile = *(map+1);
+            if (*(map-mapwidth) >= AREATILE)
+                tile = *(map-mapwidth);
+            if (*(map+mapwidth) >= AREATILE)
+                tile = *(map+mapwidth);
+            if ( *(map-1) >= AREATILE)
+                tile = *(map-1);
+
+            *map = tile;
+            newobj->areanumber = tile-AREATILE;
+
+            newobj->flags |= FL_AMBUSH;
+        }
+
+        newobj->obclass = which;
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
+        newobj->dir = (dirtype)(dir * 2);
+        newobj->flags |= FL_SHOOTABLE;
+        
+        return newobj;
+    }
+    return NULL;
+}
+
+//
+// _SpawnPatrol
+//
+// IOANCH 29.06.2012: made objtype *
+//
+static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
+{
+    if(atr::states[which].patrol)
+    {
+        SpawnNewObj(tilex, tiley, atr::states[which].patrol);
+        if(atr::speeds[which].patrol >= 0)
+            newobj->speed = atr::speeds[which].patrol;
+        if (!loadedgame)
+            gamestate.killtotal++;
+    
+        newobj->obclass = which;
+        newobj->dir = (dirtype)(dir*2);
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
+        newobj->distance = TILEGLOBAL;
+        newobj->flags |= FL_SHOOTABLE;
+        newobj->active = ac_yes;
+
+        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
+
+        switch (dir)
+        {
+            case 0:
+                newobj->tilex++;
+                break;
+            case 1:
+                newobj->tiley--;
+                break;
+            case 2:
+                newobj->tilex--;
+                break;
+            case 3:
+                newobj->tiley++;
+                break;
+        }
+
+        actorat[newobj->tilex][newobj->tiley] = newobj;
+
+        
+        return newobj;
+    }
+    return NULL;
+}
+
+//
+// _SpawnBoss
+//
+// IOANCH 29.06.2012: made objtype *
+//
+static objtype *_SpawnBoss (classtype which, int tilex, int tiley)
+{
+	// IOANCH 29.06.2012: update this for ANY boss
+	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
+
+    if(atr::states[which].stand)
+    {
+        SpawnNewObj (tilex,tiley,atr::states[which].stand);
+
+        spawnstate = atr::states[which].stand;
+        atr::actions[which].spawn();
+    
+        newobj->obclass = which;
+        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
+        newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
+        if (!loadedgame)
+            gamestate.killtotal++;
+        
+        return newobj;
+    }
+    return NULL;
+}
+
+// IOANCH 20130202: unification process
+//
+// _SpawnGhosts
+//
+static void _SpawnGhosts (int which, int tilex, int tiley)
+{
+    switch(which)
+    {
+        case en_blinky:
+            SpawnNewObj (tilex,tiley,&s_blinkychase1);
+            break;
+        case en_clyde:
+            SpawnNewObj (tilex,tiley,&s_clydechase1);
+            break;
+        case en_pinky:
+            SpawnNewObj (tilex,tiley,&s_pinkychase1);
+            break;
+        case en_inky:
+            SpawnNewObj (tilex,tiley,&s_inkychase1);
+            break;
+    }
+
+    newobj->obclass = ghostobj;
+    newobj->speed = SPDDOG;
+
+    newobj->dir = east;
+    newobj->flags |= FL_AMBUSH;
+    if (!loadedgame)
+    {
+        gamestate.killtotal++;
+        gamestate.killcount++;
+    }
+}
+
+//
+// Basic::SpawnEnemy
+//
+// Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
+//
+void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
+                       boolean patrol, enemy_t ghosttype)
+{
+    // IOANCH 20130304: don't account for loaded game
+	if(nonazis && !loadedgame)
+		return;	// don't spawn anything if --nonazis was defined
+	
+	objtype *newenemy = NULL;
+
+	switch(which)
+	{
+	case guardobj:
+	case officerobj:
+	case ssobj:
+	case mutantobj:
+	case dogobj:
+		if(patrol)
+			newenemy = _SpawnPatrol(which, tilex, tiley, dir);
+		else
+			newenemy = _SpawnStand(which, tilex, tiley, dir);
+		break;
+	case bossobj:
+	case schabbobj:
+	case fakeobj:
+	case mechahitlerobj:
+	case gretelobj:
+	case giftobj:
+	case fatobj:
+	case spectreobj:
+	case angelobj:
+	case transobj:
+	case uberobj:
+	case willobj:
+	case deathobj:
+		newenemy = _SpawnBoss(which, tilex, tiley);
+		break;
+            // IOANCH 20130202: unification process
+	case ghostobj:
+		_SpawnGhosts(ghosttype, tilex, tiley);
+		break;
+    default:
+        return;
+	}
+	
+	// IOANCH 20121219: record enemy position
+	BotMan::RecordEnemyPosition(newobj);
+	
+	if(newenemy)
+		livingNazis.add(newenemy);
+}
+
+//
+// Basic::IsEnemy
+//
+boolean Basic::IsEnemy(classtype cls)
+{
+    return atr::flags[cls] & ATR_ENEMY;
+}
+
+//
+// Basic::IsBoss
+//
+boolean Basic::IsBoss(classtype cls)
+{
+    return atr::flags[cls] & ATR_BOSS;
+}
 
 //
 // Basic::IsDangerous
@@ -67,7 +360,9 @@ int Basic::marktot[27] =
 //
 boolean Basic::IsDamaging(objtype *ret, int dist)
 {
-    if((dist <= 2 && atr::flags[ret->obclass] & ATR_NEARBY_THREAT && ret->flags & FL_ATTACKMODE) || (dist <= atr::threatrange[ret->obclass] && ret->state->flags & STF_DAMAGING))
+    if((dist <= 2 && atr::flags[ret->obclass] & ATR_NEARBY_THREAT && 
+        ret->flags & FL_ATTACKMODE) || 
+        (dist <= atr::threatrange[ret->obclass] && ret->state->flags & STF_DAMAGING))
     {
         return true;
     }
@@ -210,224 +505,7 @@ boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
     return true;
 }
 
-//
-// Basic::SpawnStand
-//
-// Made protected.
-//
-// IOANCH 29.06.2012: made objtype *
-//
-objtype *Basic::SpawnStand (classtype which, int tilex, int tiley, int dir)
-{
-    word *map;
-    word tile;
-    
-    if(atr::states[which].stand)
-    {
-        SpawnNewObj(tilex, tiley, atr::states[which].stand);
-        if(atr::speeds[which].patrol >= 0)
-            newobj->speed = atr::speeds[which].patrol;
-        if(!loadedgame)
-            gamestate.killtotal++;
-    
-        map = mapsegs[0]+(tiley<<mapshift)+tilex;
-        tile = *map;
-        if (tile == AMBUSHTILE)
-        {
-            tilemap[tilex][tiley] = 0;
 
-            if (*(map+1) >= AREATILE)
-                tile = *(map+1);
-            if (*(map-mapwidth) >= AREATILE)
-                tile = *(map-mapwidth);
-            if (*(map+mapwidth) >= AREATILE)
-                tile = *(map+mapwidth);
-            if ( *(map-1) >= AREATILE)
-                tile = *(map-1);
-
-            *map = tile;
-            newobj->areanumber = tile-AREATILE;
-
-            newobj->flags |= FL_AMBUSH;
-        }
-
-        newobj->obclass = which;
-        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
-        newobj->dir = (dirtype)(dir * 2);
-        newobj->flags |= FL_SHOOTABLE;
-        
-        return newobj;
-    }
-    return NULL;
-}
-
-
-//
-// Basic::SpawnPatrol
-//
-// IOANCH 29.06.2012: made objtype *
-//
-objtype *Basic::SpawnPatrol (classtype which, int tilex, int tiley, int dir)
-{
-    if(atr::states[which].patrol)
-    {
-        SpawnNewObj(tilex, tiley, atr::states[which].patrol);
-        if(atr::speeds[which].patrol >= 0)
-            newobj->speed = atr::speeds[which].patrol;
-        if (!loadedgame)
-            gamestate.killtotal++;
-    
-        newobj->obclass = which;
-        newobj->dir = (dirtype)(dir*2);
-        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
-        newobj->distance = TILEGLOBAL;
-        newobj->flags |= FL_SHOOTABLE;
-        newobj->active = ac_yes;
-
-        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
-
-        switch (dir)
-        {
-            case 0:
-                newobj->tilex++;
-                break;
-            case 1:
-                newobj->tiley--;
-                break;
-            case 2:
-                newobj->tilex--;
-                break;
-            case 3:
-                newobj->tiley++;
-                break;
-        }
-
-        actorat[newobj->tilex][newobj->tiley] = newobj;
-
-        
-        return newobj;
-    }
-    return NULL;
-}
-
-//
-// Basic::SpawnBoss
-//
-// IOANCH 29.06.2012: made objtype *
-//
-objtype *Basic::SpawnBoss (classtype which, int tilex, int tiley)
-{
-	// IOANCH 29.06.2012: update this for ANY boss
-	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
-
-    if(atr::states[which].stand)
-    {
-        SpawnNewObj (tilex,tiley,atr::states[which].stand);
-
-        spawnstate = atr::states[which].stand;
-        atr::actions[which].spawn();
-    
-        newobj->obclass = which;
-        newobj->hitpoints = atr::hitpoints[which][gamestate.difficulty];
-        newobj->flags |= FL_SHOOTABLE|FL_AMBUSH;
-        if (!loadedgame)
-            gamestate.killtotal++;
-        
-        return newobj;
-    }
-    return NULL;
-}
-
-// IOANCH 20130202: unification process
-//
-// Basic::SpawnGhosts
-//
-void Basic::SpawnGhosts (int which, int tilex, int tiley)
-{
-    switch(which)
-    {
-        case en_blinky:
-            SpawnNewObj (tilex,tiley,&s_blinkychase1);
-            break;
-        case en_clyde:
-            SpawnNewObj (tilex,tiley,&s_clydechase1);
-            break;
-        case en_pinky:
-            SpawnNewObj (tilex,tiley,&s_pinkychase1);
-            break;
-        case en_inky:
-            SpawnNewObj (tilex,tiley,&s_inkychase1);
-            break;
-    }
-
-    newobj->obclass = ghostobj;
-    newobj->speed = SPDDOG;
-
-    newobj->dir = east;
-    newobj->flags |= FL_AMBUSH;
-    if (!loadedgame)
-    {
-        gamestate.killtotal++;
-        gamestate.killcount++;
-    }
-}
-
-
-//
-// Basic::SpawnEnemy
-//
-// Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
-//
-void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
-                       boolean patrol, enemy_t ghosttype)
-{
-    // IOANCH 20130304: don't account for loaded game
-	if(nonazis && !loadedgame)
-		return;	// don't spawn anything if --nonazis was defined
-	
-	objtype *newenemy = NULL;
-
-	switch(which)
-	{
-	case guardobj:
-	case officerobj:
-	case ssobj:
-	case mutantobj:
-	case dogobj:
-		if(patrol)
-			newenemy = SpawnPatrol(which, tilex, tiley, dir);
-		else
-			newenemy = SpawnStand(which, tilex, tiley, dir);
-		break;
-	case bossobj:
-	case schabbobj:
-	case fakeobj:
-	case mechahitlerobj:
-	case gretelobj:
-	case giftobj:
-	case fatobj:
-	case spectreobj:
-	case angelobj:
-	case transobj:
-	case uberobj:
-	case willobj:
-	case deathobj:
-		newenemy = SpawnBoss(which, tilex, tiley);
-		break;
-            // IOANCH 20130202: unification process
-	case ghostobj:
-		SpawnGhosts(ghosttype, tilex, tiley);
-		break;
-    default:
-        return;
-	}
-	
-	// IOANCH 20121219: record enemy position
-	BotMan::RecordEnemyPosition(newobj);
-	
-	if(newenemy)
-		livingNazis.add(newenemy);
-}
 
 //
 // Basic::MarkovWrite
@@ -448,11 +526,11 @@ void Basic::MarkovWrite(char *c, int nmax)
 	
 	do
 	{
-		r = rand()%marktot[j];
+		r = rand()%_marktot[j];
 		s = 0;
 		for(i = 0; i < 27; i++)
 		{
-			s += markov[j][i];
+			s += _markov[j][i];
 			if(s > r)
 				break;
 		}
@@ -479,19 +557,6 @@ int Basic::ApproxDist(int dx, int dy)
 }
 
 //
-// Basic::EmptyItemList
-//
-// empty itemList
-//
-void Basic::EmptyItemList()
-{
-	int i, j;
-	for(i = 0; i < MAPSIZE; ++i)
-		for(j = 0; j < MAPSIZE; ++j)
-			itemList[i][j].removeAll();
-}
-
-//
 // Basic::NewStringTildeExpand
 //     
 // Create new string with 
@@ -505,13 +570,9 @@ char *Basic::NewStringTildeExpand(const char *basedir)
         {
             size_t newlen = strlen(home) + strlen(basedir);
             char *newalloc = (char *)malloc(newlen * sizeof(char));
-#ifndef _WIN32
-            strlcat(newalloc, home, newlen);
-            strlcat(newalloc, basedir + 1, newlen);
-#else
+
             strcat(newalloc, home);
             strcat(newalloc, basedir + 1);
-#endif
                         
             return newalloc;
         }

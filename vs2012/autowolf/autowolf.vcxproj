@@ -224,6 +224,7 @@
     <ClInclude Include="..\..\List.h" />
     <ClInclude Include="..\..\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\m_dllist.h" />
+    <ClInclude Include="..\..\obattrib.h" />
     <ClInclude Include="..\..\PathArray.h" />
     <ClInclude Include="..\..\Property.h" />
     <ClInclude Include="..\..\PropertyFile.h" />
