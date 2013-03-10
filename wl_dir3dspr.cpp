@@ -20,6 +20,7 @@
 #include "version.h"
 
 #ifdef USE_DIR3DSPR
+#include "wl_act1.h"
 #include "wl_def.h"
 #include "wl_shade.h"
 

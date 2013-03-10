@@ -35,6 +35,8 @@
 #endif
 
 #include "wl_def.h"
+#include "wl_agent.h"
+#include "wl_text.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 20121217: bot
 // IOANCH 20130303: Cocoa functions for Apple computers

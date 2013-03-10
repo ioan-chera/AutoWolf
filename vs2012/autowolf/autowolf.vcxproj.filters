@@ -304,6 +304,18 @@
     <ClInclude Include="..\..\obattrib.h">
       <Filter>Source Files\TABLES</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\wl_act1.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_agent.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_act2.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_text.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\sodpal.inc">

@@ -21,6 +21,8 @@
 // WL_PLAY.C
 
 #include "wl_def.h"
+#include "wl_act1.h"
+#include "wl_agent.h"
 #pragma hdrstop
 
 #include "wl_cloudsky.h"

@@ -20,6 +20,7 @@
 #define Wolf4SDL_obattrib_h
 
 #include "wl_def.h"
+#include "wl_act2.h"
 
 // NOTE: flags are limited to 64 in amount
 #define ATR_NEARBY_THREAT 1     // is a close-range thread to the bot

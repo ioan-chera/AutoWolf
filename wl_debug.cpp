@@ -27,6 +27,8 @@
 #endif
 
 #include "wl_def.h"
+#include "wl_act1.h"
+#include "wl_agent.h"
 #pragma hdrstop
 
 #ifdef USE_CLOUDSKY

@@ -21,6 +21,7 @@
 // WL_ACT1.C
 
 #include "wl_def.h"
+#include "wl_act1.h"
 #pragma hdrstop
 #include "ioan_bas.h"	// IOANCH 29.09.2012
 
@@ -399,14 +400,14 @@ boolean         areabyplayer[NUMAREAS];
 /*
 ==============
 =
-= ConnectAreas
+= _ConnectAreas
 =
 = Scans outward from playerarea, marking all connected areas
 =
 ==============
 */
 
-void RecursiveConnect (int areanumber)
+static void _RecursiveConnect (int areanumber)
 {
     int i;
 
@@ -415,17 +416,17 @@ void RecursiveConnect (int areanumber)
         if (areaconnect[areanumber][i] && !areabyplayer[i])
         {
             areabyplayer[i] = true;
-            RecursiveConnect (i);
+            _RecursiveConnect (i);
         }
     }
 }
 
 
-void ConnectAreas (void)
+static void _ConnectAreas (void)
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     areabyplayer[player->areanumber] = true;
-    RecursiveConnect (player->areanumber);
+    _RecursiveConnect (player->areanumber);
 }
 
 
@@ -525,12 +526,12 @@ void OpenDoor (int door)
 /*
 =====================
 =
-= CloseDoor
+= _CloseDoor
 =
 =====================
 */
 
-void CloseDoor (int door)
+static void _CloseDoor (int door)
 {
     int     tilex,tiley,area;
     objtype *check;
@@ -632,7 +633,7 @@ void OperateDoor (int door)
             break;
         case dr_open:
         case dr_opening:
-            CloseDoor (door);
+            _CloseDoor (door);
             break;
     }
 }
@@ -643,17 +644,17 @@ void OperateDoor (int door)
 /*
 ===============
 =
-= DoorOpen
+= _DoorOpen
 =
 = Close the door after three seconds
 =
 ===============
 */
 
-void DoorOpen (int door)
+static void _DoorOpen (int door)
 {
     if ( (doorobjlist[door].ticcount += (short) tics) >= OPENTICS)
-        CloseDoor (door);
+        _CloseDoor (door);
 }
 
 
@@ -661,12 +662,12 @@ void DoorOpen (int door)
 /*
 ===============
 =
-= DoorOpening
+= _DoorOpening
 =
 ===============
 */
 
-void DoorOpening (int door)
+static void _DoorOpening (int door)
 {
     unsigned area1,area2;
     word *map;
@@ -700,7 +701,7 @@ void DoorOpening (int door)
             areaconnect[area2][area1]++;
 
             if (player->areanumber < NUMAREAS)
-                ConnectAreas ();
+                _ConnectAreas ();
 
             if (areabyplayer[area1])
                 PlaySoundLocTile(OPENDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley);  // JAB
@@ -729,12 +730,12 @@ void DoorOpening (int door)
 /*
 ===============
 =
-= DoorClosing
+= _DoorClosing
 =
 ===============
 */
 
-void DoorClosing (int door)
+static void _DoorClosing (int door)
 {
     unsigned area1,area2;
     word *map;
@@ -787,7 +788,7 @@ void DoorClosing (int door)
             areaconnect[area2][area1]--;
 
             if (player->areanumber < NUMAREAS)
-                ConnectAreas ();
+                _ConnectAreas ();
         }
     }
 
@@ -819,15 +820,15 @@ void MoveDoors (void)
         switch (doorobjlist[door].action)
         {
             case dr_open:
-                DoorOpen (door);
+                _DoorOpen (door);
                 break;
 
             case dr_opening:
-                DoorOpening(door);
+                _DoorOpening(door);
                 break;
 
             case dr_closing:
-                DoorClosing(door);
+                _DoorClosing(door);
                 break;
 			default:
 				;
@@ -848,7 +849,7 @@ word pwallstate;
 word pwallpos;                  // amount a pushable wall has been moved (0-63)
 word pwallx,pwally;
 byte pwalldir,pwalltile;
-int dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
+static int _dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 
 /*
 ===============
@@ -869,8 +870,8 @@ void PushWall (int checkx, int checky, int dir)
     if (!oldtile)
         return;
 
-    dx = dirs[dir][0];
-    dy = dirs[dir][1];
+    dx = _dirs[dir][0];
+    dy = _dirs[dir][1];
 
     if (actorat[checkx+dx][checky+dy])
     {
@@ -927,7 +928,7 @@ void MovePWalls (void)
         actorat[pwallx][pwally] = 0;
         *(mapsegs[0]+(pwally<<mapshift)+pwallx) = player->areanumber+AREATILE;
 
-        int dx=dirs[pwalldir][0], dy=dirs[pwalldir][1];
+        int dx=_dirs[pwalldir][0], dy=_dirs[pwalldir][1];
         //
         // see if it should be pushed farther
         //

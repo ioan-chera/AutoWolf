@@ -21,6 +21,9 @@
 // WL_STATE.C
 
 #include "wl_def.h"
+#include "wl_act1.h"
+#include "wl_act2.h"
+#include "wl_agent.h"
 #pragma hdrstop
 #include "ioan_bas.h"	// IOANCH 29.06.2012
 #include "List.h"

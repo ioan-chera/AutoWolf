@@ -27,9 +27,8 @@
 #endif
 
 #include "wl_def.h"
-#if defined(__APPLE__) || defined(UNIX)
-    #include <wordexp.h>
-#endif
+#include "wl_act1.h"
+#include "wl_agent.h"
 #pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>

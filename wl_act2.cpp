@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "wl_def.h"
+#include "wl_act1.h"
+#include "wl_agent.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// include bot
 #include "ioan_bas.h"

@@ -25,6 +25,7 @@
 #include "PathArray.h"
 #include "CheckSum.h"
 #include "MasterDirectoryFile.h"
+#include "wl_act1.h"
 
 // static class member definition
 boolean BotMan::active;

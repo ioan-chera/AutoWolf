@@ -21,6 +21,8 @@
 // WL_INTER.C
 
 #include "wl_def.h"
+#include "wl_agent.h"
+#include "wl_text.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"

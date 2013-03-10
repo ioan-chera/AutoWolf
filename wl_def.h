@@ -915,36 +915,7 @@ boolean CheckSight (objtype *ob);
 =============================================================================
 */
 
-extern  short    anglefrac;
-extern  int      facecount, facetimes;
-extern  word     plux,pluy;         // player coordinates scaled to unsigned
-extern  int32_t  thrustspeed;
-extern  objtype  *LastAttacker;
 
-void    Thrust (int angle, int32_t speed);
-void    SpawnPlayer (int tilex, int tiley, int dir);
-void    TakeDamage (int points,objtype *attacker);
-void    GivePoints (int32_t points);
-void    GetBonus (statobj_t *check);
-void    GiveWeapon (int weapon);
-void    GiveAmmo (int ammo);
-void    GiveKey (int key);
-
-//
-// player state info
-//
-
-void    StatusDrawFace(unsigned picnum);
-void    DrawFace (void);
-void    DrawHealth (void);
-void    HealSelf (int points);
-void    DrawLevel (void);
-void    DrawLives (void);
-void    GiveExtraMan (void);
-void    DrawScore (void);
-void    DrawWeapon (void);
-void    DrawKeys (void);
-void    DrawAmmo (void);
 
 
 /*
@@ -955,33 +926,10 @@ void    DrawAmmo (void);
 =============================================================================
 */
 
-extern  doorobj_t doorobjlist[MAXDOORS];
-extern  doorobj_t *lastdoorobj;
-extern  short     doornum;
-
-extern  word      doorposition[MAXDOORS];
-
-extern  byte      areaconnect[NUMAREAS][NUMAREAS];
-
-extern  boolean   areabyplayer[NUMAREAS];
-
-extern word     pwallstate;
-extern word     pwallpos;        // amount a pushable wall has been moved (0-63)
-extern word     pwallx,pwally;
-extern byte     pwalldir,pwalltile;
 
 
-void InitDoorList (void);
-void InitStaticList (void);
-void SpawnStatic (int tilex, int tiley, int type);
-void SpawnDoor (int tilex, int tiley, boolean vertical, int lock);
-void MoveDoors (void);
-void MovePWalls (void);
-void OpenDoor (int door);
-void PlaceItemType (int itemtype, int tilex, int tiley);
-void PushWall (int checkx, int checky, int dir);
-void OperateDoor (int door);
-void InitAreas (void);
+
+// IOANCH 20130310: modularization
 
 /*
 =============================================================================
@@ -991,76 +939,7 @@ void InitAreas (void);
 =============================================================================
 */
 
-#define s_nakedbody s_static10
 
-extern  statetype s_grddie1;
-extern  statetype s_dogdie1;
-extern  statetype s_ofcdie1;
-extern  statetype s_mutdie1;
-extern  statetype s_ssdie1;
-extern  statetype s_bossdie1;
-extern  statetype s_schabbdie1;
-extern  statetype s_fakedie1;
-extern  statetype s_mechadie1;
-extern  statetype s_hitlerdie1;
-extern  statetype s_greteldie1;
-extern  statetype s_giftdie1;
-extern  statetype s_fatdie1;
-
-extern  statetype s_spectredie1;
-extern  statetype s_angeldie1;
-extern  statetype s_transdie0;
-extern  statetype s_uberdie0;
-extern  statetype s_willdie1;
-extern  statetype s_deathdie1;
-
-
-extern  statetype s_grdchase1;
-extern  statetype s_dogchase1;
-extern  statetype s_ofcchase1;
-extern  statetype s_sschase1;
-extern  statetype s_mutchase1;
-extern  statetype s_bosschase1;
-extern  statetype s_schabbchase1;
-extern  statetype s_fakechase1;
-extern  statetype s_mechachase1;
-extern  statetype s_gretelchase1;
-extern  statetype s_giftchase1;
-extern  statetype s_fatchase1;
-
-extern  statetype s_spectrechase1;
-extern  statetype s_angelchase1;
-extern  statetype s_transchase1;
-extern  statetype s_uberchase1;
-extern  statetype s_willchase1;
-extern  statetype s_deathchase1;
-
-extern  statetype s_blinkychase1;
-extern  statetype s_hitlerchase1;
-
-extern  statetype s_grdpain;
-extern  statetype s_grdpain1;
-extern  statetype s_ofcpain;
-extern  statetype s_ofcpain1;
-extern  statetype s_sspain;
-extern  statetype s_sspain1;
-extern  statetype s_mutpain;
-extern  statetype s_mutpain1;
-
-extern  statetype s_deathcam;
-
-extern  statetype s_schabbdeathcam2;
-extern  statetype s_hitlerdeathcam2;
-extern  statetype s_giftdeathcam2;
-extern  statetype s_fatdeathcam2;
-
-// IOANCH 29.06.2012: deleted global ghosts moved to Basic
-void KillActor (objtype *ob);
-
-void SpawnDeadGuard (int tilex, int tiley);
-
-void A_DeathScream (objtype *ob);
-void SpawnBJVictory (void);
 
 /*
 =============================================================================
@@ -1069,11 +948,6 @@ void SpawnBJVictory (void);
 
 =============================================================================
 */
-
-extern  char    helpfilename[],endfilename[];
-
-extern  void    HelpScreens(void);
-extern  void    EndText(void);
 
 
 /*

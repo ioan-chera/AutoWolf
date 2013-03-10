@@ -22,6 +22,9 @@
 
 #include <math.h>
 #include "wl_def.h"
+#include "wl_act1.h"
+#include "wl_act2.h"
+#include "wl_agent.h"
 #include <SDL_mixer.h>
 #pragma hdrstop
 // IOANCH 17.05.2012

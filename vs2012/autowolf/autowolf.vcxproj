@@ -234,11 +234,15 @@
     <ClInclude Include="..\..\spr_wl6.h" />
     <ClInclude Include="..\..\version.h" />
     <ClInclude Include="..\..\win\resource.h" />
+    <ClInclude Include="..\..\wl_act1.h" />
+    <ClInclude Include="..\..\wl_act2.h" />
+    <ClInclude Include="..\..\wl_agent.h" />
     <ClInclude Include="..\..\wl_atmos.h" />
     <ClInclude Include="..\..\wl_cloudsky.h" />
     <ClInclude Include="..\..\wl_def.h" />
     <ClInclude Include="..\..\wl_menu.h" />
     <ClInclude Include="..\..\wl_shade.h" />
+    <ClInclude Include="..\..\wl_text.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\sodpal.inc" />

@@ -18,6 +18,7 @@
 
 #include "ioan_secret.h"
 #include "ioan_bas.h"
+#include "wl_act1.h"
 
 byte Secret::visited[MAPSIZE][MAPSIZE];
 
