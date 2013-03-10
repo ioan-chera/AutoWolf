@@ -644,50 +644,7 @@ extern int mapon;
 =============================================================================
 */
 
-extern  boolean  loadedgame;
-extern  fixed    focallength;
-extern  int      viewscreenx, viewscreeny;
-extern  int      viewwidth;
-extern  int      viewheight;
-extern  short    centerx;
-extern  int32_t  heightnumerator;
-extern  fixed    scale;
 
-extern  int      dirangle[9];
-
-extern  int      mouseadjustment;
-extern  int      shootdelta;
-extern  unsigned screenofs;
-
-extern  boolean  startgame;
-extern  char     str[80];
-extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
-extern  char     configname[13];
-
-//
-// Command line parameter variables
-//
-extern  boolean  param_debugmode;
-extern  boolean  param_nowait;
-extern  int      param_difficulty;
-extern  int      param_tedlevel;
-extern  int      param_joystickindex;
-extern  int      param_joystickhat;
-extern  int      param_samplerate;
-extern  int      param_audiobuffer;
-extern  int      param_mission;
-extern  boolean  param_goodtimes;
-extern  boolean  param_ignorenumchunks;
-
-
-void            NewGame (int difficulty,int episode);
-void            CalcProjection (int32_t focal);
-void            NewViewSize (int width);
-boolean         SetViewSize (unsigned width, unsigned height);
-boolean         LoadTheGame(FILE *file,int x,int y);
-boolean         SaveTheGame(FILE *file,int x,int y);
-void            ShowViewSize (int width);
-void            ShutdownId (void);
 
 
 /*
@@ -698,39 +655,6 @@ void            ShutdownId (void);
 =============================================================================
 */
 
-extern  gametype        gamestate;
-extern  byte            bordercol;
-extern  SDL_Surface     *latchpics[NUMLATCHPICS];
-extern  char            demoname[13];
-
-void    SetupGameLevel (void);
-void    GameLoop (void);
-void    DrawPlayBorder (void);
-void    DrawStatusBorder (byte color);
-void    DrawPlayScreen (void);
-void    DrawPlayBorderSides (void);
-void    ShowActStatus();
-
-void    PlayDemo (int demonumber);
-void    RecordDemo (void);
-
-// IOANCH 20130302: unification
-
-extern  int32_t            spearx,speary;
-extern  unsigned        spearangle;
-extern  boolean         spearflag;
-
-
-
-#define ClearMemory SD_StopDigitized
-
-
-// JAB
-#define PlaySoundLocTile(s,tx,ty)       PlaySoundLocGlobal(s,(((int32_t)(tx) << TILESHIFT) + (1L << (TILESHIFT - 1))),(((int32_t)ty << TILESHIFT) + (1L << (TILESHIFT - 1))))
-#define PlaySoundLocActor(s,ob)         PlaySoundLocGlobal(s,(ob)->x,(ob)->y)
-void    PlaySoundLocGlobal(word s,fixed gx,fixed gy);
-void UpdateSoundLoc(void);
-
 
 /*
 =============================================================================
@@ -740,78 +664,6 @@ void UpdateSoundLoc(void);
 =============================================================================
 */
 
-#define BASEMOVE                35
-#define RUNMOVE                 70
-#define BASETURN                35
-#define RUNTURN                 70
-
-#define JOYSCALE                2
-
-extern  byte            tilemap[MAPSIZE][MAPSIZE];      // wall values only
-extern  byte            spotvis[MAPSIZE][MAPSIZE];
-extern  objtype         *actorat[MAPSIZE][MAPSIZE];
-
-extern  objtype         *player;
-
-extern  unsigned        tics;
-extern  int             viewsize;
-
-extern  int             lastgamemusicoffset;
-
-//
-// current user input
-//
-extern  int         controlx,controly;              // range from -100 to 100
-extern  boolean     buttonstate[NUMBUTTONS];
-extern  objtype     objlist[MAXACTORS];
-extern  boolean     buttonheld[NUMBUTTONS];
-extern  exit_t      playstate;
-extern  boolean     madenoise;
-extern  statobj_t   statobjlist[MAXSTATS];
-extern  statobj_t   *laststatobj;
-extern  objtype     *newobj,*killerobj;
-extern  doorobj_t   doorobjlist[MAXDOORS];
-extern  doorobj_t   *lastdoorobj;
-extern  int         godmode;
-
-extern  boolean     demorecord,demoplayback;
-extern  int8_t      *demoptr, *lastdemoptr;
-extern  memptr      demobuffer;
-
-//
-// control info
-//
-extern  boolean     mouseenabled,joystickenabled;
-extern  int         dirscan[4];
-extern  int         buttonscan[NUMBUTTONS];
-extern  int         buttonmouse[4];
-extern  int         buttonjoy[32];
-
-void    InitActorList (void);
-void    GetNewActor (void);
-void    PlayLoop (void);
-
-void    CenterWindow(word w,word h);
-
-void    InitRedShifts (void);
-void    FinishPaletteShifts (void);
-
-void    RemoveObj (objtype *gone);
-void    PollControls (void);
-int     StopMusic(void);
-void    StartMusic(void);
-void    ContinueMusic(int offs);
-void    StartDamageFlash (int damage);
-void    StartBonusFlash (void);
-
-// IOANCH 20130302: unification
-extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
-
-extern  objtype     *objfreelist;     // *obj,*player,*lastobj,
-
-extern  boolean     noclip,ammocheat;
-extern  int         singlestep, extravbls;
-
 /*
 =============================================================================
 
@@ -819,16 +671,6 @@ extern  int         singlestep, extravbls;
 
 =============================================================================
 */
-
-void IntroScreen (void);
-void PG13(void);
-void DrawHighScores(void);
-void CheckHighScore (int32_t score,word other);
-void Victory (void);
-void LevelCompleted (void);
-void ClearSplitVWB (void);
-
-void PreloadGraphics(void);
 
 
 /*
@@ -849,35 +691,6 @@ int DebugKeys (void);
 =============================================================================
 */
 
-//
-// math tables
-//
-extern  short *pixelangle;
-extern  int32_t finetangent[FINEANGLES/4];
-extern  fixed sintable[];
-extern  fixed *costable;
-extern  int *wallheight;
-extern  word horizwall[],vertwall[];
-extern  int32_t    lasttimecount;
-extern  int32_t    frameon;
-
-extern  unsigned screenloc[3];
-
-extern  boolean fizzlein, fpscounter;
-
-extern  fixed   viewx,viewy;                    // the focal point
-extern  fixed   viewsin,viewcos;
-
-void    ThreeDRefresh (void);
-void    CalcTics (void);
-
-typedef struct
-{
-    word leftpix,rightpix;
-    word dataofs[64];
-// table data after dataofs[rightpix-leftpix+1]
-} t_compshape;
-
 /*
 =============================================================================
 
@@ -885,27 +698,6 @@ typedef struct
 
 =============================================================================
 */
-#define TURNTICS        10
-#define SPDPATROL       512
-#define SPDDOG          1500
-
-
-void    InitHitRect (objtype *ob, unsigned radius);
-void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
-void    NewState (objtype *ob, statetype *state);
-
-boolean TryWalk (objtype *ob);
-void    SelectChaseDir (objtype *ob);
-void    SelectDodgeDir (objtype *ob);
-void    SelectRunDir (objtype *ob);
-void    MoveObj (objtype *ob, int32_t move);
-boolean SightPlayer (objtype *ob);
-
-void    KillActor (objtype *ob);
-void    DamageActor (objtype *ob, unsigned damage);
-
-boolean CheckLine (objtype *ob);
-boolean CheckSight (objtype *ob);
 
 /*
 =============================================================================

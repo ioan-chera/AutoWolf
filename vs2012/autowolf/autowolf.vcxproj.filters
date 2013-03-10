@@ -316,6 +316,24 @@
     <ClInclude Include="..\..\wl_text.h">
       <Filter>Source Files\WL_</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\wl_main.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_game.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_play.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_inter.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_draw.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_state.h">
+      <Filter>Source Files\WL_</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\sodpal.inc">

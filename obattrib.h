@@ -21,6 +21,8 @@
 
 #include "wl_def.h"
 #include "wl_act2.h"
+#include "wl_play.h"
+#include "wl_state.h"
 
 // NOTE: flags are limited to 64 in amount
 #define ATR_NEARBY_THREAT 1     // is a close-range thread to the bot

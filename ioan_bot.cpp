@@ -26,6 +26,11 @@
 #include "CheckSum.h"
 #include "MasterDirectoryFile.h"
 #include "wl_act1.h"
+#include "wl_draw.h"
+#include "wl_game.h"
+#include "wl_main.h"
+#include "wl_play.h"
+#include "wl_state.h"
 
 // static class member definition
 boolean BotMan::active;

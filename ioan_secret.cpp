@@ -19,6 +19,8 @@
 #include "ioan_secret.h"
 #include "ioan_bas.h"
 #include "wl_act1.h"
+#include "wl_game.h"
+#include "wl_play.h"
 
 byte Secret::visited[MAPSIZE][MAPSIZE];
 

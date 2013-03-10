@@ -21,6 +21,8 @@
 // WL_TEXT.C
 
 #include "wl_def.h"
+#include "wl_game.h"
+#include "wl_main.h"
 #pragma hdrstop
 
 /*

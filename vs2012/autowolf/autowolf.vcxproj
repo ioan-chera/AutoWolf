@@ -240,8 +240,14 @@
     <ClInclude Include="..\..\wl_atmos.h" />
     <ClInclude Include="..\..\wl_cloudsky.h" />
     <ClInclude Include="..\..\wl_def.h" />
+    <ClInclude Include="..\..\wl_draw.h" />
+    <ClInclude Include="..\..\wl_game.h" />
+    <ClInclude Include="..\..\wl_inter.h" />
+    <ClInclude Include="..\..\wl_main.h" />
     <ClInclude Include="..\..\wl_menu.h" />
+    <ClInclude Include="..\..\wl_play.h" />
     <ClInclude Include="..\..\wl_shade.h" />
+    <ClInclude Include="..\..\wl_state.h" />
     <ClInclude Include="..\..\wl_text.h" />
   </ItemGroup>
   <ItemGroup>

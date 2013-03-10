@@ -22,6 +22,9 @@
 #include "obattrib.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
+#include "wl_game.h"
+#include "wl_play.h"
+#include "wl_state.h"
 
 // static members definition
 boolean Basic::nonazis, Basic::secretstep3;

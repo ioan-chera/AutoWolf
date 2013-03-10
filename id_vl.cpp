@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include "wl_def.h"
+#include "wl_draw.h"
 #pragma hdrstop
 
 // Uncomment the following line, if you get destination out of bounds

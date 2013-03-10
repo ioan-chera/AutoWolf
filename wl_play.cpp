@@ -23,6 +23,11 @@
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
+#include "wl_draw.h"
+#include "wl_game.h"
+#include "wl_inter.h"
+#include "wl_main.h"
+#include "wl_play.h"
 #pragma hdrstop
 
 #include "wl_cloudsky.h"
