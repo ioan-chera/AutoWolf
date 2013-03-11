@@ -21,10 +21,9 @@
 #define __Wolf4SDL__Property__
 
 #include <stdlib.h>
-#ifdef _WIN32
 #include <stdint.h>
-#endif
 
+#include "PString.h"
 #include "m_dllist.h"
 
 //
@@ -63,11 +62,8 @@
 class Property
 {
 protected:
-    // Length of string value (for quick changing)
-    size_t _stringAllocLen;
-    
     // Pointer to string value
-    char *_stringValue;
+    PString _stringValue;
 public:
     
     enum Type
@@ -79,13 +75,11 @@ public:
     
     // Key string for hashing
     char *_key;    
-    
     // link of itself in hash table
     DLListItem <Property> link;
     
     // Integer value
     int32_t intValue;
-    
     // Data type
     Type type;
     
@@ -95,11 +89,10 @@ public:
     ~Property()
     {
         delete [] _key;
-        delete [] _stringValue;
     }
     
     // Getter of string value
-    const char *stringValue() const
+    const class PString &stringValue() const
     {
         return _stringValue;
     }
@@ -114,7 +107,7 @@ public:
     void setKey(const char *newKey);
     
     // Setter to string value
-    void setStringValue(const char *newValue);
+    void setStringValue(const class PString &newValue);
 };
 
 

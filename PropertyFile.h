@@ -20,10 +20,13 @@
 #define PROPERTYFILE_H_
 
 #define PROPERTY_FILE_HEADER "Property"
+#define PROPERTY_FILE_NAME   "Properties"
 
-#include "e_hash.h"
+#define PROPERTY_KEY_EXPLORED "Explored"
+
 #include "Property.h"
 #include "DataFile.h"
+#include "e_hash.h"
 
 // How to declare a hash table
 //
@@ -45,9 +48,13 @@ protected:
 	bool doReadFromFile(FILE *f);
 public:
     PropertyFile();
+    ~PropertyFile();
     // the content
     EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
-        propertyTable;
+        *propertyTable;
+    
+    // do that other thing and init the hash table
+	void initialize(const char *fname, size_t nchar = 0);
     
     // get file size
 	uint64_t getSize();

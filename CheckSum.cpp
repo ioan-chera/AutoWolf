@@ -18,9 +18,9 @@
 
 
 #include "wl_def.h"
-#include "CheckSum.h"
 #include "MasterDirectoryFile.h"
-#include "ExploredArrayFile.h"
+#include "PropertyFile.h"
+#include "CheckSum.h"
 
 char digeststring[17];
 
@@ -204,7 +204,57 @@ void GetExploredData(void *exploredTarget)
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
 	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
-	
+    
+    // Looking for files...
+    // Get property file from digest folder.
+    // If it exists, then access its hash table.
+    // If it contains property with name "Explored", use it.
+    // If it doesn't, initialize it empty.
+    // If file doesn't exist, do likewise.
+    
+    PropertyFile *propertyFile = (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
+    
+    if(propertyFile)
+    {
+        // File exists. Use its hash table
+        Property *prop = propertyFile->propertyTable->objectForKey(PROPERTY_KEY_EXPLORED);
+        if(prop)
+        {
+            // Property exists. Get its data (expected is string).
+            // Make sure it IS string
+            if(prop->type == Property::PString)
+            {
+                // Type valid. Send the data
+                const PString &explorstr = prop->stringValue();
+                const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
+                
+                {
+                    int j;
+                    size_t pos;
+                    uint8_t mbyte;
+                    
+                    boolean *baseaddress = (boolean *)exploredTarget;
+                    
+                    for(pos = 0; pos < maparea; pos += 8)
+                    {
+                        mbyte = *explorbuf++;
+                        for(j = 7; j >= 0; --j)
+                        {
+                            *(baseaddress + pos + j) = mbyte & 1;
+                            mbyte >>= 1;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // it wasn't set as PString. Kill it.
+                propertyFile->propertyTable->removeObject(prop);
+                delete prop;
+            }
+        }
+    }
+#if 0
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
 	
@@ -224,6 +274,7 @@ void GetExploredData(void *exploredTarget)
 		// write zero on exploredTarget
 		memset(exploredTarget, 0, sizeof(maparea * sizeof(boolean)));
 	}
+#endif
 }
 
 //
@@ -241,7 +292,62 @@ void PutExploredData(const void *explored)
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
 	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
+    
+    // Looking for files...
+    // Get property file from digest folder.
+    // If it exists, then access its hash table.
+    // If it contains property with name "Explored", change it.
+    // If it doesn't, create it with the proper name.
+    // If file doesn't exist, create it and give it the explored property.
 	
+    PropertyFile *propertyFile = (PropertyFile *)dir->getFileWithName
+                                                    (PROPERTY_FILE_NAME);
+
+    if(!propertyFile)
+    {
+        // File doesn't exist. Create it.
+        propertyFile = new PropertyFile;
+        propertyFile->initialize(PROPERTY_FILE_NAME);
+        dir->addFile(propertyFile);
+    }
+    
+    
+    {
+        // File exists. Look for its Explored property
+        Property *prop = propertyFile->propertyTable->objectForKey(PROPERTY_KEY_EXPLORED);
+        
+        if(!prop)
+        {
+            // Property doesn't exist. Create it.
+            prop = new Property(PROPERTY_KEY_EXPLORED);
+            propertyFile->propertyTable->addObject(prop);
+        }
+        
+        {
+            // Property exists. Change it
+            PString dataToWrite(maparea/8);
+            prop->type = Property::PString;
+            {
+                size_t pos;
+                uint8_t charac = 0;
+                
+                boolean *baseaddress = (boolean *)explored;
+                
+                for(pos = 0; pos < maparea; ++pos)
+                {
+                    charac = (charac << 1) + *(baseaddress + pos);
+                    if((pos + 1) % 8 == 0)	// reached eight bits
+                    {
+                        dataToWrite.Putc((char)charac);
+                        charac = 0;
+                    }
+                }
+            }
+            // Written.
+            prop->setStringValue(dataToWrite);
+        }
+    }
+#if 0
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
 	
@@ -261,4 +367,5 @@ void PutExploredData(const void *explored)
 		// write zero on exploredTarget
 		exploredFile->putData(explored);
 	}
+#endif
 }

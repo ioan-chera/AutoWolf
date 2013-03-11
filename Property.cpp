@@ -25,8 +25,7 @@
 //
 // Property::Property
 //
-Property::Property(const char *key) : _stringAllocLen(0), _stringValue(0),
-type(Unknown)
+Property::Property(const char *key) : type(Unknown)
 {
     _key = new char[strlen(key) + 1];
     strcpy(_key, key);
@@ -37,18 +36,9 @@ type(Unknown)
 //
 // Sets the _stringValue destination to a string
 //
-void Property::setStringValue(const char *newValue)
+void Property::setStringValue(const class PString &newValue)
 {
-    size_t newAllocLen = strlen(newValue) + 1;
-    
-    if(newAllocLen > _stringAllocLen || newAllocLen << NEW_ALLOC_2_RATIO < 
-       _stringAllocLen)
-    {
-        delete []_stringValue;
-        _stringValue = new char[newAllocLen];
-        _stringAllocLen = newAllocLen;
-    }
-    strcpy(_stringValue, newValue);
+    _stringValue = newValue;
 }
 
 //

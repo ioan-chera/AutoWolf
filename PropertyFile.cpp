@@ -19,11 +19,21 @@
 #include "PropertyFile.h"
 
 //
-// DirectoryFile::DirectoryFile
+// PropertyFile::PropertyFile
 //
-PropertyFile::PropertyFile()
+PropertyFile::PropertyFile() : propertyTable()
 {
 	strcpy(header, PROPERTY_FILE_HEADER);
+    this->propertyTable = new EHashTable<Property, EStringHashKey,
+        &Property::_key, &Property::link>;
+}
+
+//
+// PropertyFile::~PropertyFile
+//
+PropertyFile::~PropertyFile()
+{
+    delete this->propertyTable;
 }
 
 //
@@ -75,14 +85,14 @@ bool PropertyFile::doReadFromFile(FILE *f)
                 valName = new char[valueLen + 1];
                 valName[valueLen] = 0;
                 fread(valName, sizeof(char), valueLen, f);
-                newProp->setStringValue(valName);
+                newProp->setStringValue(PString(valName, (size_t)valueLen));
                 delete [] valName;
                 break;
             default:
                 // ???
                 break;
         }
-        propertyTable.addObject(newProp);
+        propertyTable->addObject(newProp);
         delete [] keyName;
     }
     
@@ -104,13 +114,13 @@ void PropertyFile::doWriteToFile(FILE *f)
     //   1: Pascal string (uint16_t length)
     //
     fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
-    uint32_t numProp = (uint32_t)propertyTable.getNumItems();
+    uint32_t numProp = (uint32_t)propertyTable->getNumItems();
     fwrite(&numProp, sizeof(uint32_t), 1, f);
     Property *prop = NULL;
     uint16_t propKeyLen;
     uint32_t propValLen;
     uint8_t btype;
-    while((prop = propertyTable.tableIterator(prop)))
+    while((prop = propertyTable->tableIterator(prop)))
     {
         propKeyLen = (uint16_t)strlen(prop->key());
         fwrite(&propKeyLen, sizeof(uint16_t), 1, f);
@@ -124,14 +134,24 @@ void PropertyFile::doWriteToFile(FILE *f)
                 fwrite(&prop->intValue, sizeof(int32_t), 1, f);
                 break;
             case Property::PString:
-                propValLen = (uint32_t)strlen(prop->stringValue());
+                propValLen = (uint32_t)prop->stringValue().length();
                 fwrite(&propValLen, sizeof(uint32_t), 1, f);
-                fwrite(prop->stringValue(), sizeof(char), propValLen, f);
+                fwrite(prop->stringValue().buffer(), sizeof(char), propValLen,
+                       f);
             default:
                 // ???
                 break;
         }
     }
+}
+
+//
+// PropertyFile::initialize
+//
+void PropertyFile::initialize(const char *fname, size_t nchar)
+{
+    DataFile::initialize(fname, nchar);
+//    propertyTable.initialize(127);
 }
 
 //
@@ -143,7 +163,7 @@ uint64_t PropertyFile::getSize()
 {
     uint64_t ret = FILE_HEADER_LENGTH + sizeof(uint32_t);
     Property *prop = NULL;
-    while ((prop = propertyTable.tableIterator(prop)))
+    while ((prop = propertyTable->tableIterator(prop)))
     {
         ret += sizeof(uint16_t);    // key len
         ret += strlen(prop->key());
@@ -154,7 +174,7 @@ uint64_t PropertyFile::getSize()
                 ret += sizeof(int32_t);
                 break;
             case Property::PString:
-                ret += sizeof(uint32_t) + strlen(prop->stringValue());
+                ret += sizeof(uint32_t) + prop->stringValue().length();
             default:
                 // ???
                 break;
