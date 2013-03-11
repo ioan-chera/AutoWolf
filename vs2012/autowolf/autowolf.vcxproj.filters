@@ -30,6 +30,9 @@
     <Filter Include="Source Files\IOAN\FileSystem">
       <UniqueIdentifier>{150697d0-607e-4274-8e85-29d418d1346e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\WL_\Gimmicks">
+      <UniqueIdentifier>{7bdd1abf-f6e7-4020-93df-ce1661460bb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\id_ca.cpp">
@@ -71,22 +74,10 @@
     <ClCompile Include="..\..\wl_agent.cpp">
       <Filter>Source Files\WL_</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wl_atmos.cpp">
-      <Filter>Source Files\WL_</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\wl_cloudsky.cpp">
-      <Filter>Source Files\WL_</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\wl_debug.cpp">
       <Filter>Source Files\WL_</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wl_dir3dspr.cpp">
-      <Filter>Source Files\WL_</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\wl_draw.cpp">
-      <Filter>Source Files\WL_</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\wl_floorceiling.cpp">
       <Filter>Source Files\WL_</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wl_game.cpp">
@@ -99,9 +90,6 @@
       <Filter>Source Files\WL_</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wl_menu.cpp">
-      <Filter>Source Files\WL_</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\wl_parallax.cpp">
       <Filter>Source Files\WL_</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wl_play.cpp">
@@ -170,6 +158,21 @@
     <ClCompile Include="..\..\signon.cpp">
       <Filter>Source Files\TABLES</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wl_atmos.cpp">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wl_cloudsky.cpp">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wl_dir3dspr.cpp">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wl_floorceiling.cpp">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wl_parallax.cpp">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\dosbox\dbopl.h">
@@ -222,12 +225,6 @@
     </ClInclude>
     <ClInclude Include="..\..\id_vl.h">
       <Filter>Source Files\ID_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_atmos.h">
-      <Filter>Source Files\WL_</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\wl_cloudsky.h">
-      <Filter>Source Files\WL_</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wl_def.h">
       <Filter>Source Files\WL_</Filter>
@@ -333,6 +330,12 @@
     </ClInclude>
     <ClInclude Include="..\..\wl_state.h">
       <Filter>Source Files\WL_</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_atmos.h">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wl_cloudsky.h">
+      <Filter>Source Files\WL_\Gimmicks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
