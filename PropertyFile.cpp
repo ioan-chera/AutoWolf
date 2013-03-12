@@ -16,16 +16,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include "wl_def.h"
 #include "PropertyFile.h"
 
 //
 // PropertyFile::PropertyFile
 //
-PropertyFile::PropertyFile() : propertyTable()
+PropertyFile::PropertyFile()// : propertyTable()
 {
 	strcpy(header, PROPERTY_FILE_HEADER);
-    this->propertyTable = new EHashTable<Property, EStringHashKey,
-        &Property::_key, &Property::link>;
+//    this->propertyTable = new EHashTable<Property, EStringHashKey,
+//        &Property::_key, &Property::link>;
 }
 
 //
@@ -33,7 +34,7 @@ PropertyFile::PropertyFile() : propertyTable()
 //
 PropertyFile::~PropertyFile()
 {
-    delete this->propertyTable;
+//    delete this->propertyTable;
 }
 
 //
@@ -92,7 +93,7 @@ bool PropertyFile::doReadFromFile(FILE *f)
                 // ???
                 break;
         }
-        propertyTable->addObject(newProp);
+        propertyTable.addObject(newProp);
         delete [] keyName;
     }
     
@@ -114,13 +115,13 @@ void PropertyFile::doWriteToFile(FILE *f)
     //   1: Pascal string (uint16_t length)
     //
     fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
-    uint32_t numProp = (uint32_t)propertyTable->getNumItems();
+    uint32_t numProp = (uint32_t)propertyTable.getNumItems();
     fwrite(&numProp, sizeof(uint32_t), 1, f);
     Property *prop = NULL;
     uint16_t propKeyLen;
     uint32_t propValLen;
     uint8_t btype;
-    while((prop = propertyTable->tableIterator(prop)))
+    while((prop = propertyTable.tableIterator(prop)))
     {
         propKeyLen = (uint16_t)strlen(prop->key());
         fwrite(&propKeyLen, sizeof(uint16_t), 1, f);
@@ -155,6 +156,90 @@ void PropertyFile::initialize(const char *fname, size_t nchar)
 }
 
 //
+// PropertyFile::getExplored
+//
+void PropertyFile::getExplored(void *exploredTarget) 
+{
+    // File exists. Use its hash table
+    Property *prop = propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
+    if(prop)
+    {
+        // Property exists. Get its data (expected is string).
+        // Make sure it IS string
+        if(prop->type == Property::PString)
+        {
+            // Type valid. Send the data
+            const PString &explorstr = prop->stringValue();
+            const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
+            
+            {
+                int j;
+                size_t pos;
+                uint8_t mbyte;
+                
+                boolean *baseaddress = (boolean *)exploredTarget;
+                
+                for(pos = 0; pos < maparea; pos += 8)
+                {
+                    mbyte = *explorbuf++;
+                    for(j = 7; j >= 0; --j)
+                    {
+                        *(baseaddress + pos + j) = mbyte & 1;
+                        mbyte >>= 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            // it wasn't set as PString. Kill it.
+            propertyTable.removeObject(prop);
+            delete prop;
+        }
+    }
+}
+
+//
+// PropertyFile::putExplored
+//
+void PropertyFile::putExplored(const void *explored)
+{
+    // File exists. Look for its Explored property
+    Property *prop = propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
+    
+    if(!prop)
+    {
+        // Property doesn't exist. Create it.
+        prop = new Property(PROPERTY_KEY_EXPLORED);
+        propertyTable.addObject(prop);
+    }
+    
+    {
+        // Property exists. Change it
+        PString dataToWrite(maparea/8);
+        prop->type = Property::PString;
+        {
+            size_t pos;
+            uint8_t charac = 0;
+            
+            boolean *baseaddress = (boolean *)explored;
+            
+            for(pos = 0; pos < maparea; ++pos)
+            {
+                charac = (charac << 1) + *(baseaddress + pos);
+                if((pos + 1) % 8 == 0)	// reached eight bits
+                {
+                    dataToWrite.Putc((char)charac);
+                    charac = 0;
+                }
+            }
+        }
+        // Written.
+        prop->setStringValue(dataToWrite);
+    }
+}
+
+//
 // PropertyFile::getSize
 //
 // This really should be part of reading and react to changes.
@@ -163,7 +248,7 @@ uint64_t PropertyFile::getSize()
 {
     uint64_t ret = FILE_HEADER_LENGTH + sizeof(uint32_t);
     Property *prop = NULL;
-    while ((prop = propertyTable->tableIterator(prop)))
+    while ((prop = propertyTable.tableIterator(prop)))
     {
         ret += sizeof(uint16_t);    // key len
         ret += strlen(prop->key());

@@ -215,9 +215,11 @@ void GetExploredData(void *exploredTarget)
     PropertyFile *propertyFile = (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
     
     if(propertyFile)
+        propertyFile->getExplored(exploredTarget);
+#if 0
     {
         // File exists. Use its hash table
-        Property *prop = propertyFile->propertyTable->objectForKey(PROPERTY_KEY_EXPLORED);
+        Property *prop = propertyFile->propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
         if(prop)
         {
             // Property exists. Get its data (expected is string).
@@ -249,11 +251,12 @@ void GetExploredData(void *exploredTarget)
             else
             {
                 // it wasn't set as PString. Kill it.
-                propertyFile->propertyTable->removeObject(prop);
+                propertyFile->propertyTable.removeObject(prop);
                 delete prop;
             }
         }
     }
+#endif
 #if 0
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
@@ -311,16 +314,17 @@ void PutExploredData(const void *explored)
         dir->addFile(propertyFile);
     }
     
-    
+    propertyFile->putExplored(explored);
+#if 0
     {
         // File exists. Look for its Explored property
-        Property *prop = propertyFile->propertyTable->objectForKey(PROPERTY_KEY_EXPLORED);
+        Property *prop = propertyFile->propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
         
         if(!prop)
         {
             // Property doesn't exist. Create it.
             prop = new Property(PROPERTY_KEY_EXPLORED);
-            propertyFile->propertyTable->addObject(prop);
+            propertyFile->propertyTable.addObject(prop);
         }
         
         {
@@ -347,6 +351,7 @@ void PutExploredData(const void *explored)
             prop->setStringValue(dataToWrite);
         }
     }
+#endif
 #if 0
 	// Now. It might either be empty, or contain the Explored file already
 	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);

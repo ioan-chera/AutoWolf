@@ -20,6 +20,7 @@
 #include <string.h>
 #include "ExploredArrayFile.h"
 #include "DirectoryFile.h"
+#include "PropertyFile.h"
 
 //
 // DirectoryFile::DirectoryFile
@@ -230,6 +231,8 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 		   newFile = new ExploredArrayFile;
 	    else if(!strcmp(filehead, DIRECTORY_HEADER))
 		   newFile = new DirectoryFile;
+        else if(!strcmp(filehead, PROPERTY_FILE_HEADER))
+           newFile = new PropertyFile;
 		else// unknown, skip
 		{
 			fseek(f, (long)curaddr, SEEK_SET);
