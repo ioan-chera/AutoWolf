@@ -18,6 +18,15 @@
 
 #include "wl_def.h"
 #include "PropertyFile.h"
+#include "e_hash.h"
+#include "Property.h"
+
+class PropertyFilePimpl
+{
+public:
+    EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
+        _propertyTable;
+};
 
 //
 // PropertyFile::PropertyFile
@@ -25,8 +34,7 @@
 PropertyFile::PropertyFile()// : propertyTable()
 {
 	strcpy(header, PROPERTY_FILE_HEADER);
-//    this->propertyTable = new EHashTable<Property, EStringHashKey,
-//        &Property::_key, &Property::link>;
+    pimpl = new PropertyFilePimpl;
 }
 
 //
@@ -34,7 +42,14 @@ PropertyFile::PropertyFile()// : propertyTable()
 //
 PropertyFile::~PropertyFile()
 {
-//    delete this->propertyTable;
+    delete pimpl;
+    Property *prop = NULL;
+    
+    while((prop = pimpl->_propertyTable.tableIterator(prop)))
+    {
+        pimpl->_propertyTable.removeObject(prop);
+        delete prop;
+    }
 }
 
 //
@@ -93,7 +108,7 @@ bool PropertyFile::doReadFromFile(FILE *f)
                 // ???
                 break;
         }
-        propertyTable.addObject(newProp);
+        pimpl->_propertyTable.addObject(newProp);
         delete [] keyName;
     }
     
@@ -115,13 +130,13 @@ void PropertyFile::doWriteToFile(FILE *f)
     //   1: Pascal string (uint16_t length)
     //
     fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
-    uint32_t numProp = (uint32_t)propertyTable.getNumItems();
+    uint32_t numProp = (uint32_t)pimpl->_propertyTable.getNumItems();
     fwrite(&numProp, sizeof(uint32_t), 1, f);
     Property *prop = NULL;
     uint16_t propKeyLen;
     uint32_t propValLen;
     uint8_t btype;
-    while((prop = propertyTable.tableIterator(prop)))
+    while((prop = pimpl->_propertyTable.tableIterator(prop)))
     {
         propKeyLen = (uint16_t)strlen(prop->key());
         fwrite(&propKeyLen, sizeof(uint16_t), 1, f);
@@ -152,7 +167,8 @@ void PropertyFile::doWriteToFile(FILE *f)
 void PropertyFile::getExplored(void *exploredTarget) 
 {
     // File exists. Use its hash table
-    Property *prop = propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
+    Property *prop =
+    pimpl->_propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
     if(prop)
     {
         // Property exists. Get its data (expected is string).
@@ -184,7 +200,7 @@ void PropertyFile::getExplored(void *exploredTarget)
         else
         {
             // it wasn't set as PString. Kill it.
-            propertyTable.removeObject(prop);
+            pimpl->_propertyTable.removeObject(prop);
             delete prop;
         }
     }
@@ -196,13 +212,14 @@ void PropertyFile::getExplored(void *exploredTarget)
 void PropertyFile::putExplored(const void *explored)
 {
     // File exists. Look for its Explored property
-    Property *prop = propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
+    Property *prop =
+    pimpl->_propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
     
     if(!prop)
     {
         // Property doesn't exist. Create it.
         prop = new Property(PROPERTY_KEY_EXPLORED);
-        propertyTable.addObject(prop);
+        pimpl->_propertyTable.addObject(prop);
     }
     
     {
@@ -239,7 +256,7 @@ uint64_t PropertyFile::getSize()
 {
     uint64_t ret = FILE_HEADER_LENGTH + sizeof(uint32_t);
     Property *prop = NULL;
-    while ((prop = propertyTable.tableIterator(prop)))
+    while ((prop = pimpl->_propertyTable.tableIterator(prop)))
     {
         ret += sizeof(uint16_t);    // key len
         ret += strlen(prop->key());

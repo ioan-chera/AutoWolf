@@ -30,7 +30,7 @@ char masterDirectoryFilePath[MAX_PATH_LENGTH];
 //
 ////////////
 
-MasterDirectoryFile mainDataFile;
+MasterDirectoryFile *mainDataFile;
 
 ////////////
 //
@@ -45,9 +45,6 @@ MasterDirectoryFile::MasterDirectoryFile()
 {
 	_filename = masterDirectoryFileName;
 	initialized = true;
-    
-
-	
 	strcpy(header, MASTERDIR_HEADER);
 }
 
@@ -58,7 +55,9 @@ MasterDirectoryFile::MasterDirectoryFile()
 //
 MasterDirectoryFile &MasterDirectoryFile::MainDir()
 {
-	return mainDataFile;
+    if(!mainDataFile)
+        mainDataFile = new MasterDirectoryFile;
+	return *mainDataFile;
 }
 
 //
@@ -66,6 +65,7 @@ MasterDirectoryFile &MasterDirectoryFile::MainDir()
 //
 void MasterDirectoryFile::initializeConfigLocation()
 {
+    //    initialize(masterDirectoryFileName);
     if(configdir[0] == '\0')
     {
         snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath),
@@ -130,7 +130,7 @@ bool MasterDirectoryFile::loadFromFile()
 		return false;
 	}
 	
-	doReadFromFile(f);
+	DirectoryFile::doReadFromFile(f);
 	
 	fclose(f);
 	

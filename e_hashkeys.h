@@ -29,6 +29,7 @@
 #define E_HASHKEYS_H__
 
 #include <string.h> // IOANCH 20130308: added that
+#include "PString.h"
 
 unsigned int D_HashTableKey(const char *str);
 unsigned int D_HashTableKeyCase(const char *str);
@@ -126,6 +127,27 @@ public:
    {
       return !strcasecmp(first, second);
    }
+};
+
+// IOANCH 20130312: added PString hash calculators
+//
+// EPStringHashKey
+//
+class EPStringHashKey
+{
+public:
+    typedef const PString basic_type;
+    typedef const PString param_type;
+    
+    static unsigned int HashCode(const PString &input)
+    {
+        return D_HashTablePKeyCase(input.buffer(), input.length());
+    }
+    
+    static bool Compare(const PString &first, const PString &second)
+    {
+        return first == second;
+    }
 };
 
 #endif

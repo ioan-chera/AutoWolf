@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "PString.h"
+#include "m_dllist.h"
 
 #define FILE_HEADER_LENGTH 8
 
@@ -43,8 +44,7 @@ class DataFile
 {
 	friend class DirectoryFile;
 protected:
-	// name of file (appears as directory entry or outer filename)
-    PString _filename;
+
 	// file header (as defined by subclasses)
 	char header[FILE_HEADER_LENGTH + 1];
 	// see if initialized
@@ -56,9 +56,11 @@ protected:
 	virtual void doWriteToFile(FILE *f) = 0;
 	// Execute reading from file
 	virtual bool doReadFromFile(FILE *f) = 0;
-
+    
 public:
-	
+	// name of file (appears as directory entry or outer filename)
+    PString _filename;
+    DLListItem <DataFile> hashLink;
 	
 	DataFile();
 	virtual ~DataFile() {}

@@ -24,8 +24,6 @@
 
 #define PROPERTY_KEY_EXPLORED "Explored"
 
-#include "e_hash.h"
-#include "Property.h"
 #include "DataFile.h"
 
 // How to declare a hash table
@@ -39,6 +37,8 @@
 // File containing a hash table of Property objects. Thanks to Quasar for the
 // hash table structure.
 //
+class PropertyFilePimpl;
+
 class PropertyFile : public DataFile
 {
 protected:
@@ -47,8 +47,9 @@ protected:
 	// Execute reading from file
 	bool doReadFromFile(FILE *f);
     // the content
-    EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
-    propertyTable;
+    
+private:
+    PropertyFilePimpl *pimpl;
 
 public:
     PropertyFile();

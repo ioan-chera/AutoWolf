@@ -23,7 +23,6 @@
 #define DIRECTORY_HEADER "Director"
 
 #include "DataFile.h"
-#include "List.h"
 
 
 //
@@ -43,11 +42,15 @@
 //   non-null-string file name
 //   uint64_t address of file within container
 //
+class DirectoryFilePimpl;
+
 class DirectoryFile : public DataFile
 {
-protected:
+private:
 	// list of files
-	List <DataFile *> fileList;	// FIXME: define a list which owns the referenced components
+    DirectoryFilePimpl *pimpl;
+
+protected:
 	// number of files
 	uint32_t numberOfFiles;
 	// address of list
@@ -58,15 +61,7 @@ protected:
 	bool doReadFromFile(FILE *f);
 public:
 	DirectoryFile();
-	~DirectoryFile()
-	{
-		DataFile *file, *next;
-		for(file = fileList.firstObject(); file; file = next)
-		{
-			next = fileList.nextObject();
-			delete file;
-		}
-	}
+	virtual ~DirectoryFile();
 	
 	// now size
 	uint64_t getSize();

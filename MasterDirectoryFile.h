@@ -26,7 +26,6 @@
 #define MASTERDIR_HEADER "AutoWolf"
 const char masterDirectoryFileName[] = "AutoWolf.data";
 
-
 //
 // MasterDirectoryFile
 //
@@ -34,19 +33,15 @@ const char masterDirectoryFileName[] = "AutoWolf.data";
 //
 class MasterDirectoryFile : public DirectoryFile
 {
-protected:
 	
 //	void doWriteToFile(FILE *f);
 public:
 	MasterDirectoryFile();
-	
 	static MasterDirectoryFile &MainDir();
 	// save it to file
 	void saveToFile();
-	
 	// load it from file
 	bool loadFromFile();
-    
     // Initialize location
     void initializeConfigLocation();
 };
