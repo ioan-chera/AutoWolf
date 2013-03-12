@@ -203,7 +203,9 @@ void GetExploredData(void *exploredTarget)
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
+	dir = dir->makeDirectory(PString(digeststring,
+                                     16));
+    // the hash-named directory
     
     // Looking for files...
     // Get property file from digest folder.
@@ -212,7 +214,8 @@ void GetExploredData(void *exploredTarget)
     // If it doesn't, initialize it empty.
     // If file doesn't exist, do likewise.
     
-    PropertyFile *propertyFile = (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
+    PropertyFile *propertyFile =
+    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
     
     if(propertyFile)
         propertyFile->getExplored(exploredTarget);
@@ -259,7 +262,8 @@ void GetExploredData(void *exploredTarget)
 #endif
 #if 0
 	// Now. It might either be empty, or contain the Explored file already
-	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
+	ExploredArrayFile *exploredFile =
+    (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
 	
 	// Now decide: get data, or initialize it
 	if(exploredFile)
@@ -294,7 +298,9 @@ void PutExploredData(const void *explored)
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(digeststring, 16);					// the hash-named directory
+	dir = dir->makeDirectory(PString(digeststring,
+                                     16));
+    // the hash-named directory
     
     // Looking for files...
     // Get property file from digest folder.
@@ -303,8 +309,8 @@ void PutExploredData(const void *explored)
     // If it doesn't, create it with the proper name.
     // If file doesn't exist, create it and give it the explored property.
 	
-    PropertyFile *propertyFile = (PropertyFile *)dir->getFileWithName
-                                                    (PROPERTY_FILE_NAME);
+    PropertyFile *propertyFile =
+    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
 
     if(!propertyFile)
     {
@@ -354,7 +360,8 @@ void PutExploredData(const void *explored)
 #endif
 #if 0
 	// Now. It might either be empty, or contain the Explored file already
-	ExploredArrayFile *exploredFile = (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
+	ExploredArrayFile *exploredFile =
+    (ExploredArrayFile *)dir->getFileWithName(DATAFILE_EXPLORED_NAME);
 	
 	// Now decide: get data, or initialize it
 	if(exploredFile)

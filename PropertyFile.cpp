@@ -147,15 +147,6 @@ void PropertyFile::doWriteToFile(FILE *f)
 }
 
 //
-// PropertyFile::initialize
-//
-void PropertyFile::initialize(const char *fname, size_t nchar)
-{
-    DataFile::initialize(fname, nchar);
-//    propertyTable.initialize(127);
-}
-
-//
 // PropertyFile::getExplored
 //
 void PropertyFile::getExplored(void *exploredTarget) 

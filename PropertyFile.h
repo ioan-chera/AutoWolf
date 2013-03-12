@@ -58,8 +58,6 @@ public:
     void getExplored(void *exploredTarget);
     // putExplored
     void putExplored(const void *explored);
-    // do that other thing and init the hash table
-	void initialize(const char *fname, size_t nchar = 0);
     // get file size
 	uint64_t getSize();
 };

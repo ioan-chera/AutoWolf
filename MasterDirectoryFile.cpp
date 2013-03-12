@@ -43,8 +43,7 @@ MasterDirectoryFile mainDataFile;
 //
 MasterDirectoryFile::MasterDirectoryFile()
 {
-	filename = strdup(masterDirectoryFileName);
-	filenamelen = strlen(filename);
+	_filename = masterDirectoryFileName;
 	initialized = true;
     
 
@@ -69,8 +68,8 @@ void MasterDirectoryFile::initializeConfigLocation()
 {
     if(configdir[0] == '\0')
     {
-        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath), "%s"
-                 , masterDirectoryFileName);
+        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath),
+                 "%s", masterDirectoryFileName);
     }
     else
     {

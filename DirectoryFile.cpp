@@ -53,14 +53,15 @@ bool DirectoryFile::addFile(DataFile *file)
 //
 // create folder if not exist
 //
-DirectoryFile *DirectoryFile::makeDirectory(const char *fname, size_t nchar)
+DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 {
-	DataFile *findDir = getFileWithName(fname, nchar);
-	if(!findDir || (findDir && strcmp(findDir->getHeader(), DIRECTORY_HEADER)))
+	DataFile *findDir = getFileWithName(fname);
+	if(!findDir || (findDir && strcmp(findDir->getHeader(),
+                                      DIRECTORY_HEADER)))
 	{
 		// either doesn't exist or is not a folder
 		DirectoryFile *newdir = new DirectoryFile;
-		newdir->initialize(fname, nchar);
+		newdir->initialize(fname);
 		addFile(newdir);
 		
 		return newdir;
@@ -75,22 +76,14 @@ DirectoryFile *DirectoryFile::makeDirectory(const char *fname, size_t nchar)
 //
 // access file with name
 //
-DataFile *DirectoryFile::getFileWithName(const char *fname, size_t nchar)
+DataFile *DirectoryFile::getFileWithName(const PString &fname)
 {
 	// FIXME: Implement faster, proven searching methods than this
 	DataFile *file;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
-		if(nchar <= 0)
-		{
-			if(!strcmp(file->getFilename(), fname))
-				return file;
-		}
-		else
-		{
-			if(!memcmp(file->getFilename(), fname, nchar))
-				return file;
-		}
+        if(file->getFilename() == fname)
+            return file;
 	}
 	return NULL;
 }
@@ -135,7 +128,8 @@ uint64_t DirectoryFile::getSize()
 		ret += file->getSize();
 		
 		// directory entry
-		ret += sizeof(uint16_t) + file->getFilenameLen() + sizeof(uint64_t);
+		ret += sizeof(uint16_t) + file->getFilename().length()
+        + sizeof(uint64_t);
 	}
 	
 	return ret;
@@ -170,9 +164,9 @@ void DirectoryFile::doWriteToFile(FILE *f)
 	uint16_t len;
 	for(file = fileList.firstObject(); file; file = fileList.nextObject())
 	{
-		len = (uint16_t)file->getFilenameLen();
+		len = (uint16_t)file->getFilename().length();
 		fwrite(&len, sizeof(len), 1, f);
-		fwrite(file->getFilename(), sizeof(uint8_t), len, f);
+		fwrite(file->getFilename().buffer(), sizeof(uint8_t), len, f);
 		fwrite(&addr, sizeof(addr), 1, f);
 		size = file->getSize();
 		addr += size;
@@ -239,7 +233,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 			continue;
 		}
 		
-		newFile->initialize(fname, namelen);
+		newFile->initialize(PString(fname, namelen));
 		
 		newFile->doReadFromFile(f);
 		

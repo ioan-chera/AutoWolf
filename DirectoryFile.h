@@ -75,10 +75,10 @@ public:
 	bool addFile(DataFile *file);
 	
 	// access file with name
-	DataFile *getFileWithName(const char *fname, size_t nchar = 0);
+	DataFile *getFileWithName(const PString &fname);
 	
 	// create folder if not exist
-	DirectoryFile *makeDirectory(const char *fname, size_t nchar = 0);
+	DirectoryFile *makeDirectory(const PString &fname);
 };
 
 #endif

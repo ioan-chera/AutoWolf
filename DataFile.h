@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include "PString.h"
 
 #define FILE_HEADER_LENGTH 8
 
@@ -43,16 +44,14 @@ class DataFile
 	friend class DirectoryFile;
 protected:
 	// name of file (appears as directory entry or outer filename)
-	char *filename;
-	// length of filename
-	size_t filenamelen;
+    PString _filename;
 	// file header (as defined by subclasses)
 	char header[FILE_HEADER_LENGTH + 1];
 	// see if initialized
 	bool initialized;
 	
 	// creates a new empty file
-	void doInitializeEmpty(const char *fname, size_t nchar = 0);
+	void doInitializeEmpty(const PString &fname);
 	// Execute writing to file
 	virtual void doWriteToFile(FILE *f) = 0;
 	// Execute reading from file
@@ -62,27 +61,20 @@ public:
 	
 	
 	DataFile();
-	virtual ~DataFile()
-	{
-		delete filename;
-	}
+	virtual ~DataFile() {}
 	
 	// accessor methods
-	const char *getFilename() const
+	const PString &getFilename() const
 	{
-		return filename;
+		return _filename;
 	}
 	const char *getHeader() const
 	{
 		return header;
 	}
-	size_t getFilenameLen() const
-	{
-		return filenamelen;
-	}
 	
 	// do that other thing
-	void initialize(const char *fname, size_t nchar = 0);
+	void initialize(const PString &fname);
 	
 	// get file size
 	virtual uint64_t getSize() = 0;

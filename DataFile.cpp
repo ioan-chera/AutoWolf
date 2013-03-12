@@ -41,7 +41,7 @@
 //
 // DataFile::DataFile
 //
-DataFile::DataFile() : filename(0), initialized(false)
+DataFile::DataFile() : initialized(false)
 {
 	strcpy(header, "Unknown");
 }
@@ -51,9 +51,9 @@ DataFile::DataFile() : filename(0), initialized(false)
 //
 // Initialize with the Director name
 //
-void DataFile::initialize(const char *fname, size_t nchar)
+void DataFile::initialize(const PString &fname)
 {
-	doInitializeEmpty(fname, nchar);
+	doInitializeEmpty(fname);
 }
 
 //
@@ -61,20 +61,8 @@ void DataFile::initialize(const char *fname, size_t nchar)
 //
 // Creates a new structure
 //
-void DataFile::doInitializeEmpty(const char *fname, size_t nchar)
+void DataFile::doInitializeEmpty(const PString &fname)
 {
-	if(nchar <= 0)	// text string
-	{
-		filename = strdup(fname);
-		filenamelen = strlen(filename);
-	}
-	else			// arbitrary char array (may have null)
-	{
-		filename = new char[nchar + 1];
-		filename[nchar] = 0;
-		memcpy(filename, fname, nchar);
-		filenamelen = nchar;
-	}
-	
+    _filename = fname;
 	initialized = true;
 }
