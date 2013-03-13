@@ -20,24 +20,6 @@
 #include <string.h>
 #include "DataFile.h"
 
-////////////
-//
-// CONSTANTS
-//
-////////////
-
-////////////
-//
-// INSTANCES
-//
-////////////
-
-////////////
-//
-// METHODS
-//
-////////////
-
 //
 // DataFile::DataFile
 //

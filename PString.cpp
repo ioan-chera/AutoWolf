@@ -29,7 +29,9 @@
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
+#endif
 
+#if defined(_WIN32) || defined(APPLE_NON_CPP11)
 //
 // memmem
 //

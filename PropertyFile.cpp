@@ -95,7 +95,7 @@ bool PropertyFile::doReadFromFile(FILE *f)
                 fread(&newProp->intValue, sizeof(int32_t), 1, f);
                 break;
                 
-            case Property::PString:
+            case Property::PStringVal:
                 // Pascal string
                 fread(&valueLen, sizeof(uint32_t), 1, f);
                 valName = new char[valueLen + 1];
@@ -149,7 +149,7 @@ void PropertyFile::doWriteToFile(FILE *f)
             case Property::Int32:
                 fwrite(&prop->intValue, sizeof(int32_t), 1, f);
                 break;
-            case Property::PString:
+            case Property::PStringVal:
                 propValLen = (uint32_t)prop->stringValue().length();
                 fwrite(&propValLen, sizeof(uint32_t), 1, f);
                 fwrite(prop->stringValue().buffer(), sizeof(char), propValLen,
@@ -173,7 +173,7 @@ void PropertyFile::getExplored(void *exploredTarget)
     {
         // Property exists. Get its data (expected is string).
         // Make sure it IS string
-        if(prop->type == Property::PString)
+        if(prop->type == Property::PStringVal)
         {
             // Type valid. Send the data
             const PString &explorstr = prop->stringValue();
@@ -225,7 +225,7 @@ void PropertyFile::putExplored(const void *explored)
     {
         // Property exists. Change it
         PString dataToWrite(maparea/8);
-        prop->type = Property::PString;
+        prop->type = Property::PStringVal;
         {
             size_t pos;
             uint8_t charac = 0;
@@ -266,7 +266,7 @@ uint64_t PropertyFile::getSize()
             case Property::Int32:
                 ret += sizeof(int32_t);
                 break;
-            case Property::PString:
+            case Property::PStringVal:
                 ret += sizeof(uint32_t) + prop->stringValue().length();
             default:
                 // ???

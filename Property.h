@@ -70,7 +70,7 @@ public:
     {
         Unknown,
         Int32,
-        PString,
+        PStringVal,
     };
     
     // Key string for hashing
