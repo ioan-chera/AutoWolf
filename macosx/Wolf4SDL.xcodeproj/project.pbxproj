@@ -95,6 +95,16 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4F00E0EA16F06A90006F3D16 /* wl_act1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_act1.h; path = ../wl_act1.h; sourceTree = SOURCE_ROOT; };
+		4F00E0EB16F06A90006F3D16 /* wl_act2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_act2.h; path = ../wl_act2.h; sourceTree = SOURCE_ROOT; };
+		4F00E0EC16F06A90006F3D16 /* wl_agent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_agent.h; path = ../wl_agent.h; sourceTree = SOURCE_ROOT; };
+		4F00E0ED16F06A90006F3D16 /* wl_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_draw.h; path = ../wl_draw.h; sourceTree = SOURCE_ROOT; };
+		4F00E0EE16F06A90006F3D16 /* wl_game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_game.h; path = ../wl_game.h; sourceTree = SOURCE_ROOT; };
+		4F00E0EF16F06A90006F3D16 /* wl_inter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_inter.h; path = ../wl_inter.h; sourceTree = SOURCE_ROOT; };
+		4F00E0F016F06A90006F3D16 /* wl_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_main.h; path = ../wl_main.h; sourceTree = SOURCE_ROOT; };
+		4F00E0F116F06A90006F3D16 /* wl_play.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_play.h; path = ../wl_play.h; sourceTree = SOURCE_ROOT; };
+		4F00E0F216F06A90006F3D16 /* wl_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_state.h; path = ../wl_state.h; sourceTree = SOURCE_ROOT; };
+		4F00E0F316F06A90006F3D16 /* wl_text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_text.h; path = ../wl_text.h; sourceTree = SOURCE_ROOT; };
 		4F14DD1E16E9E18A00606BD4 /* PropertyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyFile.h; path = ../PropertyFile.h; sourceTree = SOURCE_ROOT; };
 		4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyFile.cpp; path = ../PropertyFile.cpp; sourceTree = SOURCE_ROOT; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../obattrib.cpp; sourceTree = "<group>"; };
@@ -357,6 +367,16 @@
 		FA8DFA98158692FB00EBBFB2 /* WL */ = {
 			isa = PBXGroup;
 			children = (
+				4F00E0EA16F06A90006F3D16 /* wl_act1.h */,
+				4F00E0EB16F06A90006F3D16 /* wl_act2.h */,
+				4F00E0EC16F06A90006F3D16 /* wl_agent.h */,
+				4F00E0ED16F06A90006F3D16 /* wl_draw.h */,
+				4F00E0EE16F06A90006F3D16 /* wl_game.h */,
+				4F00E0EF16F06A90006F3D16 /* wl_inter.h */,
+				4F00E0F016F06A90006F3D16 /* wl_main.h */,
+				4F00E0F116F06A90006F3D16 /* wl_play.h */,
+				4F00E0F216F06A90006F3D16 /* wl_state.h */,
+				4F00E0F316F06A90006F3D16 /* wl_text.h */,
 				FAE8D10D166E3E1E006B2EDE /* Gimmicks */,
 				D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */,
 				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
