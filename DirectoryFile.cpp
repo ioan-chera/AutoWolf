@@ -44,13 +44,13 @@ DirectoryFile::DirectoryFile() : numberOfFiles(0), addressOfList(0)
 DirectoryFile::~DirectoryFile()
 {
     DataFile *file = NULL;
-    delete pimpl;
-    
+
     while((file = pimpl->fileHash.tableIterator(file)))
     {
         pimpl->fileHash.removeObject(file);
         delete file;
     }
+    delete pimpl;
 }
 
 //

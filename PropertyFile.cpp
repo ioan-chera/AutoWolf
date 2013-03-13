@@ -42,7 +42,7 @@ PropertyFile::PropertyFile()// : propertyTable()
 //
 PropertyFile::~PropertyFile()
 {
-    delete pimpl;
+
     Property *prop = NULL;
     
     while((prop = pimpl->_propertyTable.tableIterator(prop)))
@@ -50,6 +50,7 @@ PropertyFile::~PropertyFile()
         pimpl->_propertyTable.removeObject(prop);
         delete prop;
     }
+    delete pimpl;
 }
 
 //
