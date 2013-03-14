@@ -137,7 +137,7 @@ class EPStringHashKey
 {
 public:
     typedef const PString basic_type;
-    typedef const PString param_type;
+    typedef const PString &param_type;
     
     static unsigned int HashCode(const PString &input)
     {
