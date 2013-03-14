@@ -45,7 +45,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma pack(1)
+// IOANCH 20130314: commented this
+// #pragma pack(1)
 
 //#include "dosbox.h"
 #include "dbopl.h"

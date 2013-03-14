@@ -29,7 +29,7 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #include "wl_play.h"
-#pragma hdrstop
+// #pragma hdrstop
 
 #include "wl_cloudsky.h"
 #include "wl_shade.h"

@@ -43,7 +43,7 @@
 #include "wl_def.h"
 #include "wl_menu.h"
 
-#pragma	hdrstop
+// #pragma hdrstop
 
 #if _MSC_VER == 1200            // Visual C++ 6
 	#define vsnprintf _vsnprintf

@@ -43,7 +43,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include "wl_text.h"
-#pragma hdrstop
+// #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 20121217: bot
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
