@@ -50,8 +50,7 @@ extern unsigned char SPEAR;
 #	define O_BINARY 0
 #endif
 
-// IOANCH 20130314: commented this
-// #pragma pack(1)
+#pragma pack(1)
 
 #if defined(_arch_dreamcast)
 #define YESBUTTONNAME "A"

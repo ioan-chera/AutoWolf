@@ -29,7 +29,7 @@
 #include "wl_main.h"
 #include "wl_play.h"
 #include "wl_state.h"
-// #pragma hdrstop
+#pragma hdrstop
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"

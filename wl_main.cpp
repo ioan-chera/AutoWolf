@@ -35,7 +35,7 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #include "wl_play.h"
-// #pragma hdrstop
+#pragma hdrstop
 #include "wl_atmos.h"
 #include <SDL_syswm.h>
 // IOANCH 17.05.2012

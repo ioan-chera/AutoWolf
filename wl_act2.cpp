@@ -31,7 +31,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include "wl_state.h"
-// #pragma hdrstop
+#pragma hdrstop
 #include "ioan_bot.h"	// include bot
 #include "ioan_bas.h"
 #include "List.h"

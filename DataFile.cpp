@@ -18,6 +18,7 @@
 
 
 #include <string.h>
+#pragma pack(1)
 #include "DataFile.h"
 
 //

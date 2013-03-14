@@ -26,7 +26,7 @@
 #include "wl_agent.h"
 #include "wl_game.h"
 #include "wl_play.h"
-// #pragma hdrstop
+#pragma hdrstop
 #include "ioan_bas.h"	// IOANCH 29.06.2012
 #include "List.h"
 #include "obattrib.h"

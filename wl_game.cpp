@@ -32,7 +32,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include <SDL_mixer.h>
-// #pragma hdrstop
+#pragma hdrstop
 // IOANCH 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"

@@ -17,7 +17,7 @@
 //
 
 #include <string.h>
-
+#pragma pack(1)
 #include "Property.h"
 
 #define NEW_ALLOC_2_RATIO 3

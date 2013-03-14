@@ -18,6 +18,7 @@
 
 
 #include <string.h>
+#pragma pack(1)
 #include "DirectoryFile.h"
 #include "PropertyFile.h"
 #include "e_hash.h"

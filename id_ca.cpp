@@ -48,7 +48,7 @@ loaded into the data segment
 
 #include "wl_def.h"
 #include "wl_main.h"
-// #pragma hdrstop
+#pragma hdrstop
 
 #define THREEBYTEGRSTARTS
 
