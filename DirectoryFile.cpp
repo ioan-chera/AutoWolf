@@ -20,15 +20,6 @@
 #include <string.h>
 #pragma pack(1)
 #include "DirectoryFile.h"
-#include "PropertyFile.h"
-#include "e_hash.h"
-
-class DirectoryFilePimpl
-{
-public:
-    EHashTable <DataFile, EPStringHashKey, &DataFile::_filename,
-        &DataFile::hashLink> fileHash;
-};
 
 //
 // DirectoryFile::DirectoryFile
@@ -36,7 +27,6 @@ public:
 DirectoryFile::DirectoryFile() : numberOfFiles(0), addressOfList(0)
 {
 	strcpy(header, DIRECTORY_HEADER);
-    pimpl = new DirectoryFilePimpl;
 }
 
 //
@@ -46,12 +36,11 @@ DirectoryFile::~DirectoryFile()
 {
     DataFile *file = NULL;
 
-    while((file = pimpl->fileHash.tableIterator(file)))
+    while((file = fileHash.tableIterator(file)))
     {
-        pimpl->fileHash.removeObject(file);
+        fileHash.removeObject(file);
         delete file;
     }
-    delete pimpl;
 }
 
 //
@@ -65,7 +54,7 @@ bool DirectoryFile::addFile(DataFile *file)
 	if(!file || !file->getHeader())	// headerless files are invalid
 		return false;
 	
-    pimpl->fileHash.addObject(file);
+    fileHash.addObject(file);
     
 //	fileList.add(file);
 	++numberOfFiles;
@@ -105,7 +94,7 @@ DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 DataFile *DirectoryFile::getFileWithName(const PString &fname)
 {
 	// FIXME: Implement faster, proven searching methods than this
-    return pimpl->fileHash.objectForKey(fname);
+    return fileHash.objectForKey(fname);
 }
 
 //
@@ -142,7 +131,7 @@ uint64_t DirectoryFile::getSize()
 	
 	// content
 	DataFile *file = NULL;
-    while((file = pimpl->fileHash.tableIterator(file)))
+    while((file = fileHash.tableIterator(file)))
 	{
 		// content
 		ret += file->getSize();
@@ -167,7 +156,7 @@ void DirectoryFile::doWriteToFile(FILE *f)
 	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
 	DataFile *file = NULL;
 	uint64_t size = 0, addr;
-    while((file = pimpl->fileHash.tableIterator(file)))
+    while((file = fileHash.tableIterator(file)))
 	{
 		file->doWriteToFile(f);
 		size += file->getSize();	// FIXME: try to cache that
@@ -182,8 +171,8 @@ void DirectoryFile::doWriteToFile(FILE *f)
 	addr = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
 	
 	uint16_t len;
-    for(file = pimpl->fileHash.tableIterator(NULL); file;
-        file = pimpl->fileHash.tableIterator(file))
+    for(file = fileHash.tableIterator(NULL); file;
+        file = fileHash.tableIterator(file))
 	{
 		len = (uint16_t)file->getFilename().length();
 		fwrite(&len, sizeof(len), 1, f);

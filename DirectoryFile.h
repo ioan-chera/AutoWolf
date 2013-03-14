@@ -23,7 +23,8 @@
 #define DIRECTORY_HEADER "Director"
 
 #include "DataFile.h"
-
+#include "PropertyFile.h"
+#include "e_hash.h"
 
 //
 // DirectoryFile
@@ -42,13 +43,12 @@
 //   non-null-string file name
 //   uint64_t address of file within container
 //
-class DirectoryFilePimpl;
-
 class DirectoryFile : public DataFile
 {
-private:
+protected:
 	// list of files
-    DirectoryFilePimpl *pimpl;
+    EHashTable <DataFile, EPStringHashKey, &DataFile::_filename,
+    &DataFile::hashLink> fileHash;
 
 protected:
 	// number of files
