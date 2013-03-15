@@ -46,9 +46,11 @@ class DataFile
 protected:
 
 	// file header (as defined by subclasses)
-	char header[FILE_HEADER_LENGTH + 1];
+	char _header[FILE_HEADER_LENGTH + 1];
 	// see if initialized
-	bool initialized;
+	bool _initialized;
+    // cached file size
+    uint64_t _size;
 	
 	// creates a new empty file
 	void doInitializeEmpty(const PString &fname);
@@ -66,20 +68,23 @@ public:
 	virtual ~DataFile() {}
 	
 	// accessor methods
-	const PString &getFilename() const
+	const PString &filename() const
 	{
 		return _filename;
 	}
-	const char *getHeader() const
+	const char *header() const
 	{
-		return header;
+		return _header;
 	}
 	
 	// do that other thing
 	void initialize(const PString &fname);
 	
 	// get file size
-	virtual uint64_t getSize() = 0;
+	virtual uint64_t size()
+    {
+        return _size;
+    }
 };
 
 #endif

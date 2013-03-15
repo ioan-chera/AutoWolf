@@ -24,9 +24,9 @@
 //
 // DataFile::DataFile
 //
-DataFile::DataFile() : initialized(false)
+DataFile::DataFile() : _initialized(false)
 {
-	strcpy(header, "Unknown");
+	strcpy(_header, "Unknown");
 }
 
 //
@@ -47,5 +47,5 @@ void DataFile::initialize(const PString &fname)
 void DataFile::doInitializeEmpty(const PString &fname)
 {
     _filename = fname;
-	initialized = true;
+	_initialized = true;
 }

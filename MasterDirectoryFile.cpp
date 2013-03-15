@@ -44,8 +44,8 @@ MasterDirectoryFile *mainDataFile;
 MasterDirectoryFile::MasterDirectoryFile()
 {
 	_filename = masterDirectoryFileName;
-	initialized = true;
-	strcpy(header, MASTERDIR_HEADER);
+	_initialized = true;
+	strcpy(_header, MASTERDIR_HEADER);
 }
 
 //

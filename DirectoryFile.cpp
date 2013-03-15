@@ -26,7 +26,7 @@
 //
 DirectoryFile::DirectoryFile() : numberOfFiles(0), addressOfList(0)
 {
-	strcpy(header, DIRECTORY_HEADER);
+	strcpy(_header, DIRECTORY_HEADER);
 }
 
 //
@@ -51,7 +51,7 @@ DirectoryFile::~DirectoryFile()
 //
 bool DirectoryFile::addFile(DataFile *file)
 {
-	if(!file || !file->getHeader())	// headerless files are invalid
+	if(!file || !file->header())	// headerless files are invalid
 		return false;
 	
     fileHash.addObject(file);
@@ -71,7 +71,7 @@ bool DirectoryFile::addFile(DataFile *file)
 DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 {
 	DataFile *findDir = getFileWithName(fname);
-	if(!findDir || (findDir && strcmp(findDir->getHeader(),
+	if(!findDir || (findDir && strcmp(findDir->header(),
                                       DIRECTORY_HEADER)))
 	{
 		// either doesn't exist or is not a folder
@@ -98,11 +98,11 @@ DataFile *DirectoryFile::getFileWithName(const PString &fname)
 }
 
 //
-// DirectoryFile::getSize
+// DirectoryFile::size
 //
 // calculate the size
 //
-uint64_t DirectoryFile::getSize()
+uint64_t DirectoryFile::size()
 {
 	// size of:
 	// 8 header
@@ -127,17 +127,18 @@ uint64_t DirectoryFile::getSize()
 	// FIXME: get cache from doWriteToFile
 	
 	// header length + number of entries + address of entry list
-	uint64_t ret = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
+	uint64_t ret = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + 
+        sizeof(addressOfList);
 	
 	// content
 	DataFile *file = NULL;
     while((file = fileHash.tableIterator(file)))
 	{
 		// content
-		ret += file->getSize();
+		ret += file->size();
 		
 		// directory entry
-		ret += sizeof(uint16_t) + file->getFilename().length()
+		ret += sizeof(uint16_t) + file->filename().length()
         + sizeof(uint64_t);
 	}
 	
@@ -151,7 +152,7 @@ uint64_t DirectoryFile::getSize()
 //
 void DirectoryFile::doWriteToFile(FILE *f)
 {
-	fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
+	fwrite(_header, sizeof(char), FILE_HEADER_LENGTH, f);
 	fwrite(&numberOfFiles, sizeof(numberOfFiles), 1, f);
 	fwrite(&addressOfList, sizeof(addressOfList), 1, f);
 	DataFile *file = NULL;
@@ -159,7 +160,7 @@ void DirectoryFile::doWriteToFile(FILE *f)
     while((file = fileHash.tableIterator(file)))
 	{
 		file->doWriteToFile(f);
-		size += file->getSize();	// FIXME: try to cache that
+		size += file->size();	// FIXME: try to cache that
 	}
 	addr = ftell(f);
 	
@@ -174,11 +175,11 @@ void DirectoryFile::doWriteToFile(FILE *f)
     for(file = fileHash.tableIterator(NULL); file;
         file = fileHash.tableIterator(file))
 	{
-		len = (uint16_t)file->getFilename().length();
+		len = (uint16_t)file->filename().length();
 		fwrite(&len, sizeof(len), 1, f);
-		fwrite(file->getFilename().buffer(), sizeof(uint8_t), len, f);
+		fwrite(file->filename().buffer(), sizeof(uint8_t), len, f);
 		fwrite(&addr, sizeof(addr), 1, f);
-		size = file->getSize();
+		size = file->size();
 		addr += size;
 	}
 }

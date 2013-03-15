@@ -48,10 +48,13 @@ protected:
 	// Execute reading from file
 	bool doReadFromFile(FILE *f);
     // the content
-    
-protected:
     EHashTable<Property, EStringHashKey, &Property::_key, &Property::link>
     _propertyTable;
+    
+    // Create object or address one.
+    Property *_makeObjectWithKey(const char *key);
+    // Update size
+    void _updateSize();
 
 public:
     PropertyFile();
@@ -61,8 +64,6 @@ public:
     void getExplored(void *exploredTarget);
     // putExplored
     void putExplored(const void *explored);
-    // get file size
-	uint64_t getSize();
 };
 
 #endif

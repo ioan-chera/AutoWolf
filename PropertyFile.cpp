@@ -24,7 +24,8 @@
 //
 PropertyFile::PropertyFile()// : propertyTable()
 {
-	strcpy(header, PROPERTY_FILE_HEADER);
+	strcpy(_header, PROPERTY_FILE_HEADER);
+    _size = FILE_HEADER_LENGTH + sizeof(uint32_t);
 }
 
 //
@@ -119,7 +120,7 @@ void PropertyFile::doWriteToFile(FILE *f)
     //   0: int32_t
     //   1: Pascal string (uint16_t length)
     //
-    fwrite(header, sizeof(char), FILE_HEADER_LENGTH, f);
+    fwrite(_header, sizeof(char), FILE_HEADER_LENGTH, f);
     uint32_t numProp = (uint32_t)_propertyTable.getNumItems();
     fwrite(&numProp, sizeof(uint32_t), 1, f);
     Property *prop = NULL;
@@ -153,6 +154,9 @@ void PropertyFile::doWriteToFile(FILE *f)
 
 //
 // PropertyFile::getExplored
+//
+// Gets explored matrix from file contents to bot data
+// FIXME: Optimization idea. Let the bot write directly to file.
 //
 void PropertyFile::getExplored(void *exploredTarget) 
 {
@@ -197,71 +201,78 @@ void PropertyFile::getExplored(void *exploredTarget)
 }
 
 //
-// PropertyFile::putExplored
+// PropertyFile::_makeObjectWithKey
 //
-void PropertyFile::putExplored(const void *explored)
+Property *PropertyFile::_makeObjectWithKey(const char *key)
 {
-    // File exists. Look for its Explored property
-    Property *prop =
-    _propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
+    Property *prop = _propertyTable.objectForKey(key);
     
     if(!prop)
     {
         // Property doesn't exist. Create it.
-        prop = new Property(PROPERTY_KEY_EXPLORED);
+        prop = new Property(key);
         _propertyTable.addObject(prop);
     }
     
-    {
-        // Property exists. Change it
-        PString dataToWrite(maparea/8);
-        prop->type = Property::PStringVal;
-        {
-            size_t pos;
-            uint8_t charac = 0;
-            
-            boolean *baseaddress = (boolean *)explored;
-            
-            for(pos = 0; pos < maparea; ++pos)
-            {
-                charac = (charac << 1) + *(baseaddress + pos);
-                if((pos + 1) % 8 == 0)	// reached eight bits
-                {
-                    dataToWrite.Putc((char)charac);
-                    charac = 0;
-                }
-            }
-        }
-        // Written.
-        prop->setStringValue(dataToWrite);
-    }
+    return prop;
 }
 
 //
-// PropertyFile::getSize
+// PropertyFile::_updateSize
 //
-// This really should be part of reading and react to changes.
-//
-uint64_t PropertyFile::getSize()
+void PropertyFile::_updateSize()
 {
-    uint64_t ret = FILE_HEADER_LENGTH + sizeof(uint32_t);
+    _size = FILE_HEADER_LENGTH + sizeof(uint32_t);
     Property *prop = NULL;
     while ((prop = _propertyTable.tableIterator(prop)))
     {
-        ret += sizeof(uint16_t);    // key len
-        ret += strlen(prop->key());
-        ret += sizeof(uint8_t);     // value type
+        _size += sizeof(uint16_t);    // key len
+        _size += strlen(prop->key());
+        _size += sizeof(uint8_t);     // value type
         switch (prop->type)
         {
             case Property::Int32:
-                ret += sizeof(int32_t);
+                _size += sizeof(int32_t);
                 break;
             case Property::PStringVal:
-                ret += sizeof(uint32_t) + prop->stringValue().length();
+                _size += sizeof(uint32_t) + prop->stringValue().length();
             default:
                 // ???
                 break;
         }
     }
-    return ret;
+}
+
+//
+// PropertyFile::putExplored
+//
+// Puts the explored data from given bot's memory to file's memory
+// FIXME: again, why waste resources to copy data around?
+//
+void PropertyFile::putExplored(const void *explored)
+{
+    // File exists. Look for its Explored property
+    Property *prop = _makeObjectWithKey(PROPERTY_KEY_EXPLORED);
+    
+    // Property exists. Change it
+    PString dataToWrite(maparea/8);
+
+    size_t pos;
+    uint8_t charac = 0;
+    
+    boolean *baseaddress = (boolean *)explored;
+    
+    for(pos = 0; pos < maparea; ++pos)
+    {
+        charac = (charac << 1) + *(baseaddress + pos);
+        if((pos + 1) % 8 == 0)	// reached eight bits
+        {
+            dataToWrite.Putc((char)charac);
+            charac = 0;
+        }
+    }
+    // Written.
+    prop->type = Property::PStringVal;
+    prop->setStringValue(dataToWrite);
+    _updateSize();
 }

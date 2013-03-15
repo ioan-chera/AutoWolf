@@ -64,7 +64,8 @@ public:
 	virtual ~DirectoryFile();
 	
 	// now size
-	uint64_t getSize();
+    // FIXME: make it cached too…
+	uint64_t size();
 	
 	// add file to list
 	bool addFile(DataFile *file);
