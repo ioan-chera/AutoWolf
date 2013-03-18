@@ -103,6 +103,7 @@ bool PropertyFile::doReadFromFile(FILE *f)
         delete [] keyName;
     }
     
+    _updateSize();
     return true;
 }
 
