@@ -73,12 +73,6 @@ void BotMan::MapInit()
 	// get explored data
 	GetExploredData(explored);
 	
-	
-//	for(i = 0; i < MAPSIZE; ++i)
-//		for(j = 0; j < MAPSIZE; ++j)
-//			explored[i][j] = false;
-//	memset(explored, 0, maparea * sizeof(boolean));
-
 	// FIXME: this should be taken from loaded game data. I might put a LoadGameInit just for that.
 	for(i = 0; i < MAPSIZE; ++i)
 		for(j = 0; j < MAPSIZE; ++j)
@@ -564,7 +558,7 @@ objtype *BotMan::EnemyOnTarget()
 
 		if (closest == oldclosest)
 			return NULL;                                         // no more targets, all missed
-
+        
 		//
 		// trace a line from player to enemey
 		//
@@ -823,10 +817,6 @@ void BotMan::DoRetreat(boolean forth, objtype *cause)
 	}
 	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
 		return;
-//	backx += tx;
-//	backy += ty;
-//	sidex += tx;
-//	sidey += ty;
 
 	objtype *check1 = actorat[tx + backx][ty + backy], *check2;
 	if((check1 && !ISPOINTER(check1)) || (check1 && ISPOINTER(check1) && check1->flags & FL_SHOOTABLE))
@@ -1580,7 +1570,6 @@ void BotMan::DoCommand()
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -2;
-//	static int reactiontime = 30;
 	
 	objtype *check0;
 	
@@ -1591,18 +1580,8 @@ void BotMan::DoCommand()
 	check0 = EnemyVisible(&eangle, &edist);
 	if(check0)
 	{
-//		if(edist >= 10)
-//			reactiontime -= 1 * tics;
-//		else
-//			reactiontime -= ((11 - edist) >> 1) * tics;
-//		if(reactiontime <= 0)
-//		{
-//			reactiontime = 0;
 			damagetaken = NULL;
 			DoCombatAI(eangle, edist);
-//		}
-//		else
-//			DoNonCombatAI();
 	}
 	else if(retreat > 0)	// standard retreat, still moving
 	{
@@ -1623,15 +1602,12 @@ void BotMan::DoCommand()
 			else
 			{
 				controly = RUNMOVE*tics;
-				//DoRetreat(false, check2);
 			}
 			retreat = 5;
 			damagetaken = NULL;
 		}
 		else
 		{
-//			if(reactiontime < 30)
-//				reactiontime+= tics;
 			DoNonCombatAI();
 		}
 	}
