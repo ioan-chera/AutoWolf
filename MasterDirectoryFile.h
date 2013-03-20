@@ -34,7 +34,6 @@ const char masterDirectoryFileName[] = "AutoWolf.data";
 class MasterDirectoryFile : public DirectoryFile
 {
 	
-//	void doWriteToFile(FILE *f);
 public:
 	MasterDirectoryFile();
 	static MasterDirectoryFile &MainDir();

@@ -55,10 +55,11 @@ bool DirectoryFile::addFile(DataFile *file)
 		return false;
 	
     fileHash.addObject(file);
+    file->_containerFile = this;
     
-//	fileList.add(file);
 	++numberOfFiles;
-	// that has to be it?
+    
+    _updateSize();
 	
 	return true;
 }
@@ -98,51 +99,25 @@ DataFile *DirectoryFile::getFileWithName(const PString &fname)
 }
 
 //
-// DirectoryFile::size
+// DirectoryFile::_updateSize
 //
-// calculate the size
-//
-uint64_t DirectoryFile::size()
+void DirectoryFile::_updateSize()
 {
-	// size of:
-	// 8 header
-	// 4 number of files
-	// 8 address of file list
-	// length of each file
-	//
-	// Structure:
-
-	//  uint32_t number of files
-	//  uint64_t address of file list
-	//  Contents of each file
-	//  File list
-	//
-	// File list:
-	//  entries of:
-	//   uint16_t length of file name
-	//   non-null-string file name
-	//   uint64_t address of file within container
-	//   uint64_t length of contained file
-	
-	// FIXME: get cache from doWriteToFile
-	
-	// header length + number of entries + address of entry list
-	uint64_t ret = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + 
-        sizeof(addressOfList);
+    _size = FILE_HEADER_LENGTH + sizeof(numberOfFiles) + sizeof(addressOfList);
 	
 	// content
 	DataFile *file = NULL;
     while((file = fileHash.tableIterator(file)))
 	{
 		// content
-		ret += file->size();
+		_size += file->size();
 		
 		// directory entry
-		ret += sizeof(uint16_t) + file->filename().length()
-        + sizeof(uint64_t);
+		_size += sizeof(uint16_t) + file->filename().length() +
+                sizeof(uint64_t);
 	}
 	
-	return ret;
+    DataFile::_updateSize();
 }
 
 //

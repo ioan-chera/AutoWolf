@@ -59,14 +59,12 @@ protected:
 	void doWriteToFile(FILE *f);
 	// Execute reading from file
 	bool doReadFromFile(FILE *f);
+    // Update size
+    void _updateSize();
 public:
 	DirectoryFile();
 	virtual ~DirectoryFile();
-	
-	// now size
-    // FIXME: make it cached too…
-	uint64_t size();
-	
+
 	// add file to list
 	bool addFile(DataFile *file);
 	

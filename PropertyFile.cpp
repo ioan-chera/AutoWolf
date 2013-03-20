@@ -242,6 +242,8 @@ void PropertyFile::_updateSize()
                 break;
         }
     }
+    
+    DataFile::_updateSize();
 }
 
 //

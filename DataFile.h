@@ -51,6 +51,8 @@ protected:
 	bool _initialized;
     // cached file size
     uint64_t _size;
+    // relation to container
+    DataFile *_containerFile;
 	
 	// creates a new empty file
 	void doInitializeEmpty(const PString &fname);
@@ -58,6 +60,8 @@ protected:
 	virtual void doWriteToFile(FILE *f) = 0;
 	// Execute reading from file
 	virtual bool doReadFromFile(FILE *f) = 0;
+    // Update size
+    virtual void _updateSize();
     
 public:
 	// name of file (appears as directory entry or outer filename)

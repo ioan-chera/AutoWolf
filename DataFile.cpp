@@ -24,7 +24,7 @@
 //
 // DataFile::DataFile
 //
-DataFile::DataFile() : _initialized(false)
+DataFile::DataFile() : _initialized(false), _containerFile(NULL)
 {
 	strcpy(_header, "Unknown");
 }
@@ -48,4 +48,13 @@ void DataFile::doInitializeEmpty(const PString &fname)
 {
     _filename = fname;
 	_initialized = true;
+}
+
+//
+// DataFile::_updateSize
+//
+void DataFile::_updateSize()
+{
+    if(_containerFile)
+        _containerFile->_updateSize();
 }
