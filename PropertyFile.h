@@ -55,11 +55,14 @@ protected:
     Property *_makeObjectWithKey(const char *key);
     // Update size
     void _updateSize();
-
+    // packByteArray
+    static PString _PackBooleanArray(const void *byteArray, size_t arraySize);
+    static void _UnpackBooleanArray(const PString &source, void *target,
+                                    size_t targetSize);
 public:
     PropertyFile();
     ~PropertyFile();
-    
+
     // getExplored
     void getExplored(void *exploredTarget);
     // putExplored
