@@ -22,7 +22,7 @@
 #include "PropertyFile.h"
 #include "CheckSum.h"
 
-char digeststring[17];
+char digeststring[16];
 
 //
 // leftrotate
@@ -184,7 +184,6 @@ void CalculateMapsegsChecksum()
 	uint8_t digest[16];
 	calcMapsegsChecksum(digest);	// DO IT
 	
-	digeststring[16] = 0;
 	memcpy(digeststring, digest, 16*sizeof(char));
 }
 
@@ -203,8 +202,7 @@ void GetExploredData(void *exploredTarget)
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring,
-                                     16));
+	dir = dir->makeDirectory(PString(digeststring, 16));
     // the hash-named directory
     
     // Looking for files...
@@ -235,8 +233,7 @@ void PutExploredData(const void *explored)
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring,
-                                     16));
+	dir = dir->makeDirectory(PString(digeststring, 16));
     // the hash-named directory
     
     // Looking for files...

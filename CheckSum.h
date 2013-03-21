@@ -24,6 +24,6 @@ void CalculateMapsegsChecksum();
 void GetExploredData(void *exploredTarget);
 void PutExploredData(const void *explored);
 
-extern char digeststring[17];
+extern char digeststring[16];
 
 #endif
