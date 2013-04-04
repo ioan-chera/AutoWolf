@@ -21,6 +21,7 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
+#include "obattrib.h"
 #include "HistoryRatio.h"
 #include "PathArray.h"
 #include "CheckSum.h"
@@ -99,6 +100,12 @@ void BotMan::LoadData()
 {
 	MasterDirectoryFile::MainDir().loadFromFile();
 }
+
+// Bot moods: using today value as seed, use a random strategy, one or more:
+// - As soon as elevator is found, take it
+// - Avoid taking the secret elevator (and if "as soon", don't take it)
+// - Don't look for treasure
+// - Don't actively hunt for Nazis (except boss)
 
 //
 // BotMan::ObjectOfInterest
@@ -707,7 +714,8 @@ objtype *BotMan::EnemyEager()
 objtype *BotMan::DamageThreat(objtype *targ)
 {
 	objtype *objignore = targ;
-	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1)))
+	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && 
+        gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1)))
 	{
 		objignore = NULL;
 	}
@@ -724,14 +732,15 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 	int j, k, dist;
 	objtype *ret;
 
-	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; 
+        ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		if(!areabyplayer[ret->areanumber] || ret == objignore)
 			continue;
 		k = (ret->x - x) >> TILESHIFT;
 		j = (ret->y - y )>> TILESHIFT;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic::GenericCheckLine(ret->recordx, ret->recordy, x, y))
+		if(dist > atr::threatrange[ret->obclass] || !Basic::GenericCheckLine(ret->recordx, ret->recordy, x, y))
 			continue;
 
 		if(Basic::IsDamaging(ret, dist) || justexists)
