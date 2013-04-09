@@ -114,10 +114,12 @@ void BotMan::LoadData()
 //
 boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 {
-	assert(tx >= 0);
-	assert(tx < MAPSIZE);
-	assert(ty >= 0);
-	assert(ty < MAPSIZE);
+    if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+        return true;
+//	assert(tx >= 0);
+//	assert(tx < MAPSIZE);
+//	assert(ty >= 0);
+//	assert(ty < MAPSIZE);
 	
 	objtype *check = actorat[tx][ty];
 	
