@@ -475,7 +475,13 @@ boolean BotMan::FindShortestPath(boolean ignoreproj, boolean mindnazis, byte ret
 			byte door = tilemap[cx][cy];
 			
 			// This checks for any blocking device: refactor it
-			if((check && !ISPOINTER(check) && !(door & 0x80)) || ((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && !ignoreproj && IsProjectile(cx, cy, 1)) || (mindnazis && (player->tilex != tx || player->tiley != ty || (check && ISPOINTER(check) && check->flags & FL_SHOOTABLE)) && IsEnemyBlocking(cx, cy)))
+			if((check && !ISPOINTER(check) && !(door & 0x80)) || 
+               ((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && 
+                !ignoreproj && IsProjectile(cx, cy, 1)) || 
+               (mindnazis && (player->tilex != tx || player->tiley != ty || 
+                              (check && ISPOINTER(check) && 
+                               check->flags & FL_SHOOTABLE)) && 
+                IsEnemyBlocking(cx, cy)))
 			{
 				continue;	// solid, can't be passed
 			}
