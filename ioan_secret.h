@@ -22,13 +22,18 @@
 
 #include "wl_def.h"
 
-class Secret
+//
+// Secret
+//
+// Module for solving pushwall mazes
+//
+namespace Secret
 {
-protected:
-	static int CalcScoreAdd(int tx, int ty, bool start = false);	// CalcScore recursive component
-	static byte visited[MAPSIZE][MAPSIZE];
-public:
-	static int CalcScore(int tx, int ty);	// calculate the available score from this current position
+    // CalcScore recursive component
+    int RecursiveCalcScore(int tx, int ty, bool start = false);
+    extern byte visited[MAPSIZE][MAPSIZE];
+    // calculate the available score from this current position
+    int CalcScore(int tx, int ty);
 };
 
 #endif
