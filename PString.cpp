@@ -31,7 +31,7 @@
     #define snprintf _snprintf
 #endif
 
-#if defined(_WIN32) || defined(APPLE_NON_CPP11)
+#if defined(_WIN32) || defined(APPLE_NON_CPP11) || defined(MEMMEM_NOT_DEFINED)
 //
 // memmem
 //

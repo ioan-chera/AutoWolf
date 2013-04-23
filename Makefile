@@ -1,6 +1,7 @@
 CONFIG ?= config.default
 -include $(CONFIG)
-
+CC = gcc-mp-4.7
+CXX = g++-mp-4.7 -std=c++11
 
 BINARY    ?= autowolf
 PREFIX    ?= /usr/local
@@ -30,6 +31,7 @@ ifdef GPL
     CFLAGS += -DUSE_GPL
 endif
 
+CFLAGS += -DMEMMEM_NOT_DEFINED
 
 CCFLAGS += $(CFLAGS)
 CCFLAGS += -std=gnu99
@@ -46,7 +48,14 @@ LDFLAGS += -static-libgcc
 endif
 
 SRCS :=
+SRCS += audioabstract.cpp
+SRCS += CheckSum.cpp
+SRCS += DataFile.cpp
+SRCS += DirectoryFile.cpp
 SRCS += dosbox/dbopl.cpp
+SRCS += e_hashkeys.cpp
+SRCS += gfxvabstract.cpp
+SRCS += HistoryRatio.cpp
 SRCS += id_ca.cpp
 SRCS += id_in.cpp
 SRCS += id_pm.cpp
@@ -54,13 +63,27 @@ SRCS += id_sd.cpp
 SRCS += id_us_1.cpp
 SRCS += id_vh.cpp
 SRCS += id_vl.cpp
+SRCS += ioan_bas.cpp
+SRCS += ioan_bot.cpp
+SRCS += ioan_secret.cpp
+SRCS += macosx/CocoaFun.mm
+SRCS += macosx/SDLMain.m
+SRCS += MasterDirectoryFile.cpp
+SRCS += obattrib.cpp
+SRCS += PathArray.cpp
+SRCS += Property.cpp
+SRCS += PropertyFile.cpp
+SRCS += PString.cpp
+SRCS += sdl_winmain.cpp
 SRCS += signon.cpp
+SRCS += sprabstract.cpp
 SRCS += wl_act1.cpp
 SRCS += wl_act2.cpp
 SRCS += wl_agent.cpp
 SRCS += wl_atmos.cpp
 SRCS += wl_cloudsky.cpp
 SRCS += wl_debug.cpp
+SRCS += wl_dir3dspr.cpp
 SRCS += wl_draw.cpp
 SRCS += wl_floorceiling.cpp
 SRCS += wl_game.cpp
@@ -69,32 +92,15 @@ SRCS += wl_main.cpp
 SRCS += wl_menu.cpp
 SRCS += wl_parallax.cpp
 SRCS += wl_play.cpp
+SRCS += wl_shade.cpp
 SRCS += wl_state.cpp
 SRCS += wl_text.cpp
-SRCS += CheckSum.cpp
-SRCS += DataFile.cpp
-SRCS += Dictionary.cpp
-SRCS += DictionaryFile.cpp
-SRCS += DirectoryFile.cpp
-SRCS += ExploredArrayFile.cpp
-SRCS += HistoryRatio.cpp
-SRCS += ioan_bas.cpp
-SRCS += ioan_bot.cpp
-SRCS += ioan_secret.cpp
-SRCS += MasterDirectoryFile.cpp
-SRCS += PathArray.cpp
-SRCS += wl_atmos.cpp
-SRCS += wl_cloudsky.cpp
-SRCS += wl_dir3dspr.cpp
-SRCS += wl_floorceiling.cpp
-SRCS += wl_parallax.cpp
-SRCS += wl_shade.cpp
 
-DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d))
-OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o))
+DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d) $(SRCS:.m=.d) $(SRCS:.mm=.d))
+OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o) $(SRCS:.m=.o) $(SRCS:.mm=.o))
 
 .SUFFIXES:
-.SUFFIXES: .c .cpp .d .o
+.SUFFIXES: .c .cpp .m .mm .d .o
 
 Q ?= @
 
@@ -115,8 +121,16 @@ $(BINARY): $(OBJS)
 .c.o:
 	@echo '===> CC $<'
 	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
+	
+.m.o:
+	@echo '===> CC $<'
+	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
 
 .cpp.o:
+	@echo '===> CXX $<'
+	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.mm.o:
 	@echo '===> CXX $<'
 	$(Q)$(CXX) $(CXXFLAGS) -c $< -o $@
 
