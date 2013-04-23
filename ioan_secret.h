@@ -21,6 +21,7 @@
 #define IOAN_SECRET_H_
 
 #include "wl_def.h"
+#include "Exception.h"
 
 //
 // Secret
@@ -34,6 +35,38 @@ namespace Secret
     extern byte visited[MAPSIZE][MAPSIZE];
     // calculate the available score from this current position
     int CalcScore(int tx, int ty);
+};
+
+//
+// Pushwall
+//
+class Pushwall
+{
+protected:
+    // Can still be pushed?
+    boolean active;
+    // Current position
+    word tilex, tiley;
+    
+public:
+    Pushwall() : active(true), tilex(0), tiley(0)
+    {
+    }
+    Pushwall(word tilex, word tiley)
+    {
+        if(tilex >= MAPSIZE || tiley >= MAPSIZE)
+            throw Exception("Error: Pushwall tilex/tiley out of range");
+        this->tilex = tilex;
+        this->tiley = tiley;
+    }
+};
+
+//
+// ScoreMap
+//
+class ScoreMap
+{
+    
 };
 
 #endif

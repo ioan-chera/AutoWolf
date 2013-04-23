@@ -14,6 +14,7 @@
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */; };
+		4F3435031726973200A10A72 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F3435021726973200A10A72 /* Exception.cpp */; };
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
@@ -114,6 +115,8 @@
 		4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = e_hashkeys.h; path = ../e_hashkeys.h; sourceTree = "<group>"; };
 		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_dllist.h; path = ../m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../e_hashkeys.cpp; sourceTree = "<group>"; };
+		4F3435011726973200A10A72 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = ../Exception.h; sourceTree = SOURCE_ROOT; };
+		4F3435021726973200A10A72 /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = ../Exception.cpp; sourceTree = SOURCE_ROOT; };
 		4F9AD19816EB38BB00321A66 /* PString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PString.cpp; path = ../PString.cpp; sourceTree = "<group>"; };
 		4F9AD19916EB38BB00321A66 /* PString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PString.h; path = ../PString.h; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
@@ -314,6 +317,15 @@
 			name = Eternity;
 			sourceTree = "<group>";
 		};
+		4F3435001726971E00A10A72 /* Exception */ = {
+			isa = PBXGroup;
+			children = (
+				4F3435011726973200A10A72 /* Exception.h */,
+				4F3435021726973200A10A72 /* Exception.cpp */,
+			);
+			name = Exception;
+			sourceTree = "<group>";
+		};
 		4F9E982516E3666D00B632BB /* CocoaFun */ = {
 			isa = PBXGroup;
 			children = (
@@ -326,6 +338,7 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
+				4F3435001726971E00A10A72 /* Exception */,
 				FAE77847168481E900EBE363 /* DataStructure */,
 				FA21BE12157412A800C23B4A /* ioan_bas.h */,
 				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
@@ -575,6 +588,7 @@
 				4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */,
 				4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */,
 				4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */,
+				4F3435031726973200A10A72 /* Exception.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
