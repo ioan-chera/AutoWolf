@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #define PSTRING_LOCAL_LENGTH 32
+#define STRING_ASSUMED_DEC_NUMBER_LENGTH 80
 
 //
 // PString
@@ -61,6 +62,7 @@ public:
     PString(const char *cstr);
     PString(const PString &other);
     PString(size_t startSize = 0);
+    PString(int number);
     
     // Destructor
     ~PString() { freeBuffer(); }
@@ -73,9 +75,11 @@ public:
     PString &concat(const char *str, size_t inLength);
     PString &concat(const char *str);
     PString &concat(const PString &src);
+    PString &concat(int number);
     PString &copy(const char *str, size_t inLength);
     PString &copy(const char *str);
     PString &copy(const PString &src);
+    PString &copy(int number);
     PString &create();
     PString &createSize(size_t size);
     PString &Delc();
@@ -137,9 +141,15 @@ public:
     bool     operator != (const char    *other) const;
     PString &operator  = (const PString &other);
     PString &operator  = (const char    *other);
+    PString &operator  = (int   number);
     PString &operator += (const PString &other);
     PString &operator += (const char    *other);
     PString &operator += (char  ch);
+    PString &operator += (int   number);
+    PString  operator +  (const PString &other) const;
+    PString  operator +  (const char    *other) const;
+    PString  operator +  (char  ch) const;
+    PString  operator +  (int   number) const;
     PString &operator << (const PString &other);
     PString &operator << (const char    *other);
     PString &operator << (char   ch);
@@ -151,5 +161,9 @@ public:
 //    size_t length() {return _length;}
     
 };
+
+PString  operator +  (const char    *first, const PString &second);
+PString  operator +  (char  ch,             const PString &second);
+PString  operator +  (int   number,         const PString &second);
 
 #endif /* defined(__Wolf4SDL__PString__) */

@@ -20,10 +20,12 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 #pragma pack(1)
 #include "e_hashkeys.h"
 
 #include "PString.h"
+#include "Exception.h"
 
 #ifdef _WIN32
     #define strcasecmp stricmp
@@ -146,6 +148,14 @@ PString::PString(size_t startSize) : _index(0), _size(PSTRING_LOCAL_LENGTH)
     if(startSize)
         initCreateSize(startSize);
 }
+
+PString::PString(int number) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+{
+    _buffer = _local;
+    memset(_local, 0, sizeof(_local));
+    copy(number);
+}
+
 //
 // PString::clear
 //
@@ -200,6 +210,15 @@ PString &PString::concat(const PString &src)
     return concat(src._buffer, src._index);
 }
 
+PString &PString::concat(int number)
+{
+    static char buf[STRING_ASSUMED_DEC_NUMBER_LENGTH];
+    int nchar = snprintf(buf, STRING_ASSUMED_DEC_NUMBER_LENGTH, "%d", number);
+    if(nchar >= STRING_ASSUMED_DEC_NUMBER_LENGTH)
+        throw Exception("PString number too large");
+    return concat(buf, nchar);
+}
+
 //
 // PString::copy
 //
@@ -227,6 +246,13 @@ PString &PString::copy(const PString &src)
         clear();
     
     return concat(src);
+}
+
+PString &PString::copy(int number)
+{
+    if(_index > 0)
+        clear();
+    return concat(number);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1192,6 +1218,10 @@ PString &PString::operator = (const char *other)
 {
     return copy(other);
 }
+PString &PString::operator = (int number)
+{
+    return copy(number);
+}
 
 //
 // PString::operator +=
@@ -1206,16 +1236,49 @@ PString &PString::operator += (const char *other)
 {
     return concat(other);
 }
-
-//
-// PString::operator +=
-//
-// Overloaded += for characters
-//
 PString &PString::operator += (char ch)
 {
     return Putc(ch);
 }
+PString &PString::operator += (int number)
+{
+    return concat(number);
+}
+
+//
+// PString::operator +=
+//
+// Overloaded + for PString &
+//
+PString PString::operator + (const PString &other) const
+{
+    return PString(*this).concat(other);
+}
+PString PString::operator + (const char *other) const
+{
+    return PString(*this).concat(other);
+}
+PString PString::operator + (char ch) const
+{
+    return PString(*this).Putc(ch);
+}
+PString PString::operator + (int number) const
+{
+    return PString(*this).concat(number);
+}
+PString  operator +  (const char    *first, const PString &second)
+{
+    return PString(first).concat(second);
+}
+PString  operator +  (char  ch,             const PString &second)
+{
+    return PString().Putc(ch).concat(second);
+}
+PString  operator +  (int   number,         const PString &second)
+{
+    return PString(number).concat(second);
+}
+
 
 //
 // Stream Insertion Operators
