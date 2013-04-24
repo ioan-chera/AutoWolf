@@ -33,7 +33,7 @@ public:
     {
         exctext = txt;
     }
-    const PString &info()
+    const PString &info() const
     {
         return exctext;
     }
