@@ -35,6 +35,8 @@
 #include "wl_shade.h"
 // IOANCH 17.05.2012
 #include "ioan_bot.h"
+#include "Exception.h"
+#include "PString.h"
 
 /*
 =============================================================================
@@ -480,34 +482,40 @@ void PollControls (void)
     }
 
 
-	 //if(!BotMan::active)	// IOANCH 17.05.2012: if bot active, don't poll the user.
-	 {
 	//
 	// get button states
 	//
-		 PollKeyboardButtons ();
+     PollKeyboardButtons ();
 
-		 if (mouseenabled && IN_IsInputGrabbed())
-			  PollMouseButtons ();
+     if (mouseenabled && IN_IsInputGrabbed())
+          PollMouseButtons ();
 
-		 if (joystickenabled)
-			  PollJoystickButtons ();
+     if (joystickenabled)
+          PollJoystickButtons ();
 
 	//
 	// get movements
 	//
-		 PollKeyboardMove ();
+     PollKeyboardMove ();
 
-		 if (mouseenabled && IN_IsInputGrabbed())
-			  PollMouseMove ();
+     if (mouseenabled && IN_IsInputGrabbed())
+          PollMouseMove ();
 
-		 if (joystickenabled)
-			  PollJoystickMove ();
-	 }
-	 if(BotMan::active)	// bot active: operate
+     if (joystickenabled)
+          PollJoystickMove ();
+
+     if(BotMan::active)	// bot active: operate
 	 {
 		 // Find A* path
-		 BotMan::DoCommand();
+         try
+         {
+             BotMan::DoCommand();
+         }
+         catch (const Exception &exc)
+         {
+             PString errormsg(exc.info());
+             Quit(errormsg.buffer());
+         }
 	 }
 
 //
