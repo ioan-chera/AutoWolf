@@ -19,3 +19,25 @@
 #include "wl_def.h"
 #include "Exception.h"
 
+boolean Exception::showred = false;
+
+Exception::Exception()
+{
+    exctext = "Raised exception";
+    showred = true;
+}
+Exception::Exception(const PString &txt)
+{
+    exctext = "Raised: " + txt;
+    showred = true;
+}
+Exception::Exception(const char *filestr, int linestr)
+{
+    exctext = "Raised exception at " + PString(filestr) + ":" + linestr;
+    showred = true;
+}
+Exception::Exception(const PString &txt, const char *filestr, int linestr)
+{
+    exctext = "Raised: " + txt + " at " + filestr + ":" + linestr;
+    showred = true;
+}

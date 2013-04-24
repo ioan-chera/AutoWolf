@@ -18,25 +18,23 @@
 
 #ifndef EXCEPTION_H_
 #define EXCEPTION_H_
-
 #include "PString.h"
+
 
 class Exception
 {
+    static boolean showred;
     PString exctext;
 public:
-    Exception() : exctext()
-    {
-        
-    }
-    Exception(const PString &txt)
-    {
-        exctext = txt;
-    }
+    Exception();
+    Exception(const PString &txt);
+    Exception(const char *filestr, int linestr);
+    Exception(const PString &txt, const char *filestr, int linestr);
     const PString &info() const
     {
         return exctext;
     }
+    friend void DrawPlayBorder(void);
 };
 
 #endif
