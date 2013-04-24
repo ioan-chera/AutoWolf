@@ -1,7 +1,7 @@
 CONFIG ?= config.default
 -include $(CONFIG)
-CC = gcc-mp-4.7
-CXX = g++-mp-4.7 -std=c++11
+CC = gcc
+CXX = g++ -std=c++11
 
 BINARY    ?= autowolf
 PREFIX    ?= /usr/local
@@ -52,6 +52,7 @@ SRCS += audioabstract.cpp
 SRCS += CheckSum.cpp
 SRCS += DataFile.cpp
 SRCS += DirectoryFile.cpp
+SRCS += Exception.cpp
 SRCS += dosbox/dbopl.cpp
 SRCS += e_hashkeys.cpp
 SRCS += gfxvabstract.cpp
@@ -66,8 +67,6 @@ SRCS += id_vl.cpp
 SRCS += ioan_bas.cpp
 SRCS += ioan_bot.cpp
 SRCS += ioan_secret.cpp
-SRCS += macosx/CocoaFun.mm
-SRCS += macosx/SDLMain.m
 SRCS += MasterDirectoryFile.cpp
 SRCS += obattrib.cpp
 SRCS += PathArray.cpp

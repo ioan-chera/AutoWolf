@@ -18,6 +18,7 @@
 
 #ifndef EXCEPTION_H_
 #define EXCEPTION_H_
+#include "wl_def.h"
 #include "PString.h"
 
 
