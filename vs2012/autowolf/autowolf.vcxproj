@@ -152,7 +152,7 @@
     <ClCompile Include="..\..\DataFile.cpp" />
     <ClCompile Include="..\..\DirectoryFile.cpp" />
     <ClCompile Include="..\..\dosbox\dbopl.cpp" />
-    <ClCompile Include="..\..\ExploredArrayFile.cpp" />
+    <ClCompile Include="..\..\Exception.cpp" />
     <ClCompile Include="..\..\e_hashkeys.cpp" />
     <ClCompile Include="..\..\gfxvabstract.cpp" />
     <ClCompile Include="..\..\HistoryRatio.cpp" />
@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\ioan_secret.cpp" />
     <ClCompile Include="..\..\MasterDirectoryFile.cpp" />
     <ClCompile Include="..\..\obattrib.cpp" />
+    <ClCompile Include="..\..\OutOfRangeException.cpp" />
     <ClCompile Include="..\..\PathArray.cpp" />
     <ClCompile Include="..\..\Property.cpp" />
     <ClCompile Include="..\..\PropertyFile.cpp" />
@@ -202,7 +203,7 @@
     <ClInclude Include="..\..\DataFile.h" />
     <ClInclude Include="..\..\DirectoryFile.h" />
     <ClInclude Include="..\..\dosbox\dbopl.h" />
-    <ClInclude Include="..\..\ExploredArrayFile.h" />
+    <ClInclude Include="..\..\Exception.h" />
     <ClInclude Include="..\..\e_hash.h" />
     <ClInclude Include="..\..\e_hashkeys.h" />
     <ClInclude Include="..\..\foreign.h" />
@@ -225,6 +226,7 @@
     <ClInclude Include="..\..\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\m_dllist.h" />
     <ClInclude Include="..\..\obattrib.h" />
+    <ClInclude Include="..\..\OutOfRangeException.h" />
     <ClInclude Include="..\..\PathArray.h" />
     <ClInclude Include="..\..\Property.h" />
     <ClInclude Include="..\..\PropertyFile.h" />

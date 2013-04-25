@@ -33,6 +33,9 @@
     <Filter Include="Source Files\WL_\Gimmicks">
       <UniqueIdentifier>{7bdd1abf-f6e7-4020-93df-ce1661460bb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IOAN\DataStruct\Exception">
+      <UniqueIdentifier>{a6d65875-2da4-4ca6-ad66-57aad93ed17f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\id_ca.cpp">
@@ -140,9 +143,6 @@
     <ClCompile Include="..\..\DirectoryFile.cpp">
       <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ExploredArrayFile.cpp">
-      <Filter>Source Files\IOAN\FileSystem</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\MasterDirectoryFile.cpp">
       <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClCompile>
@@ -172,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="..\..\wl_parallax.cpp">
       <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Exception.cpp">
+      <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\OutOfRangeException.cpp">
+      <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +262,6 @@
     <ClInclude Include="..\..\DirectoryFile.h">
       <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ExploredArrayFile.h">
-      <Filter>Source Files\IOAN\FileSystem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\MasterDirectoryFile.h">
       <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClInclude>
@@ -336,6 +339,12 @@
     </ClInclude>
     <ClInclude Include="..\..\wl_cloudsky.h">
       <Filter>Source Files\WL_\Gimmicks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Exception.h">
+      <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\OutOfRangeException.h">
+      <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
