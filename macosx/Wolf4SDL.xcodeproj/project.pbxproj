@@ -20,6 +20,7 @@
 		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9E7F616BDD49600B43091 /* audioabstract.cpp */; };
+		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D901F4C20FC0DB520040C290 /* SDL_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D901F4C10FC0DB520040C290 /* SDL_mixer.framework */; };
@@ -131,6 +132,8 @@
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; name = wolfpal.inc; path = ../wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../audioabstract.h; sourceTree = "<group>"; };
 		4FD9E7F616BDD49600B43091 /* audioabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioabstract.cpp; path = ../audioabstract.cpp; sourceTree = "<group>"; };
+		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
+		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Automatic Wolfenstein.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Automatic Wolfenstein.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Users/ioan/Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
@@ -322,6 +325,8 @@
 			children = (
 				4F3435011726973200A10A72 /* Exception.h */,
 				4F3435021726973200A10A72 /* Exception.cpp */,
+				4FFAA4641729579F005A328F /* OutOfRangeException.h */,
+				4FFAA4651729579F005A328F /* OutOfRangeException.cpp */,
 			);
 			name = Exception;
 			sourceTree = "<group>";
@@ -589,6 +594,7 @@
 				4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */,
 				4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */,
 				4F3435031726973200A10A72 /* Exception.cpp in Sources */,
+				4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
