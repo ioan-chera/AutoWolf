@@ -110,7 +110,7 @@ typedef struct
 
 void Quit(const char *errorStr, ...);
 
-
+#include "SODFlag.h"
 #include "id_pm.h"
 #include "id_sd.h"
 #include "id_in.h"

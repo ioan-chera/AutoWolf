@@ -64,7 +64,6 @@ static inline byte *PM_GetTexture(int wallpic)
     return PM_GetPage(wallpic);
 }
 
-#include "SODFlag.h"
 // IOANCH 20130303: choose whether to remap
 static inline uint16_t *PM_GetSprite(int shapenum, boolean remap = true)
 {

@@ -34,7 +34,6 @@
 #include "wl_cloudsky.h"
 #include "wl_atmos.h"
 #include "wl_shade.h"
-#include "SODFlag.h"
 
 /*
 =============================================================================

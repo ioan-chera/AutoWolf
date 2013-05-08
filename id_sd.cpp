@@ -61,7 +61,6 @@
 #include "mame/fmopl.h"
 #endif
 #endif
-#include "SODFlag.h"
 #define ORIGSAMPLERATE 7042
 
 typedef struct

@@ -24,7 +24,6 @@
 #include "wl_def.h"
 #include "wl_draw.h"
 #pragma hdrstop
-#include "SODFlag.h"
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
 //#define IGNORE_BAD_DEST

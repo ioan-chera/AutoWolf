@@ -28,7 +28,6 @@
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"
-#include "SODFlag.h"
 // IOANCH 20130302: unification
 LRstruct LevelRatios[LRpack_wl6 > LRpack_sod ? LRpack_wl6 : LRpack_sod];
 int32_t lastBreathTime = 0;

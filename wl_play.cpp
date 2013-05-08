@@ -30,7 +30,6 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
-#include "SODFlag.h"
 
 #include "wl_cloudsky.h"
 #include "wl_shade.h"

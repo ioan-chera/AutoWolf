@@ -35,7 +35,6 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
-#include "SODFlag.h"
 
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"

@@ -48,7 +48,6 @@
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 #include "MasterDirectoryFile.h"
-#include "SODFlag.h"
 
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;

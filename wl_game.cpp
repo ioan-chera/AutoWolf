@@ -37,7 +37,6 @@
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "List.h"
-#include "SODFlag.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>

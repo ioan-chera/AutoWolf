@@ -19,7 +19,6 @@
 //
 
 #include "wl_def.h"
-#include "SODFlag.h"
 
 pictabletype	*pictable;
 SDL_Surface     *latchpics[NUMLATCHPICS];

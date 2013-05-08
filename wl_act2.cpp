@@ -36,7 +36,6 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "obattrib.h"   // IOANCH 20130306
-#include "SODFlag.h"
 
 //
 // IOANCH 20130311: corrected T_ names to A_ names when used as one-shot 

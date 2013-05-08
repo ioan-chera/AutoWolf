@@ -33,7 +33,6 @@
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
-#include "SODFlag.h"
 
 /*
 =============================================================================
