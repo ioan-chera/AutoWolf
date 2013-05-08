@@ -20,6 +20,7 @@
 #ifndef IOAN_BAS_H_
 #define IOAN_BAS_H_
 
+#include <math.h>
 #include "wl_def.h"
 #include "List.h"
 
