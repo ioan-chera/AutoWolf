@@ -75,6 +75,7 @@ SRCS += PropertyFile.cpp
 SRCS += PString.cpp
 SRCS += sdl_winmain.cpp
 SRCS += signon.cpp
+SRCS += SODFlag.cpp
 SRCS += sprabstract.cpp
 SRCS += wl_act1.cpp
 SRCS += wl_act2.cpp
