@@ -260,15 +260,15 @@ Victory (void)
     VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec % 10));
     VW_UpdateScreen ();
 
-    itoa (kr, tempstr, 10);
+    itoanoreturn (kr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY, tempstr);
 
-    itoa (sr, tempstr, 10);
+    itoanoreturn (sr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY + 2, tempstr);
 
-    itoa (tr, tempstr, 10);
+    itoanoreturn (tr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
     Write (x, RATIOY + 4, tempstr);
 
@@ -700,7 +700,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                ltoa ((long int)((int32_t) i * PAR_AMOUNT), tempstr, 10);
+                ltoanoreturn ((long int)((int32_t) i * PAR_AMOUNT), tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -731,7 +731,7 @@ LevelCompleted (void)
         ratio = kr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            itoanoreturn (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 14, tempstr);
             if (!(i % 10))
@@ -748,7 +748,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa ((long int)bonus, tempstr, 10);
+            ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -773,7 +773,7 @@ LevelCompleted (void)
         ratio = sr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            itoanoreturn (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 16, tempstr);
             if (!(i % 10))
@@ -790,7 +790,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa ((long int)bonus, tempstr, 10);
+            ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -814,7 +814,7 @@ LevelCompleted (void)
         ratio = tr;
         for (i = 0; i <= ratio; i++)
         {
-            itoa (i, tempstr, 10);
+            itoanoreturn (i, tempstr, 10);
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 18, tempstr);
             if (!(i % 10))
@@ -830,7 +830,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa ((long int)bonus, tempstr, 10);
+            ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -852,15 +852,15 @@ LevelCompleted (void)
         //
         // JUMP STRAIGHT HERE IF KEY PRESSED
         //
-done:   itoa (kr, tempstr, 10);
+done:   itoanoreturn (kr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
         Write (x, 14, tempstr);
 
-        itoa (sr, tempstr, 10);
+        itoanoreturn (sr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
         Write (x, 16, tempstr);
 
-        itoa (tr, tempstr, 10);
+        itoanoreturn (tr, tempstr, 10);
         x = RATIOXX - (int) strlen(tempstr) * 2;
         Write (x, 18, tempstr);
 
@@ -869,7 +869,7 @@ done:   itoa (kr, tempstr, 10);
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        ltoa ((long int)bonus, tempstr, 10);
+        ltoanoreturn ((long int)bonus, tempstr, 10);
         x = 36 - (int) strlen(tempstr) * 2;
         Write (x, 7, tempstr);
 
@@ -1113,7 +1113,7 @@ DrawHighScores (void)
         //
         // level
         //
-        itoa (s->completed, buffer, 10);
+        itoanoreturn (s->completed, buffer, 10);
         // IOANCH 20130303
         if(!SPEAR())
         {
@@ -1132,7 +1132,7 @@ DrawHighScores (void)
         if(!SPEAR())
         {
             PrintX -= 6;
-            itoa (s->episode + 1, buffer1, 10);
+            itoanoreturn (s->episode + 1, buffer1, 10);
             US_Print ("E");
             US_Print (buffer1);
             US_Print ("/L");
@@ -1151,7 +1151,7 @@ DrawHighScores (void)
         //
         // score
         //
-        itoa (s->score, buffer, 10);
+        itoanoreturn (s->score, buffer, 10);
         if(!SPEAR())
         {
             for (str = buffer; *str; str++)

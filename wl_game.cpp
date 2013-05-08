@@ -997,7 +997,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
     unsigned length,c;
     char str[20];
 
-    ltoa ((long int)number,str,10);
+    ltoanoreturn ((long int)number,str,10);
 
     length = (unsigned) strlen (str);
 

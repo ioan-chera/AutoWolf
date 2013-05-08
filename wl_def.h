@@ -775,9 +775,13 @@ static inline fixed FixedMul(fixed a, fixed b)
     #define strcasecmp stricmp
     #define strncasecmp strnicmp
     #define snprintf _snprintf
+    #define itoanoreturn itoa
+    #define ltoanoreturn ltoa
 #else
-#define itoa(value, string, radix) (sprintf(string, "%d", value), string)
-#define ltoa(value, string, radix) (sprintf(string, "%ld", value), string)
+    #define itoa(value, string, radix) (sprintf(string, "%d", value), string)
+    #define ltoa(value, string, radix) (sprintf(string, "%ld", value), string)
+    #define itoanoreturn(value, string, radix) sprintf(string, "%d", value)
+    #define ltoanoreturn(value, string, radix) sprintf(string, "%ld", value)
 #if 0
     static inline char* itoa(int value, char* string, int radix)
     {
