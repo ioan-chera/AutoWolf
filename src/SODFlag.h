@@ -17,6 +17,7 @@
 //
 
 #include "wl_def.h"
+#include "PString.h"
 
 #ifndef SODFLAG_H_
 #define SODFLAG_H_
@@ -25,9 +26,11 @@
 //
 class SODFlag
 {
-    friend void InitializeSPEAR();
+    friend int main(int argc, char *argv[]);
     
     boolean flag;
+    
+    void Initialize(const PString &basePath);
 public:
     SODFlag() : flag(false)
     {

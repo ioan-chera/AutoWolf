@@ -2098,42 +2098,6 @@ void CheckParameters(int argc, char *argv[])
 */
 
 //
-// InitializeSPEAR
-//
-// IOANCH 20130303: unification
-// Return the global SPEAR() variable depending on sanity autodetect
-// It later looks for the entire package, but will be guided by this quick
-// detection
-//
-void InitializeSPEAR()
-{
-    // FIXME: look in better locations, not just working dir.
-    FILE *f;
-    f = fopen("VSWAP.SD3", "rb");
-    if(!f)
-    {
-        f = fopen("VSWAP.SD2", "rb");
-        if(!f)
-        {
-            f = fopen("VSWAP.SD1", "rb");
-            if(!f)
-            {
-                f = fopen("VSWAP.SOD", "rb");
-                if(!f)
-                {     
-                    SPEAR.flag = false;
-					return;	// none found: assume Wolf3D
-                }
-            }
-        }
-    }
-    fclose(f);
-	// One of the ifs failed - fall here and return SPEAR() 1
-    SPEAR.flag = true;
-    //return 1;
-}
-
-//
 // main
 //
 // Main program start
@@ -2146,7 +2110,7 @@ int main (int argc, char *argv[])
     CheckParameters(argc, argv);
 #endif
     // IOANCH: unification: set the SPEAR() global var
-    InitializeSPEAR();
+    SPEAR.Initialize("");
     
     CheckForEpisodes();
 

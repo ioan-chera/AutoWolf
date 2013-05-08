@@ -16,6 +16,34 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+
 #include "SODFlag.h"
 
 SODFlag SPEAR;
+
+void SODFlag::Initialize(const PString &basePath)
+{
+    FILE *f;
+    
+    f = fopen(basePath.withSubpath("VSWAP.SD3").buffer(), "rb");
+    if(!f)
+    {
+        f = fopen(basePath.withSubpath("VSWAP.SD2").buffer(), "rb");
+        if(!f)
+        {
+            f = fopen(basePath.withSubpath("VSWAP.SD1").buffer(), "rb");
+            if(!f)
+            {
+                f = fopen(basePath.withSubpath("VSWAP.SOD").buffer(), "rb");
+                if(!f)
+                {
+                    this->flag = false;
+					return;	// none found: assume Wolf3D
+                }
+            }
+        }
+    }
+    fclose(f);
+	// One of the ifs failed - fall here and return SPEAR() 1
+    this->flag = true;
+}

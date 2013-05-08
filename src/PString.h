@@ -94,8 +94,9 @@ public:
     PString &lstrip(char c);
     PString &makeQuoted();
     PString &normalizeSlashes();
-    PString &pathConcatenate(const char *addend, size_t inLength);
-    PString &pathConcatenate(const char *addend);
+    PString withSubpath(const char *addend, size_t inLength) const;
+    PString withSubpath(const char *addend) const;
+    PString withSubpath(const PString &add) const;
     PString &Putc(char ch);
     PString &removeFileSpec();
     size_t   replace(const char *filter, size_t inLength, char repl);

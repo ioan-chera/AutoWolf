@@ -635,25 +635,31 @@ PString &PString::normalizeSlashes()
 }
 
 //
-// PString::pathConcatenate
+// PString::withSubpath
 //
 // Concatenate a C string assuming the PString's current contents are a file
 // path. Slashes will be normalized.
+// IOANCH 20130508: made it so it doesn't modify the source
 //
-PString &PString::pathConcatenate(const char *addend, size_t inLength)
+PString PString::withSubpath(const char *addend, size_t inLength) const
 {
     // Only add a slash if this is not the initial path component.
-    if(_index > 0)
-        *this += '/';
+    PString ret(*this);
+    if(ret._index > 0)
+        ret += '/';
     
-    concat(addend, inLength);
-    normalizeSlashes();
+    ret.concat(addend, inLength);
+    ret.normalizeSlashes();
     
-    return *this;
+    return ret;
 }
-PString &PString::pathConcatenate(const char *addend)
+PString PString::withSubpath(const char *addend) const
 {
-    return pathConcatenate(addend, strlen(addend));
+    return withSubpath(addend, strlen(addend));
+}
+PString PString::withSubpath(const PString &add) const
+{
+    return withSubpath(add._buffer, add._index);
 }
 
 //
