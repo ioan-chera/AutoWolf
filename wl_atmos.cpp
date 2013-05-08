@@ -20,6 +20,7 @@
 
 #if defined(USE_STARSKY) || defined(USE_RAIN) || defined(USE_SNOW)
 
+#include <math.h>
 #include "wl_def.h"
 
 #if defined(USE_RAIN) || defined(USE_SNOW)
