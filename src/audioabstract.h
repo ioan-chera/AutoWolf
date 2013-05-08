@@ -28,6 +28,10 @@
 #ifndef Wolf4SDL_audioabstract_h
 #define Wolf4SDL_audioabstract_h
 
+#include "audiowl6.h"
+#include "audiosod.h"
+
+
 //
 // soundnames
 //

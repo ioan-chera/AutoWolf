@@ -27,9 +27,6 @@
 
 #include "audioabstract.h"
 
-#include "audiosod.h"
-#include "audiowl6.h"
-
 //
 // soundmap
 //
