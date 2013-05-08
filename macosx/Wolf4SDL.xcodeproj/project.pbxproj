@@ -166,7 +166,6 @@
 		D901F4E70FC0DBCB0040C290 /* wl_text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_text.cpp; path = ../wl_text.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4E80FC0DBCB0040C290 /* id_sd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = id_sd.h; path = ../id_sd.h; sourceTree = SOURCE_ROOT; };
 		D901F4E90FC0DBCB0040C290 /* id_sd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = id_sd.cpp; path = ../id_sd.cpp; sourceTree = SOURCE_ROOT; };
-		D901F4EA0FC0DBCB0040C290 /* gp2x.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gp2x.h; path = ../gp2x.h; sourceTree = SOURCE_ROOT; };
 		D901F4EB0FC0DBCB0040C290 /* wl_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_state.cpp; path = ../wl_state.cpp; sourceTree = SOURCE_ROOT; };
 		D901F4EC0FC0DBCB0040C290 /* wl_shade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_shade.h; path = ../wl_shade.h; sourceTree = SOURCE_ROOT; };
 		D901F4ED0FC0DBCB0040C290 /* wl_shade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wl_shade.cpp; path = ../wl_shade.cpp; sourceTree = SOURCE_ROOT; };
@@ -221,13 +220,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		080E96DDFE201D6D7F000001 /* Classes */ = {
+		080E96DDFE201D6D7F000001 /* OSX Initialization */ = {
 			isa = PBXGroup;
 			children = (
 				002F3A2B09D0888800EBEB88 /* SDLMain.h */,
 				002F3A2C09D0888800EBEB88 /* SDLMain.m */,
 			);
-			name = Classes;
+			name = "OSX Initialization";
 			sourceTree = "<group>";
 		};
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
@@ -260,8 +259,7 @@
 		29B97314FDCFA39411CA2CEA /* Untitled */ = {
 			isa = PBXGroup;
 			children = (
-				080E96DDFE201D6D7F000001 /* Classes */,
-				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97315FDCFA39411CA2CEA /* Source Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -269,30 +267,23 @@
 			name = Untitled;
 			sourceTree = "<group>";
 		};
-		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+		29B97315FDCFA39411CA2CEA /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
-				4F9E982516E3666D00B632BB /* CocoaFun */,
-				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
-				FAB104D21591AA9100393DE3 /* dbopl.h */,
+				080E96DDFE201D6D7F000001 /* OSX Initialization */,
+				4F9E982516E3666D00B632BB /* OSX Specific */,
+				4F471738173A61250018E82B /* DOSBOX */,
 				FA8DFA991586930700EBBFB2 /* INFO */,
 				FA8DFA98158692FB00EBBFB2 /* WL */,
 				FA8DFA97158692EB00EBBFB2 /* ID */,
 				FA8DFA96158692E000EBBFB2 /* IOAN */,
-				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
-				D901F4E00FC0DBCB0040C290 /* version.h */,
-				D901F4E10FC0DBCB0040C290 /* signon.cpp */,
-				D901F4EA0FC0DBCB0040C290 /* gp2x.h */,
-				D901F4F40FC0DBCB0040C290 /* foreign.h */,
 			);
-			name = "Other Sources";
+			name = "Source Files";
 			sourceTree = "<group>";
 		};
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4FD9E7F016BDAA2D00B43091 /* sodpal.inc */,
-				4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */,
 				D94B84D40FC0F2F800EADB6F /* wolf4sdl.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -331,13 +322,22 @@
 			name = Exception;
 			sourceTree = "<group>";
 		};
-		4F9E982516E3666D00B632BB /* CocoaFun */ = {
+		4F471738173A61250018E82B /* DOSBOX */ = {
+			isa = PBXGroup;
+			children = (
+				FAB104D11591AA9100393DE3 /* dbopl.cpp */,
+				FAB104D21591AA9100393DE3 /* dbopl.h */,
+			);
+			name = DOSBOX;
+			sourceTree = "<group>";
+		};
+		4F9E982516E3666D00B632BB /* OSX Specific */ = {
 			isa = PBXGroup;
 			children = (
 				4F9E982616E3669F00B632BB /* CocoaFun.mm */,
 				4F9E982816E366C100B632BB /* CocoaFun.h */,
 			);
-			name = CocoaFun;
+			name = "OSX Specific";
 			sourceTree = "<group>";
 		};
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
@@ -345,6 +345,7 @@
 			children = (
 				4F3435001726971E00A10A72 /* Exception */,
 				FAE77847168481E900EBE363 /* DataStructure */,
+				FAC97A51167A679800949336 /* DataFile */,
 				FA21BE12157412A800C23B4A /* ioan_bas.h */,
 				FA21BE11157412A800C23B4A /* ioan_bas.cpp */,
 				FA21BE14157412A800C23B4A /* ioan_bot.h */,
@@ -353,7 +354,6 @@
 				FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */,
 				FAC97A491679D14F00949336 /* CheckSum.h */,
 				FAC97A481679D14E00949336 /* CheckSum.cpp */,
-				FAC97A51167A679800949336 /* DataFile */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -414,6 +414,12 @@
 		FA8DFA991586930700EBBFB2 /* INFO */ = {
 			isa = PBXGroup;
 			children = (
+				4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */,
+				4FD9E7F016BDAA2D00B43091 /* sodpal.inc */,
+				D901F4F40FC0DBCB0040C290 /* foreign.h */,
+				D901F4E10FC0DBCB0040C290 /* signon.cpp */,
+				D901F4E00FC0DBCB0040C290 /* version.h */,
+				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
 				4F1ECC2216E7BEAB00A37742 /* obattrib.h */,
 				4F1ECC2016E6579400A37742 /* obattrib.cpp */,
 				4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */,
