@@ -42,16 +42,7 @@
 
 #pragma pack(1)
 
-#if defined(_arch_dreamcast)
-#define YESBUTTONNAME "A"
-#define NOBUTTONNAME  "B"
-#elif defined(GP2X)
-#define YESBUTTONNAME "Y"
-#define NOBUTTONNAME  "B"
-#else
-#define YESBUTTONNAME "Y"
-#define NOBUTTONNAME  "N"
-#endif
+
 
 #include "foreign.h"
 

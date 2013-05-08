@@ -1,3 +1,14 @@
+#if defined(_arch_dreamcast)
+#define YESBUTTONNAME "A"
+#define NOBUTTONNAME  "B"
+#elif defined(GP2X)
+#define YESBUTTONNAME "Y"
+#define NOBUTTONNAME  "B"
+#else
+#define YESBUTTONNAME "Y"
+#define NOBUTTONNAME  "N"
+#endif
+
 #define QUITSUR	    "Are you sure you want\n"\
 		            "to quit this great game?"
 
