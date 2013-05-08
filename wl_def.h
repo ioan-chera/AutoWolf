@@ -27,7 +27,6 @@
 #define IMPALED(a, b) (SPEAR() ? a##_sod b : a##_wl6 b)
 
 #include <fcntl.h>
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #if defined(_arch_dreamcast)

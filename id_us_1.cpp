@@ -40,6 +40,7 @@
 //			window
 //
 
+#include <ctype.h>
 #include "wl_def.h"
 #include "wl_menu.h"
 
