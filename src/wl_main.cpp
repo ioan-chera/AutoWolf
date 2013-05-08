@@ -1753,7 +1753,8 @@ static void DemoLoop()
 
 //===========================================================================
 
-#define IFARG(str) if(!strcmp(arg, (str)))
+// IOANCH 20130509: arguments are now case insensitive
+#define IFARG(str) if(!strcasecmp(arg, (str)))
 
 //
 // CheckParameters
@@ -1771,7 +1772,7 @@ void CheckParameters(int argc, char *argv[])
     {
         char *arg = argv[i];
         // IOANCH 20130303: unification
-        if(!strcmp(arg, "--debugmode") || !strcmp(arg, "--goobers"))
+        if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
             param_debugmode = true;
         else IFARG("--baby")
             param_difficulty = 0;
