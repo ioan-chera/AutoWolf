@@ -60,12 +60,8 @@
 #include "audioabstract.h"
 
 // IOANCH 20130301: unification culling
-#include "gfxv_wl6.h"
-#include "gfxv_sod.h"
 #include "gfxvabstract.h"
 // IOANCH: added sprite header
-#include "spr_wl6.h"
-#include "spr_sod.h"
 #include "sprabstract.h"
 
 #include "f_spear.h"

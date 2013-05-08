@@ -20,6 +20,10 @@
 #ifndef SPRABSTRACT_H_
 #define SPRABSTRACT_H_
 
+#include "spr_wl6.h"
+#include "spr_sod.h"
+
+
 enum
 {
     MACHINEGUNATK3,

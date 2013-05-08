@@ -20,6 +20,9 @@
 #ifndef GFXVABSTRACT_H_
 #define GFXVABSTRACT_H_
 
+#include "gfxv_wl6.h"
+#include "gfxv_sod.h"
+
 typedef enum
 {
     BJCOLLAPSE1PIC,                      // 31

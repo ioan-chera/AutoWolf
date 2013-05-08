@@ -18,8 +18,6 @@
 
 
 
-#include "spr_wl6.h"
-#include "spr_sod.h"
 #include "sprabstract.h"
 
 const unsigned int sprmap[][2] =

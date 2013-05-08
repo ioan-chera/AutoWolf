@@ -16,8 +16,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include "gfxv_wl6.h"
-#include "gfxv_sod.h"
 #include "gfxvabstract.h"
 const unsigned int gfxvmap[][2] =
 {
