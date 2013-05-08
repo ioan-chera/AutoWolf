@@ -19,6 +19,7 @@
 //
 
 #include <stdlib.h>
+#include <SDL.h>
 #include "wl_def.h"
 
 pictabletype	*pictable;

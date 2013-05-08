@@ -37,6 +37,7 @@
 //	DEBUG - there are more globals
 //
 
+#include <SDL.h>
 #include "wl_def.h"
 #include "wl_main.h"
 

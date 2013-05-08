@@ -28,6 +28,8 @@
 #ifndef __ID_SD__
 #define __ID_SD__
 
+#include <SDL.h>
+
 #define alOut(n,b) YM3812Write(oplChip, n, b)
 
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0

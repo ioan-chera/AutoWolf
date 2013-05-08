@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL.h>
 #include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_draw.h"

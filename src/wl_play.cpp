@@ -21,6 +21,7 @@
 // WL_PLAY.C
 
 #include <stdlib.h>
+#include <SDL.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"

@@ -19,7 +19,7 @@
 //
 
 // ID_VH.H
-
+#include <SDL.h>
 
 #define WHITE			15			// graphics mode independant colors
 #define BLACK			0

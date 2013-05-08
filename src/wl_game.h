@@ -1,6 +1,7 @@
 #ifndef WL_GAME_H_
 #define WL_GAME_H_
 
+#include <SDL.h>
 
 extern  gametype        gamestate;
 extern  byte            bordercol;

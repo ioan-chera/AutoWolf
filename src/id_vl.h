@@ -22,6 +22,8 @@
 
 // wolf compatability
 
+#include <SDL.h>
+
 void Quit (const char *error,...);
 
 //===========================================================================
