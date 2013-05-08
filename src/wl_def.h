@@ -42,10 +42,6 @@
 
 #pragma pack(1)
 
-
-
-#include "foreign.h"
-
 // IOANCH 20130307: block definition
 #ifdef APPLE_NON_CPP11
 #define LAM ^

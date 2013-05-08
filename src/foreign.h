@@ -9,9 +9,6 @@
 #define NOBUTTONNAME  "N"
 #endif
 
-#define QUITSUR	    "Are you sure you want\n"\
-		            "to quit this great game?"
-
 #define CURGAME	    "You are currently in\n"\
 		            "a game. Continuing will\n"\
 		            "erase old game. Ok?"
@@ -42,11 +39,6 @@
 #define STR_DEMO	"Demo"
 #define STR_LGC		"Load Game called\n\""
 #define STR_EMPTY	"empty"
-#define STR_CALIB	"Calibrate"
-#define STR_JOYST	"Joystick"
-#define STR_MOVEJOY	"Move joystick to\nupper left and\npress button 0\n"
-#define STR_MOVEJOY2 "Move joystick to\nlower right and\npress button 1\n"
-#define STR_ESCEXIT	"ESC to exit"
 
 #define STR_NONE	"None"
 #define	STR_PC		"PC Speaker"
@@ -56,8 +48,6 @@
 
 #define	STR_MOUSEEN	"Mouse Enabled"
 #define	STR_JOYEN	"Joystick Enabled"
-#define	STR_PORT2	"Use joystick port 2"
-#define	STR_GAMEPAD	"Gravis GamePad Enabled"
 #define	STR_SENS	"Mouse Sensitivity"
 #define	STR_CUSTOM	"Customize controls"
 

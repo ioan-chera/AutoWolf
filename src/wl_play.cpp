@@ -22,6 +22,7 @@
 
 #include <stdlib.h>
 #include <SDL.h>
+#include "foreign.h"
 #include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"
