@@ -23,12 +23,12 @@ boolean Exception::showred = false;
 
 Exception::Exception()
 {
-    exctext = "Raised exception";
+    exctext = "";
     showred = true;
 }
 Exception::Exception(const PString &txt)
 {
-    exctext = "Raised: " + txt;
+    exctext = txt;
     showred = true;
 }
 Exception::Exception(const char *filestr, int linestr)
@@ -38,6 +38,6 @@ Exception::Exception(const char *filestr, int linestr)
 }
 Exception::Exception(const PString &txt, const char *filestr, int linestr)
 {
-    exctext = "Raised: " + txt + " at " + filestr + ":" + linestr;
+    exctext = txt + " at " + filestr + ":" + linestr;
     showred = true;
 }

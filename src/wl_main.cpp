@@ -48,6 +48,7 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "List.h"
+#include "Exception.h"
 
 /*
 =============================================================================
@@ -1763,329 +1764,312 @@ static void DemoLoop()
 //
 void CheckParameters(int argc, char *argv[])
 {
-    bool hasError = false, showHelp = false;
     bool sampleRateGiven = false, audioBufferGiven = false;
     int defaultSampleRate = param_samplerate;
 
     BotMan::active = true;	// IOANCH 26.05.2012: initialize with true, not false
-    for(int i = 1; i < argc; i++)
+    try
     {
-        char *arg = argv[i];
-        // IOANCH 20130303: unification
-        if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
-            param_debugmode = true;
-        else IFARG("--baby")
-            param_difficulty = 0;
-        else IFARG("--easy")
-            param_difficulty = 1;
-        else IFARG("--normal")
-            param_difficulty = 2;
-        else IFARG("--hard")
-            param_difficulty = 3;
-        else IFARG("--nowait")
-            param_nowait = true;
-        else IFARG("--tedlevel")
+        for(int i = 1; i < argc; i++)
         {
-            if(++i >= argc)
+            char *arg = argv[i];
+            // IOANCH 20130303: unification
+            if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
+                param_debugmode = true;
+            else IFARG("--baby")
+                param_difficulty = 0;
+            else IFARG("--easy")
+                param_difficulty = 1;
+            else IFARG("--normal")
+                param_difficulty = 2;
+            else IFARG("--hard")
+                param_difficulty = 3;
+            else IFARG("--nowait")
+                param_nowait = true;
+            else IFARG("--tedlevel")
             {
-                printf("The tedlevel option is missing the level argument!\n");
-                hasError = true;
-            }
-            else param_tedlevel = atoi(argv[i]);
-        }
-        else IFARG("--windowed")
-            fullscreen = false;
-        else IFARG("--fullscreen")
-            fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
-        else IFARG("--windowed-mouse")
-        {
-            fullscreen = false;
-            forcegrabmouse = true;
-        }
-        else IFARG("--res")
-        {
-            if(i + 2 >= argc)
-            {
-                printf("The res option needs the width and/or the height "
-                       "argument!\n");
-                hasError = true;
-            }
-            else
-            {
-                screenWidth = atoi(argv[++i]);
-                screenHeight = atoi(argv[++i]);
-                unsigned factor = screenWidth / 320;
-                if(screenWidth % 320 || (screenHeight != 200 * factor && 
-                                         screenHeight != 240 * factor))
+                if(++i >= argc)
                 {
-                    printf("Screen size must be a multiple of 320x200 or "
-                           "320x240!\n"); 
-                    hasError = true;
+                    throw Exception("The tedlevel option is missing the level argument!\n");
                 }
+                else param_tedlevel = atoi(argv[i]);
             }
-        }
-        else IFARG("--resf")
-        {
-            if(i + 2 >= argc)
+            else IFARG("--windowed")
+                fullscreen = false;
+            else IFARG("--fullscreen")
+                fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
+            else IFARG("--windowed-mouse")
             {
-                printf("The resf option needs the width and/or the height "
-                       "argument!\n");
-                hasError = true;
+                fullscreen = false;
+                forcegrabmouse = true;
             }
-            else
+            else IFARG("--res")
             {
-                screenWidth = atoi(argv[++i]);
-                screenHeight = atoi(argv[++i]);
-                if(screenWidth < 320)
+                if(i + 2 >= argc)
                 {
-                    printf("Screen width must be at least 320!\n");
-                    hasError = true;
-                }
-                if(screenHeight < 200)
-                {
-                    printf("Screen height must be at least 200!\n"); 
-                    hasError = true;
-                }
-            }
-        }
-        else IFARG("--bits")
-        {
-            if(++i >= argc)
-            {
-                printf("The bits option is missing the color depth "
-                       "argument!\n");
-                hasError = true;
-            }
-            else
-            {
-                screenBits = atoi(argv[i]);
-                switch(screenBits)
-                {
-                    case 8:
-                    case 16:
-                    case 24:
-                    case 32:
-                        break;
-
-                    default:
-                        printf("Screen color depth must be 8, 16, 24, or 32!\n");
-                        hasError = true;
-                        break;
-                }
-            }
-        }
-        else IFARG("--nodblbuf")
-            usedoublebuffering = false;
-        else IFARG("--extravbls")
-        {
-            if(++i >= argc)
-            {
-                printf("The extravbls option is missing the vbls argument!\n");
-                hasError = true;
-            }
-            else
-            {
-                extravbls = atoi(argv[i]);
-                if(extravbls < 0)
-                {
-                    printf("Extravbls must be positive!\n");
-                    hasError = true;
-                }
-            }
-        }
-        else IFARG("--joystick")
-        {
-            if(++i >= argc)
-            {
-                printf("The joystick option is missing the index argument!\n");
-                hasError = true;
-            }
-            else 
-                param_joystickindex = atoi(argv[i]);   
-            // index is checked in InitGame
-        }
-        else IFARG("--joystickhat")
-        {
-            if(++i >= argc)
-            {
-                printf("The joystickhat option is missing the index argument!\n");
-                hasError = true;
-            }
-            else param_joystickhat = atoi(argv[i]);
-        }
-        else IFARG("--samplerate")
-        {
-            if(++i >= argc)
-            {
-                printf("The samplerate option is missing the rate argument!\n");
-                hasError = true;
-            }
-            else param_samplerate = atoi(argv[i]);
-            sampleRateGiven = true;
-        }
-        else IFARG("--audiobuffer")
-        {
-            if(++i >= argc)
-            {
-                printf("The audiobuffer option is missing the size argument!\n");
-                hasError = true;
-            }
-            else param_audiobuffer = atoi(argv[i]);
-            audioBufferGiven = true;
-        }
-        else IFARG("--mission")
-        {
-            if(++i >= argc)
-            {
-                printf("The mission option is missing the mission argument!\n");
-                hasError = true;
-            }
-            else
-            {
-                param_mission = atoi(argv[i]);
-                if(param_mission < 0 || param_mission > 3)
-                {
-                    printf("The mission option must be between 0 and 3!\n");
-                    hasError = true;
-                }
-            }
-        }
-        else IFARG("--configdir")
-        {
-            if(++i >= argc)
-            {
-                printf("The configdir option is missing the dir argument!\n");
-                hasError = true;
-            }
-            else
-            {
-                // IOANCH 20130307: expand tilde
-                char *trans = Basic::NewStringTildeExpand(argv[i]);
-                if(trans)
-                {
-                    size_t len = strlen(trans);
-                    if(len + 2 > sizeof(configdir))
-                    {
-                        printf("The config directory is too long!\n");
-                        hasError = true;
-                    }
-                    else
-                    {
-                        strcpy(configdir, trans);
-                        if(trans[len] != '/' && trans[len] != '\\')
-                            strcat(configdir, "/");
-                    }
-                    free(trans);
+                    throw Exception("The res option needs the width and/or the height "
+                           "argument!\n");
                 }
                 else
                 {
-                    printf("The config directory couldn't be set!\n");
-                    hasError = true;
+                    screenWidth = atoi(argv[++i]);
+                    screenHeight = atoi(argv[++i]);
+                    unsigned factor = screenWidth / 320;
+                    if(screenWidth % 320 || (screenHeight != 200 * factor && 
+                                             screenHeight != 240 * factor))
+                    {
+                        throw Exception("Screen size must be a multiple of 320x200 or "
+                               "320x240!\n"); 
+                    }
                 }
-
             }
-        }
-        else IFARG("--goodtimes")
-            param_goodtimes = true;
-        else IFARG("--ignorenumchunks")
-            param_ignorenumchunks = true;
-        else IFARG("--help")
-            showHelp = true;
-			// IOANCH 17.05.2012: added --nobot parameter
-        else IFARG("--nobot")
-            BotMan::active = false;
-			// IOANCH 17.05.2012: added --nonazis
-        else IFARG("--nonazis")
-            Basic::nonazis = true;
-			// IOANCH 29.09.2012: added --secretstep3
-        else IFARG("--secretstep3")
-            Basic::secretstep3 = true;
-        else IFARG("--wolfdir")
-        {
-            // IOANCH 20130304: added --wolfdir
-            if(++i >= argc)
+            else IFARG("--resf")
             {
-                printf("The wolfdir option is missing the dir argument!\n");
-                hasError = true;
+                if(i + 2 >= argc)
+                {
+                    throw Exception("The resf option needs the width and/or the height "
+                           "argument!\n");
+                }
+                else
+                {
+                    screenWidth = atoi(argv[++i]);
+                    screenHeight = atoi(argv[++i]);
+                    if(screenWidth < 320)
+                    {
+                        throw Exception("Screen width must be at least 320!\n");
+                    }
+                    if(screenHeight < 200)
+                    {
+                        throw Exception("Screen height must be at least 200!\n"); 
+                    }
+                }
+            }
+            else IFARG("--bits")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The bits option is missing the color depth "
+                           "argument!\n");
+                }
+                else
+                {
+                    screenBits = atoi(argv[i]);
+                    switch(screenBits)
+                    {
+                        case 8:
+                        case 16:
+                        case 24:
+                        case 32:
+                            break;
+
+                        default:
+                            throw Exception("Screen color depth must be 8, 16, 24, or 32!\n");
+                            break;
+                    }
+                }
+            }
+            else IFARG("--nodblbuf")
+                usedoublebuffering = false;
+            else IFARG("--extravbls")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The extravbls option is missing the vbls argument!\n");
+                }
+                else
+                {
+                    extravbls = atoi(argv[i]);
+                    if(extravbls < 0)
+                    {
+                        throw Exception("Extravbls must be positive!\n");
+                    }
+                }
+            }
+            else IFARG("--joystick")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The joystick option is missing the index argument!\n");
+                }
+                else 
+                    param_joystickindex = atoi(argv[i]);   
+                // index is checked in InitGame
+            }
+            else IFARG("--joystickhat")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The joystickhat option is missing the index argument!\n");
+                }
+                else param_joystickhat = atoi(argv[i]);
+            }
+            else IFARG("--samplerate")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The samplerate option is missing the rate argument!\n");
+                }
+                else param_samplerate = atoi(argv[i]);
+                sampleRateGiven = true;
+            }
+            else IFARG("--audiobuffer")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The audiobuffer option is missing the size argument!\n");
+                }
+                else param_audiobuffer = atoi(argv[i]);
+                audioBufferGiven = true;
+            }
+            else IFARG("--mission")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The mission option is missing the mission argument!\n");
+                }
+                else
+                {
+                    param_mission = atoi(argv[i]);
+                    if(param_mission < 0 || param_mission > 3)
+                    {
+                        throw Exception("The mission option must be between 0 and 3!\n");
+                    }
+                }
+            }
+            else IFARG("--configdir")
+            {
+                if(++i >= argc)
+                {
+                    throw Exception("The configdir option is missing the dir argument!\n");
+                }
+                else
+                {
+                    // IOANCH 20130307: expand tilde
+                    char *trans = Basic::NewStringTildeExpand(argv[i]);
+                    if(trans)
+                    {
+                        size_t len = strlen(trans);
+                        if(len + 2 > sizeof(configdir))
+                        {
+                            throw Exception("The config directory is too long!\n");
+                        }
+                        else
+                        {
+                            strcpy(configdir, trans);
+                            if(trans[len] != '/' && trans[len] != '\\')
+                                strcat(configdir, "/");
+                        }
+                        free(trans);
+                    }
+                    else
+                    {
+                        throw Exception("The config directory couldn't be set!\n");
+                    }
+
+                }
+            }
+            else IFARG("--goodtimes")
+                param_goodtimes = true;
+            else IFARG("--ignorenumchunks")
+                param_ignorenumchunks = true;
+            else IFARG("--help")
+                throw Exception();
+                // IOANCH 17.05.2012: added --nobot parameter
+            else IFARG("--nobot")
+                BotMan::active = false;
+                // IOANCH 17.05.2012: added --nonazis
+            else IFARG("--nonazis")
+                Basic::nonazis = true;
+                // IOANCH 29.09.2012: added --secretstep3
+            else IFARG("--secretstep3")
+                Basic::secretstep3 = true;
+            else IFARG("--wolfdir")
+            {
+                // IOANCH 20130304: added --wolfdir
+                if(++i >= argc)
+                {
+                    throw Exception("The wolfdir option is missing the dir argument!\n");
+                }
+                else
+                {
+                    char *trans = Basic::NewStringTildeExpand(argv[i]);
+    #if defined(_WIN32)
+                    int cdres = !::SetCurrentDirectory(trans);
+    #else
+                    int cdres = chdir(trans);
+                    // FIXME: don't just assume UNIX/Linux/Apple
+    #endif
+                    if(cdres)
+                    {
+                        throw Exception(PString("Cannot change directory to ") + trans + "\n");
+                    }
+                    if(trans)
+                        free(trans);
+                }
             }
             else
-            {
-                char *trans = Basic::NewStringTildeExpand(argv[i]);
-#if defined(_WIN32)
-                int cdres = !::SetCurrentDirectory(trans);
-#else
-                int cdres = chdir(trans);
-                // FIXME: don't just assume UNIX/Linux/Apple
-#endif
-                if(cdres)
-                {
-                    printf("Cannot change directory to %s!\n", trans);
-                    hasError = true;
-                }
-                if(trans)
-                    free(trans);
-            }
+                throw Exception(PString("Unknown argument ") + arg + "\n");
         }
-        else
-            hasError = true;
     }
-    if(hasError || showHelp)
+    catch(const Exception &e)
     {
-        if(hasError) printf("\n");	// IOANCH 26.05.2012: updated title and info
+        puts(e.info().buffer());
         printf(
-            "AutoWolf v0.3\n"
-            "By Ioan Chera on Wolf4SDL codebase"
-            "Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
-            "Original Wolfenstein 3D by id Software\n\n"
-            "Usage: AutoWolf [options]\n"
-            "Options:\n"
-            " --nobot                Do not use bot\n"
-            " --nonazis              Maps without Nazis spawned\n"
-            " --secretstep3          Emulate 3-step secret wall bug\n"
-            " --help                 This help page\n"
-            " --tedlevel <level>     Starts the game in the given level\n"
-            " --baby                 Sets the difficulty to baby for tedlevel\n"
-            " --easy                 Sets the difficulty to easy for tedlevel\n"
-            " --normal               Sets the difficulty to normal for tedlevel\n"
-            " --hard                 Sets the difficulty to hard for tedlevel\n"
-            " --nowait               Skips intro screens\n"
-            " --windowed[-mouse]     Starts the game in a window [and grabs mouse]\n"
-            " --res <width> <height> Sets the screen resolution\n"
-            "                        (must be multiple of 320x200 or 320x240)\n"
-            " --resf <w> <h>         Sets any screen resolution >= 320x200\n"
-            "                        (which may result in graphic errors)\n"
-            " --bits <b>             Sets the screen color depth\n"
-            "                        (use this when you have palette/fading problems\n"
-            "                        allowed: 8, 16, 24, 32, default: \"best\" depth)\n"
-            " --nodblbuf             Don't use SDL's double buffering\n"
-            " --extravbls <vbls>     Sets a delay after each frame, which may help to\n"
-            "                        reduce flickering (unit is currently 8 ms, default: 0)\n"
-            " --joystick <index>     Use the index-th joystick if available\n"
-            "                        (-1 to disable joystick, default: 0)\n"
-            " --joystickhat <index>  Enables movement with the given coolie hat\n"
-            " --samplerate <rate>    Sets the sound sample rate (given in Hz, default: %i)\n"
-            " --audiobuffer <size>   Sets the size of the audio buffer (-> sound latency)\n"
-            "                        (given in bytes, default: 2048 / (44100 / samplerate))\n"
-            " --ignorenumchunks      Ignores the number of chunks in VGAHEAD.*\n"
-            "                        (may be useful for some broken mods)\n"
-            " --configdir <dir>      Directory where config file and save games are stored\n"
-#if defined(_arch_dreamcast) || defined(_WIN32)
-            "                        (default: current directory)\n"
+               "AutoWolf v0.3\n"
+               "By Ioan Chera on Wolf4SDL codebase"
+               "Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
+               "Original Wolfenstein 3D by id Software\n\n"
+#ifdef __APPLE__
+               "Usage: open -a AutoWolf --args [options]\n"
 #else
-            "                        (default: $HOME/.autowolf)\n"	// IOANCH 20130116: changed name
+               "Usage: autowolf [options]\n"
+#endif
+               "Options:\n"
+               " --nobot                Do not use bot\n"
+               " --nonazis              Maps without Nazis spawned\n"
+               " --secretstep3          Emulate 3-step secret wall bug\n"
+               " --help                 This help page\n"
+               " --tedlevel <level>     Starts the game in the given level\n"
+               " --baby                 Sets the difficulty to baby for tedlevel\n"
+               " --easy                 Sets the difficulty to easy for tedlevel\n"
+               " --normal               Sets the difficulty to normal for tedlevel\n"
+               " --hard                 Sets the difficulty to hard for tedlevel\n"
+               " --nowait               Skips intro screens\n"
+               " --windowed[-mouse]     Starts the game in a window [and grabs mouse]\n"
+               " --res <width> <height> Sets the screen resolution\n"
+               "                        (must be multiple of 320x200 or 320x240)\n"
+               " --resf <w> <h>         Sets any screen resolution >= 320x200\n"
+               "                        (which may result in graphic errors)\n"
+               " --bits <b>             Sets the screen color depth\n"
+               "                        (use this when you have palette/fading problems\n"
+               "                        allowed: 8, 16, 24, 32, default: \"best\" depth)\n"
+               " --nodblbuf             Don't use SDL's double buffering\n"
+               " --extravbls <vbls>     Sets a delay after each frame, which may help to\n"
+               "                        reduce flickering (unit is currently 8 ms, default: 0)\n"
+               " --joystick <index>     Use the index-th joystick if available\n"
+               "                        (-1 to disable joystick, default: 0)\n"
+               " --joystickhat <index>  Enables movement with the given coolie hat\n"
+               " --samplerate <rate>    Sets the sound sample rate (given in Hz, default: %i)\n"
+               " --audiobuffer <size>   Sets the size of the audio buffer (-> sound latency)\n"
+               "                        (given in bytes, default: 2048 / (44100 / samplerate))\n"
+               " --ignorenumchunks      Ignores the number of chunks in VGAHEAD.*\n"
+               "                        (may be useful for some broken mods)\n"
+               " --configdir <dir>      Directory where config file and save games are stored\n"
+#if defined(_arch_dreamcast) || defined(_WIN32)
+               "                        (default: current directory)\n"
+#else
+               "                        (default: $HOME/.autowolf)\n"	// IOANCH 20130116: changed name
 #endif
                // IOANCH 20130301: unification culling
-            , defaultSampleRate);
-            printf(
-            " --mission <mission>    Mission number to play (0-3)\n"
-            "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
-            " --goodtimes            Disable copy protection quiz\n"
-
-            
-            );
+               , defaultSampleRate);
+        printf(
+               " --mission <mission>    Mission number to play (0-3)\n"
+               "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
+               " --goodtimes            Disable copy protection quiz\n"
+               );
         exit(1);
     }
-
+    
     if(sampleRateGiven && !audioBufferGiven)
         param_audiobuffer = 2048 / (44100 / param_samplerate);
 }
