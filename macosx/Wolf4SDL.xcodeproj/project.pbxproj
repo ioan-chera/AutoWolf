@@ -671,7 +671,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"~/Library/Frameworks",
+					frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -684,8 +684,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"~/Library/Frameworks/SDL.framework/**",
-					"~/Library/Frameworks/SDL_mixer.framework/**",
+					"frameworks/SDL.framework/**",
+					"frameworks/SDL_mixer.framework/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -700,15 +700,6 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
-				HEADER_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
-					/Library/Frameworks/SDL.framework/Headers,
-					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
-					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
-					"$(HEADER_SEARCH_PATHS)",
-					/Library/Frameworks/SDL.framework/Versions/A/Headers,
-					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
-				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_NAME = AutoWolf;
@@ -724,15 +715,6 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
-				HEADER_SEARCH_PATHS = (
-					"$(HOME)/Library/Frameworks/SDL.framework/Headers",
-					/Library/Frameworks/SDL.framework/Headers,
-					"$(HOME)/Library/Frameworks/SDL.framework/Headers/SDL_mixer",
-					/Library/Frameworks/SDL.framework/Headers/SDL_mixer,
-					"$(HEADER_SEARCH_PATHS)",
-					/Library/Frameworks/SDL.framework/Versions/A/Headers,
-					/Library/Frameworks/SDL_mixer.framework/Versions/A/Headers,
-				);
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				PRODUCT_NAME = AutoWolf;
@@ -768,7 +750,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"~/Library/Frameworks",
+					frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -778,8 +760,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"~/Library/Frameworks/SDL.framework/**",
-					"~/Library/Frameworks/SDL_mixer.framework/**",
+					"frameworks/SDL.framework/**",
+					"frameworks/SDL_mixer.framework/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -797,7 +779,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"~/Library/Frameworks",
+					frameworks,
 					"$(FRAMEWORK_SEARCH_PATHS)",
 				);
 				GCC_DYNAMIC_NO_PIC = YES;
@@ -809,8 +791,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"~/Library/Frameworks/SDL.framework/**",
-					"~/Library/Frameworks/SDL_mixer.framework/**",
+					"frameworks/SDL.framework/**",
+					"frameworks/SDL_mixer.framework/**",
 				);
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
