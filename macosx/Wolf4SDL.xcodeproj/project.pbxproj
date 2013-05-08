@@ -118,6 +118,7 @@
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../e_hashkeys.cpp; sourceTree = "<group>"; };
 		4F3435011726973200A10A72 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = ../Exception.h; sourceTree = SOURCE_ROOT; };
 		4F3435021726973200A10A72 /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = ../Exception.cpp; sourceTree = SOURCE_ROOT; };
+		4F47175E173A63580018E82B /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = SOURCE_ROOT; };
 		4F9AD19816EB38BB00321A66 /* PString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PString.cpp; path = ../PString.cpp; sourceTree = "<group>"; };
 		4F9AD19916EB38BB00321A66 /* PString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PString.h; path = ../PString.h; sourceTree = "<group>"; };
 		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../gfxvabstract.cpp; sourceTree = "<group>"; };
@@ -262,6 +263,7 @@
 				29B97315FDCFA39411CA2CEA /* Source Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				4F47175D173A632B0018E82B /* Other Files */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
 			name = Untitled;
@@ -329,6 +331,14 @@
 				FAB104D21591AA9100393DE3 /* dbopl.h */,
 			);
 			name = DOSBOX;
+			sourceTree = "<group>";
+		};
+		4F47175D173A632B0018E82B /* Other Files */ = {
+			isa = PBXGroup;
+			children = (
+				4F47175E173A63580018E82B /* Makefile */,
+			);
+			name = "Other Files";
 			sourceTree = "<group>";
 		};
 		4F9E982516E3666D00B632BB /* OSX Specific */ = {
