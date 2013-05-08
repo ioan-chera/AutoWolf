@@ -202,7 +202,7 @@ statinfo_sod[] =
     {SPR_STAT_48,block},                    // marble pillar
     {SPR_STAT_49,bo_25clip},                // bonus 25 clip
     {SPR_STAT_50,block},                    // truck
-    {SPR_STAT_51,bo_spear},                 // SPEAR OF DESTINY!
+    {SPR_STAT_51,bo_spear},                 // SPEAR.Flag() OF DESTINY!
     
     {SPR_STAT_26,bo_clip2},                 // Clip            "
 #ifdef USE_DIR3DSPR

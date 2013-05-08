@@ -22,10 +22,9 @@
 #ifndef WL_DEF_H
 #define WL_DEF_H
 
-// IOANCH 20130303: SPEAR variable
-extern unsigned char SPEAR;
-#define IMPALE(a) (SPEAR ? a##_sod : a##_wl6)
-#define IMPALED(a, b) (SPEAR ? a##_sod b : a##_wl6 b)
+// IOANCH 20130303: SPEAR.Flag() variable
+#define IMPALE(a) (SPEAR.Flag() ? a##_sod : a##_wl6)
+#define IMPALED(a, b) (SPEAR.Flag() ? a##_sod b : a##_wl6 b)
 
 // Defines which version shall be built and configures supported extra features
 #include "version.h"

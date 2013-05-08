@@ -33,6 +33,7 @@
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
+#include "SODFlag.h"
 
 /*
 =============================================================================
@@ -329,23 +330,23 @@ void StatusDrawFace(unsigned picnum)
 void DrawFace (void)
 {
     if(viewsize == 21 && ingame) return;
-    if (SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR])
-        StatusDrawFace(gfxvmap[GOTGATLINGPIC][SPEAR]);
+    if (SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR.Flag()])
+        StatusDrawFace(gfxvmap[GOTGATLINGPIC][SPEAR.Flag()]);
     else if (gamestate.health)
     {
         // IOANCH 20130202: unification process
-        if (SPEAR && godmode)
-            StatusDrawFace(gfxvmap[GODMODEFACE1PIC][SPEAR]+gamestate.faceframe);
+        if (SPEAR.Flag() && godmode)
+            StatusDrawFace(gfxvmap[GODMODEFACE1PIC][SPEAR.Flag()]+gamestate.faceframe);
         else
-            StatusDrawFace(gfxvmap[FACE1APIC][SPEAR]+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
+            StatusDrawFace(gfxvmap[FACE1APIC][SPEAR.Flag()]+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
     }	// IOANCH 25.10.2012: named constant
     else
     {
         // IOANCH 20130202: unification process
         if (LastAttacker && LastAttacker->obclass == needleobj)
-            StatusDrawFace(gfxvmap[MUTANTBJPIC][SPEAR]);
+            StatusDrawFace(gfxvmap[MUTANTBJPIC][SPEAR.Flag()]);
         else
-            StatusDrawFace(gfxvmap[FACE8APIC][SPEAR]);
+            StatusDrawFace(gfxvmap[FACE8APIC][SPEAR.Flag()]);
     }
 }
 
@@ -373,7 +374,7 @@ void UpdateFace (void)
             return;
         }
     }
-    else if(SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR])
+    else if(SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR.Flag()])
         return;
 
     facecount += tics;
@@ -411,7 +412,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        StatusDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR]);
+        StatusDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR.Flag()]);
         x++;
         width--;
     }
@@ -420,7 +421,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        StatusDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR]);
+        StatusDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR.Flag()]);
         x++;
         c++;
     }
@@ -482,10 +483,10 @@ void TakeDamage (int points,objtype *attacker)
     // MAKE BJ'S EYES BUG IF MAJOR DAMAGE!
     //
     // IOANCH 20130202: unification process
-    if (SPEAR && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
+    if (SPEAR.Flag() && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
     {
         // IOANCH 20130302: unification
-        StatusDrawFace(gfxvmap[BJOUCHPIC][SPEAR]);
+        StatusDrawFace(gfxvmap[BJOUCHPIC][SPEAR.Flag()]);
         facecount = 0;
     }
 }
@@ -524,7 +525,7 @@ void DrawLevel (void)
 {
     if(viewsize == 21 && ingame) return;
     // IOANCH 20130202: unification process
-    if (SPEAR && gamestate.mapon == 20)
+    if (SPEAR.Flag() && gamestate.mapon == 20)
         LatchNumber (2,16,2,18);
     else
         LatchNumber (2,16,2,gamestate.mapon+1);
@@ -612,7 +613,7 @@ void GivePoints (int32_t points)
 void DrawWeapon (void)
 {
     if(viewsize == 21 && ingame) return;
-    StatusDrawPic (32,8,gfxvmap[KNIFEPIC][SPEAR]+gamestate.weapon);
+    StatusDrawPic (32,8,gfxvmap[KNIFEPIC][SPEAR.Flag()]+gamestate.weapon);
 }
 
 
@@ -628,14 +629,14 @@ void DrawKeys (void)
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
-        StatusDrawPic (30,4,gfxvmap[GOLDKEYPIC][SPEAR]);
+        StatusDrawPic (30,4,gfxvmap[GOLDKEYPIC][SPEAR.Flag()]);
     else
-        StatusDrawPic (30,4,gfxvmap[NOKEYPIC][SPEAR]);
+        StatusDrawPic (30,4,gfxvmap[NOKEYPIC][SPEAR.Flag()]);
 
     if (gamestate.keys & 2)
-        StatusDrawPic (30,20,gfxvmap[SILVERKEYPIC][SPEAR]);
+        StatusDrawPic (30,20,gfxvmap[SILVERKEYPIC][SPEAR.Flag()]);
     else
-        StatusDrawPic (30,20,gfxvmap[NOKEYPIC][SPEAR]);
+        StatusDrawPic (30,20,gfxvmap[NOKEYPIC][SPEAR.Flag()]);
 }
 
 /*
@@ -806,7 +807,7 @@ void GetBonus (statobj_t *check)
             GiveWeapon (wp_chaingun);
 
             if(viewsize != 21)
-                StatusDrawFace (gfxvmap[GOTGATLINGPIC][SPEAR]);
+                StatusDrawFace (gfxvmap[GOTGATLINGPIC][SPEAR.Flag()]);
             facecount = 0;
             break;
 
@@ -1011,7 +1012,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 void VictoryTile (void)
 {
     // IOANCH 20130202: unification process
-    if(!SPEAR)
+    if(!SPEAR.Flag())
         SpawnBJVictory ();
 
     gamestate.victoryflag = true;
@@ -1054,7 +1055,7 @@ void Thrust (int angle, int32_t speed)
     // ZERO FUNNY COUNTER IF MOVED!
     //
     // IOANCH 20130202: unification process
-    if (SPEAR && speed)
+    if (SPEAR.Flag() && speed)
         funnyticount = 0;
 
     thrustspeed += speed;

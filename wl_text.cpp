@@ -25,6 +25,7 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #pragma hdrstop
+#include "SODFlag.h"
 
 /*
 =============================================================================
@@ -48,8 +49,8 @@ TEXT FORMATTING COMMANDS
 =============================================================================
 */
 
-// IOANCH 20130303: SPEAR unification
-// #ifndef SPEAR
+// IOANCH 20130303: SPEAR.Flag() unification
+// #ifndef SPEAR.Flag()
 
 #define BACKCOLOR       0x11
 
@@ -274,8 +275,8 @@ void HandleCommand (void)
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
             VWB_DrawPic (picx&~7,picy,picnum);
-            picwidth = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].width;
-            picheight = pictable[picnum-gfxvmap[STARTPICS][SPEAR]].height;
+            picwidth = pictable[picnum-gfxvmap[STARTPICS][SPEAR.Flag()]].width;
+            picheight = pictable[picnum-gfxvmap[STARTPICS][SPEAR.Flag()]].height;
             //
             // adjust margins
             //
@@ -449,10 +450,10 @@ void PageLayout (boolean shownumber)
     // clear the screen
     //
     VWB_Bar (0,0,320,200,BACKCOLOR);
-    VWB_DrawPic (0,0,gfxvmap[H_TOPWINDOWPIC][SPEAR]);
-    VWB_DrawPic (0,8,gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
-    VWB_DrawPic (312,8,gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
-    VWB_DrawPic (8,176,gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
+    VWB_DrawPic (0,0,gfxvmap[H_TOPWINDOWPIC][SPEAR.Flag()]);
+    VWB_DrawPic (0,8,gfxvmap[H_LEFTWINDOWPIC][SPEAR.Flag()]);
+    VWB_DrawPic (312,8,gfxvmap[H_RIGHTWINDOWPIC][SPEAR.Flag()]);
+    VWB_DrawPic (8,176,gfxvmap[H_BOTTOMINFOPIC][SPEAR.Flag()]);
 
 
     for (i=0; i<TEXTROWS; i++)
@@ -576,11 +577,11 @@ void CacheLayoutGraphics (void)
                 numpages++;
             if (ch == 'E')          // end of file, so load graphics and return
             {
-#ifndef SPEAR
-                CA_CacheGrChunk(gfxvmap[H_TOPWINDOWPIC][SPEAR]);
-                CA_CacheGrChunk(gfxvmap[H_LEFTWINDOWPIC][SPEAR]);
-                CA_CacheGrChunk(gfxvmap[H_RIGHTWINDOWPIC][SPEAR]);
-                CA_CacheGrChunk(gfxvmap[H_BOTTOMINFOPIC][SPEAR]);
+#ifndef SPEAR.Flag()
+                CA_CacheGrChunk(gfxvmap[H_TOPWINDOWPIC][SPEAR.Flag()]);
+                CA_CacheGrChunk(gfxvmap[H_LEFTWINDOWPIC][SPEAR.Flag()]);
+                CA_CacheGrChunk(gfxvmap[H_RIGHTWINDOWPIC][SPEAR.Flag()]);
+                CA_CacheGrChunk(gfxvmap[H_BOTTOMINFOPIC][SPEAR.Flag()]);
 #endif
                 //                              CA_CacheMarks ();
                 text = textstart;
@@ -625,7 +626,7 @@ void ShowArticle (char *article)
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
-    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR.Flag()]);
     VWB_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
 
@@ -715,7 +716,7 @@ void ShowArticle (char *article)
 // IOANCH 20130301: unification culling
 #ifdef ARTSEXTERN
 int     endextern = T_ENDART1;
-#ifndef SPEAR
+#ifndef SPEAR.Flag()
 int     helpextern = T_HELPART;
 #endif
 #endif
@@ -729,7 +730,7 @@ char helpfilename[13] = "HELPART.",
 =
 =================
 */
-#ifndef SPEAR
+#ifndef SPEAR.Flag()
 void HelpScreens (void)
 {
     int     artnum;
@@ -742,7 +743,7 @@ void HelpScreens (void)
 
 #ifdef ARTSEXTERN
     // IOANCH 20130302: helpextern used to be here
-    artnum = gfxvmap[T_HELPART][SPEAR];
+    artnum = gfxvmap[T_HELPART][SPEAR.Flag()];
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
@@ -783,8 +784,8 @@ void EndText (void)
 
 
 #ifdef ARTSEXTERN
-    // IOANCH 20130302: unification: map it here. (endextern used to be gfxvmap[T_ENDART1][SPEAR]
-    artnum = gfxvmap[T_ENDART1][SPEAR]+gamestate.episode;
+    // IOANCH 20130302: unification: map it here. (endextern used to be gfxvmap[T_ENDART1][SPEAR.Flag()]
+    artnum = gfxvmap[T_ENDART1][SPEAR.Flag()]+gamestate.episode;
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else

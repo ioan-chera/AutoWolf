@@ -22,14 +22,14 @@
 // WL_MENU.H
 //
 // IOANCH 20130302: unification
-#define BORDCOLOR (SPEAR ? 0x99 : 0x29)
-#define BORD2COLOR (SPEAR ? 0x93 : 0x23)
+#define BORDCOLOR (SPEAR.Flag() ? 0x99 : 0x29)
+#define BORD2COLOR (SPEAR.Flag() ? 0x93 : 0x23)
 #define DEACTIVE_sod 0x9b
 #define DEACTIVE_wl6 0x2b
 #define DEACTIVE IMPALE(DEACTIVE)
-#define BKGDCOLOR (SPEAR ? 0x9d : 0x2d)
+#define BKGDCOLOR (SPEAR.Flag() ? 0x9d : 0x2d)
 #define STRIPE 0x2c
-#define MenuFadeOut() VL_FadeOut(0, 255, SPEAR ? 0 : 43, 0, SPEAR ? 51 : 0, 10)
+#define MenuFadeOut() VL_FadeOut(0, 255, SPEAR.Flag() ? 0 : 43, 0, SPEAR.Flag() ? 51 : 0, 10)
 
 #define READCOLOR       0x4a
 #define READHCOLOR      0x47
@@ -41,7 +41,7 @@
             // IOANCH 20130301: unification music
 #define MENUSONG        IMPALE((int)WONDERIN_MUS)
 
-#define INTROSONG       (SPEAR ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
+#define INTROSONG       (SPEAR.Flag() ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
 #define CENTERX         ((int) screenWidth / 2)

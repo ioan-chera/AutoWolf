@@ -37,7 +37,7 @@
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "List.h"
-
+#include "SODFlag.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -338,7 +338,7 @@ static void ScanInfoPlane(void)
                     break;
                 case 73:
                 case 74:
-                    if(SPEAR)
+                    if(SPEAR.Flag())
                         SpawnStatic(x,y,tile-23);
                     break;
 
@@ -544,44 +544,44 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 214:	// IOANCH 17.05.2012: use centralized function
-				    if(!SPEAR) Basic::SpawnEnemy(bossobj, x, y);
+				    if(!SPEAR.Flag()) Basic::SpawnEnemy(bossobj, x, y);
                     break;
                 case 197:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(gretelobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(gretelobj, x, y);
                     break;
                 case 215:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(giftobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(giftobj, x, y);
                     break;
                 case 179:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(fatobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(fatobj, x, y);
                     break;
                 case 196:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(schabbobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(schabbobj, x, y);
                     break;
                 case 160:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(fakeobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(fakeobj, x, y);
                     break;
                 case 178:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(mechahitlerobj, x, y);
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(mechahitlerobj, x, y);
                     break;
 
                 case 106:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(spectreobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(spectreobj, x, y);
                     break;
                 case 107:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(angelobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(angelobj, x, y);
                     break;
                 case 125:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(transobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(transobj, x, y);
                     break;
                 case 142:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(uberobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(uberobj, x, y);
                     break;
                 case 143:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(willobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(willobj, x, y);
                     break;
                 case 161:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR) Basic::SpawnEnemy(deathobj, x, y);
+					if(SPEAR.Flag()) Basic::SpawnEnemy(deathobj, x, y);
                     break;
 
 
@@ -637,19 +637,19 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 224:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_blinky);
                     break;
                 case 225:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_clyde);
                     break;
                 case 226:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_pinky);
                     break;
                 case 227:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+					if(!SPEAR.Flag()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_inky);
                     break;
             }
@@ -977,7 +977,7 @@ void DrawPlayBorder (void)
 
 void DrawPlayScreen (void)
 {
-    VWB_DrawPicScaledCoord ((screenWidth-scaleFactor*320)/2,screenHeight-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR]);
+    VWB_DrawPicScaledCoord ((screenWidth-scaleFactor*320)/2,screenHeight-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR.Flag()]);
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1002,7 +1002,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        LatchDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR]);
+        LatchDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR.Flag()]);
         x++;
         width--;
     }
@@ -1011,7 +1011,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        LatchDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR]);
+        LatchDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR.Flag()]);
         x++;
         c++;
     }
@@ -1020,8 +1020,8 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[gfxvmap[STATUSBARPIC][SPEAR]];
-    int	picnum = gfxvmap[STATUSBARPIC][SPEAR] - gfxvmap[STARTPICS][SPEAR];
+    byte *source = grsegs[gfxvmap[STATUSBARPIC][SPEAR.Flag()]];
+    int	picnum = gfxvmap[STATUSBARPIC][SPEAR.Flag()] - gfxvmap[STARTPICS][SPEAR.Flag()];
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
     int destx = (screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
@@ -1129,10 +1129,10 @@ void RecordDemo (void)
 
     CenterWindow(26,3);
     PrintY+=6;
-    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR.Flag()]);
     fontnumber=0;
     SETFONTCOLOR(0,15);
-    if(!SPEAR)
+    if(!SPEAR.Flag())
     {
     // IOANCH 20130301: unification culling
         US_Print("  Demo which level(1-60): ");
@@ -1158,7 +1158,7 @@ void RecordDemo (void)
 
     VW_FadeOut ();
     // IOANCH 20130302: unification
-    if(!SPEAR)
+    if(!SPEAR.Flag())
     {
         NewGame (gd_hard,level/10);
         gamestate.mapon = level%10;
@@ -1218,7 +1218,7 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
     // IOANCH 20130301: unification culling
-    int dems[4]={static_cast<int>(gfxvmap[T_DEMO0][SPEAR]),static_cast<int>(gfxvmap[T_DEMO1][SPEAR]),static_cast<int>(gfxvmap[T_DEMO2][SPEAR]),static_cast<int>(gfxvmap[T_DEMO3][SPEAR])};
+    int dems[4]={static_cast<int>(gfxvmap[T_DEMO0][SPEAR.Flag()]),static_cast<int>(gfxvmap[T_DEMO1][SPEAR.Flag()]),static_cast<int>(gfxvmap[T_DEMO2][SPEAR.Flag()]),static_cast<int>(gfxvmap[T_DEMO3][SPEAR.Flag()])};
 
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];
@@ -1442,7 +1442,7 @@ restartgame:
         if (!loadedgame)
             SetupGameLevel ();
         // IOANCH 20130302: unification
-        if (SPEAR && gamestate.mapon == 20)      // give them the key allways
+        if (SPEAR.Flag() && gamestate.mapon == 20)      // give them the key allways
         {
             gamestate.keys |= 1;
             DrawKeys ();
@@ -1469,7 +1469,7 @@ restartgame:
 startplayloop:
         PlayLoop ();
 
-        if (SPEAR && spearflag)
+        if (SPEAR.Flag() && spearflag)
         {
             SD_StopSound();
             SD_PlaySound(GETSPEARSND);
@@ -1521,7 +1521,7 @@ startplayloop:
 
                 gamestate.oldscore = gamestate.score;
                 // IOANCH 20130302: unification
-                if(!SPEAR)
+                if(!SPEAR.Flag())
                 {
                     if (gamestate.mapon == 9)
                         gamestate.mapon = ElevatorBackTo[gamestate.episode];    // back from secret
@@ -1607,7 +1607,7 @@ startplayloop:
             case ex_victorious:
                 if(viewsize == 21) DrawPlayScreen();
                 // IOANCH 20130302: unification
-                if(!SPEAR)
+                if(!SPEAR.Flag())
                     VW_FadeOut ();
                 else
                     VL_FadeOut (0,255,0,17,17,300);

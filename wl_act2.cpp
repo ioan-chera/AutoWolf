@@ -36,6 +36,7 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "obattrib.h"   // IOANCH 20130306
+#include "SODFlag.h"
 
 //
 // IOANCH 20130311: corrected T_ names to A_ names when used as one-shot 
@@ -793,7 +794,7 @@ void A_DeathScream (objtype *ob)
     // IOANCH 20130301: unification culling
 
     // IOANCH 20130202: unification process
-    if (!US_RndT() && ((!SPEAR && mapon==9) || (SPEAR && (mapon == 18 || mapon == 19))))
+    if (!US_RndT() && ((!SPEAR.Flag() && mapon==9) || (SPEAR.Flag() && (mapon == 18 || mapon == 19))))
     {
         switch(ob->obclass)
         {
@@ -851,7 +852,7 @@ void A_DeathScream (objtype *ob)
 /*
 =============================================================================
 
-                                SPEAR ACTORS
+                                SPEAR.Flag() ACTORS
 
 =============================================================================
 */
@@ -2868,16 +2869,16 @@ void    A_StartDeathCam (objtype *ob)
 
     if (bordercol != VIEWCOLOR)
     {
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]+1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()]+1);
         fontnumber = 1;
         SETFONTCOLOR(15,bordercol);
         PrintX = 68; PrintY = 45;
         US_Print (STR_SEEAGAIN);
-        UNCACHEGRCHUNK(gfxvmap[STARTFONT][SPEAR]+1);
+        UNCACHEGRCHUNK(gfxvmap[STARTFONT][SPEAR.Flag()]+1);
     }
     else
     {
-        CacheLump(gfxvmap[LEVELEND_LUMP_START][SPEAR],gfxvmap[LEVELEND_LUMP_END][SPEAR]);
+        CacheLump(gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()],gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
         // IOANCH 20130301: unification culling
         Write(0,7,STR_SEEAGAIN);
     }

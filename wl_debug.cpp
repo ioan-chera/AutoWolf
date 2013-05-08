@@ -35,6 +35,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
+#include "SODFlag.h"
 
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
@@ -699,7 +700,7 @@ again:
         CenterWindow(26,3);
         PrintY+=6;
         // IOANCH 20130202: unification process
-        if(!SPEAR)
+        if(!SPEAR.Flag())
             US_Print("  Warp to which level(1-10): ");
         else
             US_Print("  Warp to which level(1-21): ");
@@ -710,7 +711,7 @@ again:
         {
             level = atoi (str);
             // IOANCH 20130202: unification process
-            if ((!SPEAR && level>0 && level<11) || (SPEAR && level > 0 && level < 22))
+            if ((!SPEAR.Flag() && level>0 && level<11) || (SPEAR.Flag() && level > 0 && level < 22))
             {
                 gamestate.mapon = level-1;
                 playstate = ex_warped;

@@ -24,7 +24,7 @@
 #include "wl_def.h"
 #include "wl_draw.h"
 #pragma hdrstop
-
+#include "SODFlag.h"
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
 //#define IGNORE_BAD_DEST
@@ -87,7 +87,7 @@ SDL_Color curpal[256];
 // IOANCH 20130202: unification process
 // SDL_Color gamepal[]={
 SDL_Colour palette_sod[]={
-// #ifdef SPEAR
+// #ifdef SPEAR.Flag()
     #include "sodpal.inc"
 };
 // #else
@@ -128,7 +128,7 @@ void	VL_SetVGAPlaneMode (void)
 {
 	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
     // IOANCH 20130202: unification process
-    if( SPEAR)
+    if( SPEAR.Flag())
         SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
     else
         SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
