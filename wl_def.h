@@ -29,7 +29,6 @@
 // Defines which version shall be built and configures supported extra features
 #include "version.h"
 
-#include <assert.h>
 #include <fcntl.h>
 #include <math.h>
 #include <ctype.h>

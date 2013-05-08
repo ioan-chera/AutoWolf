@@ -46,6 +46,7 @@ loaded into the data segment
     #include <unistd.h>
 #endif
 
+#include <assert.h>
 #include "wl_def.h"
 #include "wl_main.h"
 #pragma hdrstop

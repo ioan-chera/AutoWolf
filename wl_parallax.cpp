@@ -19,7 +19,7 @@
 #include "version.h"
 
 #ifdef USE_PARALLAX
-
+#include <assert.h>
 #include "wl_def.h"
 
 #ifdef USE_FEATUREFLAGS

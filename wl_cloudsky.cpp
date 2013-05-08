@@ -20,6 +20,7 @@
 
 #ifdef USE_CLOUDSKY
 
+#include <assert.h>
 #include "wl_def.h"
 #include "wl_cloudsky.h"
 
