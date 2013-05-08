@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include "foreign.h"
+#include "f_spear.h"
 #include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_game.h"
