@@ -32,7 +32,7 @@ public:
     SODFlag() : flag(false)
     {
     }
-    boolean Flag()
+    boolean operator()()
     {
         return flag;
     }

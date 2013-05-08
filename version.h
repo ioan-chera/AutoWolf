@@ -25,7 +25,7 @@
 
 /* Defines used for different versions */
 
-//#define SPEAR.Flag()
+//#define SPEAR()
 //#define SPEARDEMO
 //#define UPLOAD
 
@@ -44,9 +44,9 @@
     Wolf3d Shareware v1.1                     - define CARMACIZED and UPLOAD and APOGEE_1_1
     Wolf3d Shareware v1.2                     - define CARMACIZED and UPLOAD and APOGEE_1_2
     Wolf3d Shareware v1.4                     - define CARMACIZED and UPLOAD
-    Spear of Destiny Full and Mission Disks   - define CARMACIZED and SPEAR.Flag()
+    Spear of Destiny Full and Mission Disks   - define CARMACIZED and SPEAR()
                                                 (and GOODTIMES for no FormGen quiz)
-    Spear of Destiny Demo                     - define CARMACIZED and SPEAR.Flag() and SPEARDEMO
+    Spear of Destiny Demo                     - define CARMACIZED and SPEAR() and SPEARDEMO
 */
 
 #endif

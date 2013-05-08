@@ -76,7 +76,7 @@ typedef enum {
 	GAMEOVERSND,             // 17
 	GETAMMOBOXSND,           // 64
 	GETAMMOSND,              // 31
-	GETGATLINGSND,           // 38 DIGI SPEAR.Flag()
+	GETGATLINGSND,           // 38 DIGI SPEAR()
 	GETKEYSND,               // 12
 	GETMACHINESND,           // 30
 	GETSPEARSND,             // 79 DIGI

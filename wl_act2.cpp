@@ -794,7 +794,7 @@ void A_DeathScream (objtype *ob)
     // IOANCH 20130301: unification culling
 
     // IOANCH 20130202: unification process
-    if (!US_RndT() && ((!SPEAR.Flag() && mapon==9) || (SPEAR.Flag() && (mapon == 18 || mapon == 19))))
+    if (!US_RndT() && ((!SPEAR() && mapon==9) || (SPEAR() && (mapon == 18 || mapon == 19))))
     {
         switch(ob->obclass)
         {
@@ -852,7 +852,7 @@ void A_DeathScream (objtype *ob)
 /*
 =============================================================================
 
-                                SPEAR.Flag() ACTORS
+                                SPEAR() ACTORS
 
 =============================================================================
 */
@@ -2869,16 +2869,16 @@ void    A_StartDeathCam (objtype *ob)
 
     if (bordercol != VIEWCOLOR)
     {
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()]+1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]+1);
         fontnumber = 1;
         SETFONTCOLOR(15,bordercol);
         PrintX = 68; PrintY = 45;
         US_Print (STR_SEEAGAIN);
-        UNCACHEGRCHUNK(gfxvmap[STARTFONT][SPEAR.Flag()]+1);
+        UNCACHEGRCHUNK(gfxvmap[STARTFONT][SPEAR()]+1);
     }
     else
     {
-        CacheLump(gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()],gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
+        CacheLump(gfxvmap[LEVELEND_LUMP_START][SPEAR()],gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
         // IOANCH 20130301: unification culling
         Write(0,7,STR_SEEAGAIN);
     }

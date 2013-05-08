@@ -1256,7 +1256,7 @@ void SD_Shutdown(void)
     SD_MusicOff();
     SD_StopSound();
 
-	unsigned int lastvalue = SPEAR.Flag() ? STARTMUSIC_sod - STARTDIGISOUNDS_sod :
+	unsigned int lastvalue = SPEAR() ? STARTMUSIC_sod - STARTDIGISOUNDS_sod :
     STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6;
     
     for(int i = 0; i < (signed int)lastvalue; i++)
@@ -1295,7 +1295,7 @@ boolean SD_PlaySound(soundnames sound_abstract)
     int             lp,rp;
 	
 	// IOANCH 20130301: abstract sound
-	unsigned int sound = soundmap[sound_abstract][SPEAR.Flag()];
+	unsigned int sound = soundmap[sound_abstract][SPEAR()];
 
     lp = LeftPosition;
     rp = RightPosition;

@@ -239,7 +239,7 @@ int songs_sod[] = {
 
     //////////////////////////////////////////////////////////////
     //
-    // SPEAR.Flag() OF DESTINY TRACKS
+    // SPEAR() OF DESTINY TRACKS
     //
     //////////////////////////////////////////////////////////////
     XTIPTOE_MUS_sod,
@@ -608,7 +608,7 @@ void CheckKeys (void)
     scan = LastScan;
 
 
-    if(SPEAR.Flag())
+    if(SPEAR())
     {
         //
         // SECRET CHEAT CODE: TAB-G-F10
@@ -654,13 +654,13 @@ void CheckKeys (void)
         DrawScore ();
 
         ClearMemory ();
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR()] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -675,11 +675,11 @@ void CheckKeys (void)
     if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && param_debugmode)
     {
         ClearMemory ();
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
-        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR()] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -694,14 +694,14 @@ void CheckKeys (void)
     if (Keyboard[sc_B] && Keyboard[sc_A] && Keyboard[sc_T])
     {
         ClearMemory ();
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
         ClearSplitVWB ();
 
         Message ("Commander Keen is also\n"
                  "available from Apogee, but\n"
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
-        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+        UNCACHEGRCHUNK (gfxvmap[STARTFONT][SPEAR()] + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -716,7 +716,7 @@ void CheckKeys (void)
     if(Paused)
     {
         int lastoffs = StopMusic();
-        LatchDrawPic (20 - 4, 80 - 2 * 8, gfxvmap[PAUSEDPIC][SPEAR.Flag()]);
+        LatchDrawPic (20 - 4, 80 - 2 * 8, gfxvmap[PAUSEDPIC][SPEAR()]);
         VH_UpdateScreen();
         IN_Ack ();
         Paused = false;
@@ -779,7 +779,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (Keyboard[sc_Tab] && DebugOk)
     {
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]);
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
@@ -1370,7 +1370,7 @@ void PlayLoop (void)
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
         //
-        if(SPEAR.Flag())
+        if(SPEAR())
         {
             funnyticount += tics;
             if (funnyticount > 30l * 70)
@@ -1378,7 +1378,7 @@ void PlayLoop (void)
                 funnyticount = 0;
                 // IOANCH 20130302: unification
                 if(viewsize != 21)
-                    StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR.Flag()] + (US_RndT () & 1));
+                    StatusDrawFace(gfxvmap[BJWAITING1PIC][SPEAR()] + (US_RndT () & 1));
                 facecount = 0;
             }
         }

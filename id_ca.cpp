@@ -143,7 +143,7 @@ SDMode oldsoundmode;
 //
 static int32_t GRFILEPOS(const size_t idx)
 {
-    if(SPEAR.Flag())
+    if(SPEAR())
         assert(idx < lengthof(grstarts_sod));
     else
         assert(idx < lengthof(grstarts_wl6));
@@ -409,7 +409,7 @@ static void CAL_SetupGrFile (void)
 #ifdef GRHEADERLINKED
 
     grhuffman = (huffnode *)&EGAdict;
-    if(SPEAR.Flag())
+    if(SPEAR())
         grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
     else
         grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
@@ -444,7 +444,7 @@ static void CAL_SetupGrFile (void)
     // IOANCH 20130301: unification culling
 //    int testexp = sizeof(grstarts_wl6);
 	int expectedsize;
-    if(SPEAR.Flag())
+    if(SPEAR())
         expectedsize = lengthof(grstarts_sod) - numEpisodesMissing;
     else
         expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
@@ -458,7 +458,7 @@ static void CAL_SetupGrFile (void)
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
             fname, headersize / 3, expectedsize);
 
-    if(SPEAR.Flag())
+    if(SPEAR())
     {
         byte data[lengthof(grstarts_sod) * 3];
         read(handle, data, sizeof(data));
@@ -503,13 +503,13 @@ static void CAL_SetupGrFile (void)
 // load the pic and sprite headers into the arrays in the data segment
 //
     
-    pictable=(pictabletype *) malloc(gfxvmap[NUMPICS][SPEAR.Flag()]*sizeof(pictabletype));
+    pictable=(pictabletype *) malloc(gfxvmap[NUMPICS][SPEAR()]*sizeof(pictabletype));
     CHECKMALLOCRESULT(pictable);
-    CAL_GetGrChunkLength(gfxvmap[STRUCTPIC][SPEAR.Flag()]);                // position file pointer
+    CAL_GetGrChunkLength(gfxvmap[STRUCTPIC][SPEAR()]);                // position file pointer
     compseg=(byte *) malloc(chunkcomplen);
     CHECKMALLOCRESULT(compseg);
     read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, gfxvmap[NUMPICS][SPEAR.Flag()] * sizeof(pictabletype), grhuffman);
+    CAL_HuffExpand(compseg, (byte*)pictable, gfxvmap[NUMPICS][SPEAR()] * sizeof(pictabletype), grhuffman);
     free(compseg);
 }
 
@@ -652,7 +652,7 @@ void CA_Shutdown (void)
     if(audiohandle != -1)
         close(audiohandle);
 
-    for(i=0; i<(signed int)gfxvmap[NUMCHUNKS][SPEAR.Flag()]; i++)
+    for(i=0; i<(signed int)gfxvmap[NUMCHUNKS][SPEAR()]; i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
@@ -815,7 +815,7 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
-    if (chunk >= (signed int)gfxvmap[STARTTILE8][SPEAR.Flag()] && chunk < (signed int)gfxvmap[STARTEXTERNS][SPEAR.Flag()])
+    if (chunk >= (signed int)gfxvmap[STARTTILE8][SPEAR()] && chunk < (signed int)gfxvmap[STARTEXTERNS][SPEAR()])
     {
         //
         // expanded sizes of tile8/16/32 are implicit
@@ -824,15 +824,15 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<(signed int)gfxvmap[STARTTILE8M][SPEAR.Flag()])          // tile 8s are all in one chunk!
-            expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR.Flag()];
-        else if (chunk<(signed int)gfxvmap[STARTTILE16][SPEAR.Flag()])
-            expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR.Flag()];
-        else if (chunk<(signed int)gfxvmap[STARTTILE16M][SPEAR.Flag()])    // all other tiles are one/chunk
+        if (chunk<(signed int)gfxvmap[STARTTILE8M][SPEAR()])          // tile 8s are all in one chunk!
+            expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR()];
+        else if (chunk<(signed int)gfxvmap[STARTTILE16][SPEAR()])
+            expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR()];
+        else if (chunk<(signed int)gfxvmap[STARTTILE16M][SPEAR()])    // all other tiles are one/chunk
             expanded = BLOCK*4;
-        else if (chunk<(signed int)gfxvmap[STARTTILE32][SPEAR.Flag()])
+        else if (chunk<(signed int)gfxvmap[STARTTILE32][SPEAR()])
             expanded = MASKBLOCK*4;
-        else if (chunk<(signed int)gfxvmap[STARTTILE32M][SPEAR.Flag()])
+        else if (chunk<(signed int)gfxvmap[STARTTILE32M][SPEAR()])
             expanded = BLOCK*16;
         else
             expanded = MASKBLOCK*16;

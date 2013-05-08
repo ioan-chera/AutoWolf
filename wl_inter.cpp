@@ -85,14 +85,14 @@ void EndSpear (void)
 {
     SDL_Color pal[256];
 
-    EndScreen (gfxvmap[END1PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN11PIC][SPEAR.Flag()]);
+    EndScreen (gfxvmap[END1PALETTE][SPEAR()], gfxvmap[ENDSCREEN11PIC][SPEAR()]);
 
-    CA_CacheScreen (gfxvmap[ENDSCREEN3PIC][SPEAR.Flag()]);
+    CA_CacheScreen (gfxvmap[ENDSCREEN3PIC][SPEAR()]);
     VW_UpdateScreen ();
-    CA_CacheGrChunk (gfxvmap[END3PALETTE][SPEAR.Flag()]);
-    VL_ConvertPalette(grsegs[gfxvmap[END3PALETTE][SPEAR.Flag()]], pal, 256);
+    CA_CacheGrChunk (gfxvmap[END3PALETTE][SPEAR()]);
+    VL_ConvertPalette(grsegs[gfxvmap[END3PALETTE][SPEAR()]], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    UNCACHEGRCHUNK (gfxvmap[END3PALETTE][SPEAR.Flag()]);
+    UNCACHEGRCHUNK (gfxvmap[END3PALETTE][SPEAR()]);
     fontnumber = 0;
     fontcolor = 0xd0;
     WindowX = 0;
@@ -114,14 +114,14 @@ void EndSpear (void)
 
     VW_FadeOut ();
 
-    EndScreen (gfxvmap[END4PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN4PIC][SPEAR.Flag()]);
-    EndScreen (gfxvmap[END5PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN5PIC][SPEAR.Flag()]);
-    EndScreen (gfxvmap[END6PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN6PIC][SPEAR.Flag()]);
-    EndScreen (gfxvmap[END7PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN7PIC][SPEAR.Flag()]);
-    EndScreen (gfxvmap[END8PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN8PIC][SPEAR.Flag()]);
-    EndScreen (gfxvmap[END9PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN9PIC][SPEAR.Flag()]);
+    EndScreen (gfxvmap[END4PALETTE][SPEAR()], gfxvmap[ENDSCREEN4PIC][SPEAR()]);
+    EndScreen (gfxvmap[END5PALETTE][SPEAR()], gfxvmap[ENDSCREEN5PIC][SPEAR()]);
+    EndScreen (gfxvmap[END6PALETTE][SPEAR()], gfxvmap[ENDSCREEN6PIC][SPEAR()]);
+    EndScreen (gfxvmap[END7PALETTE][SPEAR()], gfxvmap[ENDSCREEN7PIC][SPEAR()]);
+    EndScreen (gfxvmap[END8PALETTE][SPEAR()], gfxvmap[ENDSCREEN8PIC][SPEAR()]);
+    EndScreen (gfxvmap[END9PALETTE][SPEAR()], gfxvmap[ENDSCREEN9PIC][SPEAR()]);
 
-    EndScreen (gfxvmap[END2PALETTE][SPEAR.Flag()], gfxvmap[ENDSCREEN12PIC][SPEAR.Flag()]);
+    EndScreen (gfxvmap[END2PALETTE][SPEAR()], gfxvmap[ENDSCREEN12PIC][SPEAR()]);
 
     MainMenu[savegame].active = 0;
 }
@@ -152,46 +152,46 @@ Victory (void)
 #define TIMEY   8
 
     // IOANCH 20130302: unification
-    if(SPEAR.Flag())
+    if(SPEAR())
     {
         // IOANCH 20130301: unification music
         StartCPMusic (XTHEEND_MUS_sod);
 
         // IOANCH 20130302: unification
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR.Flag()]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
 
         VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR.Flag()]);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
         VW_UpdateScreen ();
         VW_FadeIn ();
         VW_WaitVBL (2 * 70);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR.Flag()]);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
         VW_UpdateScreen ();
         VW_WaitVBL (105);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR.Flag()]);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
         VW_UpdateScreen ();
         VW_WaitVBL (105);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR.Flag()]);
+        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
         VW_UpdateScreen ();
         VW_WaitVBL (3 * 70);
 
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR.Flag()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR.Flag()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR.Flag()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR.Flag()]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
+        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
     StartCPMusic (IMPALE((int)URAHERO_MUS));
     ClearSplitVWB ();
-    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()], gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()]);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]);
 
-    if(!SPEAR.Flag())
-        CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR.Flag()]);
+    if(!SPEAR())
+        CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR()]);
 
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
@@ -215,7 +215,7 @@ Victory (void)
 
 
 
-    VWB_DrawPic (8, 4, gfxvmap[L_BJWINSPIC][SPEAR.Flag()]);
+    VWB_DrawPic (8, 4, gfxvmap[L_BJWINSPIC][SPEAR()]);
 
 
     for (kr = sr = tr = sec = i = 0; i < LRpack; i++)
@@ -226,7 +226,7 @@ Victory (void)
         tr += LevelRatios[i].treasure;
     }
 
-    if(!SPEAR.Flag())
+    if(!SPEAR())
     {
         kr /= LRpack;
         sr /= LRpack;
@@ -246,15 +246,15 @@ Victory (void)
         min = sec = 99;
 
     i = TIMEX * 8 + 1;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (min / 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (min % 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min % 10));
     i += 2 * 8;
     Write (i / 8, TIMEY, ":");
     i += 1 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (sec / 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (sec % 10));
+    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec % 10));
     VW_UpdateScreen ();
 
     itoa (kr, tempstr, 10);
@@ -273,14 +273,14 @@ Victory (void)
     // IOANCH 20130301: unification culling
 
 
-    if(!SPEAR.Flag())
+    if(!SPEAR())
     {
         //
         // TOTAL TIME VERIFICATION CODE
         //
         if (gamestate.difficulty >= gd_medium)
         {
-            VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR.Flag()]);
+            VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR()]);
             fontnumber = 0;
             fontcolor = READHCOLOR;
             PrintX = 30 * 8 - 3;
@@ -308,12 +308,12 @@ Victory (void)
     if(screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
-    if(!SPEAR.Flag())
-        UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR.Flag()]);
-    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()], gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
+    if(!SPEAR())
+        UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR()]);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
 
 
-    if(!SPEAR.Flag())
+    if(!SPEAR())
         EndText ();
     else
         EndSpear ();
@@ -340,11 +340,11 @@ PG13 (void)
     VW_FadeOut ();
     VWB_Bar (0, 0, 320, 200, 0x82);     // background
 
-    CA_CacheGrChunk (gfxvmap[PG13PIC][SPEAR.Flag()]);
-    VWB_DrawPic (216, 110, gfxvmap[PG13PIC][SPEAR.Flag()]);
+    CA_CacheGrChunk (gfxvmap[PG13PIC][SPEAR()]);
+    VWB_DrawPic (216, 110, gfxvmap[PG13PIC][SPEAR()]);
     VW_UpdateScreen ();
 
-    UNCACHEGRCHUNK (gfxvmap[PG13PIC][SPEAR.Flag()]);
+    UNCACHEGRCHUNK (gfxvmap[PG13PIC][SPEAR()]);
 
     VW_FadeIn ();
     IN_UserInput (TickBase * 7);
@@ -359,21 +359,21 @@ PG13 (void)
 void
 Write (int x, int y, const char *string)
 {
-    static const unsigned int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR.Flag()],
-        gfxvmap[L_NUM1PIC][SPEAR.Flag()], gfxvmap[L_NUM2PIC][SPEAR.Flag()], 
-        gfxvmap[L_NUM3PIC][SPEAR.Flag()], gfxvmap[L_NUM4PIC][SPEAR.Flag()], 
-        gfxvmap[L_NUM5PIC][SPEAR.Flag()], gfxvmap[L_NUM6PIC][SPEAR.Flag()], 
-        gfxvmap[L_NUM7PIC][SPEAR.Flag()], gfxvmap[L_NUM8PIC][SPEAR.Flag()], 
-        gfxvmap[L_NUM9PIC][SPEAR.Flag()], gfxvmap[L_COLONPIC][SPEAR.Flag()], 0, 0, 0, 0, 0, 0, 
-        gfxvmap[L_APIC][SPEAR.Flag()], gfxvmap[L_BPIC][SPEAR.Flag()], gfxvmap[L_CPIC][SPEAR.Flag()], 
-        gfxvmap[L_DPIC][SPEAR.Flag()], gfxvmap[L_EPIC][SPEAR.Flag()], gfxvmap[L_FPIC][SPEAR.Flag()], 
-        gfxvmap[L_GPIC][SPEAR.Flag()], gfxvmap[L_HPIC][SPEAR.Flag()], gfxvmap[L_IPIC][SPEAR.Flag()],
-        gfxvmap[L_JPIC][SPEAR.Flag()], gfxvmap[L_KPIC][SPEAR.Flag()], gfxvmap[L_LPIC][SPEAR.Flag()], 
-        gfxvmap[L_MPIC][SPEAR.Flag()], gfxvmap[L_NPIC][SPEAR.Flag()], gfxvmap[L_OPIC][SPEAR.Flag()], 
-        gfxvmap[L_PPIC][SPEAR.Flag()], gfxvmap[L_QPIC][SPEAR.Flag()], gfxvmap[L_RPIC][SPEAR.Flag()], 
-        gfxvmap[L_SPIC][SPEAR.Flag()], gfxvmap[L_TPIC][SPEAR.Flag()], gfxvmap[L_UPIC][SPEAR.Flag()], 
-        gfxvmap[L_VPIC][SPEAR.Flag()], gfxvmap[L_WPIC][SPEAR.Flag()], gfxvmap[L_XPIC][SPEAR.Flag()], 
-        gfxvmap[L_YPIC][SPEAR.Flag()], gfxvmap[L_ZPIC][SPEAR.Flag()]
+    static const unsigned int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR()],
+        gfxvmap[L_NUM1PIC][SPEAR()], gfxvmap[L_NUM2PIC][SPEAR()], 
+        gfxvmap[L_NUM3PIC][SPEAR()], gfxvmap[L_NUM4PIC][SPEAR()], 
+        gfxvmap[L_NUM5PIC][SPEAR()], gfxvmap[L_NUM6PIC][SPEAR()], 
+        gfxvmap[L_NUM7PIC][SPEAR()], gfxvmap[L_NUM8PIC][SPEAR()], 
+        gfxvmap[L_NUM9PIC][SPEAR()], gfxvmap[L_COLONPIC][SPEAR()], 0, 0, 0, 0, 0, 0, 
+        gfxvmap[L_APIC][SPEAR()], gfxvmap[L_BPIC][SPEAR()], gfxvmap[L_CPIC][SPEAR()], 
+        gfxvmap[L_DPIC][SPEAR()], gfxvmap[L_EPIC][SPEAR()], gfxvmap[L_FPIC][SPEAR()], 
+        gfxvmap[L_GPIC][SPEAR()], gfxvmap[L_HPIC][SPEAR()], gfxvmap[L_IPIC][SPEAR()],
+        gfxvmap[L_JPIC][SPEAR()], gfxvmap[L_KPIC][SPEAR()], gfxvmap[L_LPIC][SPEAR()], 
+        gfxvmap[L_MPIC][SPEAR()], gfxvmap[L_NPIC][SPEAR()], gfxvmap[L_OPIC][SPEAR()], 
+        gfxvmap[L_PPIC][SPEAR()], gfxvmap[L_QPIC][SPEAR()], gfxvmap[L_RPIC][SPEAR()], 
+        gfxvmap[L_SPIC][SPEAR()], gfxvmap[L_TPIC][SPEAR()], gfxvmap[L_UPIC][SPEAR()], 
+        gfxvmap[L_VPIC][SPEAR()], gfxvmap[L_WPIC][SPEAR()], gfxvmap[L_XPIC][SPEAR()], 
+        gfxvmap[L_YPIC][SPEAR()], gfxvmap[L_ZPIC][SPEAR()]
     };
 
     int i, ox, nx, ny, len = (int) strlen(string);
@@ -398,13 +398,13 @@ Write (int x, int y, const char *string)
             switch (string[i])
             {
                 case '!':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_EXPOINTPIC][SPEAR.Flag()]);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_EXPOINTPIC][SPEAR()]);
                     nx += 8;
                     continue;
 // IOANCH 20130301: unification culling
 
                 case '\'':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_APOSTROPHEPIC][SPEAR.Flag()]);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_APOSTROPHEPIC][SPEAR()]);
                     nx += 8;
                     continue;
 
@@ -413,12 +413,12 @@ Write (int x, int y, const char *string)
                     break;
 
                 case 0x3a:     // ':'
-                    VWB_DrawPic (nx, ny, gfxvmap[L_COLONPIC][SPEAR.Flag()]);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_COLONPIC][SPEAR()]);
                     nx += 8;
                     continue;
 
                 case '%':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_PERCENTPIC][SPEAR.Flag()]);
+                    VWB_DrawPic (nx, ny, gfxvmap[L_PERCENTPIC][SPEAR()]);
                     break;
 
                 default:
@@ -437,7 +437,7 @@ void
 BJ_Breathe (void)
 {
     static int which = 0, max = 10;
-    int pics[2] = { static_cast<int>(gfxvmap[L_GUYPIC][SPEAR.Flag()]), static_cast<int>(gfxvmap[L_GUY2PIC][SPEAR.Flag()]) };
+    int pics[2] = { static_cast<int>(gfxvmap[L_GUYPIC][SPEAR()]), static_cast<int>(gfxvmap[L_GUY2PIC][SPEAR()]) };
 
     SDL_Delay(5);
 
@@ -570,7 +570,7 @@ LevelCompleted (void)
     times parTimes_sod[] = {
 
         //
-        // SPEAR.Flag() OF DESTINY TIMES
+        // SPEAR() OF DESTINY TIMES
         //
         {1.5, "01:30"},
         {3.5, "03:30"},
@@ -595,7 +595,7 @@ LevelCompleted (void)
     };
     times *parTimes = IMPALE(parTimes);
 
-    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()], gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
+    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
     ClearSplitVWB ();           // set up for double buffering in split screen
     VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
@@ -610,9 +610,9 @@ LevelCompleted (void)
     IN_ClearKeysDown ();
     IN_StartAck ();
 // IOANCH 20130301: unification culling
-    VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR.Flag()]);
+    VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR()]);
 
-    if ((!SPEAR.Flag() && mapon < 8) || (SPEAR.Flag() && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
+    if ((!SPEAR() && mapon < 8) || (SPEAR() && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
     {
         // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -663,15 +663,15 @@ LevelCompleted (void)
 #else
         i = 26 * 8;
 #endif
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (min / 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (min % 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min % 10));
         i += 2 * 8;
         Write (i / 8, 10, ":");
         i += 1 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (sec / 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR.Flag()] + (sec % 10));
+        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec % 10));
 
         VW_UpdateScreen ();
         VW_FadeIn ();
@@ -881,7 +881,7 @@ done:   itoa (kr, tempstr, 10);
     else
     {
 // IOANCH 20130301: unification culling
-        if(SPEAR.Flag()) 
+        if(SPEAR()) 
         {
             switch (mapon)
             {
@@ -945,7 +945,7 @@ done:   itoa (kr, tempstr, 10);
     VW_FadeOut ();
     DrawPlayBorder();
 
-    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR.Flag()], gfxvmap[LEVELEND_LUMP_END][SPEAR.Flag()]);
+    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
 }
 
 
@@ -997,7 +997,7 @@ PreloadGraphics (void)
 
     VWB_BarScaledCoord (0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
     LatchDrawPicScaledCoord ((screenWidth-scaleFactor*224)/16,
-        (screenHeight-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR.Flag()]);
+        (screenHeight-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR()]);
 
     WindowX = (screenWidth - scaleFactor*224)/2;
     WindowY = (screenHeight - scaleFactor*(STATUSLINES+48))/2;
@@ -1041,15 +1041,15 @@ DrawHighScores (void)
     word i, w, h;
     HighScore *s;
 
-    if(!SPEAR.Flag())
+    if(!SPEAR())
     {
-        CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()]);
+        CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]);
         // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR.Flag()]);
+        CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR()]);
 
 
 
@@ -1057,14 +1057,14 @@ DrawHighScores (void)
         ClearMScreen ();
         DrawStripes (10);
 
-        VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR.Flag()]);
-        UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR.Flag()]);
+        VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR()]);
+        UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR()]);
 
         // IOANCH 20130301: unification culling
 
-        VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR.Flag()]);
-        VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR.Flag()]);
-        VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR.Flag()]);
+        VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR()]);
+        VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR()]);
+        VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR()]);
 
 
 
@@ -1072,19 +1072,19 @@ DrawHighScores (void)
     }
     else
     {
-        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR.Flag()], gfxvmap[BACKDROP_LUMP_END][SPEAR.Flag()]);
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()], gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
         ClearMScreen ();
         DrawStripes (10);
-        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR.Flag()], gfxvmap[BACKDROP_LUMP_END][SPEAR.Flag()]);
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()], gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
 
-        CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR.Flag()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR.Flag()]);
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
-        VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR.Flag()]);
+        CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR()]);
+        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
+        VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR()]);
 
         fontnumber = 1;
     }
 
-    if(!SPEAR.Flag())
+    if(!SPEAR())
     {
         SETFONTCOLOR (15, 0x29);
     }
@@ -1100,7 +1100,7 @@ DrawHighScores (void)
         //
         // name
         //
-        if(!SPEAR.Flag())
+        if(!SPEAR())
             PrintX = 4 * 8;
         else
             PrintX = 16;
@@ -1112,7 +1112,7 @@ DrawHighScores (void)
         //
         itoa (s->completed, buffer, 10);
         // IOANCH 20130303
-        if(!SPEAR.Flag())
+        if(!SPEAR())
         {
             for (str = buffer; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1126,7 +1126,7 @@ DrawHighScores (void)
         }
 // IOANCH 20130301: unification culling
 
-        if(!SPEAR.Flag())
+        if(!SPEAR())
         {
             PrintX -= 6;
             itoa (s->episode + 1, buffer1, 10);
@@ -1135,10 +1135,10 @@ DrawHighScores (void)
             US_Print ("/L");
         }
 
-        if(SPEAR.Flag())
+        if(SPEAR())
         {
             if (s->completed == 21)
-                VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR.Flag()]);
+                VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR()]);
             else
                 US_Print (buffer);
         }
@@ -1149,7 +1149,7 @@ DrawHighScores (void)
         // score
         //
         itoa (s->score, buffer, 10);
-        if(!SPEAR.Flag())
+        if(!SPEAR())
         {
             for (str = buffer; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1169,9 +1169,9 @@ DrawHighScores (void)
 
     VW_UpdateScreen ();
 
-    if(SPEAR.Flag())
+    if(SPEAR())
     {
-        UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR.Flag()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR.Flag()]);
+        UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR()]);
         fontnumber = 0;
     }
 }
@@ -1212,7 +1212,7 @@ CheckHighScore (int32_t score, word other)
         }
     }
             // IOANCH 20130301: unification music
-    if (SPEAR.Flag())
+    if (SPEAR())
         StartCPMusic (XAWARD_MUS_sod);
     else
         StartCPMusic (ROSTER_MUS_wl6);
@@ -1228,7 +1228,7 @@ CheckHighScore (int32_t score, word other)
         //
         PrintY = 76 + (16 * n);
 
-        if(!SPEAR.Flag())
+        if(!SPEAR())
         {
             PrintX = 4 * 8;
             backcolor = BORDCOLOR;
@@ -1295,7 +1295,7 @@ NonShareware (void)
     ClearMScreen ();
     DrawStripes (10);
 
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR.Flag()] + 1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
     fontnumber = 1;
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
