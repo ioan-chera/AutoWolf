@@ -1,6 +1,8 @@
 #ifndef WL_MAIN_H_
 #define WL_MAIN_H_
 
+#include <stdio.h>
+
 extern  boolean  loadedgame;
 extern  fixed    focallength;
 extern  int      viewscreenx, viewscreeny;

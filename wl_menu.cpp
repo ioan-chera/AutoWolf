@@ -34,6 +34,7 @@
     #include <unistd.h>
 #endif
 
+#include <stdio.h>
 #include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_draw.h"

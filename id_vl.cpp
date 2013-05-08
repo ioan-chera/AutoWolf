@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 #include "wl_def.h"
 #include "wl_draw.h"
 #pragma hdrstop

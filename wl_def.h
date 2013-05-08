@@ -27,7 +27,6 @@
 #define IMPALED(a, b) (SPEAR() ? a##_sod b : a##_wl6 b)
 
 #include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -778,17 +777,21 @@ static inline fixed FixedMul(fixed a, fixed b)
     #define strncasecmp strnicmp
     #define snprintf _snprintf
 #else
+#define itoa(value, string, radix) (sprintf(string, "%d", value), string)
+#define ltoa(value, string, radix) (sprintf(string, "%ld", value), string)
+#if 0
     static inline char* itoa(int value, char* string, int radix)
     {
-	    sprintf(string, "%d", value);
-	    return string;
+        sprintf(string, "%d", value);
+        return string;
     }
 
     static inline char* ltoa(long value, char* string, int radix)
     {
-	    sprintf(string, "%ld", value);
-	    return string;
+        sprintf(string, "%ld", value);
+        return string;
     }
+#endif
 #endif
 
 #define lengthof(x) (sizeof(x) / sizeof(*(x)))

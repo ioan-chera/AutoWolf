@@ -41,6 +41,7 @@
 //
 
 #include <ctype.h>
+#include <stdio.h>
 #include "wl_def.h"
 #include "wl_menu.h"
 

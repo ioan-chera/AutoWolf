@@ -49,6 +49,7 @@
 
 // IOANCH 20121223: Cleaned up this file
 
+#include <stdio.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_main.h"

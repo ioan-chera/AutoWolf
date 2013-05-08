@@ -20,6 +20,7 @@
 
 // WL_TEXT.C
 
+#include <stdio.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_game.h"

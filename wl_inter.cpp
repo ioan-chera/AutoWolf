@@ -20,6 +20,7 @@
 
 // WL_INTER.C
 
+#include <stdio.h>
 #include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_game.h"
@@ -31,6 +32,8 @@
 // IOANCH 20130302: unification
 LRstruct LevelRatios[LRpack_wl6 > LRpack_sod ? LRpack_wl6 : LRpack_sod];
 int32_t lastBreathTime = 0;
+
+
 
 void Write (int x, int y, const char *string);
 
@@ -696,7 +699,7 @@ LevelCompleted (void)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                ltoa ((int32_t) i * PAR_AMOUNT, tempstr, 10);
+                ltoa ((long int)((int32_t) i * PAR_AMOUNT), tempstr, 10);
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
@@ -744,7 +747,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            ltoa ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -786,7 +789,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            ltoa ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -826,7 +829,7 @@ LevelCompleted (void)
             VW_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
-            ltoa (bonus, tempstr, 10);
+            ltoa ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             VW_UpdateScreen ();
@@ -865,7 +868,7 @@ done:   itoa (kr, tempstr, 10);
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        ltoa (bonus, tempstr, 10);
+        ltoa ((long int)bonus, tempstr, 10);
         x = 36 - (int) strlen(tempstr) * 2;
         Write (x, 7, tempstr);
 
