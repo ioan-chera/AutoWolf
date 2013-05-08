@@ -109,7 +109,7 @@
 #define	STR_SEEAGAIN	"Let's see that again!"
 
 // IOANCH 20130202: unification process
-// #ifdef SPEAR
+// #ifdef SPEAR()
 #define ENDSTR1SPEAR "Heroes don't quit, but\ngo ahead and press " YESBUTTONNAME "\nif you aren't one."
 #define ENDSTR2SPEAR "Press " YESBUTTONNAME " to quit,\nor press " NOBUTTONNAME " to enjoy\nmore violent diversion."
 #define ENDSTR3SPEAR "Depressing the " YESBUTTONNAME " key means\nyou must return to the\nhumdrum workday world."

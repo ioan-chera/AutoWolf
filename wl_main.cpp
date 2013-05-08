@@ -26,6 +26,10 @@
     #include <unistd.h>
 #endif
 
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
@@ -42,7 +46,6 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "List.h"
-
 
 /*
 =============================================================================
@@ -82,9 +85,6 @@ extern byte signon_sod[];
 
 =============================================================================
 */
-
-// IOANCH 20130303: SPEAR variable
-unsigned char SPEAR;
 
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
@@ -370,7 +370,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     // IOANCH 20130302: unification
-    VWB_DrawPic(x,y,gfxvmap[C_DISKLOADING1PIC][SPEAR]+which);
+    VWB_DrawPic(x,y,gfxvmap[C_DISKLOADING1PIC][SPEAR()]+which);
     VW_UpdateScreen();
     which^=1;
 }
@@ -919,7 +919,7 @@ void SignonScreen (void)                        // VGA version
 void FinishSignon (void)
 {
     // IOANCH 20130303: unification
-    if(!SPEAR)
+    if(!SPEAR())
     {
         VW_Bar (0,189,300,11,VL_GetPixel(0,0));
         WindowX = 0;
@@ -986,7 +986,7 @@ void FinishSignon (void)
 //   0: player weapons
 //   1: boss weapons
 
-// IOANCH 20130301: SPEAR unification
+// IOANCH 20130301: SPEAR() unification
 static int wolfdigimap_wl6[] =
 {
 	// These first sounds are in the upload version
@@ -1056,7 +1056,7 @@ static int wolfdigimap_sod[] =
 	// These first sounds are in the upload version
 
 	//
-	// SPEAR OF DESTINY DIGISOUNDS
+	// SPEAR() OF DESTINY DIGISOUNDS
 	//
 	HALTSND_sod,                0,  -1,
 	CLOSEDOORSND_sod,           2,  -1,
@@ -1214,23 +1214,23 @@ void DoJukebox(void)
     MenuFadeOut();
 
     // IOANCH 20130301: unification culling
-    start = SPEAR ? 0 : ((SDL_GetTicks()/10)%3)*6;
+    start = SPEAR() ? 0 : ((SDL_GetTicks()/10)%3)*6;
 
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR]+1);
+    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]+1);
     
-    if(SPEAR)
-        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    if(SPEAR())
+        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()],gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
     else
-        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR()],gfxvmap[CONTROLS_LUMP_END][SPEAR()]);
     CA_LoadAllSounds ();
     // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
-    VWB_DrawPic(112,184,gfxvmap[C_MOUSELBACKPIC][SPEAR]);
+    VWB_DrawPic(112,184,gfxvmap[C_MOUSELBACKPIC][SPEAR()]);
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
 
-    if(!SPEAR)
+    if(!SPEAR())
         DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
     else
         DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
@@ -1267,10 +1267,10 @@ void DoJukebox(void)
     IN_ClearKeysDown();
     // IOANCH 20130303: unification
 
-    if(SPEAR)
-        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR],gfxvmap[BACKDROP_LUMP_END][SPEAR]);
+    if(SPEAR())
+        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()],gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
     else
-        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR],gfxvmap[CONTROLS_LUMP_END][SPEAR]);
+        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR()],gfxvmap[CONTROLS_LUMP_END][SPEAR()]);
 
 }
 
@@ -1350,12 +1350,12 @@ static void InitGame()
     // TODO: Will any memory checking be needed someday??
 #ifdef NOTYET
     // IOANCH 20130303: unification
-    if (!SPEAR && mminfo.mainmem < 235000L || SPEAR && mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
+    if (!SPEAR() && mminfo.mainmem < 235000L || SPEAR() && mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
     {
         byte *screen;
 
-        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
-        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR()]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR()]];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1400,8 +1400,8 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR]);
-    CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR]);
+    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR()]);
+    CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR()]);
 
     LoadLatchMem ();
     BuildTables ();          // trig tables
@@ -1548,8 +1548,8 @@ void Quit (const char *errorStr, ...)
 #ifdef NOTYET
         // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (gfxvmap[ORDERSCREEN][SPEAR]);
-        screen = grsegs[gfxvmap[ORDERSCREEN][SPEAR]];
+        CA_CacheGrChunk (gfxvmap[ORDERSCREEN][SPEAR()]);
+        screen = grsegs[gfxvmap[ORDERSCREEN][SPEAR()]];
 
 #endif
         WriteConfig ();
@@ -1557,8 +1557,8 @@ void Quit (const char *errorStr, ...)
 #ifdef NOTYET
     else
     {
-        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR]);
-        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR]];
+        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR()]);
+        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR()]];
     }
 #endif
 
@@ -1583,7 +1583,7 @@ void Quit (const char *errorStr, ...)
 #ifdef NOTYET
         // IOANCH 20130301: unification culling
 
-        memcpy((byte *)0xb8000,screen+7,24*160); // 24 for SPEAR/UPLOAD compatibility
+        memcpy((byte *)0xb8000,screen+7,24*160); // 24 for SPEAR()/UPLOAD compatibility
 
         SetTextCursor(0,23);
 #endif
@@ -1619,7 +1619,7 @@ static void DemoLoop()
         NewGame(param_difficulty,0);
 
         // IOANCH 20130303: unification
-        if(!SPEAR)
+        if(!SPEAR())
         {
             gamestate.episode = param_tedlevel/10;
             gamestate.mapon = param_tedlevel%10;
@@ -1661,27 +1661,27 @@ static void DemoLoop()
 #ifndef DEMOTEST
 
             // IOANCH 20130303: unification
-            if(SPEAR)
+            if(SPEAR())
             {
                 SDL_Color pal[256];
-                CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR]);
-                VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR]], pal, 256);
+                CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR()]);
+                VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR()]], pal, 256);
 
-                CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR]);
-                VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR()]);
+                VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR()]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR()]);
 
-                CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR]);
-                VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR]);
-                UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR]);
+                CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR()]);
+                VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR()]);
+                UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR()]);
                 VW_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
-                UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR]);
+                UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR()]);
             }
             else
             {
-                CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR]);
+                CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR()]);
                 VW_UpdateScreen ();
                 VW_FadeIn();
             }
@@ -1691,7 +1691,7 @@ static void DemoLoop()
 //
 // credits page
 //
-            CA_CacheScreen (gfxvmap[CREDITSPIC][SPEAR]);
+            CA_CacheScreen (gfxvmap[CREDITSPIC][SPEAR()]);
             VW_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))
@@ -2099,11 +2099,11 @@ void CheckParameters(int argc, char *argv[])
 // InitializeSPEAR
 //
 // IOANCH 20130303: unification
-// Return the global SPEAR variable depending on sanity autodetect
+// Return the global SPEAR() variable depending on sanity autodetect
 // It later looks for the entire package, but will be guided by this quick
 // detection
 //
-unsigned char InitializeSPEAR()
+void InitializeSPEAR()
 {
     // FIXME: look in better locations, not just working dir.
     FILE *f;
@@ -2118,15 +2118,17 @@ unsigned char InitializeSPEAR()
             {
                 f = fopen("VSWAP.SOD", "rb");
                 if(!f)
-                {                    
-					return 0;	// none found: assume Wolf3D
+                {     
+                    SPEAR.flag = false;
+					return;	// none found: assume Wolf3D
                 }
             }
         }
     }
     fclose(f);
-	// One of the ifs failed - fall here and return SPEAR 1
-    return 1;
+	// One of the ifs failed - fall here and return SPEAR() 1
+    SPEAR.flag = true;
+    //return 1;
 }
 
 //
@@ -2141,8 +2143,8 @@ int main (int argc, char *argv[])
 #else
     CheckParameters(argc, argv);
 #endif
-    // IOANCH: unification: set the SPEAR global var
-    SPEAR = InitializeSPEAR();
+    // IOANCH: unification: set the SPEAR() global var
+    InitializeSPEAR();
     
     CheckForEpisodes();
 

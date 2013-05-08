@@ -19,6 +19,7 @@
 #include "version.h"
 
 #ifdef USE_SHADING
+#include <assert.h>
 #include "wl_def.h"
 #include "wl_shade.h"
 

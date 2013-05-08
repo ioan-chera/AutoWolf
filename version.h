@@ -25,7 +25,7 @@
 
 /* Defines used for different versions */
 
-//#define SPEAR
+//#define SPEAR()
 //#define SPEARDEMO
 //#define UPLOAD
 
@@ -44,9 +44,9 @@
     Wolf3d Shareware v1.1                     - define CARMACIZED and UPLOAD and APOGEE_1_1
     Wolf3d Shareware v1.2                     - define CARMACIZED and UPLOAD and APOGEE_1_2
     Wolf3d Shareware v1.4                     - define CARMACIZED and UPLOAD
-    Spear of Destiny Full and Mission Disks   - define CARMACIZED and SPEAR
+    Spear of Destiny Full and Mission Disks   - define CARMACIZED and SPEAR()
                                                 (and GOODTIMES for no FormGen quiz)
-    Spear of Destiny Demo                     - define CARMACIZED and SPEAR and SPEARDEMO
+    Spear of Destiny Demo                     - define CARMACIZED and SPEAR() and SPEARDEMO
 */
 
 #endif
@@ -69,6 +69,17 @@
 #define PLAYDEMOLIKEORIGINAL  // When playing or recording demos, several bug fixes do not take
                               // effect to let the original demos work as in the original Wolf3D v1.4
                               // (actually better, as the second demo rarely worked)
+
+#ifdef PLAYDEMOLIKEORIGINAL
+    #define DEMOCHOOSE_ORIG_SDL(orig, sdl) ((demorecord || demoplayback) ? (orig) : (sdl))
+    #define DEMOCOND_ORIG                  (demorecord || demoplayback)
+    #define DEMOIF_SDL                     if(DEMOCOND_SDL)
+#else
+    #define DEMOCHOOSE_ORIG_SDL(orig, sdl) (sdl)
+    #define DEMOCOND_ORIG                  false
+    #define DEMOIF_SDL
+#endif
+#define DEMOCOND_SDL                   (!DEMOCOND_ORIG)
 
 // IOANCH 11.06.2012: don't define that now if Max OSX mode
 //#ifndef __AUTOWOLF_DEBUG_MAX_OS_X__

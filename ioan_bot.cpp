@@ -18,6 +18,7 @@
 
 
 #include <limits.h>
+#include <math.h>
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"

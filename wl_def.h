@@ -22,20 +22,11 @@
 #ifndef WL_DEF_H
 #define WL_DEF_H
 
-// IOANCH 20130303: SPEAR variable
-extern unsigned char SPEAR;
-#define IMPALE(a) (SPEAR ? a##_sod : a##_wl6)
-#define IMPALED(a, b) (SPEAR ? a##_sod b : a##_wl6 b)
+// IOANCH 20130303: SPEAR() variable
+#define IMPALE(a) (SPEAR() ? a##_sod : a##_wl6)
+#define IMPALED(a, b) (SPEAR() ? a##_sod b : a##_wl6 b)
 
-// Defines which version shall be built and configures supported extra features
-#include "version.h"
-
-#include <assert.h>
 #include <fcntl.h>
-#include <math.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
@@ -111,7 +102,7 @@ typedef struct
 
 void Quit(const char *errorStr, ...);
 
-
+#include "SODFlag.h"
 #include "id_pm.h"
 #include "id_sd.h"
 #include "id_in.h"
@@ -774,17 +765,6 @@ static inline fixed FixedMul(fixed a, fixed b)
 	return (fixed)(((int64_t)a * b + 0x8000) >> 16);
 }
 
-#ifdef PLAYDEMOLIKEORIGINAL
-    #define DEMOCHOOSE_ORIG_SDL(orig, sdl) ((demorecord || demoplayback) ? (orig) : (sdl))
-    #define DEMOCOND_ORIG                  (demorecord || demoplayback)
-    #define DEMOIF_SDL                     if(DEMOCOND_SDL)
-#else
-    #define DEMOCHOOSE_ORIG_SDL(orig, sdl) (sdl)
-    #define DEMOCOND_ORIG                  false
-    #define DEMOIF_SDL
-#endif
-#define DEMOCOND_SDL                   (!DEMOCOND_ORIG)
-
 #define GetTicks() ((SDL_GetTicks()*7)/100)
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
@@ -796,17 +776,21 @@ static inline fixed FixedMul(fixed a, fixed b)
     #define strncasecmp strnicmp
     #define snprintf _snprintf
 #else
+#define itoa(value, string, radix) (sprintf(string, "%d", value), string)
+#define ltoa(value, string, radix) (sprintf(string, "%ld", value), string)
+#if 0
     static inline char* itoa(int value, char* string, int radix)
     {
-	    sprintf(string, "%d", value);
-	    return string;
+        sprintf(string, "%d", value);
+        return string;
     }
 
     static inline char* ltoa(long value, char* string, int radix)
     {
-	    sprintf(string, "%ld", value);
-	    return string;
+        sprintf(string, "%ld", value);
+        return string;
     }
+#endif
 #endif
 
 #define lengthof(x) (sizeof(x) / sizeof(*(x)))

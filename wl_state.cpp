@@ -20,6 +20,7 @@
 
 // WL_STATE.C
 
+#include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_act2.h"

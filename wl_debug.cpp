@@ -26,6 +26,9 @@
 	#include <unistd.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
@@ -699,7 +702,7 @@ again:
         CenterWindow(26,3);
         PrintY+=6;
         // IOANCH 20130202: unification process
-        if(!SPEAR)
+        if(!SPEAR())
             US_Print("  Warp to which level(1-10): ");
         else
             US_Print("  Warp to which level(1-21): ");
@@ -710,7 +713,7 @@ again:
         {
             level = atoi (str);
             // IOANCH 20130202: unification process
-            if ((!SPEAR && level>0 && level<11) || (SPEAR && level > 0 && level < 22))
+            if ((!SPEAR() && level>0 && level<11) || (SPEAR() && level > 0 && level < 22))
             {
                 gamestate.mapon = level-1;
                 playstate = ex_warped;

@@ -998,24 +998,24 @@ void DrawPlayerWeapon (void)
 
     // IOANCH 20130302: unification
     // IOANCH 20130303: do sprite remapping here
-    if (!SPEAR && gamestate.victoryflag)
+    if (!SPEAR() && gamestate.victoryflag)
     {
         // IOANCH 20130301: unification culling
 
         if (player->state == &s_deathcam && (GetTimeCount()&32) )
-            SimpleScaleShape(viewwidth/2,sprmap[SPR_DEATHCAM][SPEAR],viewheight+1);
+            SimpleScaleShape(viewwidth/2,sprmap[SPR_DEATHCAM][SPEAR()],viewheight+1);
 
         return;
     }
 
     if (gamestate.weapon != -1)
     {
-        shapenum = sprmap[weaponscale[gamestate.weapon]][SPEAR]+gamestate.weaponframe;
+        shapenum = sprmap[weaponscale[gamestate.weapon]][SPEAR()]+gamestate.weaponframe;
         SimpleScaleShape(viewwidth/2,shapenum,viewheight+1);
     }
 
     if (demorecord || demoplayback)
-        SimpleScaleShape(viewwidth/2,sprmap[SPR_DEMO][SPEAR],viewheight+1);
+        SimpleScaleShape(viewwidth/2,sprmap[SPR_DEMO][SPEAR()],viewheight+1);
 }
 
 
