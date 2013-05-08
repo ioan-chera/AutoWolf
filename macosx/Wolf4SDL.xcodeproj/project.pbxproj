@@ -138,6 +138,7 @@
 		4FD9E7F616BDD49600B43091 /* audioabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = audioabstract.cpp; path = ../audioabstract.cpp; sourceTree = "<group>"; };
 		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
 		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
+		4FFDC97C173AB26600DE48A0 /* exepack.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = exepack.sh; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AutoWolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C10FC0DB520040C290 /* SDL_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL_mixer.framework; path = /Users/ioan/Library/Frameworks/SDL_mixer.framework; sourceTree = "<absolute>"; };
@@ -266,6 +267,7 @@
 				29B97315FDCFA39411CA2CEA /* Source Files */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				4FFDC97B173AB25400DE48A0 /* Build scripts */,
 				4F47175D173A632B0018E82B /* Other Files */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -351,6 +353,14 @@
 				4F9E982816E366C100B632BB /* CocoaFun.h */,
 			);
 			name = "OSX Specific";
+			sourceTree = "<group>";
+		};
+		4FFDC97B173AB25400DE48A0 /* Build scripts */ = {
+			isa = PBXGroup;
+			children = (
+				4FFDC97C173AB26600DE48A0 /* exepack.sh */,
+			);
+			name = "Build scripts";
 			sourceTree = "<group>";
 		};
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
@@ -513,6 +523,7 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				FAE8D0FC166E3C43006B2EDE /* CopyFiles */,
+				4FFDC97A173AB22B00DE48A0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -562,6 +573,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4FFDC97A173AB22B00DE48A0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "script_file=\"exepack.sh\"\n/bin/sh ${PROJECT_DIR}/${script_file}";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
