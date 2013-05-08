@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #pragma pack(1)
 #include "e_hashkeys.h"
 

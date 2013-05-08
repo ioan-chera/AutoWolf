@@ -19,6 +19,7 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "wl_def.h"
 
 int ChunksInFile;

@@ -28,6 +28,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"

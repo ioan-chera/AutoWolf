@@ -42,6 +42,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "wl_def.h"
 #include "wl_menu.h"
 
@@ -209,7 +210,7 @@ void US_PrintSigned(int32_t n)
 {
 	char	buffer[32];
 
-	US_Print(ltoa(n,buffer,10));
+	US_Print(ltoa((long int)n,buffer,10));
 }
 
 ///////////////////////////////////////////////////////////////////////////

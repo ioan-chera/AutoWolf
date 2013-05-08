@@ -406,7 +406,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
     unsigned length,c;
     char    str[20];
 
-    ltoa (number,str,10);
+    ltoa ((long int)number,str,10);
 
     length = (unsigned) strlen (str);
 

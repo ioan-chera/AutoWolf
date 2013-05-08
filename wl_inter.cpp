@@ -21,6 +21,7 @@
 // WL_INTER.C
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_game.h"
