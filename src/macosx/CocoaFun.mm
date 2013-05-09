@@ -1,9 +1,19 @@
 //
-//  CocoaFun.m
-//  Wolf4SDL
+// Copyright (C) 2013  Ioan Chera
 //
-//  Created by ioan on 03.03.2013.
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
 //
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
 // Geared towards OS X 10.6 and later
@@ -43,4 +53,12 @@ const char *Cocoa_ApplicationSupportDirectory()
     const char *res = [[appDirectory path] cStringUsingEncoding:NSUTF8StringEncoding];
     
     return res;
+}
+
+//
+// Cocoa_DisplayErrorAlert
+//
+void Cocoa_DisplayErrorAlert(const char *msg)
+{
+    [[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Dismiss" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 }

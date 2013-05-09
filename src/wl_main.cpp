@@ -49,6 +49,9 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "Config.h"
+#ifdef __APPLE__
+#include "CocoaFun.h"
+#endif
 
 /*
 =============================================================================
@@ -1254,7 +1257,7 @@ void DoJukebox(void)
 =
 ==========================
 */
-
+static char global_error[256];
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
@@ -1269,6 +1272,14 @@ static void InitGame()
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
     }
+    // IOANCH: prepare the OSX version for displaying a quit error
+#ifdef __APPLE__
+    atexit_b(^()
+             {
+                 if(global_error && *global_error)
+                     Cocoa_DisplayErrorAlert(global_error);
+             });
+#endif
     atexit(SDL_Quit);
 
     int numJoysticks = SDL_NumJoysticks();
@@ -1480,85 +1491,44 @@ void NewViewSize (int width)
 =
 ==========================
 */
-
+// IOANCH 20130509: now the error is stored globally, so it can be gathered
 void Quit (const char *errorStr, ...)
 {
-#ifdef NOTYET
-    byte *screen;
-#endif
-    char error[256];
     if(errorStr != NULL)
     {
         va_list vlist;
         va_start(vlist, errorStr);
-        vsprintf(error, errorStr, vlist);
+        vsprintf(global_error, errorStr, vlist);
         va_end(vlist);
     }
-    else error[0] = 0;
+    else
+        global_error[0] = 0;
 
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (error && *error)
+        if (global_error && *global_error)
         {
-#ifdef NOTYET
-            SetTextCursor(0,0);
-#endif
-            puts(error);
-#ifdef NOTYET
-            SetTextCursor(0,2);
-#endif
+            puts(global_error);
             VW_WaitVBL(100);
         }
         exit(1);
     }
 
-    if (!error || !*error)
+    if (!global_error || !*global_error)
     {
-#ifdef NOTYET
-        // IOANCH 20130301: unification culling
-
-        CA_CacheGrChunk (gfxvmap[ORDERSCREEN][SPEAR()]);
-        screen = grsegs[gfxvmap[ORDERSCREEN][SPEAR()]];
-
-#endif
         WriteConfig ();
     }
-#ifdef NOTYET
-    else
-    {
-        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR()]);
-        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR()]];
-    }
-#endif
 
     ShutdownId ();
 
-    if (error && *error)
+    if (global_error && *global_error)
     {
-#ifdef NOTYET
-        memcpy((byte *)0xb8000,screen+7,7*160);
-        SetTextCursor(9,3);
-#endif
-        puts(error);
-#ifdef NOTYET
-        SetTextCursor(0,7);
-#endif
+        puts(global_error);
         VW_WaitVBL(200);
         exit(1);
     }
-    else
-    if (!error || !(*error))
-    {
-#ifdef NOTYET
-        // IOANCH 20130301: unification culling
-
-        memcpy((byte *)0xb8000,screen+7,24*160); // 24 for SPEAR()/UPLOAD compatibility
-
-        SetTextCursor(0,23);
-#endif
-    }
-
+    
     exit(0);
 }
 
