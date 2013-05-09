@@ -50,6 +50,7 @@ endif
 SRCS :=
 SRCS += src/audioabstract.cpp
 SRCS += src/CheckSum.cpp
+SRCS += src/Config.cpp
 SRCS += src/DataFile.cpp
 SRCS += src/DirectoryFile.cpp
 SRCS += src/Exception.cpp
