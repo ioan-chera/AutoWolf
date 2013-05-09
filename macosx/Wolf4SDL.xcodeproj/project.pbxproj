@@ -590,8 +590,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "script_file=\"exepack.sh\"\n/bin/sh ${PROJECT_DIR}/${script_file}";
+			shellPath = /bin/bash;
+			shellScript = "script_file=\"exepack.sh\"\necho \"$CONFIGURATION\"\nif [ \"$CONFIGURATION\" == \"Release\" ];then\n    /bin/bash ${PROJECT_DIR}/${script_file}\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
