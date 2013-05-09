@@ -24,7 +24,7 @@ extern  char     str[80];
 class PString;
 extern  PString  configdir;            // IOANCH 20130509: use PString for paths
 //extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
-extern  char     configname[13];
+extern  PString  configname;
 
 //
 // Command line parameter variables

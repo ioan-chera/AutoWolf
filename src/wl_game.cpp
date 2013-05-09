@@ -1053,7 +1053,7 @@ void ShowActStatus()
 ==================
 */
 
-char    demoname[13] = "DEMO?.";
+PString    demoname("DEMO?.");
 
 #ifndef REMDEBUG
 #define MAXDEMOSIZE     8192
@@ -1106,7 +1106,7 @@ void FinishDemoRecord (void)
         if (level>=0 && level<=9)
         {
             demoname[4] = (char)('0'+level);
-            CA_WriteFile (demoname,demobuffer,length);
+            CA_WriteFile (demoname.buffer(),demobuffer,length);
         }
     }
 
@@ -1226,7 +1226,7 @@ void PlayDemo (int demonumber)
     demoptr = (int8_t *) grsegs[dems[demonumber]];
 #else
     demoname[4] = '0'+demonumber;
-    CA_LoadFile (demoname,&demobuffer);
+    CA_LoadFile (demoname.buffer(),&demobuffer);
     demoptr = (int8_t *)demobuffer;
 #endif
 

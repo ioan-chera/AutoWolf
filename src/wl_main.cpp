@@ -114,7 +114,7 @@ boolean loadedgame;
 int     mouseadjustment;
 
 PString configdir;
-char    configname[13] = "CONFIG.";
+PString configname("CONFIG.");
 
 //
 // Command line parameter variables
@@ -169,7 +169,7 @@ void ReadConfig(void)
     PString configpath;
 
 #ifdef _arch_dreamcast
-    DC_LoadFromVMU(configname);
+    DC_LoadFromVMU(configname.buffer());
 #endif
 
     configpath = configdir.withSubpath(configname);
@@ -291,7 +291,7 @@ void WriteConfig(void)
     PString configpath;
 
 #ifdef _arch_dreamcast
-    fs_unlink(configname);
+    fs_unlink(configname.buffer());
 #endif
 
     configpath = configdir.withSubpath(configname);
@@ -327,7 +327,7 @@ void WriteConfig(void)
         close(file);
     }
 #ifdef _arch_dreamcast
-    DC_SaveToVMU(configname, NULL);
+    DC_SaveToVMU(configname.buffer(), NULL);
 #endif
 }
 

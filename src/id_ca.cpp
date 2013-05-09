@@ -51,6 +51,7 @@ loaded into the data segment
 #include "wl_def.h"
 #include "wl_main.h"
 #pragma hdrstop
+#include "PString.h"
 
 #define THREEBYTEGRSTARTS
 
@@ -107,9 +108,9 @@ int     numEpisodesMissing = 0;
 =============================================================================
 */
 
-char extension[5]; // Need a string, not constant to change cache files
-char graphext[5];
-char audioext[5];
+PString extension; // Need a string, not constant to change cache files
+PString graphext;
+PString audioext;
 static const char gheadname[] = "VGAHEAD.";
 static const char gfilename[] = "VGAGRAPH.";
 static const char gdictname[] = "VGADICT.";
@@ -403,7 +404,7 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
 //
 static void CAL_SetupGrFile (void)
 {
-    char fname[13];
+    PString fname;
     int handle;
     byte *compseg;
 
@@ -421,23 +422,22 @@ static void CAL_SetupGrFile (void)
 // load ???dict.ext (huffman dictionary for graphics files)
 //
 
-    strcpy(fname,gdictname);
-    strcat(fname,graphext);
-
-    handle = open(fname, O_RDONLY | O_BINARY);
+    fname = PString(gdictname) + graphext;  // IOANCH 20130509: don't 
+                                            // withExtension yet
+    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
     read(handle, grhuffman, sizeof(grhuffman));
     close(handle);
 
     // load the data offsets from ???head.ext
-    strcpy(fname,gheadname);
-    strcat(fname,graphext);
+    
+    fname = PString(gheadname) + graphext;
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
     long headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
@@ -445,19 +445,18 @@ static void CAL_SetupGrFile (void)
     // IOANCH 20130301: unification culling
 //    int testexp = sizeof(grstarts_wl6);
 	int expectedsize;
+    
     if(SPEAR())
         expectedsize = lengthof(grstarts_sod) - numEpisodesMissing;
     else
         expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
-
-
 
     if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
-            fname, headersize / 3, expectedsize);
+            fname.buffer(), headersize / 3, expectedsize);
 
     if(SPEAR())
     {
@@ -492,12 +491,11 @@ static void CAL_SetupGrFile (void)
 //
 // Open the graphics file, leaving it open until the game is finished
 //
-    strcpy(fname,gfilename);
-    strcat(fname,graphext);
+    fname = PString(gfilename) + graphext;
 
-    grhandle = open(fname, O_RDONLY | O_BINARY);
+    grhandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (grhandle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
 
 //
@@ -524,17 +522,16 @@ static void CAL_SetupMapFile (void)
     int     i;
     int handle;
     int32_t length,pos;
-    char fname[13];
+    PString fname;
 
 //
 // load maphead.ext (offsets and tileinfo for map file)
 //
-    strcpy(fname,mheadname);
-    strcat(fname,extension);
+    fname = PString(mheadname) + extension;
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
     mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
@@ -548,12 +545,11 @@ static void CAL_SetupMapFile (void)
 // open the data file
 //
     // IOANCH 20130301: unification culling
-    strcpy(fname, "GAMEMAPS.");
-    strcat(fname, extension);
+    fname = PString("GAMEMAPS.") + extension;
 
-    maphandle = open(fname, O_RDONLY | O_BINARY);
+    maphandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (maphandle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
 //
 // load all map header
@@ -590,28 +586,26 @@ static void CAL_SetupMapFile (void)
 //
 static void CAL_SetupAudioFile (void)
 {
-    char fname[13];
+    PString fname;
 
 //
 // load AUDIOHED.ext (offsets for audio file)
 //
-    strcpy(fname,aheadname);
-    strcat(fname,audioext);
+    fname = PString(aheadname) + audioext;
 
     void* ptr;
-    if (!CA_LoadFile(fname, &ptr))
-        CA_CannotOpen(fname);
+    if (!CA_LoadFile(fname.buffer(), &ptr))
+        CA_CannotOpen(fname.buffer());
     audiostarts = (int32_t*)ptr;
 
 //
 // open the data file
 //
-    strcpy(fname,afilename);
-    strcat(fname,audioext);
+    fname = PString(afilename) + audioext;
 
-    audiohandle = open(fname, O_RDONLY | O_BINARY);
+    audiohandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (audiohandle == -1)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 }
 
 //==========================================================================

@@ -241,7 +241,7 @@ static int StartGame;
 static int SoundStatus = 1;
 static int pickquick;
 static char SaveGameNames[10][32];
-static char SaveName[13] = "SAVEGAM?.";
+static PString SaveName("SAVEGAM?.");
 
 
 ////////////////////////////////////////////////////////////////////
@@ -1402,10 +1402,10 @@ int CP_LoadGame (int quick)
 {
     FILE *file;
     int which, exit = 0;
-    char name[13];
+    PString name;
     PString loadpath;   // IOANCH 20130509: use PString for paths
 
-    strcpy (name, SaveName);
+    name = SaveName;
 
     //
     // QUICKLOAD?
@@ -1419,7 +1419,7 @@ int CP_LoadGame (int quick)
             name[7] = which + '0';
 
 #ifdef _arch_dreamcast
-            DC_LoadFromVMU(name);
+            DC_LoadFromVMU(name.buffer());
 #endif
 
             loadpath = configdir.withSubpath(name);
@@ -1462,7 +1462,7 @@ int CP_LoadGame (int quick)
             name[7] = which + '0';
 
 #ifdef _arch_dreamcast
-            DC_LoadFromVMU(name);
+            DC_LoadFromVMU(name.buffer());
 #endif
             loadpath = configdir.withSubpath(name);
 
@@ -1584,11 +1584,11 @@ CP_SaveGame (int quick)
 {
     int which, exit = 0;
     FILE *file;
-    char name[13];
+    PString name;
     PString savepath;   // IOANCH 20130509: use PString for paths
     char input[32];
 
-    strcpy (name, SaveName);
+    name = SaveName;
 
     //
     // QUICKSAVE?
@@ -1614,7 +1614,7 @@ CP_SaveGame (int quick)
             fclose (file);
 
 #ifdef _arch_dreamcast
-            DC_SaveToVMU(name, input);
+            DC_SaveToVMU(name.buffer(), input);
 #endif
 
             return 1;
@@ -1685,7 +1685,7 @@ CP_SaveGame (int quick)
                 fclose (file);
 
 #ifdef _arch_dreamcast
-                DC_SaveToVMU(name, input);
+                DC_SaveToVMU(name.buffer(), input);
 #endif
 
                 ShootSnd ();
@@ -3038,16 +3038,16 @@ SetupControlPanel (void)
 ////////////////////////////////////////////////////////////////////
 void SetupSaveGames()
 {
-    char name[13];
+    PString name;
     PString savepath;
 
-    strcpy(name, SaveName);
+    name = SaveName;
     for(int i = 0; i < 10; i++)
     {
         name[7] = '0' + i;
 #ifdef _arch_dreamcast
         // Try to unpack file
-        if(DC_LoadFromVMU(name))
+        if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
             savepath = configdir.withSubpath(name);
@@ -3064,7 +3064,7 @@ void SetupSaveGames()
             }
 #ifdef _arch_dreamcast
             // Remove unpacked version of file
-            fs_unlink(name);
+            fs_unlink(name.buffer());
         }
 #endif
     }
@@ -3860,7 +3860,7 @@ void CheckForEpisodes (void)
     {
         if(!stat("VSWAP.WL6", &statbuf))
         {
-            strcpy (extension, "WL6");
+            extension = "WL6";
             NewEmenu[2].active = 
             NewEmenu[4].active = 
             NewEmenu[6].active =
@@ -3876,7 +3876,7 @@ void CheckForEpisodes (void)
         {
             if(!stat("VSWAP.WL3", &statbuf))
             {
-                strcpy (extension, "WL3");
+                extension = "WL3";
                 numEpisodesMissing = 3;
                 NewEmenu[2].active = NewEmenu[4].active = EpisodeSelect[1] = EpisodeSelect[2] = 1;
             }
@@ -3884,7 +3884,7 @@ void CheckForEpisodes (void)
             {
                 if(!stat("VSWAP.WL1", &statbuf))
                 {
-                    strcpy (extension, "WL1");
+                    extension = "WL1";
                     numEpisodesMissing = 5;
                 }
                 else
@@ -3899,49 +3899,49 @@ void CheckForEpisodes (void)
         if(param_mission == 0)
         {
             if(!stat("VSWAP.SOD", &statbuf))
-                strcpy (extension, "SOD");
+                extension = "SOD";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(param_mission == 1)
         {
             if(!stat("VSWAP.SD1", &statbuf))
-                strcpy (extension, "SD1");
+                extension = "SD1";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(param_mission == 2)
         {
             if(!stat("VSWAP.SD2", &statbuf))
-                strcpy (extension, "SD2");
+                extension = "SD2";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(param_mission == 3)
         {
             if(!stat("VSWAP.SD3", &statbuf))
-                strcpy (extension, "SD3");
+                extension = "SD3";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
         else
             Quit ("UNSUPPORTED MISSION!");
-        strcpy (graphext, "SOD");
-        strcpy (audioext, "SOD");
+        graphext = "SOD";
+        audioext = "SOD";
     }
     else
     {
-        strcpy (graphext, extension);
-        strcpy (audioext, extension);
+        graphext = extension;
+        audioext = extension;
     }
 
-    strcat (configname, extension);
-    strcat (SaveName, extension);
-    strcat (demoname, extension);
+    configname += extension;
+    SaveName += extension;
+    demoname += extension;
 
     if(!SPEAR())
     {
     // IOANCH 20130301: unification culling
-        strcat (endfilename, extension);
+        endfilename += extension;
     }
 }

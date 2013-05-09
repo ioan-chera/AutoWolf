@@ -41,12 +41,11 @@ uint8_t **PMPages;
 //
 void PM_Startup()
 {
-    char fname[13] = "VSWAP.";
-    strcat(fname,extension);
+    PString fname = PString("VSWAP.") + extension;
 
-    FILE *file = fopen(fname,"rb");
+    FILE *file = fopen(fname.buffer(),"rb");
     if(!file)
-        CA_CannotOpen(fname);
+        CA_CannotOpen(fname.buffer());
 
     ChunksInFile = 0;
     fread(&ChunksInFile, sizeof(word), 1, file);
@@ -67,7 +66,7 @@ void PM_Startup()
     long fileSize = ftell(file);
     long pageDataSize = fileSize - pageOffsets[0];
     if(pageDataSize > (size_t) -1)
-        Quit("The page file \"%s\" is too large!", fname);
+        Quit("The page file \"%s\" is too large!", fname.buffer());
 
     pageOffsets[ChunksInFile] = fileSize;
 

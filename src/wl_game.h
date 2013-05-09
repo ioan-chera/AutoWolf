@@ -6,7 +6,8 @@
 extern  gametype        gamestate;
 extern  byte            bordercol;
 extern  SDL_Surface     *latchpics[NUMLATCHPICS];
-extern  char            demoname[13];
+class PString;
+extern  PString         demoname;
 
 void    SetupGameLevel (void);
 void    GameLoop (void);

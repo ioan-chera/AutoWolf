@@ -19,7 +19,9 @@
 #ifndef WL_TEXT_H_
 #define WL_TEXT_H_
 
-extern  char    helpfilename[],endfilename[];
+extern  char    helpfilename[];
+class PString;
+extern PString endfilename;
 
 extern  void    HelpScreens(void);
 extern  void    EndText(void);

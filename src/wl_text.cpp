@@ -719,8 +719,8 @@ void ShowArticle (char *article)
 int     endextern = T_ENDART1;
 int     helpextern = T_HELPART;
 #endif
-char helpfilename[13] = "HELPART.",
-    endfilename[13] = "ENDART1.";
+char helpfilename[13] = "HELPART.";
+PString endfilename("ENDART1.");
 
 /*
 =================
@@ -787,7 +787,7 @@ void EndText (void)
     text = (char *)grsegs[artnum];
 #else
     endfilename[6] = '1'+gamestate.episode;
-    CA_LoadFile (endfilename,&layout);
+    CA_LoadFile (endfilename.buffer(),&layout);
     text = (char *)layout;
 #endif
 
