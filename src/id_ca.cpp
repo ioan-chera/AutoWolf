@@ -423,7 +423,7 @@ static void CAL_SetupGrFile (void)
 // load ???dict.ext (huffman dictionary for graphics files)
 //
 
-    fname = PString(gdictname) + graphext;  // IOANCH 20130509: don't 
+    fname = PString(gdictname).concat(graphext);  // IOANCH 20130509: don't
                                             // withExtension yet
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -434,7 +434,7 @@ static void CAL_SetupGrFile (void)
 
     // load the data offsets from ???head.ext
     
-    fname = PString(gheadname) + graphext;
+    fname = PString(gheadname).concat(graphext);
 
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -492,7 +492,7 @@ static void CAL_SetupGrFile (void)
 //
 // Open the graphics file, leaving it open until the game is finished
 //
-    fname = PString(gfilename) + graphext;
+    fname = PString(gfilename).concat(graphext);
 
     grhandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (grhandle == -1)
@@ -528,7 +528,7 @@ static void CAL_SetupMapFile (void)
 //
 // load maphead.ext (offsets and tileinfo for map file)
 //
-    fname = PString(mheadname) + extension;
+    fname = PString(mheadname).concat(extension);
 
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -546,7 +546,7 @@ static void CAL_SetupMapFile (void)
 // open the data file
 //
     // IOANCH 20130301: unification culling
-    fname = PString("GAMEMAPS.") + extension;
+    fname = PString("GAMEMAPS.").concat(extension);
 
     maphandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (maphandle == -1)
@@ -592,7 +592,7 @@ static void CAL_SetupAudioFile (void)
 //
 // load AUDIOHED.ext (offsets for audio file)
 //
-    fname = PString(aheadname) + audioext;
+    fname = PString(aheadname).concat(audioext);
 
     void* ptr;
     if (!CA_LoadFile(fname.buffer(), &ptr))
@@ -602,7 +602,7 @@ static void CAL_SetupAudioFile (void)
 //
 // open the data file
 //
-    fname = PString(afilename) + audioext;
+    fname = PString(afilename).concat(audioext);
 
     audiohandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (audiohandle == -1)

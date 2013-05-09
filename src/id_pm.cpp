@@ -41,7 +41,7 @@ uint8_t **PMPages;
 //
 void PM_Startup()
 {
-    PString fname = PString("VSWAP.") + extension;
+    PString fname = PString("VSWAP.").concat(extension);
 
     FILE *file = fopen(fname.buffer(),"rb");
     if(!file)
