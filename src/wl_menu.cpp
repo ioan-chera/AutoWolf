@@ -1423,7 +1423,7 @@ int CP_LoadGame (int quick)
             DC_LoadFromVMU(name.buffer());
 #endif
 
-            loadpath = Config::dir.withSubpath(name);
+            loadpath = Config::Dir().withSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1465,7 +1465,7 @@ int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
-            loadpath = Config::dir.withSubpath(name);
+            loadpath = Config::Dir().withSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1602,7 +1602,7 @@ CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            savepath = Config::dir.withSubpath(name);
+            savepath = Config::Dir().withSubpath(name);
 
             unlink (savepath.buffer());
             file = fopen (savepath.buffer(), "wb");
@@ -1673,7 +1673,7 @@ CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                savepath = Config::dir.withSubpath(name);
+                savepath = Config::Dir().withSubpath(name);
 
                 unlink (savepath.buffer());
                 file = fopen (savepath.buffer(), "wb");
@@ -3051,7 +3051,7 @@ void SetupSaveGames()
         if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
-            savepath = Config::dir.withSubpath(name);
+            savepath = Config::Dir().withSubpath(name);
 
             const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
             if(handle >= 0)
@@ -3818,7 +3818,7 @@ void CheckForEpisodes (void)
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_WIN32) && !defined(_arch_dreamcast)
-    if(Config::dir.length() == 0)
+    if(Config::Dir().length() == 0)
     {
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
@@ -3836,19 +3836,19 @@ void CheckForEpisodes (void)
 #endif
     }
 #endif
-    if(Config::dir.length() > 0)
+    if(Config::Dir().length() > 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(Config::dir.buffer(), &statbuf) != 0)
+        if(stat(Config::Dir().buffer(), &statbuf) != 0)
         {
 #ifdef _WIN32
-            if(_mkdir(Config::dir.buffer()) != 0)
+            if(_mkdir(Config::Dir().buffer()) != 0)
 #else
-            if(mkdir(Config::dir.buffer(), 0755) != 0)
+            if(mkdir(Config::Dir().buffer(), 0755) != 0)
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.", 
-                     Config::dir.buffer());
+                     Config::Dir().buffer());
             }
         }
     }

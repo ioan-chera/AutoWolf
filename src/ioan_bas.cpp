@@ -295,7 +295,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
                        boolean patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
-	if(Config::nonazis && !loadedgame)
+	if(Config::NoNazis() && !loadedgame)
 		return;	// don't spawn anything if --nonazis was defined
 	
 	objtype *newenemy = NULL;

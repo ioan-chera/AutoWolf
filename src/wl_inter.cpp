@@ -935,7 +935,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     while (!IN_CheckAck ())
 	{
         BJ_Breathe ();
-        if(Config::botActive)
+        if(Config::BotActive())
 		{
 			  if(++botcount == 600)
 				  break;
@@ -1241,7 +1241,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = BORDCOLOR;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::botActive)
+		      if(Config::BotActive())
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);
@@ -1263,7 +1263,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = 0x9c;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::botActive)
+		      if(Config::BotActive())
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);

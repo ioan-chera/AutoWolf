@@ -28,30 +28,56 @@ class PString;
 //
 // Namespace for configuration variables
 //
-namespace Config 
+class Config 
 {
-	extern boolean nonazis;	// no enemies spawned
-	extern boolean secretstep3;	// make secret walls go three steps (for troublesome maps)
-    extern boolean botActive;
-    extern PString dir;            // IOANCH 20130509: formerly configdir
-    extern int     extravbls;
-    extern boolean forcegrabmouse;
-    extern boolean fullscreen;
-    extern int     audiobuffer;
-    extern int     samplerate;
-    extern boolean debugmode;
-    extern int     difficulty;
-    extern boolean ignorenumchunks;
-    extern int     joystickhat;
-    extern int     joystickindex;
-    extern int     mission;
-    extern boolean nowait;
-    extern int     tedlevel;
+	static boolean nonazis;	// no enemies spawned
+    static boolean secretstep3;	// make secret walls go three steps (for bugged maps)
+    static boolean botActive;
+    static PString dir;            // IOANCH 20130509: formerly configdir
+    static int     extravbls;
+    static boolean forcegrabmouse;
+    static boolean fullscreen;
+    static int     audiobuffer;
+    static int     samplerate;
+    static boolean debugmode;
+    static int     difficulty;
+    static boolean ignorenumchunks;
+    static int     joystickhat;
+    static int     joystickindex;
+    static int     mission;
+    static boolean nowait;
+    static int     tedlevel;
+
+    static unsigned screenBits;
+    static unsigned screenHeight;
+    static unsigned screenWidth;
+    static boolean  usedoublebuffering;
     
-    extern unsigned screenBits;
-    extern unsigned screenHeight;
-    extern unsigned screenWidth;
-    extern boolean  usedoublebuffering;
-}
+public:
+    static void CheckParameters(int argc, char *argv[]);
+    
+    static boolean NoNazis()             const {return nonazis;}	// no enemies spawned
+    static boolean SecretStep3()         const {return secretstep3;}	// make secret walls go three steps (for bugged maps)
+    static boolean BotActive()           const {return botActive;}
+    static PString Dir()                 const {return dir;}            // IOANCH 20130509: formerly configdir
+    static int     ExtraVBLs()           const {return extravbls;}
+    static boolean ForceGrabMouse()      const {return forcegrabmouse;}
+    static boolean Fullscreen()          const {return fullscreen;}
+    static int     AudioBuffer()         const {return audiobuffer;}
+    static int     SampleRate()          const {return samplerate;}
+    static boolean DebugMode()           const {return debugmode;}
+    static int     Difficulty()          const {return difficulty;}
+    static boolean IgnoreNumChunks()     const {return ignorenumchunks;}
+    static int     JoystickHat()         const {return joystickhat;}
+    static int     JoystickIndex()       const {return joystickindex;}
+    static int     Mission()             const {return mission;}
+    static boolean NoWait()              const {return nowait;}
+    static int     TedLevel()            const {return tedlevel;}
+    
+    static unsigned ScreenBits()         const {return screenBits;}
+    static unsigned ScreenHeight()       const {return screenHeight;}
+    static unsigned ScreenWidth()        const {return screenWidth;}
+    static boolean  UseDoubleBuffering() const {return usedoublebuffering;}
+};
 
 #endif

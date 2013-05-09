@@ -509,7 +509,7 @@ void PollControls (void)
      if (joystickenabled)
           PollJoystickMove ();
 
-     if(Config::botActive)	// bot active: operate
+     if(Config::BotActive())	// bot active: operate
 	 {
 		 // Find A* path
          try

@@ -936,7 +936,7 @@ void MovePWalls (void)
         // see if it should be pushed farther
         //
 		// IOANCH 29.09.2012: secretstep3 parameter in action
-        if (pwallstate >= (Config::secretstep3 ? 384 : 256))            // only move two tiles fix
+        if (pwallstate >= (Config::SecretStep3() ? 384 : 256))            // only move two tiles fix
         {
             //
             // the block has been pushed two tiles
