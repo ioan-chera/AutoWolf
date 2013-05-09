@@ -34,6 +34,7 @@
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
+#include "Config.h"
 
 /*
 =============================================================================
@@ -305,8 +306,8 @@ void ControlMovement (objtype *ob)
 
 void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-    LatchDrawPicScaledCoord ((screenWidth-scaleFactor*320)/16 + scaleFactor*x,
-        screenHeight-scaleFactor*(STATUSLINES-y),picnum);
+    LatchDrawPicScaledCoord ((Config::screenWidth-scaleFactor*320)/16 + scaleFactor*x,
+                             Config::screenHeight-scaleFactor*(STATUSLINES-y),picnum);
 }
 
 void StatusDrawFace(unsigned picnum)

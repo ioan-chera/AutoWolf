@@ -41,6 +41,7 @@
 #include "ioan_bot.h"
 #include "Exception.h"
 #include "PString.h"
+#include "Config.h"
 
 /*
 =============================================================================
@@ -72,7 +73,7 @@ objtype objlist[MAXACTORS];
 objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
 boolean noclip, ammocheat;
-int godmode, singlestep, extravbls = 0;
+int godmode, singlestep;
 
 byte tilemap[MAPSIZE][MAPSIZE]; // wall values only
 byte spotvis[MAPSIZE][MAPSIZE];
@@ -380,8 +381,8 @@ void PollMouseMove (void)
     if(IN_IsInputGrabbed())
         IN_CenterMouse();
 
-    mousexmove -= screenWidth / 2;
-    mouseymove -= screenHeight / 2;
+    mousexmove -= Config::screenWidth / 2;
+    mouseymove -= Config::screenHeight / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -508,7 +509,7 @@ void PollControls (void)
      if (joystickenabled)
           PollJoystickMove ();
 
-     if(BotMan::active)	// bot active: operate
+     if(Config::botActive)	// bot active: operate
 	 {
 		 // Find A* path
          try
@@ -675,7 +676,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && param_debugmode)
+    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && Config::debugmode)
     {
         ClearMemory ();
         CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
@@ -1402,8 +1403,8 @@ void PlayLoop (void)
             VW_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
-        if (extravbls)
-            VW_WaitVBL (extravbls);
+        if (Config::extravbls)
+            VW_WaitVBL (Config::extravbls);
 
         if (demoplayback)
         {

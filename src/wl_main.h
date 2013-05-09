@@ -22,24 +22,7 @@ extern  unsigned screenofs;
 extern  boolean  startgame;
 extern  char     str[80];
 class PString;
-extern  PString  configdir;            // IOANCH 20130509: use PString for paths
-//extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
 extern  PString  configname;
-
-//
-// Command line parameter variables
-//
-extern  boolean  param_debugmode;
-extern  boolean  param_nowait;
-extern  int      param_difficulty;
-extern  int      param_tedlevel;
-extern  int      param_joystickindex;
-extern  int      param_joystickhat;
-extern  int      param_samplerate;
-extern  int      param_audiobuffer;
-extern  int      param_mission;
-extern  boolean  param_goodtimes;
-extern  boolean  param_ignorenumchunks;
 
 
 void            NewGame (int difficulty,int episode);

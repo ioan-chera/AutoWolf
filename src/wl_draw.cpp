@@ -35,6 +35,7 @@
 #include "wl_cloudsky.h"
 #include "wl_atmos.h"
 #include "wl_shade.h"
+#include "Config.h"
 
 /*
 =============================================================================
@@ -1576,7 +1577,7 @@ void    ThreeDRefresh (void)
 
     if (fizzlein)
     {
-        FizzleFade(screenBuffer, 0, 0, screenWidth, screenHeight, 20, false);
+        FizzleFade(screenBuffer, 0, 0, Config::screenWidth, Config::screenHeight, 20, false);
         fizzlein = false;
 
         lasttimecount = GetTimeCount();          // don't make a big tic count

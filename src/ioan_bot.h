@@ -107,9 +107,7 @@ public:
 	// Update the enemy's known position record
 	static void RecordEnemyPosition(objtype *enemy);
 
-	
-	static boolean active;	// true if bots are activated
-	static objtype *damagetaken;
+    static objtype *damagetaken;
 	static HistoryRatio shootRatio;
 
 	// Finds the path to walk through

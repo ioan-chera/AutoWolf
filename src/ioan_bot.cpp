@@ -35,7 +35,6 @@
 #include "wl_state.h"
 
 // static class member definition
-boolean BotMan::active;
 objtype *BotMan::damagetaken;
 // protected ones
 boolean BotMan::panic;

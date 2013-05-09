@@ -25,9 +25,9 @@
 #include "wl_game.h"
 #include "wl_play.h"
 #include "wl_state.h"
+#include "Config.h"
 
 // static members definition
-boolean Basic::nonazis, Basic::secretstep3;
 List<void *> Basic::livingNazis, Basic::thrownProjectiles;
 static List<byte> _itemList[MAPSIZE][MAPSIZE];
 
@@ -295,7 +295,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
                        boolean patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
-	if(nonazis && !loadedgame)
+	if(Config::nonazis && !loadedgame)
 		return;	// don't spawn anything if --nonazis was defined
 	
 	objtype *newenemy = NULL;

@@ -50,6 +50,7 @@
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 20121217: bot
 #include "PString.h"
+#include "Config.h"
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 #include "MasterDirectoryFile.h"
@@ -697,7 +698,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(screenHeight % 200 != 0)
+                if(Config::screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -776,7 +777,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(screenHeight % 200 != 0)
+                if(Config::screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -1422,7 +1423,7 @@ int CP_LoadGame (int quick)
             DC_LoadFromVMU(name.buffer());
 #endif
 
-            loadpath = configdir.withSubpath(name);
+            loadpath = Config::dir.withSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1464,7 +1465,7 @@ int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
-            loadpath = configdir.withSubpath(name);
+            loadpath = Config::dir.withSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1601,7 +1602,7 @@ CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            savepath = configdir.withSubpath(name);
+            savepath = Config::dir.withSubpath(name);
 
             unlink (savepath.buffer());
             file = fopen (savepath.buffer(), "wb");
@@ -1672,7 +1673,7 @@ CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                savepath = configdir.withSubpath(name);
+                savepath = Config::dir.withSubpath(name);
 
                 unlink (savepath.buffer());
                 file = fopen (savepath.buffer(), "wb");
@@ -2760,7 +2761,7 @@ CP_ChangeView (int)
         {
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
-            if(screenHeight % 200 != 0)
+            if(Config::screenHeight % 200 != 0)
                 VL_ClearScreen(0);
             return 0;
         }
@@ -2776,7 +2777,7 @@ CP_ChangeView (int)
 
     ShootSnd ();
     MenuFadeOut ();
-    if(screenHeight % 200 != 0)
+    if(Config::screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     return 0;
@@ -2790,12 +2791,12 @@ CP_ChangeView (int)
 void
 DrawChangeView (int view)
 {
-    int rescaledHeight = screenHeight / scaleFactor;
+    int rescaledHeight = Config::screenHeight / scaleFactor;
     if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
-    PrintY = (screenHeight / scaleFactor) - 39;
+    PrintY = (Config::screenHeight / scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
@@ -3016,7 +3017,7 @@ SetupControlPanel (void)
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
     fontnumber = 1;
     WindowH = 200;
-    if(screenHeight % 200 != 0)
+    if(Config::screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     if (!ingame)
@@ -3050,7 +3051,7 @@ void SetupSaveGames()
         if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
-            savepath = configdir.withSubpath(name);
+            savepath = Config::dir.withSubpath(name);
 
             const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
             if(handle >= 0)
@@ -3817,7 +3818,7 @@ void CheckForEpisodes (void)
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_WIN32) && !defined(_arch_dreamcast)
-    if(configdir.length() == 0)
+    if(Config::dir.length() == 0)
     {
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
@@ -3826,28 +3827,28 @@ void CheckForEpisodes (void)
         const char *appsupdir = Cocoa_ApplicationSupportDirectory();
         if(appsupdir == NULL)
             Quit("Your Application Support directory is not defined. You must set this before playing.");
-        configdir = PString(Cocoa_ApplicationSupportDirectory());
+        Config::dir = PString(Cocoa_ApplicationSupportDirectory());
 #else
         char *homeenv = getenv("HOME");
         if(homeenv == NULL)
             Quit("Your $HOME directory is not defined. You must set this before playing.");
-        configdir = PString(homeenv).withSubpath("/.autowolf");
+        Config::dir = PString(homeenv).withSubpath("/.autowolf");
 #endif
     }
 #endif
-    if(configdir.length() > 0)
+    if(Config::dir.length() > 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(configdir.buffer(), &statbuf) != 0)
+        if(stat(Config::dir.buffer(), &statbuf) != 0)
         {
 #ifdef _WIN32
-            if(_mkdir(configdir.buffer()) != 0)
+            if(_mkdir(Config::dir.buffer()) != 0)
 #else
-            if(mkdir(configdir.buffer(), 0755) != 0)
+            if(mkdir(Config::dir.buffer(), 0755) != 0)
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.", 
-                     configdir.buffer());
+                     Config::dir.buffer());
             }
         }
     }
@@ -3896,28 +3897,28 @@ void CheckForEpisodes (void)
     if(SPEAR())
     {
 // IOANCH 20130301: unification culling
-        if(param_mission == 0)
+        if(Config::mission == 0)
         {
             if(!stat("VSWAP.SOD", &statbuf))
                 extension = "SOD";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(param_mission == 1)
+        else if(Config::mission == 1)
         {
             if(!stat("VSWAP.SD1", &statbuf))
                 extension = "SD1";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(param_mission == 2)
+        else if(Config::mission == 2)
         {
             if(!stat("VSWAP.SD2", &statbuf))
                 extension = "SD2";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(param_mission == 3)
+        else if(Config::mission == 3)
         {
             if(!stat("VSWAP.SD3", &statbuf))
                 extension = "SD3";

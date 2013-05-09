@@ -49,6 +49,7 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "Exception.h"
+#include "Config.h"
 
 /*
 =============================================================================
@@ -113,35 +114,8 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
-PString configdir;
 PString configname("CONFIG.");
 
-//
-// Command line parameter variables
-//
-boolean param_debugmode = false;
-boolean param_nowait = false;
-int     param_difficulty = 1;           // default is "normal"
-int     param_tedlevel = -1;            // default is not to start a level
-int     param_joystickindex = 0;
-
-#if defined(_arch_dreamcast)
-int     param_joystickhat = 0;
-int     param_samplerate = 11025;       // higher samplerates result in "out of memory"
-int     param_audiobuffer = 4096 / (44100 / param_samplerate);
-#elif defined(GP2X_940)
-int     param_joystickhat = -1;
-int     param_samplerate = 11025;       // higher samplerates result in "out of memory"
-int     param_audiobuffer = 128;
-#else
-int     param_joystickhat = -1;
-int     param_samplerate = 44100;
-int     param_audiobuffer = 2048 / (44100 / param_samplerate);
-#endif
-
-int     param_mission = 0;
-boolean param_goodtimes = false;
-boolean param_ignorenumchunks = false;
 
 /*
 =============================================================================
@@ -172,7 +146,7 @@ void ReadConfig(void)
     DC_LoadFromVMU(configname.buffer());
 #endif
 
-    configpath = configdir.withSubpath(configname);
+    configpath = Config::dir.withSubpath(configname);
 
     const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
     if (file != -1)
@@ -294,7 +268,7 @@ void WriteConfig(void)
     fs_unlink(configname.buffer());
 #endif
 
-    configpath = configdir.withSubpath(configname);
+    configpath = Config::dir.withSubpath(configname);
 
     const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
@@ -937,7 +911,7 @@ void FinishSignon (void)
 
         VH_UpdateScreen();
 
-        if (!param_nowait)
+        if (!Config::nowait)
             IN_Ack ();
 
         // IOANCH 20130301: unification culling
@@ -962,7 +936,7 @@ void FinishSignon (void)
     {
         VH_UpdateScreen();
 
-        if (!param_nowait)
+        if (!Config::nowait)
             VW_WaitVBL(3*70);
     }
 
@@ -1299,8 +1273,8 @@ static void InitGame()
     atexit(SDL_Quit);
 
     int numJoysticks = SDL_NumJoysticks();
-    if(param_joystickindex && (param_joystickindex < -1 || 
-                               param_joystickindex >= numJoysticks))
+    if(Config::joystickindex && (Config::joystickindex < -1 || 
+                               Config::joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
             printf("No joysticks are available to SDL!\n");
@@ -1317,7 +1291,7 @@ static void InitGame()
     SignonScreen ();
 
 #if defined _WIN32
-    if(!fullscreen)
+    if(!Config::fullscreen)
     {
         struct SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
@@ -1436,13 +1410,13 @@ boolean SetViewSize (unsigned width, unsigned height)
     viewheight = height&~1;                 // must be even
     centerx = viewwidth/2-1;
     shootdelta = viewwidth/10;
-    if((unsigned) viewheight == screenHeight)
+    if((unsigned) viewheight == Config::screenHeight)
         viewscreenx = viewscreeny = screenofs = 0;
     else
     {
-        viewscreenx = (screenWidth-viewwidth) / 2;
-        viewscreeny = (screenHeight-scaleFactor*STATUSLINES-viewheight)/2;
-        screenofs = viewscreeny*screenWidth+viewscreenx;
+        viewscreenx = (Config::screenWidth-viewwidth) / 2;
+        viewscreeny = (Config::screenHeight-scaleFactor*STATUSLINES-viewheight)/2;
+        screenofs = viewscreeny*Config::screenWidth+viewscreenx;
     }
 
 //
@@ -1463,20 +1437,20 @@ void ShowViewSize (int width)
 
     if(width == 21)
     {
-        viewwidth = screenWidth;
-        viewheight = screenHeight;
-        VWB_BarScaledCoord (0, 0, screenWidth, screenHeight, 0);
+        viewwidth = Config::screenWidth;
+        viewheight = Config::screenHeight;
+        VWB_BarScaledCoord (0, 0, Config::screenWidth, Config::screenHeight, 0);
     }
     else if(width == 20)
     {
-        viewwidth = screenWidth;
-        viewheight = screenHeight - scaleFactor*STATUSLINES;
+        viewwidth = Config::screenWidth;
+        viewheight = Config::screenHeight - scaleFactor*STATUSLINES;
         DrawPlayBorder ();
     }
     else
     {
-        viewwidth = width*16*screenWidth/320;
-        viewheight = (int) (width*16*HEIGHTRATIO*screenHeight/200);
+        viewwidth = width*16*Config::screenWidth/320;
+        viewheight = (int) (width*16*HEIGHTRATIO*Config::screenHeight/200);
         DrawPlayBorder ();
     }
 
@@ -1489,11 +1463,11 @@ void NewViewSize (int width)
 {
     viewsize = width;
     if(viewsize == 21)
-        SetViewSize(screenWidth, screenHeight);
+        SetViewSize(Config::screenWidth, Config::screenHeight);
     else if(viewsize == 20)
-        SetViewSize(screenWidth, screenHeight - scaleFactor * STATUSLINES);
+        SetViewSize(Config::screenWidth, Config::screenHeight - scaleFactor * STATUSLINES);
     else
-        SetViewSize(width*16*screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*screenHeight/200));
+        SetViewSize(width*16*Config::screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*Config::screenHeight/200));
 }
 
 
@@ -1609,22 +1583,22 @@ static void DemoLoop()
 //
 // check for launch from ted
 //
-    if (param_tedlevel != -1)
+    if (Config::tedlevel != -1)
     {
-        param_nowait = true;
+        Config::nowait = true;
         EnableEndGameMenuItem();
-        NewGame(param_difficulty,0);
+        NewGame(Config::difficulty,0);
 
         // IOANCH 20130303: unification
         if(!SPEAR())
         {
-            gamestate.episode = param_tedlevel/10;
-            gamestate.mapon = param_tedlevel%10;
+            gamestate.episode = Config::tedlevel/10;
+            gamestate.mapon = Config::tedlevel%10;
         }
         else
         {
             gamestate.episode = 0;
-            gamestate.mapon = param_tedlevel;
+            gamestate.mapon = Config::tedlevel;
         }
         GameLoop();
         Quit (NULL);
@@ -1642,7 +1616,7 @@ static void DemoLoop()
     StartCPMusic(INTROSONG);
 // IOANCH 20130301: unification culling
 
-    if (!param_nowait)
+    if (!Config::nowait)
         PG13 ();
 
 
@@ -1650,7 +1624,7 @@ static void DemoLoop()
 
     while (1)
     {
-        while (!param_nowait)
+        while (!Config::nowait)
         {
 //
 // title page
@@ -1717,7 +1691,7 @@ static void DemoLoop()
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
-            if(screenHeight % 200 != 0)
+            if(Config::screenHeight % 200 != 0)
                 VL_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
@@ -1725,7 +1699,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (Keyboard[sc_Tab] && param_debugmode)
+        if (Keyboard[sc_Tab] && Config::debugmode)
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1736,7 +1710,7 @@ static void DemoLoop()
         if (startgame || loadedgame)
         {
             GameLoop ();
-            if(!param_nowait)
+            if(!Config::nowait)
             {
                 VW_FadeOut();
                 StartCPMusic(INTROSONG);
@@ -1759,9 +1733,9 @@ static void DemoLoop()
 void CheckParameters(int argc, char *argv[])
 {
     bool sampleRateGiven = false, audioBufferGiven = false;
-    int defaultSampleRate = param_samplerate;
+    int defaultSampleRate = Config::samplerate;
 
-    BotMan::active = true;	// IOANCH 26.05.2012: initialize with true, not false
+    Config::botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
     try
     {
         for(int i = 1; i < argc; i++)
@@ -1769,32 +1743,32 @@ void CheckParameters(int argc, char *argv[])
             char *arg = argv[i];
             // IOANCH 20130303: unification
             if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
-                param_debugmode = true;
+                Config::debugmode = true;
             else IFARG("--baby")
-                param_difficulty = 0;
+                Config::difficulty = 0;
             else IFARG("--easy")
-                param_difficulty = 1;
+                Config::difficulty = 1;
             else IFARG("--normal")
-                param_difficulty = 2;
+                Config::difficulty = 2;
             else IFARG("--hard")
-                param_difficulty = 3;
+                Config::difficulty = 3;
             else IFARG("--nowait")
-                param_nowait = true;
+                Config::nowait = true;
             else IFARG("--tedlevel")
             {
                 if(++i >= argc)
                     throw Exception("The tedlevel option is missing the level argument!\n");
                 else 
-                    param_tedlevel = atoi(argv[i]);
+                    Config::tedlevel = atoi(argv[i]);
             }
             else IFARG("--windowed")
-                fullscreen = false;
+                Config::fullscreen = false;
             else IFARG("--fullscreen")
-                fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
+                Config::fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
             else IFARG("--windowed-mouse")
             {
-                fullscreen = false;
-                forcegrabmouse = true;
+                Config::fullscreen = false;
+                Config::forcegrabmouse = true;
             }
             else IFARG("--res")
             {
@@ -1803,11 +1777,11 @@ void CheckParameters(int argc, char *argv[])
                            "argument!\n");
                 else
                 {
-                    screenWidth = atoi(argv[++i]);
-                    screenHeight = atoi(argv[++i]);
-                    unsigned factor = screenWidth / 320;
-                    if(screenWidth % 320 || (screenHeight != 200 * factor && 
-                                             screenHeight != 240 * factor))
+                    Config::screenWidth = atoi(argv[++i]);
+                    Config::screenHeight = atoi(argv[++i]);
+                    unsigned factor = Config::screenWidth / 320;
+                    if(Config::screenWidth % 320 || (Config::screenHeight != 200 * factor && 
+                                             Config::screenHeight != 240 * factor))
                     {
                         throw Exception("Screen size must be a multiple of 320x200 or "
                                "320x240!\n"); 
@@ -1821,11 +1795,11 @@ void CheckParameters(int argc, char *argv[])
                            "argument!\n");
                 else
                 {
-                    screenWidth = atoi(argv[++i]);
-                    screenHeight = atoi(argv[++i]);
-                    if(screenWidth < 320)
+                    Config::screenWidth = atoi(argv[++i]);
+                    Config::screenHeight = atoi(argv[++i]);
+                    if(Config::screenWidth < 320)
                         throw Exception("Screen width must be at least 320!\n");
-                    if(screenHeight < 200)
+                    if(Config::screenHeight < 200)
                         throw Exception("Screen height must be at least 200!\n"); 
                 }
             }
@@ -1836,8 +1810,8 @@ void CheckParameters(int argc, char *argv[])
                            "argument!\n");
                 else
                 {
-                    screenBits = atoi(argv[i]);
-                    switch(screenBits)
+                    Config::screenBits = atoi(argv[i]);
+                    switch(Config::screenBits)
                     {
                         case 8:
                         case 16:
@@ -1853,15 +1827,15 @@ void CheckParameters(int argc, char *argv[])
                 }
             }
             else IFARG("--nodblbuf")
-                usedoublebuffering = false;
+                Config::usedoublebuffering = false;
             else IFARG("--extravbls")
             {
                 if(++i >= argc)
                     throw Exception("The extravbls option is missing the vbls argument!\n");
                 else
                 {
-                    extravbls = atoi(argv[i]);
-                    if(extravbls < 0)
+                    Config::extravbls = atoi(argv[i]);
+                    if(Config::extravbls < 0)
                         throw Exception("Extravbls must be positive!\n");
                 }
             }
@@ -1870,7 +1844,7 @@ void CheckParameters(int argc, char *argv[])
                 if(++i >= argc)
                     throw Exception("The joystick option is missing the index argument!\n");
                 else 
-                    param_joystickindex = atoi(argv[i]);   
+                    Config::joystickindex = atoi(argv[i]);   
                 // index is checked in InitGame
             }
             else IFARG("--joystickhat")
@@ -1878,14 +1852,14 @@ void CheckParameters(int argc, char *argv[])
                 if(++i >= argc)
                     throw Exception("The joystickhat option is missing the index argument!\n");
                 else 
-                    param_joystickhat = atoi(argv[i]);
+                    Config::joystickhat = atoi(argv[i]);
             }
             else IFARG("--samplerate")
             {
                 if(++i >= argc)
                     throw Exception("The samplerate option is missing the rate argument!\n");
                 else 
-                    param_samplerate = atoi(argv[i]);
+                    Config::samplerate = atoi(argv[i]);
                 sampleRateGiven = true;
             }
             else IFARG("--audiobuffer")
@@ -1893,7 +1867,7 @@ void CheckParameters(int argc, char *argv[])
                 if(++i >= argc)
                     throw Exception("The audiobuffer option is missing the size argument!\n");
                 else 
-                    param_audiobuffer = atoi(argv[i]);
+                    Config::audiobuffer = atoi(argv[i]);
                 audioBufferGiven = true;
             }
             else IFARG("--mission")
@@ -1902,8 +1876,8 @@ void CheckParameters(int argc, char *argv[])
                     throw Exception("The mission option is missing the mission argument!\n");
                 else
                 {
-                    param_mission = atoi(argv[i]);
-                    if(param_mission < 0 || param_mission > 3)
+                    Config::mission = atoi(argv[i]);
+                    if(Config::mission < 0 || Config::mission > 3)
                         throw Exception("The mission option must be between 0 and 3!\n");
                 }
             }
@@ -1918,30 +1892,28 @@ void CheckParameters(int argc, char *argv[])
                     if(trans)
                     {
                         size_t len = strlen(trans);
-                        configdir = trans;
+                        Config::dir = trans;
                         if(trans[len] != '/' && trans[len] != '\\')
-                            configdir += '/';
+                            Config::dir += '/';
                         free(trans);
                     }
                     else
                         throw Exception("The config directory couldn't be set!\n");
                 }
             }
-            else IFARG("--goodtimes")
-                param_goodtimes = true;
             else IFARG("--ignorenumchunks")
-                param_ignorenumchunks = true;
+                Config::ignorenumchunks = true;
             else IFARG("--help")
                 throw Exception();
                 // IOANCH 17.05.2012: added --nobot parameter
             else IFARG("--nobot")
-                BotMan::active = false;
+                Config::botActive = false;
                 // IOANCH 17.05.2012: added --nonazis
             else IFARG("--nonazis")
-                Basic::nonazis = true;
+                Config::nonazis = true;
                 // IOANCH 29.09.2012: added --secretstep3
             else IFARG("--secretstep3")
-                Basic::secretstep3 = true;
+                Config::secretstep3 = true;
             else IFARG("--wolfdir")
             {
                 // IOANCH 20130304: added --wolfdir
@@ -2020,13 +1992,12 @@ void CheckParameters(int argc, char *argv[])
         printf(
                " --mission <mission>    Mission number to play (0-3)\n"
                "                        (default: 0 -> .SOD, 1-3 -> .SD*)\n"
-               " --goodtimes            Disable copy protection quiz\n"
                );
         exit(1);
     }
     
     if(sampleRateGiven && !audioBufferGiven)
-        param_audiobuffer = 2048 / (44100 / param_samplerate);
+        Config::audiobuffer = 2048 / (44100 / Config::samplerate);
 }
 
 /*

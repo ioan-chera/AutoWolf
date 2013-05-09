@@ -33,6 +33,7 @@
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"
+#include "Config.h"
 // IOANCH 20130302: unification
 LRstruct LevelRatios[LRpack_wl6 > LRpack_sod ? LRpack_wl6 : LRpack_sod];
 int32_t lastBreathTime = 0;
@@ -199,7 +200,7 @@ Victory (void)
     if(!SPEAR())
         CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR()]);
 
-    VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, Config::screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -311,7 +312,7 @@ Victory (void)
     IN_Ack ();
 
     VW_FadeOut ();
-    if(screenHeight % 200 != 0)
+    if(Config::screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     if(!SPEAR())
@@ -603,7 +604,7 @@ LevelCompleted (void)
 
     CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VWB_Bar (0, 0, 320, screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, Config::screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
@@ -708,7 +709,7 @@ LevelCompleted (void)
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
                     SD_PlaySound (ENDBONUS1SND);
-                if(!usedoublebuffering || !(i % (PAR_AMOUNT / 50))) VW_UpdateScreen ();
+                if(!Config::usedoublebuffering || !(i % (PAR_AMOUNT / 50))) VW_UpdateScreen ();
                 while(SD_SoundPlaying ())
                     BJ_Breathe ();
                 if (IN_CheckAck ())
@@ -739,7 +740,7 @@ LevelCompleted (void)
             Write (x, 14, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
+            if(!Config::usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -781,7 +782,7 @@ LevelCompleted (void)
             Write (x, 16, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
+            if(!Config::usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -822,7 +823,7 @@ LevelCompleted (void)
             Write (x, 18, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
+            if(!Config::usedoublebuffering || !(i & 1)) VW_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
             if (IN_CheckAck ())
@@ -930,12 +931,12 @@ done:   itoanoreturn (kr, tempstr, 10);
     IN_StartAck ();
 
 	 // IOANCH 27.05.2012: let bots automatically hit after 3 seconds
-	 int botcount = 0;
+	int botcount = 0;
     while (!IN_CheckAck ())
-	 {
+	{
         BJ_Breathe ();
-		  if(BotMan::active)
-		  {
+        if(Config::botActive)
+		{
 			  if(++botcount == 600)
 				  break;
 		  }
@@ -1001,12 +1002,12 @@ PreloadGraphics (void)
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
-    VWB_BarScaledCoord (0, 0, screenWidth, screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
-    LatchDrawPicScaledCoord ((screenWidth-scaleFactor*224)/16,
-        (screenHeight-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR()]);
+    VWB_BarScaledCoord (0, 0, Config::screenWidth, Config::screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
+    LatchDrawPicScaledCoord ((Config::screenWidth-scaleFactor*224)/16,
+        (Config::screenHeight-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR()]);
 
-    WindowX = (screenWidth - scaleFactor*224)/2;
-    WindowY = (screenHeight - scaleFactor*(STATUSLINES+48))/2;
+    WindowX = (Config::screenWidth - scaleFactor*224)/2;
+    WindowY = (Config::screenHeight - scaleFactor*(STATUSLINES+48))/2;
     WindowW = scaleFactor * 28 * 8;
     WindowH = scaleFactor * 48;
 
@@ -1240,7 +1241,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = BORDCOLOR;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(BotMan::active)
+		      if(Config::botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);
@@ -1262,7 +1263,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = 0x9c;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(BotMan::active)
+		      if(Config::botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);

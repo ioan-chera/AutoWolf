@@ -52,6 +52,7 @@ loaded into the data segment
 #include "wl_main.h"
 #pragma hdrstop
 #include "PString.h"
+#include "Config.h"
 
 #define THREEBYTEGRSTARTS
 
@@ -451,7 +452,7 @@ static void CAL_SetupGrFile (void)
     else
         expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
 
-    if(!param_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
+    if(!Config::ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"

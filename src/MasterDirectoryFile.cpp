@@ -20,6 +20,7 @@
 #include "wl_def.h"
 #include "wl_main.h"
 #include "MasterDirectoryFile.h"
+#include "Config.h"
 
 PString masterDirectoryFilePath;
 
@@ -65,7 +66,7 @@ MasterDirectoryFile &MasterDirectoryFile::MainDir()
 void MasterDirectoryFile::initializeConfigLocation()
 {
     //    initialize(masterDirectoryFileName);
-    masterDirectoryFilePath = configdir.withSubpath(masterDirectoryFileName);
+    masterDirectoryFilePath = Config::dir.withSubpath(masterDirectoryFileName);
 }
 
 //

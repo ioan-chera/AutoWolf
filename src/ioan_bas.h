@@ -31,8 +31,6 @@
 //
 namespace Basic
 {
-	extern boolean nonazis;	// no enemies spawned
-	extern boolean secretstep3;	// make secret walls go three steps (for troublesome maps)
 	extern List<void *> livingNazis, thrownProjectiles;
 	
 	void EmptyItemList();	// empty itemList

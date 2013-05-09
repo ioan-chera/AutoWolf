@@ -67,6 +67,8 @@
 #endif
 #define ORIGSAMPLERATE 7042
 
+#include "Config.h"
+
 typedef struct
 {
 	char RIFF[4];
@@ -691,7 +693,7 @@ void SD_PrepareSound(int which)
     if(origsamples + size >= PM_GetEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
-    int destsamples = (int) ((float) size * (float) param_samplerate
+    int destsamples = (int) ((float) size * (float) Config::samplerate
         / (float) ORIGSAMPLERATE);
 
     byte *wavebuffer = (byte *) malloc(sizeof(headchunk) + sizeof(wavechunk)
@@ -700,7 +702,8 @@ void SD_PrepareSound(int which)
         Quit("Unable to allocate wave buffer for sound %i!\n", which);
 
     headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
-        {'f','m','t',' '}, 0x10, 0x0001, 1, static_cast<longword>(param_samplerate), static_cast<longword>(param_samplerate*2), 2, 16};
+        {'f','m','t',' '}, 0x10, 0x0001, 1, static_cast<longword>(Config::samplerate), 
+        static_cast<longword>(Config::samplerate*2), 2, 16};
     wavechunk dhead = {{'d', 'a', 't', 'a'}, static_cast<longword>(destsamples*2)};
     head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
     memcpy(wavebuffer, &head, sizeof(head));
@@ -711,7 +714,7 @@ void SD_PrepareSound(int which)
     Sint16 *newsamples = (Sint16 *)(void *) (wavebuffer + sizeof(headchunk)
         + sizeof(wavechunk));
     float cursample = 0.F;
-    float samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
+    float samplestep = (float) ORIGSAMPLERATE / (float) Config::samplerate;
     for(int i=0; i<destsamples; i++, cursample+=samplestep)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
@@ -1206,7 +1209,7 @@ void SD_Startup(void)
     if (SD_Started)
         return;
 
-    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer))
+    if(Mix_OpenAudio(Config::samplerate, AUDIO_S16, 2, Config::audiobuffer))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;
@@ -1217,9 +1220,9 @@ void SD_Startup(void)
 
     // Init music
 
-    samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
+    samplesPerMusicTick = Config::samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
 
-    if(YM3812Init(1,3579545,param_samplerate))
+    if(YM3812Init(1,3579545,Config::samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
     }

@@ -72,7 +72,7 @@ extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
 extern  objtype     *objfreelist;     // *obj,*player,*lastobj,
 
 extern  boolean     noclip,ammocheat;
-extern  int         singlestep, extravbls;
+extern  int         singlestep;
 
 
 #endif

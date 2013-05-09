@@ -39,6 +39,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
+#include "Config.h"
 
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
@@ -694,7 +695,7 @@ again:
         {
             level = atoi (str);
             if (level>=0 && level<=8)
-                extravbls = level;
+                Config::extravbls = level;
         }
         return 1;
     }
