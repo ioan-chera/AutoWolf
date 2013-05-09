@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+
 extern  boolean  loadedgame;
 extern  fixed    focallength;
 extern  int      viewscreenx, viewscreeny;
@@ -20,7 +21,9 @@ extern  unsigned screenofs;
 
 extern  boolean  startgame;
 extern  char     str[80];
-extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
+class PString;
+extern  PString  configdir;            // IOANCH 20130509: use PString for paths
+//extern  char     configdir[MAX_PATH_LENGTH];    // IOANCH 20130307
 extern  char     configname[13];
 
 //

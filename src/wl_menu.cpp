@@ -49,6 +49,7 @@
 #include "wl_text.h"
 #pragma hdrstop
 #include "ioan_bot.h"	// IOANCH 20121217: bot
+#include "PString.h"
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 #include "MasterDirectoryFile.h"
@@ -1397,13 +1398,12 @@ DrawLSAction (int which)
 // LOAD SAVED GAMES
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_LoadGame (int quick)
+int CP_LoadGame (int quick)
 {
     FILE *file;
     int which, exit = 0;
     char name[13];
-    char loadpath[300];
+    PString loadpath;   // IOANCH 20130509: use PString for paths
 
     strcpy (name, SaveName);
 
@@ -1422,12 +1422,9 @@ CP_LoadGame (int quick)
             DC_LoadFromVMU(name);
 #endif
 
-            if(configdir[0])
-                snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
-            else
-                strcpy(loadpath, name);
+            loadpath = configdir.withSubpath(name);
 
-            file = fopen (loadpath, "rb");
+            file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
@@ -1467,13 +1464,9 @@ CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name);
 #endif
+            loadpath = configdir.withSubpath(name);
 
-            if(configdir[0])
-                snprintf(loadpath, sizeof(loadpath), "%s/%s", configdir, name);
-            else
-                strcpy(loadpath, name);
-
-            file = fopen (loadpath, "rb");
+            file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
@@ -1592,7 +1585,7 @@ CP_SaveGame (int quick)
     int which, exit = 0;
     FILE *file;
     char name[13];
-    char savepath[300];
+    PString savepath;   // IOANCH 20130509: use PString for paths
     char input[32];
 
     strcpy (name, SaveName);
@@ -1608,13 +1601,10 @@ CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            if(configdir[0])
-                snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
-            else
-                strcpy(savepath, name);
+            savepath = configdir.withSubpath(name);
 
-            unlink (savepath);
-            file = fopen (savepath, "wb");
+            unlink (savepath.buffer());
+            file = fopen (savepath.buffer(), "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
 
@@ -1682,13 +1672,10 @@ CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                if(configdir[0])
-                    snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
-                else
-                    strcpy(savepath, name);
+                savepath = configdir.withSubpath(name);
 
-                unlink (savepath);
-                file = fopen (savepath, "wb");
+                unlink (savepath.buffer());
+                file = fopen (savepath.buffer(), "wb");
                 fwrite (input, 32, 1, file);
                 fseek (file, 32, SEEK_SET);
 
@@ -3052,7 +3039,7 @@ SetupControlPanel (void)
 void SetupSaveGames()
 {
     char name[13];
-    char savepath[300];
+    PString savepath;
 
     strcpy(name, SaveName);
     for(int i = 0; i < 10; i++)
@@ -3063,12 +3050,9 @@ void SetupSaveGames()
         if(DC_LoadFromVMU(name))
         {
 #endif
-            if(configdir[0])
-                snprintf(savepath, sizeof(savepath), "%s/%s", configdir, name);
-            else
-                strcpy(savepath, name);
+            savepath = configdir.withSubpath(name);
 
-            const int handle = open(savepath, O_RDONLY | O_BINARY);
+            const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
             if(handle >= 0)
             {
                 char temp[32];
@@ -3833,48 +3817,37 @@ void CheckForEpisodes (void)
 
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_WIN32) && !defined(_arch_dreamcast)
-    if(configdir[0] == 0)
+    if(configdir.length() == 0)
     {
         // Set config location to home directory for multi-user support
-        char *homedir = getenv("HOME");
-        if(homedir == NULL)
-        {
-            Quit("Your $HOME directory is not defined. You must set this before playing.");
-        }
         // IOANCH 20130303: do it correctly
+        // IOANCH 20130509: use PString for paths
 #ifdef __APPLE__
-        const char *WOLFDIR = Cocoa_ApplicationSupportDirectory();
-        if(strlen(WOLFDIR) > sizeof(configdir))
-        {
-            Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
-        }
-        snprintf(configdir, sizeof(configdir), "%s", WOLFDIR);
+        const char *appsupdir = Cocoa_ApplicationSupportDirectory();
+        if(appsupdir == NULL)
+            Quit("Your Application Support directory is not defined. You must set this before playing.");
+        configdir = PString(Cocoa_ApplicationSupportDirectory());
 #else
-#define WOLFDIR "/.autowolf"	// IOANCH 20130116: changed name
-        if(strlen(homedir) + sizeof(WOLFDIR) > sizeof(configdir))
-        {
-            Quit("Your $HOME directory path is too long. It cannot be used for saving games.");
-        }
-        snprintf(configdir, sizeof(configdir), "%s" WOLFDIR, homedir);
+        char *homeenv = getenv("HOME");
+        if(homeenv == NULL)
+            Quit("Your $HOME directory is not defined. You must set this before playing.");
+        configdir = PString(homeenv).withSubpath("/.autowolf");
 #endif
-        
-        
-        
     }
 #endif
-
-    if(configdir[0] != 0)
+    if(configdir.length() > 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(configdir, &statbuf) != 0)
+        if(stat(configdir.buffer(), &statbuf) != 0)
         {
 #ifdef _WIN32
-            if(_mkdir(configdir) != 0)
+            if(_mkdir(configdir.buffer()) != 0)
 #else
-            if(mkdir(configdir, 0755) != 0)
+            if(mkdir(configdir.buffer(), 0755) != 0)
 #endif
             {
-                Quit("The configuration directory \"%s\" could not be created.", configdir);
+                Quit("The configuration directory \"%s\" could not be created.", 
+                     configdir.buffer());
             }
         }
     }

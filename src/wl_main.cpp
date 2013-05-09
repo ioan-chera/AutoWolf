@@ -113,7 +113,7 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
-char    configdir[MAX_PATH_LENGTH] = "";
+PString configdir;
 char    configname[13] = "CONFIG.";
 
 //
@@ -166,18 +166,15 @@ void ReadConfig(void)
     SMMode  sm;
     SDSMode sds;
 
-    char configpath[300];
+    PString configpath;
 
 #ifdef _arch_dreamcast
     DC_LoadFromVMU(configname);
 #endif
 
-    if(configdir[0])
-        snprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
-    else
-        strcpy(configpath, configname);
+    configpath = configdir.withSubpath(configname);
 
-    const int file = open(configpath, O_RDONLY | O_BINARY);
+    const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
     if (file != -1)
     {
         //
@@ -291,18 +288,15 @@ noconfig:
 
 void WriteConfig(void)
 {
-    char configpath[300];
+    PString configpath;
 
 #ifdef _arch_dreamcast
     fs_unlink(configname);
 #endif
 
-    if(configdir[0])
-        snprintf(configpath, sizeof(configpath), "%s/%s", configdir, configname);
-    else
-        strcpy(configpath, configname);
+    configpath = configdir.withSubpath(configname);
 
-    const int file = open(configpath, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
     {
         word tmp=0xfefa;
@@ -1949,16 +1943,9 @@ void CheckParameters(int argc, char *argv[])
                     if(trans)
                     {
                         size_t len = strlen(trans);
-                        if(len + 2 > sizeof(configdir))
-                        {
-                            throw Exception("The config directory is too long!\n");
-                        }
-                        else
-                        {
-                            strcpy(configdir, trans);
-                            if(trans[len] != '/' && trans[len] != '\\')
-                                strcat(configdir, "/");
-                        }
+                        configdir = trans;
+                        if(trans[len] != '/' && trans[len] != '\\')
+                            configdir += '/';
                         free(trans);
                     }
                     else

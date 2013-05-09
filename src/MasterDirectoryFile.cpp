@@ -21,7 +21,7 @@
 #include "wl_main.h"
 #include "MasterDirectoryFile.h"
 
-char masterDirectoryFilePath[MAX_PATH_LENGTH];
+PString masterDirectoryFilePath;
 
 ////////////
 //
@@ -65,23 +65,7 @@ MasterDirectoryFile &MasterDirectoryFile::MainDir()
 void MasterDirectoryFile::initializeConfigLocation()
 {
     //    initialize(masterDirectoryFileName);
-    if(configdir[0] == '\0')
-    {
-        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath),
-                 "%s", masterDirectoryFileName);
-    }
-    else
-    {
-        if(sizeof(masterDirectoryFileName) + 1 + strlen(configdir) > sizeof
-           (masterDirectoryFilePath))
-        {
-            Quit("Your Autowolf.data directory path is too long. It cannot be used"
-                 " for saving bot knowledge.");
-        }
-        
-        snprintf(masterDirectoryFilePath, sizeof(masterDirectoryFilePath),
-                 "%s/%s", configdir, masterDirectoryFileName);
-    }
+    masterDirectoryFilePath = configdir.withSubpath(masterDirectoryFileName);
 }
 
 //
@@ -93,7 +77,7 @@ void MasterDirectoryFile::saveToFile()
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFilePath, "wb");
+	f = fopen(masterDirectoryFilePath.buffer(), "wb");
 	this->MasterDirectoryFile::doWriteToFile(f);
 	fclose(f);
 }
@@ -114,7 +98,7 @@ bool MasterDirectoryFile::loadFromFile()
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFilePath, "rb");
+	f = fopen(masterDirectoryFilePath.buffer(), "rb");
 	if(!f)
 		return false;	// no file, no worry
 
