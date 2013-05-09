@@ -3866,28 +3866,28 @@ void CheckForEpisodes (void)
             if(!stat("VSWAP.SOD", &statbuf))
                 extension = "SOD";
             else
-                Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(Config::Mission() == 1)
         {
             if(!stat("VSWAP.SD1", &statbuf))
                 extension = "SD1";
             else
-                Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(Config::Mission() == 2)
         {
             if(!stat("VSWAP.SD2", &statbuf))
                 extension = "SD2";
             else
-                Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
         }
         else if(Config::Mission() == 3)
         {
             if(!stat("VSWAP.SD3", &statbuf))
                 extension = "SD3";
             else
-                Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
+                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
         }
         else
             Quit ("UNSUPPORTED MISSION!");
