@@ -566,24 +566,15 @@ int Basic::ApproxDist(int dx, int dy)
 //     
 // Create new string with 
 //
-char *Basic::NewStringTildeExpand(const char *basedir)
+PString Basic::NewStringTildeExpand(const char *basedir)
 {
     if(basedir[0] == '~')
     {
         const char *home = getenv("HOME");
         if(home)
-        {
-            size_t newlen = strlen(home) + strlen(basedir);
-            char *newalloc = (char *)malloc(newlen * sizeof(char));
-
-            strcat(newalloc, home);
-            strcat(newalloc, basedir + 1);
-                        
-            return newalloc;
-        }
+            return PString(home).concat(basedir + 1);
     }
     
-    // Make sure it is always new
-    return strdup(basedir);
+    return PString(basedir);
 }
 

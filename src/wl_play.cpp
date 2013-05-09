@@ -381,8 +381,8 @@ void PollMouseMove (void)
     if(IN_IsInputGrabbed())
         IN_CenterMouse();
 
-    mousexmove -= Config::screenWidth / 2;
-    mouseymove -= Config::screenHeight / 2;
+    mousexmove -= Config::ScreenWidth() / 2;
+    mouseymove -= Config::ScreenHeight() / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -676,7 +676,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && Config::debugmode)
+    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && Config::DebugMode())
     {
         ClearMemory ();
         CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
@@ -1403,8 +1403,8 @@ void PlayLoop (void)
             VW_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
-        if (Config::extravbls)
-            VW_WaitVBL (Config::extravbls);
+        if (Config::ExtraVBLs())
+            VW_WaitVBL (Config::ExtraVBLs());
 
         if (demoplayback)
         {

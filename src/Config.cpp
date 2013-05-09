@@ -7,10 +7,19 @@
  *
  */
 
+#include <sys/stat.h>
+#include "CocoaFun.h"
 #include "PString.h"
 #include "Config.h"
 #include "Exception.h"
+#include "MasterDirectoryFile.h"
+#include "ioan_bas.h"
 
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 boolean Config::nonazis;
 boolean Config::secretstep3;
@@ -80,9 +89,9 @@ unsigned Config::screenBits = -1;      // use "best" color depth according to li
 void Config::CheckParameters(int argc, char *argv[])
 {
     bool sampleRateGiven = false, audioBufferGiven = false;
-    int defaultSampleRate = Config::samplerate;
+    int defaultSampleRate = samplerate;
     
-    Config::botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
+    botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
     try
     {
         for(int i = 1; i < argc; i++)
@@ -90,32 +99,32 @@ void Config::CheckParameters(int argc, char *argv[])
             char *arg = argv[i];
             // IOANCH 20130303: unification
             if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
-                Config::debugmode = true;
+                debugmode = true;
             else IFARG("--baby")
-                Config::difficulty = 0;
+                difficulty = 0;
             else IFARG("--easy")
-                Config::difficulty = 1;
+                difficulty = 1;
             else IFARG("--normal")
-                Config::difficulty = 2;
+                difficulty = 2;
             else IFARG("--hard")
-                Config::difficulty = 3;
+                difficulty = 3;
             else IFARG("--nowait")
-                Config::nowait = true;
+                nowait = true;
             else IFARG("--tedlevel")
             {
                 if(++i >= argc)
                     throw Exception("The tedlevel option is missing the level argument!\n");
                 else 
-                    Config::tedlevel = atoi(argv[i]);
+                    tedlevel = atoi(argv[i]);
             }
             else IFARG("--windowed")
-                Config::fullscreen = false;
+                fullscreen = false;
             else IFARG("--fullscreen")
-                Config::fullscreen = true;  // IOANCH 20121611: added --fullscreen option 
+                fullscreen = true;  // IOANCH 20121611: added --fullscreen option
             else IFARG("--windowed-mouse")
             {
-                Config::fullscreen = false;
-                Config::forcegrabmouse = true;
+                fullscreen = false;
+                forcegrabmouse = true;
             }
             else IFARG("--res")
             {
@@ -124,11 +133,11 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    Config::screenWidth = atoi(argv[++i]);
-                    Config::screenHeight = atoi(argv[++i]);
-                    unsigned factor = Config::screenWidth / 320;
-                    if(Config::screenWidth % 320 || (Config::screenHeight != 200 * factor && 
-                                                     Config::screenHeight != 240 * factor))
+                    screenWidth = atoi(argv[++i]);
+                    screenHeight = atoi(argv[++i]);
+                    unsigned factor = screenWidth / 320;
+                    if(screenWidth % 320 || (screenHeight != 200 * factor &&
+                                                     screenHeight != 240 * factor))
                     {
                         throw Exception("Screen size must be a multiple of 320x200 or "
                                         "320x240!\n"); 
@@ -142,11 +151,11 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    Config::screenWidth = atoi(argv[++i]);
-                    Config::screenHeight = atoi(argv[++i]);
-                    if(Config::screenWidth < 320)
+                    screenWidth = atoi(argv[++i]);
+                    screenHeight = atoi(argv[++i]);
+                    if(screenWidth < 320)
                         throw Exception("Screen width must be at least 320!\n");
-                    if(Config::screenHeight < 200)
+                    if(screenHeight < 200)
                         throw Exception("Screen height must be at least 200!\n"); 
                 }
             }
@@ -157,8 +166,8 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    Config::screenBits = atoi(argv[i]);
-                    switch(Config::screenBits)
+                    screenBits = atoi(argv[i]);
+                    switch(screenBits)
                     {
                         case 8:
                         case 16:
@@ -174,15 +183,15 @@ void Config::CheckParameters(int argc, char *argv[])
                 }
             }
             else IFARG("--nodblbuf")
-                Config::usedoublebuffering = false;
+                usedoublebuffering = false;
             else IFARG("--extravbls")
             {
                 if(++i >= argc)
                     throw Exception("The extravbls option is missing the vbls argument!\n");
                 else
                 {
-                    Config::extravbls = atoi(argv[i]);
-                    if(Config::extravbls < 0)
+                    extravbls = atoi(argv[i]);
+                    if(extravbls < 0)
                         throw Exception("Extravbls must be positive!\n");
                 }
             }
@@ -190,77 +199,73 @@ void Config::CheckParameters(int argc, char *argv[])
             {
                 if(++i >= argc)
                     throw Exception("The joystick option is missing the index argument!\n");
-                else 
-                    Config::joystickindex = atoi(argv[i]);   
+                else
+                    joystickindex = atoi(argv[i]);   
                 // index is checked in InitGame
             }
             else IFARG("--joystickhat")
             {
                 if(++i >= argc)
-                    throw Exception("The joystickhat option is missing the index argument!\n");
+                    throw Exception("The joystickhat option is missing the "
+                                    "index argument!\n");
                 else 
-                    Config::joystickhat = atoi(argv[i]);
+                    joystickhat = atoi(argv[i]);
             }
             else IFARG("--samplerate")
             {
                 if(++i >= argc)
-                    throw Exception("The samplerate option is missing the rate argument!\n");
+                    throw Exception("The samplerate option is missing the "
+                                    "rate argument!\n");
                 else 
-                    Config::samplerate = atoi(argv[i]);
+                    samplerate = atoi(argv[i]);
                 sampleRateGiven = true;
             }
             else IFARG("--audiobuffer")
             {
                 if(++i >= argc)
-                    throw Exception("The audiobuffer option is missing the size argument!\n");
+                    throw Exception("The audiobuffer option is missing the "
+                                    "size argument!\n");
                 else 
-                    Config::audiobuffer = atoi(argv[i]);
+                    audiobuffer = atoi(argv[i]);
                 audioBufferGiven = true;
             }
             else IFARG("--mission")
             {
                 if(++i >= argc)
-                    throw Exception("The mission option is missing the mission argument!\n");
+                    throw Exception("The mission option is missing the "
+                                    "mission argument!\n");
                 else
                 {
-                    Config::mission = atoi(argv[i]);
-                    if(Config::mission < 0 || Config::mission > 3)
-                        throw Exception("The mission option must be between 0 and 3!\n");
+                    mission = atoi(argv[i]);
+                    if(mission < 0 || mission > 3)
+                        throw Exception("The mission option must be between 0 "
+                                        "and 3!\n");
                 }
             }
             else IFARG("--configdir")
             {
                 if(++i >= argc)
-                    throw Exception("The configdir option is missing the dir argument!\n");
+                    throw Exception("The configdir option is missing the dir "
+                                    "argument!\n");
                 else
                 {
                     // IOANCH 20130307: expand tilde
-                    char *trans = Basic::NewStringTildeExpand(argv[i]);
-                    if(trans)
-                    {
-                        size_t len = strlen(trans);
-                        Config::dir = trans;
-                        if(trans[len] != '/' && trans[len] != '\\')
-                            Config::dir += '/';
-                        free(trans);
-                    }
-                    else
-                        throw Exception("The config directory couldn't be set!\n");
+                    dir = Basic::NewStringTildeExpand(argv[i]);
                 }
             }
             else IFARG("--ignorenumchunks")
-                Config::ignorenumchunks = true;
+                ignorenumchunks = true;
             else IFARG("--help")
                 throw Exception();
             // IOANCH 17.05.2012: added --nobot parameter
             else IFARG("--nobot")
-                Config::botActive = false;
+                botActive = false;
             // IOANCH 17.05.2012: added --nonazis
             else IFARG("--nonazis")
-                Config::nonazis = true;
+                nonazis = true;
             // IOANCH 29.09.2012: added --secretstep3
             else IFARG("--secretstep3")
-                Config::secretstep3 = true;
+                secretstep3 = true;
             else IFARG("--wolfdir")
             {
                 // IOANCH 20130304: added --wolfdir
@@ -268,21 +273,19 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The wolfdir option is missing the dir argument!\n");
                 else
                 {
-                    char *trans = Basic::NewStringTildeExpand(argv[i]);
+                    PString trans = Basic::NewStringTildeExpand(argv[i]);
 #if defined(_WIN32)
-                    int cdres = !::SetCurrentDirectory(trans);
+                    int cdres = !::SetCurrentDirectory(trans.buffer());
 #else
-                    int cdres = chdir(trans);
+                    int cdres = chdir(trans.buffer());
                     // FIXME: don't just assume UNIX/Linux/Apple
 #endif
                     if(cdres)
-                        throw Exception(PString("Cannot change directory to ") + trans + "\n");
-                    if(trans)
-                        free(trans);
+                        throw Exception(PString("Cannot change directory to ").concat(trans).concat("\n"));
                 }
             }
             else
-                throw Exception(PString("Unknown argument ") + arg + "\n");
+                throw Exception(PString("Unknown argument ").concat(arg).concat("\n"));
         }
     }
     catch(const Exception &e)
@@ -346,5 +349,55 @@ void Config::CheckParameters(int argc, char *argv[])
     }
     
     if(sampleRateGiven && !audioBufferGiven)
-        Config::audiobuffer = 2048 / (44100 / Config::samplerate);
+        audiobuffer = 2048 / (44100 / samplerate);
+}
+
+//
+// SetupConfigLocation
+//
+void Config::SetupConfigLocation()
+{
+    struct stat statbuf;
+    
+    // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
+#if !defined(_WIN32) && !defined(_arch_dreamcast)
+    if(dir.length() == 0)
+    {
+        // Set config location to home directory for multi-user support
+        // IOANCH 20130303: do it correctly
+        // IOANCH 20130509: use PString for paths
+#ifdef __APPLE__
+        const char *appsupdir = Cocoa_ApplicationSupportDirectory();
+        if(appsupdir == NULL)
+            Quit("Your Application Support directory is not defined. You must "
+                 "set this before playing.");
+        dir = appsupdir;
+#else
+        const char *homeenv = getenv("HOME");
+        if(homeenv == NULL)
+            Quit("Your $HOME directory is not defined. You must set this before "
+                 "playing.");
+        dir = PString(homeenv).concatSubpath(".autowolf");
+#endif
+    }
+#endif
+    if(dir.length() > 0)
+    {
+        // Ensure config directory exists and create if necessary
+        if(stat(dir.buffer(), &statbuf) != 0)
+        {
+#ifdef _WIN32
+            if(_mkdir(dir.buffer()) != 0)
+#else
+            if(mkdir(dir.buffer(), 0755) != 0)
+#endif
+            {
+                Quit("The configuration directory \"%s\" could not be created.",
+                     dir.buffer());
+            }
+        }
+    }
+    
+    // IOANCH 20130304: initialize bot master directory file location
+    MasterDirectoryFile::MainDir().initializeConfigLocation();
 }

@@ -851,8 +851,8 @@ void DrawPlayBorderSides(void)
 {
     if(viewsize == 21) return;
 
-	const int sw = Config::screenWidth;
-	const int sh = Config::screenHeight;
+	const int sw = Config::ScreenWidth();
+	const int sh = Config::ScreenHeight();
 	const int vw = viewwidth;
 	const int vh = viewheight;
 	const int px = scaleFactor; // size of one "pixel"
@@ -900,24 +900,24 @@ void DrawPlayBorderSides(void)
 
 void DrawStatusBorder (byte color)
 {
-    int statusborderw = (Config::screenWidth-scaleFactor*320)/2;
+    int statusborderw = (Config::ScreenWidth()-scaleFactor*320)/2;
 
-    VWB_BarScaledCoord (0,0,Config::screenWidth,Config::screenHeight-scaleFactor*(STATUSLINES-3),color);
-    VWB_BarScaledCoord (0,Config::screenHeight-scaleFactor*(STATUSLINES-3),
+    VWB_BarScaledCoord (0,0,Config::ScreenWidth(),Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),color);
+    VWB_BarScaledCoord (0,Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
-    VWB_BarScaledCoord (0,Config::screenHeight-scaleFactor*2,Config::screenWidth,scaleFactor*2,color);
-    VWB_BarScaledCoord (Config::screenWidth-statusborderw-scaleFactor*8, Config::screenHeight-scaleFactor*(STATUSLINES-3),
+    VWB_BarScaledCoord (0,Config::ScreenHeight()-scaleFactor*2,Config::ScreenWidth(),scaleFactor*2,color);
+    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*8, Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
 
-    VWB_BarScaledCoord (statusborderw+scaleFactor*9, Config::screenHeight-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*9, Config::ScreenHeight()-scaleFactor*3,
         scaleFactor*97, scaleFactor*1, color-1);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*106, Config::screenHeight-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*106, Config::ScreenHeight()-scaleFactor*3,
         scaleFactor*161, scaleFactor*1, color-2);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*267, Config::screenHeight-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*267, Config::ScreenHeight()-scaleFactor*3,
         scaleFactor*44, scaleFactor*1, color-3);
-    VWB_BarScaledCoord (Config::screenWidth-statusborderw-scaleFactor*9, Config::screenHeight-scaleFactor*(STATUSLINES-4),
+    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*9, Config::ScreenHeight()-scaleFactor*(STATUSLINES-4),
         scaleFactor*1, scaleFactor*20, color-2);
-    VWB_BarScaledCoord (Config::screenWidth-statusborderw-scaleFactor*9, Config::screenHeight-scaleFactor*(STATUSLINES/2-4),
+    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*9, Config::ScreenHeight()-scaleFactor*(STATUSLINES/2-4),
         scaleFactor*1, scaleFactor*14, color-3);
 }
 
@@ -938,19 +938,19 @@ void DrawPlayBorder (void)
         DrawStatusBorder(bordercol);
     else
     {
-        const int statusborderw = (Config::screenWidth-px*320)/2;
-        VWB_BarScaledCoord (0, Config::screenHeight-px*STATUSLINES,
+        const int statusborderw = (Config::ScreenWidth()-px*320)/2;
+        VWB_BarScaledCoord (0, Config::ScreenHeight()-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
-        VWB_BarScaledCoord (Config::screenWidth-statusborderw-px*8, Config::screenHeight-px*STATUSLINES,
+        VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-px*8, Config::ScreenHeight()-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
-    if((unsigned) viewheight == Config::screenHeight) return;
+    if((unsigned) viewheight == Config::ScreenHeight()) return;
 
-    VWB_BarScaledCoord (0,0,Config::screenWidth,Config::screenHeight-px*STATUSLINES,bordercol);
+    VWB_BarScaledCoord (0,0,Config::ScreenWidth(),Config::ScreenHeight()-px*STATUSLINES,bordercol);
 
-    const int xl = Config::screenWidth/2-viewwidth/2;
-    const int yl = (Config::screenHeight-px*STATUSLINES-viewheight)/2;
+    const int xl = Config::ScreenWidth()/2-viewwidth/2;
+    const int yl = (Config::ScreenHeight()-px*STATUSLINES-viewheight)/2;
     VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
@@ -980,7 +980,7 @@ void DrawPlayBorder (void)
 
 void DrawPlayScreen (void)
 {
-    VWB_DrawPicScaledCoord ((Config::screenWidth-scaleFactor*320)/2,Config::screenHeight-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR()]);
+    VWB_DrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/2,Config::ScreenHeight()-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR()]);
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1027,8 +1027,8 @@ void ShowActStatus()
     int	picnum = gfxvmap[STATUSBARPIC][SPEAR()] - gfxvmap[STARTPICS][SPEAR()];
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
-    int destx = (Config::screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
-    int desty = Config::screenHeight - (height - 4) * scaleFactor;
+    int destx = (Config::ScreenWidth()-scaleFactor*320)/2 + 9 * scaleFactor;
+    int desty = Config::ScreenHeight() - (height - 4) * scaleFactor;
     VL_MemToScreenScaledCoord(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
@@ -1183,7 +1183,7 @@ void RecordDemo (void)
     SetupGameLevel ();
     StartMusic ();
 
-    if(Config::usedoublebuffering) VH_UpdateScreen();
+    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
     fizzlein = true;
 
     PlayLoop ();
@@ -1375,7 +1375,7 @@ void Died (void)
     //
     FinishPaletteShifts ();
 
-    if(Config::usedoublebuffering) VH_UpdateScreen();
+    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 
@@ -1590,7 +1590,7 @@ startplayloop:
                     break;                          // more lives left
 
                 VW_FadeOut ();
-                if(Config::screenHeight % 200 != 0)
+                if(Config::ScreenHeight() % 200 != 0)
                     VL_ClearScreen(0);
 
 #ifdef _arch_dreamcast

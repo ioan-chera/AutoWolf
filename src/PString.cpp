@@ -266,8 +266,25 @@ PString &PString::copy(int number)
 //
 PString PString::withExtension(const char *ext, size_t inLength) const
 {
+    return PString(*this).concatExtension(ext, inLength);
+}
+PString PString::withExtension(const char *ext) const
+{
+    return PString(*this).concatExtension(ext);
+}
+PString PString::withExtension(const PString &other) const
+{
+    return PString(*this).concatExtension(other);
+}
+
+//
+// PString::concatExtension
+//
+// Note: an empty string will not be modified.
+//
+PString &PString::concatExtension(const char *ext, size_t inLength)
+{
     char *p = _buffer;
-    PString ret(*this);
     
     if(_index > 0)
     {
@@ -275,21 +292,22 @@ PString PString::withExtension(const char *ext, size_t inLength) const
         while(p-- > _buffer && *p != '/' && *p != '\\')
         {
             if(*p == '.')
-                return ret; // has an extension already.
+                return *this; // has an extension already.
         }
         if(*ext != '.') // need a dot?
-            ret += '.';
-        ret.concat(ext, inLength);   // add the extension
+            *this += '.';
+        concat(ext, inLength);   // add the extension
     }
-    return ret;
+    
+    return *this;
 }
-PString PString::withExtension(const char *ext) const
+PString &PString::concatExtension(const char *ext)
 {
-    return withExtension(ext, strlen(ext));
+    return concatExtension(ext, strlen(ext));
 }
-PString PString::withExtension(const PString &other) const
+PString &PString::concatExtension(const PString &other)
 {
-    return withExtension(other._buffer, other._index);
+    return concatExtension(other._buffer, other._index);
 }
 
 //
@@ -648,22 +666,41 @@ PString &PString::normalizeSlashes()
 PString PString::withSubpath(const char *addend, size_t inLength) const
 {
     // Only add a slash if this is not the initial path component.
-    PString ret(*this);
-    if(ret._index > 0)
-        ret += '/';
-    
-    ret.concat(addend, inLength);
-    ret.normalizeSlashes();
-    
-    return ret;
+    return PString(*this).concatSubpath(addend, inLength);
 }
 PString PString::withSubpath(const char *addend) const
 {
-    return withSubpath(addend, strlen(addend));
+    return PString(*this).concatSubpath(addend);
 }
 PString PString::withSubpath(const PString &add) const
 {
-    return withSubpath(add._buffer, add._index);
+    return PString(*this).concatSubpath(add);
+}
+
+//
+// PString::concatSubpath
+//
+// Concatenate a C string assuming the PString's current contents are a file
+// path. Slashes will be normalized.
+//
+PString &PString::concatSubpath(const char *addend, size_t inLength)
+{
+    // Only add a slash if this is not the initial path component.
+    if(_index > 0)
+        *this += '/';
+    
+    concat(addend, inLength);
+    normalizeSlashes();
+    
+    return *this;
+}
+PString &PString::concatSubpath(const char *addend)
+{
+    return concatSubpath(addend, strlen(addend));
+}
+PString &PString::concatSubpath(const PString &other)
+{
+    return concatSubpath(other._buffer, other._index);
 }
 
 //

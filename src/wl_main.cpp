@@ -1290,7 +1290,7 @@ static void InitGame()
     SignonScreen ();
 
 #if defined _WIN32
-    if(!Config::fullscreen)
+    if(!Config::FullScreen())
     {
         struct SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
@@ -1409,13 +1409,13 @@ boolean SetViewSize (unsigned width, unsigned height)
     viewheight = height&~1;                 // must be even
     centerx = viewwidth/2-1;
     shootdelta = viewwidth/10;
-    if((unsigned) viewheight == Config::screenHeight)
+    if((unsigned) viewheight == Config::ScreenHeight())
         viewscreenx = viewscreeny = screenofs = 0;
     else
     {
-        viewscreenx = (Config::screenWidth-viewwidth) / 2;
-        viewscreeny = (Config::screenHeight-scaleFactor*STATUSLINES-viewheight)/2;
-        screenofs = viewscreeny*Config::screenWidth+viewscreenx;
+        viewscreenx = (Config::ScreenWidth()-viewwidth) / 2;
+        viewscreeny = (Config::ScreenHeight()-scaleFactor*STATUSLINES-viewheight)/2;
+        screenofs = viewscreeny*Config::ScreenWidth()+viewscreenx;
     }
 
 //
@@ -1436,20 +1436,20 @@ void ShowViewSize (int width)
 
     if(width == 21)
     {
-        viewwidth = Config::screenWidth;
-        viewheight = Config::screenHeight;
-        VWB_BarScaledCoord (0, 0, Config::screenWidth, Config::screenHeight, 0);
+        viewwidth = Config::ScreenWidth();
+        viewheight = Config::ScreenHeight();
+        VWB_BarScaledCoord (0, 0, Config::ScreenWidth(), Config::ScreenHeight(), 0);
     }
     else if(width == 20)
     {
-        viewwidth = Config::screenWidth;
-        viewheight = Config::screenHeight - scaleFactor*STATUSLINES;
+        viewwidth = Config::ScreenWidth();
+        viewheight = Config::ScreenHeight() - scaleFactor*STATUSLINES;
         DrawPlayBorder ();
     }
     else
     {
-        viewwidth = width*16*Config::screenWidth/320;
-        viewheight = (int) (width*16*HEIGHTRATIO*Config::screenHeight/200);
+        viewwidth = width*16*Config::ScreenWidth()/320;
+        viewheight = (int) (width*16*HEIGHTRATIO*Config::ScreenHeight()/200);
         DrawPlayBorder ();
     }
 
@@ -1462,11 +1462,11 @@ void NewViewSize (int width)
 {
     viewsize = width;
     if(viewsize == 21)
-        SetViewSize(Config::screenWidth, Config::screenHeight);
+        SetViewSize(Config::ScreenWidth(), Config::ScreenHeight());
     else if(viewsize == 20)
-        SetViewSize(Config::screenWidth, Config::screenHeight - scaleFactor * STATUSLINES);
+        SetViewSize(Config::ScreenWidth(), Config::ScreenHeight() - scaleFactor * STATUSLINES);
     else
-        SetViewSize(width*16*Config::screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*Config::screenHeight/200));
+        SetViewSize(width*16*Config::ScreenWidth()/320, (unsigned) (width*16*HEIGHTRATIO*Config::ScreenHeight()/200));
 }
 
 
@@ -1582,22 +1582,22 @@ static void DemoLoop()
 //
 // check for launch from ted
 //
-    if (Config::tedlevel != -1)
+    if (Config::TedLevel() != -1)
     {
-        Config::nowait = true;
+        Config::SetNoWait(true);
         EnableEndGameMenuItem();
-        NewGame(Config::difficulty,0);
+        NewGame(Config::Difficulty(),0);
 
         // IOANCH 20130303: unification
         if(!SPEAR())
         {
-            gamestate.episode = Config::tedlevel/10;
-            gamestate.mapon = Config::tedlevel%10;
+            gamestate.episode = Config::TedLevel()/10;
+            gamestate.mapon = Config::TedLevel()%10;
         }
         else
         {
             gamestate.episode = 0;
-            gamestate.mapon = Config::tedlevel;
+            gamestate.mapon = Config::TedLevel();
         }
         GameLoop();
         Quit (NULL);
@@ -1615,7 +1615,7 @@ static void DemoLoop()
     StartCPMusic(INTROSONG);
 // IOANCH 20130301: unification culling
 
-    if (!Config::nowait)
+    if (!Config::NoWait())
         PG13 ();
 
 
@@ -1623,7 +1623,7 @@ static void DemoLoop()
 
     while (1)
     {
-        while (!Config::nowait)
+        while (!Config::NoWait())
         {
 //
 // title page
@@ -1690,7 +1690,7 @@ static void DemoLoop()
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
-            if(Config::screenHeight % 200 != 0)
+            if(Config::ScreenHeight() % 200 != 0)
                 VL_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
@@ -1698,7 +1698,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (Keyboard[sc_Tab] && Config::debugmode)
+        if (Keyboard[sc_Tab] && Config::DebugMode())
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1709,7 +1709,7 @@ static void DemoLoop()
         if (startgame || loadedgame)
         {
             GameLoop ();
-            if(!Config::nowait)
+            if(!Config::NoWait())
             {
                 VW_FadeOut();
                 StartCPMusic(INTROSONG);
@@ -1745,6 +1745,8 @@ int main (int argc, char *argv[])
     // IOANCH: unification: set the SPEAR() global var
     SPEAR.Initialize("");
     
+    // IOANCH 20130509: this changes config values. Call moved here from CFE.
+    Config::SetupConfigLocation();
     CheckForEpisodes();
 
     InitGame();

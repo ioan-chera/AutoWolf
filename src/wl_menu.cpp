@@ -698,7 +698,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(Config::screenHeight % 200 != 0)
+                if(Config::ScreenHeight() % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -777,7 +777,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(Config::screenHeight % 200 != 0)
+                if(Config::ScreenHeight() % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -2761,7 +2761,7 @@ CP_ChangeView (int)
         {
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
-            if(Config::screenHeight % 200 != 0)
+            if(Config::ScreenHeight() % 200 != 0)
                 VL_ClearScreen(0);
             return 0;
         }
@@ -2777,7 +2777,7 @@ CP_ChangeView (int)
 
     ShootSnd ();
     MenuFadeOut ();
-    if(Config::screenHeight % 200 != 0)
+    if(Config::ScreenHeight() % 200 != 0)
         VL_ClearScreen(0);
 
     return 0;
@@ -2791,12 +2791,12 @@ CP_ChangeView (int)
 void
 DrawChangeView (int view)
 {
-    int rescaledHeight = Config::screenHeight / scaleFactor;
+    int rescaledHeight = Config::ScreenHeight() / scaleFactor;
     if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
-    PrintY = (Config::screenHeight / scaleFactor) - 39;
+    PrintY = (Config::ScreenHeight() / scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
@@ -3017,7 +3017,7 @@ SetupControlPanel (void)
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
     fontnumber = 1;
     WindowH = 200;
-    if(Config::screenHeight % 200 != 0)
+    if(Config::ScreenHeight() % 200 != 0)
         VL_ClearScreen(0);
 
     if (!ingame)
@@ -3816,45 +3816,6 @@ void CheckForEpisodes (void)
 {
     struct stat statbuf;
 
-    // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast)
-    if(Config::Dir().length() == 0)
-    {
-        // Set config location to home directory for multi-user support
-        // IOANCH 20130303: do it correctly
-        // IOANCH 20130509: use PString for paths
-#ifdef __APPLE__
-        const char *appsupdir = Cocoa_ApplicationSupportDirectory();
-        if(appsupdir == NULL)
-            Quit("Your Application Support directory is not defined. You must set this before playing.");
-        Config::dir = PString(Cocoa_ApplicationSupportDirectory());
-#else
-        char *homeenv = getenv("HOME");
-        if(homeenv == NULL)
-            Quit("Your $HOME directory is not defined. You must set this before playing.");
-        Config::dir = PString(homeenv).withSubpath("/.autowolf");
-#endif
-    }
-#endif
-    if(Config::Dir().length() > 0)
-    {
-        // Ensure config directory exists and create if necessary
-        if(stat(Config::Dir().buffer(), &statbuf) != 0)
-        {
-#ifdef _WIN32
-            if(_mkdir(Config::Dir().buffer()) != 0)
-#else
-            if(mkdir(Config::Dir().buffer(), 0755) != 0)
-#endif
-            {
-                Quit("The configuration directory \"%s\" could not be created.", 
-                     Config::Dir().buffer());
-            }
-        }
-    }
-    
-    // IOANCH 20130304: initialize bot master directory file location
-    MasterDirectoryFile::MainDir().initializeConfigLocation();
 
     // IOANCH 20130301: unification culling
     if(!SPEAR())
@@ -3892,33 +3853,34 @@ void CheckForEpisodes (void)
                     Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
             }
         }
+        graphext = extension;
+        audioext = extension;
     }
-    
-    if(SPEAR())
+    else
     {
 // IOANCH 20130301: unification culling
-        if(Config::mission == 0)
+        if(Config::Mission() == 0)
         {
             if(!stat("VSWAP.SOD", &statbuf))
                 extension = "SOD";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(Config::mission == 1)
+        else if(Config::Mission() == 1)
         {
             if(!stat("VSWAP.SD1", &statbuf))
                 extension = "SD1";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(Config::mission == 2)
+        else if(Config::Mission() == 2)
         {
             if(!stat("VSWAP.SD2", &statbuf))
                 extension = "SD2";
             else
                 Quit ("NO SPEAR() OF DESTINY DATA FILES TO BE FOUND!");
         }
-        else if(Config::mission == 3)
+        else if(Config::Mission() == 3)
         {
             if(!stat("VSWAP.SD3", &statbuf))
                 extension = "SD3";
@@ -3929,11 +3891,6 @@ void CheckForEpisodes (void)
             Quit ("UNSUPPORTED MISSION!");
         graphext = "SOD";
         audioext = "SOD";
-    }
-    else
-    {
-        graphext = extension;
-        audioext = extension;
     }
 
     configname += extension;

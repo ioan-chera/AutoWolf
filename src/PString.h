@@ -68,6 +68,9 @@ public:
     ~PString() { freeBuffer(); }
     
     // Manipulators
+    PString &concatExtension(const char *ext, size_t inLength);
+    PString &concatExtension(const char *ext);
+    PString &concatExtension(const PString &other);
     PString  withExtension(const char *ext, size_t inLength) const;
     PString  withExtension(const char *ext) const;
     PString  withExtension(const PString &other) const;
@@ -95,9 +98,12 @@ public:
     PString &lstrip(char c);
     PString &makeQuoted();
     PString &normalizeSlashes();
-    PString withSubpath(const char *addend, size_t inLength) const;
-    PString withSubpath(const char *addend) const;
-    PString withSubpath(const PString &add) const;
+    PString &concatSubpath(const char *addend, size_t inLength);
+    PString &concatSubpath(const char *addend);
+    PString &concatSubpath(const PString &other);
+    PString  withSubpath(const char *addend, size_t inLength) const;
+    PString  withSubpath(const char *addend) const;
+    PString  withSubpath(const PString &add) const;
     PString &Putc(char ch);
     PString &removeFileSpec();
     size_t   replace(const char *filter, size_t inLength, char repl);

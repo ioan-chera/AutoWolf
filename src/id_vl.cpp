@@ -126,32 +126,32 @@ void	VL_SetVGAPlaneMode (void)
     else
         SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
 
-    if(Config::screenBits == -1)
+    if(Config::ScreenBits() == -1)
     {
         const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
-        Config::screenBits = vidInfo->vfmt->BitsPerPixel;
+        Config::SetScreenBits(vidInfo->vfmt->BitsPerPixel);
     }
 
-    screen = SDL_SetVideoMode(Config::screenWidth, Config::screenHeight, Config::screenBits,
-          (Config::usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
-        | (Config::screenBits == 8 ? SDL_HWPALETTE : 0)
-        | (Config::fullscreen ? SDL_FULLSCREEN : 0));
+    screen = SDL_SetVideoMode(Config::ScreenWidth(), Config::ScreenHeight(), Config::ScreenBits(),
+          (Config::UseDoubleBuffering() ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
+        | (Config::ScreenBits() == 8 ? SDL_HWPALETTE : 0)
+        | (Config::FullScreen() ? SDL_FULLSCREEN : 0));
     if(!screen)
     {
-        printf("Unable to set %ix%ix%i video mode: %s\n", Config::screenWidth,
-               Config::screenHeight, Config::screenBits, SDL_GetError());
+        printf("Unable to set %ix%ix%i video mode: %s\n", Config::ScreenWidth(),
+               Config::ScreenHeight(), Config::ScreenBits(), SDL_GetError());
         exit(1);
     }
     if((screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
-        Config::usedoublebuffering = false;
+        Config::SetUseDoubleBuffering(false);
     SDL_ShowCursor(SDL_DISABLE);
 
     // IOANCH 20130202: unification process
     SDL_SetColors(screen, IMPALE(palette), 0, 256);
     memcpy(curpal, IMPALE(palette), sizeof(SDL_Color) * 256);
 
-    screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, Config::screenWidth,
-        Config::screenHeight, 8, 0, 0, 0, 0);
+    screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, Config::ScreenWidth(),
+        Config::ScreenHeight(), 8, 0, 0, 0, 0);
     if(!screenBuffer)
     {
         printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
@@ -167,12 +167,12 @@ void	VL_SetVGAPlaneMode (void)
     curSurface = screenBuffer;
     curPitch = bufferPitch;
 
-    scaleFactor = Config::screenWidth/320;
-    if(Config::screenHeight/200 < scaleFactor) scaleFactor = Config::screenHeight/200;
+    scaleFactor = Config::ScreenWidth()/320;
+    if(Config::ScreenHeight()/200 < scaleFactor) scaleFactor = Config::ScreenHeight()/200;
 
-    pixelangle = (short *) malloc(Config::screenWidth * sizeof(short));
+    pixelangle = (short *) malloc(Config::ScreenWidth() * sizeof(short));
     CHECKMALLOCRESULT(pixelangle);
-    wallheight = (int *) malloc(Config::screenWidth * sizeof(int));
+    wallheight = (int *) malloc(Config::ScreenWidth() * sizeof(int));
     CHECKMALLOCRESULT(wallheight);
 }
 
@@ -242,7 +242,7 @@ void VL_SetColor	(int color, int red, int green, int blue)
     SDL_Color col = { static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue) };
     curpal[color] = col;
 
-    if(Config::screenBits == 8)
+    if(Config::ScreenBits() == 8)
         SDL_SetPalette(screen, SDL_PHYSPAL, &col, color, 1);
     else
     {
@@ -284,7 +284,7 @@ void VL_SetPalette (SDL_Color *palette, bool forceupdate)
 {
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
-    if(Config::screenBits == 8)
+    if(Config::ScreenBits() == 8)
         SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
     else
     {
@@ -361,7 +361,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 			newptr++;
 		}
 
-		if(!Config::usedoublebuffering || Config::screenBits == 8) VL_WaitVBL(1);
+		if(!Config::UseDoubleBuffering() || Config::ScreenBits() == 8) VL_WaitVBL(1);
 		VL_SetPalette (palette2, true);
 	}
 
@@ -405,7 +405,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 			palette2[j].b = palette1[j].b + delta * i / steps;
 		}
 
-		if(!Config::usedoublebuffering || Config::screenBits == 8) VL_WaitVBL(1);
+		if(!Config::UseDoubleBuffering() || Config::ScreenBits() == 8) VL_WaitVBL(1);
 		VL_SetPalette(palette2, true);
 	}
 
@@ -454,8 +454,8 @@ void VL_Plot (int x, int y, int color)
 {
     byte *ptr;
 
-    assert(x >= 0 && (unsigned) x < Config::screenWidth
-            && y >= 0 && (unsigned) y < Config::screenHeight
+    assert(x >= 0 && (unsigned) x < Config::ScreenWidth()
+            && y >= 0 && (unsigned) y < Config::ScreenHeight()
             && "VL_Plot: Pixel out of bounds!");
 
     ptr = VL_LockSurface(curSurface);
@@ -479,8 +479,8 @@ byte VL_GetPixel (int x, int y)
     byte *ptr;
     byte col;
 
-    assert_ret(x >= 0 && (unsigned) x < Config::screenWidth
-            && y >= 0 && (unsigned) y < Config::screenHeight
+    assert_ret(x >= 0 && (unsigned) x < Config::ScreenWidth()
+            && y >= 0 && (unsigned) y < Config::ScreenHeight()
             && "VL_GetPixel: Pixel out of bounds!");
 
     ptr = VL_LockSurface(curSurface);
@@ -506,8 +506,8 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
     byte *ptr;
 
-    assert(x >= 0 && x + width <= Config::screenWidth
-            && y >= 0 && y < Config::screenHeight
+    assert(x >= 0 && x + width <= Config::ScreenWidth()
+            && y >= 0 && y < Config::ScreenHeight()
             && "VL_Hlin: Destination rectangle out of bounds!");
 
     ptr = VL_LockSurface(curSurface);
@@ -531,8 +531,8 @@ void VL_Vlin (int x, int y, int height, int color)
 {
 	byte *ptr;
 
-	assert(x >= 0 && (unsigned) x < Config::screenWidth
-			&& y >= 0 && (unsigned) y + height <= Config::screenHeight
+	assert(x >= 0 && (unsigned) x < Config::ScreenWidth()
+			&& y >= 0 && (unsigned) y + height <= Config::ScreenHeight()
 			&& "VL_Vlin: Destination rectangle out of bounds!");
 
 	ptr = VL_LockSurface(curSurface);
@@ -562,8 +562,8 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
 	byte *ptr;
 
-	assert(scx >= 0 && (unsigned) scx + scwidth <= Config::screenWidth
-			&& scy >= 0 && (unsigned) scy + scheight <= Config::screenHeight
+	assert(scx >= 0 && (unsigned) scx + scwidth <= Config::ScreenWidth()
+			&& scy >= 0 && (unsigned) scy + scheight <= Config::ScreenHeight()
 			&& "VL_BarScaledCoord: Destination rectangle out of bounds!");
 
 	ptr = VL_LockSurface(curSurface);
@@ -600,8 +600,8 @@ void VL_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface
     byte *ptr;
     int xsrc, ysrc, pitch;
 
-    assert(x >= 0 && (unsigned) x + width <= Config::screenWidth
-            && y >= 0 && (unsigned) y + height <= Config::screenHeight
+    assert(x >= 0 && (unsigned) x + width <= Config::ScreenWidth()
+            && y >= 0 && (unsigned) y + height <= Config::ScreenHeight()
             && "VL_MemToLatch: Destination rectangle out of bounds!");
 
     ptr = VL_LockSurface(destSurface);
@@ -639,8 +639,8 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * scaleFactor <= Config::screenWidth
-            && desty >= 0 && desty + height * scaleFactor <= Config::screenHeight
+    assert(destx >= 0 && destx + width * scaleFactor <= Config::ScreenWidth()
+            && desty >= 0 && desty + height * scaleFactor <= Config::ScreenHeight()
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     ptr = VL_LockSurface(curSurface);
@@ -683,8 +683,8 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * scaleFactor <= Config::screenWidth
-            && desty >= 0 && desty + height * scaleFactor <= Config::screenHeight
+    assert(destx >= 0 && destx + width * scaleFactor <= Config::ScreenWidth()
+            && desty >= 0 && desty + height * scaleFactor <= Config::ScreenHeight()
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     ptr = VL_LockSurface(curSurface);
@@ -722,8 +722,8 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
 void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest)
 {
-	assert(scxdest >= 0 && scxdest + width * scaleFactor <= Config::screenWidth
-			&& scydest >= 0 && scydest + height * scaleFactor <= Config::screenHeight
+	assert(scxdest >= 0 && scxdest + width * scaleFactor <= Config::ScreenWidth()
+			&& scydest >= 0 && scydest + height * scaleFactor <= Config::ScreenHeight()
 			&& "VL_LatchToScreenScaledCoord: Destination rectangle out of bounds!");
 
 	if(scaleFactor == 1)
@@ -736,7 +736,7 @@ void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
         //       SDL tries to map the colors...
         //       The result: All colors are mapped to black.
         //       So, we do the blit on our own...
-        if(Config::screenBits != 8)
+        if(Config::ScreenBits() != 8)
         {
             byte *src, *dest;
             unsigned srcPitch;

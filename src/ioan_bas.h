@@ -23,6 +23,7 @@
 #include <math.h>
 #include "wl_def.h"
 #include "List.h"
+#include "PString.h"
 
 //
 // Basic
@@ -116,7 +117,7 @@ namespace Basic
 	// ApproximateDistance
 	int ApproxDist(int dx, int dy);
     
-    char *NewStringTildeExpand(const char *basedir);
+    PString NewStringTildeExpand(const char *basedir);
 
 };
 
