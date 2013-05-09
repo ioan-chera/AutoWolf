@@ -60,5 +60,5 @@ const char *Cocoa_ApplicationSupportDirectory()
 //
 void Cocoa_DisplayErrorAlert(const char *msg)
 {
-    [[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Dismiss" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+    [[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 }

@@ -1272,14 +1272,7 @@ static void InitGame()
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
     }
-    // IOANCH: prepare the OSX version for displaying a quit error
-#ifdef __APPLE__
-    atexit_b(^()
-             {
-                 if(global_error && *global_error)
-                     Cocoa_DisplayErrorAlert(global_error);
-             });
-#endif
+
     atexit(SDL_Quit);
 
     int numJoysticks = SDL_NumJoysticks();
@@ -1714,6 +1707,15 @@ int main (int argc, char *argv[])
 #endif
     // IOANCH: unification: set the SPEAR() global var
     SPEAR.Initialize("");
+    
+    // IOANCH: prepare the OSX version for displaying a quit error
+#ifdef __APPLE__
+    atexit_b(^()
+             {
+                 if(global_error && *global_error)
+                     Cocoa_DisplayErrorAlert(global_error);
+             });
+#endif
     
     // IOANCH 20130509: this changes config values. Call moved here from CFE.
     Config::SetupConfigLocation();
