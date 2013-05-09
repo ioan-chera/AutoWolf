@@ -3816,7 +3816,6 @@ void CheckForEpisodes (void)
 {
     struct stat statbuf;
 
-
     // IOANCH 20130301: unification culling
     if(!SPEAR())
     {
@@ -3840,7 +3839,10 @@ void CheckForEpisodes (void)
             {
                 extension = "WL3";
                 numEpisodesMissing = 3;
-                NewEmenu[2].active = NewEmenu[4].active = EpisodeSelect[1] = EpisodeSelect[2] = 1;
+                NewEmenu[2].active =
+                NewEmenu[4].active =
+                EpisodeSelect[1] =
+                EpisodeSelect[2] = 1;
             }
             else
             {
