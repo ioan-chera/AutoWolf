@@ -259,13 +259,15 @@ PString &PString::copy(int number)
 ////////////////////////////////////////////////////////////////////////////////
 
 //
-// PString::addDefaultExtension
+// PString::withExtension
 //
 // Note: an empty string will not be modified.
+// Modified and renamed by IOANCH 20130509 not to modify the object
 //
-PString &PString::addDefaultExtension(const char *ext, size_t inLength)
+PString PString::withExtension(const char *ext, size_t inLength) const
 {
     char *p = _buffer;
+    PString ret(*this);
     
     if(_index > 0)
     {
@@ -273,19 +275,21 @@ PString &PString::addDefaultExtension(const char *ext, size_t inLength)
         while(p-- > _buffer && *p != '/' && *p != '\\')
         {
             if(*p == '.')
-                return *this; // has an extension already.
+                return ret; // has an extension already.
         }
         if(*ext != '.') // need a dot?
-            *this += '.';
-        concat(ext, inLength);   // add the extension
+            ret += '.';
+        ret.concat(ext, inLength);   // add the extension
     }
-    
-    return *this;
+    return ret;
 }
-
-PString &PString::addDefaultExtension(const char *ext)
+PString PString::withExtension(const char *ext) const
 {
-    return addDefaultExtension(ext, strlen(ext));
+    return withExtension(ext, strlen(ext));
+}
+PString PString::withExtension(const PString &other) const
+{
+    return withExtension(other._buffer, other._index);
 }
 
 //

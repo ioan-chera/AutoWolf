@@ -68,8 +68,9 @@ public:
     ~PString() { freeBuffer(); }
     
     // Manipulators
-    PString &addDefaultExtension(const char *ext, size_t inLength);
-    PString &addDefaultExtension(const char *ext);
+    PString  withExtension(const char *ext, size_t inLength) const;
+    PString  withExtension(const char *ext) const;
+    PString  withExtension(const PString &other) const;
     PString &clear();
     PString &clearOrCreate(size_t size);
     PString &concat(const char *str, size_t inLength);
