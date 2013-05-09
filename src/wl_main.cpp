@@ -1783,10 +1783,9 @@ void CheckParameters(int argc, char *argv[])
             else IFARG("--tedlevel")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The tedlevel option is missing the level argument!\n");
-                }
-                else param_tedlevel = atoi(argv[i]);
+                else 
+                    param_tedlevel = atoi(argv[i]);
             }
             else IFARG("--windowed")
                 fullscreen = false;
@@ -1800,10 +1799,8 @@ void CheckParameters(int argc, char *argv[])
             else IFARG("--res")
             {
                 if(i + 2 >= argc)
-                {
                     throw Exception("The res option needs the width and/or the height "
                            "argument!\n");
-                }
                 else
                 {
                     screenWidth = atoi(argv[++i]);
@@ -1820,31 +1817,23 @@ void CheckParameters(int argc, char *argv[])
             else IFARG("--resf")
             {
                 if(i + 2 >= argc)
-                {
                     throw Exception("The resf option needs the width and/or the height "
                            "argument!\n");
-                }
                 else
                 {
                     screenWidth = atoi(argv[++i]);
                     screenHeight = atoi(argv[++i]);
                     if(screenWidth < 320)
-                    {
                         throw Exception("Screen width must be at least 320!\n");
-                    }
                     if(screenHeight < 200)
-                    {
                         throw Exception("Screen height must be at least 200!\n"); 
-                    }
                 }
             }
             else IFARG("--bits")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The bits option is missing the color depth "
                            "argument!\n");
-                }
                 else
                 {
                     screenBits = atoi(argv[i]);
@@ -1857,7 +1846,8 @@ void CheckParameters(int argc, char *argv[])
                             break;
 
                         default:
-                            throw Exception("Screen color depth must be 8, 16, 24, or 32!\n");
+                            throw Exception("Screen color depth must be 8, 16, "
+                                            "24, or 32!\n");
                             break;
                     }
                 }
@@ -1867,24 +1857,18 @@ void CheckParameters(int argc, char *argv[])
             else IFARG("--extravbls")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The extravbls option is missing the vbls argument!\n");
-                }
                 else
                 {
                     extravbls = atoi(argv[i]);
                     if(extravbls < 0)
-                    {
                         throw Exception("Extravbls must be positive!\n");
-                    }
                 }
             }
             else IFARG("--joystick")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The joystick option is missing the index argument!\n");
-                }
                 else 
                     param_joystickindex = atoi(argv[i]);   
                 // index is checked in InitGame
@@ -1892,50 +1876,41 @@ void CheckParameters(int argc, char *argv[])
             else IFARG("--joystickhat")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The joystickhat option is missing the index argument!\n");
-                }
-                else param_joystickhat = atoi(argv[i]);
+                else 
+                    param_joystickhat = atoi(argv[i]);
             }
             else IFARG("--samplerate")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The samplerate option is missing the rate argument!\n");
-                }
-                else param_samplerate = atoi(argv[i]);
+                else 
+                    param_samplerate = atoi(argv[i]);
                 sampleRateGiven = true;
             }
             else IFARG("--audiobuffer")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The audiobuffer option is missing the size argument!\n");
-                }
-                else param_audiobuffer = atoi(argv[i]);
+                else 
+                    param_audiobuffer = atoi(argv[i]);
                 audioBufferGiven = true;
             }
             else IFARG("--mission")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The mission option is missing the mission argument!\n");
-                }
                 else
                 {
                     param_mission = atoi(argv[i]);
                     if(param_mission < 0 || param_mission > 3)
-                    {
                         throw Exception("The mission option must be between 0 and 3!\n");
-                    }
                 }
             }
             else IFARG("--configdir")
             {
                 if(++i >= argc)
-                {
                     throw Exception("The configdir option is missing the dir argument!\n");
-                }
                 else
                 {
                     // IOANCH 20130307: expand tilde
@@ -1949,10 +1924,7 @@ void CheckParameters(int argc, char *argv[])
                         free(trans);
                     }
                     else
-                    {
                         throw Exception("The config directory couldn't be set!\n");
-                    }
-
                 }
             }
             else IFARG("--goodtimes")
@@ -1974,9 +1946,7 @@ void CheckParameters(int argc, char *argv[])
             {
                 // IOANCH 20130304: added --wolfdir
                 if(++i >= argc)
-                {
                     throw Exception("The wolfdir option is missing the dir argument!\n");
-                }
                 else
                 {
                     char *trans = Basic::NewStringTildeExpand(argv[i]);
@@ -1987,9 +1957,7 @@ void CheckParameters(int argc, char *argv[])
                     // FIXME: don't just assume UNIX/Linux/Apple
     #endif
                     if(cdres)
-                    {
                         throw Exception(PString("Cannot change directory to ") + trans + "\n");
-                    }
                     if(trans)
                         free(trans);
                 }
