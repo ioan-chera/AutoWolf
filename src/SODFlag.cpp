@@ -21,6 +21,9 @@
 
 SODFlag SPEAR;
 
+const char SODFlag::wolftitle[] = "Automatic Wolfenstein 3D";
+const char SODFlag::speartitle[] = "Automatic Spear of Destiny";
+
 const unsigned int SODFlag::gfxvmap[][2] =
 {
     {3,                     BJCOLLAPSE1PIC_sod},

@@ -40,6 +40,8 @@ class SODFlag
     static const unsigned int gfxvmap[][2];
     static const unsigned int sprmap[][2];
     static const unsigned int soundmap[][2];
+    static const char wolftitle[];
+    static const char speartitle[];
     void Initialize(const PString &basePath);
 public:
     SODFlag() : flag(false)                  {}
@@ -47,6 +49,7 @@ public:
     unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}
     unsigned int sp(unsigned int value)const {return sprmap[value][flag];}
     unsigned int sd(unsigned int value)const {return soundmap[value][flag];}
+    const char *FullTitle() const {return flag ? speartitle : wolftitle;}
 };
 extern SODFlag SPEAR;
 
