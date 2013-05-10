@@ -3857,6 +3857,7 @@ void CheckForEpisodes (void)
         }
         graphext = extension;
         audioext = extension;
+        endfilename += extension;
     }
     else
     {
@@ -3899,10 +3900,4 @@ void CheckForEpisodes (void)
     configname += extension;
     SaveName += extension;
     demoname += extension;
-
-    if(!SPEAR())
-    {
-    // IOANCH 20130301: unification culling
-        endfilename += extension;
-    }
 }
