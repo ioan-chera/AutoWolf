@@ -1034,10 +1034,8 @@ void CA_CacheMap (int mapnum)
 //
 void CA_CannotOpen(const char *string)
 {
-    char str[30];
-
-    strcpy(str,"Can't open ");
-    strcat(str,string);
-    strcat(str,"!\n");
-    Quit (str);
+    // IOANCH 20130510: don't use a statically allocated char array.
+    PString str("Can't open ");
+    str.concat(string).concat("!\n");
+    Quit (str.buffer());
 }
