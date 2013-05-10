@@ -3833,28 +3833,23 @@ void CheckForEpisodes (void)
             EpisodeSelect[4] = 
             EpisodeSelect[5] = 1;
         }
-        else
+        else if(!stat("VSWAP.WL3", &statbuf))
         {
-            if(!stat("VSWAP.WL3", &statbuf))
-            {
-                extension = "WL3";
-                numEpisodesMissing = 3;
-                NewEmenu[2].active =
-                NewEmenu[4].active =
-                EpisodeSelect[1] =
-                EpisodeSelect[2] = 1;
-            }
-            else
-            {
-                if(!stat("VSWAP.WL1", &statbuf))
-                {
-                    extension = "WL1";
-                    numEpisodesMissing = 5;
-                }
-                else
-                    Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
-            }
+            extension = "WL3";
+            numEpisodesMissing = 3;
+            NewEmenu[2].active =
+            NewEmenu[4].active =
+            EpisodeSelect[1] =
+            EpisodeSelect[2] = 1;
         }
+        else if(!stat("VSWAP.WL1", &statbuf))
+        {
+            extension = "WL1";
+            numEpisodesMissing = 5;
+        }
+        else
+            Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+        
         graphext = extension;
         audioext = extension;
         endfilename += extension;
