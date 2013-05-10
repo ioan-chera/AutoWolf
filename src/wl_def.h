@@ -56,8 +56,6 @@
 
 // IOANCH 20130301: unification
 #include "audioabstract.h"
-// IOANCH: added sprite header
-#include "sprabstract.h"
 
 typedef uint8_t byte;
 typedef uint16_t word;

@@ -18,8 +18,6 @@
 		4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4717BA173A6A610018E82B /* SODFlag.cpp */; };
 		4F471993173BC0310018E82B /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F471992173BC0310018E82B /* Config.cpp */; };
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
-		4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */; };
-		4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982116E33FC000B632BB /* sprabstract.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9E7F616BDD49600B43091 /* audioabstract.cpp */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
@@ -127,11 +125,9 @@
 		4F471992173BC0310018E82B /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = ../src/Config.cpp; sourceTree = SOURCE_ROOT; };
 		4F9AD19816EB38BB00321A66 /* PString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PString.cpp; path = ../src/PString.cpp; sourceTree = "<group>"; };
 		4F9AD19916EB38BB00321A66 /* PString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PString.h; path = ../src/PString.h; sourceTree = "<group>"; };
-		4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gfxvabstract.cpp; path = ../src/gfxvabstract.cpp; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../src/gfxvabstract.h; sourceTree = "<group>"; };
 		4F9E981F16E33FC000B632BB /* spr_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_sod.h; path = ../src/spr_sod.h; sourceTree = "<group>"; };
 		4F9E982016E33FC000B632BB /* spr_wl6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spr_wl6.h; path = ../src/spr_wl6.h; sourceTree = "<group>"; };
-		4F9E982116E33FC000B632BB /* sprabstract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sprabstract.cpp; path = ../src/sprabstract.cpp; sourceTree = "<group>"; };
 		4F9E982216E33FC000B632BB /* sprabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sprabstract.h; path = ../src/sprabstract.h; sourceTree = "<group>"; };
 		4F9E982616E3669F00B632BB /* CocoaFun.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CocoaFun.mm; path = ../src/macosx/CocoaFun.mm; sourceTree = "<group>"; };
 		4F9E982816E366C100B632BB /* CocoaFun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CocoaFun.h; path = ../src/macosx/CocoaFun.h; sourceTree = "<group>"; };
@@ -452,11 +448,9 @@
 				D901F4C80FC0DBCB0040C290 /* f_spear.h */,
 				4F1ECC2216E7BEAB00A37742 /* obattrib.h */,
 				4F1ECC2016E6579400A37742 /* obattrib.cpp */,
-				4F9E981D16E33FC000B632BB /* gfxvabstract.cpp */,
 				4F9E981E16E33FC000B632BB /* gfxvabstract.h */,
 				4F9E981F16E33FC000B632BB /* spr_sod.h */,
 				4F9E982016E33FC000B632BB /* spr_wl6.h */,
-				4F9E982116E33FC000B632BB /* sprabstract.cpp */,
 				4F9E982216E33FC000B632BB /* sprabstract.h */,
 				D901F4CE0FC0DBCB0040C290 /* gfxv_sod.h */,
 				D901F4D20FC0DBCB0040C290 /* gfxv_wl6.h */,
@@ -638,8 +632,6 @@
 				FAC97A54167A696F00949336 /* DirectoryFile.cpp in Sources */,
 				FAC97A57167B3F0F00949336 /* MasterDirectoryFile.cpp in Sources */,
 				4FD9E7F716BDD49600B43091 /* audioabstract.cpp in Sources */,
-				4F9E982316E33FC000B632BB /* gfxvabstract.cpp in Sources */,
-				4F9E982416E33FC000B632BB /* sprabstract.cpp in Sources */,
 				4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */,
 				4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */,
 				4F1ECC2916E922B500A37742 /* Property.cpp in Sources */,

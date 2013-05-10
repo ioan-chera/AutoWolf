@@ -21,6 +21,8 @@
 
 // IOANCH 20130301: unification culling
 #include "gfxvabstract.h"
+// IOANCH: added sprite header
+#include "sprabstract.h"
 
 #ifndef SODFLAG_H_
 #define SODFLAG_H_
@@ -33,11 +35,13 @@ class SODFlag
     
     boolean flag;
     static const unsigned int gfxvmap[][2];
+    static const unsigned int sprmap[][2];
     void Initialize(const PString &basePath);
 public:
     SODFlag() : flag(false)                  {}
     boolean             operator()()   const {return flag;}
     unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}
+    unsigned int sp(unsigned int value)const {return sprmap[value][flag];}
 };
 extern SODFlag SPEAR;
 

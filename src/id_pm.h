@@ -70,7 +70,7 @@ static inline uint16_t *PM_GetSprite(int shapenum, boolean remap = true)
     // correct alignment is enforced by PM_Startup()
     // IOANCH 20130302: unification
     if(remap)
-        shapenum = sprmap[shapenum][SPEAR()];
+        shapenum = SPEAR.sp(shapenum);
     return (uint16_t *) (void *) PM_GetPage(PMSpriteStart + shapenum);
 }
 
