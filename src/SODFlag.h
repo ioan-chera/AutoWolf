@@ -19,6 +19,9 @@
 #include "wl_def.h"
 #include "PString.h"
 
+// IOANCH 20130301: unification culling
+#include "gfxvabstract.h"
+
 #ifndef SODFLAG_H_
 #define SODFLAG_H_
 //
@@ -29,16 +32,12 @@ class SODFlag
     friend int main(int argc, char *argv[]);
     
     boolean flag;
-    
+    static const unsigned int gfxvmap[][2];
     void Initialize(const PString &basePath);
 public:
-    SODFlag() : flag(false)
-    {
-    }
-    boolean operator()()
-    {
-        return flag;
-    }
+    SODFlag() : flag(false)                  {}
+    boolean      operator()()          const {return flag;}
+    unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}
 };
 extern SODFlag SPEAR;
 

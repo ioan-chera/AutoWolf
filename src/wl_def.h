@@ -56,8 +56,6 @@
 
 // IOANCH 20130301: unification
 #include "audioabstract.h"
-// IOANCH 20130301: unification culling
-#include "gfxvabstract.h"
 // IOANCH: added sprite header
 #include "sprabstract.h"
 
