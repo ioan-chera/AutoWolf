@@ -503,13 +503,13 @@ static void CAL_SetupGrFile (void)
 // load the pic and sprite headers into the arrays in the data segment
 //
     
-    pictable=(pictabletype *) malloc(gfxvmap[NUMPICS][SPEAR()]*sizeof(pictabletype));
+    pictable=(pictabletype *) malloc(SPEAR.g(NUMPICS)*sizeof(pictabletype));
     CHECKMALLOCRESULT(pictable);
-    CAL_GetGrChunkLength(gfxvmap[STRUCTPIC][SPEAR()]);                // position file pointer
+    CAL_GetGrChunkLength(SPEAR.g(STRUCTPIC));                // position file pointer
     compseg=(byte *) malloc(chunkcomplen);
     CHECKMALLOCRESULT(compseg);
     read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, gfxvmap[NUMPICS][SPEAR()] * sizeof(pictabletype), grhuffman);
+    CAL_HuffExpand(compseg, (byte*)pictable, SPEAR.g(NUMPICS) * sizeof(pictabletype), grhuffman);
     free(compseg);
 }
 
@@ -648,7 +648,7 @@ void CA_Shutdown (void)
     if(audiohandle != -1)
         close(audiohandle);
 
-    for(i=0; i<(signed int)gfxvmap[NUMCHUNKS][SPEAR()]; i++)
+    for(i=0; i<(signed int)SPEAR.g(NUMCHUNKS); i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
@@ -811,7 +811,7 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 {
     int32_t    expanded;
 
-    if (chunk >= (signed int)gfxvmap[STARTTILE8][SPEAR()] && chunk < (signed int)gfxvmap[STARTEXTERNS][SPEAR()])
+    if (chunk >= (signed int)SPEAR.g(STARTTILE8) && chunk < (signed int)SPEAR.g(STARTEXTERNS))
     {
         //
         // expanded sizes of tile8/16/32 are implicit
@@ -820,15 +820,15 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
 
-        if (chunk<(signed int)gfxvmap[STARTTILE8M][SPEAR()])          // tile 8s are all in one chunk!
-            expanded = BLOCK*gfxvmap[NUMTILE8][SPEAR()];
-        else if (chunk<(signed int)gfxvmap[STARTTILE16][SPEAR()])
-            expanded = MASKBLOCK*gfxvmap[NUMTILE8M][SPEAR()];
-        else if (chunk<(signed int)gfxvmap[STARTTILE16M][SPEAR()])    // all other tiles are one/chunk
+        if (chunk<(signed int)SPEAR.g(STARTTILE8M))          // tile 8s are all in one chunk!
+            expanded = BLOCK*SPEAR.g(NUMTILE8);
+        else if (chunk<(signed int)SPEAR.g(STARTTILE16))
+            expanded = MASKBLOCK*SPEAR.g(NUMTILE8M);
+        else if (chunk<(signed int)SPEAR.g(STARTTILE16M))    // all other tiles are one/chunk
             expanded = BLOCK*4;
-        else if (chunk<(signed int)gfxvmap[STARTTILE32][SPEAR()])
+        else if (chunk<(signed int)SPEAR.g(STARTTILE32))
             expanded = MASKBLOCK*4;
-        else if (chunk<(signed int)gfxvmap[STARTTILE32M][SPEAR()])
+        else if (chunk<(signed int)SPEAR.g(STARTTILE32M))
             expanded = BLOCK*16;
         else
             expanded = MASKBLOCK*16;

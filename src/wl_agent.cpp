@@ -332,22 +332,22 @@ void DrawFace (void)
 {
     if(viewsize == 21 && ingame) return;
     if (SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR()])
-        StatusDrawFace(gfxvmap[GOTGATLINGPIC][SPEAR()]);
+        StatusDrawFace(SPEAR.g(GOTGATLINGPIC));
     else if (gamestate.health)
     {
         // IOANCH 20130202: unification process
         if (SPEAR() && godmode)
-            StatusDrawFace(gfxvmap[GODMODEFACE1PIC][SPEAR()]+gamestate.faceframe);
+            StatusDrawFace(SPEAR.g(GODMODEFACE1PIC)+gamestate.faceframe);
         else
-            StatusDrawFace(gfxvmap[FACE1APIC][SPEAR()]+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
+            StatusDrawFace(SPEAR.g(FACE1APIC)+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
     }	// IOANCH 25.10.2012: named constant
     else
     {
         // IOANCH 20130202: unification process
         if (LastAttacker && LastAttacker->obclass == needleobj)
-            StatusDrawFace(gfxvmap[MUTANTBJPIC][SPEAR()]);
+            StatusDrawFace(SPEAR.g(MUTANTBJPIC));
         else
-            StatusDrawFace(gfxvmap[FACE8APIC][SPEAR()]);
+            StatusDrawFace(SPEAR.g(FACE8APIC));
     }
 }
 
@@ -413,7 +413,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        StatusDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR()]);
+        StatusDrawPic (x,y,SPEAR.g(N_BLANKPIC));
         x++;
         width--;
     }
@@ -422,7 +422,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        StatusDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR()]);
+        StatusDrawPic (x,y,str[c]-'0'+ SPEAR.g(N_0PIC));
         x++;
         c++;
     }
@@ -487,7 +487,7 @@ void TakeDamage (int points,objtype *attacker)
     if (SPEAR() && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
     {
         // IOANCH 20130302: unification
-        StatusDrawFace(gfxvmap[BJOUCHPIC][SPEAR()]);
+        StatusDrawFace(SPEAR.g(BJOUCHPIC));
         facecount = 0;
     }
 }
@@ -614,7 +614,7 @@ void GivePoints (int32_t points)
 void DrawWeapon (void)
 {
     if(viewsize == 21 && ingame) return;
-    StatusDrawPic (32,8,gfxvmap[KNIFEPIC][SPEAR()]+gamestate.weapon);
+    StatusDrawPic (32,8,SPEAR.g(KNIFEPIC)+gamestate.weapon);
 }
 
 
@@ -630,14 +630,14 @@ void DrawKeys (void)
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
-        StatusDrawPic (30,4,gfxvmap[GOLDKEYPIC][SPEAR()]);
+        StatusDrawPic (30,4,SPEAR.g(GOLDKEYPIC));
     else
-        StatusDrawPic (30,4,gfxvmap[NOKEYPIC][SPEAR()]);
+        StatusDrawPic (30,4,SPEAR.g(NOKEYPIC));
 
     if (gamestate.keys & 2)
-        StatusDrawPic (30,20,gfxvmap[SILVERKEYPIC][SPEAR()]);
+        StatusDrawPic (30,20,SPEAR.g(SILVERKEYPIC));
     else
-        StatusDrawPic (30,20,gfxvmap[NOKEYPIC][SPEAR()]);
+        StatusDrawPic (30,20,SPEAR.g(NOKEYPIC));
 }
 
 /*
@@ -808,7 +808,7 @@ void GetBonus (statobj_t *check)
             GiveWeapon (wp_chaingun);
 
             if(viewsize != 21)
-                StatusDrawFace (gfxvmap[GOTGATLINGPIC][SPEAR()]);
+                StatusDrawFace (SPEAR.g(GOTGATLINGPIC));
             facecount = 0;
             break;
 

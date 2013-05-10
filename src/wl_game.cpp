@@ -980,7 +980,7 @@ void DrawPlayBorder (void)
 
 void DrawPlayScreen (void)
 {
-    VWB_DrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/2,Config::ScreenHeight()-scaleFactor*STATUSLINES,gfxvmap[STATUSBARPIC][SPEAR()]);
+    VWB_DrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/2,Config::ScreenHeight()-scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1005,7 +1005,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        LatchDrawPic (x,y,gfxvmap[N_BLANKPIC][SPEAR()]);
+        LatchDrawPic (x,y,SPEAR.g(N_BLANKPIC));
         x++;
         width--;
     }
@@ -1014,7 +1014,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        LatchDrawPic (x,y,str[c]-'0'+ gfxvmap[N_0PIC][SPEAR()]);
+        LatchDrawPic (x,y,str[c]-'0'+ SPEAR.g(N_0PIC));
         x++;
         c++;
     }
@@ -1023,8 +1023,8 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[gfxvmap[STATUSBARPIC][SPEAR()]];
-    int	picnum = gfxvmap[STATUSBARPIC][SPEAR()] - gfxvmap[STARTPICS][SPEAR()];
+    byte *source = grsegs[SPEAR.g(STATUSBARPIC)];
+    int	picnum = SPEAR.g(STATUSBARPIC) - SPEAR.g(STARTPICS);
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
     int destx = (Config::ScreenWidth()-scaleFactor*320)/2 + 9 * scaleFactor;
@@ -1132,7 +1132,7 @@ void RecordDemo (void)
 
     CenterWindow(26,3);
     PrintY+=6;
-    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR()]);
+    CA_CacheGrChunk(SPEAR.g(STARTFONT));
     fontnumber=0;
     SETFONTCOLOR(0,15);
     if(!SPEAR())
@@ -1221,7 +1221,7 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
     // IOANCH 20130301: unification culling
-    int dems[4]={static_cast<int>(gfxvmap[T_DEMO0][SPEAR()]),static_cast<int>(gfxvmap[T_DEMO1][SPEAR()]),static_cast<int>(gfxvmap[T_DEMO2][SPEAR()]),static_cast<int>(gfxvmap[T_DEMO3][SPEAR()])};
+    int dems[4]={static_cast<int>(SPEAR.g(T_DEMO0)),static_cast<int>(SPEAR.g(T_DEMO1)),static_cast<int>(SPEAR.g(T_DEMO2)),static_cast<int>(SPEAR.g(T_DEMO3))};
 
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];

@@ -343,7 +343,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     // IOANCH 20130302: unification
-    VWB_DrawPic(x,y,gfxvmap[C_DISKLOADING1PIC][SPEAR()]+which);
+    VWB_DrawPic(x,y,SPEAR.g(C_DISKLOADING1PIC)+which);
     VW_UpdateScreen();
     which^=1;
 }
@@ -1189,17 +1189,17 @@ void DoJukebox(void)
     // IOANCH 20130301: unification culling
     start = SPEAR() ? 0 : ((SDL_GetTicks()/10)%3)*6;
 
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]+1);
+    CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
     
     if(SPEAR())
-        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()],gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
+        CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
     else
-        CacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR()],gfxvmap[CONTROLS_LUMP_END][SPEAR()]);
+        CacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
     CA_LoadAllSounds ();
     // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
-    VWB_DrawPic(112,184,gfxvmap[C_MOUSELBACKPIC][SPEAR()]);
+    VWB_DrawPic(112,184,SPEAR.g(C_MOUSELBACKPIC));
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
 
@@ -1241,9 +1241,9 @@ void DoJukebox(void)
     // IOANCH 20130303: unification
 
     if(SPEAR())
-        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()],gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
+        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
     else
-        UnCacheLump (gfxvmap[CONTROLS_LUMP_START][SPEAR()],gfxvmap[CONTROLS_LUMP_END][SPEAR()]);
+        UnCacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
 
 }
 
@@ -1328,8 +1328,8 @@ static void InitGame()
     {
         byte *screen;
 
-        CA_CacheGrChunk (gfxvmap[ERRORSCREEN][SPEAR()]);
-        screen = grsegs[gfxvmap[ERRORSCREEN][SPEAR()]];
+        CA_CacheGrChunk (SPEAR.g(ERRORSCREEN));
+        screen = grsegs[SPEAR.g(ERRORSCREEN)];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1374,8 +1374,8 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    CA_CacheGrChunk(gfxvmap[STARTFONT][SPEAR()]);
-    CA_CacheGrChunk(gfxvmap[STATUSBARPIC][SPEAR()]);
+    CA_CacheGrChunk(SPEAR.g(STARTFONT));
+    CA_CacheGrChunk(SPEAR.g(STATUSBARPIC));
 
     LoadLatchMem ();
     BuildTables ();          // trig tables
@@ -1597,24 +1597,24 @@ static void DemoLoop()
             if(SPEAR())
             {
                 SDL_Color pal[256];
-                CA_CacheGrChunk (gfxvmap[TITLEPALETTE][SPEAR()]);
-                VL_ConvertPalette(grsegs[gfxvmap[TITLEPALETTE][SPEAR()]], pal, 256);
+                CA_CacheGrChunk (SPEAR.g(TITLEPALETTE));
+                VL_ConvertPalette(grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
 
-                CA_CacheGrChunk (gfxvmap[TITLE1PIC][SPEAR()]);
-                VWB_DrawPic (0,0,gfxvmap[TITLE1PIC][SPEAR()]);
-                UNCACHEGRCHUNK (gfxvmap[TITLE1PIC][SPEAR()]);
+                CA_CacheGrChunk (SPEAR.g(TITLE1PIC));
+                VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC));
+                UNCACHEGRCHUNK (SPEAR.g(TITLE1PIC));
 
-                CA_CacheGrChunk (gfxvmap[TITLE2PIC][SPEAR()]);
-                VWB_DrawPic (0,80,gfxvmap[TITLE2PIC][SPEAR()]);
-                UNCACHEGRCHUNK (gfxvmap[TITLE2PIC][SPEAR()]);
+                CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
+                VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
+                UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
                 VW_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
-                UNCACHEGRCHUNK (gfxvmap[TITLEPALETTE][SPEAR()]);
+                UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
             }
             else
             {
-                CA_CacheScreen (gfxvmap[TITLEPIC][SPEAR()]);
+                CA_CacheScreen (SPEAR.g(TITLEPIC));
                 VW_UpdateScreen ();
                 VW_FadeIn();
             }
@@ -1624,7 +1624,7 @@ static void DemoLoop()
 //
 // credits page
 //
-            CA_CacheScreen (gfxvmap[CREDITSPIC][SPEAR()]);
+            CA_CacheScreen (SPEAR.g(CREDITSPIC));
             VW_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))

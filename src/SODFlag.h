@@ -36,7 +36,7 @@ class SODFlag
     void Initialize(const PString &basePath);
 public:
     SODFlag() : flag(false)                  {}
-    boolean      operator()()          const {return flag;}
+    boolean             operator()()   const {return flag;}
     unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}
 };
 extern SODFlag SPEAR;

@@ -92,14 +92,14 @@ void EndSpear (void)
 {
     SDL_Color pal[256];
 
-    EndScreen (gfxvmap[END1PALETTE][SPEAR()], gfxvmap[ENDSCREEN11PIC][SPEAR()]);
+    EndScreen (SPEAR.g(END1PALETTE), SPEAR.g(ENDSCREEN11PIC));
 
-    CA_CacheScreen (gfxvmap[ENDSCREEN3PIC][SPEAR()]);
+    CA_CacheScreen (SPEAR.g(ENDSCREEN3PIC));
     VW_UpdateScreen ();
-    CA_CacheGrChunk (gfxvmap[END3PALETTE][SPEAR()]);
-    VL_ConvertPalette(grsegs[gfxvmap[END3PALETTE][SPEAR()]], pal, 256);
+    CA_CacheGrChunk (SPEAR.g(END3PALETTE));
+    VL_ConvertPalette(grsegs[SPEAR.g(END3PALETTE)], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    UNCACHEGRCHUNK (gfxvmap[END3PALETTE][SPEAR()]);
+    UNCACHEGRCHUNK (SPEAR.g(END3PALETTE));
     fontnumber = 0;
     fontcolor = 0xd0;
     WindowX = 0;
@@ -121,14 +121,14 @@ void EndSpear (void)
 
     VW_FadeOut ();
 
-    EndScreen (gfxvmap[END4PALETTE][SPEAR()], gfxvmap[ENDSCREEN4PIC][SPEAR()]);
-    EndScreen (gfxvmap[END5PALETTE][SPEAR()], gfxvmap[ENDSCREEN5PIC][SPEAR()]);
-    EndScreen (gfxvmap[END6PALETTE][SPEAR()], gfxvmap[ENDSCREEN6PIC][SPEAR()]);
-    EndScreen (gfxvmap[END7PALETTE][SPEAR()], gfxvmap[ENDSCREEN7PIC][SPEAR()]);
-    EndScreen (gfxvmap[END8PALETTE][SPEAR()], gfxvmap[ENDSCREEN8PIC][SPEAR()]);
-    EndScreen (gfxvmap[END9PALETTE][SPEAR()], gfxvmap[ENDSCREEN9PIC][SPEAR()]);
+    EndScreen (SPEAR.g(END4PALETTE), SPEAR.g(ENDSCREEN4PIC));
+    EndScreen (SPEAR.g(END5PALETTE), SPEAR.g(ENDSCREEN5PIC));
+    EndScreen (SPEAR.g(END6PALETTE), SPEAR.g(ENDSCREEN6PIC));
+    EndScreen (SPEAR.g(END7PALETTE), SPEAR.g(ENDSCREEN7PIC));
+    EndScreen (SPEAR.g(END8PALETTE), SPEAR.g(ENDSCREEN8PIC));
+    EndScreen (SPEAR.g(END9PALETTE), SPEAR.g(ENDSCREEN9PIC));
 
-    EndScreen (gfxvmap[END2PALETTE][SPEAR()], gfxvmap[ENDSCREEN12PIC][SPEAR()]);
+    EndScreen (SPEAR.g(END2PALETTE), SPEAR.g(ENDSCREEN12PIC));
 
     MainMenu[savegame].active = 0;
 }
@@ -165,40 +165,40 @@ Victory (void)
         StartCPMusic (XTHEEND_MUS_sod);
 
         // IOANCH 20130302: unification
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
+        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE1PIC));
+        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE2PIC));
+        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE3PIC));
+        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE4PIC));
 
         VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
+        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
         VW_UpdateScreen ();
         VW_FadeIn ();
         VW_WaitVBL (2 * 70);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
+        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE2PIC));
         VW_UpdateScreen ();
         VW_WaitVBL (105);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
+        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE3PIC));
         VW_UpdateScreen ();
         VW_WaitVBL (105);
-        VWB_DrawPic (124, 44, gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
+        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE4PIC));
         VW_UpdateScreen ();
         VW_WaitVBL (3 * 70);
 
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE1PIC][SPEAR()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE2PIC][SPEAR()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE3PIC][SPEAR()]);
-        UNCACHEGRCHUNK (gfxvmap[BJCOLLAPSE4PIC][SPEAR()]);
+        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE1PIC));
+        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE2PIC));
+        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE3PIC));
+        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE4PIC));
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
     StartCPMusic (IMPALE((int)URAHERO_MUS));
     ClearSplitVWB ();
-    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]);
+    CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
+    CA_CacheGrChunk (SPEAR.g(STARTFONT));
 
     if(!SPEAR())
-        CA_CacheGrChunk (gfxvmap[C_TIMECODEPIC][SPEAR()]);
+        CA_CacheGrChunk (SPEAR.g(C_TIMECODEPIC));
 
     VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
@@ -222,7 +222,7 @@ Victory (void)
 
 
 
-    VWB_DrawPic (8, 4, gfxvmap[L_BJWINSPIC][SPEAR()]);
+    VWB_DrawPic (8, 4, SPEAR.g(L_BJWINSPIC));
 
 
     for (kr = sr = tr = sec = i = 0; i < LRpack; i++)
@@ -253,15 +253,15 @@ Victory (void)
         min = sec = 99;
 
     i = TIMEX * 8 + 1;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min / 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (min / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min % 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (min % 10));
     i += 2 * 8;
     Write (i / 8, TIMEY, ":");
     i += 1 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec / 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec % 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
     VW_UpdateScreen ();
 
     itoanoreturn (kr, tempstr, 10);
@@ -287,7 +287,7 @@ Victory (void)
         //
         if (gamestate.difficulty >= gd_medium)
         {
-            VWB_DrawPic (30 * 8, TIMEY * 8, gfxvmap[C_TIMECODEPIC][SPEAR()]);
+            VWB_DrawPic (30 * 8, TIMEY * 8, SPEAR.g(C_TIMECODEPIC));
             fontnumber = 0;
             fontcolor = READHCOLOR;
             PrintX = 30 * 8 - 3;
@@ -316,8 +316,8 @@ Victory (void)
         VL_ClearScreen(0);
 
     if(!SPEAR())
-        UNCACHEGRCHUNK (gfxvmap[C_TIMECODEPIC][SPEAR()]);
-    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
+        UNCACHEGRCHUNK (SPEAR.g(C_TIMECODEPIC));
+    UnCacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
 
 
     if(!SPEAR())
@@ -347,11 +347,11 @@ PG13 (void)
     VW_FadeOut ();
     VWB_Bar (0, 0, 320, 200, 0x82);     // background
 
-    CA_CacheGrChunk (gfxvmap[PG13PIC][SPEAR()]);
-    VWB_DrawPic (216, 110, gfxvmap[PG13PIC][SPEAR()]);
+    CA_CacheGrChunk (SPEAR.g(PG13PIC));
+    VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
     VW_UpdateScreen ();
 
-    UNCACHEGRCHUNK (gfxvmap[PG13PIC][SPEAR()]);
+    UNCACHEGRCHUNK (SPEAR.g(PG13PIC));
 
     VW_FadeIn ();
     IN_UserInput (TickBase * 7);
@@ -366,21 +366,21 @@ PG13 (void)
 void
 Write (int x, int y, const char *string)
 {
-    static const unsigned int alpha[] = { gfxvmap[L_NUM0PIC][SPEAR()],
-        gfxvmap[L_NUM1PIC][SPEAR()], gfxvmap[L_NUM2PIC][SPEAR()], 
-        gfxvmap[L_NUM3PIC][SPEAR()], gfxvmap[L_NUM4PIC][SPEAR()], 
-        gfxvmap[L_NUM5PIC][SPEAR()], gfxvmap[L_NUM6PIC][SPEAR()], 
-        gfxvmap[L_NUM7PIC][SPEAR()], gfxvmap[L_NUM8PIC][SPEAR()], 
-        gfxvmap[L_NUM9PIC][SPEAR()], gfxvmap[L_COLONPIC][SPEAR()], 0, 0, 0, 0, 0, 0, 
-        gfxvmap[L_APIC][SPEAR()], gfxvmap[L_BPIC][SPEAR()], gfxvmap[L_CPIC][SPEAR()], 
-        gfxvmap[L_DPIC][SPEAR()], gfxvmap[L_EPIC][SPEAR()], gfxvmap[L_FPIC][SPEAR()], 
-        gfxvmap[L_GPIC][SPEAR()], gfxvmap[L_HPIC][SPEAR()], gfxvmap[L_IPIC][SPEAR()],
-        gfxvmap[L_JPIC][SPEAR()], gfxvmap[L_KPIC][SPEAR()], gfxvmap[L_LPIC][SPEAR()], 
-        gfxvmap[L_MPIC][SPEAR()], gfxvmap[L_NPIC][SPEAR()], gfxvmap[L_OPIC][SPEAR()], 
-        gfxvmap[L_PPIC][SPEAR()], gfxvmap[L_QPIC][SPEAR()], gfxvmap[L_RPIC][SPEAR()], 
-        gfxvmap[L_SPIC][SPEAR()], gfxvmap[L_TPIC][SPEAR()], gfxvmap[L_UPIC][SPEAR()], 
-        gfxvmap[L_VPIC][SPEAR()], gfxvmap[L_WPIC][SPEAR()], gfxvmap[L_XPIC][SPEAR()], 
-        gfxvmap[L_YPIC][SPEAR()], gfxvmap[L_ZPIC][SPEAR()]
+    static const unsigned int alpha[] = { SPEAR.g(L_NUM0PIC),
+        SPEAR.g(L_NUM1PIC), SPEAR.g(L_NUM2PIC), 
+        SPEAR.g(L_NUM3PIC), SPEAR.g(L_NUM4PIC), 
+        SPEAR.g(L_NUM5PIC), SPEAR.g(L_NUM6PIC), 
+        SPEAR.g(L_NUM7PIC), SPEAR.g(L_NUM8PIC), 
+        SPEAR.g(L_NUM9PIC), SPEAR.g(L_COLONPIC), 0, 0, 0, 0, 0, 0, 
+        SPEAR.g(L_APIC), SPEAR.g(L_BPIC), SPEAR.g(L_CPIC), 
+        SPEAR.g(L_DPIC), SPEAR.g(L_EPIC), SPEAR.g(L_FPIC), 
+        SPEAR.g(L_GPIC), SPEAR.g(L_HPIC), SPEAR.g(L_IPIC),
+        SPEAR.g(L_JPIC), SPEAR.g(L_KPIC), SPEAR.g(L_LPIC), 
+        SPEAR.g(L_MPIC), SPEAR.g(L_NPIC), SPEAR.g(L_OPIC), 
+        SPEAR.g(L_PPIC), SPEAR.g(L_QPIC), SPEAR.g(L_RPIC), 
+        SPEAR.g(L_SPIC), SPEAR.g(L_TPIC), SPEAR.g(L_UPIC), 
+        SPEAR.g(L_VPIC), SPEAR.g(L_WPIC), SPEAR.g(L_XPIC), 
+        SPEAR.g(L_YPIC), SPEAR.g(L_ZPIC)
     };
 
     int i, ox, nx, ny, len = (int) strlen(string);
@@ -405,13 +405,13 @@ Write (int x, int y, const char *string)
             switch (string[i])
             {
                 case '!':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_EXPOINTPIC][SPEAR()]);
+                    VWB_DrawPic (nx, ny, SPEAR.g(L_EXPOINTPIC));
                     nx += 8;
                     continue;
 // IOANCH 20130301: unification culling
 
                 case '\'':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_APOSTROPHEPIC][SPEAR()]);
+                    VWB_DrawPic (nx, ny, SPEAR.g(L_APOSTROPHEPIC));
                     nx += 8;
                     continue;
 
@@ -420,12 +420,12 @@ Write (int x, int y, const char *string)
                     break;
 
                 case 0x3a:     // ':'
-                    VWB_DrawPic (nx, ny, gfxvmap[L_COLONPIC][SPEAR()]);
+                    VWB_DrawPic (nx, ny, SPEAR.g(L_COLONPIC));
                     nx += 8;
                     continue;
 
                 case '%':
-                    VWB_DrawPic (nx, ny, gfxvmap[L_PERCENTPIC][SPEAR()]);
+                    VWB_DrawPic (nx, ny, SPEAR.g(L_PERCENTPIC));
                     break;
 
                 default:
@@ -444,7 +444,7 @@ void
 BJ_Breathe (void)
 {
     static int which = 0, max = 10;
-    int pics[2] = { static_cast<int>(gfxvmap[L_GUYPIC][SPEAR()]), static_cast<int>(gfxvmap[L_GUY2PIC][SPEAR()]) };
+    int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
 
     SDL_Delay(5);
 
@@ -602,7 +602,7 @@ LevelCompleted (void)
     };
     times *parTimes = IMPALE(parTimes);
 
-    CacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
+    CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
     VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
@@ -617,7 +617,7 @@ LevelCompleted (void)
     IN_ClearKeysDown ();
     IN_StartAck ();
 // IOANCH 20130301: unification culling
-    VWB_DrawPic (0, 16, gfxvmap[L_GUYPIC][SPEAR()]);
+    VWB_DrawPic (0, 16, SPEAR.g(L_GUYPIC));
 
     if ((!SPEAR() && mapon < 8) || (SPEAR() && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
     {
@@ -670,15 +670,15 @@ LevelCompleted (void)
 #else
         i = 26 * 8;
 #endif
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min / 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (min / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (min % 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (min % 10));
         i += 2 * 8;
         Write (i / 8, 10, ":");
         i += 1 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec / 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (sec / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, gfxvmap[L_NUM0PIC][SPEAR()] + (sec % 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
 
         VW_UpdateScreen ();
         VW_FadeIn ();
@@ -952,7 +952,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     VW_FadeOut ();
     DrawPlayBorder();
 
-    UnCacheLump (gfxvmap[LEVELEND_LUMP_START][SPEAR()], gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
+    UnCacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
 }
 
 
@@ -1004,7 +1004,7 @@ PreloadGraphics (void)
 
     VWB_BarScaledCoord (0, 0, Config::ScreenWidth(), Config::ScreenHeight() - scaleFactor * (STATUSLINES - 1), bordercol);
     LatchDrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*224)/16,
-        (Config::ScreenHeight()-scaleFactor*(STATUSLINES+48))/2, gfxvmap[GETPSYCHEDPIC][SPEAR()]);
+        (Config::ScreenHeight()-scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
 
     WindowX = (Config::ScreenWidth() - scaleFactor*224)/2;
     WindowY = (Config::ScreenHeight() - scaleFactor*(STATUSLINES+48))/2;
@@ -1050,13 +1050,13 @@ DrawHighScores (void)
 
     if(!SPEAR())
     {
-        CA_CacheGrChunk (gfxvmap[HIGHSCORESPIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]);
+        CA_CacheGrChunk (SPEAR.g(HIGHSCORESPIC));
+        CA_CacheGrChunk (SPEAR.g(STARTFONT));
         // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (gfxvmap[C_LEVELPIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[C_SCOREPIC][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[C_NAMEPIC][SPEAR()]);
+        CA_CacheGrChunk (SPEAR.g(C_LEVELPIC));
+        CA_CacheGrChunk (SPEAR.g(C_SCOREPIC));
+        CA_CacheGrChunk (SPEAR.g(C_NAMEPIC));
 
 
 
@@ -1064,14 +1064,14 @@ DrawHighScores (void)
         ClearMScreen ();
         DrawStripes (10);
 
-        VWB_DrawPic (48, 0, gfxvmap[HIGHSCORESPIC][SPEAR()]);
-        UNCACHEGRCHUNK (gfxvmap[HIGHSCORESPIC][SPEAR()]);
+        VWB_DrawPic (48, 0, SPEAR.g(HIGHSCORESPIC));
+        UNCACHEGRCHUNK (SPEAR.g(HIGHSCORESPIC));
 
         // IOANCH 20130301: unification culling
 
-        VWB_DrawPic (4 * 8, 68, gfxvmap[C_NAMEPIC][SPEAR()]);
-        VWB_DrawPic (20 * 8, 68, gfxvmap[C_LEVELPIC][SPEAR()]);
-        VWB_DrawPic (28 * 8, 68, gfxvmap[C_SCOREPIC][SPEAR()]);
+        VWB_DrawPic (4 * 8, 68, SPEAR.g(C_NAMEPIC));
+        VWB_DrawPic (20 * 8, 68, SPEAR.g(C_LEVELPIC));
+        VWB_DrawPic (28 * 8, 68, SPEAR.g(C_SCOREPIC));
 
 
 
@@ -1079,14 +1079,14 @@ DrawHighScores (void)
     }
     else
     {
-        CacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()], gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
+        CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
         ClearMScreen ();
         DrawStripes (10);
-        UnCacheLump (gfxvmap[BACKDROP_LUMP_START][SPEAR()], gfxvmap[BACKDROP_LUMP_END][SPEAR()]);
+        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
 
-        CacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR()]);
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
-        VWB_DrawPic (0, 0, gfxvmap[HIGHSCORESPIC][SPEAR()]);
+        CacheLump (SPEAR.g(HIGHSCORES_LUMP_START), SPEAR.g(HIGHSCORES_LUMP_END));
+        CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+        VWB_DrawPic (0, 0, SPEAR.g(HIGHSCORESPIC));
 
         fontnumber = 1;
     }
@@ -1145,7 +1145,7 @@ DrawHighScores (void)
         if(SPEAR())
         {
             if (s->completed == 21)
-                VWB_DrawPic (PrintX + 8, PrintY - 1, gfxvmap[C_WONSPEARPIC][SPEAR()]);
+                VWB_DrawPic (PrintX + 8, PrintY - 1, SPEAR.g(C_WONSPEARPIC));
             else
                 US_Print (buffer);
         }
@@ -1178,7 +1178,7 @@ DrawHighScores (void)
 
     if(SPEAR())
     {
-        UnCacheLump (gfxvmap[HIGHSCORES_LUMP_START][SPEAR()], gfxvmap[HIGHSCORES_LUMP_END][SPEAR()]);
+        UnCacheLump (SPEAR.g(HIGHSCORES_LUMP_START), SPEAR.g(HIGHSCORES_LUMP_END));
         fontnumber = 0;
     }
 }
@@ -1302,7 +1302,7 @@ NonShareware (void)
     ClearMScreen ();
     DrawStripes (10);
 
-    CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()] + 1);
+    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
     fontnumber = 1;
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);

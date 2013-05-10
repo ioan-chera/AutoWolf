@@ -2872,16 +2872,16 @@ void    A_StartDeathCam (objtype *ob)
 
     if (bordercol != VIEWCOLOR)
     {
-        CA_CacheGrChunk (gfxvmap[STARTFONT][SPEAR()]+1);
+        CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
         fontnumber = 1;
         SETFONTCOLOR(15,bordercol);
         PrintX = 68; PrintY = 45;
         US_Print (STR_SEEAGAIN);
-        UNCACHEGRCHUNK(gfxvmap[STARTFONT][SPEAR()]+1);
+        UNCACHEGRCHUNK(SPEAR.g(STARTFONT)+1);
     }
     else
     {
-        CacheLump(gfxvmap[LEVELEND_LUMP_START][SPEAR()],gfxvmap[LEVELEND_LUMP_END][SPEAR()]);
+        CacheLump(SPEAR.g(LEVELEND_LUMP_START),SPEAR.g(LEVELEND_LUMP_END));
         // IOANCH 20130301: unification culling
         Write(0,7,STR_SEEAGAIN);
     }
