@@ -3861,36 +3861,37 @@ void CheckForEpisodes (void)
     else
     {
 // IOANCH 20130301: unification culling
-        if(Config::Mission() == 0)
+        switch (Config::Mission())
         {
-            if(!stat("VSWAP.SOD", &statbuf))
-                extension = "SOD";
-            else
-                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            case 0:
+                if(!stat("VSWAP.SOD", &statbuf))
+                    extension = "SOD";
+                else
+                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+                break;
+            case 1:
+                if(!stat("VSWAP.SD1", &statbuf))
+                    extension = "SD1";
+                else
+                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+                break;
+            case 2:
+                if(!stat("VSWAP.SD2", &statbuf))
+                    extension = "SD2";
+                else
+                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+                break;
+            case 3:
+                if(!stat("VSWAP.SD3", &statbuf))
+                    extension = "SD3";
+                else
+                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+                break;
+            default:
+                Quit ("UNSUPPORTED MISSION!");
+                break;
         }
-        else if(Config::Mission() == 1)
-        {
-            if(!stat("VSWAP.SD1", &statbuf))
-                extension = "SD1";
-            else
-                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-        }
-        else if(Config::Mission() == 2)
-        {
-            if(!stat("VSWAP.SD2", &statbuf))
-                extension = "SD2";
-            else
-                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-        }
-        else if(Config::Mission() == 3)
-        {
-            if(!stat("VSWAP.SD3", &statbuf))
-                extension = "SD3";
-            else
-                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-        }
-        else
-            Quit ("UNSUPPORTED MISSION!");
+        
         graphext = "SOD";
         audioext = "SOD";
     }
