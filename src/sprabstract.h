@@ -562,7 +562,5 @@ enum
     SPR_WILL_W4,
 };
 
-extern const unsigned int sprmap[][2];
-
 #endif
 

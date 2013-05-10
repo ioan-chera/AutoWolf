@@ -48,7 +48,6 @@ LDFLAGS += -static-libgcc
 endif
 
 SRCS :=
-SRCS += src/audioabstract.cpp
 SRCS += src/CheckSum.cpp
 SRCS += src/Config.cpp
 SRCS += src/DataFile.cpp

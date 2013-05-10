@@ -284,6 +284,4 @@ typedef enum
     ENUMEND_abstract,
 } graphicnums_abstract;
 
-extern const unsigned int gfxvmap[][2];
-
 #endif

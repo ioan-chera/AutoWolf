@@ -54,8 +54,6 @@
 // IOANCH 20130307: path length
 #define MAX_PATH_LENGTH 2048
 
-// IOANCH 20130301: unification
-#include "audioabstract.h"
 
 typedef uint8_t byte;
 typedef uint16_t word;

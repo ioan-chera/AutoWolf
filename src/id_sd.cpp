@@ -1301,7 +1301,7 @@ boolean SD_PlaySound(soundnames sound_abstract)
     int             lp,rp;
 	
 	// IOANCH 20130301: abstract sound
-	unsigned int sound = soundmap[sound_abstract][SPEAR()];
+	unsigned int sound = SPEAR.sd(sound_abstract);
 
     lp = LeftPosition;
     rp = RightPosition;

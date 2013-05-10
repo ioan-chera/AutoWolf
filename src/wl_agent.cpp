@@ -331,7 +331,7 @@ void StatusDrawFace(unsigned picnum)
 void DrawFace (void)
 {
     if(viewsize == 21 && ingame) return;
-    if (SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR()])
+    if (SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
         StatusDrawFace(SPEAR.g(GOTGATLINGPIC));
     else if (gamestate.health)
     {
@@ -375,7 +375,7 @@ void UpdateFace (void)
             return;
         }
     }
-    else if(SD_SoundPlaying() == soundmap[GETGATLINGSND][SPEAR()])
+    else if(SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
         return;
 
     facecount += tics;
