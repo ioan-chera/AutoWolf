@@ -1,11 +1,22 @@
-/*
- *  Config.cpp
- *  Wolf4SDL
- *
- *  Created by Ioan Chera on 5/9/13.
- *  Copyright 2013 __MyCompanyName__. All rights reserved.
- *
- */
+//
+// Copyright (C) 1991-1992  id Software
+// Copyright (C) 2007-2011  Moritz Kroll
+// Copyright (C) 2013  Ioan Chera
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+//
 
 #include <sys/stat.h>
 #include "CocoaFun.h"
@@ -81,6 +92,27 @@ unsigned Config::screenBits = -1;      // use "best" color depth according to li
 // IOANCH 20130509: arguments are now case insensitive
 #define IFARG(str) if(!strcasecmp(arg, (str)))
 
+inline static int changeDirectory(const char *locdir)
+{
+#if defined(_WIN32)
+    return !::SetCurrentDirectory(locdir);
+#else
+    return chdir(locdir);
+    // FIXME: don't just assume UNIX/Linux/Apple
+#endif
+}
+
+void Config::CheckEnvVars()
+{
+    const char *wolfdir = getenv("AUTOWOLFDIR");
+    if(wolfdir)
+    {
+        PString expanded = Basic::NewStringTildeExpand(wolfdir);
+        if(changeDirectory(expanded.buffer()))
+            throw Exception(PString("Cannot change directory to ").concat(expanded).concat("\n"));
+    }
+}
+
 //
 // CheckParameters
 //
@@ -94,6 +126,7 @@ void Config::CheckParameters(int argc, char *argv[])
     botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
     try
     {
+        CheckEnvVars();
         for(int i = 1; i < argc; i++)
         {
             char *arg = argv[i];
@@ -274,13 +307,7 @@ void Config::CheckParameters(int argc, char *argv[])
                 else
                 {
                     PString trans = Basic::NewStringTildeExpand(argv[i]);
-#if defined(_WIN32)
-                    int cdres = !::SetCurrentDirectory(trans.buffer());
-#else
-                    int cdres = chdir(trans.buffer());
-                    // FIXME: don't just assume UNIX/Linux/Apple
-#endif
-                    if(cdres)
+                    if(changeDirectory(trans.buffer()))
                         throw Exception(PString("Cannot change directory to ").concat(trans).concat("\n"));
                 }
             }

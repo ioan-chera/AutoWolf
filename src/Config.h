@@ -53,7 +53,9 @@ class Config
     static unsigned screenWidth;
     static boolean  usedoublebuffering;
     
+    static void     CheckEnvVars();
 public:
+
     static void     CheckParameters(int argc, char *argv[]);
     static void     SetupConfigLocation();
     
