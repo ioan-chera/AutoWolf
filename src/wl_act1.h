@@ -24,7 +24,7 @@ void SpawnStatic (int tilex, int tiley, int type);
 void PlaceItemType (int itemtype, int tilex, int tiley);
 void InitAreas ();
 void InitDoorList ();
-void SpawnDoor (int tilex, int tiley, boolean vertical, int lock);
+void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock);
 void OpenDoor (int door);
 void OperateDoor (int door);
 void MoveDoors ();
@@ -35,7 +35,7 @@ void MovePWalls ();
 extern  short     doornum;
 extern  word      doorposition[MAXDOORS];
 extern  byte      areaconnect[NUMAREAS][NUMAREAS];
-extern  boolean   areabyplayer[NUMAREAS];
+extern  Boolean   areabyplayer[NUMAREAS];
 extern word     pwallstate;
 extern word     pwallpos;        // amount a pushable wall has been moved (0-63)
 extern word     pwallx,pwally;

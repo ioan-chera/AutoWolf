@@ -236,7 +236,7 @@ PString PropertyFile::_PackBooleanArray(const void *byteArray, size_t arraySize)
     
     PString dataToWrite(arraySize/8);
     
-    boolean *baseaddress = (boolean *)byteArray;
+    Boolean *baseaddress = (Boolean *)byteArray;
     
     for(pos = 0; pos < arraySize; ++pos)
     {
@@ -264,7 +264,7 @@ void PropertyFile::_UnpackBooleanArray(const PString &source, void *target,
     size_t pos;
     uint8_t mbyte;
     
-    boolean *baseaddress = (boolean *)target;
+    Boolean *baseaddress = (Boolean *)target;
     
     for(pos = 0; pos < targetSize; pos += 8)
     {

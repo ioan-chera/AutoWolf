@@ -65,7 +65,7 @@ static inline byte *PM_GetTexture(int wallpic)
 }
 
 // IOANCH 20130303: choose whether to remap
-static inline uint16_t *PM_GetSprite(int shapenum, boolean remap = true)
+static inline uint16_t *PM_GetSprite(int shapenum, Boolean remap = true)
 {
     // correct alignment is enforced by PM_Startup()
     // IOANCH 20130302: unification

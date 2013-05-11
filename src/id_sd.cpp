@@ -49,9 +49,6 @@
 
 // IOANCH 20121223: Cleaned up this file
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_main.h"
@@ -109,7 +106,7 @@ static byte      *SoundBuffers[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 >
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 
 //      Global variables
-        boolean         AdLibPresent,
+        Boolean         AdLibPresent,
                         SoundBlasterPresent,SBProPresent,
                         SoundPositioned;
         SDMode          SoundMode;
@@ -127,8 +124,8 @@ int DigiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod -
 				STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
 //      Internal variables
-static  boolean                 SD_Started;
-static  boolean                 nextsoundpos;
+static  Boolean                 SD_Started;
+static  Boolean                 nextsoundpos;
 // IOANCH 20130301: unification
 static  unsigned int            SoundNumber;
 static  unsigned int            DigiNumber;
@@ -139,7 +136,7 @@ static  int                     RightPosition;
 
         word                    NumDigi;
 static  digiinfo               *DigiList;
-static  boolean                 DigiPlaying;
+static  Boolean                 DigiPlaying;
 
 //      PC Sound variables
 // static  volatile byte           pcLastSample;
@@ -155,7 +152,7 @@ static  longword                alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
-static  volatile boolean        sqActive;
+static  volatile Boolean        sqActive;
 static  word                   *sqHack;
 static  word                   *sqHackPtr;
 static  int                     sqHackLen;
@@ -394,7 +391,7 @@ void __interrupt SDL_t0SlowAsmService(void)
                 outp(0x20,0x20);
 }
 
-void SDL_IndicatePC(boolean ind)
+void SDL_IndicatePC(Boolean ind)
 {
         pcindicate=ind;
 }
@@ -484,7 +481,7 @@ void
 #else
 static void
 #endif
-SDL_PCPlaySample(byte *data,longword len,boolean inIRQ)
+SDL_PCPlaySample(byte *data,longword len,Boolean inIRQ)
 {
         if(!inIRQ)
         {
@@ -771,7 +768,7 @@ void SD_ChannelFinished(int channel)
 //
 void SD_SetDigiDevice(SDSMode mode)
 {
-    boolean devicenotpresent;
+    Boolean devicenotpresent;
 
     if (mode == DigiMode)
         return;
@@ -966,7 +963,7 @@ static void SD_L_StartAL(void)
 //             
 // Determines if there's an AdLib (or SoundBlaster emulating an AdLib) present
 //
-static boolean SD_L_DetectAdLib(void)
+static Boolean SD_L_DetectAdLib(void)
 {
     for (int i = 1; i <= 0xf5; i++)       // Zero all the registers
         alOut(i, 0);
@@ -1036,9 +1033,9 @@ static void SD_L_StartDevice(void)
 //      SD_SetSoundMode() - Sets which sound hardware to use for sound effects
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_SetSoundMode(SDMode mode)
+Boolean SD_SetSoundMode(SDMode mode)
 {
-    boolean result = false;
+    Boolean result = false;
     word    tableoffset;
 
     SD_StopSound();
@@ -1083,9 +1080,9 @@ boolean SD_SetSoundMode(SDMode mode)
 //      SD_SetMusicMode() - sets the device to use for background music
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_SetMusicMode(SMMode mode)
+Boolean SD_SetMusicMode(SMMode mode)
 {
-    boolean result = false;
+    Boolean result = false;
 
     SD_FadeOutMusic();
     while (SD_MusicPlaying())
@@ -1294,9 +1291,9 @@ void SD_PositionSound(int leftvol,int rightvol)
 //      SD_PlaySound() - plays the specified sound on the appropriate hardware
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_PlaySound(soundnames sound_abstract)
+Boolean SD_PlaySound(soundnames sound_abstract)
 {
-    boolean         ispos;
+    Boolean         ispos;
     SoundCommon     *s;
     int             lp,rp;
 	
@@ -1388,7 +1385,7 @@ boolean SD_PlaySound(soundnames sound_abstract)
 ///////////////////////////////////////////////////////////////////////////
 word SD_SoundPlaying(void)
 {
-    boolean result = false;
+    Boolean result = false;
 
     switch (SoundMode)
     {
@@ -1566,9 +1563,9 @@ void SD_FadeOutMusic(void)
 //              not
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean SD_MusicPlaying(void)
+Boolean SD_MusicPlaying(void)
 {
-    boolean result;
+    Boolean result;
 
     switch (MusicMode)
     {

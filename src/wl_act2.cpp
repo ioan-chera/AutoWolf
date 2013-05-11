@@ -20,9 +20,6 @@
 
 // WL_ACT2.C
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
 #include "foreign.h"
 #include "version.h"
 #include "wl_def.h"
@@ -187,7 +184,7 @@ void A_Smoke (objtype *ob)
 
 #define PROJSIZE        0x2000
 
-boolean ProjectileTryMove (objtype *ob)
+Boolean ProjectileTryMove (objtype *ob)
 {
     int      xl,yl,xh,yh,x,y;
     objtype *check;
@@ -1445,7 +1442,7 @@ void T_ProjectileBossChase(objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    boolean dodge;
+    Boolean dodge;
 	
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -2174,7 +2171,7 @@ void T_Chase (objtype *ob)
 {
     int32_t move,target;
     int     dx,dy,dist,chance;
-    boolean dodge;
+    Boolean dodge;
 
     if (gamestate.victoryflag)
         return;
@@ -2810,7 +2807,7 @@ void A_BJDone (objtype *)
 ===============
 */
 
-boolean CheckPosition (objtype *ob)
+Boolean CheckPosition (objtype *ob)
 {
     int     x,y,xl,yl,xh,yh;
     objtype *check;

@@ -20,7 +20,6 @@
 #ifndef IOAN_BAS_H_
 #define IOAN_BAS_H_
 
-#include <math.h>
 #include "wl_def.h"
 #include "List.h"
 #include "PString.h"
@@ -43,18 +42,18 @@ namespace Basic
 
 	// Spawns a Nazi (originally they were separate functions; no more)
 	void SpawnEnemy(classtype cl, int tilex, int tiley, int dir = 0, 
-                           boolean patrol = false, enemy_t ghost = en_blinky);
+                           Boolean patrol = false, enemy_t ghost = en_blinky);
 
 	// Checks if it's an enemy
-	boolean IsEnemy(classtype cls);
+	Boolean IsEnemy(classtype cls);
 	// if it's a boss (no pain chance)
-	boolean IsBoss(classtype cls);
+	Boolean IsBoss(classtype cls);
 
 	// Check if it's armed
-	boolean IsDamaging(objtype *ret, int dist);
+	Boolean IsDamaging(objtype *ret, int dist);
 
 	// Generic check line
-	boolean GenericCheckLine (int x1, int y1, int x2, int y2);
+	Boolean GenericCheckLine (int x1, int y1, int x2, int y2);
 
 	// Get coordinates
 	inline int Major(int t)

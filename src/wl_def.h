@@ -26,7 +26,12 @@
 #define IMPALE(a) (SPEAR() ? a##_sod : a##_wl6)
 #define IMPALED(a, b) (SPEAR() ? a##_sod b : a##_wl6 b)
 
+#include <assert.h>
 #include <fcntl.h>
+#include <math.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
@@ -35,6 +40,7 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
+#include <SDL.h>
 
 #if !defined O_BINARY
 #	define O_BINARY 0
@@ -59,7 +65,7 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
 typedef uint32_t longword;
-typedef int8_t boolean;
+typedef int8_t Boolean;
 typedef void * memptr;
 
 typedef struct
@@ -426,7 +432,7 @@ typedef void (* statefunc) (void *);
 
 typedef struct statestruct
 {
-    boolean rotate;
+    Boolean rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void    (*think) (void *),(*action) (void *);
@@ -466,7 +472,7 @@ typedef enum
 typedef struct doorstruct
 {
     byte     tilex,tiley;
-    boolean  vertical;
+    Boolean  vertical;
     byte     lock;
     doortype action;
     short    ticcount;
@@ -575,7 +581,7 @@ typedef struct
                 secrettotal,treasuretotal,killtotal;
     int32_t     TimeCount;
     int32_t     killx,killy;
-    boolean     victoryflag;            // set during victory animations
+    Boolean     victoryflag;            // set during victory animations
 } gametype;
 
 

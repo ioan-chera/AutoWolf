@@ -30,28 +30,28 @@ class PString;
 //
 class Config 
 {
-	static boolean  nonazis;	// no enemies spawned
-    static boolean  secretstep3;
-    static boolean  botActive;
+	static Boolean  nonazis;	// no enemies spawned
+    static Boolean  secretstep3;
+    static Boolean  botActive;
     static PString  dir;            // IOANCH 20130509: formerly configdir
     static int      extravbls;
-    static boolean  forcegrabmouse;
-    static boolean  fullscreen;
+    static Boolean  forcegrabmouse;
+    static Boolean  fullscreen;
     static int      audiobuffer;
     static int      samplerate;
-    static boolean  debugmode;
+    static Boolean  debugmode;
     static int      difficulty;
-    static boolean  ignorenumchunks;
+    static Boolean  ignorenumchunks;
     static int      joystickhat;
     static int      joystickindex;
     static int      mission;
-    static boolean  nowait;
+    static Boolean  nowait;
     static int      tedlevel;
 
     static unsigned screenBits;
     static unsigned screenHeight;
     static unsigned screenWidth;
-    static boolean  usedoublebuffering;
+    static Boolean  usedoublebuffering;
     
     static void     CheckEnvVars();
 public:
@@ -59,32 +59,32 @@ public:
     static void     CheckParameters(int argc, char *argv[]);
     static void     SetupConfigLocation();
     
-    static boolean  NoNazis()              {return nonazis;}
-    static boolean  SecretStep3()          {return secretstep3;}
-    static boolean  BotActive()            {return botActive;}
+    static Boolean  NoNazis()              {return nonazis;}
+    static Boolean  SecretStep3()          {return secretstep3;}
+    static Boolean  BotActive()            {return botActive;}
     static PString  Dir()                  {return dir;}
     static int      ExtraVBLs()            {return extravbls;}
-    static boolean  ForceGrabMouse()       {return forcegrabmouse;}
-    static boolean  FullScreen()           {return fullscreen;}
+    static Boolean  ForceGrabMouse()       {return forcegrabmouse;}
+    static Boolean  FullScreen()           {return fullscreen;}
     static int      AudioBuffer()          {return audiobuffer;}
     static int      SampleRate()           {return samplerate;}
-    static boolean  DebugMode()            {return debugmode;}
+    static Boolean  DebugMode()            {return debugmode;}
     static int      Difficulty()           {return difficulty;}
-    static boolean  IgnoreNumChunks()      {return ignorenumchunks;}
+    static Boolean  IgnoreNumChunks()      {return ignorenumchunks;}
     static int      JoystickHat()          {return joystickhat;}
     static int      JoystickIndex()        {return joystickindex;}
     static int      Mission()              {return mission;}
-    static boolean  NoWait()               {return nowait;}
+    static Boolean  NoWait()               {return nowait;}
     static int      TedLevel()             {return tedlevel;}
     static unsigned ScreenBits()           {return screenBits;}
     static unsigned ScreenHeight()         {return screenHeight;}
     static unsigned ScreenWidth()          {return screenWidth;}
-    static boolean  UseDoubleBuffering()   {return usedoublebuffering;}
+    static Boolean  UseDoubleBuffering()   {return usedoublebuffering;}
     
     static void     SetExtraVBLs(int value){extravbls = value;}
-    static void     SetNoWait(boolean value){nowait = value;}
+    static void     SetNoWait(Boolean value){nowait = value;}
     static void     SetScreenBits(unsigned value){screenBits = value;}
-    static void     SetUseDoubleBuffering(boolean value)
+    static void     SetUseDoubleBuffering(Boolean value)
     {usedoublebuffering = value;}
 };
 

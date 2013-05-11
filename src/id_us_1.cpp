@@ -40,10 +40,6 @@
 //			window
 //
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "wl_def.h"
 #include "wl_menu.h"
 
@@ -60,7 +56,7 @@
 //	Internal variables
 #define	ConfigVersion	1
 
-static	boolean		US_Started;
+static	Boolean		US_Started;
 
 		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
@@ -441,7 +437,7 @@ void US_RestoreWindow(WindowRec *win)
 ///////////////////////////////////////////////////////////////////////////
 static void USL_XORICursor(int x,int y,const char *s,word cursor)
 {
-	static	boolean	status;		// VGA doesn't XOR...
+	static	Boolean	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
 	word	w,h;
@@ -494,9 +490,9 @@ char USL_RotateChar(char ch, int dir)
 //		returned
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean US_LineInput(int x,int y,char *buf,const char *def,boolean escok, int maxchars,int maxwidth)
+Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int maxchars,int maxwidth)
 {
-	boolean		redraw,
+	Boolean		redraw,
 				cursorvis,cursormoved,
 				done,result, checkkey;
 	ScanCode	sc;

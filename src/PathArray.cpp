@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include <stdlib.h>
 #include "PathArray.h"
 #include "wl_def.h"
 #include "ioan_bas.h"
@@ -57,7 +56,7 @@ int PathArray::addStartNode(int tx, int ty)
 	return addStartNode(tx, ty, tx, ty);
 }
 
-int PathArray::addStartNode(int tx, int ty, int destx, int desty, boolean negate)
+int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean negate)
 {
 	Node node;
 	int dist = Basic::ApproxDist((destx - tx) << 8, (desty - ty) << 8);
@@ -174,7 +173,7 @@ void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist)
 	updateNode(ichange, index, cx, cy, dist, cx, cy);
 }
 
-void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist, int destx, int desty, boolean negate)
+void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist, int destx, int desty, Boolean negate)
 {
 	dist += nodes[index].g_score;
 	if(ichange == -1)

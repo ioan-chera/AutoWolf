@@ -44,7 +44,7 @@ class Pushwall
 {
 protected:
     // Can still be pushed?
-    boolean active;
+    Boolean active;
     // Current position
     word tilex, tiley;
     

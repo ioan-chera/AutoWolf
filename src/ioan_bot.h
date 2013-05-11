@@ -50,24 +50,24 @@ protected:
 	static PathArray path;
 
 	// protected variables
-	static boolean panic;	// gun logic switch (use gatling gun to kill quickly)
+	static Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
 	static byte pressuse;	// periodic switch for triggering button-down-only commands
 	static short retreatwaitdelay, retreatwaitcount, retreat;	// retreat (cover) controllers
 	static SearchStage searchstage;
 	static int exitx, exity;
 	static objtype *threater;
-	static boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+	static Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
 	static List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
 
 	// protected functions
 	// Recursively explores from the given origin
-	static void ExploreFill(int tx, int ty, int ox, int oy, boolean firstcall = false);
+	static void ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall = false);
 	// Finds the closest object of interest (object, hidden door, exit)
-	static boolean FindShortestPath(boolean ignoreproj = false, boolean mindnazis = false, byte retreating = 0, boolean knifeinsight = false);
+	static Boolean FindShortestPath(Boolean ignoreproj = false, Boolean mindnazis = false, byte retreating = 0, Boolean knifeinsight = false);
 	// move by strafing
-	static void MoveStrafe(short tangle, short dangle, boolean tryuse, byte pressuse, int nx, int ny);
+	static void MoveStrafe(short tangle, short dangle, Boolean tryuse, byte pressuse, int nx, int ny);
 	// Object of interest
-	static boolean ObjectOfInterest(int dx, int dy, boolean knifeinsight = false);
+	static Boolean ObjectOfInterest(int dx, int dy, Boolean knifeinsight = false);
 	// Enemy on spot
 	static objtype *EnemyFound(int dx, int dy);
 	// Enemy targetted
@@ -79,9 +79,9 @@ protected:
 	// Automated and armed
 	static objtype *DamageThreat(objtype *targ);
 	// do retreat
-	static void DoRetreat(boolean forth = false, objtype *cause = NULL);
+	static void DoRetreat(Boolean forth = false, objtype *cause = NULL);
 	// like EnemiesArmed, but not restricted to the player
-	static objtype *Crossfire(int x, int y, objtype *objignore = NULL, boolean justexists = false);
+	static objtype *Crossfire(int x, int y, objtype *objignore = NULL, Boolean justexists = false);
 	// Like enemyvisible, but for any spot
 	static objtype *GenericEnemyVisible(int tx, int ty);
 	// Test if there's a projectile there
@@ -98,7 +98,7 @@ protected:
 	// Do noncombat AI
 	static void DoNonCombatAI();
 	// Do knife AI (when guns won't work)
-	static boolean DoMeleeAI();
+	static Boolean DoMeleeAI();
 	// See if there's an active behind the corner that may be knifed
 	static objtype *DogGnawing(int *eangle = NULL);
 	// Turn the player

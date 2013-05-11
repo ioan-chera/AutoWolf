@@ -18,7 +18,6 @@
 
 
 #include <limits.h>
-#include <math.h>
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
@@ -37,14 +36,14 @@
 // static class member definition
 objtype *BotMan::damagetaken;
 // protected ones
-boolean BotMan::panic;
+Boolean BotMan::panic;
 byte BotMan::pressuse;
 short BotMan::retreatwaitdelay, BotMan::retreatwaitcount, BotMan::retreat;
 SearchStage BotMan::searchstage;
 int BotMan::exitx, BotMan::exity;
 objtype *BotMan::threater;
 PathArray BotMan::path;
-boolean BotMan::explored[MAPSIZE][MAPSIZE];
+Boolean BotMan::explored[MAPSIZE][MAPSIZE];
 List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
 
 HistoryRatio BotMan::shootRatio;
@@ -112,7 +111,7 @@ void BotMan::LoadData()
 //
 // Pickable item, secret door, exit switch, exit pad
 //
-boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
+Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 {
     if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
         return true;
@@ -322,15 +321,15 @@ boolean BotMan::ObjectOfInterest(int tx, int ty, boolean knifeinsight)
 //
 // Recursively explores from the given origin
 //
-void BotMan::ExploreFill(int tx, int ty, int ox, int oy, boolean firstcall)
+void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 {
 	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
 		return;
 	
-	static boolean explore_visited[MAPSIZE][MAPSIZE];
+	static Boolean explore_visited[MAPSIZE][MAPSIZE];
 	if(firstcall)	// origin
 	{
-		memset(explore_visited, 0, maparea*sizeof(boolean));
+		memset(explore_visited, 0, maparea*sizeof(Boolean));
 	}
 	
 	if(explore_visited[tx][ty])
@@ -360,7 +359,7 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, boolean firstcall)
 //
 // Finds the path to the nearest destination
 //
-boolean BotMan::FindShortestPath(boolean ignoreproj, boolean mindnazis, byte retreating, boolean knifeinsight)
+Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte retreating, Boolean knifeinsight)
 {
 	int j;
 	
@@ -735,7 +734,7 @@ objtype *BotMan::DamageThreat(objtype *targ)
 //
 // Returns true if there's a crossfire in that spot
 //
-objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
+objtype *BotMan::Crossfire(int x, int y, objtype *objignore, Boolean justexists)
 {
 	int j, k, dist;
 	objtype *ret;
@@ -763,7 +762,7 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, boolean justexists)
 //
 // Retreats the bot sliding off walls
 //
-void BotMan::DoRetreat(boolean forth, objtype *cause)
+void BotMan::DoRetreat(Boolean forth, objtype *cause)
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
@@ -1058,7 +1057,7 @@ void BotMan::MoveByStrafe()
 	}
 	
 	int nx, ny, mx, my;
-	boolean tryuse = false;	// whether to try using
+	Boolean tryuse = false;	// whether to try using
 	
 	mx = player->tilex;
 	my = player->tiley;
@@ -1413,7 +1412,7 @@ void BotMan::DoNonCombatAI()
 		}
 	}
 	
-	static boolean waitpwall;
+	static Boolean waitpwall;
 	if(pwallstate)
 		waitpwall = true;
 	
@@ -1430,7 +1429,7 @@ void BotMan::DoNonCombatAI()
 	}
 	
 	int nx, ny, mx, my;
-	boolean tryuse = false;	// whether to try using
+	Boolean tryuse = false;	// whether to try using
 	
 	
 	mx = player->x;
@@ -1546,7 +1545,7 @@ void BotMan::DoNonCombatAI()
 //
 // Use the knife if the gun won't work (e.g. biting dogs)
 //
-boolean BotMan::DoMeleeAI()
+Boolean BotMan::DoMeleeAI()
 {
 	int eangle;
 	if(DogGnawing(&eangle))

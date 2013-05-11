@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include <stdlib.h>
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "obattrib.h"
@@ -292,7 +291,7 @@ static void _SpawnGhosts (int which, int tilex, int tiley)
 // Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
 //
 void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
-                       boolean patrol, enemy_t ghosttype)
+                       Boolean patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
 	if(Config::NoNazis() && !loadedgame)
@@ -345,7 +344,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
 //
 // Basic::IsEnemy
 //
-boolean Basic::IsEnemy(classtype cls)
+Boolean Basic::IsEnemy(classtype cls)
 {
     return atr::flags[cls] & ATR_ENEMY;
 }
@@ -353,7 +352,7 @@ boolean Basic::IsEnemy(classtype cls)
 //
 // Basic::IsBoss
 //
-boolean Basic::IsBoss(classtype cls)
+Boolean Basic::IsBoss(classtype cls)
 {
     return atr::flags[cls] & ATR_BOSS;
 }
@@ -363,7 +362,7 @@ boolean Basic::IsBoss(classtype cls)
 //
 // Check if the Nazi is ready to fire or firing (important for fighting SS and bosses)
 //
-boolean Basic::IsDamaging(objtype *ret, int dist)
+Boolean Basic::IsDamaging(objtype *ret, int dist)
 {
     if((dist <= 2 && atr::flags[ret->obclass] & ATR_NEARBY_THREAT && 
         ret->flags & FL_ATTACKMODE) || 
@@ -380,7 +379,7 @@ boolean Basic::IsDamaging(objtype *ret, int dist)
 //
 // Like CheckLine, but with user-settable coordinates
 //
-boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
+Boolean Basic::GenericCheckLine (int x1, int y1, int x2, int y2)
 {
     int         xt1,yt1,xt2,yt2;
     int         x,y;

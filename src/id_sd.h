@@ -28,7 +28,6 @@
 #ifndef __ID_SD__
 #define __ID_SD__
 
-#include <SDL.h>
 
 #define alOut(n,b) YM3812Write(oplChip, n, b)
 
@@ -132,7 +131,7 @@ typedef struct
 extern globalsoundpos channelSoundPos[];
 
 // Global variables
-extern  boolean         AdLibPresent,
+extern  Boolean         AdLibPresent,
                         SoundBlasterPresent,
                         SoundPositioned;
 extern  SDMode          SoundMode;
@@ -154,7 +153,7 @@ extern  void    SD_Startup(void),
 
 extern  int     SD_GetChannelForDigi(int which);
 extern  void    SD_PositionSound(int leftvol,int rightvol);
-extern  boolean SD_PlaySound(soundnames sound);
+extern  Boolean SD_PlaySound(soundnames sound);
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
 extern  void    SD_StopSound(void),
                 SD_WaitSoundDone(void);
@@ -165,9 +164,9 @@ extern  void    SD_MusicOn(void),
                 SD_FadeOutMusic(void);
 extern  int     SD_MusicOff(void);
 
-extern  boolean SD_MusicPlaying(void);
-extern  boolean SD_SetSoundMode(SDMode mode);
-extern  boolean SD_SetMusicMode(SMMode mode);
+extern  Boolean SD_MusicPlaying(void);
+extern  Boolean SD_SetSoundMode(SDMode mode);
+extern  Boolean SD_SetMusicMode(SMMode mode);
 extern  word    SD_SoundPlaying(void);
 
 extern  void    SD_SetDigiDevice(SDSMode);

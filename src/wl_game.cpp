@@ -20,8 +20,6 @@
 
 // WL_GAME.C
 
-#include <math.h>
-#include <stdlib.h>
 #include "foreign.h"
 #include "version.h"
 #include "wl_def.h"
@@ -64,14 +62,14 @@
 =============================================================================
 */
 
-boolean         ingame,fizzlein;
+Boolean         ingame,fizzlein;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 // IOANCH 20130302: unification
 int32_t         spearx,speary;
 unsigned        spearangle;
-boolean         spearflag;
+Boolean         spearflag;
 
 
 #ifdef USE_FEATUREFLAGS
@@ -1424,7 +1422,7 @@ void Died (void)
 
 void GameLoop (void)
 {
-    boolean died;
+    Boolean died;
 #ifdef MYPROFILE
     clock_t start,end;
 #endif

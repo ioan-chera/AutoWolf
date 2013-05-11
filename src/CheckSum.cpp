@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include <stdlib.h>
 #include "wl_def.h"
 #include "MasterDirectoryFile.h"
 #include "PropertyFile.h"
@@ -195,7 +194,7 @@ void CalculateMapsegsChecksum()
 void GetExploredData(void *exploredTarget)
 {
 	// see if folder exists in AutoWolf/Maps
-	memset(exploredTarget, 0, sizeof(maparea * sizeof(boolean)));
+	memset(exploredTarget, 0, sizeof(maparea * sizeof(Boolean)));
 	
 	// now to write the file
 	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();

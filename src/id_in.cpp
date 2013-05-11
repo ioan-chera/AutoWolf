@@ -37,7 +37,6 @@
 //	DEBUG - there are more globals
 //
 
-#include <SDL.h>
 #include "wl_def.h"
 #include "wl_main.h"
 #include "Config.h"
@@ -54,12 +53,12 @@
 //
 // configuration variables
 //
-boolean MousePresent;
+Boolean MousePresent;
 
 
 // 	Global variables
-volatile boolean    Keyboard[SDLK_LAST];
-volatile boolean	Paused;
+volatile Boolean    Keyboard[SDLK_LAST];
+volatile Boolean	Paused;
 volatile char		LastASCII;
 volatile ScanCode	LastScan;
 
@@ -129,7 +128,7 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 };
 
 
-static	boolean		IN_Started;
+static	Boolean		IN_Started;
 
 static	Direction	DirTable[] =		// Quick lookup for total direction
 {
@@ -254,7 +253,7 @@ int IN_JoyButtons()
 //
 // IN_JoyPresent
 //
-boolean IN_JoyPresent()
+Boolean IN_JoyPresent()
 {
     return Joystick != NULL;
 }
@@ -580,7 +579,7 @@ char IN_WaitForASCII(void)
 //
 ///////////////////////////////////////////////////////////////////////////
 
-boolean	btnstate[NUMBUTTONS];
+Boolean	btnstate[NUMBUTTONS];
 
 //
 // IN_StartAck
@@ -607,7 +606,7 @@ void IN_StartAck(void)
 //
 // IN_CheckAck
 //
-boolean IN_CheckAck (void)
+Boolean IN_CheckAck (void)
 {
     IN_ProcessEvents();
 //
@@ -671,7 +670,7 @@ void IN_Ack (void)
 //		button up.
 //
 ///////////////////////////////////////////////////////////////////////////
-boolean IN_UserInput(longword delay)
+Boolean IN_UserInput(longword delay)
 {
 	longword	lasttime;
 

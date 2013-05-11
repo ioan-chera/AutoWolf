@@ -20,9 +20,6 @@
 
 // WL_INTER.C
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "foreign.h"
 #include "f_spear.h"
 #include "wl_def.h"
@@ -970,7 +967,7 @@ done:   itoanoreturn (kr, tempstr, 10);
 =================
 */
 
-boolean
+Boolean
 PreloadUpdate (unsigned current, unsigned total)
 {
     unsigned w = WindowW - scaleFactor * 10;

@@ -21,10 +21,6 @@
 // ID_VL.C
 
 #include <string.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "wl_def.h"
 #include "wl_draw.h"
 #pragma hdrstop
@@ -67,7 +63,7 @@ unsigned curPitch;
 
 unsigned scaleFactor;
 
-boolean	 screenfaded;
+Boolean	 screenfaded;
 unsigned bordercolor;
 
 SDL_Color palette1[256], palette2[256];

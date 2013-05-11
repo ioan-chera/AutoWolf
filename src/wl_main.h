@@ -1,10 +1,9 @@
 #ifndef WL_MAIN_H_
 #define WL_MAIN_H_
 
-#include <stdio.h>
 
 
-extern  boolean  loadedgame;
+extern  Boolean  loadedgame;
 extern  fixed    focallength;
 extern  int      viewscreenx, viewscreeny;
 extern  int      viewwidth;
@@ -19,7 +18,7 @@ extern  int      mouseadjustment;
 extern  int      shootdelta;
 extern  unsigned screenofs;
 
-extern  boolean  startgame;
+extern  Boolean  startgame;
 extern  char     str[80];
 class PString;
 extern  PString  configname;
@@ -28,9 +27,9 @@ extern  PString  configname;
 void            NewGame (int difficulty,int episode);
 void            CalcProjection (int32_t focal);
 void            NewViewSize (int width);
-boolean         SetViewSize (unsigned width, unsigned height);
-boolean         LoadTheGame(FILE *file,int x,int y);
-boolean         SaveTheGame(FILE *file,int x,int y);
+Boolean         SetViewSize (unsigned width, unsigned height);
+Boolean         LoadTheGame(FILE *file,int x,int y);
+Boolean         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 void            ShutdownId (void);
 

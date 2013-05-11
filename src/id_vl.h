@@ -22,7 +22,6 @@
 
 // wolf compatability
 
-#include <SDL.h>
 
 void Quit (const char *error,...);
 
@@ -38,7 +37,7 @@ extern SDL_Surface *screen, *screenBuffer, *curSurface;
 extern  unsigned screenPitch, bufferPitch, curPitch;
 extern  unsigned scaleFactor;
 
-extern	boolean  screenfaded;
+extern	Boolean  screenfaded;
 extern	unsigned bordercolor;
 
 // IOANCH 20130202: unification process

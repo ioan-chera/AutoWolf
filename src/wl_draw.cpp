@@ -21,7 +21,6 @@
 
 // WL_DRAW.C
 
-#include <SDL.h>
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
@@ -63,7 +62,7 @@ unsigned vbufPitch = 0;
 
 int32_t    lasttimecount;
 int32_t    frameon;
-boolean fpscounter;
+Boolean fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
 
@@ -224,7 +223,7 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
+Boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
@@ -1062,7 +1061,7 @@ void AsmRefresh()
 {
     int32_t xstep,ystep;
     longword xpartial,ypartial;
-    boolean playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
+    Boolean playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
 
     for(pixx=0;pixx<viewwidth;pixx++)
     {

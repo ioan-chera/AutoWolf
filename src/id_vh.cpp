@@ -18,8 +18,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include <stdlib.h>
-#include <SDL.h>
 #include "wl_def.h"
 #include "Config.h"
 
@@ -425,7 +423,7 @@ void VH_Startup()
 //
 // FizzleFade
 //
-boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigned height, unsigned frames, boolean abortable)
+Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigned height, unsigned frames, Boolean abortable)
 {
     unsigned x, y, frame, pixperframe;
     int32_t  rndval, lastrndval;

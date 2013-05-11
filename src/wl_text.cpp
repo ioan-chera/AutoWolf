@@ -20,9 +20,6 @@
 
 // WL_TEXT.C
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_game.h"
@@ -90,7 +87,7 @@ static int     picx;
 static int     picy;
 static int     picnum;
 static int     picdelay;
-static boolean layoutdone;
+static Boolean layoutdone;
 
 //===========================================================================
 
@@ -440,7 +437,7 @@ void HandleWord (void)
 =====================
 */
 
-void PageLayout (boolean shownumber)
+void PageLayout (Boolean shownumber)
 {
     int     i,oldfontcolor;
     char    ch;
@@ -620,7 +617,7 @@ void ShowArticle (char *article)
     // IOANCH 20130301: unification culling
 
     unsigned    oldfontnumber;
-    boolean     newpage,firstpage;
+    Boolean     newpage,firstpage;
     ControlInfo ci;
 
     // IOANCH 20130301: unification culling

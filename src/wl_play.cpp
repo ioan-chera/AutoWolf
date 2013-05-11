@@ -20,8 +20,6 @@
 
 // WL_PLAY.C
 
-#include <stdlib.h>
-#include <SDL.h>
 #include "foreign.h"
 #include "version.h"
 #include "wl_def.h"
@@ -61,7 +59,7 @@
 =============================================================================
 */
 
-boolean madenoise;              // true when shooting or screaming
+Boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
@@ -72,7 +70,7 @@ static int DebugOk;
 objtype objlist[MAXACTORS];
 objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
-boolean noclip, ammocheat;
+Boolean noclip, ammocheat;
 int godmode, singlestep;
 
 byte tilemap[MAPSIZE][MAPSIZE]; // wall values only
@@ -87,7 +85,7 @@ unsigned tics;
 //
 // control info
 //
-boolean mouseenabled, joystickenabled;
+Boolean mouseenabled, joystickenabled;
 int dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
 int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
@@ -105,9 +103,9 @@ int buttonjoy[32] = {
 
 int viewsize;
 
-boolean buttonheld[NUMBUTTONS];
+Boolean buttonheld[NUMBUTTONS];
 
-boolean demorecord, demoplayback;
+Boolean demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
 memptr demobuffer;
 
@@ -115,7 +113,7 @@ memptr demobuffer;
 // current user input
 //
 int controlx, controly;         // range from -100 to 100 per tic
-boolean buttonstate[NUMBUTTONS];
+Boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
 
@@ -1021,7 +1019,7 @@ SDL_Color redshifts[NUMREDSHIFTS][256];
 SDL_Color whiteshifts[NUMWHITESHIFTS][256];
 
 int damagecount, bonuscount;
-boolean palshifted;
+Boolean palshifted;
 
 /*
 =====================

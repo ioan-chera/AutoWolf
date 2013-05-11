@@ -16,7 +16,7 @@ extern  int32_t    frameon;
 
 extern  unsigned screenloc[3];
 
-extern  boolean fizzlein, fpscounter;
+extern  Boolean fizzlein, fpscounter;
 
 extern  fixed   viewx,viewy;                    // the focal point
 extern  fixed   viewsin,viewcos;

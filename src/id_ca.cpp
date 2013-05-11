@@ -46,8 +46,6 @@ loaded into the data segment
     #include <unistd.h>
 #endif
 
-#include <assert.h>
-#include <stdlib.h>
 #include "wl_def.h"
 #include "wl_main.h"
 #pragma hdrstop
@@ -179,7 +177,7 @@ static void CAL_GetGrChunkLength(int chunk)
 //
 // Writes a file from a memory buffer
 //
-boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
+Boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if(handle == -1)
@@ -199,7 +197,7 @@ boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
 //
 // Allocate space for and load a file
 //
-boolean CA_LoadFile(const char *filename, memptr *ptr)
+Boolean CA_LoadFile(const char *filename, memptr *ptr)
 {
     int32_t size;
 

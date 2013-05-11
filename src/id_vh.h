@@ -19,7 +19,6 @@
 //
 
 // ID_VH.H
-#include <SDL.h>
 
 #define WHITE			15			// graphics mode independant colors
 #define BLACK			0
@@ -114,8 +113,8 @@ void    LoadLatchMem (void);
 void    FreeLatchMem();
 
 void    VH_Startup();
-boolean FizzleFade (SDL_Surface *source, int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, boolean abortable);
+Boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, Boolean abortable);
 
 #define NUMLATCHPICS	100
 extern	SDL_Surface *latchpics[NUMLATCHPICS];

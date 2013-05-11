@@ -135,7 +135,7 @@ typedef	enum		{
 						dir_None
 					} Direction;
 typedef	struct		{
-						boolean		button0,button1,button2,button3;
+						Boolean		button0,button1,button2,button3;
 						short		x,y;
 						Motion		xaxis,yaxis;
 						Direction	dir;
@@ -156,9 +156,9 @@ typedef	struct		{
 									joyMultXH,joyMultYH;
 					} JoystickDef;
 // Global variables
-extern  volatile boolean    Keyboard[];
-extern           boolean    MousePresent;
-extern  volatile boolean    Paused;
+extern  volatile Boolean    Keyboard[];
+extern           Boolean    MousePresent;
+extern  volatile Boolean    Paused;
 extern  volatile char       LastASCII;
 extern  volatile ScanCode   LastScan;
 extern           int        JoyNumButtons;
@@ -178,7 +178,7 @@ extern	void		IN_SetupJoy(word joy,word minx,word maxx,
 								word miny,word maxy);
 extern	void		IN_StopDemo(void),IN_FreeDemoBuffer(void),
 					IN_Ack(void);
-extern	boolean		IN_UserInput(longword delay);
+extern	Boolean		IN_UserInput(longword delay);
 extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
@@ -189,14 +189,14 @@ void    IN_ProcessEvents();
 
 int     IN_MouseButtons (void);
 
-boolean IN_JoyPresent();
+Boolean IN_JoyPresent();
 void    IN_SetJoyCurrent(int joyIndex);
 int     IN_JoyButtons (void);
 void    IN_GetJoyDelta(int *dx,int *dy);
 void    IN_GetJoyFineDelta(int *dx, int *dy);
 
 void    IN_StartAck(void);
-boolean IN_CheckAck (void);
+Boolean IN_CheckAck (void);
 bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 

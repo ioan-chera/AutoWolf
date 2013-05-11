@@ -26,9 +26,6 @@
 	#include <unistd.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "version.h"
 #include "wl_def.h"
 #include "wl_act1.h"
@@ -272,7 +269,7 @@ void ShapeTest (void)
     extern  byte    *postsource;
     static  char    buf[10];
 
-    boolean         done;
+    Boolean         done;
     ScanCode        scan;
     int             i,j,k,x;
     longword        l;
@@ -464,7 +461,7 @@ void ShapeTest (void)
 
 int DebugKeys (void)
 {
-    boolean esc;
+    Boolean esc;
     int level;
 
     if (Keyboard[sc_B])             // B = border color
@@ -847,7 +844,7 @@ void OverheadRefresh (void)
 
 void ViewMap (void)
 {
-    boolean         button0held;
+    Boolean         button0held;
 
     viewtype = actoratview;
     //      button0held = false;

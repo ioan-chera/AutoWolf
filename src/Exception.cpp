@@ -19,7 +19,7 @@
 #include "wl_def.h"
 #include "Exception.h"
 
-boolean Exception::showred = false;
+Boolean Exception::showred = false;
 
 Exception::Exception()
 {

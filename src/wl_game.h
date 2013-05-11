@@ -1,8 +1,6 @@
 #ifndef WL_GAME_H_
 #define WL_GAME_H_
 
-#include <SDL.h>
-
 extern  gametype        gamestate;
 extern  byte            bordercol;
 extern  SDL_Surface     *latchpics[NUMLATCHPICS];
@@ -24,7 +22,7 @@ void    RecordDemo (void);
 
 extern  int32_t            spearx,speary;
 extern  unsigned        spearangle;
-extern  boolean         spearflag;
+extern  Boolean         spearflag;
 
 
 

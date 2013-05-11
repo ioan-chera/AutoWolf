@@ -24,7 +24,7 @@
 
 class Exception
 {
-    static boolean showred;
+    static Boolean showred;
     PString exctext;
 public:
     Exception();

@@ -10,18 +10,18 @@ void    InitHitRect (objtype *ob, unsigned radius);
 void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 void    NewState (objtype *ob, statetype *state);
 
-boolean TryWalk (objtype *ob);
+Boolean TryWalk (objtype *ob);
 void    SelectChaseDir (objtype *ob);
 void    SelectDodgeDir (objtype *ob);
 void    SelectRunDir (objtype *ob);
 void    MoveObj (objtype *ob, int32_t move);
-boolean SightPlayer (objtype *ob);
+Boolean SightPlayer (objtype *ob);
 
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-boolean CheckLine (objtype *ob);
-boolean CheckSight (objtype *ob);
+Boolean CheckLine (objtype *ob);
+Boolean CheckSight (objtype *ob);
 
 
 #endif

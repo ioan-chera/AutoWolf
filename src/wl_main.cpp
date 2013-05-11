@@ -26,10 +26,6 @@
     #include <unistd.h>
 #endif
 
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL.h>
 #include "foreign.h"
 #include "version.h"
 #include "wl_def.h"
@@ -112,8 +108,8 @@ int32_t  heightnumerator;
 
 void    Quit (const char *error,...);
 
-boolean startgame;
-boolean loadedgame;
+Boolean startgame;
+Boolean loadedgame;
 int     mouseadjustment;
 
 PString configname("CONFIG.");
@@ -171,9 +167,9 @@ void ReadConfig(void)
 
         read(file,&mouseenabled,sizeof(mouseenabled));
         read(file,&joystickenabled,sizeof(joystickenabled));
-        boolean dummyJoypadEnabled;
+        Boolean dummyJoypadEnabled;
         read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive;
+        Boolean dummyJoystickProgressive;
         read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
@@ -285,9 +281,9 @@ void WriteConfig(void)
 
         write(file,&mouseenabled,sizeof(mouseenabled));
         write(file,&joystickenabled,sizeof(joystickenabled));
-        boolean dummyJoypadEnabled = false;
+        Boolean dummyJoypadEnabled = false;
         write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        boolean dummyJoystickProgressive = false;
+        Boolean dummyJoystickProgressive = false;
         write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
@@ -371,7 +367,7 @@ int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 extern statetype s_grdstand;
 extern statetype s_player;
 
-boolean SaveTheGame(FILE *file,int x,int y)
+Boolean SaveTheGame(FILE *file,int x,int y)
 {
 //    struct diskfree_t dfree;
 //    int32_t avail,size,checksum;
@@ -522,7 +518,7 @@ boolean SaveTheGame(FILE *file,int x,int y)
 ==================
 */
 
-boolean LoadTheGame(FILE *file,int x,int y)
+Boolean LoadTheGame(FILE *file,int x,int y)
 {
     int32_t checksum,oldchecksum;
     objtype nullobj;
@@ -1261,7 +1257,7 @@ static char global_error[256];
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
-    boolean didjukebox=false;
+    Boolean didjukebox=false;
 
     // initialize SDL
 #if defined _WIN32
@@ -1423,7 +1419,7 @@ static void InitGame()
 ==========================
 */
 
-boolean SetViewSize (unsigned width, unsigned height)
+Boolean SetViewSize (unsigned width, unsigned height)
 {
     viewwidth = width&~15;                  // must be divisable by 16
     viewheight = height&~1;                 // must be even
