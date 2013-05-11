@@ -1,0 +1,317 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4FB3B401173E94D400C29DF4 /* AutoWolf.app in Resources */ = {isa = PBXBuildFile; fileRef = 4FB3B400173E94D400C29DF4 /* AutoWolf.app */; };
+		4FFEFEF4173E7FB9004054BD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FFEFEF3173E7FB9004054BD /* Cocoa.framework */; };
+		4FFEFEFE173E7FB9004054BD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4FFEFEFC173E7FB9004054BD /* InfoPlist.strings */; };
+		4FFEFF00173E7FB9004054BD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEFEFF173E7FB9004054BD /* main.m */; };
+		4FFEFF04173E7FB9004054BD /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4FFEFF02173E7FB9004054BD /* Credits.rtf */; };
+		4FFEFF07173E7FB9004054BD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FFEFF06173E7FB9004054BD /* AppDelegate.m */; };
+		4FFEFF0A173E7FB9004054BD /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FFEFF08173E7FB9004054BD /* MainMenu.xib */; };
+		4FFEFF11173E8562004054BD /* wolf4sdl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4FFEFF10173E8562004054BD /* wolf4sdl.icns */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4FB3B400173E94D400C29DF4 /* AutoWolf.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = AutoWolf.app; path = ../../../../../../develop/autowolf/AutoWolf.app; sourceTree = "<group>"; };
+		4FFEFEF0173E7FB9004054BD /* AutoWolfStarter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolfStarter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FFEFEF3173E7FB9004054BD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4FFEFEF6173E7FB9004054BD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		4FFEFEF7173E7FB9004054BD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		4FFEFEF8173E7FB9004054BD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4FFEFEFB173E7FB9004054BD /* AutoWolfStarter-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AutoWolfStarter-Info.plist"; sourceTree = "<group>"; };
+		4FFEFEFD173E7FB9004054BD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4FFEFEFF173E7FB9004054BD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4FFEFF01173E7FB9004054BD /* AutoWolfStarter-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AutoWolfStarter-Prefix.pch"; sourceTree = "<group>"; };
+		4FFEFF03173E7FB9004054BD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		4FFEFF05173E7FB9004054BD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4FFEFF06173E7FB9004054BD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4FFEFF09173E7FB9004054BD /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		4FFEFF10173E8562004054BD /* wolf4sdl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = wolf4sdl.icns; path = ../../../../macosx/wolf4sdl.icns; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4FFEFEED173E7FB9004054BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FFEFEF4173E7FB9004054BD /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4FFEFEE7173E7FB9004054BD = {
+			isa = PBXGroup;
+			children = (
+				4FFEFEF9173E7FB9004054BD /* AutoWolfStarter */,
+				4FFEFEF2173E7FB9004054BD /* Frameworks */,
+				4FFEFEF1173E7FB9004054BD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4FFEFEF1173E7FB9004054BD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4FFEFEF0173E7FB9004054BD /* AutoWolfStarter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4FFEFEF2173E7FB9004054BD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4FFEFEF3173E7FB9004054BD /* Cocoa.framework */,
+				4FFEFEF5173E7FB9004054BD /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4FFEFEF5173E7FB9004054BD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4FFEFEF6173E7FB9004054BD /* AppKit.framework */,
+				4FFEFEF7173E7FB9004054BD /* CoreData.framework */,
+				4FFEFEF8173E7FB9004054BD /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		4FFEFEF9173E7FB9004054BD /* AutoWolfStarter */ = {
+			isa = PBXGroup;
+			children = (
+				4FFEFF05173E7FB9004054BD /* AppDelegate.h */,
+				4FFEFF06173E7FB9004054BD /* AppDelegate.m */,
+				4FFEFF08173E7FB9004054BD /* MainMenu.xib */,
+				4FFEFEFA173E7FB9004054BD /* Supporting Files */,
+			);
+			path = AutoWolfStarter;
+			sourceTree = "<group>";
+		};
+		4FFEFEFA173E7FB9004054BD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4FB3B400173E94D400C29DF4 /* AutoWolf.app */,
+				4FFEFF10173E8562004054BD /* wolf4sdl.icns */,
+				4FFEFEFB173E7FB9004054BD /* AutoWolfStarter-Info.plist */,
+				4FFEFEFC173E7FB9004054BD /* InfoPlist.strings */,
+				4FFEFEFF173E7FB9004054BD /* main.m */,
+				4FFEFF01173E7FB9004054BD /* AutoWolfStarter-Prefix.pch */,
+				4FFEFF02173E7FB9004054BD /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4FFEFEEF173E7FB9004054BD /* AutoWolfStarter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FFEFF0D173E7FB9004054BD /* Build configuration list for PBXNativeTarget "AutoWolfStarter" */;
+			buildPhases = (
+				4FFEFEEC173E7FB9004054BD /* Sources */,
+				4FFEFEED173E7FB9004054BD /* Frameworks */,
+				4FFEFEEE173E7FB9004054BD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AutoWolfStarter;
+			productName = AutoWolfStarter;
+			productReference = 4FFEFEF0173E7FB9004054BD /* AutoWolfStarter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4FFEFEE8173E7FB9004054BD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = ichera;
+			};
+			buildConfigurationList = 4FFEFEEB173E7FB9004054BD /* Build configuration list for PBXProject "AutoWolfStarter" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4FFEFEE7173E7FB9004054BD;
+			productRefGroup = 4FFEFEF1173E7FB9004054BD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4FFEFEEF173E7FB9004054BD /* AutoWolfStarter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4FFEFEEE173E7FB9004054BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FFEFEFE173E7FB9004054BD /* InfoPlist.strings in Resources */,
+				4FFEFF04173E7FB9004054BD /* Credits.rtf in Resources */,
+				4FFEFF0A173E7FB9004054BD /* MainMenu.xib in Resources */,
+				4FFEFF11173E8562004054BD /* wolf4sdl.icns in Resources */,
+				4FB3B401173E94D400C29DF4 /* AutoWolf.app in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4FFEFEEC173E7FB9004054BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4FFEFF00173E7FB9004054BD /* main.m in Sources */,
+				4FFEFF07173E7FB9004054BD /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4FFEFEFC173E7FB9004054BD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FFEFEFD173E7FB9004054BD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4FFEFF02173E7FB9004054BD /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FFEFF03173E7FB9004054BD /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		4FFEFF08173E7FB9004054BD /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4FFEFF09173E7FB9004054BD /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4FFEFF0B173E7FB9004054BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4FFEFF0C173E7FB9004054BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4FFEFF0E173E7FB9004054BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AutoWolfStarter/AutoWolfStarter-Prefix.pch";
+				INFOPLIST_FILE = "AutoWolfStarter/AutoWolfStarter-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4FFEFF0F173E7FB9004054BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AutoWolfStarter/AutoWolfStarter-Prefix.pch";
+				INFOPLIST_FILE = "AutoWolfStarter/AutoWolfStarter-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4FFEFEEB173E7FB9004054BD /* Build configuration list for PBXProject "AutoWolfStarter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FFEFF0B173E7FB9004054BD /* Debug */,
+				4FFEFF0C173E7FB9004054BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4FFEFF0D173E7FB9004054BD /* Build configuration list for PBXNativeTarget "AutoWolfStarter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FFEFF0E173E7FB9004054BD /* Debug */,
+				4FFEFF0F173E7FB9004054BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4FFEFEE8173E7FB9004054BD /* Project object */;
+}
