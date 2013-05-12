@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 ichera. All rights reserved.
 //
 
-#include <wordexp.h>
 #import "AppDelegate.h"
 
 @implementation AppDelegate
@@ -158,17 +157,7 @@
     _task.launchPath = engineBundle.executablePath;
     if (_parametersTextField.stringValue.length > 0)
     {
-        wordexp_t we;
-        memset(&we, 0, sizeof(we));
-        wordexp([_parametersTextField.stringValue cStringUsingEncoding:NSUTF8StringEncoding], &we, 0);
-        NSMutableArray *argumentArray = [NSMutableArray.alloc initWithCapacity:we.we_wordc];
-        for (NSUInteger i = 0; i < we.we_wordc; ++i)
-            [argumentArray addObject:[NSString stringWithCString:we.we_wordv[i] encoding:NSUTF8StringEncoding]];
-            
-        wordfree(&we);
-        
-        _task.arguments = argumentArray;
-        [argumentArray release];
+        _task.arguments = [_parametersTextField.stringValue componentsSeparatedByString:@" "];
     }
     [_task launch];
 }
