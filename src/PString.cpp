@@ -190,13 +190,15 @@ PString &PString::clearOrCreate(size_t pSize)
 PString &PString::concat(const char *str, size_t inLength)
 {
     size_t cursize = _size;
-    size_t newsize = _index + inLength;
+    size_t newsize = _index + inLength + 1;
     
     if(newsize > cursize)
         grow(newsize - cursize);
     memcpy(_buffer + _index, str, inLength);
     
-    _index = newsize;
+    _index = newsize - 1;
+    *(_buffer + _index) = '\0'; // make sure to add null character for compa-
+                                // tibility with C strings
     
     return *this;
 }
@@ -216,7 +218,7 @@ PString &PString::concat(int number)
     static char buf[STRING_ASSUMED_DEC_NUMBER_LENGTH];
     int nchar = snprintf(buf, STRING_ASSUMED_DEC_NUMBER_LENGTH, "%d", number);
     if(nchar >= STRING_ASSUMED_DEC_NUMBER_LENGTH)
-        throw Exception("PString number too large");
+        return *this;
     return concat(buf, nchar);
 }
 
@@ -515,7 +517,7 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
 {
     char *insertpoint;
     size_t charstomove;
-    size_t totalsize    = _index + inLength;
+    size_t totalsize    = _index + inLength + 1;
     
     // pos must be between 0 and dest->index - 1
     if(pos >= _index)
@@ -535,7 +537,7 @@ PString &PString::insert(const char *insertstr, size_t inLength, size_t pos)
     memmove(insertpoint + inLength, insertpoint, charstomove);
     memmove(insertpoint, insertstr, inLength);
     
-    _index = totalsize;
+    _index = totalsize - 1;
     
     return *this;
 }
@@ -711,7 +713,7 @@ PString &PString::concatSubpath(const PString &other)
 //
 PString &PString::Putc(char ch)
 {
-    if(_index >= _size)     // leave room for \0
+    if(_index >= _size - 1)     // leave room for \0
         grow(_size);        // double buffer size
     
     _buffer[_index++] = ch;
