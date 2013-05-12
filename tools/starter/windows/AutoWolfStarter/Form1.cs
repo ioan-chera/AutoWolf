@@ -120,15 +120,13 @@ namespace AutoWolfStarter
 
         private void startButton_Click(object sender, EventArgs e)
         {
-            if(locationListBox.SelectedIndex == -1)
-            {
-                MessageBox.Show("You must select a file path in the list before starting AutoWolf. " +
-                                "If the list is empty, you have to add a path.");
-                return;
-            }
+
             ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.EnvironmentVariables["AUTOWOLFDIR"] = 
-                locationListBox.Items[locationListBox.SelectedIndex].ToString();
+            if (locationListBox.SelectedIndex != -1)
+            {
+                startInfo.EnvironmentVariables["AUTOWOLFDIR"] =
+                    locationListBox.Items[locationListBox.SelectedIndex].ToString();
+            }
             startInfo.Arguments = commandLineArgumentsTextBox.Text;
             startInfo.FileName = "AutoWolf.exe";
             startInfo.UseShellExecute = false;
