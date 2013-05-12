@@ -119,6 +119,7 @@
             this.startButton.TabIndex = 3;
             this.startButton.Text = "&Start AutoWolf";
             this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
             // quitButton
             // 

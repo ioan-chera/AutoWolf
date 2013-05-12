@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
+using System.Diagnostics;
 
 namespace AutoWolfStarter
 {
@@ -115,6 +116,23 @@ namespace AutoWolfStarter
         private void quitButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            if(locationListBox.SelectedIndex == -1)
+            {
+                MessageBox.Show("You must select a file path in the list before starting AutoWolf. " +
+                                "If the list is empty, you have to add a path.");
+                return;
+            }
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.EnvironmentVariables["AUTOWOLFDIR"] = 
+                locationListBox.Items[locationListBox.SelectedIndex].ToString();
+            startInfo.Arguments = commandLineArgumentsTextBox.Text;
+            startInfo.FileName = "AutoWolf.exe";
+            startInfo.UseShellExecute = false;
+            Process.Start(startInfo);
         }
     }
 }
