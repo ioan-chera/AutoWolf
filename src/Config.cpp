@@ -21,10 +21,6 @@
 #include <sys/stat.h>
 #ifdef __APPLE__
 #include "CocoaFun.h"
-#elif defined _WIN32
-#include <io.h>
-#include <direct.h>
-#include <Windows.h>
 #endif
 #include "Config.h"
 #include "PString.h"
@@ -33,7 +29,9 @@
 #include "ioan_bas.h"
 
 #ifdef _WIN32
-#include <io.h>
+#include <direct.h>
+#include <Windows.h>
+#include <ShlObj.h>
 #else
 #include <unistd.h>
 #endif
@@ -108,6 +106,11 @@ inline static int changeDirectory(const char *locdir)
 #endif
 }
 
+//
+// Config::CheckEnvVars
+//
+// Called from CheckParameters
+//
 void Config::CheckEnvVars()
 {
     const char *wolfdir = getenv("AUTOWOLFDIR");
@@ -393,7 +396,7 @@ void Config::SetupConfigLocation()
     struct stat statbuf;
     
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
-#if !defined(_WIN32) && !defined(_arch_dreamcast)
+#if !defined(_arch_dreamcast)
     if(dir.length() == 0)
     {
         // Set config location to home directory for multi-user support
@@ -405,12 +408,18 @@ void Config::SetupConfigLocation()
             Quit("Your Application Support directory is not defined. You must "
                  "set this before playing.");
         dir = appsupdir;
+#elif defined(_WIN32)
+        TCHAR appdatdir[MAX_PATH];
+        if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
+            Quit("Your Application Data directory is not defined. You must "
+                 "set this before playing.");
+        dir.copy(appdatdir).concatSubpath("AutoWolf");
 #else
         const char *homeenv = getenv("HOME");
         if(homeenv == NULL)
             Quit("Your $HOME directory is not defined. You must set this before "
                  "playing.");
-        dir = PString(homeenv).concatSubpath(".autowolf");
+        dir.copy(homeenv).concatSubpath(".autowolf");
 #endif
     }
 #endif
