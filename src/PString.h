@@ -101,9 +101,9 @@ public:
     PString &concatSubpath(const char *addend, size_t inLength);
     PString &concatSubpath(const char *addend);
     PString &concatSubpath(const PString &other);
-    PString  withSubpath(const char *addend, size_t inLength) const;
-    PString  withSubpath(const char *addend) const;
-    PString  withSubpath(const PString &add) const;
+//    PString  withSubpath(const char *addend, size_t inLength) const;
+//    PString  withSubpath(const char *addend) const;
+//    PString  withSubpath(const PString &add) const;
     PString &Putc(char ch);
     PString &removeFileSpec();
     size_t   replace(const char *filter, size_t inLength, char repl);
@@ -154,13 +154,14 @@ public:
     PString &operator += (const char    *other);
     PString &operator += (char  ch);
     PString &operator += (int   number);
-    PString  operator +  (const PString &other) const;
-    PString  operator +  (const char    *other) const;
-    PString  operator +  (char  ch) const;
-    PString  operator +  (int   number) const;
+//    PString  operator +  (const PString &other) const;
+//    PString  operator +  (const char    *other) const;
+//    PString  operator +  (char  ch) const;
+//    PString  operator +  (int   number) const;
     PString &operator << (const PString &other);
     PString &operator << (const char    *other);
     PString &operator << (char   ch);
+    PString &operator << (int number);
     
     char       &operator [] (size_t idx);
     const char &operator [] (size_t idx) const;

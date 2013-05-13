@@ -1420,7 +1420,7 @@ int CP_LoadGame (int quick)
             DC_LoadFromVMU(name.buffer());
 #endif
 
-            loadpath = Config::Dir().withSubpath(name);
+            loadpath.copy(Config::Dir()).concatSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1462,7 +1462,7 @@ int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
-            loadpath = Config::Dir().withSubpath(name);
+            loadpath.copy(Config::Dir()).concatSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1599,7 +1599,7 @@ CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            savepath = Config::Dir().withSubpath(name);
+            savepath.copy(Config::Dir()).concatSubpath(name);
 
             unlink (savepath.buffer());
             file = fopen (savepath.buffer(), "wb");
@@ -1670,7 +1670,7 @@ CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                savepath = Config::Dir().withSubpath(name);
+                savepath.copy(Config::Dir()).concatSubpath(name);
 
                 unlink (savepath.buffer());
                 file = fopen (savepath.buffer(), "wb");
@@ -3048,7 +3048,7 @@ void SetupSaveGames()
         if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
-            savepath = Config::Dir().withSubpath(name);
+            savepath.copy(Config::Dir()).concatSubpath(name);
 
             const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
             if(handle >= 0)

@@ -931,16 +931,18 @@ void SODFlag::Initialize(const PString &basePath)
 {
     FILE *f;
     
-    f = fopen(basePath.withSubpath("VSWAP.SD3").buffer(), "rb");
+    PString compPath;
+    
+    f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD3").buffer(), "rb");
     if(!f)
     {
-        f = fopen(basePath.withSubpath("VSWAP.SD2").buffer(), "rb");
+        f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD2").buffer(), "rb");
         if(!f)
         {
-            f = fopen(basePath.withSubpath("VSWAP.SD1").buffer(), "rb");
+            f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD1").buffer(), "rb");
             if(!f)
             {
-                f = fopen(basePath.withSubpath("VSWAP.SOD").buffer(), "rb");
+                f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SOD").buffer(), "rb");
                 if(!f)
                 {
                     this->flag = false;

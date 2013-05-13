@@ -144,7 +144,7 @@ void ReadConfig(void)
     DC_LoadFromVMU(configname.buffer());
 #endif
 
-    configpath = Config::Dir().withSubpath(configname);
+    configpath.copy(Config::Dir()).concatSubpath(configname);
 
     const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
     if (file != -1)
@@ -266,7 +266,7 @@ void WriteConfig(void)
     fs_unlink(configname.buffer());
 #endif
 
-    configpath = Config::Dir().withSubpath(configname);
+    configpath.copy(Config::Dir()).concatSubpath(configname);
 
     const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)

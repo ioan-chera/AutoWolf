@@ -33,11 +33,11 @@ Exception::Exception(const PString &txt)
 }
 Exception::Exception(const char *filestr, int linestr)
 {
-    exctext = "Raised exception at " + PString(filestr) + ":" + linestr;
+    exctext.copy("Raised exception at ") << filestr << ":" << linestr;
     showred = true;
 }
 Exception::Exception(const PString &txt, const char *filestr, int linestr)
 {
-    exctext = txt + " at " + filestr + ":" + linestr;
+    exctext.copy(txt) << " at " << filestr << ":" << linestr;
     showred = true;
 }

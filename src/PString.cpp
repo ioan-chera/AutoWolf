@@ -665,19 +665,19 @@ PString &PString::normalizeSlashes()
 // path. Slashes will be normalized.
 // IOANCH 20130508: made it so it doesn't modify the source
 //
-PString PString::withSubpath(const char *addend, size_t inLength) const
-{
-    // Only add a slash if this is not the initial path component.
-    return PString(*this).concatSubpath(addend, inLength);
-}
-PString PString::withSubpath(const char *addend) const
-{
-    return PString(*this).concatSubpath(addend);
-}
-PString PString::withSubpath(const PString &add) const
-{
-    return PString(*this).concatSubpath(add);
-}
+//PString PString::withSubpath(const char *addend, size_t inLength) const
+//{
+//    // Only add a slash if this is not the initial path component.
+//    return PString(*this).concatSubpath(addend, inLength);
+//}
+//PString PString::withSubpath(const char *addend) const
+//{
+//    return PString(*this).concatSubpath(addend);
+//}
+//PString PString::withSubpath(const PString &add) const
+//{
+//    return PString(*this).concatSubpath(add);
+//}
 
 //
 // PString::concatSubpath
@@ -1300,34 +1300,34 @@ PString &PString::operator += (int number)
 //
 // Overloaded + for PString &
 //
-PString PString::operator + (const PString &other) const
-{
-    return PString(*this).concat(other);
-}
-PString PString::operator + (const char *other) const
-{
-    return PString(*this).concat(other);
-}
-PString PString::operator + (char ch) const
-{
-    return PString(*this).Putc(ch);
-}
-PString PString::operator + (int number) const
-{
-    return PString(*this).concat(number);
-}
-PString  operator +  (const char    *first, const PString &second)
-{
-    return PString(first).concat(second);
-}
-PString  operator +  (char  ch,             const PString &second)
-{
-    return PString().Putc(ch).concat(second);
-}
-PString  operator +  (int   number,         const PString &second)
-{
-    return PString(number).concat(second);
-}
+//PString PString::operator + (const PString &other) const
+//{
+//    return PString(*this).concat(other);
+//}
+//PString PString::operator + (const char *other) const
+//{
+//    return PString(*this).concat(other);
+//}
+//PString PString::operator + (char ch) const
+//{
+//    return PString(*this).Putc(ch);
+//}
+//PString PString::operator + (int number) const
+//{
+//    return PString(*this).concat(number);
+//}
+//PString  operator +  (const char    *first, const PString &second)
+//{
+//    return PString(first).concat(second);
+//}
+//PString  operator +  (char  ch,             const PString &second)
+//{
+//    return PString().Putc(ch).concat(second);
+//}
+//PString  operator +  (int   number,         const PString &second)
+//{
+//    return PString(number).concat(second);
+//}
 
 
 //
@@ -1342,10 +1342,13 @@ PString &PString::operator << (const char *other)
 {
     return concat(other);
 }
-
 PString &PString::operator << (char ch)
 {
     return Putc(ch);
+}
+PString &PString::operator << (int number)
+{
+    return concat(number);
 }
 
 //
