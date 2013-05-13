@@ -50,10 +50,10 @@
 
 // IOANCH 20130307: block definition
 #ifdef APPLE_NON_CPP11
-#define     LAM(a) ^
+#define     LAM(...) ^
 #define LAMDECL ^
 #else
-#define     LAM(a) [a]
+#define     LAM(...) [__VA_ARGS__]
 #define LAMDECL *
 #endif
 
