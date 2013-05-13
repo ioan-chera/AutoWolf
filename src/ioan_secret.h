@@ -55,7 +55,7 @@ public:
     Pushwall(word tilex, word tiley)
     {
         if(tilex >= MAPSIZE || tiley >= MAPSIZE)
-            throw Exception("pushwall tilex/tiley out of range");
+            Quit("pushwall tilex/tiley out of range");
         this->tilex = tilex;
         this->tiley = tiley;
     }
