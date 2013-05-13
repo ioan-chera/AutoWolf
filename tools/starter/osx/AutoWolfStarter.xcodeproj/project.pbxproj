@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4FB3B400173E94D400C29DF4 /* AutoWolf.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = AutoWolf.app; path = ../../../../../../develop/autowolf/AutoWolf.app; sourceTree = "<group>"; };
+		4FB3B400173E94D400C29DF4 /* AutoWolf.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = AutoWolf.app; path = ../../../../macosx/build/AutoWolf.app; sourceTree = "<group>"; };
 		4FFEFEF0173E7FB9004054BD /* AutoWolfStarter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolfStarter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FFEFEF3173E7FB9004054BD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4FFEFEF6173E7FB9004054BD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
