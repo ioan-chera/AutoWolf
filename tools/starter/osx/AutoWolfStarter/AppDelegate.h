@@ -9,6 +9,12 @@
 #import <Cocoa/Cocoa.h>
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate>
+{
+    NSMutableArray *_locationArray;
+    NSTask *_task;
+    IBOutlet NSTextField *_parametersTextField;
+    IBOutlet NSTableView *_locationTableView;
+}
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSTableView *locationTableView;
