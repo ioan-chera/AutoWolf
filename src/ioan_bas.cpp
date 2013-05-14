@@ -381,7 +381,8 @@ Boolean Basic::IsDamaging(objtype *ret, int dist)
 //
 // IOANCH 20130513: compacted it a bit to comply with DRY
 //
-Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in)
+Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in, 
+                                 Boolean solidActors)
 {
     static int  x1, x2, y1, y2; // IOANCH: made them static to be referred by a
     static int  xt1,yt1,xt2,yt2;// static array below
@@ -459,13 +460,27 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in)
                 V(Yfrac) += V(Ystep);
                 
                 value = (unsigned)tilemap[x][y];
+                if (solidActors)
+                {
+                    int autox = x;
+                    int autoy = y;
+                    const objtype *check = actorat[x][y];
+                    if(check && (!ISPOINTER(check) || 
+                                 (ISPOINTER(check) && check->flags & FL_SHOOTABLE)))
+                        return false;
+                }
+
+                
                 V(X) += V(Xstep);
+
+
                 
                 if (!value)
                     continue;
                 
                 if (value<128 || value>256)
                     return false;
+            
                 
                 //
                 // see if the door is open enough

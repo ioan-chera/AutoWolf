@@ -53,7 +53,8 @@ namespace Basic
 	Boolean IsDamaging(objtype *ret, int dist);
 
 	// Generic check line
-	Boolean GenericCheckLine (int x1, int y1, int x2, int y2);
+	Boolean GenericCheckLine (int x1, int y1, int x2, int y2, 
+                              Boolean solidActors = false);
 
 	// Get coordinates
 	inline int Major(int t)
