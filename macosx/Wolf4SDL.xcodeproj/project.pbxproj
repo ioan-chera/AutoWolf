@@ -154,7 +154,6 @@
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../src/audioabstract.h; sourceTree = "<group>"; };
 		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../src/OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
 		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../src/OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
-		4FFDC97C173AB26600DE48A0 /* exepack.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = exepack.sh; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AutoWolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = id_in.h; path = ../src/id_in.h; sourceTree = SOURCE_ROOT; };
@@ -403,7 +402,6 @@
 		4FFDC97B173AB25400DE48A0 /* Build scripts */ = {
 			isa = PBXGroup;
 			children = (
-				4FFDC97C173AB26600DE48A0 /* exepack.sh */,
 			);
 			name = "Build scripts";
 			sourceTree = "<group>";
@@ -567,7 +565,6 @@
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
 				FAE8D0FC166E3C43006B2EDE /* CopyFiles */,
-				4FFDC97A173AB22B00DE48A0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -617,22 +614,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		4FFDC97A173AB22B00DE48A0 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "script_file=\"exepack.sh\"\necho \"$CONFIGURATION\"\nif [ \"$CONFIGURATION\" == \"Release\" ];then\n    /bin/bash ${PROJECT_DIR}/${script_file}\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D11072C0486CEB800E47090 /* Sources */ = {
@@ -722,7 +703,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../include/SDL;
+				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -799,7 +780,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../include/SDL;
+				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -825,7 +806,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../include/SDL;
+				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
