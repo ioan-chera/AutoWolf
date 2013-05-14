@@ -35,7 +35,17 @@ enum SearchStage
 	SSGeneral,		// search normal things
 	SSOnePushWalls,	// only now look for one-push-walls (TO BE MODIFIED)
 	SSSecretLift,	// only now look for secret exit
-	SSNormalLift	// only now look for normal exit
+	SSNormalLift,	// only now look for normal exit
+    SSMax
+};
+
+enum BotMood
+{
+    MOOD_TAKEFIRSTEXIT = 1,
+    MOOD_DONTBACKFORSECRETS = 2,
+    MOOD_DONTHUNTTREASURE = 4,
+    MOOD_DONTHUNTNAZIS = 8,
+    MOOD_DONTHUNTSECRETS = 0x10,
 };
 
 //
@@ -58,6 +68,7 @@ protected:
 	static objtype *threater;
 	static Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
 	static List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
+    static unsigned mood;
 
 	// protected functions
 	// Recursively explores from the given origin
@@ -121,6 +132,9 @@ public:
 	
 	// Loads data from file
 	static void LoadData();
+    
+    // Set occasional mood
+    static void SetMood();
 };
 
 #endif

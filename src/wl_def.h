@@ -52,9 +52,11 @@
 #ifdef APPLE_NON_CPP11
 #define     LAM(...) ^
 #define LAMDECL ^
+#define LAMSPEC(rettype, lname, ...) rettype (^lname)(__VA_ARGS__)
 #else
 #define     LAM(...) [__VA_ARGS__]
 #define LAMDECL *
+#define LAMSPEC(rettype, lname, ...) auto lname
 #endif
 
 // IOANCH 20130307: path length

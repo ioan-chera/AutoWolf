@@ -18,6 +18,7 @@
 
 
 #include <limits.h>
+#include <time.h>
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
@@ -45,6 +46,7 @@ objtype *BotMan::threater;
 PathArray BotMan::path;
 Boolean BotMan::explored[MAPSIZE][MAPSIZE];
 List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
+unsigned BotMan::mood = 0;
 
 HistoryRatio BotMan::shootRatio;
 
@@ -100,6 +102,27 @@ void BotMan::LoadData()
 	MasterDirectoryFile::MainDir().loadFromFile();
 }
 
+//
+// BotMan::SetMood
+//
+void BotMan::SetMood()
+{
+    time_t t = time(NULL);  // seconds
+    time_t day = t / 60 / 60 / 24;
+    
+    // Day will be used as random seed
+    srand((unsigned)day);
+    mood = 0;
+    if(rand() % 4 == 0)
+    {
+        mood = (unsigned)rand();
+    }
+    mood |= MOOD_DONTHUNTSECRETS;
+    
+    // scramble it now
+    srand((unsigned)time(NULL));
+}
+
 // Bot moods: using today value as seed, use a random strategy, one or more:
 // - As soon as elevator is found, take it
 // - Avoid taking the secret elevator (and if "as soon", don't take it)
@@ -115,10 +138,6 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 {
     if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
         return true;
-//	assert(tx >= 0);
-//	assert(tx < MAPSIZE);
-//	assert(ty >= 0);
-//	assert(ty < MAPSIZE);
 	
 	objtype *check = actorat[tx][ty];
 	
@@ -164,7 +183,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		case    bo_chalice:
 		case    bo_bible:
 		case    bo_crown:
-			if(!knifeinsight)
+			if(!knifeinsight && !(mood & MOOD_DONTHUNTTREASURE))
 				return true;
 			break;
 		case    bo_machinegun:
@@ -191,7 +210,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 				return true;
 			break;
 		case    bo_spear:
-			if(searchstage >= SSSecretLift)
+			if(searchstage >= SSSecretLift || mood & MOOD_TAKEFIRSTEXIT)
 				return true;
 			break;
                 
@@ -214,75 +233,64 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
 			check = enemyrecord[tx][ty].firstObject();
 		}
-		if(check)
+		if(!(mood & MOOD_DONTHUNTNAZIS) && check)
 		{
 			searchstage = SSGeneral;	// reset counter if enemies here
 			return true;
 		}
 	}
 
+    // {ty + 1, ty - 1, ty, ty}
+    // {tx, tx, tx + 1, tx - 1}
+    // {ty + 2, ty - 2, tx + 2, tx - 2}
+    // {tx, tx, tx + 2, tx - 2}
+    // {ty + 2, ty - 2, ty, ty}
+    // {ty + 3, ty - 3, tx + 3, tx - 3}
+    // {< MAPSIZE, >= 0, < MAPSIZE, >= 0}
+    // {tx, tx, tx + 3, tx - 3}
+    // {ty + 3, ty - 3, ty, ty}
+    // {ty + 1, ty - 1, ty, ty}
+    // {tx, tx, tx + 1, tx - 1}
+    
+    // Nope. Let's make a lambda function here.
+    LAMSPEC(Boolean, secretVerify, int, int) = LAM(&tx, &ty)(int txofs, int tyofs)
+    {
+        if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
+		{
+            int ty2ofs = ty + 2 * tyofs;
+            int tx2ofs = tx + 2 * txofs;
+            int ty3ofs = ty + 3 * tyofs;
+            int tx3ofs = tx + 3 * txofs;
+			if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0 && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
+			{
+				if(searchstage >= SSOnePushWalls ||
+                   (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0 && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
+				{
+					exity = ty + tyofs;
+					exitx = tx + txofs;
+					return (Boolean)true;
+				}
+			}
+		}
+        return (Boolean)false;
+    };
+    
 	// secret door
-	if(!knifeinsight)	// don't look for secret doors if compromised
+	if(!knifeinsight && !(mood & MOOD_DONTHUNTSECRETS || searchstage >= SSMax))	// don't look for secret doors if compromised
 	{
 		// PUSH SOUTH
-		if(*(mapsegs[1]+((ty + 1)<<mapshift)+tx) == PUSHABLETILE)
-		{
-			if(ty + 2 < MAPSIZE && !actorat[tx][ty + 2])
-			{
-				if(searchstage >= SSOnePushWalls || (ty + 3 < MAPSIZE && !actorat[tx][ty + 3]))
-				{
-					exity = ty + 1;
-					exitx = tx;
-					return true;
-				}
-			}
-		}
-		
-		// PUSH NORTH
-		if(*(mapsegs[1]+((ty - 1)<<mapshift)+tx) == PUSHABLETILE)
-		{
-			if(ty - 2 >= 0 && !actorat[tx][ty - 2])
-			{
-				if(searchstage >= SSOnePushWalls || (ty - 3 >= 0 && !actorat[tx][ty - 3]))
-				{
-					exity = ty - 1;
-					exitx = tx;
-					return true;
-				}
-			}
-		}
-		
-		// PUSH EAST
-		if(*(mapsegs[1]+(ty<<mapshift)+tx + 1) == PUSHABLETILE)
-		{
-			if(tx + 2 < MAPSIZE && !actorat[tx + 2][ty])
-			{
-				if(searchstage >= SSOnePushWalls || (tx + 3 < MAPSIZE && !actorat[tx + 3][ty]))
-				{
-					exity = ty;
-					exitx = tx + 1;
-					return true;
-				}
-			}	
-		}
-		
-		// PUSH WEST
-		if(*(mapsegs[1]+(ty<<mapshift)+tx - 1) == PUSHABLETILE)
-		{
-			if(tx - 2 >= 0 && !actorat[tx - 2][ty])
-			{
-				if(searchstage >= SSOnePushWalls || (tx - 3 >= 0 && !actorat[tx - 3][ty]))
-				{
-					exity = ty;
-					exitx = tx - 1;
-					return true;
-				}
-			}
-		}
+        if (secretVerify(0, 1))
+            return true;
+        if (secretVerify(0, -1))
+            return true;
+        if (secretVerify(1, 0))
+            return true;
+        if (secretVerify(-1, 0))
+            return true;
 	}
 
 	// exit switch
-	if(searchstage >= SSSecretLift)
+	if(searchstage >= SSSecretLift || mood & MOOD_TAKEFIRSTEXIT)
 	{
 		
 		// THROW WEST
@@ -292,7 +300,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			{
 				exitx = tx - 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
@@ -304,13 +312,14 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			{
 				exitx = tx + 1;
 				exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
 
 		// exit pad
-		if(searchstage >= SSNormalLift && *(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+		if(searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
+           if(*(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
 			return true;
 	}
 	return false;
@@ -1487,7 +1496,7 @@ void BotMan::DoNonCombatAI()
 	// found path to exit
 	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
 	
-	if(nowon < 0 || (!pwallstate && waitpwall))
+	if(nowon < 0 || (!pwallstate && waitpwall && !(mood & MOOD_DONTBACKFORSECRETS)))
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
 		searchstage = SSGeneral;	// new areas revealed, so look

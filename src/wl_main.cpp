@@ -1310,6 +1310,7 @@ static void InitGame()
 	
 	// IOANCH 20121218: Load bot data
 	BotMan::LoadData();
+    BotMan::SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
     IN_Startup ();  // sets up the input devices
