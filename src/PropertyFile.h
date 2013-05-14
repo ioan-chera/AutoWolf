@@ -23,6 +23,7 @@
 #define PROPERTY_FILE_NAME   "Properties"
 
 #define PROPERTY_KEY_EXPLORED "Explored"
+#define PROPERTY_KEY_EXITPOS "ExitPos"
 
 #include "e_hash.h"
 #include "Property.h"
@@ -67,8 +68,12 @@ public:
     void getExplored(void *exploredTarget);
     // putExplored
     void putExplored(const void *explored);
+    // hasProperty
+    bool hasProperty(const char *keyName) const;
     // getIntValue
     int getIntValue(const char *keyName) const;
+    // setIntValue
+    void setIntValue(const char *keyName, int value);
 };
 
 #endif

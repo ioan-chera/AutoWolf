@@ -21,8 +21,6 @@
 #define CHECKSUM_H_
 
 void CalculateMapsegsChecksum();
-void GetExploredData(void *exploredTarget);
-void PutExploredData(const void *explored);
 
 extern char digeststring[16];
 

@@ -41,11 +41,12 @@ enum SearchStage
 
 enum BotMood
 {
-    MOOD_TAKEFIRSTEXIT = 1,
+    MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
     MOOD_DONTBACKFORSECRETS = 2,
     MOOD_DONTHUNTTREASURE = 4,
     MOOD_DONTHUNTNAZIS = 8,
     MOOD_DONTHUNTSECRETS = 0x10,
+    MOOD_JUSTGOTOEXIT = 0x20,
 };
 
 //
@@ -66,9 +67,15 @@ protected:
 	static SearchStage searchstage;
 	static int exitx, exity;
 	static objtype *threater;
-	static Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
 	static List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
     static unsigned mood;
+    
+    //
+    // DATA GATHERED FROM DATABASE
+    //
+    static Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+    static int knownExitX, knownExitY;
+    
 
 	// protected functions
 	// Recursively explores from the given origin
@@ -114,6 +121,11 @@ protected:
 	static objtype *DogGnawing(int *eangle = NULL);
 	// Turn the player
 	static void TurnToAngle(int dangle);
+    
+    // Put explored data
+    static void PutExploredData();
+    // Get Explored data
+    static void GetExploredData();
 public:
 	// Update the enemy's known position record
 	static void RecordEnemyPosition(objtype *enemy);

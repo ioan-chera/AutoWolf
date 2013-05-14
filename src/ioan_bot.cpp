@@ -45,6 +45,7 @@ int BotMan::exitx, BotMan::exity;
 objtype *BotMan::threater;
 PathArray BotMan::path;
 Boolean BotMan::explored[MAPSIZE][MAPSIZE];
+int BotMan::knownExitX, BotMan::knownExitY;
 List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
 unsigned BotMan::mood = 0;
 
@@ -73,7 +74,7 @@ void BotMan::MapInit()
 	memset(explored, 0, sizeof(explored));
 	CalculateMapsegsChecksum();
 	// get explored data
-	GetExploredData(explored);
+	GetExploredData();
 	
 	// FIXME: this should be taken from loaded game data. I might put a LoadGameInit just for that.
 	for(i = 0; i < MAPSIZE; ++i)
@@ -88,7 +89,7 @@ void BotMan::MapInit()
 //
 void BotMan::SaveData()
 {
-	PutExploredData(explored);
+	PutExploredData();
 	MasterDirectoryFile::MainDir().saveToFile();
 }
 
@@ -100,6 +101,87 @@ void BotMan::SaveData()
 void BotMan::LoadData()
 {
 	MasterDirectoryFile::MainDir().loadFromFile();
+}
+
+//
+// BotMan::PutExploredData
+//
+void BotMan::PutExploredData()
+{
+    // see if folder exists in AutoWolf/Maps
+	
+	// now to write the file
+	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
+	DirectoryFile *dir;
+	
+	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
+	dir = dir->makeDirectory(PString(digeststring, 16));
+    // the hash-named directory
+    PString a(digeststring, 16);
+    
+    // Looking for files...
+    // Get property file from digest folder.
+    // If it exists, then access its hash table.
+    // If it contains property with name "Explored", change it.
+    // If it doesn't, create it with the proper name.
+    // If file doesn't exist, create it and give it the explored property.
+	
+    PropertyFile *propertyFile =
+    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
+    
+    if(!propertyFile)
+    {
+        // File doesn't exist. Create it.
+        propertyFile = new PropertyFile;
+        propertyFile->initialize(PROPERTY_FILE_NAME);
+        dir->addFile(propertyFile);
+        
+    }
+    
+    propertyFile->putExplored(explored);
+    propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitX +
+                              (knownExitY << 8));
+}
+
+//
+// BotMan::GetExploredData
+//
+void BotMan::GetExploredData()
+{
+    // see if folder exists in AutoWolf/Maps
+	memset(explored, 0, sizeof(maparea * sizeof(Boolean)));
+	
+	// now to write the file
+	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
+	DirectoryFile *dir;
+	
+	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
+	dir = dir->makeDirectory(PString(digeststring, 16));
+    // the hash-named directory
+    PString a(digeststring, 16);
+    
+    // Looking for files...
+    // Get property file from digest folder.
+    // If it exists, then access its hash table.
+    // If it contains property with name "Explored", use it.
+    // If it doesn't, initialize it empty.
+    // If file doesn't exist, do likewise.
+    
+    PropertyFile *propertyFile =
+    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
+    
+    if(propertyFile)
+    {
+        propertyFile->getExplored(explored);
+        if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
+        {
+            unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
+            knownExitX = (int)(prop & 0x00ff);
+            knownExitY = (int)((prop & 0xff00) >> 8);
+        }
+        else
+            knownExitX = knownExitY = -1;
+    }
 }
 
 //
@@ -297,8 +379,8 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || tx - 2 < 0 || !actorat[tx-2][ty]) 
 			{
-				exitx = tx - 1;
-				exity = ty;
+				knownExitX = exitx = tx - 1;
+				knownExitY = exity = ty;
 				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
@@ -309,8 +391,8 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || tx + 2 >= MAPSIZE || !actorat[tx+2][ty]) 
 			{
-				exitx = tx + 1;
-				exity = ty;
+				knownExitX = exitx = tx + 1;
+				knownExitY = exity = ty;
 				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
@@ -381,7 +463,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte ret
 	path.makeEmpty();
 	if(retreating && threater != NULL)
 		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
-	else		
+	else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
+        path.addStartNode(player->tilex, player->tiley, knownExitX, knownExitY);
+    else
 		path.addStartNode(player->tilex, player->tiley);
 
 	int imin, ifound;
@@ -534,7 +618,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte ret
 			
 			if(retreating && threater != NULL)
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
-			else
+			else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
+                path.updateNode(ifound, imin, cx, cy, tentative_g_add, knownExitX, knownExitY);
+            else
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add);
 			
 		}
@@ -1315,26 +1401,34 @@ void BotMan::DoMeleeAI(short eangle, int edist)
     
     if(check2 && (check2 != check || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1))))
 	{
-		threater = check2;
-		if(FindShortestPath(false, true, 1))
-		{
-			panic = false;
-			MoveByStrafe();
-		}
-		else
-		{
-			panic = true;
-			if(FindShortestPath(false, true, 2))	// try to pass by opening doors now
-				MoveByStrafe();
-			else
-				controly = RUNMOVE*tics;
-			//DoRetreat(false, check2);
-		}
+        if(FindShortestPath(false, true, 0, true))
+        {
+            MoveByStrafe();
+            return ;
+        }
+        else
+        {
+            threater = check2;
+            if(FindShortestPath(false, true, 1))
+            {
+                panic = false;
+                MoveByStrafe();
+            }
+            else
+            {
+                panic = true;
+                if(FindShortestPath(false, true, 2))	// try to pass by opening doors now
+                    MoveByStrafe();
+                else
+                    controly = RUNMOVE*tics;
+                //DoRetreat(false, check2);
+            }
 
-		retreat = 10;
-		if(check2->obclass == mutantobj)
-			retreat = 5;
-        return;
+            retreat = 10;
+            if(check2->obclass == mutantobj)
+                retreat = 5;
+            return;
+        }
 	}
 	else
 		retreat = 0;

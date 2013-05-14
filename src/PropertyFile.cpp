@@ -299,6 +299,16 @@ void PropertyFile::putExplored(const void *explored)
 }
 
 //
+// PropertyFile::hasProperty
+//
+bool PropertyFile::hasProperty(const char *keyName) const
+{
+    if (_propertyTable.objectForKey(keyName))
+        return true;
+    return false;
+}
+
+//
 // PropertyFile::getIntValue
 //
 int PropertyFile::getIntValue(const char *keyName) const
@@ -309,4 +319,15 @@ int PropertyFile::getIntValue(const char *keyName) const
         return (int)prop->intValue;
     }
     return 0;   // default to 0
+}
+
+//
+// PropertyFile::setIntValue
+//
+void PropertyFile::setIntValue(const char *keyName, int value)
+{
+    Property *prop = _makeObjectWithKey(keyName);
+    prop->type = Property::Int32;
+    prop->intValue = (int32_t)value;
+    _updateSize();
 }
