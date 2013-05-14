@@ -57,7 +57,7 @@ namespace Basic
                               Boolean solidActors = false);
     
     // Check if can knife
-    objtype *CheckKnifeEnemy(const objtype *ob);
+    objtype *CheckKnifeEnemy();
 
 	// Get coordinates
 	inline int Major(int t)

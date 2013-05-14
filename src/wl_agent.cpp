@@ -1249,10 +1249,15 @@ void SpawnPlayer (int tilex, int tiley, int dir)
 ===============
 */
 
+// IOANCH: modified to use another function
 void    KnifeAttack (objtype *ob)
 {
-    objtype *closest = Basic::CheckKnifeEnemy(ob);
+    objtype *closest;
+    
+    SD_PlaySound (ATKKNIFESND);
 
+    closest = Basic::CheckKnifeEnemy();
+    
     // hit something
     if(closest)
         DamageActor (closest,US_RndT() >> 4);

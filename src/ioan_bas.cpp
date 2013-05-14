@@ -463,8 +463,6 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in,
                 value = (unsigned)tilemap[x][y];
                 if (solidActors)
                 {
-                    int autox = x;
-                    int autoy = y;
                     const objtype *check = actorat[x][y];
                     if(check && (!ISPOINTER(check) || 
                                  (ISPOINTER(check) && check->flags & FL_SHOOTABLE)))
@@ -503,16 +501,14 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in,
 //
 // Basic::CheckKnifeEnemy
 //
-objtype *Basic::CheckKnifeEnemy(const objtype *ob)
+objtype *Basic::CheckKnifeEnemy()
 {
     objtype *check,*closest;
     int32_t  dist;
     
-    SD_PlaySound (ATKKNIFESND);
-    // actually fire
     dist = 0x7fffffff;
     closest = NULL;
-    for (check=ob->next; check; check=check->next)
+    for (check = (objtype *)Basic::livingNazis.firstObject(); check; check = (objtype *)Basic::livingNazis.nextObject())
     {
         if ( (check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
             && abs(check->viewx-centerx) < shootdelta)
