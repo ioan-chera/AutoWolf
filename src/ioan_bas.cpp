@@ -24,6 +24,7 @@
 #include "wl_game.h"
 #include "wl_play.h"
 #include "wl_state.h"
+#include "wl_main.h"
 #include "Config.h"
 
 // static members definition
@@ -499,7 +500,38 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in,
     return true;
 }
 
-
+//
+// Basic::CheckKnifeEnemy
+//
+objtype *Basic::CheckKnifeEnemy(const objtype *ob)
+{
+    objtype *check,*closest;
+    int32_t  dist;
+    
+    SD_PlaySound (ATKKNIFESND);
+    // actually fire
+    dist = 0x7fffffff;
+    closest = NULL;
+    for (check=ob->next; check; check=check->next)
+    {
+        if ( (check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
+            && abs(check->viewx-centerx) < shootdelta)
+        {
+            if (check->transx < dist)
+            {
+                dist = check->transx;
+                closest = check;
+            }
+        }
+    }
+    
+    if (!closest || dist > 0x18000l)
+    {
+        // missed
+        return NULL;
+    }
+    return closest;
+}
 
 //
 // Basic::MarkovWrite

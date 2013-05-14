@@ -55,6 +55,9 @@ namespace Basic
 	// Generic check line
 	Boolean GenericCheckLine (int x1, int y1, int x2, int y2, 
                               Boolean solidActors = false);
+    
+    // Check if can knife
+    objtype *CheckKnifeEnemy(const objtype *ob);
 
 	// Get coordinates
 	inline int Major(int t)

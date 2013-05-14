@@ -1251,34 +1251,11 @@ void SpawnPlayer (int tilex, int tiley, int dir)
 
 void    KnifeAttack (objtype *ob)
 {
-    objtype *check,*closest;
-    int32_t  dist;
-
-    SD_PlaySound (ATKKNIFESND);
-    // actually fire
-    dist = 0x7fffffff;
-    closest = NULL;
-    for (check=ob->next; check; check=check->next)
-    {
-        if ( (check->flags & FL_SHOOTABLE) && (check->flags & FL_VISABLE)
-            && abs(check->viewx-centerx) < shootdelta)
-        {
-            if (check->transx < dist)
-            {
-                dist = check->transx;
-                closest = check;
-            }
-        }
-    }
-
-    if (!closest || dist > 0x18000l)
-    {
-        // missed
-        return;
-    }
+    objtype *closest = Basic::CheckKnifeEnemy(ob);
 
     // hit something
-    DamageActor (closest,US_RndT() >> 4);
+    if(closest)
+        DamageActor (closest,US_RndT() >> 4);
 }
 
 
