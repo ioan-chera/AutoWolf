@@ -74,6 +74,7 @@ static	Boolean		US_Started;
 					};
 
 int rndindex = 0;
+int rndindexbot = 0;    // IOANCH 20130514: added another counter
 
 static byte rndtable[] = {
       0,   8, 109, 220, 222, 241, 149, 107,  75, 248, 254, 140,  16,  66,
@@ -777,12 +778,15 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 //      current time
 //
 ///////////////////////////////////////////////////////////////////////////
+// IOANCH 20130514: rndindexbot
 void US_InitRndT(int randomize)
 {
     if(randomize)
-        rndindex = (SDL_GetTicks() >> 4) & 0xff;
+    {
+        rndindexbot = rndindex = (SDL_GetTicks() >> 4) & 0xff;
+    }
     else
-        rndindex = 0;
+        rndindexbot = rndindex = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -794,4 +798,10 @@ int US_RndT()
 {
     rndindex = (rndindex+1)&0xff;
     return rndtable[rndindex];
+}
+
+int US_RndTBot()
+{
+    rndindexbot = (rndindexbot+1)&0xff;
+    return rndtable[rndindexbot];
 }
