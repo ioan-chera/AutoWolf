@@ -98,7 +98,7 @@ protected:
 	// Do noncombat AI
 	static void DoNonCombatAI();
 	// Do knife AI (when guns won't work)
-	static Boolean DoMeleeAI();
+	static void DoMeleeAI(short eangle, int edist);
 	// See if there's an active behind the corner that may be knifed
 	static objtype *DogGnawing(int *eangle = NULL);
 	// Turn the player

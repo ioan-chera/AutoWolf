@@ -1285,31 +1285,68 @@ void BotMan::TurnToAngle(int dangle)
 //
 // BotMan::DoMeleeAI
 //
-// Use the knife if the gun won't work (e.g. biting dogs)
+// Use the knife if the gun won't work
 //
-Boolean BotMan::DoMeleeAI()
+void BotMan::DoMeleeAI(short eangle, int edist)
 {
-//    KnifeAttack(player);
-//    int eangle, edist;
-//    objtype *check0 = EnemyVisible(&eangle, &edist, true);
-//    
-//    if(!check0)
+    // Check to see if there's a visible enemy
+//    objtype *check = EnemyVisible(&eangle, &edist, true);
+    
+    int dangle = Basic::CentreAngle(eangle, player->angle);
+    TurnToAngle(dangle);
+    objtype *check = EnemyOnTarget();
+    objtype *check2 = DamageThreat(check);
+//    if(!check)
 //    {
 //        if(FindShortestPath(false, true, 0, true))
 //		{
 //			MoveByStrafe();
-//			return;
-//		}        
+//			return ;
+//		}    
 //    }
-//    else 
-//    {
-//        // Can attack.
-//        // But handle retreating
-//        objtype *check = EnemyOnTarget();
-//        objtype *check2 = DamageThreat(check);
-//    }
+    
+    if(check2 && (check2 != check || (Basic::IsBoss(check->obclass) || (check->obclass == mutantobj && gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1))))
+	{
+		threater = check2;
+		if(FindShortestPath(false, true, 1))
+		{
+			panic = false;
+			MoveByStrafe();
+		}
+		else
+		{
+			panic = true;
+			if(FindShortestPath(false, true, 2))	// try to pass by opening doors now
+				MoveByStrafe();
+			else
+				controly = RUNMOVE*tics;
+			//DoRetreat(false, check2);
+		}
 
-	return true;
+		retreat = 10;
+		if(check2->obclass == mutantobj)
+			retreat = 5;
+        return;
+	}
+	else
+		retreat = 0;
+    
+    buttonstate[bt_strafe] = false;
+    if(check)
+    {
+        if(pressuse % 4 == 0 && edist <= 3)
+			buttonstate[bt_attack] = true;
+        if (dangle > -45 && dangle < 45)
+        {
+            controly = -RUNMOVE * tics;
+//            buttonstate[bt_strafe] = true;
+            controlx += (US_RndTBot() % 30 - 15) * tics;
+            
+        }
+    }
+
+
+	return ;
 }
 
 //
@@ -1322,16 +1359,16 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	
 	searchstage = SSGeneral;	// reset elevator counter if distracted
 	
-	if(gamestate.weapon == wp_knife)
-		if(FindShortestPath(false, true, 0, true))
-		{
-			MoveByStrafe();
-			return;
-		}
 	
 	path.reset();
 	// Enemy visible mode
-	// centred angle here
+    // centred angle here
+    if(gamestate.weapon == wp_knife)
+    {
+		DoMeleeAI((short)eangle, edist);
+        return;
+    }
+    
 	int dangle = Basic::CentreAngle(eangle, player->angle);
 	
 	TurnToAngle(dangle);
