@@ -117,7 +117,6 @@ void BotMan::SetMood()
     {
         mood = (unsigned)rand();
     }
-    mood |= MOOD_DONTHUNTSECRETS;
     
     // scramble it now
     srand((unsigned)time(NULL));
@@ -276,7 +275,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     };
     
 	// secret door
-	if(!knifeinsight && !(mood & MOOD_DONTHUNTSECRETS || searchstage >= SSMax))	// don't look for secret doors if compromised
+	if(!knifeinsight && (!(mood & MOOD_DONTHUNTSECRETS) || searchstage >= SSMax))	// don't look for secret doors if compromised
 	{
 		// PUSH SOUTH
         if (secretVerify(0, 1))
