@@ -21,6 +21,13 @@
 		4F86103817421EF100A1979A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103717421EF100A1979A /* AudioUnit.framework */; };
 		4F86103E17421EFD00A1979A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103D17421EFD00A1979A /* OpenGL.framework */; };
 		4F861081174223AE00A1979A /* libSDL_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F861080174223AE00A1979A /* libSDL_mixer.a */; };
+		4F86110517422B5400A1979A /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F8610FE17422B5400A1979A /* libvorbis.a */; };
+		4F86110D17422B8D00A1979A /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86110C17422B8D00A1979A /* libogg.a */; };
+		4F86111E17422BC800A1979A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86111D17422BC800A1979A /* AudioToolbox.framework */; };
+		4F86113D17422CB000A1979A /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86113C17422CB000A1979A /* libvorbisfile.a */; };
+		4F86114317422CC800A1979A /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114217422CC800A1979A /* libFLAC.a */; };
+		4F86114917422E5100A1979A /* libmikmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114817422E5100A1979A /* libmikmod.a */; };
+		4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114C17422E6100A1979A /* libsmpeg.a */; };
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
@@ -127,6 +134,13 @@
 		4F86103717421EF100A1979A /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		4F86103D17421EFD00A1979A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		4F861080174223AE00A1979A /* libSDL_mixer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL_mixer.a; path = ../lib/libSDL_mixer.a; sourceTree = SOURCE_ROOT; };
+		4F8610FE17422B5400A1979A /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = ../lib/libvorbis.a; sourceTree = SOURCE_ROOT; };
+		4F86110C17422B8D00A1979A /* libogg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libogg.a; path = ../lib/libogg.a; sourceTree = SOURCE_ROOT; };
+		4F86111D17422BC800A1979A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4F86113C17422CB000A1979A /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = ../lib/libvorbisfile.a; sourceTree = SOURCE_ROOT; };
+		4F86114217422CC800A1979A /* libFLAC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFLAC.a; path = ../lib/libFLAC.a; sourceTree = SOURCE_ROOT; };
+		4F86114817422E5100A1979A /* libmikmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmikmod.a; path = ../lib/libmikmod.a; sourceTree = SOURCE_ROOT; };
+		4F86114C17422E6100A1979A /* libsmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsmpeg.a; path = ../lib/libsmpeg.a; sourceTree = SOURCE_ROOT; };
 		4F9AD19816EB38BB00321A66 /* PString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PString.cpp; path = ../src/PString.cpp; sourceTree = "<group>"; };
 		4F9AD19916EB38BB00321A66 /* PString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PString.h; path = ../src/PString.h; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../src/gfxvabstract.h; sourceTree = "<group>"; };
@@ -224,6 +238,13 @@
 				4F86103817421EF100A1979A /* AudioUnit.framework in Frameworks */,
 				4F86103E17421EFD00A1979A /* OpenGL.framework in Frameworks */,
 				4F861081174223AE00A1979A /* libSDL_mixer.a in Frameworks */,
+				4F86110517422B5400A1979A /* libvorbis.a in Frameworks */,
+				4F86110D17422B8D00A1979A /* libogg.a in Frameworks */,
+				4F86111E17422BC800A1979A /* AudioToolbox.framework in Frameworks */,
+				4F86113D17422CB000A1979A /* libvorbisfile.a in Frameworks */,
+				4F86114317422CC800A1979A /* libFLAC.a in Frameworks */,
+				4F86114917422E5100A1979A /* libmikmod.a in Frameworks */,
+				4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +277,7 @@
 				4F86103017421EE400A1979A /* Carbon.framework */,
 				4F86103717421EF100A1979A /* AudioUnit.framework */,
 				4F86103D17421EFD00A1979A /* OpenGL.framework */,
+				4F86111D17422BC800A1979A /* AudioToolbox.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -308,6 +330,12 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4F86114C17422E6100A1979A /* libsmpeg.a */,
+				4F86114817422E5100A1979A /* libmikmod.a */,
+				4F86114217422CC800A1979A /* libFLAC.a */,
+				4F86113C17422CB000A1979A /* libvorbisfile.a */,
+				4F86110C17422B8D00A1979A /* libogg.a */,
+				4F8610FE17422B5400A1979A /* libvorbis.a */,
 				4F861080174223AE00A1979A /* libSDL_mixer.a */,
 				4F860DC017421D4B00A1979A /* libSDL.a */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
@@ -702,7 +730,7 @@
 		4F9521C616E87F16009D9F7E /* Debug pre-C++11 */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
