@@ -408,22 +408,21 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in)
     // (ydist, yt2, yt1, y1, ystep, xstep, xfrac, x1, y, x)
     // capture: partial, deltafrac, delta, ltemp, value, intercept
     // lambda terminology: i = this coordinate; o = other coordinate
-    static struct v_t
-    {
-        int *const Xdist[2] = {&xdist, &ydist};
-        int *const Xt2[2]   = {&xt2,   &yt2};
-        int *const Xt1[2]   = {&xt1,   &yt1};
-        int *const X1[2]    = {&x1,    &y1};
-        int *const X2[2]    = {&x2,    &y2};
-        int *const Xstep[2] = {&xstep, &ystep};
-        int *const Ystep[2] = {&ystep, &xstep};
-        int *const Yfrac[2] = {&yfrac, &xfrac};
-        int *const Y1[2]    = {&y1,    &x1};
-        int *const Y2[2]    = {&y2,    &x2};
-        int *const X[2]     = {&x,     &y};
-        int *const Y[2]     = {&y,     &x};
-    } v;
-#define V(a) (*v.a[i])
+
+    int *const Xdist[2] = {&xdist, &ydist};
+    int *const Xt2[2]   = {&xt2,   &yt2};
+    int *const Xt1[2]   = {&xt1,   &yt1};
+    int *const X1[2]    = {&x1,    &y1};
+    int *const X2[2]    = {&x2,    &y2};
+    int *const Xstep[2] = {&xstep, &ystep};
+    int *const Ystep[2] = {&ystep, &xstep};
+    int *const Yfrac[2] = {&yfrac, &xfrac};
+    int *const Y1[2]    = {&y1,    &x1};
+    int *const Y2[2]    = {&y2,    &x2};
+    int *const X[2]     = {&x,     &y};
+    int *const Y[2]     = {&y,     &x};
+
+#define V(a) (*a[i])
     for(int i = 0; i < 2; ++i)
     {
         V(Xdist) = abs(V(Xt2)-V(Xt1));
