@@ -77,7 +77,6 @@ void    MoveObj (objtype *ob, int32_t move);
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-Boolean CheckLine (objtype *ob);
 
 void    FirstSighting (objtype *ob);
 Boolean CheckSight (objtype *ob);
@@ -1081,10 +1080,10 @@ void DamageActor (objtype *ob, unsigned damage)
 =====================
 */
 
-Boolean CheckLine (objtype *ob)
+Boolean CheckLine (objtype *ob, Boolean solidActors)
 {
     // IOANCH 20130305: DRY
-    return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y);
+    return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y, solidActors);
 }
 
 

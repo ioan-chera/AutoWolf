@@ -543,7 +543,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte ret
 //
 // True if can shoot
 //
-objtype *BotMan::EnemyOnTarget()
+objtype *BotMan::EnemyOnTarget(Boolean solidActors)
 {
 	objtype *check,*closest,*oldclosest;
 	int32_t  viewdist;
@@ -577,7 +577,7 @@ objtype *BotMan::EnemyOnTarget()
 		// trace a line from player to enemey
 		//
 
-		if (CheckLine(closest))
+		if (CheckLine(closest, solidActors))
 			return closest;
 	}
 	return NULL;
@@ -609,7 +609,7 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 //
 // True if an enemy is in sight
 //
-objtype *BotMan::EnemyVisible(short *angle, int *distance)
+objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 {
 	int tx = player->tilex, ty = player->tiley;
 	int i, j, k, distmin;
@@ -628,7 +628,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance)
 
 		if(i > 15)
 			continue;
-		if(!CheckLine(ret))
+		if(!CheckLine(ret, solidActors))
 			continue;
 		
 		// ret visible here: handle their updated location
@@ -722,7 +722,8 @@ objtype *BotMan::DamageThreat(objtype *targ)
 {
 	objtype *objignore = targ;
 	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && 
-        gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1)))
+        gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1) 
+        /*|| (gamestate.weapon < wp_pistol && Basic::CheckKnifeEnemy() != targ)*/))
 	{
 		objignore = NULL;
 	}
@@ -1282,6 +1283,36 @@ void BotMan::TurnToAngle(int dangle)
 }
 
 //
+// BotMan::DoMeleeAI
+//
+// Use the knife if the gun won't work (e.g. biting dogs)
+//
+Boolean BotMan::DoMeleeAI()
+{
+//    KnifeAttack(player);
+//    int eangle, edist;
+//    objtype *check0 = EnemyVisible(&eangle, &edist, true);
+//    
+//    if(!check0)
+//    {
+//        if(FindShortestPath(false, true, 0, true))
+//		{
+//			MoveByStrafe();
+//			return;
+//		}        
+//    }
+//    else 
+//    {
+//        // Can attack.
+//        // But handle retreating
+//        objtype *check = EnemyOnTarget();
+//        objtype *check2 = DamageThreat(check);
+//    }
+
+	return true;
+}
+
+//
 // BotMan::DoCombatAI
 //
 void BotMan::DoCombatAI(int eangle, int edist)
@@ -1539,41 +1570,6 @@ void BotMan::DoNonCombatAI()
 	// normally just turn (it's non-combat, no problem)
 	TurnToAngle(dangle);
 }
-
-//
-// BotMan::DoMeleeAI
-//
-// Use the knife if the gun won't work (e.g. biting dogs)
-//
-Boolean BotMan::DoMeleeAI()
-{
-	int eangle;
-	if(DogGnawing(&eangle))
-	{
-		if(gamestate.weapon != wp_knife)
-			buttonstate[bt_readyknife] = true;
-		
-		// Use missile AI code here
-		path.reset();
-		// Enemy visible mode
-		// centred angle here
-		int dangle = Basic::CentreAngle(eangle, player->angle);
-		
-		TurnToAngle(dangle);
-		if(abs(dangle) <= 5)
-		{
-			controly = -RUNMOVE * tics;
-			if(pressuse % 4 == 0)
-				buttonstate[bt_attack] = true;
-		}
-	}
-	else
-	{
-		return false;
-	}
-	return true;
-}
-
 
 
 //

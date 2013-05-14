@@ -20,7 +20,7 @@ Boolean SightPlayer (objtype *ob);
 void    KillActor (objtype *ob);
 void    DamageActor (objtype *ob, unsigned damage);
 
-Boolean CheckLine (objtype *ob);
+Boolean CheckLine (objtype *ob, Boolean solidActors = false);
 Boolean CheckSight (objtype *ob);
 
 

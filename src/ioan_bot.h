@@ -71,9 +71,9 @@ protected:
 	// Enemy on spot
 	static objtype *EnemyFound(int dx, int dy);
 	// Enemy targetted
-	static objtype *EnemyOnTarget();
+	static objtype *EnemyOnTarget(Boolean solidActors = false);
 	// Enemy visible
-	static objtype *EnemyVisible(short *angle, int *distance);
+	static objtype *EnemyVisible(short *angle, int *distance, Boolean solidActors = false);
 	// Enemy eager to follow
 	static objtype *EnemyEager();
 	// Automated and armed
