@@ -297,3 +297,16 @@ void PropertyFile::putExplored(const void *explored)
     prop->setStringValue(dataToWrite);
     _updateSize();
 }
+
+//
+// PropertyFile::getIntValue
+//
+int PropertyFile::getIntValue(const char *keyName) const
+{
+    Property *prop = _propertyTable.objectForKey(keyName);
+    if(prop && prop->type == Property::Int32)
+    {
+        return (int)prop->intValue;
+    }
+    return 0;   // default to 0
+}

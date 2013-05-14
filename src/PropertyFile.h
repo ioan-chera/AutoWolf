@@ -67,6 +67,8 @@ public:
     void getExplored(void *exploredTarget);
     // putExplored
     void putExplored(const void *explored);
+    // getIntValue
+    int getIntValue(const char *keyName) const;
 };
 
 #endif
