@@ -81,6 +81,7 @@ typedef struct
 
 void Quit(const char *errorStr, ...);
 
+#include "Point2D.h"    // IOANCH 20130515
 #include "SODFlag.h"
 #include "id_pm.h"
 #include "id_sd.h"
