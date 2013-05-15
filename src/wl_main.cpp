@@ -45,6 +45,7 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "Config.h"
+#include "MasterDirectoryFile.h"
 #ifdef __APPLE__
 #include "CocoaFun.h"
 #endif
@@ -1309,8 +1310,8 @@ static void InitGame()
 	VW_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
-	BotMan::LoadData();
-    BotMan::SetMood();
+    MasterDirectoryFile::MainDir().loadFromFile();
+    bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
     IN_Startup ();  // sets up the input devices
