@@ -15,7 +15,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// MODULE FOR THE GAME BOT
+//
+////////////////////////////////////////////////////////////////////////////////
 
+#include "wl_def.h"
 
 #include <limits.h>
 #include <time.h>
@@ -34,22 +40,10 @@
 #include "wl_play.h"
 #include "wl_state.h"
 
-// static class member definition
-objtype *BotMan::damagetaken;
-// protected ones
-Boolean BotMan::panic;
-byte BotMan::pressuse;
-short BotMan::retreatwaitdelay, BotMan::retreatwaitcount, BotMan::retreat;
-SearchStage BotMan::searchstage;
-int BotMan::exitx, BotMan::exity;
-objtype *BotMan::threater;
-PathArray BotMan::path;
-Boolean BotMan::explored[MAPSIZE][MAPSIZE];
-int BotMan::knownExitX, BotMan::knownExitY;
-List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
-unsigned BotMan::mood = 0;
+BotMan bot;
 
-HistoryRatio BotMan::shootRatio;
+// static class member definition
+// protected ones
 
 //
 // BotMan::MapInit
@@ -68,18 +62,21 @@ void BotMan::MapInit()
 	panic = false;
 	int i, j;
 	
-	
-	// IOANCH 20121213
-	// calculate checksum of it
 	memset(explored, 0, sizeof(explored));
-	CalculateMapsegsChecksum();
+
+    // IOANCH 20121213
+	// calculate checksum of it
+    CheckSum::CalculateMapsegsChecksum();
 	// get explored data
-	GetExploredData();
+	GetExploredData(CheckSum::digeststring);
 	
-	// FIXME: this should be taken from loaded game data. I might put a LoadGameInit just for that.
+	// FIXME: this should be taken from loaded game data. I might put a
+    // LoadGameInit just for that.
 	for(i = 0; i < MAPSIZE; ++i)
+    {
 		for(j = 0; j < MAPSIZE; ++j)
 			enemyrecord[i][j].removeAll();
+    }
 }
 
 //
@@ -87,37 +84,25 @@ void BotMan::MapInit()
 //
 // Saves explored to data file (at death/victory, or quit -- must be ingame)
 //
-void BotMan::SaveData()
+void BotMan::SaveData() const
 {
-	PutExploredData();
+	StoreAcquiredData(CheckSum::digeststring);
 	MasterDirectoryFile::MainDir().saveToFile();
 }
 
 //
-// BotMan::LoadData
+// BotMan::StoreAcquiredData
 //
-// Loads data from file (at startup)
-//
-void BotMan::LoadData()
-{
-	MasterDirectoryFile::MainDir().loadFromFile();
-}
-
-//
-// BotMan::PutExploredData
-//
-void BotMan::PutExploredData()
+void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 {
     // see if folder exists in AutoWolf/Maps
 	
 	// now to write the file
-	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
-	DirectoryFile *dir;
+	DirectoryFile *dir = MasterDirectoryFile::MainDir()
+    .makeDirectory(MASTERDIR_MAPSDIRECTORY)
+    ->makeDirectory(PString((const char *)digeststring, 16));
 	
-	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring, 16));
     // the hash-named directory
-    PString a(digeststring, 16);
     
     // Looking for files...
     // Get property file from digest folder.
@@ -126,27 +111,16 @@ void BotMan::PutExploredData()
     // If it doesn't, create it with the proper name.
     // If file doesn't exist, create it and give it the explored property.
 	
-    PropertyFile *propertyFile =
-    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
-    
-    if(!propertyFile)
-    {
-        // File doesn't exist. Create it.
-        propertyFile = new PropertyFile;
-        propertyFile->initialize(PROPERTY_FILE_NAME);
-        dir->addFile(propertyFile);
-        
-    }
+    MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
     
     propertyFile->putExplored(explored);
-    propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitX +
-                              (knownExitY << 8));
+    propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitPoint.PropertyCompressTile());
 }
 
 //
 // BotMan::GetExploredData
 //
-void BotMan::GetExploredData()
+void BotMan::GetExploredData(const uint8_t *digeststring)
 {
     // see if folder exists in AutoWolf/Maps
 	memset(explored, 0, sizeof(maparea * sizeof(Boolean)));
@@ -156,9 +130,8 @@ void BotMan::GetExploredData()
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring, 16));
+	dir = dir->makeDirectory(PString((const char *)digeststring, 16));
     // the hash-named directory
-    PString a(digeststring, 16);
     
     // Looking for files...
     // Get property file from digest folder.
@@ -176,11 +149,12 @@ void BotMan::GetExploredData()
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
-            knownExitX = (int)(prop & 0x00ff);
-            knownExitY = (int)((prop & 0xff00) >> 8);
+            knownExitPoint.PropertyDecompressTile((int)prop);
         }
         else
-            knownExitX = knownExitY = -1;
+        {
+            knownExitPoint.SetValue(-1, -1);
+        }
     }
 }
 
@@ -334,7 +308,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // {tx, tx, tx + 1, tx - 1}
     
     // Nope. Let's make a lambda function here.
-    LAMSPEC(Boolean, secretVerify, int, int) = LAM(&tx, &ty)(int txofs, int tyofs)
+    LAMSPEC(Boolean, secretVerify, int, int) = LAM(&)(int txofs, int tyofs)
     {
         if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
 		{
@@ -379,8 +353,9 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || tx - 2 < 0 || !actorat[tx-2][ty]) 
 			{
-				knownExitX = exitx = tx - 1;
-				knownExitY = exity = ty;
+				exitx = tx - 1;
+				exity = ty;
+                knownExitPoint.SetValue(tx - 1, ty);
 				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
@@ -391,8 +366,9 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		{
 			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || tx + 2 >= MAPSIZE || !actorat[tx+2][ty]) 
 			{
-				knownExitX = exitx = tx + 1;
-				knownExitY = exity = ty;
+				exitx = tx + 1;
+				exity = ty;
+                knownExitPoint.SetValue(tx + 1, ty);
 				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
@@ -449,7 +425,8 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 //
 // Finds the path to the nearest destination
 //
-Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte retreating, Boolean knifeinsight)
+Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
+                                 byte retreating, Boolean knifeinsight)
 {
 	int j;
 	
@@ -759,34 +736,6 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 	}
 
 	return retmin;
-}
-
-//
-// BotMan::GenericEnemyVisible
-//
-// True if an enemy is in sight
-//
-objtype *BotMan::GenericEnemyVisible(int tx, int ty)
-{
-	int x = Basic::Major(tx);
-	int y = Basic::Major(ty);
-	int j, k;
-	objtype *ret;
-
-	for(j = -15; j <= 15; ++j)
-	{
-		for(k = -15; k <= 15; ++k)
-		{
-			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-				continue;
-			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && Basic::GenericCheckLine(ret->x, ret->y, x, y))
-			{
-				return ret;
-			}
-		}
-	}
-	return NULL;
 }
 
 //
@@ -1104,36 +1053,6 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty)
 			return ret;
 	}
 	return NULL;
-}
-
-//
-// BotMan::DogGnawing
-//
-// a living aggressive enemy is all behind the corner
-//
-objtype *BotMan::DogGnawing(int *eangle)
-{
-	objtype *check;
-    for (check=(objtype *)Basic::livingNazis.firstObject(); check; check=(objtype *)Basic::livingNazis.nextObject())
-    {
-        if(check->obclass == dogobj && (check->flags & FL_ATTACKMODE))
-		{
-			int dx = check->tilex - player->tilex, dy = check->tiley - player->tiley;
-			if(areabyplayer[check->areanumber] && abs(dx) <= 1 && 
-			   abs(dy) <= 1)
-			{
-				if(eangle)
-				{
-					double ddx = (double)dx, ddy = -(double)dy;
-					double dang = atan2(ddy, ddx);
-					*eangle = (int)(180.0/PI*dang);
-				}
-				return check;
-			}
-		}
-    }
-	
-    return NULL;
 }
 
 //
