@@ -72,8 +72,7 @@ bool DirectoryFile::addFile(DataFile *file)
 DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 {
 	DataFile *findDir = getFileWithName(fname);
-	if(!findDir || (findDir && strcmp(findDir->header(),
-                                      DIRECTORY_HEADER)))
+	if(!findDir || (findDir && strcmp(findDir->header(), DIRECTORY_HEADER)))
 	{
 		// either doesn't exist or is not a folder
 		DirectoryFile *newdir = new DirectoryFile;
