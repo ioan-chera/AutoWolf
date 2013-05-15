@@ -30,6 +30,7 @@
 		4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114C17422E6100A1979A /* libsmpeg.a */; };
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
+		4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FB3B41E1744183100C29DF4 /* Point2D.cpp */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -127,6 +128,8 @@
 		4F9E982216E33FC000B632BB /* sprabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sprabstract.h; path = ../src/sprabstract.h; sourceTree = "<group>"; };
 		4F9E982616E3669F00B632BB /* CocoaFun.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CocoaFun.mm; path = ../src/macosx/CocoaFun.mm; sourceTree = "<group>"; };
 		4F9E982816E366C100B632BB /* CocoaFun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CocoaFun.h; path = ../src/macosx/CocoaFun.h; sourceTree = "<group>"; };
+		4FB3B41E1744183100C29DF4 /* Point2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Point2D.cpp; path = ../src/Point2D.cpp; sourceTree = "<group>"; };
+		4FB3B41F1744183200C29DF4 /* Point2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point2D.h; path = ../src/Point2D.h; sourceTree = "<group>"; };
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = sodpal.inc; path = ../src/sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = wolfpal.inc; path = ../src/wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../src/audioabstract.h; sourceTree = "<group>"; };
@@ -511,6 +514,8 @@
 				4F1ECC2816E922B500A37742 /* Property.h */,
 				4F9AD19816EB38BB00321A66 /* PString.cpp */,
 				4F9AD19916EB38BB00321A66 /* PString.h */,
+				4FB3B41E1744183100C29DF4 /* Point2D.cpp */,
+				4FB3B41F1744183200C29DF4 /* Point2D.h */,
 			);
 			name = DataStructure;
 			sourceTree = "<group>";
@@ -643,6 +648,7 @@
 				4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */,
 				4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */,
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
+				4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
