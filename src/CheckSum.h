@@ -20,8 +20,16 @@
 #ifndef CHECKSUM_H_
 #define CHECKSUM_H_
 
-void CalculateMapsegsChecksum();
-
-extern char digeststring[16];
+//
+// CheckSum
+//
+// Namespace for checksums
+//
+namespace CheckSum
+{
+    extern uint8_t digeststring[16];
+    
+    void CalculateMapsegsChecksum();
+}
 
 #endif
