@@ -311,7 +311,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // {tx, tx, tx + 1, tx - 1}
     
     // Nope. Let's make a lambda function here.
-    LAMSPEC(Boolean, secretVerify, int, int) = LAM(&)(int txofs, int tyofs)
+    auto secretVerify = [&](int txofs, int tyofs)
     {
         if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
 		{
