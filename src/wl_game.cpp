@@ -705,10 +705,10 @@ void SetupGameLevel (void)
     #define MXX MAPSIZE - 1
 
     // Read feature flags data from map corners and overwrite corners with adjacent tiles
-    ffDataTopLeft     = MAPSPOT(0,   0,   0); MAPSPOT(0,   0,   0) = MAPSPOT(1,       0,       0);
-    ffDataTopRight    = MAPSPOT(MXX, 0,   0); MAPSPOT(MXX, 0,   0) = MAPSPOT(MXX,     1,       0);
-    ffDataBottomRight = MAPSPOT(MXX, MXX, 0); MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX,     0);
-    ffDataBottomLeft  = MAPSPOT(0,   MXX, 0); MAPSPOT(0,   MXX, 0) = MAPSPOT(0,       MXX - 1, 0);
+    ffDataTopLeft     = MAPSPOT(Point2D<int>::Make(0),   0); MAPSPOT(Point2D<int>::Make(0),   0) = MAPSPOT(Point2D<int>::Make(1, 0),       0);
+    ffDataTopRight    = MAPSPOT(Point2D<int>::Make(MXX, 0),   0); MAPSPOT(Point2D<int>::Make(MXX, 0),   0) = MAPSPOT(Point2D<int>::Make(MXX, 1),       0);
+    ffDataBottomRight = MAPSPOT(Point2D<int>::Make(MXX), 0); MAPSPOT(Point2D<int>::Make(MXX), 0) = MAPSPOT(Point2D<int>::Make(MXX - 1, MXX),     0);
+    ffDataBottomLeft  = MAPSPOT(Point2D<int>::Make(0, MXX), 0); MAPSPOT(Point2D<int>::Make(0, MXX), 0) = MAPSPOT(Point2D<int>::Make(0, MXX - 1), 0);
 
     #undef MXX
 #endif

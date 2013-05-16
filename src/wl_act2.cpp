@@ -2428,7 +2428,7 @@ void SelectPathDir (objtype *ob)
 {
     unsigned spot;
 
-    spot = MAPSPOT(ob->tilex,ob->tiley,1)-ICONARROWS;
+    spot = MAPSPOT(Point2D<word>::Make(ob->tilex,ob->tiley),1)-ICONARROWS;
 
     if (spot<8)
     {

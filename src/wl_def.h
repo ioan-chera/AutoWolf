@@ -56,17 +56,8 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
 typedef uint32_t longword;
-typedef int8_t Boolean;
+typedef int8_t Boolean; // IOANCH 20130516: made uppercase not to conflict
 typedef void * memptr;
-
-typedef struct
-{
-    int x,y;
-} Point;
-typedef struct
-{
-    Point ul,lr;
-} Rect;
 
 void Quit(const char *errorStr, ...);
 
@@ -80,7 +71,13 @@ void Quit(const char *errorStr, ...);
 #include "id_us.h"
 #include "id_ca.h"
 
-#define MAPSPOT(x,y,plane) (mapsegs[plane][((y)<<mapshift)+(x)])
+struct Rect
+{
+    Point2D<int> ul,lr;
+};
+
+
+#define MAPSPOT(point,plane) (mapsegs[plane][(point).MapUnfold(mapshift)])
 
 #define SIGN(x)         ((x)>0?1:-1)
 #define ABS(x)          ((int)(x)>0?(x):-(x))

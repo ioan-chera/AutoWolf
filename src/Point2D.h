@@ -67,6 +67,13 @@ public:
         ret.y = valy;
         return ret;
     }
+    static Point2D<T> Make(T val)
+    {
+        Point2D<T> ret;
+        ret.x = val;
+        ret.x = val;
+        return ret;
+    }
     Point2D<T> &operator = (T val)
     {
         x = y = val;

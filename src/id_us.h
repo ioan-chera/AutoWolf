@@ -115,6 +115,7 @@ extern	Boolean	US_UpdateCursor(void);
 Boolean         US_LineInput(int x,int y,char *buf,const char *def,Boolean escok,
                              int maxchars,int maxwidth);
 
+struct Rect;
 void	        USL_PrintInCenter(const char *s,Rect r);
 char 	        *USL_GiveSaveName(word game);
 
