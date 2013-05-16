@@ -26,9 +26,9 @@
     #include <unistd.h>
 #endif
 
+#include "wl_def.h"
 #include "foreign.h"
 #include "version.h"
-#include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
 #include "wl_draw.h"

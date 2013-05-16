@@ -20,8 +20,8 @@
 
 // WL_TEXT.C
 
-#include "version.h"
 #include "wl_def.h"
+#include "version.h"
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_menu.h"

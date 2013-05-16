@@ -34,8 +34,8 @@
     #include <unistd.h>
 #endif
 
-#include "foreign.h"
 #include "wl_def.h"
+#include "foreign.h"
 #include "wl_agent.h"
 #include "wl_draw.h"
 #include "wl_game.h"

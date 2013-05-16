@@ -1515,7 +1515,8 @@ void    ThreeDRefresh (void)
 // clear out the traced array
 //
     memset(spotvis,0,maparea);
-    spotvis[player->tilex][player->tiley] = 1;       // Detect all sprites over player fix
+    spotvis[player->tilex][player->tiley] = 1;
+    // Detect all sprites over player fix
 
     vbuf = VL_LockSurface(screenBuffer);
     if(vbuf == NULL) return;
