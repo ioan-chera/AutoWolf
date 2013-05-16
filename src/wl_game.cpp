@@ -67,7 +67,7 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 // IOANCH 20130302: unification
-int32_t         spearx,speary;
+Point2D<int32_t>   spearPoint;
 unsigned        spearangle;
 Boolean         spearflag;
 
@@ -1486,8 +1486,8 @@ startplayloop:
             gamestate.mapon = 20;
             SetupGameLevel ();
             StartMusic ();
-            player->x = spearx;
-            player->y = speary;
+            player->x = spearPoint.x;
+            player->y = spearPoint.y;
             player->angle = (short)spearangle;
             spearflag = false;
             Thrust (0,0);

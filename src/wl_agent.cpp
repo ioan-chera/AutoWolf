@@ -845,8 +845,7 @@ void GetBonus (statobj_t *check)
             // IOANCH 20130202: unification process
         case    bo_spear:
             spearflag = true;
-            spearx = player->x;
-            speary = player->y;
+            spearPoint.SetValue(player->x, player->y);
             spearangle = player->angle;
             playstate = ex_completed;
     }
