@@ -2825,7 +2825,7 @@ CP_Quit (int)
     {
 		// IOANCH 20121217: save data
 		if(ingame)
-			BotMan::SaveData();
+			bot.SaveData();
 		
         VW_UpdateScreen ();
         SD_MusicOff ();

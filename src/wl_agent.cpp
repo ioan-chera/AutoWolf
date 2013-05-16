@@ -462,7 +462,7 @@ void TakeDamage (int points,objtype *attacker)
         points>>=2;
 	
 	// IOANCH 02.07.2012: alert the bot that damage was taken
-	BotMan::damagetaken = attacker;
+	bot.damagetaken = attacker;
 
     if (!godmode)
         gamestate.health -= points;
@@ -1315,7 +1315,7 @@ void    GunAttack (objtype *ob)
         if (closest == oldclosest)
 		{
 			// IOANCH 26.06.2012: efficiency
-			BotMan::shootRatio.addFail();
+			bot.shootRatio.addFail();
             return;                                         // no more targets, all missed
 		}
 
@@ -1342,13 +1342,13 @@ void    GunAttack (objtype *ob)
         if ( (US_RndT() / 12) < dist)           // missed
 		{
 			// IOANCH 26.06.2012: efficiency
-			BotMan::shootRatio.addFail();
+			bot.shootRatio.addFail();
             return;
 		}
         damage = US_RndT() / 6;
     }
 	// IOANCH 26.06.2012: efficiency
-	BotMan::shootRatio.addSuccess();
+	bot.shootRatio.addSuccess();
     DamageActor (closest,damage);
 }
 

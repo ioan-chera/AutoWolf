@@ -61,25 +61,15 @@ protected:
         SSSecretLift,	// only now look for secret exit
         SSNormalLift,	// only now look for normal exit
         SSMax
-    };
-    
-	// search data structure
-	PathArray path;
-
-	// protected variables
+    } searchstage;
+	PathArray path;     // search data structure
 	Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
 	byte pressuse;	// periodic switch for triggering button-down-only commands
-	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat (cover) controllers
-	SearchStage searchstage;
+	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat controllers
 	int exitx, exity;
 	objtype *threater;
-	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
-
+	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
     unsigned mood;
-    
-    //
-    // DATA GATHERED FROM DATABASE
-    //
     Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
     Point2D<int> knownExitPoint;
     
@@ -97,30 +87,47 @@ protected:
 
 	Boolean ObjectOfInterest(int dx, int dy,
                                     Boolean knifeinsight = false);
-	objtype *EnemyOnTarget(Boolean solidActors = false);
+	objtype *EnemyOnTarget(Boolean solidActors = false) const;
 	objtype *EnemyVisible(short *angle, int *distance,
                                  Boolean solidActors = false);
-	objtype *EnemyEager();
+	objtype *EnemyEager() const;
 
-	objtype *DamageThreat(objtype *targ);
-	void DoRetreat(Boolean forth = false, objtype *cause = NULL);
-	objtype *Crossfire(int x, int y, objtype *objignore = NULL,
-                              Boolean justexists = false);
+	objtype *DamageThreat(const objtype *targ) const;
+	void DoRetreat(Boolean forth = false, objtype *cause = NULL) const;
+	objtype *Crossfire(int x, int y, const objtype *objignore = NULL,
+                              Boolean justexists = false) const;
 	objtype *IsProjectile(int tx, int ty, int dist = 1,
-                                 short *angle = NULL, int *distance = NULL);
-	objtype *IsEnemyBlocking(int tx, int ty);
-	objtype *IsEnemyNearby(int tx, int ty);
+                          short *angle = NULL, int *distance = NULL) const;
+	objtype *IsEnemyBlocking(int tx, int ty) const;
+	objtype *IsEnemyNearby(int tx, int ty) const;
     
 	void MoveByStrafe();
-	void ChooseWeapon();
+	void ChooseWeapon() const;
 	void DoCombatAI(int eangle, int edist);
 	void DoNonCombatAI();
 	void DoMeleeAI(short eangle, int edist);
-	void TurnToAngle(int dangle);
+	void TurnToAngle(int dangle) const;
     
     void StoreAcquiredData(const uint8_t *digeststring) const;
     void GetExploredData(const uint8_t *digeststring);
 public:
+    
+    BotMan() :
+    searchstage(SSGeneral),
+    panic(false),
+    pressuse(0),
+    retreatwaitdelay(0),
+    retreatwaitcount(0),
+    retreat(0),
+    exitx(0),
+    exity(0),
+    threater(NULL),
+    mood(0)
+    {
+        memset(explored, 0, sizeof(explored));
+        knownExitPoint = 0;
+    }
+    
 	// Update the enemy's known position record
 	void RecordEnemyPosition(objtype *enemy);
 

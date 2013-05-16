@@ -714,7 +714,7 @@ void SetupGameLevel (void)
 #endif
 	
 	// IOANCH 17.05.2012: initialize bot
-	BotMan::MapInit();
+	bot.MapInit();
 
 //
 // copy the wall data to a data segment array

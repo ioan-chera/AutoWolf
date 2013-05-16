@@ -162,6 +162,8 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
 //
 // BotMan::SetMood
 //
+// Should always set the same value to mood, throughout the day
+//
 void BotMan::SetMood()
 {
     time_t t = time(NULL);  // seconds
@@ -169,10 +171,10 @@ void BotMan::SetMood()
     
     // Day will be used as random seed
     srand((unsigned)day);
-    mood = 0;
+    mood = 0;   // default it to 0
     if(rand() % 4 == 0)
     {
-        mood = (unsigned)rand();
+        mood = (unsigned)rand();    // Just scramble it
     }
     
     // scramble it now
@@ -441,8 +443,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 	path.makeEmpty();
 	if(retreating && threater != NULL)
 		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
-	else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
-        path.addStartNode(player->tilex, player->tiley, knownExitX, knownExitY);
+	else if(mood & MOOD_JUSTGOTOEXIT && knownExitPoint > -1)
+        path.addStartNode(player->tilex, player->tiley,
+                          knownExitPoint.x, knownExitPoint.y);
     else
 		path.addStartNode(player->tilex, player->tiley);
 
@@ -596,8 +599,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 			
 			if(retreating && threater != NULL)
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
-			else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
-                path.updateNode(ifound, imin, cx, cy, tentative_g_add, knownExitX, knownExitY);
+			else if(mood & MOOD_JUSTGOTOEXIT && knownExitPoint > -1)
+                path.updateNode(ifound, imin, cx, cy, tentative_g_add,
+                                knownExitPoint.x, knownExitPoint.y);
             else
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add);
 			
@@ -615,9 +619,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 //
 // True if can shoot
 //
-objtype *BotMan::EnemyOnTarget(Boolean solidActors)
+objtype *BotMan::EnemyOnTarget(Boolean solidActors) const
 {
-	objtype *check,*closest,*oldclosest;
+	objtype *closest,*oldclosest;
 	int32_t  viewdist;
 
 	//
@@ -630,9 +634,12 @@ objtype *BotMan::EnemyOnTarget(Boolean solidActors)
 	{
 		oldclosest = closest;
 
-		for(check = (objtype *)Basic::livingNazis.firstObject(); check; check = (objtype *)Basic::livingNazis.nextObject())
+		for(objtype *
+            check = (objtype *)Basic::livingNazis.firstObject(); check;
+            check = (objtype *)Basic::livingNazis.nextObject())
 		{
-			if ((check->flags & FL_VISABLE) && abs(check->viewx-centerx) < shootdelta)
+			if ((check->flags & FL_VISABLE)
+                && abs(check->viewx-centerx) < shootdelta)
 			{
 				if (check->transx < viewdist)
 				{
@@ -643,7 +650,8 @@ objtype *BotMan::EnemyOnTarget(Boolean solidActors)
 		}
 
 		if (closest == oldclosest)
-			return NULL;                                         // no more targets, all missed
+			return NULL;
+            // no more targets, all missed
         
 		//
 		// trace a line from player to enemey
@@ -744,11 +752,11 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 //
 // True if 1 non-ambush enemies are afoot 
 //
-objtype *BotMan::EnemyEager()
+objtype *BotMan::EnemyEager() const
 {
-	objtype *ret;
-
-	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
+	for(objtype *
+        ret = (objtype *)Basic::livingNazis.firstObject(); ret;
+        ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
 		if(areabyplayer[ret->areanumber] && explored[ret->recordx >> TILESHIFT][ret->recordy >> TILESHIFT] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
@@ -762,9 +770,9 @@ objtype *BotMan::EnemyEager()
 //
 // true if damage is imminent and retreat should be done
 //
-objtype *BotMan::DamageThreat(objtype *targ)
+objtype *BotMan::DamageThreat(const objtype *targ) const
 {
-	objtype *objignore = targ;
+	const objtype *objignore = targ;
 	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && 
         gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1) 
         /*|| (gamestate.weapon < wp_pistol && Basic::CheckKnifeEnemy() != targ)*/))
@@ -779,7 +787,8 @@ objtype *BotMan::DamageThreat(objtype *targ)
 //
 // Returns true if there's a crossfire in that spot
 //
-objtype *BotMan::Crossfire(int x, int y, objtype *objignore, Boolean justexists)
+objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
+                           Boolean justexists) const
 {
 	int j, k, dist;
 	objtype *ret;
@@ -807,75 +816,32 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, Boolean justexists)
 //
 // Retreats the bot sliding off walls
 //
-void BotMan::DoRetreat(Boolean forth, objtype *cause)
+void BotMan::DoRetreat(Boolean forth, objtype *cause) const
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
-	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
-	if(player->angle > 0 && player->angle <= 45)
-	{
-		backx = -1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = 1*neg;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 45 && player->angle <= 90)
-	{
-		backx = 0;
-		backy = 1*neg;
-		sidex = -1*neg;
-		sidey = 0;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 90 && player->angle <= 135)
-	{
-		backx = 0;
-		backy = 1*neg;
-		sidex = 1*neg;
-		sidey = 0;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 135 && player->angle <= 180)
-	{
-		backx = 1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = 1*neg;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 180 && player->angle <= 225)
-	{
-		backx = 1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = -1*neg;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 225 && player->angle <= 270)
-	{
-		backx = 0;
-		backy = -1*neg;
-		sidex = 1*neg;
-		sidey = 0;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 270 && player->angle <= 315)
-	{
-		backx = 0;
-		backy = -1*neg;
-		sidex = -1*neg;
-		sidey = 0;
-		dir = RUNMOVE*neg;
-	}
-	else
-	{
-		backx = -1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = -1*neg;
-		dir = -RUNMOVE*neg;
-	}
+	int j, backx, backy, sidex, sidey,
+        tx = player->tilex, ty = player->tiley, dir;
+    
+    const int backx_[] = {-neg, 0,    0,   neg, neg,  0,    0,    -neg};
+    const int backy_[] = {0,    neg,  neg, 0,   0,    -neg, -neg, 0};
+    const int sidex_[] = {0,    -neg, neg, 0,   0,    neg,  -neg, 0};
+    const int sidey_[] = {neg,  0,    0,   neg, -neg, 0,    0,    -neg};
+    const int dir_[]   = {RUNMOVE * neg, -RUNMOVE * neg};
+    
+    for(int factor = 0; factor < 8; ++factor)
+    {
+        if(player->angle > 45 * factor && player->angle <= 45 * factor + 45)
+        {
+            backx = backx_[factor];
+            backy = backy_[factor];
+            sidex = sidex_[factor];
+            sidey = sidey_[factor];
+            dir = dir_[factor % 2];
+            break;
+        }
+    }
+    
 	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
 		return;
 
@@ -965,7 +931,8 @@ solved:
 //
 // True if a flying projectile exists in this place
 //
-objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
+objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle,
+                              int *distance) const
 {
 	objtype *ret;
 
@@ -1024,7 +991,7 @@ retok:
 //
 // True if a living enemy exists around
 //
-objtype *BotMan::IsEnemyBlocking(int tx, int ty)
+objtype *BotMan::IsEnemyBlocking(int tx, int ty) const
 {
 	objtype *ret;
 	
@@ -1044,7 +1011,7 @@ objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 //
 // True if a living enemy exists around
 //
-objtype *BotMan::IsEnemyNearby(int tx, int ty)
+objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 {
 	objtype *ret;
 	
@@ -1178,7 +1145,8 @@ void BotMan::MoveByStrafe()
 				break;
 		}
 		// Press if there's an obstacle ahead
-		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny]))
+           && pressuse % 4 == 0)
 			buttonstate[bt_use] = true;
 		else
 			buttonstate[bt_use] = false;
@@ -1263,7 +1231,7 @@ void BotMan::MoveByStrafe()
 //
 // BotMan::ChooseWeapon
 //
-void BotMan::ChooseWeapon()
+void BotMan::ChooseWeapon() const
 {
 	if(gamestate.ammo > 0)
 	{
@@ -1271,9 +1239,12 @@ void BotMan::ChooseWeapon()
 			buttonstate[bt_readyknife + gamestate.bestweapon - wp_knife] = true;
 		if(gamestate.bestweapon == wp_chaingun)
 		{
-			if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
+			if(!panic && gamestate.weapon != wp_machinegun
+               && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
 				buttonstate[bt_readymachinegun] = true;
-			else if(gamestate.weapon != wp_chaingun && (panic || (gamestate.ammo >= 50 && shootRatio.getValue() > 7)))
+			else if(gamestate.weapon != wp_chaingun
+                    && (panic || (gamestate.ammo >= 50
+                                  && shootRatio.getValue() > 7)))
 				buttonstate[bt_readychaingun] = true;
 		}
 	}
@@ -1282,7 +1253,7 @@ void BotMan::ChooseWeapon()
 //
 // BotMan::TurnToAngle
 //
-void BotMan::TurnToAngle(int dangle)
+void BotMan::TurnToAngle(int dangle) const
 {
 	buttonstate[bt_strafe] = false;
 

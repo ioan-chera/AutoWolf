@@ -512,7 +512,7 @@ void PollControls (void)
 		 // Find A* path
          try
          {
-             BotMan::DoCommand();
+             bot.DoCommand();
          }
          catch (const Exception &exc)
          {
@@ -1418,7 +1418,7 @@ void PlayLoop (void)
 	// IOANCH 20121215
 	// Now is a time to save explored map data
 	if(ingame)
-		BotMan::SaveData();
+		bot.SaveData();
 
     if (playstate != ex_died)
         FinishPaletteShifts ();

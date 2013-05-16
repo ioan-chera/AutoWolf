@@ -338,7 +338,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
 	}
 	
 	// IOANCH 20121219: record enemy position
-	BotMan::RecordEnemyPosition(newobj);
+	bot.RecordEnemyPosition(newobj);
 	
 	if(newenemy)
 		livingNazis.add(newenemy);
