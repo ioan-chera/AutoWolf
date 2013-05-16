@@ -771,9 +771,9 @@ statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_grete
 ===============
 */
 
-void SpawnDeadGuard (int tilex, int tiley)
+void SpawnDeadGuard (const Point2D<int> &tilePoint)
 {
-    SpawnNewObj (tilex,tiley,&s_grddie4);
+    SpawnNewObj (tilePoint.x,tilePoint.y,&s_grddie4);
     DEMOIF_SDL
     {
         newobj->flags |= FL_NONMARK;    // walk through moving enemy fix

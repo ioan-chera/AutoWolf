@@ -398,7 +398,7 @@ static void ScanInfoPlane(void)
                     break;
 
                 case 124:
-                    SpawnDeadGuard (x,y);
+                    SpawnDeadGuard (Point2D<int>::Make(x, y));
                     break;
 //
 // officer
