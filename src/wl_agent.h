@@ -25,7 +25,7 @@ extern  int32_t       thrustspeed;
 extern  objtype      *LastAttacker;
 
 void    Thrust (int angle, int32_t speed);
-void    SpawnPlayer (const Point2D<int> &tilePoint, int dir);
+void    SpawnPlayer (Point2D<int> tilePoint, int dir);
 void    TakeDamage (int points,objtype *attacker);
 void    GivePoints (int32_t points);
 void    GetBonus (statobj_t *check);

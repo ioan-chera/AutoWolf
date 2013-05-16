@@ -85,7 +85,7 @@ extern  statetype s_fatdeathcam2;
 // IOANCH 29.06.2012: deleted global ghosts moved to Basic
 void KillActor (objtype *ob);
 
-void SpawnDeadGuard (const Point2D<int> &tilePoint);
+void SpawnDeadGuard (Point2D<int> tilePoint);
 
 void A_DeathScream (objtype *ob);
 void SpawnBJVictory (void);

@@ -1215,7 +1215,7 @@ void Cmd_Use (void)
 ===============
 */
 
-void SpawnPlayer (const Point2D<int> &tilePoint, int dir)
+void SpawnPlayer (Point2D<int> tilePoint, int dir)
 {
     player->obclass = playerobj;
     player->active = ac_yes;
