@@ -1215,15 +1215,15 @@ void Cmd_Use (void)
 ===============
 */
 
-void SpawnPlayer (int tilex, int tiley, int dir)
+void SpawnPlayer (const Point2D<int> &tilePoint, int dir)
 {
     player->obclass = playerobj;
     player->active = ac_yes;
-    player->tilex = tilex;
-    player->tiley = tiley;
+    player->tilex = tilePoint.x;
+    player->tiley = tilePoint.y;
     player->areanumber = (byte) *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex);
-    player->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
-    player->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
+    player->x = ((int32_t)tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+    player->y = ((int32_t)tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
     player->state = &s_player;
     player->angle = (1-dir)*90;
     if (player->angle<0)

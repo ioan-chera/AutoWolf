@@ -276,7 +276,7 @@ static void ScanInfoPlane(void)
                 case 20:
                 case 21:
                 case 22:
-                    SpawnPlayer(x,y,NORTH+tile-19);
+                    SpawnPlayer(Point2D<int>::Make(x, y),NORTH+tile-19);
                     break;
 
                 case 23:
