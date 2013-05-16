@@ -37,7 +37,7 @@
 //
 // List of generic (abstract) names
 //
-typedef enum {
+enum soundnames {
 	AHHHGSND,                // 52 DIGI
 	ANGELDEATHSND,           // 77 DIGI
 	ANGELFIRESND,            // 69
@@ -142,6 +142,6 @@ typedef enum {
 	WILHELMSIGHTSND,         // 72 DIGI
 	YEAHSND,                 // 72
     LASTSNDABSTRACT
-} soundnames;
+} ;
 
 #endif

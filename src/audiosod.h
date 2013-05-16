@@ -35,7 +35,7 @@
 //
 
 // IOANCH 20130202: unification process
-typedef enum {
+enum soundnames_sod{
 	HITWALLSND_sod,              // 0
 	MISSILEHITSND_sod,           // 1
 	SELECTITEMSND_sod,           // 2
@@ -118,7 +118,7 @@ typedef enum {
 	GETSPEARSND_sod,             // 79
 	ANGELTIREDSND_sod,           // 80
 	LASTSOUND_sod
-} soundnames_sod;
+} ;
 
 //
 // Base offsets
@@ -132,7 +132,7 @@ typedef enum {
 //
 // Music names & indexes
 //
-typedef enum {
+enum musicnames_sod{
 	XFUNKIE_MUS_sod,             // 0
 	DUNGEON_MUS_sod,             // 1
 	XDEATH_MUS_sod,              // 2
@@ -158,7 +158,7 @@ typedef enum {
 	XGETYOU_MUS_sod,             // 22
 	XTOWER2_MUS_sod,             // 23
 	LASTMUSIC_sod
-} musicnames_sod;
+} ;
 
 // IOANCH 20130202: named as symbols
 #define NUMSOUNDS_sod		    LASTSOUND_sod

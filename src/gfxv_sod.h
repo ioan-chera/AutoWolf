@@ -28,7 +28,7 @@
 // IOANCH 20130302: unification
 #ifndef GFXV_SOD_H_
 #define GFXV_SOD_H_
-typedef enum {
+enum graphicnums_sod {
     // Lump Start
     C_BACKDROPPIC_sod=3,
     C_MOUSELBACKPIC_sod,                     // 4
@@ -225,7 +225,7 @@ typedef enum {
     T_ENDART1_sod,                           // 168
 
     ENUMEND_sod
-} graphicnums_sod;
+} ;
 
 //
 // Data LUMPs

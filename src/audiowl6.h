@@ -34,7 +34,7 @@
 #ifndef AUDIOWL6_H_
 #define AUDIOWL6_H_
 
-typedef enum {
+enum soundnames_wl6{
 	HITWALLSND_wl6,              // 0
 	SELECTWPNSND_wl6,            // 1
 	SELECTITEMSND_wl6,           // 2
@@ -139,7 +139,7 @@ typedef enum {
 //
 // Music names & indexes
 //
-typedef enum {
+enum musicnames_wl6{
 	CORNER_MUS_wl6,              // 0
 	DUNGEON_MUS_wl6,             // 1
 	WARMARCH_MUS_wl6,            // 2
