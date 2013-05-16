@@ -33,7 +33,7 @@ public:
 	void addSuccess();
 	void initLength(int len);
 	
-	int getValue()
+	int getValue() const
 	{
 		return value;
 	}
