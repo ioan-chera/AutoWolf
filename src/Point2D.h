@@ -25,11 +25,11 @@ public:
     T x;
     T y;
     
-    int PropertyCompressTile() const
+    int PropertySerializeTile() const
     {
         return x + (y << 8);
     }
-    void PropertyDecompressTile(int source)
+    void PropertyDeserializeTile(int source)
     {
         x = source & 0x00ff;
         y = (source & 0xff00) >> 8;
@@ -66,6 +66,11 @@ public:
         ret.x = valx;
         ret.y = valy;
         return ret;
+    }
+    Point2D<T> &operator = (T val)
+    {
+        x = y = val;
+        return *this;
     }
 };
 

@@ -114,7 +114,8 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
     MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
     
     propertyFile->putExplored(explored);
-    propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitPoint.PropertyCompressTile());
+    propertyFile->setIntValue(PROPERTY_KEY_EXITPOS,
+                              knownExitPoint.PropertySerializeTile());
 }
 
 //
@@ -149,7 +150,7 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
-            knownExitPoint.PropertyDecompressTile((int)prop);
+            knownExitPoint.PropertyDeserializeTile((int)prop);
         }
         else
         {
