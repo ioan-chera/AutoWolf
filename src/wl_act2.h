@@ -16,6 +16,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+/*
+ =============================================================================
+ 
+ WL_ACT2 DEFINITIONS
+ 
+ =============================================================================
+ */
+
 #ifndef WL_ACT2_H_
 #define WL_ACT2_H_
 
@@ -85,7 +93,7 @@ extern  statetype s_fatdeathcam2;
 // IOANCH 29.06.2012: deleted global ghosts moved to Basic
 void KillActor (objtype *ob);
 
-void SpawnDeadGuard (Point2D<int> tilePoint);
+void SpawnDeadGuard (const Point2D<int> &tilePoint);
 
 void A_DeathScream (objtype *ob);
 void SpawnBJVictory (void);

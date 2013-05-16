@@ -40,7 +40,7 @@ namespace Basic
 
 
 	// Spawns a Nazi (originally they were separate functions; no more)
-	void SpawnEnemy(classtype cl, int tilex, int tiley, int dir = 0, 
+	void SpawnEnemy(classtype cl, const Point2D<int> &tilePoint, int dir = 0,
                            Boolean patrol = false, enemy_t ghost = en_blinky);
 
 	// Checks if it's an enemy
@@ -52,17 +52,25 @@ namespace Basic
 	Boolean IsDamaging(objtype *ret, int dist);
 
 	// Generic check line
-	Boolean GenericCheckLine (int x1, int y1, int x2, int y2, 
+	Boolean GenericCheckLine (const Point2D<int> &point1,
+                              const Point2D<int> &point2,
                               Boolean solidActors = false);
     
     // Check if can knife
     objtype *CheckKnifeEnemy();
 
 	// Get coordinates
-	inline int Major(int t)
+	inline fixed Major(int t)
 	{
 		return (t << TILESHIFT) + (1 << (TILESHIFT - 1));
 	}
+    inline Point2D<fixed> Major(const Point2D<int> &p)
+    {
+        Point2D<fixed> ret;
+        ret.x = Major(p.x);
+        ret.y = Major(p.y);
+        return ret;
+    }
 
 	// Write a random name
 	void MarkovWrite(char *c, int nmax);
@@ -79,14 +87,16 @@ namespace Basic
 	}
 	
 	// get angle from dir
-	inline int DirAngle(int mx, int my, int nx, int ny)
+	inline int DirAngle(const Point2D<int> &mPoint,
+                        Point2D<int> nPoint)
 	{
-		nx = Basic::Major(nx);
-		ny = Basic::Major(ny);
+        nPoint = Basic::Major(nPoint);
 		
-		double dx = (double)(nx - mx);
-		double dy = -(double)(ny - my);
-		double ang = atan2(dy, dx);
+        Point2D<double> dPoint;
+        
+		dPoint.x = (double)(nPoint.x - mPoint.x);
+		dPoint.y = -(double)(nPoint.y - mPoint.y);
+		double ang = atan2(dPoint.y, dPoint.x);
 		int rang = (int)(180.0/PI*ang);
 		while(rang < 0)
 			rang += 360;
@@ -118,8 +128,9 @@ namespace Basic
 	
 	// ApproximateDistance
 	int ApproxDist(int dx, int dy);
+    int ApproxDist(const Point2D<int> &dPoint);
     
-    PString NewStringTildeExpand(const char *basedir);
+    PString &SetStringTildeExpand(const char *basedir, PString &dest);
 
 };
 

@@ -239,7 +239,7 @@ void InitStaticList (void)
 ===============
 */
 
-void SpawnStatic (Point2D<int> tilePoint, int type)
+void SpawnStatic (const Point2D<int> &tilePoint, int type)
 {
     // IOANCH 20130202: unification process
     struct _statinfo_t *statinfo;
@@ -313,7 +313,7 @@ void SpawnStatic (Point2D<int> tilePoint, int type)
 ===============
 */
 
-void PlaceItemType (int itemtype, Point2D<int> tilePoint)
+void PlaceItemType (int itemtype, const Point2D<int> &tilePoint)
 {
     int type;
     statobj_t *spot;
@@ -471,7 +471,7 @@ void InitDoorList (void)
 ===============
 */
 
-void SpawnDoor (Point2D<int> tilePoint, Boolean vertical, int lock)
+void SpawnDoor (const Point2D<int> &tilePoint, Boolean vertical, int lock)
 {
     word *map;
 
@@ -866,7 +866,7 @@ static int _dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 ===============
 */
 
-void PushWall (Point2D<int> checkPoint, int dir)
+void PushWall (const Point2D<int> &checkPoint, int dir)
 {
     int oldtile;
     Point2D<int> dPoint;

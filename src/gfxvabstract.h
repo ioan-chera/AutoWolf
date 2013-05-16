@@ -23,7 +23,7 @@
 #include "gfxv_wl6.h"
 #include "gfxv_sod.h"
 
-enum graphicnums_abstract
+typedef enum
 {
     BJCOLLAPSE1PIC,                      // 31
     BJCOLLAPSE2PIC,                      // 32
@@ -282,6 +282,6 @@ enum graphicnums_abstract
     TITLESCREEN_LUMP_START,
 
     ENUMEND_abstract,
-} ;
+} graphicnums_abstract;
 
 #endif

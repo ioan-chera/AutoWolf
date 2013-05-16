@@ -35,7 +35,7 @@
 //
 
 // IOANCH 20130202: unification process
-enum soundnames_sod{
+typedef enum {
 	HITWALLSND_sod,              // 0
 	MISSILEHITSND_sod,           // 1
 	SELECTITEMSND_sod,           // 2
@@ -118,7 +118,7 @@ enum soundnames_sod{
 	GETSPEARSND_sod,             // 79
 	ANGELTIREDSND_sod,           // 80
 	LASTSOUND_sod
-} ;
+} soundnames_sod;
 
 //
 // Base offsets
@@ -132,7 +132,7 @@ enum soundnames_sod{
 //
 // Music names & indexes
 //
-enum musicnames_sod{
+typedef enum {
 	XFUNKIE_MUS_sod,             // 0
 	DUNGEON_MUS_sod,             // 1
 	XDEATH_MUS_sod,              // 2
@@ -158,7 +158,7 @@ enum musicnames_sod{
 	XGETYOU_MUS_sod,             // 22
 	XTOWER2_MUS_sod,             // 23
 	LASTMUSIC_sod
-} ;
+} musicnames_sod;
 
 // IOANCH 20130202: named as symbols
 #define NUMSOUNDS_sod		    LASTSOUND_sod

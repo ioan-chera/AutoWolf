@@ -28,7 +28,7 @@
 // IOANCH 20130302: unification
 #ifndef GFXV_WL6_H_
 #define GFXV_WL6_H_
-enum graphicnums_wl6{
+typedef enum {
     // Lump Start
     H_BJPIC_wl6=3,
     H_CASTLEPIC_wl6,                         // 4
@@ -182,7 +182,7 @@ enum graphicnums_wl6{
     T_ENDART5_wl6,                           // 147
     T_ENDART6_wl6,                           // 148
     ENUMEND_wl6
-} ;
+} graphicnums_wl6;
 
 //
 // Data LUMPs

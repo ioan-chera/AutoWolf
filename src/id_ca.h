@@ -37,13 +37,13 @@
 
 //===========================================================================
 
-struct maptype
+typedef struct
 {
     int32_t planestart[3];
     word    planelength[3];
     word    width,height;
     char    name[16];
-} ;
+} maptype;
 
 //===========================================================================
 

@@ -771,7 +771,7 @@ statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_grete
 ===============
 */
 
-void SpawnDeadGuard (Point2D<int> tilePoint)
+void SpawnDeadGuard (const Point2D<int> &tilePoint)
 {
     SpawnNewObj (tilePoint.x,tilePoint.y,&s_grddie4);
     DEMOIF_SDL

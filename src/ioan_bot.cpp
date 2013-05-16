@@ -412,7 +412,8 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 			return;
 	}
 	
-	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy), Basic::Major(tx), Basic::Major(ty)))
+	if(Basic::GenericCheckLine(Basic::Major(Point2D<int>::Make(ox, oy)),
+                               Basic::Major(Point2D<int>::Make(tx, ty))))
 	{
 		explored[tx][ty] = true;
 		
@@ -801,7 +802,8 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
 		k = (ret->x - x) >> TILESHIFT;
 		j = (ret->y - y )>> TILESHIFT;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > atr::threatrange[ret->obclass] || !Basic::GenericCheckLine(ret->recordx, ret->recordy, x, y))
+		if(dist > atr::threatrange[ret->obclass]
+           || !Basic::GenericCheckLine(Point2D<int>::Make(ret->recordx, ret->recordy), Point2D<int>::Make(x, y)))
 			continue;
 
 		if(Basic::IsDamaging(ret, dist) || justexists)
@@ -1542,7 +1544,8 @@ void BotMan::DoNonCombatAI()
 	}
 	
 	// set up the target angle
-	int tangle = Basic::DirAngle(mx,my,nx,ny);
+	int tangle = Basic::DirAngle(Point2D<int>::Make(mx,my),
+                                 Point2D<int>::Make(nx,ny));
 	int dangle = Basic::CentreAngle(tangle, player->angle);
 	
 	// Non-combat mode

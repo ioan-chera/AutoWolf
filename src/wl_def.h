@@ -51,7 +51,6 @@
 // IOANCH 20130307: path length
 #define MAX_PATH_LENGTH 2048
 
-
 typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
@@ -255,29 +254,32 @@ typedef enum
 // IOANCH 25.10.2012
 // Other constants that had to be named
 //
-#define I_PLAYERHEALTH		100
-#define I_FIRSTAIDHEALTH	25
+#define I_PLAYERHEALTH          100
+#define I_FIRSTAIDHEALTH        25
 #define I_FOODHEALTH			10
-#define I_DOGFOODHEALTH		4
+#define I_DOGFOODHEALTH         4
 #define I_BLOODHEALTHTHRESHOLD	10
+
 #define I_CROSSSCORE			100
-#define I_CHALICESCORE		500
-#define I_TREASURESCORE		1000
+#define I_CHALICESCORE          500
+#define I_TREASURESCORE         1000
 #define I_CROWNSCORE			5000
+
 #define I_GUARDSCORE			100
-#define I_OFFICERSCORE		400
-#define I_MUTANTSCORE		700
+#define I_OFFICERSCORE          400
+#define I_MUTANTSCORE           700
 #define I_SSSCORE				500
-#define I_DOGSCORE			200
-#define I_BOSSSCORE			5000
-#define I_FAKEHITLERSCORE	2000
-#define I_SPECTRESCORE		200
+#define I_DOGSCORE              200
+#define I_BOSSSCORE             5000
+#define I_FAKEHITLERSCORE       2000
+#define I_SPECTRESCORE          200
+
 #define I_MAXAMMO				99
-#define I_CLIPAMMO			8
-#define I_SEMICLIPAMMO		4
+#define I_CLIPAMMO              8
+#define I_SEMICLIPAMMO          4
 #define I_BOXAMMO				25
 #define I_GUNAMMO				6
-#define I_BONUSAMMO			25
+#define I_BONUSAMMO             25
 
 
 //
@@ -295,30 +297,30 @@ typedef enum
 =============================================================================
 */
 
-typedef enum {
+enum controldir_t {
     di_north,
     di_east,
     di_south,
     di_west
-} controldir_t;
+} ;
 
-typedef enum {
+enum door_t {
     dr_normal,
     dr_lock1,
     dr_lock2,
     dr_lock3,
     dr_lock4,
     dr_elevator
-} door_t;
+} ;
 
-typedef enum {
+enum activetype {
     ac_badobject = -1,
     ac_no,
     ac_yes,
     ac_allways
-} activetype;
+} ;
 
-typedef enum {
+enum classtype {
     nothing,
     playerobj,
     inertobj,
@@ -349,9 +351,9 @@ typedef enum {
     deathobj,
     hrocketobj,
     sparkobj
-} classtype;
+} ;
 
-typedef enum {
+ enum wl_stat_t{
     none,
     block,
     bo_gibs,
@@ -373,9 +375,9 @@ typedef enum {
     bo_fullheal,
     bo_25clip,
     bo_spear
-} wl_stat_t;
+} ;
 
-typedef enum {
+enum dirtype{
     east,
     northeast,
     north,
@@ -385,34 +387,36 @@ typedef enum {
     south,
     southeast,
     nodir
-} dirtype;
+} ;
 
-
-#define NUMENEMIES  22
-typedef enum {
+enum enemy_t{
     en_guard,
     en_officer,
     en_ss,
     en_dog,
     en_boss,
+    
     en_schabbs,
     en_fake,
     en_hitler,
     en_mutant,
     en_blinky,
+    
     en_clyde,
     en_pinky,
     en_inky,
     en_gretel,
     en_gift,
+    
     en_fat,
     en_spectre,
     en_angel,
     en_trans,
     en_uber,
+    
     en_will,
     en_death
-} enemy_t;
+} ;
 
 typedef void (* statefunc) (void *);
 
@@ -528,13 +532,14 @@ enum
 };
 
 
-#define NUMWEAPONS      4
+//#define NUMWEAPONS      4
 typedef enum
 {
     wp_knife,
     wp_pistol,
     wp_machinegun,
-    wp_chaingun
+    wp_chaingun,
+    NUMWEAPONS
 } weapontype;
 
 
@@ -595,43 +600,6 @@ extern int mapon;
 /*
 =============================================================================
 
-                             WL_MAIN DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-
-/*
-=============================================================================
-
-                         WL_GAME DEFINITIONS
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
-                            WL_PLAY DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                                WL_INTER
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
                                 WL_DEBUG
 
 =============================================================================
@@ -639,64 +607,7 @@ extern int mapon;
 
 int DebugKeys (void);
 
-/*
-=============================================================================
-
-                            WL_DRAW DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                             WL_STATE DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                             WL_AGENT DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-
-/*
-=============================================================================
-
-                             WL_ACT1 DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-
 // IOANCH 20130310: modularization
-
-/*
-=============================================================================
-
-                             WL_ACT2 DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-/*
-=============================================================================
-
-                             WL_TEXT DEFINITIONS
-
-=============================================================================
-*/
-
 
 /*
 =============================================================================
@@ -714,7 +625,6 @@ void GP2X_Shutdown(void);
 #endif
 void GP2X_ButtonDown(int button);
 void GP2X_ButtonUp(int button);
-
 #endif
 
 
@@ -731,7 +641,7 @@ static inline fixed FixedMul(fixed a, fixed b)
 	return (fixed)(((int64_t)a * b + 0x8000) >> 16);
 }
 
-#define GetTicks() ((SDL_GetTicks()*7)/100)
+// IOANCH 20130516: deleted unused code
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 

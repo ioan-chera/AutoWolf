@@ -1084,7 +1084,8 @@ void DamageActor (objtype *ob, unsigned damage)
 Boolean CheckLine (objtype *ob, Boolean solidActors)
 {
     // IOANCH 20130305: DRY
-    return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y, solidActors);
+    return Basic::GenericCheckLine(Point2D<fixed>::Make(ob->x, ob->y),
+                                   Point2D<fixed>::Make(player->x, player->y), solidActors);
 }
 
 
