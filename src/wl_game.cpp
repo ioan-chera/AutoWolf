@@ -335,12 +335,12 @@ static void ScanInfoPlane(void)
                 case 71:
                 case 72:
                     // IOANCH 20130302: unification
-                    SpawnStatic(x,y,tile-23);
+                    SpawnStatic(Point2D<int>::Make(x, y),tile-23);
                     break;
                 case 73:
                 case 74:
                     if(SPEAR())
-                        SpawnStatic(x,y,tile-23);
+                        SpawnStatic(Point2D<int>::Make(x, y),tile-23);
                     break;
 
 //
@@ -772,7 +772,7 @@ void SetupGameLevel (void)
                     case 96:
                     case 98:
                     case 100:
-                        SpawnDoor (x,y,1,(tile-90)/2);
+                        SpawnDoor (Point2D<int>::Make(x, y),1,(tile-90)/2);
                         break;
                     case 91:
                     case 93:
@@ -780,7 +780,7 @@ void SetupGameLevel (void)
                     case 97:
                     case 99:
                     case 101:
-                        SpawnDoor (x,y,0,(tile-91)/2);
+                        SpawnDoor (Point2D<int>::Make(x, y),0,(tile-91)/2);
                         break;
                 }
             }

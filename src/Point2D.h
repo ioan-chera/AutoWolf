@@ -22,43 +22,50 @@
 template <typename T> class Point2D
 {
 public:
-    T tx;
-    T ty;
+    T x;
+    T y;
     
     int PropertyCompressTile() const
     {
-        return tx + (ty << 8);
+        return x + (y << 8);
     }
     void PropertyDecompressTile(int source)
     {
-        this->tx = source & 0x00ff;
-        this->ty = (source & 0xff00) >> 8;
+        x = source & 0x00ff;
+        y = (source & 0xff00) >> 8;
     }
     void SetValue(const Point2D &other)
     {
-        this->tx = other.tx;
-        this->ty = other.ty;
+        x = other.x;
+        y = other.y;
     }
-    void SetValue(T otx, T oty)
+    void SetValue(T ox, T oy)
     {
-        this->tx = otx;
-        this->ty = oty;
+        x = ox;
+        y = oy;
     }
     Boolean operator != (T value) const
     {
-        return this->tx != value || this->ty != value;
+        return x != value || y != value;
     }
     Boolean operator > (T value) const
     {
-        return this->tx > value && this->ty > value;
+        return this->x > value && this->y > value;
     }
     size_t MapUnfold(size_t shift) const
     {
-        return (ty<<shift) + tx;
+        return (y << shift) + x;
     }
     Boolean IsEqual(T valx, T valy) const
     {
-        return this->tx == valx && this->ty == valy;
+        return x == valx && y == valy;
+    }
+    static Point2D<T> Make(T valx, T valy)
+    {
+        Point2D<T> ret;
+        ret.x = valx;
+        ret.y = valy;
+        return ret;
     }
 };
 

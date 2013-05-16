@@ -845,7 +845,7 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
     //
     if (!actorat[tilex][tiley])
     {
-        PlaceItemType (itemtype, tilex,tiley);
+        PlaceItemType (itemtype, Point2D<int>::Make(tilex, tiley));
         return;
     }
 
@@ -860,7 +860,7 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
         {
             if (!actorat[x][y])
             {
-                PlaceItemType (itemtype, x,y);
+                PlaceItemType (itemtype, Point2D<int>::Make(x, y));
                 return;
             }
         }
@@ -887,30 +887,31 @@ void KillActor (objtype *ob)
     switch (ob->obclass)
     {
         case guardobj:
-            GivePoints (I_GUARDSCORE);	// IOANCH 25.10.2012: all constants started with I_
+            GivePoints (I_GUARDSCORE);
+            // IOANCH 25.10.2012: all constants started with I_
             NewState (ob,&s_grddie1);
-            PlaceItemType (bo_clip2,tilex,tiley);
+            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
             break;
 
         case officerobj:
             GivePoints (I_OFFICERSCORE);
             NewState (ob,&s_ofcdie1);
-            PlaceItemType (bo_clip2,tilex,tiley);
+            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
             break;
 
         case mutantobj:
             GivePoints (I_MUTANTSCORE);
             NewState (ob,&s_mutdie1);
-            PlaceItemType (bo_clip2,tilex,tiley);
+            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
             break;
 
         case ssobj:
             GivePoints (I_SSSCORE);
             NewState (ob,&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
-                PlaceItemType (bo_machinegun,tilex,tiley);
+                PlaceItemType (bo_machinegun,Point2D<int>::Make(tilex, tiley));
             else
-                PlaceItemType (bo_clip2,tilex,tiley);
+                PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
             break;
 
         case dogobj:
@@ -921,13 +922,13 @@ void KillActor (objtype *ob)
         case bossobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_bossdie1);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 
         case gretelobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_greteldie1);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 
         case giftobj:
@@ -982,25 +983,25 @@ void KillActor (objtype *ob)
         case transobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_transdie0);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 
         case uberobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_uberdie0);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 
         case willobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_willdie1);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 
         case deathobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_deathdie1);
-            PlaceItemType (bo_key1,tilex,tiley);
+            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
             break;
 		default:
 			;

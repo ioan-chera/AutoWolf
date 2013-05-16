@@ -21,6 +21,7 @@
 // WL_ACT1.C
 
 #include "wl_def.h"
+
 #include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_play.h"
@@ -238,21 +239,22 @@ void InitStaticList (void)
 ===============
 */
 
-void SpawnStatic (int tilex, int tiley, int type)
+void SpawnStatic (const Point2D<int> &tilePoint, int type)
 {
     // IOANCH 20130202: unification process
     struct _statinfo_t *statinfo;
     statinfo = IMPALE(statinfo);
     
     laststatobj->shapenum = statinfo[type].picnum;
-    laststatobj->tilex = tilex;
-    laststatobj->tiley = tiley;
-    laststatobj->visspot = &spotvis[tilex][tiley];
+    laststatobj->tilex = tilePoint.x;
+    laststatobj->tiley = tilePoint.y;
+    laststatobj->visspot = &spotvis[tilePoint.x][tilePoint.y];
 
     switch (statinfo[type].type)
     {
         case block:
-            actorat[tilex][tiley] = (objtype *) 64;          // consider it a blocking tile
+            actorat[tilePoint.x][tilePoint.y] = (objtype *) 64;
+            // consider it a blocking tile
         case none:
             laststatobj->flags = 0;
             break;
@@ -283,7 +285,8 @@ void SpawnStatic (int tilex, int tiley, int type)
 			// IOANCH 26.10.2012: add to list
             // ONLY if on startup, otherwise let LoadTheGame add it to list
             if(!loadedgame)
-                Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
+                Basic::AddItemToList(tilePoint.x, tilePoint.y,
+                                     laststatobj->itemnumber);
             break;
 		default:
 			;
@@ -310,7 +313,7 @@ void SpawnStatic (int tilex, int tiley, int type)
 ===============
 */
 
-void PlaceItemType (int itemtype, int tilex, int tiley)
+void PlaceItemType (int itemtype, const Point2D<int> &tilePoint)
 {
     int type;
     statobj_t *spot;
@@ -350,9 +353,9 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     // place it
     //
     spot->shapenum = statinfo[type].picnum;
-    spot->tilex = tilex;
-    spot->tiley = tiley;
-    spot->visspot = &spotvis[tilex][tiley];
+    spot->tilex = tilePoint.x;
+    spot->tiley = tilePoint.y;
+    spot->visspot = &spotvis[tilePoint.x][tilePoint.y];
     spot->flags = FL_BONUS | statinfo[type].specialFlags;
     spot->itemnumber = statinfo[type].type;
 	// IOANCH: add item to list
@@ -468,7 +471,7 @@ void InitDoorList (void)
 ===============
 */
 
-void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
+void SpawnDoor (const Point2D<int> &tilePoint, Boolean vertical, int lock)
 {
     word *map;
 
@@ -476,31 +479,32 @@ void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
         Quit ("64+ doors on level!");
 
     doorposition[doornum] = 0;              // doors start out fully closed
-    lastdoorobj->tilex = tilex;
-    lastdoorobj->tiley = tiley;
+    lastdoorobj->tilex = tilePoint.x;
+    lastdoorobj->tiley = tilePoint.y;
     lastdoorobj->vertical = vertical;
     lastdoorobj->lock = lock;
     lastdoorobj->action = dr_closed;
 
-    actorat[tilex][tiley] = (objtype *)(uintptr_t)(doornum | 0x80);   // consider it a solid wall
+    actorat[tilePoint.x][tilePoint.y] =
+    (objtype *)(uintptr_t)(doornum | 0x80);   // consider it a solid wall
 
     //
     // make the door tile a special tile, and mark the adjacent tiles
     // for door sides
     //
-    tilemap[tilex][tiley] = doornum | 0x80;
-    map = mapsegs[0] + (tiley<<mapshift) +tilex;
+    tilemap[tilePoint.x][tilePoint.y] = doornum | 0x80;
+    map = mapsegs[0] + tilePoint.MapUnfold(mapshift);
     if (vertical)
     {
         *map = *(map-1);                        // set area number
-        tilemap[tilex][tiley-1] |= 0x40;
-        tilemap[tilex][tiley+1] |= 0x40;
+        tilemap[tilePoint.x][tilePoint.y-1] |= 0x40;
+        tilemap[tilePoint.x][tilePoint.y+1] |= 0x40;
     }
     else
     {
         *map = *(map-mapwidth);                                 // set area number
-        tilemap[tilex-1][tiley] |= 0x40;
-        tilemap[tilex+1][tiley] |= 0x40;
+        tilemap[tilePoint.x-1][tilePoint.y] |= 0x40;
+        tilemap[tilePoint.x+1][tilePoint.y] |= 0x40;
     }
 
     doornum++;
@@ -862,36 +866,38 @@ static int _dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 ===============
 */
 
-void PushWall (int checkx, int checky, int dir)
+void PushWall (const Point2D<int> &checkPoint, int dir)
 {
-    int oldtile, dx, dy;
+    int oldtile;
+    Point2D<int> dPoint;
 
     if (pwallstate)
         return;
 
-    oldtile = tilemap[checkx][checky];
+    oldtile = tilemap[checkPoint.x][checkPoint.y];
     if (!oldtile)
         return;
 
-    dx = _dirs[dir][0];
-    dy = _dirs[dir][1];
+    dPoint.SetValue(_dirs[dir][0], _dirs[dir][1]);
 
-    if (actorat[checkx+dx][checky+dy])
+    if (actorat[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y])
     {
         SD_PlaySound (NOWAYSND);
         return;
     }
-    actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
+    actorat[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y] =
+    (objtype *)(uintptr_t)
+    (tilemap[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y] = oldtile);
 
     gamestate.secretcount++;
-    pwallx = checkx;
-    pwally = checky;
+    pwallx = checkPoint.x;
+    pwally = checkPoint.y;
     pwalldir = dir;
     pwallstate = 1;
     pwallpos = 0;
     pwalltile = tilemap[pwallx][pwally];
     tilemap[pwallx][pwally] = 64;
-    tilemap[pwallx+dx][pwally+dy] = 64;
+    tilemap[pwallx+dPoint.x][pwally+dPoint.y] = 64;
     *(mapsegs[1]+(pwally<<mapshift)+pwallx) = 0;   // remove P tile info
     *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex); // set correct floorcode (BrotherTank's fix)
 

@@ -1172,7 +1172,7 @@ void Cmd_Use (void)
         // pushable wall
         //
 
-        PushWall (checkx,checky,dir);
+        PushWall (Point2D<int>::Make(checkx, checky),dir);
         return;
     }
     if (!buttonheld[bt_use] && doornum == ELEVATORTILE && elevatorok)
