@@ -19,11 +19,10 @@
 #ifndef WL_AGENT_H_
 #define WL_AGENT_H_
 
-extern  short    anglefrac;
-extern  int      facecount, facetimes;
-extern  word     plux,pluy;         // player coordinates scaled to unsigned
-extern  int32_t  thrustspeed;
-extern  objtype  *LastAttacker;
+extern  short         anglefrac;
+extern  int           facecount, facetimes;
+extern  int32_t       thrustspeed;
+extern  objtype      *LastAttacker;
 
 void    Thrust (int angle, int32_t speed);
 void    SpawnPlayer (int tilex, int tiley, int dir);

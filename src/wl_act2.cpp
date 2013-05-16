@@ -2919,8 +2919,7 @@ void    A_StartDeathCam (objtype *ob)
         dist += 0x1000;
 
     } while (!CheckPosition (player));
-    plux = (word)(player->x >> UNSIGNEDSHIFT);                      // scale to fit in unsigned
-    pluy = (word)(player->y >> UNSIGNEDSHIFT);
+    
     player->tilex = (word)(player->x >> TILESHIFT);         // scale to tile values
     player->tiley = (word)(player->y >> TILESHIFT);
 
