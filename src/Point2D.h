@@ -52,6 +52,10 @@ public:
     {
         return this->x > value && this->y > value;
     }
+    Boolean operator >= (T value) const
+    {
+        return this->x >= value && this->y >= value;
+    }
     size_t MapUnfold(size_t shift) const
     {
         return (y << shift) + x;
@@ -78,6 +82,29 @@ public:
     {
         x = y = val;
         return *this;
+    }
+    Boolean InRange(T minx, T maxx, T miny, T maxy) const
+    {
+        return x >= minx && x <= maxx && y >= miny && y <= maxy;
+    }
+    Boolean InRange(T min, T max) const
+    {
+        return InRange(min, max, min, max);
+    }
+    Point2D<T> Added(T dx, T dy) const
+    {
+        Point2D<T> ret;
+        ret.x = x + dx;
+        ret.y = y + dy;
+        return ret;
+    }
+    Point2D<T> Added(const Point2D<T> &dPoint) const
+    {
+        return Added(dPoint.x, dPoint.y);
+    }
+    Point2D<T> operator + (const Point2D<T> &other) const
+    {
+        return Added(other);
     }
 };
 

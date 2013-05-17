@@ -24,15 +24,6 @@
 #include "List.h"
 #include "PathArray.h"
 
-enum BotMood
-{
-    MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
-    MOOD_DONTBACKFORSECRETS = 2,
-    MOOD_DONTHUNTTREASURE = 4,
-    MOOD_DONTHUNTNAZIS = 8,
-    MOOD_DONTHUNTSECRETS = 0x10,
-    MOOD_JUSTGOTOEXIT = 0x20,
-};
 
 // Changing static to dynamic:
 // static keyword disappears WHERE IT APPLIES TO EACH INDIVIDUAL
@@ -47,7 +38,21 @@ enum BotMood
 //
 class BotMan
 {
-protected:
+    //
+    // Mood
+    //    
+    // Daily mood for the bot. Can combine these values.
+    //
+    enum Mood
+    {
+        MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
+        MOOD_DONTBACKFORSECRETS = 2,
+        MOOD_DONTHUNTTREASURE = 4,
+        MOOD_DONTHUNTNAZIS = 8,
+        MOOD_DONTHUNTSECRETS = 0x10,
+        MOOD_JUSTGOTOEXIT = 0x20,
+    };
+    unsigned mood;
     
     //
     // SearchStage
@@ -62,31 +67,32 @@ protected:
         SSNormalLift,	// only now look for normal exit
         SSMax
     } searchstage;
+    
 	PathArray path;     // search data structure
-	Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
-	byte pressuse;	// periodic switch for triggering button-down-only commands
-	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat controllers
-	int exitx, exity;
-	objtype *threater;
+	Boolean panic;      // gun logic switch (use gatling gun to kill quickly)
+	byte pressuse;      // periodic switch for triggering button-down-only
+                        // commands
+	short retreatwaitdelay, retreatwaitcount, retreat;
+                        // retreat controllers
+	objtype *threater;  // the actor that triggered running for cover
 	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
-    unsigned mood;
     Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+    
+    Point2D<int> exitPoint;
     Point2D<int> knownExitPoint;
     
 
-	void ExploreFill(int tx, int ty, int ox, int oy,
-                            Boolean firstcall = false);
+	void ExploreFill(const Point2D<int> &tPoint, const Point2D<int> &oPoint,
+                     Boolean firstcall = false);
 
 	Boolean FindShortestPath(Boolean ignoreproj = false,
-                                    Boolean mindnazis = false,
-                                    byte retreating = 0,
-                                    Boolean knifeinsight = false);
+                             Boolean mindnazis = false,
+                             byte retreating = 0,
+                             Boolean knifeinsight = false);
 
-	void MoveStrafe(short tangle, short dangle, Boolean tryuse,
-                           byte pressuse, int nx, int ny);
-
-	Boolean ObjectOfInterest(int dx, int dy,
-                                    Boolean knifeinsight = false);
+	Boolean ObjectOfInterest(const Point2D<int> &tPoint,
+                             Boolean knifeinsight = false);
+    
 	objtype *EnemyOnTarget(Boolean solidActors = false) const;
 	objtype *EnemyVisible(short *angle, int *distance,
                                  Boolean solidActors = false);
@@ -94,12 +100,12 @@ protected:
 
 	objtype *DamageThreat(const objtype *targ) const;
 	void DoRetreat(Boolean forth = false, objtype *cause = NULL) const;
-	objtype *Crossfire(int x, int y, const objtype *objignore = NULL,
+	objtype *Crossfire(const Point2D<int> &point, const objtype *objignore = NULL,
                               Boolean justexists = false) const;
-	objtype *IsProjectile(int tx, int ty, int dist = 1,
+	objtype *IsProjectile(const Point2D<int> &tPoint, int dist = 1,
                           short *angle = NULL, int *distance = NULL) const;
-	objtype *IsEnemyBlocking(int tx, int ty) const;
-	objtype *IsEnemyNearby(int tx, int ty) const;
+	objtype *IsEnemyBlocking(const Point2D<int> &tPoint) const;
+	objtype *IsEnemyNearby(const Point2D<int> &point) const;
     
 	void MoveByStrafe();
 	void ChooseWeapon() const;
@@ -112,6 +118,11 @@ protected:
     void GetExploredData(const uint8_t *digeststring);
 public:
     
+    //
+    // BotMan
+    //
+    // Constructor
+    //
     BotMan() :
     searchstage(SSGeneral),
     panic(false),
@@ -119,18 +130,18 @@ public:
     retreatwaitdelay(0),
     retreatwaitcount(0),
     retreat(0),
-    exitx(0),
-    exity(0),
     threater(NULL),
     mood(0)
     {
         memset(explored, 0, sizeof(explored));
         knownExitPoint = 0;
+        exitPoint = 0;
     }
     
 	// Update the enemy's known position record
 	void RecordEnemyPosition(objtype *enemy);
 
+    // These two are used from outside
     objtype *damagetaken;
 	HistoryRatio shootRatio;
 
