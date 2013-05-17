@@ -839,7 +839,7 @@ void BotMan::DoRetreat(Boolean forth, objtype *cause) const
     
     for(int factor = 0; factor < 8; ++factor)
     {
-        if(player->angle > 45 * factor && player->angle <= 45 * factor + 45)
+        if(player->angle >= 45 * factor && player->angle <= 45 * factor + 45)
         {
             backx = backx_[factor];
             backy = backy_[factor];
