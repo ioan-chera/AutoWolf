@@ -17,7 +17,16 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// MASTER DEFINITIONS FILE
+//
+// Includes definitions for most important things, as well as 
+// inclusions of system headers.
+//
+// IMPORTANT: Must be the first header to include
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef WL_DEF_H
 #define WL_DEF_H
@@ -434,12 +443,11 @@ typedef struct statestruct
     uint64_t flags;
 } statetype;
 
-
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // trivial actor structure
 //
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct statstruct
 {
@@ -451,11 +459,11 @@ typedef struct statstruct
 } statobj_t;
 
 
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // door actor structure
 //
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef enum
 {
@@ -472,11 +480,11 @@ typedef struct doorstruct
 } doorobj_t;
 
 
-//--------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // thinking actor structure
 //
-//--------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct objstruct
 {
@@ -551,11 +559,11 @@ enum
     gd_hard
 };
 
-//---------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // gamestate structure
 //
-//---------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
 {
@@ -597,25 +605,21 @@ typedef enum
 extern word *mapsegs[MAPPLANES];
 extern int mapon;
 
-/*
-=============================================================================
-
-                                WL_DEBUG
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                WL_DEBUG
+//
+////////////////////////////////////////////////////////////////////////////////
 
 int DebugKeys (void);
 
 // IOANCH 20130310: modularization
 
-/*
-=============================================================================
-
-                               GP2X DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                               GP2X DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #if defined(GP2X)
 
@@ -627,14 +631,11 @@ void GP2X_ButtonDown(int button);
 void GP2X_ButtonUp(int button);
 #endif
 
-
-/*
-=============================================================================
-
-                             MISC DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                             MISC DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 static inline fixed FixedMul(fixed a, fixed b)
 {
@@ -690,14 +691,11 @@ static inline longword READLONGWORD(byte *&ptr)
     return val;
 }
 
-
-/*
-=============================================================================
-
-                           FEATURE DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                           FEATURE DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_FEATUREFLAGS
     // The currently available feature flags
@@ -712,13 +710,16 @@ static inline longword READLONGWORD(byte *&ptr)
     // to avoid interpretation as e.g. doors.
     extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
 
-    /*************************************************************
-     * Current usage of ffData... variables:
-     * ffDataTopLeft:     lower 8-bit: ShadeDefID
-     * ffDataTopRight:    FeatureFlags
-     * ffDataBottomLeft:  CloudSkyDefID or ParallaxStartTexture
-     * ffDataBottomRight: unused
-     *************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+//
+//      Current usage of ffData... variables:
+//      ffDataTopLeft:     lower 8-bit: ShadeDefID
+//      ffDataTopRight:    FeatureFlags
+//      ffDataBottomLeft:  CloudSkyDefID or ParallaxStartTexture
+//      ffDataBottomRight: unused
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
     // The feature flags are stored as a wall in the upper right corner of each level
     static inline word GetFeatureFlags()

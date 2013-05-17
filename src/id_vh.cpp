@@ -74,13 +74,14 @@ void VWB_DrawPropString(const char* string)
 	VL_UnlockSurface(curSurface);
 }
 
-/*
-=================
-=
-= VL_MungePic
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_MungePic
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 void VL_MungePic (byte *source, unsigned width, unsigned height)
 {
 	unsigned x,y,plane,size,pwidth;
@@ -136,13 +137,12 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[SPEAR.g(STARTFONT)+fontnumber]);
 }
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                Double buffer management routines
+//
+////////////////////////////////////////////////////////////////////////////////
 
-				Double buffer management routines
-
-=============================================================================
-*/
 
 //
 // VH_UpdateScreen
@@ -241,21 +241,21 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 }
 
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                        WOLFENSTEIN STUFF
+//
+////////////////////////////////////////////////////////////////////////////////
 
-						WOLFENSTEIN STUFF
 
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = LatchDrawPic
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-=====================
-=
-= LatchDrawPic
-=
-=====================
-*/
 
 void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
@@ -286,13 +286,14 @@ void FreeLatchMem()
     }
 }
 
-/*
-===================
-=
-= LoadLatchMem
-=
-===================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = LoadLatchMem
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void LoadLatchMem (void)
 {
@@ -352,20 +353,21 @@ void LoadLatchMem (void)
 
 //==========================================================================
 
-/*
-===================
-=
-= FizzleFade
-=
-= returns true if aborted
-=
-= It uses maximum-length Linear Feedback Shift Registers (LFSR) counters.
-= You can find a list of them with lengths from 3 to 168 at:
-= http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
-= Many thanks to Xilinx for this list!!!
-=
-===================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = FizzleFade
+// =
+// = returns true if aborted
+// =
+// = It uses maximum-length Linear Feedback Shift Registers (LFSR) counters.
+// = You can find a list of them with lengths from 3 to 168 at:
+// = http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
+// = Many thanks to Xilinx for this list!!!
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 // XOR masks for the pseudo-random number sequence starting with n=17 bits
 static const uint32_t rndmasks[] = {

@@ -30,7 +30,9 @@
 #ifndef SODFLAG_H_
 #define SODFLAG_H_
 //
-// SODFlag.h
+// SODFlag
+//
+// Class for Spear master flag
 //
 class SODFlag
 {
