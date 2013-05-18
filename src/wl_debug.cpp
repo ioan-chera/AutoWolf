@@ -240,7 +240,7 @@ void BasicOverhead (void)
         }
     }
 
-    VWB_Bar(player->tilex*z+offx,player->tiley*z+offy,z,z,15); // player
+    VWB_Bar(player->tilePoint.x*z+offx,player->tilePoint.y*z+offy,z,z,15); // player
 
     // resize the border to match
 
@@ -530,17 +530,17 @@ int DebugKeys (void)
         US_Print (")\ny:");  US_PrintUnsigned (player->y);
         US_Print (" (");     US_PrintUnsigned (player->y%65536);
         US_Print (")\nA:");  US_PrintUnsigned (player->angle);
-        US_Print (" X:");    US_PrintUnsigned (player->tilex);
-        US_Print (" Y:");    US_PrintUnsigned (player->tiley);
-        US_Print ("\n1:");   US_PrintUnsigned (tilemap[player->tilex][player->tiley]);
-        sprintf(str," 2:%.8X",(unsigned)(uintptr_t)actorat[player->tilex][player->tiley]); US_Print(str);
+        US_Print (" X:");    US_PrintUnsigned (player->tilePoint.x);
+        US_Print (" Y:");    US_PrintUnsigned (player->tilePoint.y);
+        US_Print ("\n1:");   US_PrintUnsigned (tilemap[player->tilePoint.x][player->tilePoint.y]);
+        sprintf(str," 2:%.8X",(unsigned)(uintptr_t)actorat[player->tilePoint.x][player->tilePoint.y]); US_Print(str);
         US_Print ("\nf 1:"); US_PrintUnsigned (player->areanumber);
-        US_Print (" 2:");    US_PrintUnsigned (MAPSPOT(Point2D<word>::Make(player->tilex, player->tiley),1));
+        US_Print (" 2:");    US_PrintUnsigned (MAPSPOT(player->tilePoint,1));
         US_Print (" 3:");
-        if ((unsigned)(uintptr_t)actorat[player->tilex][player->tiley] < 256)
-            US_PrintUnsigned (spotvis[player->tilex][player->tiley]);
+        if ((unsigned)(uintptr_t)actorat[player->tilePoint.x][player->tilePoint.y] < 256)
+            US_PrintUnsigned (spotvis[player->tilePoint.x][player->tilePoint.y]);
         else
-            US_PrintUnsigned (actorat[player->tilex][player->tiley]->flags);
+            US_PrintUnsigned (actorat[player->tilePoint.x][player->tilePoint.y]->flags);
         VW_UpdateScreen();
         IN_Ack();
         return 1;
@@ -856,12 +856,12 @@ void ViewMap (void)
     //      button0held = false;
 
 
-    maporgx = player->tilex - VIEWTILEX/2;
+    maporgx = player->tilePoint.x - VIEWTILEX/2;
     if (maporgx<0)
         maporgx = 0;
     if (maporgx>MAPSIZE-VIEWTILEX)
         maporgx=MAPSIZE-VIEWTILEX;
-    maporgy = player->tiley - VIEWTILEY/2;
+    maporgy = player->tilePoint.y - VIEWTILEY/2;
     if (maporgy<0)
         maporgy = 0;
     if (maporgy>MAPSIZE-VIEWTILEY)

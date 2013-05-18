@@ -123,15 +123,15 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
     else
         newobj->ticcount = 0;
 
-    newobj->tilex = (short) tilex;
-    newobj->tiley = (short) tiley;
+    newobj->tilePoint.x = (short) tilex;
+    newobj->tilePoint.y = (short) tiley;
     newobj->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
     newobj->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
     newobj->areanumber =
-        *(mapsegs[0] + (newobj->tiley<<mapshift)+newobj->tilex) - AREATILE;
+        *(mapsegs[0] + newobj->tilePoint.MapUnfold(mapshift)) - AREATILE;
 }
 
 
@@ -245,39 +245,39 @@ Boolean TryWalk (objtype *ob)
         switch (ob->dir)
         {
             case north:
-                ob->tiley--;
+                ob->tilePoint.y--;
                 break;
 
             case northeast:
-                ob->tilex++;
-                ob->tiley--;
+                ob->tilePoint.x++;
+                ob->tilePoint.y--;
                 break;
 
             case east:
-                ob->tilex++;
+                ob->tilePoint.x++;
                 break;
 
             case southeast:
-                ob->tilex++;
-                ob->tiley++;
+                ob->tilePoint.x++;
+                ob->tilePoint.y++;
                 break;
 
             case south:
-                ob->tiley++;
+                ob->tilePoint.y++;
                 break;
 
             case southwest:
-                ob->tilex--;
-                ob->tiley++;
+                ob->tilePoint.x--;
+                ob->tilePoint.y++;
                 break;
 
             case west:
-                ob->tilex--;
+                ob->tilePoint.x--;
                 break;
 
             case northwest:
-                ob->tilex--;
-                ob->tiley--;
+                ob->tilePoint.x--;
+                ob->tilePoint.y--;
                 break;
 			default:
 				;
@@ -291,84 +291,84 @@ Boolean TryWalk (objtype *ob)
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilex,ob->tiley-1);
+                    CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilex,ob->tiley-1);
+                    CHECKSIDE(ob->tilePoint.x,ob->tilePoint.y-1);
                 }
-                ob->tiley--;
+                ob->tilePoint.y--;
                 break;
 
             case northeast:
-                CHECKDIAG(ob->tilex+1,ob->tiley-1);
-                CHECKDIAG(ob->tilex+1,ob->tiley);
-                CHECKDIAG(ob->tilex,ob->tiley-1);
-                ob->tilex++;
-                ob->tiley--;
+                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y-1);
+                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
+                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
+                ob->tilePoint.x++;
+                ob->tilePoint.y--;
                 break;
 
             case east:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilex+1,ob->tiley);
+                    CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilex+1,ob->tiley);
+                    CHECKSIDE(ob->tilePoint.x+1,ob->tilePoint.y);
                 }
-                ob->tilex++;
+                ob->tilePoint.x++;
                 break;
 
             case southeast:
-                CHECKDIAG(ob->tilex+1,ob->tiley+1);
-                CHECKDIAG(ob->tilex+1,ob->tiley);
-                CHECKDIAG(ob->tilex,ob->tiley+1);
-                ob->tilex++;
-                ob->tiley++;
+                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y+1);
+                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
+                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
+                ob->tilePoint.x++;
+                ob->tilePoint.y++;
                 break;
 
             case south:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilex,ob->tiley+1);
+                    CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilex,ob->tiley+1);
+                    CHECKSIDE(ob->tilePoint.x,ob->tilePoint.y+1);
                 }
-                ob->tiley++;
+                ob->tilePoint.y++;
                 break;
 
             case southwest:
-                CHECKDIAG(ob->tilex-1,ob->tiley+1);
-                CHECKDIAG(ob->tilex-1,ob->tiley);
-                CHECKDIAG(ob->tilex,ob->tiley+1);
-                ob->tilex--;
-                ob->tiley++;
+                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y+1);
+                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
+                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
+                ob->tilePoint.x--;
+                ob->tilePoint.y++;
                 break;
 
             case west:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilex-1,ob->tiley);
+                    CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilex-1,ob->tiley);
+                    CHECKSIDE(ob->tilePoint.x-1,ob->tilePoint.y);
                 }
-                ob->tilex--;
+                ob->tilePoint.x--;
                 break;
 
             case northwest:
-                CHECKDIAG(ob->tilex-1,ob->tiley-1);
-                CHECKDIAG(ob->tilex-1,ob->tiley);
-                CHECKDIAG(ob->tilex,ob->tiley-1);
-                ob->tilex--;
-                ob->tiley--;
+                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y-1);
+                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
+                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
+                ob->tilePoint.x--;
+                ob->tilePoint.y--;
                 break;
 
             case nodir:
@@ -389,7 +389,7 @@ Boolean TryWalk (objtype *ob)
 #endif
 
     ob->areanumber =
-        *(mapsegs[0] + (ob->tiley<<mapshift)+ob->tilex) - AREATILE;
+        *(mapsegs[0] + ob->tilePoint.MapUnfold(mapshift)) - AREATILE;
 
     ob->distance = TILEGLOBAL;
     return true;
@@ -438,8 +438,8 @@ void SelectDodgeDir (objtype *ob)
     else
         turnaround=opposite[ob->dir];
 
-    deltax = player->tilex - ob->tilex;
-    deltay = player->tiley - ob->tiley;
+    deltax = player->tilePoint.x - ob->tilePoint.x;
+    deltay = player->tilePoint.y - ob->tilePoint.y;
 
     //
     // arange 5 direction choices in order of preference
@@ -545,8 +545,8 @@ void SelectChaseDir (objtype *ob)
     olddir=ob->dir;
     turnaround=opposite[olddir];
 
-    deltax=player->tilex - ob->tilex;
-    deltay=player->tiley - ob->tiley;
+    deltax=player->tilePoint.x - ob->tilePoint.x;
+    deltay=player->tilePoint.y - ob->tilePoint.y;
 
     d[1]=nodir;
     d[2]=nodir;
@@ -652,8 +652,8 @@ void SelectRunDir (objtype *ob)
     dirtype tdir;
 
 
-    deltax=player->tilex - ob->tilex;
-    deltay=player->tiley - ob->tiley;
+    deltax=player->tilePoint.x - ob->tilePoint.x;
+    deltay=player->tilePoint.y - ob->tilePoint.y;
 
     if (deltax<0)
         d[1]= east;
@@ -822,24 +822,24 @@ moveok:
     ob->distance -=move;
 }
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                STUFF
+//
+////////////////////////////////////////////////////////////////////////////////
 
-                                STUFF
 
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = DropItem
+// =
+// = Tries to drop a bonus item somewhere in the tiles surrounding the
+// = given tilex/tiley
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= DropItem
-=
-= Tries to drop a bonus item somewhere in the tiles surrounding the
-= given tilex/tiley
-=
-===============
-*/
 
 void DropItem (wl_stat_t itemtype, int tilex, int tiley)
 {
@@ -886,8 +886,8 @@ void KillActor (objtype *ob)
 {
     int     tilex,tiley;
 
-    tilex = ob->tilex = (word)(ob->x >> TILESHIFT);         // drop item on center
-    tiley = ob->tiley = (word)(ob->y >> TILESHIFT);
+    tilex = ob->tilePoint.x = (word)(ob->x >> TILESHIFT);         // drop item on center
+    tiley = ob->tilePoint.y = (word)(ob->y >> TILESHIFT);
 
     switch (ob->obclass)
     {
@@ -1017,7 +1017,7 @@ void KillActor (objtype *ob)
 	Basic::livingNazis.remove(ob);
 	
     ob->flags &= ~FL_SHOOTABLE;
-    actorat[ob->tilex][ob->tiley] = NULL;
+    actorat[ob->tilePoint.x][ob->tilePoint.y] = NULL;
     ob->flags |= FL_NONMARK;
 }
 

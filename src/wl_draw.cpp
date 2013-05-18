@@ -904,7 +904,7 @@ void DrawScaleds (void)
         if ((visptr->shapenum = obj->state->shapenum)==0)
             continue;                                               // no shape
 
-        spotloc = (obj->tilex<<mapshift)+obj->tiley;   // optimize: keep in struct?
+        spotloc = (obj->tilePoint.x<<mapshift)+obj->tilePoint.y;   // optimize: keep in struct?
         visspot = &spotvis[0][0]+spotloc;
         tilespot = &tilemap[0][0]+spotloc;
 
@@ -1519,7 +1519,7 @@ void    ThreeDRefresh (void)
 // clear out the traced array
 //
     memset(spotvis,0,maparea);
-    spotvis[player->tilex][player->tiley] = 1;
+    spotvis[player->tilePoint.x][player->tilePoint.y] = 1;
     // Detect all sprites over player fix
 
     vbuf = VL_LockSurface(screenBuffer);

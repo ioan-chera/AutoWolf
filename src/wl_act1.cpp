@@ -557,12 +557,12 @@ static void _CloseDoor (int door)
     if (actorat[tilex][tiley])
         return;
 
-    if (player->tilex == tilex && player->tiley == tiley)
+    if (player->tilePoint.x == tilex && player->tilePoint.y == tiley)
         return;
 
     if (doorobjlist[door].vertical)
     {
-        if ( player->tiley == tiley )
+        if ( player->tilePoint.y == tiley )
         {
             if ( ((player->x+MINDIST) >>TILESHIFT) == tilex )
                 return;
@@ -578,7 +578,7 @@ static void _CloseDoor (int door)
     }
     else if (!doorobjlist[door].vertical)
     {
-        if (player->tilex == tilex)
+        if (player->tilePoint.x == tilex)
         {
             if ( ((player->y+MINDIST) >>TILESHIFT) == tiley )
                 return;
@@ -758,7 +758,7 @@ static void _DoorClosing (int door)
     tiley = doorobjlist[door].tiley;
 
     if ( ((int)(uintptr_t)actorat[tilex][tiley] != (door | 0x80))
-        || (player->tilex == tilex && player->tiley == tiley) )
+        || (player->tilePoint.x == tilex && player->tilePoint.y == tiley) )
     {                       // something got inside the door
         OpenDoor (door);
         return;
@@ -904,7 +904,7 @@ void PushWall (const Point2D<int> &checkPoint, int dir)
     tilemap[pwallx][pwally] = 64;
     tilemap[pwallx+dPoint.x][pwally+dPoint.y] = 64;
     *(mapsegs[1]+(pwally<<mapshift)+pwallx) = 0;   // remove P tile info
-    *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex); // set correct floorcode (BrotherTank's fix)
+    *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+player->tilePoint.MapUnfold(mapshift)); // set correct floorcode (BrotherTank's fix)
 
     SD_PlaySound (PUSHWALLSND);
 }

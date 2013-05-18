@@ -1077,10 +1077,10 @@ void Thrust (int angle, int32_t speed)
 
     ClipMove(player,xmove,ymove);
 
-    player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
-    player->tiley = (short)(player->y >> TILESHIFT);
+    player->tilePoint.x = (short)(player->x >> TILESHIFT);                // scale to tile values
+    player->tilePoint.y = (short)(player->y >> TILESHIFT);
 
-    offset = (player->tiley<<mapshift)+player->tilex;
+    offset = player->tilePoint.MapUnfold(mapshift);
     player->areanumber = *(mapsegs[0] + offset) -AREATILE;
 
     if (*(mapsegs[1] + offset) == EXITTILE)
@@ -1132,7 +1132,8 @@ void Cmd_Fire (void)
 
 void Cmd_Use (void)
 {
-    int     checkx,checky,doornum,dir;
+    Point2D<int>checkPoint;
+    int     doornum,dir;
     Boolean elevatorok;
 
     //
@@ -1140,41 +1141,37 @@ void Cmd_Use (void)
     //
     if (player->angle < ANGLES/8 || player->angle > 7*ANGLES/8)
     {
-        checkx = player->tilex + 1;
-        checky = player->tiley;
+        checkPoint = player->tilePoint.Added(1, 0);
         dir = di_east;
         elevatorok = true;
     }
     else if (player->angle < 3*ANGLES/8)
     {
-        checkx = player->tilex;
-        checky = player->tiley-1;
+        checkPoint = player->tilePoint.Added(0, -1);
         dir = di_north;
         elevatorok = false;
     }
     else if (player->angle < 5*ANGLES/8)
     {
-        checkx = player->tilex - 1;
-        checky = player->tiley;
+        checkPoint = player->tilePoint.Added(-1, 0);
         dir = di_west;
         elevatorok = true;
     }
     else
     {
-        checkx = player->tilex;
-        checky = player->tiley + 1;
+        checkPoint = player->tilePoint.Added(0, 1);
         dir = di_south;
         elevatorok = false;
     }
 
-    doornum = tilemap[checkx][checky];
-    if (*(mapsegs[1]+(checky<<mapshift)+checkx) == PUSHABLETILE)
+    doornum = tilemap[checkPoint.x][checkPoint.y];
+    if (*(mapsegs[1]+checkPoint.MapUnfold(mapshift)) == PUSHABLETILE)
     {
         //
         // pushable wall
         //
 
-        PushWall (Point2D<int>::Make(checkx, checky),dir);
+        PushWall (checkPoint,dir);
         return;
     }
     if (!buttonheld[bt_use] && doornum == ELEVATORTILE && elevatorok)
@@ -1184,8 +1181,8 @@ void Cmd_Use (void)
         //
         buttonheld[bt_use] = true;
 
-        tilemap[checkx][checky]++;              // flip switch
-        if (*(mapsegs[0]+(player->tiley<<mapshift)+player->tilex) == ALTELEVATORTILE)
+        tilemap[checkPoint.x][checkPoint.y]++;              // flip switch
+        if (*(mapsegs[0]+player->tilePoint.MapUnfold(mapshift)) == ALTELEVATORTILE)
             playstate = ex_secretlevel;
         else
             playstate = ex_completed;
@@ -1201,31 +1198,30 @@ void Cmd_Use (void)
         SD_PlaySound (DONOTHINGSND);
 }
 
-/*
-=============================================================================
-
-                                PLAYER CONTROL
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                PLAYER CONTROL
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
 
-/*
-===============
-=
-= SpawnPlayer
-=
-===============
-*/
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SpawnPlayer
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void SpawnPlayer (const Point2D<int> &tilePoint, int dir)
 {
     player->obclass = playerobj;
     player->active = ac_yes;
-    player->tilex = tilePoint.x;
-    player->tiley = tilePoint.y;
-    player->areanumber = (byte) *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex);
+    player->tilePoint = tilePoint;
+    player->areanumber = (byte) *(mapsegs[0]+player->tilePoint.MapUnfold(mapshift));
     player->x = ((int32_t)tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
     player->y = ((int32_t)tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
     player->state = &s_player;
@@ -1239,17 +1235,16 @@ void SpawnPlayer (const Point2D<int> &tilePoint, int dir)
 }
 
 
-//===========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = T_KnifeAttack
+// =
+// = Update player hands, and try to do damage when the proper frame is reached
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= T_KnifeAttack
-=
-= Update player hands, and try to do damage when the proper frame is reached
-=
-===============
-*/
 
 // IOANCH: modified to use another function
 void    KnifeAttack (objtype *ob)
@@ -1332,8 +1327,8 @@ void    GunAttack (objtype *ob)
     //
     // hit something
     //
-    dx = ABS(closest->tilex - player->tilex);
-    dy = ABS(closest->tiley - player->tiley);
+    dx = ABS(closest->tilePoint.x - player->tilePoint.x);
+    dy = ABS(closest->tilePoint.y - player->tilePoint.y);
     dist = dx>dy ? dx:dy;
     if (dist<2)
         damage = US_RndT() / 4;
@@ -1381,7 +1376,7 @@ void VictorySpin (void)
             player->angle = 270;
     }
 
-    desty = (((int32_t)player->tiley-5)<<TILESHIFT)-0x3000;
+    desty = (((int32_t)player->tilePoint.y-5)<<TILESHIFT)-0x3000;
 
     if (player->y > desty)
     {
@@ -1424,8 +1419,8 @@ void    T_Attack (objtype *ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
     
-    player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
-    player->tiley = (short)(player->y >> TILESHIFT);
+    player->tilePoint.x = (short)(player->x >> TILESHIFT);                // scale to tile values
+    player->tilePoint.y = (short)(player->y >> TILESHIFT);
 
     //
     // change frame and fire
@@ -1521,6 +1516,6 @@ void    T_Player (objtype *ob)
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
     
-    player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
-    player->tiley = (short)(player->y >> TILESHIFT);
+    player->tilePoint.x = (short)(player->x >> TILESHIFT);                // scale to tile values
+    player->tilePoint.y = (short)(player->y >> TILESHIFT);
 }

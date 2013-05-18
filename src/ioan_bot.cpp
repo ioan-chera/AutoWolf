@@ -122,7 +122,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 void BotMan::GetExploredData(const uint8_t *digeststring)
 {
     // see if folder exists in AutoWolf/Maps
-	memset(explored, 0, sizeof(maparea * sizeof(Boolean)));
+	memset(explored, 0, sizeof(explored));
 	
 	// now to write the file
 	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
@@ -318,9 +318,9 @@ Boolean BotMan::ObjectOfInterest(const Point2D<int> &tPoint,
         if(*(mapsegs[1] + (tPoint + tPointOfs).MapUnfold(mapshift))
            == PUSHABLETILE)
         {
-            Point2D<int> tPoint2Ofs = tPoint.Added(2 * tPointOfs.x,
+            const Point2D<int> &tPoint2Ofs = tPoint.Added(2 * tPointOfs.x,
                                                    2 * tPointOfs.y);
-            Point2D<int> tPoint3Ofs = tPoint.Added(3 * tPointOfs.x,
+            const Point2D<int> &tPoint3Ofs = tPoint.Added(3 * tPointOfs.x,
                                                    3 * tPointOfs.y);
 			if(!actorat[tPoint2Ofs.x][tPoint2Ofs.y]
                && tPoint2Ofs.InRange(0, MAPSIZE - 1))
@@ -393,7 +393,8 @@ Boolean BotMan::ObjectOfInterest(const Point2D<int> &tPoint,
 //
 // Recursively explores from the given origin
 //
-void BotMan::ExploreFill(const Point2D<int> &tPoint, const Point2D<int> &oPoint,
+void BotMan::ExploreFill(const Point2D<int> &tPoint,
+                         const Point2D<int> &oPoint,
                          Boolean firstcall)
 {
     if(!tPoint.InRange(0, MAPSIZE - 1))
@@ -419,11 +420,13 @@ void BotMan::ExploreFill(const Point2D<int> &tPoint, const Point2D<int> &oPoint,
 	if(Basic::GenericCheckLine(oPoint, tPoint))
 	{
 		explored[tPoint.x][tPoint.y] = true;
+        
+        static Point2D<int> temp;
 		
-        ExploreFill(tPoint.Added(-1, 0), oPoint);
-        ExploreFill(tPoint.Added( 1, 0), oPoint);
-        ExploreFill(tPoint.Added( 0,-1), oPoint);
-        ExploreFill(tPoint.Added( 0, 1), oPoint);
+        ExploreFill(temp.Set(tPoint.x - 1, tPoint.y), oPoint);
+        ExploreFill(temp.Set(tPoint.x + 1, tPoint.y), oPoint);
+        ExploreFill(temp.Set(tPoint.x, tPoint.y - 1), oPoint);
+        ExploreFill(temp.Set(tPoint.x, tPoint.y + 1), oPoint);
 	}
 }
 
@@ -438,21 +441,20 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 	int j;
 	
 	// if stepped and reached on a former enemy position, remove it
-	enemyrecord[player->tilex][player->tiley].removeAll();
+	enemyrecord[player->tilePoint.x][player->tilePoint.y].removeAll();
 	
 	// if stepped on unexplored terrain, do a scan
-	if(!explored[player->tilex][player->tiley])
-		ExploreFill(Point2D<int>::Make(player->tilex, player->tiley),
-                    Point2D<int>::Make(player->tilex, player->tiley), true);
+	if(!explored[player->tilePoint.x][player->tilePoint.y])
+		ExploreFill(player->tilePoint, player->tilePoint, true);
 
 	path.makeEmpty();
 	if(retreating && threater != NULL)
-		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
+		path.addStartNode(player->tilePoint.x, player->tilePoint.y, threater->tilePoint.x, threater->tilePoint.y, true);
 	else if(mood & MOOD_JUSTGOTOEXIT && knownExitPoint > -1)
-        path.addStartNode(player->tilex, player->tiley,
+        path.addStartNode(player->tilePoint.x, player->tilePoint.y,
                           knownExitPoint.x, knownExitPoint.y);
     else
-		path.addStartNode(player->tilex, player->tiley);
+		path.addStartNode(player->tilePoint.x, player->tilePoint.y);
 
 	int imin, ifound;
 	int tx, ty, cx, cy;
@@ -552,13 +554,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 			byte door = tilemap[cx][cy];
 			
 			// This checks for any blocking device: refactor it
-			if((check && !ISPOINTER(check) && !(door & 0x80)) ||
-               ((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && 
-                !ignoreproj && IsProjectile(Point2D<int>::Make(cx, cy), 1)) ||
-               (mindnazis && (player->tilex != tx || player->tiley != ty || 
-                              (check && ISPOINTER(check) && 
-                               check->flags & FL_SHOOTABLE)) && 
-                IsEnemyBlocking(Point2D<int>::Make(cx, cy))))
+			if((check && !ISPOINTER(check) && !(door & 0x80)) || ((abs(cx - player->tilePoint.x) > 1 || abs(cy - player->tilePoint.y) > 1) && !ignoreproj && IsProjectile(Point2D<int>::Make(cx, cy), 1)) || (mindnazis && (!player->tilePoint.IsEqual(tx, ty) || (check && ISPOINTER(check) && check->flags & FL_SHOOTABLE)) && IsEnemyBlocking(Point2D<int>::Make(cx, cy))))
 			{
 				continue;	// solid, can't be passed
 			}
@@ -604,7 +600,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 				tentative_g_add <<= 2;
 			
 			if(retreating && threater != NULL)
-				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
+				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilePoint.x, threater->tilePoint.y, true);
 			else if(mood & MOOD_JUSTGOTOEXIT && knownExitPoint > -1)
                 path.updateNode(ifound, imin, cx, cy, tentative_g_add,
                                 knownExitPoint.x, knownExitPoint.y);
@@ -688,7 +684,7 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 	}
 	enemy->recordx = enemy->x;
 	enemy->recordy = enemy->y;
-	enemyrecord[enemy->tilex][enemy->tiley].add(enemy);
+	enemyrecord[enemy->tilePoint.x][enemy->tilePoint.y].add(enemy);
 }
 //
 // BotMan::EnemyVisible
@@ -697,7 +693,7 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 //
 objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 {
-	int tx = player->tilex, ty = player->tiley;
+	int tx = player->tilePoint.x, ty = player->tilePoint.y;
 	int i, j, k, distmin;
 	objtype *ret, *retmin = NULL;
 	short angmin;
@@ -708,8 +704,8 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		k = abs(ret->tilex - tx);
-		j = abs(ret->tiley - ty);
+		k = abs(ret->tilePoint.x - tx);
+		j = abs(ret->tilePoint.y - ty);
 		i = k > j ? k : j;
 
 		if(i > 15)
@@ -829,7 +825,7 @@ void BotMan::DoRetreat(Boolean forth, objtype *cause) const
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
 	int j, backx, backy, sidex, sidey,
-        tx = player->tilex, ty = player->tiley, dir;
+        tx = player->tilePoint.x, ty = player->tilePoint.y, dir;
     
     const int backx_[] = {-neg, 0,    0,   neg, neg,  0,    0,    -neg};
     const int backy_[] = {0,    neg,  neg, 0,   0,    -neg, -neg, 0};
@@ -947,7 +943,7 @@ objtype *BotMan::IsProjectile(const Point2D<int> &tPoint, int dist, short *angle
 	for(ret = (objtype *)Basic::thrownProjectiles.firstObject(); ret;
 		ret = (objtype *)Basic::thrownProjectiles.nextObject())
 	{
-		if(abs(ret->tilex - tPoint.x) <= dist && abs(ret->tiley - tPoint.y) <= dist)
+		if(abs(ret->tilePoint.x - tPoint.x) <= dist && abs(ret->tilePoint.y - tPoint.y) <= dist)
 		{
 			switch(ret->obclass)
 			{
@@ -1026,7 +1022,7 @@ objtype *BotMan::IsEnemyNearby(const Point2D<int> &tPoint) const
 	
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		if(abs(ret->tilex - tPoint.x) <= 1 && abs(ret->tiley - tPoint.y) <= 1)
+		if(abs(ret->tilePoint.x - tPoint.x) <= 1 && abs(ret->tilePoint.y - tPoint.y) <= 1)
 			return ret;
 	}
 	return NULL;
@@ -1050,8 +1046,8 @@ void BotMan::MoveByStrafe()
 	int nx, ny, mx, my;
 	Boolean tryuse = false;	// whether to try using
 	
-	mx = player->tilex;
-	my = player->tiley;
+	mx = player->tilePoint.x;
+	my = player->tilePoint.y;
 	
 	// elevator
 	byte tile;
@@ -1176,8 +1172,8 @@ void BotMan::MoveByStrafe()
 		buttonstate[bt_strafe] = true;
 		// straight line: can strafe now
 		fixed centx, centy, cento, plro;
-		centx = (player->tilex << TILESHIFT);
-		centy = (player->tiley << TILESHIFT);
+		centx = (player->tilePoint.x << TILESHIFT);
+		centy = (player->tilePoint.y << TILESHIFT);
 		
 		switch(tangle)
 		{
@@ -1382,7 +1378,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	
 	if(!check2)
 	{
-		check2 = IsProjectile(Point2D<int>::Make(player->tilex, player->tiley),
+		check2 = IsProjectile(Point2D<int>::Make(player->tilePoint.x, player->tilePoint.y),
                               2, &pangle, &proj);
 		proj = 1;
 	}
@@ -1427,7 +1423,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 		retreat = 0;
 	
 	if(!check && dangle >= -5 && dangle <= 5 && retreat <= 0 &&
-       !IsEnemyNearby(Point2D<int>::Make(player->tilex, player->tiley)))
+       !IsEnemyNearby(player->tilePoint))
 	{
 		// Do NOT charge if there's a risk ahead!
 		fixed plx = player->x, ply = player->y;
@@ -1489,7 +1485,7 @@ void BotMan::DoNonCombatAI()
 		waitpwall = true;
 	
 	// found path to exit
-	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
+	int nowon = path.pathCoordsIndex(player->tilePoint.x, player->tilePoint.y);
 	
 	if(nowon < 0 || (!pwallstate && waitpwall && !(mood & MOOD_DONTBACKFORSECRETS)))
 	{

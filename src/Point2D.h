@@ -24,7 +24,6 @@ template <typename T> class Point2D
 public:
     T x;
     T y;
-    
     int PropertySerializeTile() const
     {
         return x + (y << 8);
@@ -43,6 +42,12 @@ public:
     {
         x = ox;
         y = oy;
+    }
+    template<typename W> Point2D<T> &operator = (const Point2D<W> &other)
+    {
+        x = (T)other.x;
+        y = (T)other.y;
+        return *this;
     }
     Boolean operator != (T value) const
     {
@@ -98,6 +103,12 @@ public:
         ret.y = y + dy;
         return ret;
     }
+    Point2D<T> &Set(T ox, T oy)
+    {
+        x = ox;
+        y = oy;
+        return *this;
+    }
     Point2D<T> Added(const Point2D<T> &dPoint) const
     {
         return Added(dPoint.x, dPoint.y);
@@ -105,6 +116,10 @@ public:
     Point2D<T> operator + (const Point2D<T> &other) const
     {
         return Added(other);
+    }
+    template<typename W> operator Point2D<W>()
+    {
+        return {(W)x, (W)y};
     }
 };
 

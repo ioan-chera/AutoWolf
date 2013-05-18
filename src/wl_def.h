@@ -501,7 +501,8 @@ typedef struct objstruct
     dirtype     dir;
 
     fixed       x,y;
-    word        tilex,tiley;
+    
+    Point2D<word> tilePoint;
 	fixed		recordx, recordy;	// IOANCH 20121211: record position for the bot
     byte        areanumber;
 

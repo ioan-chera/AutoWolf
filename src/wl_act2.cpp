@@ -167,8 +167,7 @@ void A_Smoke (objtype *ob)
         newobj->state = &s_smoke1;
     newobj->ticcount = 6;
 
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
+    newobj->tilePoint = ob->tilePoint;
     newobj->x = ob->x;
     newobj->y = ob->y;
     newobj->obclass = inertobj;
@@ -296,8 +295,8 @@ void T_Projectile (objtype *ob)
         return;
     }
 
-    ob->tilex = (short)(ob->x >> TILESHIFT);
-    ob->tiley = (short)(ob->y >> TILESHIFT);
+    ob->tilePoint.x = (short)(ob->x >> TILESHIFT);
+    ob->tilePoint.y = (short)(ob->y >> TILESHIFT);
 }
 
 
@@ -999,8 +998,8 @@ void A_UShoot (objtype *ob)
 
     A_Shoot (ob);
 
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs(ob->tilePoint.x - player->tilePoint.x);
+    dy = abs(ob->tilePoint.y - player->tilePoint.y);
     dist = dx>dy ? dx : dy;
     if (dist <= 1)
         TakeDamage (10,ob);
@@ -1157,8 +1156,7 @@ void A_Launch (objtype *ob)
     newobj->state = &s_rocket;
     newobj->ticcount = 1;
 
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
+    newobj->tilePoint = ob->tilePoint;
     newobj->x = ob->x;
     newobj->y = ob->y;
     newobj->obclass = rocketobj;
@@ -1450,8 +1448,8 @@ void T_ProjectileBossChase(objtype *ob)
     Boolean dodge;
 	
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs(ob->tilePoint.x - player->tilePoint.x);
+    dy = abs(ob->tilePoint.y - player->tilePoint.y);
     dist = dx>dy ? dx : dy;
 	
     if (CheckLine(ob))                                              // got a shot at player?
@@ -1534,8 +1532,8 @@ void T_ProjectileBossChase(objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
 		
         move -= ob->distance;
 		
@@ -1757,8 +1755,7 @@ void _MissileThrow(objtype *ob, statetype *state, classtype cl,
     newobj->state = state;
     newobj->ticcount = 1;
     
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
+    newobj->tilePoint = ob->tilePoint;
     newobj->x = ob->x;
     newobj->y = ob->y;
     newobj->obclass = cl;
@@ -1988,7 +1985,7 @@ void A_HitlerMorph (objtype *ob)
 {
     short hitpoints[4]={500,700,800,900};
 
-    SpawnNewObj (ob->tilex,ob->tiley,&s_hitlerchase1);
+    SpawnNewObj (ob->tilePoint.x,ob->tilePoint.y,&s_hitlerchase1);
     newobj->speed = SPDPATROL*5;
 
     newobj->x = ob->x;
@@ -2050,8 +2047,7 @@ void A_FakeFire (objtype *ob)
     newobj->state = &s_fire1;
     newobj->ticcount = 1;
 
-    newobj->tilex = ob->tilex;
-    newobj->tiley = ob->tiley;
+    newobj->tilePoint = ob->tilePoint;
     newobj->x = ob->x;
     newobj->y = ob->y;
     newobj->dir = nodir;
@@ -2121,8 +2117,8 @@ void T_Fake (objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
 
         move -= ob->distance;
 
@@ -2186,8 +2182,8 @@ void T_Chase (objtype *ob)
 	 if (CheckLine(ob))      // got a shot at player?
     {
         ob->hidden = false;
-        dx = abs(ob->tilex - player->tilex);
-        dy = abs(ob->tiley - player->tiley);
+        dx = abs(ob->tilePoint.x - player->tilePoint.x);
+        dy = abs(ob->tilePoint.y - player->tilePoint.y);
         dist = dx>dy ? dx : dy;
 
 #ifdef PLAYDEMOLIKEORIGINAL
@@ -2276,8 +2272,8 @@ void T_Chase (objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
 
         move -= ob->distance;
 
@@ -2328,8 +2324,8 @@ void T_Ghosts (objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
 
         move -= ob->distance;
 
@@ -2398,8 +2394,8 @@ void T_DogChase (objtype *ob)
         //
         // fix position to account for round off during moving
         //
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
 
         move -= ob->distance;
 
@@ -2433,7 +2429,7 @@ void SelectPathDir (objtype *ob)
 {
     unsigned spot;
 
-    spot = MAPSPOT(Point2D<word>::Make(ob->tilex,ob->tiley),1)-ICONARROWS;
+    spot = MAPSPOT(ob->tilePoint,1)-ICONARROWS;
 
     if (spot<8)
     {
@@ -2496,15 +2492,15 @@ void T_Path (objtype *ob)
             break;
         }
 
-        if (ob->tilex>MAPSIZE || ob->tiley>MAPSIZE)
+        if (ob->tilePoint.x>MAPSIZE || ob->tilePoint.y>MAPSIZE)
         {
             sprintf (str, "T_Path hit a wall at %u,%u, dir %u",
-                ob->tilex,ob->tiley,ob->dir);
+                ob->tilePoint.x,ob->tilePoint.y,ob->dir);
             Quit (str);
         }
 
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
         move -= ob->distance;
 
         SelectPathDir (ob);
@@ -2548,8 +2544,8 @@ void A_Shoot (objtype *ob)
     if (!CheckLine (ob))                    // player is not behind a wall
         return;
         
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs(ob->tilePoint.x - player->tilePoint.x);
+    dy = abs(ob->tilePoint.y - player->tilePoint.y);
     dist = dx>dy ? dx:dy;
 
     if (ob->obclass == ssobj || ob->obclass == bossobj)
@@ -2709,7 +2705,7 @@ statetype s_deathcam            = {false,0,0,NULL,NULL,NULL};
 
 void SpawnBJVictory (void)
 {
-    SpawnNewObj (player->tilex,player->tiley+1,&s_bjrun1);
+    SpawnNewObj (player->tilePoint.x,player->tilePoint.y+1,&s_bjrun1);
     newobj->x = player->x;
     newobj->y = player->y;
     newobj->obclass = bjobj;
@@ -2742,8 +2738,8 @@ void T_BJRun (objtype *ob)
         }
 
 
-        ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;
-        ob->y = ((int32_t)ob->tiley<<TILESHIFT)+TILEGLOBAL/2;
+        ob->x = ((int32_t)ob->tilePoint.x<<TILESHIFT)+TILEGLOBAL/2;
+        ob->y = ((int32_t)ob->tilePoint.y<<TILESHIFT)+TILEGLOBAL/2;
         move -= ob->distance;
 
         SelectPathDir (ob);
@@ -2925,8 +2921,8 @@ void    A_StartDeathCam (objtype *ob)
 
     } while (!CheckPosition (player));
     
-    player->tilex = (word)(player->x >> TILESHIFT);         // scale to tile values
-    player->tiley = (word)(player->y >> TILESHIFT);
+    player->tilePoint.x = (word)(player->x >> TILESHIFT);         // scale to tile values
+    player->tilePoint.y = (word)(player->y >> TILESHIFT);
 
     //
     // go back to the game

@@ -139,24 +139,25 @@ byte Basic::NextObjectAt(int tx, int ty)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnStand (classtype which, int tilex, int tiley, int dir)
+static objtype *_SpawnStand (classtype which, const Point2D<int> &tilePoint,
+                             int dir)
 {
     word *map;
     word tile;
     
     if(atr::states[which].stand)
     {
-        SpawnNewObj(tilex, tiley, atr::states[which].stand);
+        SpawnNewObj(tilePoint.x, tilePoint.y, atr::states[which].stand);
         if(atr::speeds[which].patrol >= 0)
             newobj->speed = atr::speeds[which].patrol;
         if(!loadedgame)
             gamestate.killtotal++;
     
-        map = mapsegs[0]+(tiley<<mapshift)+tilex;
+        map = mapsegs[0]+tilePoint.MapUnfold(mapshift);
         tile = *map;
         if (tile == AMBUSHTILE)
         {
-            tilemap[tilex][tiley] = 0;
+            tilemap[tilePoint.x][tilePoint.y] = 0;
 
             if (*(map+1) >= AREATILE)
                 tile = *(map+1);
@@ -188,11 +189,12 @@ static objtype *_SpawnStand (classtype which, int tilex, int tiley, int dir)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
+static objtype *_SpawnPatrol (classtype which, const Point2D<int> &tilePoint,
+                              int dir)
 {
     if(atr::states[which].patrol)
     {
-        SpawnNewObj(tilex, tiley, atr::states[which].patrol);
+        SpawnNewObj(tilePoint.x, tilePoint.y, atr::states[which].patrol);
         if(atr::speeds[which].patrol >= 0)
             newobj->speed = atr::speeds[which].patrol;
         if (!loadedgame)
@@ -205,25 +207,25 @@ static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
         newobj->flags |= FL_SHOOTABLE;
         newobj->active = ac_yes;
 
-        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
+        actorat[newobj->tilePoint.x][newobj->tilePoint.y] = NULL;           // don't use original spot
 
         switch (dir)
         {
             case 0:
-                newobj->tilex++;
+                newobj->tilePoint.x++;
                 break;
             case 1:
-                newobj->tiley--;
+                newobj->tilePoint.y--;
                 break;
             case 2:
-                newobj->tilex--;
+                newobj->tilePoint.x--;
                 break;
             case 3:
-                newobj->tiley++;
+                newobj->tilePoint.y++;
                 break;
         }
 
-        actorat[newobj->tilex][newobj->tiley] = newobj;
+        actorat[newobj->tilePoint.x][newobj->tilePoint.y] = newobj;
 
         
         return newobj;
@@ -236,14 +238,14 @@ static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnBoss (classtype which, int tilex, int tiley)
+static objtype *_SpawnBoss (classtype which, const Point2D<int> &tilePoint)
 {
 	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
     if(atr::states[which].stand)
     {
-        SpawnNewObj (tilex,tiley,atr::states[which].stand);
+        SpawnNewObj (tilePoint.x,tilePoint.y,atr::states[which].stand);
 
         spawnstate = atr::states[which].stand;
         atr::actions[which].spawn();
@@ -263,21 +265,21 @@ static objtype *_SpawnBoss (classtype which, int tilex, int tiley)
 //
 // _SpawnGhosts
 //
-static void _SpawnGhosts (int which, int tilex, int tiley)
+static void _SpawnGhosts (int which, const Point2D<int> &tilePoint)
 {
     switch(which)
     {
         case en_blinky:
-            SpawnNewObj (tilex,tiley,&s_blinkychase1);
+            SpawnNewObj (tilePoint.x,tilePoint.y,&s_blinkychase1);
             break;
         case en_clyde:
-            SpawnNewObj (tilex,tiley,&s_clydechase1);
+            SpawnNewObj (tilePoint.x,tilePoint.y,&s_clydechase1);
             break;
         case en_pinky:
-            SpawnNewObj (tilex,tiley,&s_pinkychase1);
+            SpawnNewObj (tilePoint.x,tilePoint.y,&s_pinkychase1);
             break;
         case en_inky:
-            SpawnNewObj (tilex,tiley,&s_inkychase1);
+            SpawnNewObj (tilePoint.x,tilePoint.y,&s_inkychase1);
             break;
     }
 
@@ -315,9 +317,9 @@ void Basic::SpawnEnemy(classtype which, const Point2D<int> &tilePoint, int dir,
 	case mutantobj:
 	case dogobj:
 		if(patrol)
-			newenemy = _SpawnPatrol(which, tilePoint.x, tilePoint.y, dir);
+			newenemy = _SpawnPatrol(which, tilePoint, dir);
 		else
-			newenemy = _SpawnStand(which, tilePoint.x, tilePoint.y, dir);
+			newenemy = _SpawnStand(which, tilePoint, dir);
 		break;
 	case bossobj:
 	case schabbobj:
@@ -332,11 +334,11 @@ void Basic::SpawnEnemy(classtype which, const Point2D<int> &tilePoint, int dir,
 	case uberobj:
 	case willobj:
 	case deathobj:
-		newenemy = _SpawnBoss(which, tilePoint.x, tilePoint.y);
+		newenemy = _SpawnBoss(which, tilePoint);
 		break;
             // IOANCH 20130202: unification process
 	case ghostobj:
-		_SpawnGhosts(ghosttype, tilePoint.x, tilePoint.y);
+		_SpawnGhosts(ghosttype, tilePoint);
 		break;
     default:
         return;
