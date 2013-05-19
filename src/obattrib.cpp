@@ -21,7 +21,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "wl_def.h"
 #include "obattrib.h"
+#include "ActorStates.h"
 
 const int atr::hitpoints[][4]=
 {

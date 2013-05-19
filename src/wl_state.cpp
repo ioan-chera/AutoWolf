@@ -36,23 +36,16 @@
 #include "ioan_bas.h"	// IOANCH 29.06.2012
 #include "List.h"
 #include "obattrib.h"
+#include "ActorStates.h"
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                            LOCAL CONSTANTS
+//
+//                            GLOBAL VARIABLES
+//
+////////////////////////////////////////////////////////////////////////////////
 
-                            LOCAL CONSTANTS
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
-                            GLOBAL VARIABLES
-
-=============================================================================
-*/
 
 
 static const dirtype opposite[9] =
@@ -86,31 +79,26 @@ void    DamageActor (objtype *ob, unsigned damage);
 void    FirstSighting (objtype *ob);
 Boolean CheckSight (objtype *ob);
 
-/*
-=============================================================================
-
-                                LOCAL VARIABLES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                LOCAL VARIABLES
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SpawnNewObj
+// =
+// = Spaws a new actor at the given TILE coordinates, with the given state, and
+// = the given size in GLOBAL units.
+// =
+// = newobj = a pointer to an initialized new actor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-//===========================================================================
-
-
-/*
-===================
-=
-= SpawnNewObj
-=
-= Spaws a new actor at the given TILE coordinates, with the given state, and
-= the given size in GLOBAL units.
-=
-= newobj = a pointer to an initialized new actor
-=
-===================
-*/
 
 void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 {
@@ -136,15 +124,16 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
 
 
 
-/*
-===================
-=
-= NewState
-=
-= Changes ob to a new state, setting ticcount to the max for that state
-=
-===================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = NewState
+// =
+// = Changes ob to a new state, setting ticcount to the max for that state
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 // IOANCH 20130305: made it const-correct
 void NewState (objtype *ob, statetype *state)
 {
@@ -152,40 +141,40 @@ void NewState (objtype *ob, statetype *state)
     ob->ticcount = state->tictime;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//                        ENEMY TILE WORLD MOVEMENT CODE
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-=============================================================================
 
-                        ENEMY TILE WORLD MOVEMENT CODE
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = TryWalk
+// =
+// = Attempts to move ob in its current (ob->dir) direction.
+// =
+// = If blocked by either a wall or an actor returns FALSE
+// =
+// = If move is either clear or blocked only by a door, returns TRUE and sets
+// =
+// = ob->tilex         = new destination
+// = ob->tiley
+// = ob->areanumber    = the floor tile number (0-(NUMAREAS-1)) of destination
+// = ob->distance      = TILEGLOBAl, or -doornumber if a door is blocking the 
+// way
+// =
+// = If a door is in the way, an OpenDoor call is made to start it opening.
+// = The actor code should wait until
+// =       doorobjlist[-ob->distance].action = dr_open, meaning the door has 
+// been
+// =       fully opened
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-=============================================================================
-*/
-
-
-/*
-==================================
-=
-= TryWalk
-=
-= Attempts to move ob in its current (ob->dir) direction.
-=
-= If blocked by either a wall or an actor returns FALSE
-=
-= If move is either clear or blocked only by a door, returns TRUE and sets
-=
-= ob->tilex         = new destination
-= ob->tiley
-= ob->areanumber    = the floor tile number (0-(NUMAREAS-1)) of destination
-= ob->distance      = TILEGLOBAl, or -doornumber if a door is blocking the way
-=
-= If a door is in the way, an OpenDoor call is made to start it opening.
-= The actor code should wait until
-=       doorobjlist[-ob->distance].action = dr_open, meaning the door has been
-=       fully opened
-=
-==================================
-*/
 
 #define CHECKDIAG(x,y)                              \
 {                                                   \
@@ -396,28 +385,29 @@ Boolean TryWalk (objtype *ob)
 }
 
 
-/*
-==================================
-=
-= SelectDodgeDir
-=
-= Attempts to choose and initiate a movement for ob that sends it towards
-= the player while dodging
-=
-= If there is no possible move (ob is totally surrounded)
-=
-= ob->dir           =       nodir
-=
-= Otherwise
-=
-= ob->dir           = new direction to follow
-= ob->distance      = TILEGLOBAL or -doornumber
-= ob->tilex         = new destination
-= ob->tiley
-= ob->areanumber    = the floor tile number (0-(NUMAREAS-1)) of destination
-=
-==================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SelectDodgeDir
+// =
+// = Attempts to choose and initiate a movement for ob that sends it towards
+// = the player while dodging
+// =
+// = If there is no possible move (ob is totally surrounded)
+// =
+// = ob->dir           =       nodir
+// =
+// = Otherwise
+// =
+// = ob->dir           = new direction to follow
+// = ob->distance      = TILEGLOBAL or -doornumber
+// = ob->tilex         = new destination
+// = ob->tiley
+// = ob->areanumber    = the floor tile number (0-(NUMAREAS-1)) of destination
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void SelectDodgeDir (objtype *ob)
 {
@@ -524,16 +514,16 @@ void SelectDodgeDir (objtype *ob)
     ob->dir = nodir;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SelectChaseDir
+// =
+// = As SelectDodgeDir, but doesn't try to dodge
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-============================
-=
-= SelectChaseDir
-=
-= As SelectDodgeDir, but doesn't try to dodge
-=
-============================
-*/
 
 void SelectChaseDir (objtype *ob)
 {
@@ -634,16 +624,16 @@ void SelectChaseDir (objtype *ob)
     ob->dir = nodir;                // can't move
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SelectRunDir
+// =
+// = Run Away from player
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-============================
-=
-= SelectRunDir
-=
-= Run Away from player
-=
-============================
-*/
 
 void SelectRunDir (objtype *ob)
 {
@@ -703,21 +693,21 @@ void SelectRunDir (objtype *ob)
     ob->dir = nodir;                // can't move
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = MoveObj
+// =
+// = Moves ob be move global units in ob->dir direction
+// = Actors are not allowed to move inside the player
+// = Does NOT check to see if the move is tile map valid
+// =
+// = ob->x                 = adjusted for new position
+// = ob->y
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-=================
-=
-= MoveObj
-=
-= Moves ob be move global units in ob->dir direction
-= Actors are not allowed to move inside the player
-= Does NOT check to see if the move is tile map valid
-=
-= ob->x                 = adjusted for new position
-= ob->y
-=
-=================
-*/
 
 void MoveObj (objtype *ob, int32_t move)
 {
@@ -872,15 +862,14 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = KillActor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-
-/*
-===============
-=
-= KillActor
-=
-===============
-*/
 
 void KillActor (objtype *ob)
 {
@@ -1019,21 +1008,19 @@ void KillActor (objtype *ob)
     actorat[ob->tilex][ob->tiley] = NULL;
     ob->flags |= FL_NONMARK;
 }
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = DamageActor
+// =
+// = Called when the player succesfully hits an enemy.
+// =
+// = Does damage points to enemy ob, either putting it into a stun frame or
+// = killing it.
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-
-
-/*
-===================
-=
-= DamageActor
-=
-= Called when the player succesfully hits an enemy.
-=
-= Does damage points to enemy ob, either putting it into a stun frame or
-= killing it.
-=
-===================
-*/
 
 void DamageActor (objtype *ob, unsigned damage)
 {
@@ -1066,24 +1053,22 @@ void DamageActor (objtype *ob, unsigned damage)
     }
 }
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                CHECKSIGHT
+//
+////////////////////////////////////////////////////////////////////////////////
 
-                                CHECKSIGHT
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = CheckLine
+// =
+// = Returns true if a straight line between the player and ob is unobstructed
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-=============================================================================
-*/
-
-
-/*
-=====================
-=
-= CheckLine
-=
-= Returns true if a straight line between the player and ob is unobstructed
-=
-=====================
-*/
 
 Boolean CheckLine (objtype *ob, Boolean solidActors)
 {
@@ -1091,20 +1076,20 @@ Boolean CheckLine (objtype *ob, Boolean solidActors)
     return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y, solidActors);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = CheckSight
+// =
+// = Checks a straight line between player and current object
+// =
+// = If the sight is ok, check alertness and angle to see if they notice
+// =
+// = returns true if the player has been spoted
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-================
-=
-= CheckSight
-=
-= Checks a straight line between player and current object
-=
-= If the sight is ok, check alertness and angle to see if they notice
-=
-= returns true if the player has been spoted
-=
-================
-*/
 
 #define MINSIGHT        0x18000l
 
@@ -1185,17 +1170,17 @@ Boolean CheckSight (objtype *ob)
     return CheckLine (ob);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = FirstSighting
+// =
+// = Puts an actor into attack mode and possibly reverses the direction
+// = if the player is behind it
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= FirstSighting
-=
-= Puts an actor into attack mode and possibly reverses the direction
-= if the player is behind it
-=
-===============
-*/
 
 void FirstSighting (objtype *ob)
 {
@@ -1223,21 +1208,20 @@ void FirstSighting (objtype *ob)
     ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SightPlayer
+// =
+// = Called by actors that ARE NOT chasing the player.  If the player
+// = is detected (by sight, noise, or proximity), the actor is put into
+// = it's combat frame and true is returned.
+// =
+// = Incorporates a random reaction delay
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-
-/*
-===============
-=
-= SightPlayer
-=
-= Called by actors that ARE NOT chasing the player.  If the player
-= is detected (by sight, noise, or proximity), the actor is put into
-= it's combat frame and true is returned.
-=
-= Incorporates a random reaction delay
-=
-===============
-*/
 
 Boolean SightPlayer (objtype *ob)
 {

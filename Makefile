@@ -48,6 +48,7 @@ LDFLAGS += -static-libgcc
 endif
 
 SRCS :=
+SRCS += src/ActorStates.cpp
 SRCS += src/CheckSum.cpp
 SRCS += src/Config.cpp
 SRCS += src/DataFile.cpp

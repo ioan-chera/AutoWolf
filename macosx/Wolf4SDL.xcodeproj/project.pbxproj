@@ -12,6 +12,7 @@
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */; };
+		4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F32BDAB1749441A00EF744B /* ActorStates.cpp */; };
 		4F3435031726973200A10A72 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F3435021726973200A10A72 /* Exception.cpp */; };
 		4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4717BA173A6A610018E82B /* SODFlag.cpp */; };
 		4F471993173BC0310018E82B /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F471992173BC0310018E82B /* Config.cpp */; };
@@ -100,6 +101,8 @@
 		4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = e_hashkeys.h; path = ../src/e_hashkeys.h; sourceTree = "<group>"; };
 		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = m_dllist.h; path = ../src/m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../src/e_hashkeys.cpp; sourceTree = "<group>"; };
+		4F32BDAB1749441A00EF744B /* ActorStates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorStates.cpp; path = ../src/ActorStates.cpp; sourceTree = "<group>"; };
+		4F32BDAC1749441B00EF744B /* ActorStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorStates.h; path = ../src/ActorStates.h; sourceTree = "<group>"; };
 		4F3435011726973200A10A72 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = ../src/Exception.h; sourceTree = SOURCE_ROOT; };
 		4F3435021726973200A10A72 /* Exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exception.cpp; path = ../src/Exception.cpp; sourceTree = SOURCE_ROOT; };
 		4F47175E173A63580018E82B /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; lineEnding = 0; name = Makefile; path = ../Makefile; sourceTree = SOURCE_ROOT; };
@@ -433,31 +436,33 @@
 		FA8DFA98158692FB00EBBFB2 /* WL */ = {
 			isa = PBXGroup;
 			children = (
-				4F00E0EA16F06A90006F3D16 /* wl_act1.h */,
-				4F00E0EB16F06A90006F3D16 /* wl_act2.h */,
-				4F00E0EC16F06A90006F3D16 /* wl_agent.h */,
-				4F00E0ED16F06A90006F3D16 /* wl_draw.h */,
-				4F00E0EE16F06A90006F3D16 /* wl_game.h */,
-				4F00E0EF16F06A90006F3D16 /* wl_inter.h */,
-				4F00E0F016F06A90006F3D16 /* wl_main.h */,
-				4F00E0F116F06A90006F3D16 /* wl_play.h */,
-				4F00E0F216F06A90006F3D16 /* wl_state.h */,
-				4F00E0F316F06A90006F3D16 /* wl_text.h */,
-				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
 				FAE8D10D166E3E1E006B2EDE /* Gimmicks */,
+				D901F4D70FC0DBCB0040C290 /* wl_def.h */,
+				4F00E0ED16F06A90006F3D16 /* wl_draw.h */,
 				D901F4D50FC0DBCB0040C290 /* wl_draw.cpp */,
 				D901F4D80FC0DBCB0040C290 /* wl_debug.cpp */,
+				4F00E0EC16F06A90006F3D16 /* wl_agent.h */,
 				D901F4DD0FC0DBCB0040C290 /* wl_agent.cpp */,
+				4F00E0EB16F06A90006F3D16 /* wl_act2.h */,
 				D901F4DE0FC0DBCB0040C290 /* wl_act2.cpp */,
+				4F00E0EA16F06A90006F3D16 /* wl_act1.h */,
 				D901F4DF0FC0DBCB0040C290 /* wl_act1.cpp */,
+				4F00E0EF16F06A90006F3D16 /* wl_inter.h */,
 				D901F4CF0FC0DBCB0040C290 /* wl_inter.cpp */,
+				4F00E0EE16F06A90006F3D16 /* wl_game.h */,
 				D901F4D00FC0DBCB0040C290 /* wl_game.cpp */,
+				4F00E0F316F06A90006F3D16 /* wl_text.h */,
 				D901F4E70FC0DBCB0040C290 /* wl_text.cpp */,
+				4F00E0F216F06A90006F3D16 /* wl_state.h */,
 				D901F4EB0FC0DBCB0040C290 /* wl_state.cpp */,
+				4F00E0F116F06A90006F3D16 /* wl_play.h */,
 				D901F4EE0FC0DBCB0040C290 /* wl_play.cpp */,
 				D901F4F00FC0DBCB0040C290 /* wl_menu.h */,
 				D901F4F10FC0DBCB0040C290 /* wl_menu.cpp */,
+				4F00E0F016F06A90006F3D16 /* wl_main.h */,
 				D901F4F20FC0DBCB0040C290 /* wl_main.cpp */,
+				4F32BDAB1749441A00EF744B /* ActorStates.cpp */,
+				4F32BDAC1749441B00EF744B /* ActorStates.h */,
 			);
 			name = WL;
 			sourceTree = "<group>";
@@ -649,6 +654,7 @@
 				4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */,
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
 				4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */,
+				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,7 +19,6 @@
 #ifndef Wolf4SDL_obattrib_h
 #define Wolf4SDL_obattrib_h
 
-#include "wl_def.h"
 #include "wl_act2.h"
 #include "wl_play.h"
 #include "wl_state.h"

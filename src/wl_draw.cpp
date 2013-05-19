@@ -39,6 +39,7 @@
 #include "wl_atmos.h"
 #include "wl_shade.h"
 #include "Config.h"
+#include "ActorStates.h"
 
 /*
 =============================================================================
@@ -982,17 +983,16 @@ void DrawScaleds (void)
     }
 }
 
-//==========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = DrawPlayerWeapon
+// =
+// = Draw the player's hands
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-==============
-=
-= DrawPlayerWeapon
-=
-= Draw the player's hands
-=
-==============
-*/
 
 int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
     SPR_MACHINEGUNREADY, SPR_CHAINREADY};

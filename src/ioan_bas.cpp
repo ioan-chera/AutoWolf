@@ -33,6 +33,7 @@
 #include "wl_state.h"
 #include "wl_main.h"
 #include "Config.h"
+#include "ActorStates.h"
 
 // static members definition
 List<void *> Basic::livingNazis, Basic::thrownProjectiles;
