@@ -53,65 +53,16 @@
 //
 // LOCAL CONSTANTS
 //
-// */
-//
 ////////////////////////////////////////////////////////////////////////////////
-
 
 #define PROJECTILESIZE  0xc000l
 
 #define BJRUNSPEED      2048
 #define BJJUMPSPEED     680
 
-////////////////////////////////////////////////////////////////////////////////
 //
-// GLOBAL VARIABLES
+// A_Smoke
 //
-// */
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// LOCAL VARIABLES
-//
-// */
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-dirtype dirtable[9] = {northwest,north,northeast,west,nodir,east,
-    southwest,south,southeast};
-
-
-
-
-
-
-
-
-
-
-
-
-
-// IOANCH 20130202: unification process
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =================
-// =
-// = A_Smoke
-// =
-// =================
-// */
-//
-////////////////////////////////////////////////////////////////////////////////
-
 
 void A_Smoke (objtype *ob)
 {
@@ -133,18 +84,15 @@ void A_Smoke (objtype *ob)
     newobj->flags = FL_NEVERMARK;
 }
 
-/*
- ===================
- =
- = ProjectileTryMove
- =
- = returns true if move ok
- ===================
- */
+//
+// ProjectileTryMove
+//
+// returns true if move ok
+//
 
 #define PROJSIZE        0x2000
 
-Boolean ProjectileTryMove (objtype *ob)
+static Boolean ProjectileTryMove (objtype *ob)
 {
     int      xl,yl,xh,yh,x,y;
     objtype *check;
@@ -169,22 +117,14 @@ Boolean ProjectileTryMove (objtype *ob)
     return true;
 }
 
-////////////////////////////////////////////////////////////////////////////////
 //
-// =================
-// =
-// = T_Projectile
-// =
-// =================
-// */
+// T_Projectile
 //
-////////////////////////////////////////////////////////////////////////////////
-
-
 void T_Projectile (objtype *ob)
 {
     int32_t deltax,deltay;
-    int     damage = 0; // IOANCH 20130202: set damage here to something whatever, to prevent undefined behaviour
+    int     damage = 0; // IOANCH 20130202: set damage here to something
+                        // whatever, to prevent undefined behaviour
     int32_t speed;
     
     speed = (int32_t)ob->speed*tics;
@@ -257,58 +197,9 @@ void T_Projectile (objtype *ob)
     ob->tiley = (short)(ob->y >> TILESHIFT);
 }
 
-/*
- =============================================================================
- 
- GUARD
- 
- =============================================================================
- */
-
 //
-// guards
+// SpawnDeadGuard
 //
-
-// IOANCH 20130202: unification process
-//
-// ghosts
-//
-
-//
-// dogs
-//
-
-//
-// officers
-//
-
-//
-// mutant
-//
-
-//
-// SS
-//
-
-// IOANCH 20130202: unification process
-//
-// hans
-//
-
-//
-// gretel
-//
-
-// IOANCH 17.05.2012: deleted SpawnStand and the rest, now they are protected members of Basic
-
-/*
- ===============
- =
- = SpawnDeadGuard
- =
- ===============
- */
-
 void SpawnDeadGuard (int tilex, int tiley)
 {
     SpawnNewObj (tilex,tiley,&s_grddie4);
@@ -319,20 +210,16 @@ void SpawnDeadGuard (int tilex, int tiley)
     newobj->obclass = inertobj;
 }
 
-/*
- ==================
- =
- = A_DeathScream
- =
- ==================
- */
-
+//
+// A_DeathScream
+//
 void A_DeathScream (objtype *ob)
 {
     // IOANCH 20130301: unification culling
     
     // IOANCH 20130202: unification process
-    if (!US_RndT() && ((!SPEAR() && mapon==9) || (SPEAR() && (mapon == 18 || mapon == 19))))
+    if (!US_RndT() && ((!SPEAR() && mapon==9) ||
+                       (SPEAR() && (mapon == 18 || mapon == 19))))
     {
         switch(ob->obclass)
         {
@@ -341,7 +228,7 @@ void A_DeathScream (objtype *ob)
             case officerobj:
             case ssobj:
             case dogobj:
-                PlaySoundLocActor(DEATHSCREAM6SND,ob);
+                PlaySoundLocActor(DEATHSCREAM6SND,ob);  // fart
                 return;
 			default:
 				;
@@ -385,34 +272,15 @@ void A_DeathScream (objtype *ob)
     }
 }
 
-/*
- =============================================================================
- 
- SPEAR() ACTORS
- 
- =============================================================================
- */
-
-// IOANCH 20130202: unification process
-
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// SPEAR() ACTORS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
-// trans
+// A_UShoot
 //
-
-//
-// uber
-//
-
-/*
- ===============
- =
- = A_UShoot
- =
- ===============
- */
-
 void A_UShoot (objtype *ob)
 {
     int     dx,dy,dist;
@@ -427,21 +295,8 @@ void A_UShoot (objtype *ob)
 }
 
 //
-// will
+// A_Launch
 //
-
-//
-// death
-//
-
-/*
- ===============
- =
- = A_Launch
- =
- ===============
- */
-
 void A_Launch (objtype *ob)
 {
     int32_t deltax,deltay;
@@ -509,7 +364,6 @@ void A_Launch (objtype *ob)
 //
 // angel
 //
-
 void A_Slurpie (objtype *)
 {
     SD_PlaySound(SLURPIESND);
@@ -520,40 +374,35 @@ void A_Breathing (objtype *)
     SD_PlaySound(ANGELTIREDSND);
 }
 
-/*
- =================
- =
- = A_Victory
- =
- =================
- */
-
+//
+// A_Victory
+//
 void A_Victory (objtype *)
 {
     playstate = ex_victorious;
 }
 
-/*
- =================
- =
- = A_StartAttack
- =
- =================
- */
-
+//
+// =================
+// =
+// = A_StartAttack
+// =
+// =================
+// */
+//
 void A_StartAttack (objtype *ob)
 {
     ob->temp1 = 0;
 }
 
-/*
- =================
- =
- = A_Relaunch
- =
- =================
- */
-
+//
+// =================
+// =
+// = A_Relaunch
+// =
+// =================
+// */
+//
 void A_Relaunch (objtype *ob)
 {
     if (++ob->temp1 == 3)
@@ -573,14 +422,14 @@ void A_Relaunch (objtype *ob)
 // spectre
 //
 
-/*
- ===============
- =
- = A_Dormant
- =
- ===============
- */
-
+//
+// ===============
+// =
+// = A_Dormant
+// =
+// ===============
+// */
+//
 void A_Dormant (objtype *ob)
 {
     int32_t     deltax,deltay;
@@ -624,17 +473,17 @@ moveok:
     Basic::livingNazis.add(ob);
 }
 
-/*
- =================
- =
- = IOANCH 20121204
- = Merged T_Will, T_Schabb and T_Gift here
- =
- = T_ProjectileBossChase
- =
- =================
- */
-
+//
+// =================
+// =
+// = IOANCH 20121204
+// = Merged T_Will, T_Schabb and T_Gift here
+// =
+// = T_ProjectileBossChase
+// =
+// =================
+// */
+//
 void T_ProjectileBossChase(objtype *ob)
 {
     int32_t move;
@@ -743,35 +592,20 @@ void T_ProjectileBossChase(objtype *ob)
     }
 }
 
-/*
- =============================================================================
- 
- SCHABBS / GIFT / FAT
- 
- =============================================================================
- */
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////
 //
-// schabb
+// SCHABBS / GIFT / FAT
 //
-
+// */
 //
-// gift
-//
-
-//
-// fat
-//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // _MissileThrow
 //
 // IOANCH 20130306: generic missile throw
 //
-void _MissileThrow(objtype *ob, statetype *state, classtype cl,
+static void _MissileThrow(objtype *ob, statetype *state, classtype cl,
                    soundnames snd)
 {
     int32_t deltax,deltay;
@@ -808,56 +642,48 @@ void _MissileThrow(objtype *ob, statetype *state, classtype cl,
     PlaySoundLocActor (snd,newobj);
 }
 
-/*
- =================
- =
- = A_SchabbThrow
- =
- =================
- */
-
+//
+// =================
+// =
+// = A_SchabbThrow
+// =
+// =================
+// */
+//
 void A_SchabbThrow (objtype *ob)
 {
     _MissileThrow(ob, &s_needle1, needleobj, SCHABBSTHROWSND);
 }
 
-/*
- =================
- =
- = A_GiftThrow
- =
- =================
- */
-
+//
+// =================
+// =
+// = A_GiftThrow
+// =
+// =================
+// */
+//
 void A_GiftThrow (objtype *ob)
 {
     _MissileThrow(ob, &s_rocket, rocketobj, MISSILEFIRESND);
 }
 
-/*
- =============================================================================
- 
- HITLERS
- 
- =============================================================================
- */
+////////////////////////////////////////////////////////////////////////////////
+//
+// HITLERS
+//
+// */
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
-// fake
+// ===============
+// =
+// = A_HitlerMorph
+// =
+// ===============
+// */
 //
-
-//
-// hitler
-//
-
-/*
- ===============
- =
- = A_HitlerMorph
- =
- ===============
- */
-
 void A_HitlerMorph (objtype *ob)
 {
     short hitpoints[4]={500,700,800,900};
@@ -880,26 +706,23 @@ void A_HitlerMorph (objtype *ob)
     Basic::livingNazis.add(newobj);
 }
 
-////////////////////////////////////////////////////////
 //
 // A_MechaSound
 // A_Slurpie
 //
-////////////////////////////////////////////////////////
 void A_MechaSound (objtype *ob)
 {
     if (areabyplayer[ob->areanumber])
         PlaySoundLocActor (MECHSTEPSND,ob);
 }
 
-/*
- =================
- =
- = A_FakeFire
- =
- =================
- */
-
+//
+// =================
+// =
+// = A_FakeFire
+// =
+// =================
+// */
 void A_FakeFire (objtype *ob)
 {
     int32_t deltax,deltay;
@@ -940,14 +763,14 @@ void A_FakeFire (objtype *ob)
     PlaySoundLocActor (FLAMETHROWERSND,newobj);
 }
 
-/*
- =================
- =
- = T_Fake
- =
- =================
- */
-
+//
+// =================
+// =
+// = T_Fake
+// =
+// =================
+// */
+//
 void T_Fake (objtype *ob)
 {
     int32_t move;
@@ -1004,42 +827,49 @@ void T_Fake (objtype *ob)
     }
 }
 
-/*
- ============================================================================
- 
- STAND
- 
- ============================================================================
- */
+////////////////////////////////////////////////////////////////////////////////
+//
+// ============================================================================
+//
+// STAND
+//
+// ============================================================================
+// */
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
- ===============
- =
- = T_Stand
- =
- ===============
- */
-
+//
+// ===============
+// =
+// = T_Stand
+// =
+// ===============
+// */
+//
 void T_Stand (objtype *ob)
 {
     SightPlayer (ob);
 }
 
-/*
- ============================================================================
- 
- CHASE
- 
- ============================================================================
- */
+////////////////////////////////////////////////////////////////////////////////
+//
+// ============================================================================
+//
+// CHASE
+//
+// ============================================================================
+// */
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
- =================
- =
- = T_Chase
- =
- =================
- */
+//
+// =================
+// =
+// = T_Chase
+// =
+// =================
+// */
+//
 
 void T_Chase (objtype *ob)
 {
@@ -1293,7 +1123,7 @@ void T_DogChase (objtype *ob)
  ===============
  */
 
-void SelectPathDir (objtype *ob)
+static void SelectPathDir (objtype *ob)
 {
     unsigned spot;
     
@@ -1518,11 +1348,6 @@ void A_Bite (objtype *ob)
  ============================================================================
  */
 
-//
-// BJ victory
-//
-
-
 /*
  ===============
  =
@@ -1629,7 +1454,7 @@ void A_BJDone (objtype *)
  ===============
  */
 
-Boolean CheckPosition (objtype *ob)
+static Boolean CheckPosition (objtype *ob)
 {
     int     x,y,xl,yl,xh,yh;
     objtype *check;
