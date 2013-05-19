@@ -65,7 +65,7 @@ void DrawFloorAndCeiling(byte *vbuf, unsigned vbufPitch, int min_wallheight)
             {
                 int curx = (gu >> TILESHIFT) & (MAPSIZE - 1);
                 int cury = (-(gv >> TILESHIFT) - 1) & (MAPSIZE - 1);
-                unsigned curtex = MAPSPOT(Point2D<int>::Make(curx, cury), 2);
+                unsigned curtex = MAPSPOT(curx, cury, 2);
                 if(curtex)
                 {
                     unsigned curtoptex = curtex >> 8;

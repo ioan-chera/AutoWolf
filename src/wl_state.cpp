@@ -123,15 +123,15 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
     else
         newobj->ticcount = 0;
 
-    newobj->tilePoint.x = (short) tilex;
-    newobj->tilePoint.y = (short) tiley;
+    newobj->tilex = (short) tilex;
+    newobj->tiley = (short) tiley;
     newobj->x = ((int32_t)tilex<<TILESHIFT)+TILEGLOBAL/2;
     newobj->y = ((int32_t)tiley<<TILESHIFT)+TILEGLOBAL/2;
     newobj->dir = nodir;
 
     actorat[tilex][tiley] = newobj;
     newobj->areanumber =
-        *(mapsegs[0] + newobj->tilePoint.MapUnfold(mapshift)) - AREATILE;
+        *(mapsegs[0] + (newobj->tiley<<mapshift)+newobj->tilex) - AREATILE;
 }
 
 
@@ -245,39 +245,39 @@ Boolean TryWalk (objtype *ob)
         switch (ob->dir)
         {
             case north:
-                ob->tilePoint.y--;
+                ob->tiley--;
                 break;
 
             case northeast:
-                ob->tilePoint.x++;
-                ob->tilePoint.y--;
+                ob->tilex++;
+                ob->tiley--;
                 break;
 
             case east:
-                ob->tilePoint.x++;
+                ob->tilex++;
                 break;
 
             case southeast:
-                ob->tilePoint.x++;
-                ob->tilePoint.y++;
+                ob->tilex++;
+                ob->tiley++;
                 break;
 
             case south:
-                ob->tilePoint.y++;
+                ob->tiley++;
                 break;
 
             case southwest:
-                ob->tilePoint.x--;
-                ob->tilePoint.y++;
+                ob->tilex--;
+                ob->tiley++;
                 break;
 
             case west:
-                ob->tilePoint.x--;
+                ob->tilex--;
                 break;
 
             case northwest:
-                ob->tilePoint.x--;
-                ob->tilePoint.y--;
+                ob->tilex--;
+                ob->tiley--;
                 break;
 			default:
 				;
@@ -291,84 +291,84 @@ Boolean TryWalk (objtype *ob)
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
+                    CHECKDIAG(ob->tilex,ob->tiley-1);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilePoint.x,ob->tilePoint.y-1);
+                    CHECKSIDE(ob->tilex,ob->tiley-1);
                 }
-                ob->tilePoint.y--;
+                ob->tiley--;
                 break;
 
             case northeast:
-                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y-1);
-                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
-                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
-                ob->tilePoint.x++;
-                ob->tilePoint.y--;
+                CHECKDIAG(ob->tilex+1,ob->tiley-1);
+                CHECKDIAG(ob->tilex+1,ob->tiley);
+                CHECKDIAG(ob->tilex,ob->tiley-1);
+                ob->tilex++;
+                ob->tiley--;
                 break;
 
             case east:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
+                    CHECKDIAG(ob->tilex+1,ob->tiley);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilePoint.x+1,ob->tilePoint.y);
+                    CHECKSIDE(ob->tilex+1,ob->tiley);
                 }
-                ob->tilePoint.x++;
+                ob->tilex++;
                 break;
 
             case southeast:
-                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y+1);
-                CHECKDIAG(ob->tilePoint.x+1,ob->tilePoint.y);
-                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
-                ob->tilePoint.x++;
-                ob->tilePoint.y++;
+                CHECKDIAG(ob->tilex+1,ob->tiley+1);
+                CHECKDIAG(ob->tilex+1,ob->tiley);
+                CHECKDIAG(ob->tilex,ob->tiley+1);
+                ob->tilex++;
+                ob->tiley++;
                 break;
 
             case south:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
+                    CHECKDIAG(ob->tilex,ob->tiley+1);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilePoint.x,ob->tilePoint.y+1);
+                    CHECKSIDE(ob->tilex,ob->tiley+1);
                 }
-                ob->tilePoint.y++;
+                ob->tiley++;
                 break;
 
             case southwest:
-                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y+1);
-                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
-                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y+1);
-                ob->tilePoint.x--;
-                ob->tilePoint.y++;
+                CHECKDIAG(ob->tilex-1,ob->tiley+1);
+                CHECKDIAG(ob->tilex-1,ob->tiley);
+                CHECKDIAG(ob->tilex,ob->tiley+1);
+                ob->tilex--;
+                ob->tiley++;
                 break;
 
             case west:
                 if (ob->obclass == dogobj || ob->obclass == fakeobj
                     || ob->obclass == ghostobj || ob->obclass == spectreobj)
                 {
-                    CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
+                    CHECKDIAG(ob->tilex-1,ob->tiley);
                 }
                 else
                 {
-                    CHECKSIDE(ob->tilePoint.x-1,ob->tilePoint.y);
+                    CHECKSIDE(ob->tilex-1,ob->tiley);
                 }
-                ob->tilePoint.x--;
+                ob->tilex--;
                 break;
 
             case northwest:
-                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y-1);
-                CHECKDIAG(ob->tilePoint.x-1,ob->tilePoint.y);
-                CHECKDIAG(ob->tilePoint.x,ob->tilePoint.y-1);
-                ob->tilePoint.x--;
-                ob->tilePoint.y--;
+                CHECKDIAG(ob->tilex-1,ob->tiley-1);
+                CHECKDIAG(ob->tilex-1,ob->tiley);
+                CHECKDIAG(ob->tilex,ob->tiley-1);
+                ob->tilex--;
+                ob->tiley--;
                 break;
 
             case nodir:
@@ -389,7 +389,7 @@ Boolean TryWalk (objtype *ob)
 #endif
 
     ob->areanumber =
-        *(mapsegs[0] + ob->tilePoint.MapUnfold(mapshift)) - AREATILE;
+        *(mapsegs[0] + (ob->tiley<<mapshift)+ob->tilex) - AREATILE;
 
     ob->distance = TILEGLOBAL;
     return true;
@@ -438,8 +438,8 @@ void SelectDodgeDir (objtype *ob)
     else
         turnaround=opposite[ob->dir];
 
-    deltax = player->tilePoint.x - ob->tilePoint.x;
-    deltay = player->tilePoint.y - ob->tilePoint.y;
+    deltax = player->tilex - ob->tilex;
+    deltay = player->tiley - ob->tiley;
 
     //
     // arange 5 direction choices in order of preference
@@ -545,8 +545,8 @@ void SelectChaseDir (objtype *ob)
     olddir=ob->dir;
     turnaround=opposite[olddir];
 
-    deltax=player->tilePoint.x - ob->tilePoint.x;
-    deltay=player->tilePoint.y - ob->tilePoint.y;
+    deltax=player->tilex - ob->tilex;
+    deltay=player->tiley - ob->tiley;
 
     d[1]=nodir;
     d[2]=nodir;
@@ -652,8 +652,8 @@ void SelectRunDir (objtype *ob)
     dirtype tdir;
 
 
-    deltax=player->tilePoint.x - ob->tilePoint.x;
-    deltay=player->tilePoint.y - ob->tilePoint.y;
+    deltax=player->tilex - ob->tilex;
+    deltay=player->tiley - ob->tiley;
 
     if (deltax<0)
         d[1]= east;
@@ -850,7 +850,7 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
     //
     if (!actorat[tilex][tiley])
     {
-        PlaceItemType (itemtype, Point2D<int>::Make(tilex, tiley));
+        PlaceItemType (itemtype, tilex,tiley);
         return;
     }
 
@@ -865,7 +865,7 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
         {
             if (!actorat[x][y])
             {
-                PlaceItemType (itemtype, Point2D<int>::Make(x, y));
+                PlaceItemType (itemtype, x,y);
                 return;
             }
         }
@@ -886,37 +886,36 @@ void KillActor (objtype *ob)
 {
     int     tilex,tiley;
 
-    tilex = ob->tilePoint.x = (word)(ob->x >> TILESHIFT);         // drop item on center
-    tiley = ob->tilePoint.y = (word)(ob->y >> TILESHIFT);
+    tilex = ob->tilex = (word)(ob->x >> TILESHIFT);         // drop item on center
+    tiley = ob->tiley = (word)(ob->y >> TILESHIFT);
 
     switch (ob->obclass)
     {
         case guardobj:
-            GivePoints (I_GUARDSCORE);
-            // IOANCH 25.10.2012: all constants started with I_
+            GivePoints (I_GUARDSCORE);	// IOANCH 25.10.2012: all constants started with I_
             NewState (ob,&s_grddie1);
-            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case officerobj:
             GivePoints (I_OFFICERSCORE);
             NewState (ob,&s_ofcdie1);
-            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case mutantobj:
             GivePoints (I_MUTANTSCORE);
             NewState (ob,&s_mutdie1);
-            PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case ssobj:
             GivePoints (I_SSSCORE);
             NewState (ob,&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
-                PlaceItemType (bo_machinegun,Point2D<int>::Make(tilex, tiley));
+                PlaceItemType (bo_machinegun,tilex,tiley);
             else
-                PlaceItemType (bo_clip2,Point2D<int>::Make(tilex, tiley));
+                PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case dogobj:
@@ -927,13 +926,13 @@ void KillActor (objtype *ob)
         case bossobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_bossdie1);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case gretelobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_greteldie1);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case giftobj:
@@ -988,25 +987,25 @@ void KillActor (objtype *ob)
         case transobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_transdie0);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case uberobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_uberdie0);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case willobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_willdie1);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case deathobj:
             GivePoints (I_BOSSSCORE);
             NewState (ob,&s_deathdie1);
-            PlaceItemType (bo_key1,Point2D<int>::Make(tilex, tiley));
+            PlaceItemType (bo_key1,tilex,tiley);
             break;
 		default:
 			;
@@ -1017,7 +1016,7 @@ void KillActor (objtype *ob)
 	Basic::livingNazis.remove(ob);
 	
     ob->flags &= ~FL_SHOOTABLE;
-    actorat[ob->tilePoint.x][ob->tilePoint.y] = NULL;
+    actorat[ob->tilex][ob->tiley] = NULL;
     ob->flags |= FL_NONMARK;
 }
 
@@ -1089,8 +1088,7 @@ void DamageActor (objtype *ob, unsigned damage)
 Boolean CheckLine (objtype *ob, Boolean solidActors)
 {
     // IOANCH 20130305: DRY
-    return Basic::GenericCheckLine(Point2D<fixed>::Make(ob->x, ob->y),
-                                   Point2D<fixed>::Make(player->x, player->y), solidActors);
+    return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y, solidActors);
 }
 
 

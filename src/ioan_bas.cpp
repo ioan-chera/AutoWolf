@@ -139,25 +139,24 @@ byte Basic::NextObjectAt(int tx, int ty)
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnStand (classtype which, const Point2D<int> &tilePoint,
-                             int dir)
+static objtype *_SpawnStand (classtype which, int tilex, int tiley, int dir)
 {
     word *map;
     word tile;
     
     if(atr::states[which].stand)
     {
-        SpawnNewObj(tilePoint.x, tilePoint.y, atr::states[which].stand);
+        SpawnNewObj(tilex, tiley, atr::states[which].stand);
         if(atr::speeds[which].patrol >= 0)
             newobj->speed = atr::speeds[which].patrol;
         if(!loadedgame)
             gamestate.killtotal++;
     
-        map = mapsegs[0]+tilePoint.MapUnfold(mapshift);
+        map = mapsegs[0]+(tiley<<mapshift)+tilex;
         tile = *map;
         if (tile == AMBUSHTILE)
         {
-            tilemap[tilePoint.x][tilePoint.y] = 0;
+            tilemap[tilex][tiley] = 0;
 
             if (*(map+1) >= AREATILE)
                 tile = *(map+1);
@@ -189,12 +188,11 @@ static objtype *_SpawnStand (classtype which, const Point2D<int> &tilePoint,
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnPatrol (classtype which, const Point2D<int> &tilePoint,
-                              int dir)
+static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 {
     if(atr::states[which].patrol)
     {
-        SpawnNewObj(tilePoint.x, tilePoint.y, atr::states[which].patrol);
+        SpawnNewObj(tilex, tiley, atr::states[which].patrol);
         if(atr::speeds[which].patrol >= 0)
             newobj->speed = atr::speeds[which].patrol;
         if (!loadedgame)
@@ -207,25 +205,25 @@ static objtype *_SpawnPatrol (classtype which, const Point2D<int> &tilePoint,
         newobj->flags |= FL_SHOOTABLE;
         newobj->active = ac_yes;
 
-        actorat[newobj->tilePoint.x][newobj->tilePoint.y] = NULL;           // don't use original spot
+        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
 
         switch (dir)
         {
             case 0:
-                newobj->tilePoint.x++;
+                newobj->tilex++;
                 break;
             case 1:
-                newobj->tilePoint.y--;
+                newobj->tiley--;
                 break;
             case 2:
-                newobj->tilePoint.x--;
+                newobj->tilex--;
                 break;
             case 3:
-                newobj->tilePoint.y++;
+                newobj->tiley++;
                 break;
         }
 
-        actorat[newobj->tilePoint.x][newobj->tilePoint.y] = newobj;
+        actorat[newobj->tilex][newobj->tiley] = newobj;
 
         
         return newobj;
@@ -238,14 +236,14 @@ static objtype *_SpawnPatrol (classtype which, const Point2D<int> &tilePoint,
 //
 // IOANCH 29.06.2012: made objtype *
 //
-static objtype *_SpawnBoss (classtype which, const Point2D<int> &tilePoint)
+static objtype *_SpawnBoss (classtype which, int tilex, int tiley)
 {
 	// IOANCH 29.06.2012: update this for ANY boss
 	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
     if(atr::states[which].stand)
     {
-        SpawnNewObj (tilePoint.x,tilePoint.y,atr::states[which].stand);
+        SpawnNewObj (tilex,tiley,atr::states[which].stand);
 
         spawnstate = atr::states[which].stand;
         atr::actions[which].spawn();
@@ -265,21 +263,21 @@ static objtype *_SpawnBoss (classtype which, const Point2D<int> &tilePoint)
 //
 // _SpawnGhosts
 //
-static void _SpawnGhosts (int which, const Point2D<int> &tilePoint)
+static void _SpawnGhosts (int which, int tilex, int tiley)
 {
     switch(which)
     {
         case en_blinky:
-            SpawnNewObj (tilePoint.x,tilePoint.y,&s_blinkychase1);
+            SpawnNewObj (tilex,tiley,&s_blinkychase1);
             break;
         case en_clyde:
-            SpawnNewObj (tilePoint.x,tilePoint.y,&s_clydechase1);
+            SpawnNewObj (tilex,tiley,&s_clydechase1);
             break;
         case en_pinky:
-            SpawnNewObj (tilePoint.x,tilePoint.y,&s_pinkychase1);
+            SpawnNewObj (tilex,tiley,&s_pinkychase1);
             break;
         case en_inky:
-            SpawnNewObj (tilePoint.x,tilePoint.y,&s_inkychase1);
+            SpawnNewObj (tilex,tiley,&s_inkychase1);
             break;
     }
 
@@ -300,7 +298,7 @@ static void _SpawnGhosts (int which, const Point2D<int> &tilePoint)
 //
 // Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
 //
-void Basic::SpawnEnemy(classtype which, const Point2D<int> &tilePoint, int dir, 
+void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
                        Boolean patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
@@ -317,9 +315,9 @@ void Basic::SpawnEnemy(classtype which, const Point2D<int> &tilePoint, int dir,
 	case mutantobj:
 	case dogobj:
 		if(patrol)
-			newenemy = _SpawnPatrol(which, tilePoint, dir);
+			newenemy = _SpawnPatrol(which, tilex, tiley, dir);
 		else
-			newenemy = _SpawnStand(which, tilePoint, dir);
+			newenemy = _SpawnStand(which, tilex, tiley, dir);
 		break;
 	case bossobj:
 	case schabbobj:
@@ -334,11 +332,11 @@ void Basic::SpawnEnemy(classtype which, const Point2D<int> &tilePoint, int dir,
 	case uberobj:
 	case willobj:
 	case deathobj:
-		newenemy = _SpawnBoss(which, tilePoint);
+		newenemy = _SpawnBoss(which, tilex, tiley);
 		break;
             // IOANCH 20130202: unification process
 	case ghostobj:
-		_SpawnGhosts(ghosttype, tilePoint);
+		_SpawnGhosts(ghosttype, tilex, tiley);
 		break;
     default:
         return;
@@ -391,8 +389,7 @@ Boolean Basic::IsDamaging(objtype *ret, int dist)
 //
 // IOANCH 20130513: compacted it a bit to comply with DRY
 //
-Boolean Basic::GenericCheckLine (const Point2D<int> &point1_in,
-                                 const Point2D<int> &point2_in,
+Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in, 
                                  Boolean solidActors)
 {
     static int  x1, x2, y1, y2; // IOANCH: made them static to be referred by a
@@ -405,13 +402,13 @@ Boolean Basic::GenericCheckLine (const Point2D<int> &point1_in,
     int         deltafrac;
     unsigned    value,intercept;
 
-    x1 = point1_in.x >> UNSIGNEDSHIFT;            // 1/256 tile precision
-    y1 = point1_in.y >> UNSIGNEDSHIFT;
+    x1 = x1_in >> UNSIGNEDSHIFT;            // 1/256 tile precision
+    y1 = y1_in >> UNSIGNEDSHIFT;
     xt1 = x1 >> 8;
     yt1 = y1 >> 8;
 
-	 x2 = point2_in.x >> UNSIGNEDSHIFT;
-	 y2 = point2_in.y >> UNSIGNEDSHIFT;
+	 x2 = x2_in >> UNSIGNEDSHIFT;
+	 y2 = y2_in >> UNSIGNEDSHIFT;
     xt2 = x2 >> 8;
     yt2 = y2 >> 8;
     
@@ -586,10 +583,6 @@ int Basic::ApproxDist(int dx, int dy)
 	if(dx < dy)
 		return dx + dy - (dx >> 1);
 	return dx + dy - (dy >> 1);
-}
-int Basic::ApproxDist(const Point2D<int> &dPoint)
-{
-    return ApproxDist(dPoint.x, dPoint.y);
 }
 
 //

@@ -66,12 +66,20 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
 typedef uint32_t longword;
-typedef int8_t Boolean; // IOANCH 20130516: made uppercase not to conflict
+typedef int8_t Boolean;
 typedef void * memptr;
+
+typedef struct
+{
+    int x,y;
+} Point;
+typedef struct
+{
+    Point ul,lr;
+} Rect;
 
 void Quit(const char *errorStr, ...);
 
-#include "Point2D.h"    // IOANCH 20130515
 #include "SODFlag.h"
 #include "id_pm.h"
 #include "id_sd.h"
@@ -81,13 +89,7 @@ void Quit(const char *errorStr, ...);
 #include "id_us.h"
 #include "id_ca.h"
 
-struct Rect
-{
-    Point2D<int> ul,lr;
-};
-
-
-#define MAPSPOT(point,plane) (mapsegs[plane][(point).MapUnfold(mapshift)])
+#define MAPSPOT(x,y,plane) (mapsegs[plane][((y)<<mapshift)+(x)])
 
 #define SIGN(x)         ((x)>0?1:-1)
 #define ABS(x)          ((int)(x)>0?(x):-(x))
@@ -474,7 +476,7 @@ typedef enum
 
 typedef struct doorstruct
 {
-    Point2D<byte> tilePoint;
+    byte     tilex,tiley;
     Boolean  vertical;
     byte     lock;
     doortype action;
@@ -501,8 +503,7 @@ typedef struct objstruct
     dirtype     dir;
 
     fixed       x,y;
-    
-    Point2D<word> tilePoint;
+    word        tilex,tiley;
 	fixed		recordx, recordy;	// IOANCH 20121211: record position for the bot
     byte        areanumber;
 

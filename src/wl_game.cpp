@@ -72,7 +72,7 @@ gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 // IOANCH 20130302: unification
-Point2D<int32_t>   spearPoint;
+int32_t         spearx,speary;
 unsigned        spearangle;
 Boolean         spearflag;
 
@@ -281,7 +281,7 @@ static void ScanInfoPlane(void)
                 case 20:
                 case 21:
                 case 22:
-                    SpawnPlayer(Point2D<int>::Make(x, y),NORTH+tile-19);
+                    SpawnPlayer(x,y,NORTH+tile-19);
                     break;
 
                 case 23:
@@ -340,12 +340,12 @@ static void ScanInfoPlane(void)
                 case 71:
                 case 72:
                     // IOANCH 20130302: unification
-                    SpawnStatic(Point2D<int>::Make(x, y),tile-23);
+                    SpawnStatic(x,y,tile-23);
                     break;
                 case 73:
                 case 74:
                     if(SPEAR())
-                        SpawnStatic(Point2D<int>::Make(x, y),tile-23);
+                        SpawnStatic(x,y,tile-23);
                     break;
 
 //
@@ -377,9 +377,7 @@ static void ScanInfoPlane(void)
                 case 109:
                 case 110:
                 case 111:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(guardobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 108);
+						 Basic::SpawnEnemy(guardobj, x, y, tile - 108);
                     break;
 
 
@@ -401,13 +399,11 @@ static void ScanInfoPlane(void)
                 case 113:
                 case 114:
                 case 115:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(guardobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 112, true);
+						 Basic::SpawnEnemy(guardobj, x, y, tile - 112, true);
                     break;
 
                 case 124:
-                    SpawnDeadGuard (Point2D<int>::Make(x, y));
+                    SpawnDeadGuard (x,y);
                     break;
 //
 // officer
@@ -430,9 +426,7 @@ static void ScanInfoPlane(void)
                 case 117:
                 case 118:
                 case 119:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(officerobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 116);
+						 Basic::SpawnEnemy(officerobj, x, y, tile - 116);
                     break;
 
 
@@ -454,9 +448,7 @@ static void ScanInfoPlane(void)
                 case 121:
                 case 122:
                 case 123:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(officerobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 120, true);
+						 Basic::SpawnEnemy(officerobj, x, y, tile - 120, true);
                     break;
 
 
@@ -481,9 +473,7 @@ static void ScanInfoPlane(void)
                 case 127:
                 case 128:
                 case 129:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(ssobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 126);
+						 Basic::SpawnEnemy(ssobj, x, y, tile - 126);
                     break;
 
 
@@ -505,9 +495,7 @@ static void ScanInfoPlane(void)
                 case 131:
                 case 132:
                 case 133:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(ssobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 130, true);
+						 Basic::SpawnEnemy(ssobj, x, y, tile - 130, true);
                     break;
 
 //
@@ -531,9 +519,7 @@ static void ScanInfoPlane(void)
                 case 135:
                 case 136:
                 case 137:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(dogobj,
-                                           Point2D<int>::Make(x, y),
-                                           tile - 134);
+						 Basic::SpawnEnemy(dogobj, x, y, tile - 134);
                     break;
 
 
@@ -555,9 +541,7 @@ static void ScanInfoPlane(void)
                 case 139:
                 case 140:
                 case 141:	// IOANCH 17.05.2012: use centralized function
-					Basic::SpawnEnemy(dogobj,
-                                      Point2D<int>::Make(x, y),
-                                      tile - 138, true);
+					Basic::SpawnEnemy(dogobj, x, y, tile - 138, true);
                     break;
 
 //
@@ -566,44 +550,44 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 214:	// IOANCH 17.05.2012: use centralized function
-				    if(!SPEAR()) Basic::SpawnEnemy(bossobj, Point2D<int>::Make(x, y));
+				    if(!SPEAR()) Basic::SpawnEnemy(bossobj, x, y);
                     break;
                 case 197:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(gretelobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(gretelobj, x, y);
                     break;
                 case 215:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(giftobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(giftobj, x, y);
                     break;
                 case 179:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(fatobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(fatobj, x, y);
                     break;
                 case 196:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(schabbobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(schabbobj, x, y);
                     break;
                 case 160:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(fakeobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(fakeobj, x, y);
                     break;
                 case 178:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(mechahitlerobj, Point2D<int>::Make(x, y));
+					if(!SPEAR()) Basic::SpawnEnemy(mechahitlerobj, x, y);
                     break;
 
                 case 106:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(spectreobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(spectreobj, x, y);
                     break;
                 case 107:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(angelobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(angelobj, x, y);
                     break;
                 case 125:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(transobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(transobj, x, y);
                     break;
                 case 142:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(uberobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(uberobj, x, y);
                     break;
                 case 143:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(willobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(willobj, x, y);
                     break;
                 case 161:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(deathobj, Point2D<int>::Make(x, y));
+					if(SPEAR()) Basic::SpawnEnemy(deathobj, x, y);
                     break;
 
 
@@ -629,7 +613,7 @@ static void ScanInfoPlane(void)
                 case 217:
                 case 218:
                 case 219:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(mutantobj, Point2D<int>::Make(x, y), tile - 216);
+						 Basic::SpawnEnemy(mutantobj, x, y, tile - 216);
                     break;
 
                 case 256:
@@ -650,7 +634,7 @@ static void ScanInfoPlane(void)
                 case 221:
                 case 222:
                 case 223:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(mutantobj, Point2D<int>::Make(x, y), tile - 220, true);
+						 Basic::SpawnEnemy(mutantobj, x, y, tile - 220, true);
                     break;
 
 //
@@ -659,19 +643,19 @@ static void ScanInfoPlane(void)
                     // IOANCH 20130302: unification
 
                 case 224:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, Point2D<int>::Make(x, y), 0, false, 
+					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_blinky);
                     break;
                 case 225:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, Point2D<int>::Make(x, y), 0, false, 
+					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_clyde);
                     break;
                 case 226:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, Point2D<int>::Make(x, y), 0, false,
+					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_pinky);
                     break;
                 case 227:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, Point2D<int>::Make(x, y), 0, false,
+					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_inky);
                     break;
             }
@@ -726,10 +710,10 @@ void SetupGameLevel (void)
     #define MXX MAPSIZE - 1
 
     // Read feature flags data from map corners and overwrite corners with adjacent tiles
-    ffDataTopLeft     = MAPSPOT(Point2D<int>::Make(0),   0); MAPSPOT(Point2D<int>::Make(0),   0) = MAPSPOT(Point2D<int>::Make(1, 0),       0);
-    ffDataTopRight    = MAPSPOT(Point2D<int>::Make(MXX, 0),   0); MAPSPOT(Point2D<int>::Make(MXX, 0),   0) = MAPSPOT(Point2D<int>::Make(MXX, 1),       0);
-    ffDataBottomRight = MAPSPOT(Point2D<int>::Make(MXX), 0); MAPSPOT(Point2D<int>::Make(MXX), 0) = MAPSPOT(Point2D<int>::Make(MXX - 1, MXX),     0);
-    ffDataBottomLeft  = MAPSPOT(Point2D<int>::Make(0, MXX), 0); MAPSPOT(Point2D<int>::Make(0, MXX), 0) = MAPSPOT(Point2D<int>::Make(0, MXX - 1), 0);
+    ffDataTopLeft     = MAPSPOT(0,   0,   0); MAPSPOT(0,   0,   0) = MAPSPOT(1,       0,       0);
+    ffDataTopRight    = MAPSPOT(MXX, 0,   0); MAPSPOT(MXX, 0,   0) = MAPSPOT(MXX,     1,       0);
+    ffDataBottomRight = MAPSPOT(MXX, MXX, 0); MAPSPOT(MXX, MXX, 0) = MAPSPOT(MXX - 1, MXX,     0);
+    ffDataBottomLeft  = MAPSPOT(0,   MXX, 0); MAPSPOT(0,   MXX, 0) = MAPSPOT(0,       MXX - 1, 0);
 
     #undef MXX
 #endif
@@ -793,7 +777,7 @@ void SetupGameLevel (void)
                     case 96:
                     case 98:
                     case 100:
-                        SpawnDoor (Point2D<int>::Make(x, y),1,(tile-90)/2);
+                        SpawnDoor (x,y,1,(tile-90)/2);
                         break;
                     case 91:
                     case 93:
@@ -801,7 +785,7 @@ void SetupGameLevel (void)
                     case 97:
                     case 99:
                     case 101:
-                        SpawnDoor (Point2D<int>::Make(x, y),0,(tile-91)/2);
+                        SpawnDoor (x,y,0,(tile-91)/2);
                         break;
                 }
             }
@@ -1507,8 +1491,8 @@ startplayloop:
             gamestate.mapon = 20;
             SetupGameLevel ();
             StartMusic ();
-            player->x = spearPoint.x;
-            player->y = spearPoint.y;
+            player->x = spearx;
+            player->y = speary;
             player->angle = (short)spearangle;
             spearflag = false;
             Thrust (0,0);

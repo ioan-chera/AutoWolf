@@ -28,15 +28,15 @@
 #define WL_ACT1_H_
 
 void InitStaticList ();
-void SpawnStatic (const Point2D<int> &tilePoint, int type);
-void PlaceItemType (int itemtype, const Point2D<int> &tilePoint);
+void SpawnStatic (int tilex, int tiley, int type);
+void PlaceItemType (int itemtype, int tilex, int tiley);
 void InitAreas ();
 void InitDoorList ();
-void SpawnDoor (const Point2D<int> &tilePoint, Boolean vertical, int lock);
+void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock);
 void OpenDoor (int door);
 void OperateDoor (int door);
 void MoveDoors ();
-void PushWall (const Point2D<int> &checkPoint, int dir);
+void PushWall (int checkx, int checky, int dir);
 void MovePWalls ();
 
 

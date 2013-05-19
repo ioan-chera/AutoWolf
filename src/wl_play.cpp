@@ -1230,7 +1230,7 @@ void DoActor (objtype * ob)
         return;
 
     if (!(ob->flags & (FL_NONMARK | FL_NEVERMARK)))
-        actorat[ob->tilePoint.x][ob->tilePoint.y] = NULL;
+        actorat[ob->tilex][ob->tiley] = NULL;
 
 //
 // non transitional object
@@ -1252,10 +1252,10 @@ void DoActor (objtype * ob)
         if (ob->flags & FL_NEVERMARK)
             return;
 
-        if ((ob->flags & FL_NONMARK) && actorat[ob->tilePoint.x][ob->tilePoint.y])
+        if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
             return;
 
-        actorat[ob->tilePoint.x][ob->tilePoint.y] = ob;
+        actorat[ob->tilex][ob->tiley] = ob;
         return;
     }
 
@@ -1311,10 +1311,10 @@ think:
     if (ob->flags & FL_NEVERMARK)
         return;
 
-    if ((ob->flags & FL_NONMARK) && actorat[ob->tilePoint.x][ob->tilePoint.y])
+    if ((ob->flags & FL_NONMARK) && actorat[ob->tilex][ob->tiley])
         return;
 
-    actorat[ob->tilePoint.x][ob->tilePoint.y] = ob;
+    actorat[ob->tilex][ob->tiley] = ob;
 }
 
 //==========================================================================

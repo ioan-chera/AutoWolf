@@ -28,7 +28,7 @@ void    RecordDemo (void);
 
 // IOANCH 20130302: unification
 
-extern  Point2D<int32_t>   spearPoint;
+extern  int32_t            spearx,speary;
 extern  unsigned        spearangle;
 extern  Boolean         spearflag;
 

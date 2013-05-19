@@ -165,7 +165,7 @@ void DrawRain(byte *vbuf, uint32_t vbufPitch)
             floory = (-(gv >> TILESHIFT) - 1) & 63;
 
             // Is there a ceiling tile?
-            if(MAPSPOT(Point2D<fixed>::Make(floorx, floory), 2) >> 8) continue;
+            if(MAPSPOT(floorx, floory, 2) >> 8) continue;
 #endif
 
             vbuf[yy * vbufPitch + xx] = shade+15;
@@ -228,7 +228,7 @@ void DrawSnow(byte *vbuf, uint32_t vbufPitch)
             floory = (-(gv >> TILESHIFT) - 1) & 63;
 
             // Is there a ceiling tile?
-            if(MAPSPOT(Point2D<fixed>::Make(floorx, floory), 2) >> 8) continue;
+            if(MAPSPOT(floorx, floory, 2) >> 8) continue;
 #endif
 
             if(shade < 10)

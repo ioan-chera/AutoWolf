@@ -242,22 +242,21 @@ void InitStaticList (void)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SpawnStatic (const Point2D<int> &tilePoint, int type)
+void SpawnStatic (int tilex, int tiley, int type)
 {
     // IOANCH 20130202: unification process
     struct _statinfo_t *statinfo;
     statinfo = IMPALE(statinfo);
     
     laststatobj->shapenum = statinfo[type].picnum;
-    laststatobj->tilex = tilePoint.x;
-    laststatobj->tiley = tilePoint.y;
-    laststatobj->visspot = &spotvis[tilePoint.x][tilePoint.y];
+    laststatobj->tilex = tilex;
+    laststatobj->tiley = tiley;
+    laststatobj->visspot = &spotvis[tilex][tiley];
 
     switch (statinfo[type].type)
     {
         case block:
-            actorat[tilePoint.x][tilePoint.y] = (objtype *) 64;
-            // consider it a blocking tile
+            actorat[tilex][tiley] = (objtype *) 64;          // consider it a blocking tile
         case none:
             laststatobj->flags = 0;
             break;
@@ -288,8 +287,7 @@ void SpawnStatic (const Point2D<int> &tilePoint, int type)
 			// IOANCH 26.10.2012: add to list
             // ONLY if on startup, otherwise let LoadTheGame add it to list
             if(!loadedgame)
-                Basic::AddItemToList(tilePoint.x, tilePoint.y,
-                                     laststatobj->itemnumber);
+                Basic::AddItemToList(tilex, tiley, laststatobj->itemnumber);
             break;
 		default:
 			;
@@ -316,7 +314,7 @@ void SpawnStatic (const Point2D<int> &tilePoint, int type)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void PlaceItemType (int itemtype, const Point2D<int> &tilePoint)
+void PlaceItemType (int itemtype, int tilex, int tiley)
 {
     int type;
     statobj_t *spot;
@@ -356,9 +354,9 @@ void PlaceItemType (int itemtype, const Point2D<int> &tilePoint)
     // place it
     //
     spot->shapenum = statinfo[type].picnum;
-    spot->tilex = tilePoint.x;
-    spot->tiley = tilePoint.y;
-    spot->visspot = &spotvis[tilePoint.x][tilePoint.y];
+    spot->tilex = tilex;
+    spot->tiley = tiley;
+    spot->visspot = &spotvis[tilex][tiley];
     spot->flags = FL_BONUS | statinfo[type].specialFlags;
     spot->itemnumber = statinfo[type].type;
 	// IOANCH: add item to list
@@ -473,7 +471,7 @@ void InitDoorList (void)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SpawnDoor (const Point2D<int> &tilePoint, Boolean vertical, int lock)
+void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
 {
     word *map;
 
@@ -481,31 +479,31 @@ void SpawnDoor (const Point2D<int> &tilePoint, Boolean vertical, int lock)
         Quit ("64+ doors on level!");
 
     doorposition[doornum] = 0;              // doors start out fully closed
-    lastdoorobj->tilePoint = tilePoint;
+    lastdoorobj->tilex = tilex;
+    lastdoorobj->tiley = tiley;
     lastdoorobj->vertical = vertical;
     lastdoorobj->lock = lock;
     lastdoorobj->action = dr_closed;
 
-    actorat[tilePoint.x][tilePoint.y] =
-    (objtype *)(uintptr_t)(doornum | 0x80);   // consider it a solid wall
+    actorat[tilex][tiley] = (objtype *)(uintptr_t)(doornum | 0x80);   // consider it a solid wall
 
     //
     // make the door tile a special tile, and mark the adjacent tiles
     // for door sides
     //
-    tilemap[tilePoint.x][tilePoint.y] = doornum | 0x80;
-    map = mapsegs[0] + tilePoint.MapUnfold(mapshift);
+    tilemap[tilex][tiley] = doornum | 0x80;
+    map = mapsegs[0] + (tiley<<mapshift) +tilex;
     if (vertical)
     {
         *map = *(map-1);                        // set area number
-        tilemap[tilePoint.x][tilePoint.y-1] |= 0x40;
-        tilemap[tilePoint.x][tilePoint.y+1] |= 0x40;
+        tilemap[tilex][tiley-1] |= 0x40;
+        tilemap[tilex][tiley+1] |= 0x40;
     }
     else
     {
         *map = *(map-mapwidth);                                 // set area number
-        tilemap[tilePoint.x-1][tilePoint.y] |= 0x40;
-        tilemap[tilePoint.x+1][tilePoint.y] |= 0x40;
+        tilemap[tilex-1][tiley] |= 0x40;
+        tilemap[tilex+1][tiley] |= 0x40;
     }
 
     doornum++;
@@ -541,51 +539,51 @@ void OpenDoor (int door)
 
 static void _CloseDoor (int door)
 {
-    Point2D<int> tilePoint;
-    int     area;
+    int     tilex,tiley,area;
     objtype *check;
 
     //
     // don't close on anything solid
     //
-    tilePoint  = doorobjlist[door].tilePoint;
+    tilex = doorobjlist[door].tilex;
+    tiley = doorobjlist[door].tiley;
 
-    if (actorat[tilePoint.x][tilePoint.y])
+    if (actorat[tilex][tiley])
         return;
 
-    if (player->tilePoint == tilePoint)
+    if (player->tilex == tilex && player->tiley == tiley)
         return;
-    
+
     if (doorobjlist[door].vertical)
     {
-        if ( player->tilePoint.y == tilePoint.y )
+        if ( player->tiley == tiley )
         {
-            if ( ((player->x+MINDIST) >>TILESHIFT) == tilePoint.x )
+            if ( ((player->x+MINDIST) >>TILESHIFT) == tilex )
                 return;
-            if ( ((player->x-MINDIST) >>TILESHIFT) == tilePoint.x )
+            if ( ((player->x-MINDIST) >>TILESHIFT) == tilex )
                 return;
         }
-        check = actorat[tilePoint.x-1][tilePoint.y];
-        if (ISPOINTER(check) && ((check->x+MINDIST) >> TILESHIFT) == tilePoint.x )
+        check = actorat[tilex-1][tiley];
+        if (ISPOINTER(check) && ((check->x+MINDIST) >> TILESHIFT) == tilex )
             return;
-        check = actorat[tilePoint.x+1][tilePoint.y];
-        if (ISPOINTER(check) && ((check->x-MINDIST) >> TILESHIFT) == tilePoint.x )
+        check = actorat[tilex+1][tiley];
+        if (ISPOINTER(check) && ((check->x-MINDIST) >> TILESHIFT) == tilex )
             return;
     }
     else if (!doorobjlist[door].vertical)
     {
-        if (player->tilePoint.x == tilePoint.x)
+        if (player->tilex == tilex)
         {
-            if ( ((player->y+MINDIST) >>TILESHIFT) == tilePoint.y )
+            if ( ((player->y+MINDIST) >>TILESHIFT) == tiley )
                 return;
-            if ( ((player->y-MINDIST) >>TILESHIFT) == tilePoint.y )
+            if ( ((player->y-MINDIST) >>TILESHIFT) == tiley )
                 return;
         }
-        check = actorat[tilePoint.x][tilePoint.y-1];
-        if (ISPOINTER(check) && ((check->y+MINDIST) >> TILESHIFT) == tilePoint.y )
+        check = actorat[tilex][tiley-1];
+        if (ISPOINTER(check) && ((check->y+MINDIST) >> TILESHIFT) == tiley )
             return;
-        check = actorat[tilePoint.x][tilePoint.y+1];
-        if (ISPOINTER(check) && ((check->y-MINDIST) >> TILESHIFT) == tilePoint.y )
+        check = actorat[tilex][tiley+1];
+        if (ISPOINTER(check) && ((check->y-MINDIST) >> TILESHIFT) == tiley )
             return;
     }
 
@@ -593,18 +591,18 @@ static void _CloseDoor (int door)
     //
     // play door sound if in a connected area
     //
-    area = *(mapsegs[0] + doorobjlist[door].tilePoint.MapUnfold(mapshift))-AREATILE;
+    area = *(mapsegs[0] + (doorobjlist[door].tiley<<mapshift)
+        +doorobjlist[door].tilex)-AREATILE;
     if (areabyplayer[area])
     {
-        PlaySoundLocTile(CLOSEDOORSND,doorobjlist[door].tilePoint.x,
-                         doorobjlist[door].tilePoint.y); // JAB
+        PlaySoundLocTile(CLOSEDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley); // JAB
     }
 
     doorobjlist[door].action = dr_closing;
     //
     // make the door space solid
     //
-    actorat[tilePoint.x][tilePoint.y] = (objtype *)(uintptr_t)(door | 0x80);
+    actorat[tilex][tiley] = (objtype *)(uintptr_t)(door | 0x80);
 }
 
 
@@ -688,7 +686,8 @@ static void _DoorOpening (int door)
         //
         // door is just starting to open, so connect the areas
         //
-        map = mapsegs[0] + doorobjlist[door].tilePoint.MapUnfold(mapshift);
+        map = mapsegs[0] + (doorobjlist[door].tiley<<mapshift)
+            +doorobjlist[door].tilex;
 
         if (doorobjlist[door].vertical)
         {
@@ -712,8 +711,7 @@ static void _DoorOpening (int door)
                 _ConnectAreas ();
 
             if (areabyplayer[area1])
-                PlaySoundLocTile(OPENDOORSND,doorobjlist[door].tilePoint.x,
-                                 doorobjlist[door].tilePoint.y);  // JAB
+                PlaySoundLocTile(OPENDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley);  // JAB
         }
     }
 
@@ -729,7 +727,7 @@ static void _DoorOpening (int door)
         position = 0xffff;
         doorobjlist[door].ticcount = 0;
         doorobjlist[door].action = dr_open;
-        actorat[doorobjlist[door].tilePoint.x][doorobjlist[door].tilePoint.y] = 0;
+        actorat[doorobjlist[door].tilex][doorobjlist[door].tiley] = 0;
     }
 
     doorposition[door] = (word) position;
@@ -750,12 +748,13 @@ static void _DoorClosing (int door)
     unsigned area1,area2;
     word *map;
     int32_t position;
-    Point2D<int> tilePoint;
+    int tilex,tiley;
 
-    tilePoint = doorobjlist[door].tilePoint;
+    tilex = doorobjlist[door].tilex;
+    tiley = doorobjlist[door].tiley;
 
-    if ( ((int)(uintptr_t)actorat[tilePoint.x][tilePoint.y] != (door | 0x80))
-        || (player->tilePoint == tilePoint) )
+    if ( ((int)(uintptr_t)actorat[tilex][tiley] != (door | 0x80))
+        || (player->tilex == tilex && player->tiley == tiley) )
     {                       // something got inside the door
         OpenDoor (door);
         return;
@@ -776,7 +775,7 @@ static void _DoorClosing (int door)
 
         doorobjlist[door].action = dr_closed;
 
-        map = mapsegs[0] + doorobjlist[door].tilePoint.MapUnfold(mapshift);
+        map = mapsegs[0] + (doorobjlist[door].tiley<<mapshift) + doorobjlist[door].tilex;
 
         if (doorobjlist[door].vertical)
         {
@@ -865,40 +864,38 @@ static int _dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void PushWall (const Point2D<int> &checkPoint, int dir)
+void PushWall (int checkx, int checky, int dir)
 {
-    int oldtile;
-    Point2D<int> dPoint;
+    int oldtile, dx, dy;
 
     if (pwallstate)
         return;
 
-    oldtile = tilemap[checkPoint.x][checkPoint.y];
+    oldtile = tilemap[checkx][checky];
     if (!oldtile)
         return;
 
-    dPoint.SetValue(_dirs[dir][0], _dirs[dir][1]);
+    dx = _dirs[dir][0];
+    dy = _dirs[dir][1];
 
-    if (actorat[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y])
+    if (actorat[checkx+dx][checky+dy])
     {
         SD_PlaySound (NOWAYSND);
         return;
     }
-    actorat[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y] =
-    (objtype *)(uintptr_t)
-    (tilemap[checkPoint.x+dPoint.x][checkPoint.y+dPoint.y] = oldtile);
+    actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
 
     gamestate.secretcount++;
-    pwallx = checkPoint.x;
-    pwally = checkPoint.y;
+    pwallx = checkx;
+    pwally = checky;
     pwalldir = dir;
     pwallstate = 1;
     pwallpos = 0;
     pwalltile = tilemap[pwallx][pwally];
     tilemap[pwallx][pwally] = 64;
-    tilemap[pwallx+dPoint.x][pwally+dPoint.y] = 64;
+    tilemap[pwallx+dx][pwally+dy] = 64;
     *(mapsegs[1]+(pwally<<mapshift)+pwallx) = 0;   // remove P tile info
-    *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+player->tilePoint.MapUnfold(mapshift)); // set correct floorcode (BrotherTank's fix)
+    *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex); // set correct floorcode (BrotherTank's fix)
 
     SD_PlaySound (PUSHWALLSND);
 }
