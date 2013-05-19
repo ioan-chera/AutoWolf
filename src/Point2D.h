@@ -63,11 +63,19 @@ public:
     }
     size_t MapUnfold(size_t shift) const
     {
-        return (y << shift) + x;
+        return ((size_t)y << shift) + x;
     }
     Boolean IsEqual(T valx, T valy) const
     {
         return x == valx && y == valy;
+    }
+    Boolean IsEqual(const Point2D<T> &o) const
+    {
+        return IsEqual(o.x, o.y);
+    }
+    Boolean operator == (const Point2D<T> &o) const
+    {
+        return IsEqual(o);
     }
     static Point2D<T> Make(T valx, T valy)
     {

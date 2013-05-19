@@ -474,7 +474,7 @@ typedef enum
 
 typedef struct doorstruct
 {
-    byte     tilex,tiley;
+    Point2D<byte> tilePoint;
     Boolean  vertical;
     byte     lock;
     doortype action;
