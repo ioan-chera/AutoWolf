@@ -52,9 +52,9 @@ extern SDL_Color palette_wl6[256];
 
 #define VL_WaitVBL(a) SDL_Delay((a)*8)
 
-void VL_SetVGAPlaneMode (void);
-void VL_SetTextMode (void);
-void VL_Shutdown (void);
+void VL_SetVGAPlaneMode ();
+void VL_SetTextMode ();
+void VL_Shutdown ();
 
 void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);

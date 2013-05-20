@@ -32,7 +32,7 @@ extern  char    helpfilename[];
 class PString;
 extern PString endfilename;
 
-extern  void    HelpScreens(void);
-extern  void    EndText(void);
+extern  void    HelpScreens();
+extern  void    EndText();
 
 #endif

@@ -39,6 +39,6 @@ Boolean         SetViewSize (unsigned width, unsigned height);
 Boolean         LoadTheGame(FILE *file,int x,int y);
 Boolean         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
-void            ShutdownId (void);
+void            ShutdownId ();
 
 #endif

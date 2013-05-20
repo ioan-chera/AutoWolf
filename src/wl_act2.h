@@ -35,7 +35,7 @@ void KillActor (objtype *ob);
 void SpawnDeadGuard (int tilex, int tiley);
 
 void A_DeathScream (objtype *ob);
-void SpawnBJVictory (void);
+void SpawnBJVictory ();
 
 void    T_Projectile (objtype *ob);
 void A_Smoke (objtype *ob);

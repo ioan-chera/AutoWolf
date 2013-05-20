@@ -100,7 +100,7 @@ CASSERT(lengthof(palette_sod) == 256 && lengthof(palette_wl6) == 256)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void	VL_Shutdown (void)
+void	VL_Shutdown ()
 {
 	//VL_SetTextMode ();
 }
@@ -115,7 +115,7 @@ void	VL_Shutdown (void)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void	VL_SetVGAPlaneMode (void)
+void	VL_SetVGAPlaneMode ()
 {
 	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
     // IOANCH 20130202: unification process

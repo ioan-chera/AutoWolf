@@ -105,7 +105,7 @@ static Boolean layoutdone;
 =====================
 */
 
-void RipToEOL (void)
+void RipToEOL ()
 {
     while (*text++ != '\n')         // scan to end of line
         ;
@@ -120,7 +120,7 @@ void RipToEOL (void)
 =====================
 */
 
-int ParseNumber (void)
+int ParseNumber ()
 {
     char  ch;
     char  num[80];
@@ -160,7 +160,7 @@ int ParseNumber (void)
 =====================
 */
 
-void ParsePicCommand (void)
+void ParsePicCommand ()
 {
     picy=ParseNumber();
     picx=ParseNumber();
@@ -169,7 +169,7 @@ void ParsePicCommand (void)
 }
 
 
-void ParseTimedCommand (void)
+void ParseTimedCommand ()
 {
     picy=ParseNumber();
     picx=ParseNumber();
@@ -190,7 +190,7 @@ void ParseTimedCommand (void)
 =====================
 */
 
-void TimedPicCommand (void)
+void TimedPicCommand ()
 {
     ParseTimedCommand ();
 
@@ -219,7 +219,7 @@ void TimedPicCommand (void)
 =====================
 */
 
-void HandleCommand (void)
+void HandleCommand ()
 {
     int     i,margin,top,bottom;
     int     picwidth,picheight,picmid;
@@ -322,7 +322,7 @@ void HandleCommand (void)
 =====================
 */
 
-void NewLine (void)
+void NewLine ()
 {
     char    ch;
 
@@ -360,7 +360,7 @@ void NewLine (void)
 =====================
 */
 
-void HandleCtrls (void)
+void HandleCtrls ()
 {
     char    ch;
 
@@ -382,7 +382,7 @@ void HandleCtrls (void)
 =====================
 */
 
-void HandleWord (void)
+void HandleWord ()
 {
     char    wword[WORDLIMIT];
     int     wordindex;
@@ -539,7 +539,7 @@ void PageLayout (Boolean shownumber)
 =====================
 */
 
-void BackPage (void)
+void BackPage ()
 {
     pagenum--;
     do
@@ -564,7 +564,7 @@ void BackPage (void)
 =
 =====================
 */
-void CacheLayoutGraphics (void)
+void CacheLayoutGraphics ()
 {
     char    *bombpoint, *textstart;
     char    ch;
@@ -731,7 +731,7 @@ PString endfilename("ENDART1.");
 =
 =================
 */
-void HelpScreens (void)
+void HelpScreens ()
 {
     int     artnum;
     char    *text;
@@ -768,7 +768,7 @@ void HelpScreens (void)
 //
 // END ARTICLES
 //
-void EndText (void)
+void EndText ()
 {
     int     artnum;
     char    *text;

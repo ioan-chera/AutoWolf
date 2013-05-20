@@ -170,33 +170,33 @@ extern           int        JoyNumButtons;
 							if (code == LastScan) LastScan = sc_None;}
 
 // DEBUG - put names in prototypes
-extern	void		IN_Startup(void),IN_Shutdown(void);
-extern	void		IN_ClearKeysDown(void);
+extern	void		IN_Startup(),IN_Shutdown();
+extern	void		IN_ClearKeysDown();
 extern	void		IN_ReadControl(int,ControlInfo *);
 extern	void		IN_GetJoyAbs(word joy,word *xp,word *yp);
 extern	void		IN_SetupJoy(word joy,word minx,word maxx,
 								word miny,word maxy);
-extern	void		IN_StopDemo(void),IN_FreeDemoBuffer(void),
-					IN_Ack(void);
+extern	void		IN_StopDemo(),IN_FreeDemoBuffer(),
+					IN_Ack();
 extern	Boolean		IN_UserInput(longword delay);
-extern	char		IN_WaitForASCII(void);
-extern	ScanCode	IN_WaitForKey(void);
+extern	char		IN_WaitForASCII();
+extern	ScanCode	IN_WaitForKey();
 extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();
 
-int     IN_MouseButtons (void);
+int     IN_MouseButtons ();
 
 Boolean IN_JoyPresent();
 void    IN_SetJoyCurrent(int joyIndex);
-int     IN_JoyButtons (void);
+int     IN_JoyButtons ();
 void    IN_GetJoyDelta(int *dx,int *dy);
 void    IN_GetJoyFineDelta(int *dx, int *dy);
 
-void    IN_StartAck(void);
-Boolean IN_CheckAck (void);
+void    IN_StartAck();
+Boolean IN_CheckAck ();
 bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 

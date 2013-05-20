@@ -118,18 +118,18 @@ void US_ControlPanel(ScanCode);
 
 void EnableEndGameMenuItem();
 
-void SetupControlPanel(void);
+void SetupControlPanel();
 void SetupSaveGames();
-void CleanupControlPanel(void);
+void CleanupControlPanel();
 
 void DrawMenu(CP_iteminfo *item_i,CP_itemtype *items);
 int  HandleMenu(CP_iteminfo *item_i,
                 CP_itemtype *items,
                 void (*routine)(int w));
-void ClearMScreen(void);
+void ClearMScreen();
 void DrawWindow(int x,int y,int w,int h,int wcolor);
 void DrawOutline(int x,int y,int w,int h,int color1,int color2);
-void WaitKeyUp(void);
+void WaitKeyUp();
 void ReadAnyControl(ControlInfo *ci);
 void TicDelay(int count);
 void CacheLump(int lumpstart,int lumpend);
@@ -137,10 +137,10 @@ void UnCacheLump(int lumpstart,int lumpend);
 int StartCPMusic(int song);
 int  Confirm(const char *string);
 void Message(const char *string);
-void CheckPause(void);
-void ShootSnd(void);
-void CheckSecretMissions(void);
-void BossKey(void);
+void CheckPause();
+void ShootSnd();
+void CheckSecretMissions();
+void BossKey();
 
 void DrawGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
 void DrawHalfStep(int x,int y);
@@ -149,21 +149,21 @@ void SetTextColor(CP_itemtype *items,int hlight);
 void DrawMenuGun(CP_iteminfo *iteminfo);
 void DrawStripes(int y);
 
-void DefineMouseBtns(void);
-void DefineJoyBtns(void);
-void DefineKeyBtns(void);
-void DefineKeyMove(void);
+void DefineMouseBtns();
+void DefineJoyBtns();
+void DefineKeyBtns();
+void DefineKeyMove();
 void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
 
-void DrawMainMenu(void);
-void DrawSoundMenu(void);
+void DrawMainMenu();
+void DrawSoundMenu();
 void DrawLoadSaveScreen(int loadsave);
-void DrawNewEpisode(void);
-void DrawNewGame(void);
+void DrawNewEpisode();
+void DrawNewGame();
 void DrawChangeView(int view);
-void DrawMouseSens(void);
-void DrawCtlScreen(void);
-void DrawCustomScreen(void);
+void DrawMouseSens();
+void DrawCtlScreen();
+void DrawCustomScreen();
 void DrawLSAction(int which);
 void DrawCustMouse(int hilight);
 void DrawCustJoy(int hilight);
@@ -193,9 +193,9 @@ int  CP_CheckQuick(ScanCode scancode);
 int CustomControls(int);
 int MouseSensitivity(int);
 
-void CheckForEpisodes(void);
+void CheckForEpisodes();
 
-void FreeMusic(void);
+void FreeMusic();
 
 
 enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
@@ -226,5 +226,5 @@ typedef struct {
 extern LRstruct LevelRatios[];
 
 void Write (int x,int y,const char *string);
-void NonShareware(void);
+void NonShareware();
 int GetYorN(int x,int y,int pic);

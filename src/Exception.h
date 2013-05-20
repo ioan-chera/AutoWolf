@@ -35,7 +35,7 @@ public:
     {
         return exctext;
     }
-    friend void DrawPlayBorder(void);
+    friend void DrawPlayBorder();
 };
 
 #endif

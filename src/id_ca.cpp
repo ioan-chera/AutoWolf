@@ -387,7 +387,7 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
 //
 // CAL_SetupGrFile
 //
-static void CAL_SetupGrFile (void)
+static void CAL_SetupGrFile ()
 {
     PString fname;
     int handle;
@@ -502,7 +502,7 @@ static void CAL_SetupGrFile (void)
 //
 // CAL_SetupMapFile
 //
-static void CAL_SetupMapFile (void)
+static void CAL_SetupMapFile ()
 {
     int     i;
     int handle;
@@ -569,7 +569,7 @@ static void CAL_SetupMapFile (void)
 //
 // CAL_SetupAudioFile
 //
-static void CAL_SetupAudioFile (void)
+static void CAL_SetupAudioFile ()
 {
     PString fname;
 
@@ -600,7 +600,7 @@ static void CAL_SetupAudioFile (void)
 //
 // Open all files and load in headers
 //
-void CA_Startup (void)
+void CA_Startup ()
 {
 #ifdef PROFILE
     unlink ("PROFILE.TXT");
@@ -621,7 +621,7 @@ void CA_Startup (void)
 //
 // Closes all files
 //
-void CA_Shutdown (void)
+void CA_Shutdown ()
 {
     int i,start;
 
@@ -727,7 +727,7 @@ static void CAL_CacheAdlibSoundChunk (int chunk)
 //
 // Purges all sounds, then loads all new ones (mode switch)
 //
-void CA_LoadAllSounds (void)
+void CA_LoadAllSounds ()
 {
     unsigned start,i;
     unsigned char cachein = 0;

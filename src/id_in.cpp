@@ -142,7 +142,7 @@ static	Direction	DirTable[] =		// Quick lookup for total direction
 //		mouse driver
 //
 ///////////////////////////////////////////////////////////////////////////
-static int INL_GetMouseButtons(void)
+static int INL_GetMouseButtons()
 {
     int buttons = SDL_GetMouseState(NULL, NULL);
     int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
@@ -414,7 +414,7 @@ void IN_ProcessEvents()
 //	IN_Startup() - Starts up the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_Startup(void)
+void IN_Startup()
 {
 	if (IN_Started)
 		return;
@@ -459,7 +459,7 @@ void IN_Startup(void)
 //	IN_Shutdown() - Shuts down the Input Mgr
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_Shutdown(void)
+void IN_Shutdown()
 {
 	if (!IN_Started)
 		return;
@@ -475,7 +475,7 @@ void IN_Shutdown(void)
 //	IN_ClearKeysDown() - Clears the keyboard array
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_ClearKeysDown(void)
+void IN_ClearKeysDown()
 {
 	LastScan = sc_None;
 	LastASCII = key_None;
@@ -545,7 +545,7 @@ void IN_ReadControl(int player,ControlInfo *info)
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-ScanCode IN_WaitForKey(void)
+ScanCode IN_WaitForKey()
 {
 	ScanCode	result;
 
@@ -561,7 +561,7 @@ ScanCode IN_WaitForKey(void)
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
-char IN_WaitForASCII(void)
+char IN_WaitForASCII()
 {
 	char		result;
 
@@ -583,7 +583,7 @@ Boolean	btnstate[NUMBUTTONS];
 //
 // IN_StartAck
 //
-void IN_StartAck(void)
+void IN_StartAck()
 {
     IN_ProcessEvents();
 //
@@ -605,7 +605,7 @@ void IN_StartAck(void)
 //
 // IN_CheckAck
 //
-Boolean IN_CheckAck (void)
+Boolean IN_CheckAck ()
 {
     IN_ProcessEvents();
 //
@@ -649,7 +649,7 @@ Boolean IN_CheckAck (void)
 //
 // IN_Ack
 //
-void IN_Ack (void)
+void IN_Ack ()
 {
 	IN_StartAck ();
 
@@ -695,7 +695,7 @@ Boolean IN_UserInput(longword delay)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int IN_MouseButtons (void)
+int IN_MouseButtons ()
 {
 	if (MousePresent)
 		return INL_GetMouseButtons();

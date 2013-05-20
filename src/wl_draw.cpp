@@ -90,12 +90,12 @@ short   viewangle;
 fixed   viewsin,viewcos;
 
 void    TransformActor (objtype *ob);
-void    BuildTables (void);
-void    ClearScreen (void);
+void    BuildTables ();
+void    ClearScreen ();
 int     CalcRotate (objtype *ob);
-void    DrawScaleds (void);
-void    CalcTics (void);
-void    ThreeDRefresh (void);
+void    DrawScaleds ();
+void    CalcTics ();
+void    ThreeDRefresh ();
 
 
 
@@ -601,7 +601,7 @@ byte vgaCeiling_sod[]=
 =====================
 */
 
-void VGAClearScreen (void)
+void VGAClearScreen ()
 {
     // IOANCH 20130302: unification
     byte ceiling=IMPALED(vgaCeiling, [gamestate.episode*10+mapon]);
@@ -850,7 +850,7 @@ typedef struct
 visobj_t vislist[MAXVISABLE];
 visobj_t *visptr,*visstep,*farthest;
 
-void DrawScaleds (void)
+void DrawScaleds ()
 {
     int      i,least,numvisable,height;
     byte     *tilespot,*visspot;
@@ -997,7 +997,7 @@ void DrawScaleds (void)
 int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
     SPR_MACHINEGUNREADY, SPR_CHAINREADY};
 
-void DrawPlayerWeapon (void)
+void DrawPlayerWeapon ()
 {
     int shapenum;
 
@@ -1035,7 +1035,7 @@ void DrawPlayerWeapon (void)
 =====================
 */
 
-void CalcTics (void)
+void CalcTics ()
 {
 //
 // calculate tics since last refresh for adaptive timing
@@ -1474,7 +1474,7 @@ passhoriz:
 ====================
 */
 
-void WallRefresh (void)
+void WallRefresh ()
 {
     xpartialdown = viewx&(TILEGLOBAL-1);
     xpartialup = TILEGLOBAL-xpartialdown;
@@ -1513,7 +1513,7 @@ void CalcViewVariables()
 ========================
 */
 
-void    ThreeDRefresh (void)
+void    ThreeDRefresh ()
 {
 //
 // clear out the traced array

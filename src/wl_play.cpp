@@ -868,21 +868,18 @@ void InitActorList (void)
 
 }
 
-//===========================================================================
+//
+// =
+// = GetNewActor
+// =
+// = Sets the global variable new to point to a free spot in objlist.
+// = The free spot is inserted at the end of the liked list
+// =
+// = When the object list is full, the caller can either have it bomb out ot
+// = return a dummy object pointer that will never get used
+// =
+//
 
-/*
-=========================
-=
-= GetNewActor
-=
-= Sets the global variable new to point to a free spot in objlist.
-= The free spot is inserted at the end of the liked list
-=
-= When the object list is full, the caller can either have it bomb out ot
-= return a dummy object pointer that will never get used
-=
-=========================
-*/
 
 void GetNewActor (void)
 {

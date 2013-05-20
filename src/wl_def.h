@@ -615,7 +615,7 @@ extern int mapon;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int DebugKeys (void);
+int DebugKeys ();
 
 // IOANCH 20130310: modularization
 
@@ -628,8 +628,8 @@ int DebugKeys (void);
 #if defined(GP2X)
 
 #if defined(GP2X_940)
-void GP2X_MemoryInit(void);
-void GP2X_Shutdown(void);
+void GP2X_MemoryInit();
+void GP2X_Shutdown();
 #endif
 void GP2X_ButtonDown(int button);
 void GP2X_ButtonUp(int button);

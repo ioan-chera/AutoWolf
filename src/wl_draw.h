@@ -29,8 +29,8 @@ extern  Boolean fizzlein, fpscounter;
 extern  fixed   viewx,viewy;                    // the focal point
 extern  fixed   viewsin,viewcos;
 
-void    ThreeDRefresh (void);
-void    CalcTics (void);
+void    ThreeDRefresh ();
+void    CalcTics ();
 
 typedef struct
 {

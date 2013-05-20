@@ -1356,7 +1356,7 @@ void A_Bite (objtype *ob)
  ===============
  */
 
-void SpawnBJVictory (void)
+void SpawnBJVictory ()
 {
     SpawnNewObj (player->tilex,player->tiley+1,&s_bjrun1);
     newobj->x = player->x;

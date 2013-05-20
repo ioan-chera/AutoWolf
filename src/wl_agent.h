@@ -46,15 +46,15 @@ void    GiveKey (int key);
 //
 
 void    StatusDrawFace(unsigned picnum);
-void    DrawFace (void);
-void    DrawHealth (void);
+void    DrawFace ();
+void    DrawHealth ();
 void    HealSelf (int points);
-void    DrawLevel (void);
-void    DrawLives (void);
-void    GiveExtraMan (void);
-void    DrawScore (void);
-void    DrawWeapon (void);
-void    DrawKeys (void);
-void    DrawAmmo (void);
+void    DrawLevel ();
+void    DrawLives ();
+void    GiveExtraMan ();
+void    DrawScore ();
+void    DrawWeapon ();
+void    DrawKeys ();
+void    DrawAmmo ();
 
 #endif

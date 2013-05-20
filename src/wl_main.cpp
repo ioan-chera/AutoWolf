@@ -123,7 +123,7 @@ PString configname("CONFIG.");
 //  ReadConfig
 //
 ////////////////////////////////////////////////////////////////////////////////
-void ReadConfig(void)
+void ReadConfig()
 {
     SDMode  sd;
     SMMode  sm;
@@ -249,7 +249,7 @@ noconfig:
 ====================
 */
 
-void WriteConfig(void)
+void WriteConfig()
 {
     PString configpath;
 
@@ -693,7 +693,7 @@ Boolean LoadTheGame(FILE *file,int x,int y)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ShutdownId (void)
+void ShutdownId ()
 {
     US_Shutdown ();         // This line is completely useless...
     SD_Shutdown ();
@@ -722,7 +722,7 @@ void ShutdownId (void)
 
 const float radtoint = (float)(FINEANGLES/2/PI);
 
-void BuildTables (void)
+void BuildTables ()
 {
     //
     // calculate fine tangents
@@ -820,7 +820,7 @@ void CalcProjection (int32_t focal)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void SetupWalls (void)
+void SetupWalls ()
 {
     int     i;
 
@@ -842,7 +842,7 @@ void SetupWalls (void)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void SignonScreen (void)                        // VGA version
+void SignonScreen ()                        // VGA version
 {
     // IOANCH 20130510: moved the VGA function upstream right above this one
 
@@ -857,7 +857,7 @@ void SignonScreen (void)                        // VGA version
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void FinishSignon (void)
+void FinishSignon ()
 {
     // IOANCH 20130303: unification
     if(!SPEAR())
@@ -1044,7 +1044,7 @@ static int wolfdigimap_sod[] =
 	LASTSOUND_sod
 };
 
-void InitDigiMap (void)
+void InitDigiMap ()
 {
     int *map;
 	
@@ -1101,7 +1101,7 @@ CP_itemtype MusicMenu_sod[]=
 
 
 // IOANCH 20130301: unification culling
-void DoJukebox(void)
+void DoJukebox()
 {
     int which,lastsong=-1;
     unsigned start;

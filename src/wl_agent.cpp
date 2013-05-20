@@ -105,11 +105,11 @@ struct atkinf
 
 //----------
 
-void Attack (void);
-void Use (void);
+void Attack ();
+void Use ();
 void Search (objtype *ob);
-void SelectWeapon (void);
-void SelectItem (void);
+void SelectWeapon ();
+void SelectItem ();
 
 //----------
 
@@ -136,7 +136,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove);
 ======================
 */
 
-void CheckWeaponChange (void)
+void CheckWeaponChange ()
 {
     int newWeapon = -1;
 
@@ -331,7 +331,7 @@ void StatusDrawFace(unsigned picnum)
 ==================
 */
 
-void DrawFace (void)
+void DrawFace ()
 {
     if(viewsize == 21 && ingame) return;
     if (SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
@@ -367,7 +367,7 @@ void DrawFace (void)
 int facecount = 0;
 int facetimes = 0;
 
-void UpdateFace (void)
+void UpdateFace ()
 {
     // don't make demo depend on sound playback
     if(demoplayback || demorecord)
@@ -440,7 +440,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 ===============
 */
 
-void DrawHealth (void)
+void DrawHealth ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (21,16,3,gamestate.health);
@@ -525,7 +525,7 @@ void HealSelf (int points)
 ===============
 */
 
-void DrawLevel (void)
+void DrawLevel ()
 {
     if(viewsize == 21 && ingame) return;
     // IOANCH 20130202: unification process
@@ -546,7 +546,7 @@ void DrawLevel (void)
 ===============
 */
 
-void DrawLives (void)
+void DrawLives ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (14,16,1,gamestate.lives);
@@ -561,7 +561,7 @@ void DrawLives (void)
 ===============
 */
 
-void GiveExtraMan (void)
+void GiveExtraMan ()
 {
     if (gamestate.lives<9)
         gamestate.lives++;
@@ -579,7 +579,7 @@ void GiveExtraMan (void)
 ===============
 */
 
-void DrawScore (void)
+void DrawScore ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (6,16,6,gamestate.score);
@@ -614,7 +614,7 @@ void GivePoints (int32_t points)
 ==================
 */
 
-void DrawWeapon (void)
+void DrawWeapon ()
 {
     if(viewsize == 21 && ingame) return;
     StatusDrawPic (32,8,SPEAR.g(KNIFEPIC)+gamestate.weapon);
@@ -629,7 +629,7 @@ void DrawWeapon (void)
 ==================
 */
 
-void DrawKeys (void)
+void DrawKeys ()
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
@@ -672,7 +672,7 @@ void GiveWeapon (int weapon)
 ===============
 */
 
-void DrawAmmo (void)
+void DrawAmmo ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (27,16,2,gamestate.ammo);
@@ -1013,7 +1013,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 ===================
 */
 
-void VictoryTile (void)
+void VictoryTile ()
 {
     // IOANCH 20130202: unification process
     if(!SPEAR())
@@ -1106,7 +1106,7 @@ void Thrust (int angle, int32_t speed)
 ===============
 */
 
-void Cmd_Fire (void)
+void Cmd_Fire ()
 {
     buttonheld[bt_attack] = true;
 
@@ -1131,7 +1131,7 @@ void Cmd_Fire (void)
 ===============
 */
 
-void Cmd_Use (void)
+void Cmd_Use ()
 {
     int     checkx,checky,doornum,dir;
     Boolean elevatorok;
@@ -1364,7 +1364,7 @@ void    GunAttack (objtype *ob)
 ===============
 */
 
-void VictorySpin (void)
+void VictorySpin ()
 {
     int32_t    desty;
 

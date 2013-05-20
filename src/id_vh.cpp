@@ -295,7 +295,7 @@ void FreeLatchMem()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void LoadLatchMem (void)
+void LoadLatchMem ()
 {
 	int	i,width,height,start,end;
 	byte *src;

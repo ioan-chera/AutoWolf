@@ -122,7 +122,7 @@ void US_Startup()
 // 	US_Shutdown() - Shuts down the User Mgr
 //
 ////////////////////////////////////////////////////////////////////////////////
-void US_Shutdown(void)
+void US_Shutdown()
 {
 	if (!US_Started)
 		return;
@@ -344,7 +344,7 @@ void US_CPrintf(const char *formatStr, ...)
 // 		cursor
 //
 ////////////////////////////////////////////////////////////////////////////////
-void US_ClearWindow(void)
+void US_ClearWindow()
 {
 	VWB_Bar(WindowX,WindowY,WindowW,WindowH,WHITE);
 	PrintX = WindowX;

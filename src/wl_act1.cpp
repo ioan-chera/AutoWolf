@@ -228,7 +228,7 @@ statinfo_sod[] =
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void InitStaticList (void)
+void InitStaticList ()
 {
     laststatobj = &statobjlist[0];
 }
@@ -428,7 +428,7 @@ static void _RecursiveConnect (int areanumber)
 }
 
 
-static void _ConnectAreas (void)
+static void _ConnectAreas ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     areabyplayer[player->areanumber] = true;
@@ -436,7 +436,7 @@ static void _ConnectAreas (void)
 }
 
 
-void InitAreas (void)
+void InitAreas ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     if (player->areanumber < NUMAREAS)
@@ -452,7 +452,7 @@ void InitAreas (void)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void InitDoorList (void)
+void InitDoorList ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     memset (areaconnect,0,sizeof(areaconnect));
@@ -814,7 +814,7 @@ static void _DoorClosing (int door)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void MoveDoors (void)
+void MoveDoors ()
 {
     int door;
 
@@ -909,7 +909,7 @@ void PushWall (int checkx, int checky, int dir)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void MovePWalls (void)
+void MovePWalls ()
 {
     int oldblock,oldtile;
 

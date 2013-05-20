@@ -57,22 +57,22 @@ extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
 
-void    InitActorList (void);
-void    GetNewActor (void);
-void    PlayLoop (void);
+void    InitActorList ();
+void    GetNewActor ();
+void    PlayLoop ();
 
 void    CenterWindow(word w,word h);
 
-void    InitRedShifts (void);
-void    FinishPaletteShifts (void);
+void    InitRedShifts ();
+void    FinishPaletteShifts ();
 
 void    RemoveObj (objtype *gone);
-void    PollControls (void);
-int     StopMusic(void);
-void    StartMusic(void);
+void    PollControls ();
+int     StopMusic();
+void    StartMusic();
 void    ContinueMusic(int offs);
 void    StartDamageFlash (int damage);
-void    StartBonusFlash (void);
+void    StartBonusFlash ();
 
 // IOANCH 20130302: unification
 extern  int32_t     funnyticount;           // FOR FUNNY BJ FACE
