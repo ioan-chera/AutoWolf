@@ -596,8 +596,6 @@ void T_ProjectileBossChase(objtype *ob)
 //
 // SCHABBS / GIFT / FAT
 //
-// */
-//
 ////////////////////////////////////////////////////////////////////////////////
 
 //
@@ -643,12 +641,7 @@ static void _MissileThrow(objtype *ob, statetype *state, classtype cl,
 }
 
 //
-// =================
-// =
-// = A_SchabbThrow
-// =
-// =================
-// */
+// A_SchabbThrow
 //
 void A_SchabbThrow (objtype *ob)
 {
@@ -656,12 +649,7 @@ void A_SchabbThrow (objtype *ob)
 }
 
 //
-// =================
-// =
-// = A_GiftThrow
-// =
-// =================
-// */
+// A_GiftThrow
 //
 void A_GiftThrow (objtype *ob)
 {
@@ -672,17 +660,10 @@ void A_GiftThrow (objtype *ob)
 //
 // HITLERS
 //
-// */
-//
 ////////////////////////////////////////////////////////////////////////////////
 
 //
-// ===============
-// =
-// = A_HitlerMorph
-// =
-// ===============
-// */
+// A_HitlerMorph
 //
 void A_HitlerMorph (objtype *ob)
 {

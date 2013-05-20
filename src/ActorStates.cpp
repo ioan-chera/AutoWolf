@@ -32,21 +32,27 @@
 //
 
 statetype s_rocket              = {true,SPR_ROCKET_1,3,(statefunc)T_Projectile,(statefunc)A_Smoke,&s_rocket};
+
 statetype s_smoke1              = {false,SPR_SMOKE_1,3,NULL,NULL,&s_smoke2};
 statetype s_smoke2              = {false,SPR_SMOKE_2,3,NULL,NULL,&s_smoke3};
 statetype s_smoke3              = {false,SPR_SMOKE_3,3,NULL,NULL,&s_smoke4};
 statetype s_smoke4              = {false,SPR_SMOKE_4,3,NULL,NULL,NULL};
+
 statetype s_boom1               = {false,SPR_BOOM_1,6,NULL,NULL,&s_boom2};
 statetype s_boom2               = {false,SPR_BOOM_2,6,NULL,NULL,&s_boom3};
 statetype s_boom3               = {false,SPR_BOOM_3,6,NULL,NULL,NULL};
+
 statetype s_hrocket             = {true,SPR_HROCKET_1,3,(statefunc)T_Projectile,(statefunc)A_Smoke,&s_hrocket};
+
 statetype s_hsmoke1             = {false,SPR_HSMOKE_1,3,NULL,NULL,&s_hsmoke2};
 statetype s_hsmoke2             = {false,SPR_HSMOKE_2,3,NULL,NULL,&s_hsmoke3};
 statetype s_hsmoke3             = {false,SPR_HSMOKE_3,3,NULL,NULL,&s_hsmoke4};
 statetype s_hsmoke4             = {false,SPR_HSMOKE_4,3,NULL,NULL,NULL};
+
 statetype s_hboom1              = {false,SPR_HBOOM_1,6,NULL,NULL,&s_hboom2};
 statetype s_hboom2              = {false,SPR_HBOOM_2,6,NULL,NULL,&s_hboom3};
 statetype s_hboom3              = {false,SPR_HBOOM_3,6,NULL,NULL,NULL};
+
 statetype s_grdstand            = {true,SPR_GRD_S_1,0,(statefunc)T_Stand,NULL,&s_grdstand};
 statetype s_grdpath1            = {true,SPR_GRD_W1_1,20,(statefunc)T_Path,NULL,&s_grdpath1s};
 statetype s_grdpath1s           = {true,SPR_GRD_W1_1,5,NULL,NULL,&s_grdpath2};
@@ -69,6 +75,7 @@ statetype s_grddie1             = {false,SPR_GRD_DIE_1,15,NULL,(statefunc)A_Deat
 statetype s_grddie2             = {false,SPR_GRD_DIE_2,15,NULL,NULL,&s_grddie3};
 statetype s_grddie3             = {false,SPR_GRD_DIE_3,15,NULL,NULL,&s_grddie4};
 statetype s_grddie4             = {false,SPR_GRD_DEAD,0,NULL,NULL,&s_grddie4};
+
 statetype s_blinkychase1        = {false,SPR_BLINKY_W1,10,(statefunc)T_Ghosts,NULL,&s_blinkychase2};
 statetype s_blinkychase2        = {false,SPR_BLINKY_W2,10,(statefunc)T_Ghosts,NULL,&s_blinkychase1};
 statetype s_inkychase1          = {false,SPR_INKY_W1,10,(statefunc)T_Ghosts,NULL,&s_inkychase2};
@@ -77,6 +84,7 @@ statetype s_pinkychase1         = {false,SPR_PINKY_W1,10,(statefunc)T_Ghosts,NUL
 statetype s_pinkychase2         = {false,SPR_PINKY_W2,10,(statefunc)T_Ghosts,NULL,&s_pinkychase1};
 statetype s_clydechase1         = {false,SPR_CLYDE_W1,10,(statefunc)T_Ghosts,NULL,&s_clydechase2};
 statetype s_clydechase2         = {false,SPR_CLYDE_W2,10,(statefunc)T_Ghosts,NULL,&s_clydechase1};
+
 statetype s_dogpath1            = {true,SPR_DOG_W1_1,20,(statefunc)T_Path,NULL,&s_dogpath1s};
 statetype s_dogpath1s           = {true,SPR_DOG_W1_1,5,NULL,NULL,&s_dogpath2};
 statetype s_dogpath2            = {true,SPR_DOG_W2_1,15,(statefunc)T_Path,NULL,&s_dogpath3};
@@ -98,6 +106,7 @@ statetype s_dogdie1             = {false,SPR_DOG_DIE_1,15,NULL,(statefunc)A_Deat
 statetype s_dogdie2             = {false,SPR_DOG_DIE_2,15,NULL,NULL,&s_dogdie3};
 statetype s_dogdie3             = {false,SPR_DOG_DIE_3,15,NULL,NULL,&s_dogdead};
 statetype s_dogdead             = {false,SPR_DOG_DEAD,15,NULL,NULL,&s_dogdead};
+
 statetype s_ofcstand            = {true,SPR_OFC_S_1,0,(statefunc)T_Stand,NULL,&s_ofcstand};
 statetype s_ofcpath1            = {true,SPR_OFC_W1_1,20,(statefunc)T_Path,NULL,&s_ofcpath1s};
 statetype s_ofcpath1s           = {true,SPR_OFC_W1_1,5,NULL,NULL,&s_ofcpath2};
@@ -121,6 +130,7 @@ statetype s_ofcdie2             = {false,SPR_OFC_DIE_2,11,NULL,NULL,&s_ofcdie3};
 statetype s_ofcdie3             = {false,SPR_OFC_DIE_3,11,NULL,NULL,&s_ofcdie4};
 statetype s_ofcdie4             = {false,SPR_OFC_DIE_4,11,NULL,NULL,&s_ofcdie5};
 statetype s_ofcdie5             = {false,SPR_OFC_DEAD,0,NULL,NULL,&s_ofcdie5};
+
 statetype s_mutstand            = {true,SPR_MUT_S_1,0,(statefunc)T_Stand,NULL,&s_mutstand};
 statetype s_mutpath1            = {true,SPR_MUT_W1_1,20,(statefunc)T_Path,NULL,&s_mutpath1s};
 statetype s_mutpath1s           = {true,SPR_MUT_W1_1,5,NULL,NULL,&s_mutpath2};
@@ -145,6 +155,7 @@ statetype s_mutdie2             = {false,SPR_MUT_DIE_2,7,NULL,NULL,&s_mutdie3};
 statetype s_mutdie3             = {false,SPR_MUT_DIE_3,7,NULL,NULL,&s_mutdie4};
 statetype s_mutdie4             = {false,SPR_MUT_DIE_4,7,NULL,NULL,&s_mutdie5};
 statetype s_mutdie5             = {false,SPR_MUT_DEAD,0,NULL,NULL,&s_mutdie5};
+
 statetype s_ssstand             = {true,SPR_SS_S_1,0,(statefunc)T_Stand,NULL,&s_ssstand};
 statetype s_sspath1             = {true,SPR_SS_W1_1,20,(statefunc)T_Path,NULL,&s_sspath1s};
 statetype s_sspath1s            = {true,SPR_SS_W1_1,5,NULL,NULL,&s_sspath2};
@@ -173,6 +184,7 @@ statetype s_ssdie1              = {false,SPR_SS_DIE_1,15,NULL,(statefunc)A_Death
 statetype s_ssdie2              = {false,SPR_SS_DIE_2,15,NULL,NULL,&s_ssdie3};
 statetype s_ssdie3              = {false,SPR_SS_DIE_3,15,NULL,NULL,&s_ssdie4};
 statetype s_ssdie4              = {false,SPR_SS_DEAD,0,NULL,NULL,&s_ssdie4};
+
 statetype s_bossstand           = {false,SPR_BOSS_W1,0,(statefunc)T_Stand,NULL,&s_bossstand};
 statetype s_bosschase1          = {false,SPR_BOSS_W1,10,(statefunc)T_Chase,NULL,&s_bosschase1s};
 statetype s_bosschase1s         = {false,SPR_BOSS_W1,3,NULL,NULL,&s_bosschase2};
@@ -193,6 +205,7 @@ statetype s_bossshoot5          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)A_Sh
 statetype s_bossshoot6          = {false,SPR_BOSS_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_bossshoot7,STF_DAMAGING};
 statetype s_bossshoot7          = {false,SPR_BOSS_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_bossshoot8,STF_DAMAGING};
 statetype s_bossshoot8          = {false,SPR_BOSS_SHOOT1,10,NULL,NULL,&s_bosschase1};
+
 statetype s_gretelstand         = {false,SPR_GRETEL_W1,0,(statefunc)T_Stand,NULL,&s_gretelstand};
 statetype s_gretelchase1        = {false,SPR_GRETEL_W1,10,(statefunc)T_Chase,NULL,&s_gretelchase1s};
 statetype s_gretelchase1s       = {false,SPR_GRETEL_W1,3,NULL,NULL,&s_gretelchase2};
@@ -213,6 +226,7 @@ statetype s_gretelshoot5        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)A_
 statetype s_gretelshoot6        = {false,SPR_GRETEL_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_gretelshoot7,STF_DAMAGING};
 statetype s_gretelshoot7        = {false,SPR_GRETEL_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_gretelshoot8,STF_DAMAGING};
 statetype s_gretelshoot8        = {false,SPR_GRETEL_SHOOT1,10,NULL,NULL,&s_gretelchase1};
+
 statetype s_transstand          = {false,SPR_TRANS_W1,0,(statefunc)T_Stand,NULL,&s_transstand};
 statetype s_transchase1         = {false,SPR_TRANS_W1,10,(statefunc)T_Chase,NULL,&s_transchase1s};
 statetype s_transchase1s        = {false,SPR_TRANS_W1,3,NULL,NULL,&s_transchase2};
@@ -235,6 +249,7 @@ statetype s_transshoot5         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)A_S
 statetype s_transshoot6         = {false,SPR_TRANS_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_transshoot7,STF_DAMAGING};
 statetype s_transshoot7         = {false,SPR_TRANS_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_transshoot8,STF_DAMAGING};
 statetype s_transshoot8         = {false,SPR_TRANS_SHOOT1,10,NULL,NULL,&s_transchase1};
+
 statetype s_uberstand           = {false,SPR_UBER_W1,0,(statefunc)T_Stand,NULL,&s_uberstand};
 statetype s_uberchase1          = {false,SPR_UBER_W1,10,(statefunc)T_Chase,NULL,&s_uberchase1s};
 statetype s_uberchase1s         = {false,SPR_UBER_W1,3,NULL,NULL,&s_uberchase2};
@@ -257,6 +272,7 @@ statetype s_ubershoot4          = {false,SPR_UBER_SHOOT4,12,NULL,(statefunc)A_US
 statetype s_ubershoot5          = {false,SPR_UBER_SHOOT3,12,NULL,(statefunc)A_UShoot,&s_ubershoot6,STF_DAMAGING};
 statetype s_ubershoot6          = {false,SPR_UBER_SHOOT2,12,NULL,(statefunc)A_UShoot,&s_ubershoot7,STF_DAMAGING};
 statetype s_ubershoot7          = {false,SPR_UBER_SHOOT1,12,NULL,NULL,&s_uberchase1};
+
 statetype s_willstand           = {false,SPR_WILL_W1,0,(statefunc)T_Stand,NULL,&s_willstand};
 statetype s_willchase1          = {false,SPR_WILL_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_willchase1s};
 statetype s_willchase1s         = {false,SPR_WILL_W1,3,NULL,NULL,&s_willchase2};
@@ -277,6 +293,7 @@ statetype s_willshoot3          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)A_Sh
 statetype s_willshoot4          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_willshoot5,STF_DAMAGING};
 statetype s_willshoot5          = {false,SPR_WILL_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_willshoot6,STF_DAMAGING};
 statetype s_willshoot6          = {false,SPR_WILL_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_willchase1,STF_DAMAGING};
+
 statetype s_deathstand          = {false,SPR_DEATH_W1,0,(statefunc)T_Stand,NULL,&s_deathstand};
 statetype s_deathchase1         = {false,SPR_DEATH_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_deathchase1s};
 statetype s_deathchase1s        = {false,SPR_DEATH_W1,3,NULL,NULL,&s_deathchase2};
@@ -299,6 +316,7 @@ statetype s_deathshoot2         = {false,SPR_DEATH_SHOOT2,10,NULL,(statefunc)A_L
 statetype s_deathshoot3         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_deathshoot4,STF_DAMAGING};
 statetype s_deathshoot4         = {false,SPR_DEATH_SHOOT3,10,NULL,(statefunc)A_Launch,&s_deathshoot5,STF_DAMAGING};
 statetype s_deathshoot5         = {false,SPR_DEATH_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_deathchase1,STF_DAMAGING};
+
 statetype s_angelstand          = {false,SPR_ANGEL_W1,0,(statefunc)T_Stand,NULL,&s_angelstand};
 statetype s_angelchase1         = {false,SPR_ANGEL_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_angelchase1s};
 statetype s_angelchase1s        = {false,SPR_ANGEL_W1,3,NULL,NULL,&s_angelchase2};
@@ -326,10 +344,12 @@ statetype s_angeltired4         = {false,SPR_ANGEL_TIRED2,40,NULL,NULL,&s_angelt
 statetype s_angeltired5         = {false,SPR_ANGEL_TIRED1,40,NULL,(statefunc)A_Breathing,&s_angeltired6};
 statetype s_angeltired6         = {false,SPR_ANGEL_TIRED2,40,NULL,NULL,&s_angeltired7};
 statetype s_angeltired7         = {false,SPR_ANGEL_TIRED1,40,NULL,(statefunc)A_Breathing,&s_angelchase1};
+
 statetype s_spark1              = {false,SPR_SPARK1,6,(statefunc)T_Projectile,NULL,&s_spark2};
 statetype s_spark2              = {false,SPR_SPARK2,6,(statefunc)T_Projectile,NULL,&s_spark3};
 statetype s_spark3              = {false,SPR_SPARK3,6,(statefunc)T_Projectile,NULL,&s_spark4};
 statetype s_spark4              = {false,SPR_SPARK4,6,(statefunc)T_Projectile,NULL,&s_spark1};
+
 statetype s_spectrewait1        = {false,SPR_SPECTRE_W1,10,(statefunc)T_Stand,NULL,&s_spectrewait2};
 statetype s_spectrewait2        = {false,SPR_SPECTRE_W2,10,(statefunc)T_Stand,NULL,&s_spectrewait3};
 statetype s_spectrewait3        = {false,SPR_SPECTRE_W3,10,(statefunc)T_Stand,NULL,&s_spectrewait4};
@@ -343,6 +363,7 @@ statetype s_spectredie2         = {false,SPR_SPECTRE_F2,10,NULL,NULL,&s_spectred
 statetype s_spectredie3         = {false,SPR_SPECTRE_F3,10,NULL,NULL,&s_spectredie4};
 statetype s_spectredie4         = {false,SPR_SPECTRE_F4,300,NULL,NULL,&s_spectrewake};
 statetype s_spectrewake         = {false,SPR_SPECTRE_F4,10,NULL,(statefunc)A_Dormant,&s_spectrewake};
+
 statetype s_schabbstand         = {false,SPR_SCHABB_W1,0,(statefunc)T_Stand,NULL,&s_schabbstand};
 statetype s_schabbchase1        = {false,SPR_SCHABB_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_schabbchase1s};
 statetype s_schabbchase1s       = {false,SPR_SCHABB_W1,3,NULL,NULL,&s_schabbchase2};
@@ -359,10 +380,12 @@ statetype s_schabbdie5          = {false,SPR_SCHABB_DIE3,10,NULL,NULL,&s_schabbd
 statetype s_schabbdie6          = {false,SPR_SCHABB_DEAD,20,NULL,(statefunc)A_StartDeathCam,&s_schabbdie6};
 statetype s_schabbshoot1        = {false,SPR_SCHABB_SHOOT1,30,NULL,NULL,&s_schabbshoot2};
 statetype s_schabbshoot2        = {false,SPR_SCHABB_SHOOT2,10,NULL,(statefunc)A_SchabbThrow,&s_schabbchase1};
+
 statetype s_needle1             = {false,SPR_HYPO1,6,(statefunc)T_Projectile,NULL,&s_needle2};
 statetype s_needle2             = {false,SPR_HYPO2,6,(statefunc)T_Projectile,NULL,&s_needle3};
 statetype s_needle3             = {false,SPR_HYPO3,6,(statefunc)T_Projectile,NULL,&s_needle4};
 statetype s_needle4             = {false,SPR_HYPO4,6,(statefunc)T_Projectile,NULL,&s_needle1};
+
 statetype s_giftstand           = {false,SPR_GIFT_W1,0,(statefunc)T_Stand,NULL,&s_giftstand};
 statetype s_giftchase1          = {false,SPR_GIFT_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_giftchase1s};
 statetype s_giftchase1s         = {false,SPR_GIFT_W1,3,NULL,NULL,&s_giftchase2};
@@ -379,6 +402,7 @@ statetype s_giftdie5            = {false,SPR_GIFT_DIE3,10,NULL,NULL,&s_giftdie6}
 statetype s_giftdie6            = {false,SPR_GIFT_DEAD,20,NULL,(statefunc)A_StartDeathCam,&s_giftdie6};
 statetype s_giftshoot1          = {false,SPR_GIFT_SHOOT1,30,NULL,NULL,&s_giftshoot2};
 statetype s_giftshoot2          = {false,SPR_GIFT_SHOOT2,10,NULL,(statefunc)A_GiftThrow,&s_giftchase1};
+
 statetype s_fatstand            = {false,SPR_FAT_W1,0,(statefunc)T_Stand,NULL,&s_fatstand};
 statetype s_fatchase1           = {false,SPR_FAT_W1,10,(statefunc)T_ProjectileBossChase,NULL,&s_fatchase1s};
 statetype s_fatchase1s          = {false,SPR_FAT_W1,3,NULL,NULL,&s_fatchase2};
@@ -399,6 +423,7 @@ statetype s_fatshoot3           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)A_Sho
 statetype s_fatshoot4           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_fatshoot5,STF_DAMAGING};
 statetype s_fatshoot5           = {false,SPR_FAT_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_fatshoot6,STF_DAMAGING};
 statetype s_fatshoot6           = {false,SPR_FAT_SHOOT4,10,NULL,(statefunc)A_Shoot,&s_fatchase1,STF_DAMAGING};
+
 statetype s_fakestand           = {false,SPR_FAKE_W1,0,(statefunc)T_Stand,NULL,&s_fakestand};
 statetype s_fakechase1          = {false,SPR_FAKE_W1,10,(statefunc)T_Fake,NULL,&s_fakechase1s};
 statetype s_fakechase1s         = {false,SPR_FAKE_W1,3,NULL,NULL,&s_fakechase2};
@@ -421,8 +446,10 @@ statetype s_fakeshoot6          = {false,SPR_FAKE_SHOOT,8,NULL,(statefunc)A_Fake
 statetype s_fakeshoot7          = {false,SPR_FAKE_SHOOT,8,NULL,(statefunc)A_FakeFire,&s_fakeshoot8};
 statetype s_fakeshoot8          = {false,SPR_FAKE_SHOOT,8,NULL,(statefunc)A_FakeFire,&s_fakeshoot9};
 statetype s_fakeshoot9          = {false,SPR_FAKE_SHOOT,8,NULL,NULL,&s_fakechase1};
+
 statetype s_fire1               = {false,SPR_FIRE1,6,NULL,(statefunc)T_Projectile,&s_fire2};
 statetype s_fire2               = {false,SPR_FIRE2,6,NULL,(statefunc)T_Projectile,&s_fire1};
+
 statetype s_mechastand          = {false,SPR_MECHA_W1,0,(statefunc)T_Stand,NULL,&s_mechastand};
 statetype s_mechachase1         = {false,SPR_MECHA_W1,10,(statefunc)T_Chase,(statefunc)A_MechaSound,&s_mechachase1s};
 statetype s_mechachase1s        = {false,SPR_MECHA_W1,6,NULL,NULL,&s_mechachase2};
@@ -441,6 +468,7 @@ statetype s_mechashoot3         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)A_S
 statetype s_mechashoot4         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_mechashoot5,STF_DAMAGING};
 statetype s_mechashoot5         = {false,SPR_MECHA_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_mechashoot6,STF_DAMAGING};
 statetype s_mechashoot6         = {false,SPR_MECHA_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_mechachase1,STF_DAMAGING};
+
 statetype s_hitlerchase1        = {false,SPR_HITLER_W1,6,(statefunc)T_Chase,NULL,&s_hitlerchase1s};
 statetype s_hitlerchase1s       = {false,SPR_HITLER_W1,4,NULL,NULL,&s_hitlerchase2};
 statetype s_hitlerchase2        = {false,SPR_HITLER_W2,2,(statefunc)T_Chase,NULL,&s_hitlerchase3};
@@ -465,6 +493,7 @@ statetype s_hitlershoot3        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)A_
 statetype s_hitlershoot4        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_hitlershoot5,STF_DAMAGING};
 statetype s_hitlershoot5        = {false,SPR_HITLER_SHOOT3,10,NULL,(statefunc)A_Shoot,&s_hitlershoot6,STF_DAMAGING};
 statetype s_hitlershoot6        = {false,SPR_HITLER_SHOOT2,10,NULL,(statefunc)A_Shoot,&s_hitlerchase1,STF_DAMAGING};
+
 statetype s_bjrun1              = {false,SPR_BJ_W1,12,(statefunc)T_BJRun,NULL,&s_bjrun1s};
 statetype s_bjrun1s             = {false,SPR_BJ_W1,3, NULL,NULL,&s_bjrun2};
 statetype s_bjrun2              = {false,SPR_BJ_W2,8,(statefunc)T_BJRun,NULL,&s_bjrun3};
@@ -475,4 +504,5 @@ statetype s_bjjump1             = {false,SPR_BJ_JUMP1,14,(statefunc)T_BJJump,NUL
 statetype s_bjjump2             = {false,SPR_BJ_JUMP2,14,(statefunc)T_BJJump,(statefunc)A_BJYell,&s_bjjump3};
 statetype s_bjjump3             = {false,SPR_BJ_JUMP3,14,(statefunc)T_BJJump,NULL,&s_bjjump4};
 statetype s_bjjump4             = {false,SPR_BJ_JUMP4,300,NULL,(statefunc)A_BJDone,&s_bjjump4};
+
 statetype s_deathcam            = {false,0,0,NULL,NULL,NULL};
