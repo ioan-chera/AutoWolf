@@ -79,7 +79,7 @@ inline static uint32_t leftRotate(uint32_t x, uint32_t c)
 }
 
 //
-// calculateMD5Checksum
+// CalculateMD5Checksum
 //
 // Calculate MD5 hash of
 //
@@ -87,7 +87,7 @@ inline static uint32_t leftRotate(uint32_t x, uint32_t c)
 //
 // WARNING! dest must be allocated with 16 bytes
 //
-void CheckSum::calculateMD5Checksum(const void *message,
+void CheckSum::CalculateMD5Checksum(const void *message,
                                  size_t messize)
 {
     MD5Input input(message, messize);
@@ -197,6 +197,33 @@ void CheckSum::calculateMD5Checksum(const void *message,
 }
 
 //
+// byteToReadableHex
+//
+// Converts a single byte into 2 ASCII characters of hex number, lower case
+//
+static const char *byteToReadableHex(uint8_t b)
+{
+    static char ret[3];
+    snprintf(ret, 3, "%02x", b);
+    return ret;
+}
+
+//
+// GetHumanReadableHex
+//
+// Obtains the human-readable sequence of hex numbers, in lower-case (as 
+// returned by the md5 command-line executable)
+//
+void CheckSum::GetHumanReadableHex(PString &dest) const
+{
+    dest.clear();
+    for (int i = 0; i < 16; ++i)
+    {
+        dest.concat(byteToReadableHex(digeststring[i]), 2);
+    }
+}
+
+//
 // unfoldedMapSegs
 //
 // Helper function to unfold mapsegs
@@ -223,5 +250,8 @@ inline static const uint8_t *unfoldedMapSegs()
 //
 void CalculateMapsegsChecksum()
 {
-    mapsegsChecksum.calculateMD5Checksum(unfoldedMapSegs(), mapSegsLength);
+    mapsegsChecksum.CalculateMD5Checksum(unfoldedMapSegs(), mapSegsLength);
+    PString test;
+    mapsegsChecksum.GetHumanReadableHex(test);
+    puts(test.buffer());
 }

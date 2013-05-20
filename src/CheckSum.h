@@ -29,11 +29,12 @@ class CheckSum
 {
     uint8_t digeststring[16];
 public:
-    void calculateMD5Checksum(const void *message, size_t messize);
+    void CalculateMD5Checksum(const void *message, size_t messize);
     const uint8_t *DigestBuffer() const
     {
         return digeststring;
     }
+    void GetHumanReadableHex(PString &dest) const;
 };
 
 extern CheckSum mapsegsChecksum;
