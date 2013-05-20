@@ -25,11 +25,18 @@
 //
 // Namespace for checksums
 //
-namespace CheckSum
+class CheckSum
 {
-    extern uint8_t digeststring[16];
-    
-    void CalculateMapsegsChecksum();
-}
+    uint8_t digeststring[16];
+public:
+    void calculateMD5Checksum(const void *message, size_t messize);
+    const uint8_t *DigestBuffer() const
+    {
+        return digeststring;
+    }
+};
+
+extern CheckSum mapsegsChecksum;
+void CalculateMapsegsChecksum();
 
 #endif

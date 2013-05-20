@@ -64,9 +64,9 @@ void BotMan::MapInit()
 
     // IOANCH 20121213
 	// calculate checksum of it
-    CheckSum::CalculateMapsegsChecksum();
+    CalculateMapsegsChecksum();
 	// get explored data
-	GetExploredData(CheckSum::digeststring);
+	GetExploredData(mapsegsChecksum.DigestBuffer());
 	
 	// FIXME: this should be taken from loaded game data. I might put a
     // LoadGameInit just for that.
@@ -84,7 +84,7 @@ void BotMan::MapInit()
 //
 void BotMan::SaveData() const
 {
-	StoreAcquiredData(CheckSum::digeststring);
+	StoreAcquiredData(mapsegsChecksum.DigestBuffer());
 	MasterDirectoryFile::MainDir().saveToFile();
 }
 

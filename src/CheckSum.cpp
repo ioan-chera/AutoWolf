@@ -25,12 +25,14 @@
 #include "wl_def.h"
 #include "CheckSum.h"
 
-uint8_t CheckSum::digeststring[16];
+CheckSum mapsegsChecksum;
 
 //
 // MD5Input
 //
 // Message prepared for MD5 input (padded and ended)
+//
+// used by the MD5 calculator
 //
 class MD5Input
 {
@@ -85,7 +87,7 @@ inline static uint32_t leftRotate(uint32_t x, uint32_t c)
 //
 // WARNING! dest must be allocated with 16 bytes
 //
-static void calculateMD5Checksum(uint8_t *dest, const void *message,
+void CheckSum::calculateMD5Checksum(const void *message,
                                  size_t messize)
 {
     MD5Input input(message, messize);
@@ -172,25 +174,26 @@ static void calculateMD5Checksum(uint8_t *dest, const void *message,
 	}
 	
 	// put it in little endian!!
-	dest[0]  = (uint8_t)( h0        % 256);
-	dest[1]  = (uint8_t)((h0 >>  8) % 256);
-	dest[2]  = (uint8_t)((h0 >> 16) % 256);
-	dest[3]  = (uint8_t)((h0 >> 24));
+
+	digeststring[0]  = (uint8_t)( h0        % 256);
+	digeststring[1]  = (uint8_t)((h0 >>  8) % 256);
+	digeststring[2]  = (uint8_t)((h0 >> 16) % 256);
+	digeststring[3]  = (uint8_t)((h0 >> 24));
 	
-	dest[4]  = (uint8_t)( h1        % 256);
-	dest[5]  = (uint8_t)((h1 >>  8) % 256);
-	dest[6]  = (uint8_t)((h1 >> 16) % 256);
-	dest[7]  = (uint8_t)((h1 >> 24));
+	digeststring[4]  = (uint8_t)( h1        % 256);
+	digeststring[5]  = (uint8_t)((h1 >>  8) % 256);
+	digeststring[6]  = (uint8_t)((h1 >> 16) % 256);
+	digeststring[7]  = (uint8_t)((h1 >> 24));
 	
-	dest[8]  = (uint8_t)( h2        % 256);
-	dest[9]  = (uint8_t)((h2 >>  8) % 256);
-	dest[10] = (uint8_t)((h2 >> 16) % 256);
-	dest[11] = (uint8_t)((h2 >> 24));
+	digeststring[8]  = (uint8_t)( h2        % 256);
+	digeststring[9]  = (uint8_t)((h2 >>  8) % 256);
+	digeststring[10] = (uint8_t)((h2 >> 16) % 256);
+	digeststring[11] = (uint8_t)((h2 >> 24));
 	
-	dest[12] = (uint8_t)( h3        % 256);
-	dest[13] = (uint8_t)((h3 >>  8) % 256);
-	dest[14] = (uint8_t)((h3 >> 16) % 256);
-	dest[15] = (uint8_t)((h3 >> 24));
+	digeststring[12] = (uint8_t)( h3        % 256);
+	digeststring[13] = (uint8_t)((h3 >>  8) % 256);
+	digeststring[14] = (uint8_t)((h3 >> 16) % 256);
+	digeststring[15] = (uint8_t)((h3 >> 24));
 }
 
 //
@@ -218,7 +221,7 @@ inline static const uint8_t *unfoldedMapSegs()
 //
 // Do the save map to file checksum thingie
 //
-void CheckSum::CalculateMapsegsChecksum()
+void CalculateMapsegsChecksum()
 {
-	calculateMD5Checksum(digeststring, unfoldedMapSegs(), mapSegsLength);
+    mapsegsChecksum.calculateMD5Checksum(unfoldedMapSegs(), mapSegsLength);
 }
