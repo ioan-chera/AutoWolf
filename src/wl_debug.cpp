@@ -17,6 +17,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Wolfenstein developer debug routines
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_DEBUG.C
 
@@ -26,8 +31,8 @@
 	#include <unistd.h>
 #endif
 
-#include "version.h"
 #include "wl_def.h"
+#include "version.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
 #include "wl_draw.h"
@@ -63,7 +68,7 @@
 
 #ifdef DEBUGKEYS
 
-int DebugKeys (void);
+int DebugKeys ();
 
 
 // from WL_DRAW.C
@@ -84,7 +89,7 @@ int     maporgy;
 // IOANCH 11.06.2012: added name to made compiler stop complaining
 enum _viewtype_t {mapview,tilemapview,actoratview,visview}  viewtype;
 
-void ViewMap (void);
+void ViewMap ();
 
 //===========================================================================
 
@@ -96,7 +101,7 @@ void ViewMap (void);
 ==================
 */
 
-void CountObjects (void)
+void CountObjects ()
 {
     int     i,total,count,active,inactive,doors;
     objtype *obj;
@@ -153,7 +158,7 @@ void CountObjects (void)
 =
 ===================
 */
-void PictureGrabber (void)
+void PictureGrabber ()
 {
     static char fname[] = "WSHOT000.BMP";
 
@@ -188,7 +193,7 @@ void PictureGrabber (void)
 ===================
 */
 
-void BasicOverhead (void)
+void BasicOverhead ()
 {
     int x, y, z, offx, offy;
 
@@ -258,7 +263,7 @@ void BasicOverhead (void)
 ================
 */
 
-void ShapeTest (void)
+void ShapeTest ()
 {
     //TODO
 #if NOTYET
@@ -459,7 +464,7 @@ void ShapeTest (void)
 ================
 */
 
-int DebugKeys (void)
+int DebugKeys ()
 {
     Boolean esc;
     int level;
@@ -783,7 +788,7 @@ again:
 ===================
 */
 
-void OverheadRefresh (void)
+void OverheadRefresh ()
 {
     unsigned        x,y,endx,endy,sx,sy;
     unsigned        tile;
@@ -842,7 +847,7 @@ void OverheadRefresh (void)
 ===================
 */
 
-void ViewMap (void)
+void ViewMap ()
 {
     Boolean         button0held;
 

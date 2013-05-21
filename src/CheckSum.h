@@ -20,8 +20,24 @@
 #ifndef CHECKSUM_H_
 #define CHECKSUM_H_
 
-void CalculateMapsegsChecksum();
+//
+// CheckSum
+//
+// Namespace for checksums
+//
+class CheckSum
+{
+    uint8_t digeststring[16];
+public:
+    void CalculateMD5Checksum(const void *message, size_t messize);
+    const uint8_t *DigestBuffer() const
+    {
+        return digeststring;
+    }
+    void GetHumanReadableHex(PString &dest) const;
+};
 
-extern char digeststring[16];
+extern CheckSum mapsegsChecksum;
+void CalculateMapsegsChecksum();
 
 #endif

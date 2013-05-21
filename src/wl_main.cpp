@@ -17,6 +17,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Game startup and initialization
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_MAIN.C
 
@@ -26,9 +31,9 @@
     #include <unistd.h>
 #endif
 
+#include "wl_def.h"
 #include "foreign.h"
 #include "version.h"
-#include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
 #include "wl_draw.h"
@@ -45,33 +50,30 @@
 #include "ioan_bas.h"
 #include "List.h"
 #include "Config.h"
+#include "MasterDirectoryFile.h"
 #ifdef __APPLE__
 #include "CocoaFun.h"
 #endif
 
-/*
-=============================================================================
-
-                             WOLFENSTEIN 3-D
-
-                        An Id Software production
-
-                             by John Carmack
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// WOLFENSTEIN 3-D
+// 
+// An Id Software production
+// 
+// by John Carmack
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // IOANCH 20130303: unification
 extern byte signon_wl6[];
 extern byte signon_sod[];
 
-/*
-=============================================================================
-
-                             LOCAL CONSTANTS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// LOCAL CONSTANTS
+// 
+////////////////////////////////////////////////////////////////////////////////
 
 
 #define FOCALLENGTH     (0x5700l)               // in global coordinates
@@ -80,13 +82,11 @@ extern byte signon_sod[];
 #define VIEWWIDTH       256                     // size of view window
 #define VIEWHEIGHT      144
 
-/*
-=============================================================================
-
-                            GLOBAL VARIABLES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// GLOBAL VARIABLES
+// 
+////////////////////////////////////////////////////////////////////////////////
 
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
@@ -114,25 +114,16 @@ int     mouseadjustment;
 
 PString configname("CONFIG.");
 
-
-/*
-=============================================================================
-
-                            LOCAL VARIABLES
-
-=============================================================================
-*/
-
-
-/*
-====================
-=
-= ReadConfig
-=
-====================
-*/
-
-void ReadConfig(void)
+////////////////////////////////////////////////////////////////////////////////
+//
+// LOCAL VARIABLES
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ReadConfig
+//
+////////////////////////////////////////////////////////////////////////////////
+void ReadConfig()
 {
     SDMode  sd;
     SMMode  sm;
@@ -258,7 +249,7 @@ noconfig:
 ====================
 */
 
-void WriteConfig(void)
+void WriteConfig()
 {
     PString configpath;
 
@@ -306,15 +297,13 @@ void WriteConfig(void)
 
 //===========================================================================
 
-/*
-=====================
-=
-= NewGame
-=
-= Set up new game to start from the beginning
-=
-=====================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// NewGame
+//
+// Set up new game to start from the beginning
+//
+////////////////////////////////////////////////////////////////////////////////
 
 void NewGame (int difficulty,int episode)
 {
@@ -356,13 +345,11 @@ int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 }
 
 
-/*
-==================
-=
-= SaveTheGame
-=
-==================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//  SaveTheGame
+//
+////////////////////////////////////////////////////////////////////////////////
 
 extern statetype s_grdstand;
 extern statetype s_player;
@@ -510,13 +497,11 @@ Boolean SaveTheGame(FILE *file,int x,int y)
 
 //===========================================================================
 
-/*
-==================
-=
-= LoadTheGame
-=
-==================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//  LoadTheGame
+//
+////////////////////////////////////////////////////////////////////////////////
 
 Boolean LoadTheGame(FILE *file,int x,int y)
 {
@@ -700,17 +685,15 @@ Boolean LoadTheGame(FILE *file,int x,int y)
 
 //===========================================================================
 
-/*
-==========================
-=
-= ShutdownId
-=
-= Shuts down all ID_?? managers
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//  ShutdownId
+//
+//  Shuts down all ID_?? managers
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void ShutdownId (void)
+void ShutdownId ()
 {
     US_Shutdown ();         // This line is completely useless...
     SD_Shutdown ();
@@ -726,22 +709,20 @@ void ShutdownId (void)
 
 //===========================================================================
 
-/*
-==================
-=
-= BuildTables
-=
-= Calculates:
-=
-= scale                 projection constant
-= sintable/costable     overlapping fractional tables
-=
-==================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//  BuildTables
+//
+//  Calculates:
+//
+//  scale                 projection constant
+//  sintable/costable     overlapping fractional tables
+//
+////////////////////////////////////////////////////////////////////////////////
 
 const float radtoint = (float)(FINEANGLES/2/PI);
 
-void BuildTables (void)
+void BuildTables ()
 {
     //
     // calculate fine tangents
@@ -779,16 +760,13 @@ void BuildTables (void)
 
 //===========================================================================
 
-
-/*
-====================
-=
-= CalcProjection
-=
-= Uses focallength
-=
-====================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// CalcProjection
+//
+// Uses focallength
+//
+////////////////////////////////////////////////////////////////////////////////
 
 void CalcProjection (int32_t focal)
 {
@@ -834,17 +812,15 @@ void CalcProjection (int32_t focal)
 
 //===========================================================================
 
-/*
-===================
-=
-= SetupWalls
-=
-= Map tile values to scaled pics
-=
-===================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// SetupWalls
+//
+// Map tile values to scaled pics
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void SetupWalls (void)
+void SetupWalls ()
 {
     int     i;
 
@@ -860,15 +836,13 @@ void SetupWalls (void)
 
 //===========================================================================
 
-/*
-==========================
-=
-= SignonScreen
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// SignonScreen
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void SignonScreen (void)                        // VGA version
+void SignonScreen ()                        // VGA version
 {
     // IOANCH 20130510: moved the VGA function upstream right above this one
 
@@ -877,15 +851,13 @@ void SignonScreen (void)                        // VGA version
 }
 
 
-/*
-==========================
-=
-= FinishSignon
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// FinishSignon
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void FinishSignon (void)
+void FinishSignon ()
 {
     // IOANCH 20130303: unification
     if(!SPEAR())
@@ -942,13 +914,11 @@ void FinishSignon (void)
 
 //===========================================================================
 
-/*
-=====================
-=
-= InitDigiMap
-=
-=====================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// InitDigiMap
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // channel mapping:
 //  -1: any non reserved channel
@@ -1074,7 +1044,7 @@ static int wolfdigimap_sod[] =
 	LASTSOUND_sod
 };
 
-void InitDigiMap (void)
+void InitDigiMap ()
 {
     int *map;
 	
@@ -1131,7 +1101,7 @@ CP_itemtype MusicMenu_sod[]=
 
 
 // IOANCH 20130301: unification culling
-void DoJukebox(void)
+void DoJukebox()
 {
     int which,lastsong=-1;
     unsigned start;
@@ -1244,15 +1214,13 @@ void DoJukebox(void)
 }
 
 
-/*
-==========================
-=
-= InitGame
-=
-= Load a few things right away
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// InitGame
+//
+// Load a few things right away
+//
+////////////////////////////////////////////////////////////////////////////////
 static char global_error[256];
 static void InitGame()
 {
@@ -1309,8 +1277,8 @@ static void InitGame()
 	VW_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
-	BotMan::LoadData();
-    BotMan::SetMood();
+    MasterDirectoryFile::MainDir().loadFromFile();
+    bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
     IN_Startup ();  // sets up the input devices
@@ -1412,14 +1380,12 @@ static void InitGame()
 
 //===========================================================================
 
-/*
-==========================
-=
-= SetViewSize
-=
-==========================
-*/
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// SetViewSize
+// Makes some Pizza
+//
+////////////////////////////////////////////////////////////////////////////////
 Boolean SetViewSize (unsigned width, unsigned height)
 {
     viewwidth = width&~15;                  // must be divisable by 16
@@ -1490,13 +1456,11 @@ void NewViewSize (int width)
 
 //===========================================================================
 
-/*
-==========================
-=
-= Quit
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// Quit
+//
+////////////////////////////////////////////////////////////////////////////////
 // IOANCH 20130509: now the error is stored globally, so it can be gathered
 void Quit (const char *errorStr, ...)
 {
@@ -1540,16 +1504,11 @@ void Quit (const char *errorStr, ...)
 
 //===========================================================================
 
-
-
-/*
-=====================
-=
-= DemoLoop
-=
-=====================
-*/
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// DemoLoop
+//
+////////////////////////////////////////////////////////////////////////////////
 
 static void DemoLoop()
 {
@@ -1697,14 +1656,11 @@ static void DemoLoop()
 
 //===========================================================================
 
-
-/*
-==========================
-=
-= main
-=
-==========================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// main
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // main

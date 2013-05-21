@@ -17,7 +17,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// Wolfenstein graphics routines
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_DRAW.C
 
@@ -35,6 +39,7 @@
 #include "wl_atmos.h"
 #include "wl_shade.h"
 #include "Config.h"
+#include "ActorStates.h"
 
 /*
 =============================================================================
@@ -85,12 +90,12 @@ short   viewangle;
 fixed   viewsin,viewcos;
 
 void    TransformActor (objtype *ob);
-void    BuildTables (void);
-void    ClearScreen (void);
+void    BuildTables ();
+void    ClearScreen ();
 int     CalcRotate (objtype *ob);
-void    DrawScaleds (void);
-void    CalcTics (void);
-void    ThreeDRefresh (void);
+void    DrawScaleds ();
+void    CalcTics ();
+void    ThreeDRefresh ();
 
 
 
@@ -596,7 +601,7 @@ byte vgaCeiling_sod[]=
 =====================
 */
 
-void VGAClearScreen (void)
+void VGAClearScreen ()
 {
     // IOANCH 20130302: unification
     byte ceiling=IMPALED(vgaCeiling, [gamestate.episode*10+mapon]);
@@ -845,7 +850,7 @@ typedef struct
 visobj_t vislist[MAXVISABLE];
 visobj_t *visptr,*visstep,*farthest;
 
-void DrawScaleds (void)
+void DrawScaleds ()
 {
     int      i,least,numvisable,height;
     byte     *tilespot,*visspot;
@@ -978,22 +983,21 @@ void DrawScaleds (void)
     }
 }
 
-//==========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = DrawPlayerWeapon
+// =
+// = Draw the player's hands
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-==============
-=
-= DrawPlayerWeapon
-=
-= Draw the player's hands
-=
-==============
-*/
 
 int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
     SPR_MACHINEGUNREADY, SPR_CHAINREADY};
 
-void DrawPlayerWeapon (void)
+void DrawPlayerWeapon ()
 {
     int shapenum;
 
@@ -1031,7 +1035,7 @@ void DrawPlayerWeapon (void)
 =====================
 */
 
-void CalcTics (void)
+void CalcTics ()
 {
 //
 // calculate tics since last refresh for adaptive timing
@@ -1470,7 +1474,7 @@ passhoriz:
 ====================
 */
 
-void WallRefresh (void)
+void WallRefresh ()
 {
     xpartialdown = viewx&(TILEGLOBAL-1);
     xpartialup = TILEGLOBAL-xpartialdown;
@@ -1509,13 +1513,14 @@ void CalcViewVariables()
 ========================
 */
 
-void    ThreeDRefresh (void)
+void    ThreeDRefresh ()
 {
 //
 // clear out the traced array
 //
     memset(spotvis,0,maparea);
-    spotvis[player->tilex][player->tiley] = 1;       // Detect all sprites over player fix
+    spotvis[player->tilex][player->tiley] = 1;
+    // Detect all sprites over player fix
 
     vbuf = VL_LockSurface(screenBuffer);
     if(vbuf == NULL) return;

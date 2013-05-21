@@ -15,28 +15,10 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-
-#ifndef HISTORYRATIO_H_
-#define HISTORYRATIO_H_
-
+////////////////////////////////////////////////////////////////////////////////
 //
-// HistoryRatio
+// Two-point vector class, sometimes needed
 //
-// Used to count past ratios
-//
-class HistoryRatio
-{
-private:
-	int pipe, value, length;
-public:
-	void addFail();
-	void addSuccess();
-	void initLength(int len);
-	
-	int getValue() const
-	{
-		return value;
-	}
-};
+////////////////////////////////////////////////////////////////////////////////
 
-#endif
+#include "wl_def.h"

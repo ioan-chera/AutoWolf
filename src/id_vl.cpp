@@ -91,29 +91,31 @@ CASSERT(lengthof(palette_sod) == 256 && lengthof(palette_wl6) == 256)
 //===========================================================================
 
 
-/*
-=======================
-=
-= VL_Shutdown
-=
-=======================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_Shutdown
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void	VL_Shutdown (void)
+
+void	VL_Shutdown ()
 {
 	//VL_SetTextMode ();
 }
 
 
-/*
-=======================
-=
-= VL_SetVGAPlaneMode
-=
-=======================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_SetVGAPlaneMode
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void	VL_SetVGAPlaneMode (void)
+
+void	VL_SetVGAPlaneMode ()
 {
 	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
     // IOANCH 20130202: unification process
@@ -173,23 +175,23 @@ void	VL_SetVGAPlaneMode (void)
     CHECKMALLOCRESULT(wallheight);
 }
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                        PALETTE OPS
+//
+//        To avoid snow, do a WaitVBL BEFORE calling these
+//
+////////////////////////////////////////////////////////////////////////////////
 
-						PALETTE OPS
 
-		To avoid snow, do a WaitVBL BEFORE calling these
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_ConvertPalette
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-=============================================================================
-*/
-
-/*
-=================
-=
-= VL_ConvertPalette
-=
-=================
-*/
 
 void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
 {
@@ -201,13 +203,14 @@ void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
     }
 }
 
-/*
-=================
-=
-= VL_FillPalette
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_FillPalette
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_FillPalette (int red, int green, int blue)
 {
@@ -226,13 +229,14 @@ void VL_FillPalette (int red, int green, int blue)
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_SetColor
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_SetColor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_SetColor	(int color, int red, int green, int blue)
 {
@@ -251,13 +255,14 @@ void VL_SetColor	(int color, int red, int green, int blue)
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_GetColor
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_GetColor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_GetColor	(int color, int *red, int *green, int *blue)
 {
@@ -269,13 +274,14 @@ void VL_GetColor	(int color, int *red, int *green, int *blue)
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_SetPalette
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_SetPalette
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_SetPalette (SDL_Color *palette, bool forceupdate)
 {
@@ -297,13 +303,14 @@ void VL_SetPalette (SDL_Color *palette, bool forceupdate)
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_GetPalette
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_GetPalette
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_GetPalette (SDL_Color *palette)
 {
@@ -313,15 +320,16 @@ void VL_GetPalette (SDL_Color *palette)
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_FadeOut
-=
-= Fades the current palette to the given color in the given number of steps
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_FadeOut
+// =
+// = Fades the current palette to the given color in the given number of steps
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 {
@@ -371,13 +379,14 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 }
 
 
-/*
-=================
-=
-= VL_FadeIn
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_FadeIn
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 {
@@ -413,13 +422,12 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 	screenfaded = false;
 }
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                            PIXEL OPS
+//
+////////////////////////////////////////////////////////////////////////////////
 
-							PIXEL OPS
-
-=============================================================================
-*/
 
 byte *VL_LockSurface(SDL_Surface *surface)
 {
@@ -439,13 +447,14 @@ void VL_UnlockSurface(SDL_Surface *surface)
     }
 }
 
-/*
-=================
-=
-= VL_Plot
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_Plot
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_Plot (int x, int y, int color)
 {
@@ -463,13 +472,14 @@ void VL_Plot (int x, int y, int color)
     VL_UnlockSurface(curSurface);
 }
 
-/*
-=================
-=
-= VL_GetPixel
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_GetPixel
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 byte VL_GetPixel (int x, int y)
 {
@@ -491,13 +501,14 @@ byte VL_GetPixel (int x, int y)
 }
 
 
-/*
-=================
-=
-= VL_Hlin
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_Hlin
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
@@ -516,13 +527,14 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 }
 
 
-/*
-=================
-=
-= VL_Vlin
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_Vlin
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_Vlin (int x, int y, int height, int color)
 {
@@ -547,13 +559,14 @@ void VL_Vlin (int x, int y, int height, int color)
 }
 
 
-/*
-=================
-=
-= VL_Bar
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_Bar
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
@@ -576,21 +589,21 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 	VL_UnlockSurface(curSurface);
 }
 
-/*
-============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                            MEMORY OPS
+//
+////////////////////////////////////////////////////////////////////////////////
 
-							MEMORY OPS
 
-============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_MemToLatch
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-=================
-=
-= VL_MemToLatch
-=
-=================
-*/
 
 void VL_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface, int x, int y)
 {
@@ -620,15 +633,16 @@ void VL_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface
 //===========================================================================
 
 
-/*
-=================
-=
-= VL_MemToScreenScaledCoord
-=
-= Draws a block of data to the screen with scaling according to scaleFactor.
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_MemToScreenScaledCoord
+// =
+// = Draws a block of data to the screen with scaling according to scaleFactor.
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, int desty)
 {
@@ -660,18 +674,20 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, 
     VL_UnlockSurface(curSurface);
 }
 
-/*
-=================
-=
-= VL_MemToScreenScaledCoord
-=
-= Draws a part of a block of data to the screen.
-= The block has the size origwidth*origheight.
-= The part at (srcx, srcy) has the size width*height
-= and will be painted to (destx, desty) with scaling according to scaleFactor.
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_MemToScreenScaledCoord
+// =
+// = Draws a part of a block of data to the screen.
+// = The block has the size origwidth*origheight.
+// = The part at (srcx, srcy) has the size width*height
+// = and will be painted to (destx, desty) with scaling according to 
+// scaleFactor.
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int srcx, int srcy,
                                 int destx, int desty, int width, int height)
@@ -708,13 +724,14 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
 
 //==========================================================================
 
-/*
-=================
-=
-= VL_LatchToScreen
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_LatchToScreen
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest)
@@ -801,13 +818,14 @@ void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
 
 //===========================================================================
 
-/*
-=================
-=
-= VL_ScreenToScreen
-=
-=================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_ScreenToScreen
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void VL_ScreenToScreen (SDL_Surface *source, SDL_Surface *dest)
 {

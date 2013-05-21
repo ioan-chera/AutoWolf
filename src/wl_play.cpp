@@ -17,12 +17,18 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Real-time gameplay functions
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_PLAY.C
 
+#include "wl_def.h"
+
 #include "foreign.h"
 #include "version.h"
-#include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
 #include "wl_draw.h"
@@ -512,7 +518,7 @@ void PollControls (void)
 		 // Find A* path
          try
          {
-             BotMan::DoCommand();
+             bot.DoCommand();
          }
          catch (const Exception &exc)
          {
@@ -862,21 +868,18 @@ void InitActorList (void)
 
 }
 
-//===========================================================================
+//
+// =
+// = GetNewActor
+// =
+// = Sets the global variable new to point to a free spot in objlist.
+// = The free spot is inserted at the end of the liked list
+// =
+// = When the object list is full, the caller can either have it bomb out ot
+// = return a dummy object pointer that will never get used
+// =
+//
 
-/*
-=========================
-=
-= GetNewActor
-=
-= Sets the global variable new to point to a free spot in objlist.
-= The free spot is inserted at the end of the liked list
-=
-= When the object list is full, the caller can either have it bomb out ot
-= return a dummy object pointer that will never get used
-=
-=========================
-*/
 
 void GetNewActor (void)
 {
@@ -1418,7 +1421,7 @@ void PlayLoop (void)
 	// IOANCH 20121215
 	// Now is a time to save explored map data
 	if(ingame)
-		BotMan::SaveData();
+		bot.SaveData();
 
     if (playstate != ex_died)
         FinishPaletteShifts ();

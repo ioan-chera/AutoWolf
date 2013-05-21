@@ -15,6 +15,13 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Basic functions. May be moved elsewhere.
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#include "wl_def.h"
 
 #include "ioan_bas.h"
 #include "ioan_bot.h"
@@ -26,6 +33,7 @@
 #include "wl_state.h"
 #include "wl_main.h"
 #include "Config.h"
+#include "ActorStates.h"
 
 // static members definition
 List<void *> Basic::livingNazis, Basic::thrownProjectiles;
@@ -336,7 +344,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
 	}
 	
 	// IOANCH 20121219: record enemy position
-	BotMan::RecordEnemyPosition(newobj);
+	bot.RecordEnemyPosition(newobj);
 	
 	if(newenemy)
 		livingNazis.add(newenemy);
@@ -579,19 +587,19 @@ int Basic::ApproxDist(int dx, int dy)
 }
 
 //
-// Basic::NewStringTildeExpand
+// Basic::SetStringTildeExpand
 //     
 // Create new string with 
 //
-PString Basic::NewStringTildeExpand(const char *basedir)
+PString &Basic::SetStringTildeExpand(const char *basedir, PString &dest)
 {
     if(basedir[0] == '~')
     {
         const char *home = getenv("HOME");
         if(home)
-            return PString(home).concat(basedir + 1);
+            return dest.copy(home).concat(basedir + 1);
     }
     
-    return PString(basedir);
+    return dest;
 }
 

@@ -17,7 +17,16 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-
+////////////////////////////////////////////////////////////////////////////////
+//
+// MASTER DEFINITIONS FILE
+//
+// Includes definitions for most important things, as well as 
+// inclusions of system headers.
+//
+// IMPORTANT: Must be the first header to include
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #ifndef WL_DEF_H
 #define WL_DEF_H
@@ -28,10 +37,12 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <math.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"
@@ -48,20 +59,8 @@
 
 #pragma pack(1)
 
-// IOANCH 20130307: block definition
-#ifdef APPLE_NON_CPP11
-#define     LAM(...) ^
-#define LAMDECL ^
-#define LAMSPEC(rettype, lname, ...) rettype (^lname)(__VA_ARGS__)
-#else
-#define     LAM(...) [__VA_ARGS__]
-#define LAMDECL *
-#define LAMSPEC(rettype, lname, ...) auto lname
-#endif
-
 // IOANCH 20130307: path length
 #define MAX_PATH_LENGTH 2048
-
 
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -268,29 +267,32 @@ typedef enum
 // IOANCH 25.10.2012
 // Other constants that had to be named
 //
-#define I_PLAYERHEALTH		100
-#define I_FIRSTAIDHEALTH	25
+#define I_PLAYERHEALTH          100
+#define I_FIRSTAIDHEALTH        25
 #define I_FOODHEALTH			10
-#define I_DOGFOODHEALTH		4
+#define I_DOGFOODHEALTH         4
 #define I_BLOODHEALTHTHRESHOLD	10
+
 #define I_CROSSSCORE			100
-#define I_CHALICESCORE		500
-#define I_TREASURESCORE		1000
+#define I_CHALICESCORE          500
+#define I_TREASURESCORE         1000
 #define I_CROWNSCORE			5000
+
 #define I_GUARDSCORE			100
-#define I_OFFICERSCORE		400
-#define I_MUTANTSCORE		700
+#define I_OFFICERSCORE          400
+#define I_MUTANTSCORE           700
 #define I_SSSCORE				500
-#define I_DOGSCORE			200
-#define I_BOSSSCORE			5000
-#define I_FAKEHITLERSCORE	2000
-#define I_SPECTRESCORE		200
+#define I_DOGSCORE              200
+#define I_BOSSSCORE             5000
+#define I_FAKEHITLERSCORE       2000
+#define I_SPECTRESCORE          200
+
 #define I_MAXAMMO				99
-#define I_CLIPAMMO			8
-#define I_SEMICLIPAMMO		4
+#define I_CLIPAMMO              8
+#define I_SEMICLIPAMMO          4
 #define I_BOXAMMO				25
 #define I_GUNAMMO				6
-#define I_BONUSAMMO			25
+#define I_BONUSAMMO             25
 
 
 //
@@ -308,30 +310,30 @@ typedef enum
 =============================================================================
 */
 
-typedef enum {
+enum controldir_t {
     di_north,
     di_east,
     di_south,
     di_west
-} controldir_t;
+} ;
 
-typedef enum {
+enum door_t {
     dr_normal,
     dr_lock1,
     dr_lock2,
     dr_lock3,
     dr_lock4,
     dr_elevator
-} door_t;
+} ;
 
-typedef enum {
+enum activetype {
     ac_badobject = -1,
     ac_no,
     ac_yes,
     ac_allways
-} activetype;
+} ;
 
-typedef enum {
+enum classtype {
     nothing,
     playerobj,
     inertobj,
@@ -362,9 +364,9 @@ typedef enum {
     deathobj,
     hrocketobj,
     sparkobj
-} classtype;
+} ;
 
-typedef enum {
+ enum wl_stat_t{
     none,
     block,
     bo_gibs,
@@ -386,9 +388,9 @@ typedef enum {
     bo_fullheal,
     bo_25clip,
     bo_spear
-} wl_stat_t;
+} ;
 
-typedef enum {
+enum dirtype{
     east,
     northeast,
     north,
@@ -398,34 +400,36 @@ typedef enum {
     south,
     southeast,
     nodir
-} dirtype;
+} ;
 
-
-#define NUMENEMIES  22
-typedef enum {
+enum enemy_t{
     en_guard,
     en_officer,
     en_ss,
     en_dog,
     en_boss,
+    
     en_schabbs,
     en_fake,
     en_hitler,
     en_mutant,
     en_blinky,
+    
     en_clyde,
     en_pinky,
     en_inky,
     en_gretel,
     en_gift,
+    
     en_fat,
     en_spectre,
     en_angel,
     en_trans,
     en_uber,
+    
     en_will,
     en_death
-} enemy_t;
+} ;
 
 typedef void (* statefunc) (void *);
 
@@ -443,12 +447,11 @@ typedef struct statestruct
     uint64_t flags;
 } statetype;
 
-
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // trivial actor structure
 //
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct statstruct
 {
@@ -460,11 +463,11 @@ typedef struct statstruct
 } statobj_t;
 
 
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // door actor structure
 //
-//---------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef enum
 {
@@ -481,11 +484,11 @@ typedef struct doorstruct
 } doorobj_t;
 
 
-//--------------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // thinking actor structure
 //
-//--------------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct objstruct
 {
@@ -541,13 +544,14 @@ enum
 };
 
 
-#define NUMWEAPONS      4
+//#define NUMWEAPONS      4
 typedef enum
 {
     wp_knife,
     wp_pistol,
     wp_machinegun,
-    wp_chaingun
+    wp_chaingun,
+    NUMWEAPONS
 } weapontype;
 
 
@@ -559,11 +563,11 @@ enum
     gd_hard
 };
 
-//---------------
+////////////////////////////////////////////////////////////////////////////////
 //
 // gamestate structure
 //
-//---------------
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
 {
@@ -605,146 +609,44 @@ typedef enum
 extern word *mapsegs[MAPPLANES];
 extern int mapon;
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                WL_DEBUG
+//
+////////////////////////////////////////////////////////////////////////////////
 
-                             WL_MAIN DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-
-/*
-=============================================================================
-
-                         WL_GAME DEFINITIONS
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
-                            WL_PLAY DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                                WL_INTER
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
-                                WL_DEBUG
-
-=============================================================================
-*/
-
-int DebugKeys (void);
-
-/*
-=============================================================================
-
-                            WL_DRAW DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                             WL_STATE DEFINITIONS
-
-=============================================================================
-*/
-
-/*
-=============================================================================
-
-                             WL_AGENT DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-
-/*
-=============================================================================
-
-                             WL_ACT1 DEFINITIONS
-
-=============================================================================
-*/
-
-
-
+int DebugKeys ();
 
 // IOANCH 20130310: modularization
 
-/*
-=============================================================================
-
-                             WL_ACT2 DEFINITIONS
-
-=============================================================================
-*/
-
-
-
-/*
-=============================================================================
-
-                             WL_TEXT DEFINITIONS
-
-=============================================================================
-*/
-
-
-/*
-=============================================================================
-
-                               GP2X DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                               GP2X DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #if defined(GP2X)
 
 #if defined(GP2X_940)
-void GP2X_MemoryInit(void);
-void GP2X_Shutdown(void);
+void GP2X_MemoryInit();
+void GP2X_Shutdown();
 #endif
 void GP2X_ButtonDown(int button);
 void GP2X_ButtonUp(int button);
-
 #endif
 
-
-/*
-=============================================================================
-
-                             MISC DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                             MISC DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 static inline fixed FixedMul(fixed a, fixed b)
 {
 	return (fixed)(((int64_t)a * b + 0x8000) >> 16);
 }
 
-#define GetTicks() ((SDL_GetTicks()*7)/100)
+// IOANCH 20130516: deleted unused code
 
 #define ISPOINTER(x) ((((uintptr_t)(x)) & ~0xffff) != 0)
 
@@ -793,14 +695,11 @@ static inline longword READLONGWORD(byte *&ptr)
     return val;
 }
 
-
-/*
-=============================================================================
-
-                           FEATURE DEFINITIONS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                           FEATURE DEFINITIONS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #ifdef USE_FEATUREFLAGS
     // The currently available feature flags
@@ -815,13 +714,16 @@ static inline longword READLONGWORD(byte *&ptr)
     // to avoid interpretation as e.g. doors.
     extern int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
 
-    /*************************************************************
-     * Current usage of ffData... variables:
-     * ffDataTopLeft:     lower 8-bit: ShadeDefID
-     * ffDataTopRight:    FeatureFlags
-     * ffDataBottomLeft:  CloudSkyDefID or ParallaxStartTexture
-     * ffDataBottomRight: unused
-     *************************************************************/
+////////////////////////////////////////////////////////////////////////////////
+//
+//      Current usage of ffData... variables:
+//      ffDataTopLeft:     lower 8-bit: ShadeDefID
+//      ffDataTopRight:    FeatureFlags
+//      ffDataBottomLeft:  CloudSkyDefID or ParallaxStartTexture
+//      ffDataBottomRight: unused
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
     // The feature flags are stored as a wall in the upper right corner of each level
     static inline word GetFeatureFlags()

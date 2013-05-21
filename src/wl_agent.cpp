@@ -17,11 +17,16 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Agent Blazkowicz routines
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_AGENT.C
 
-#include "version.h"
 #include "wl_def.h"
+#include "version.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
 #include "wl_agent.h"
@@ -66,8 +71,6 @@
 //
 int32_t         thrustspeed;
 
-word            plux,pluy;          // player coordinates scaled to unsigned
-
 short           anglefrac;
 
 objtype        *LastAttacker;
@@ -102,11 +105,11 @@ struct atkinf
 
 //----------
 
-void Attack (void);
-void Use (void);
+void Attack ();
+void Use ();
 void Search (objtype *ob);
-void SelectWeapon (void);
-void SelectItem (void);
+void SelectWeapon ();
+void SelectItem ();
 
 //----------
 
@@ -133,7 +136,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove);
 ======================
 */
 
-void CheckWeaponChange (void)
+void CheckWeaponChange ()
 {
     int newWeapon = -1;
 
@@ -328,7 +331,7 @@ void StatusDrawFace(unsigned picnum)
 ==================
 */
 
-void DrawFace (void)
+void DrawFace ()
 {
     if(viewsize == 21 && ingame) return;
     if (SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
@@ -364,7 +367,7 @@ void DrawFace (void)
 int facecount = 0;
 int facetimes = 0;
 
-void UpdateFace (void)
+void UpdateFace ()
 {
     // don't make demo depend on sound playback
     if(demoplayback || demorecord)
@@ -437,7 +440,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 ===============
 */
 
-void DrawHealth (void)
+void DrawHealth ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (21,16,3,gamestate.health);
@@ -462,7 +465,7 @@ void TakeDamage (int points,objtype *attacker)
         points>>=2;
 	
 	// IOANCH 02.07.2012: alert the bot that damage was taken
-	BotMan::damagetaken = attacker;
+	bot.damagetaken = attacker;
 
     if (!godmode)
         gamestate.health -= points;
@@ -522,7 +525,7 @@ void HealSelf (int points)
 ===============
 */
 
-void DrawLevel (void)
+void DrawLevel ()
 {
     if(viewsize == 21 && ingame) return;
     // IOANCH 20130202: unification process
@@ -543,7 +546,7 @@ void DrawLevel (void)
 ===============
 */
 
-void DrawLives (void)
+void DrawLives ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (14,16,1,gamestate.lives);
@@ -558,7 +561,7 @@ void DrawLives (void)
 ===============
 */
 
-void GiveExtraMan (void)
+void GiveExtraMan ()
 {
     if (gamestate.lives<9)
         gamestate.lives++;
@@ -576,7 +579,7 @@ void GiveExtraMan (void)
 ===============
 */
 
-void DrawScore (void)
+void DrawScore ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (6,16,6,gamestate.score);
@@ -611,7 +614,7 @@ void GivePoints (int32_t points)
 ==================
 */
 
-void DrawWeapon (void)
+void DrawWeapon ()
 {
     if(viewsize == 21 && ingame) return;
     StatusDrawPic (32,8,SPEAR.g(KNIFEPIC)+gamestate.weapon);
@@ -626,7 +629,7 @@ void DrawWeapon (void)
 ==================
 */
 
-void DrawKeys (void)
+void DrawKeys ()
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
@@ -669,7 +672,7 @@ void GiveWeapon (int weapon)
 ===============
 */
 
-void DrawAmmo (void)
+void DrawAmmo ()
 {
     if(viewsize == 21 && ingame) return;
     LatchNumber (27,16,2,gamestate.ammo);
@@ -1010,7 +1013,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 ===================
 */
 
-void VictoryTile (void)
+void VictoryTile ()
 {
     // IOANCH 20130202: unification process
     if(!SPEAR())
@@ -1103,7 +1106,7 @@ void Thrust (int angle, int32_t speed)
 ===============
 */
 
-void Cmd_Fire (void)
+void Cmd_Fire ()
 {
     buttonheld[bt_attack] = true;
 
@@ -1128,7 +1131,7 @@ void Cmd_Fire (void)
 ===============
 */
 
-void Cmd_Use (void)
+void Cmd_Use ()
 {
     int     checkx,checky,doornum,dir;
     Boolean elevatorok;
@@ -1237,17 +1240,16 @@ void SpawnPlayer (int tilex, int tiley, int dir)
 }
 
 
-//===========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = T_KnifeAttack
+// =
+// = Update player hands, and try to do damage when the proper frame is reached
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= T_KnifeAttack
-=
-= Update player hands, and try to do damage when the proper frame is reached
-=
-===============
-*/
 
 // IOANCH: modified to use another function
 void    KnifeAttack (objtype *ob)
@@ -1315,7 +1317,7 @@ void    GunAttack (objtype *ob)
         if (closest == oldclosest)
 		{
 			// IOANCH 26.06.2012: efficiency
-			BotMan::shootRatio.addFail();
+			bot.shootRatio.addFail();
             return;                                         // no more targets, all missed
 		}
 
@@ -1342,13 +1344,13 @@ void    GunAttack (objtype *ob)
         if ( (US_RndT() / 12) < dist)           // missed
 		{
 			// IOANCH 26.06.2012: efficiency
-			BotMan::shootRatio.addFail();
+			bot.shootRatio.addFail();
             return;
 		}
         damage = US_RndT() / 6;
     }
 	// IOANCH 26.06.2012: efficiency
-	BotMan::shootRatio.addSuccess();
+	bot.shootRatio.addSuccess();
     DamageActor (closest,damage);
 }
 
@@ -1362,7 +1364,7 @@ void    GunAttack (objtype *ob)
 ===============
 */
 
-void VictorySpin (void)
+void VictorySpin ()
 {
     int32_t    desty;
 
@@ -1421,9 +1423,7 @@ void    T_Attack (objtype *ob)
     ControlMovement (ob);
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
-
-    plux = (word) (player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word) (player->y >> UNSIGNEDSHIFT);
+    
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 
@@ -1520,9 +1520,7 @@ void    T_Player (objtype *ob)
     ControlMovement (ob);
     if (gamestate.victoryflag)              // watching the BJ actor
         return;
-
-    plux = (word) (player->x >> UNSIGNEDSHIFT);                     // scale to fit in unsigned
-    pluy = (word) (player->y >> UNSIGNEDSHIFT);
+    
     player->tilex = (short)(player->x >> TILESHIFT);                // scale to tile values
     player->tiley = (short)(player->y >> TILESHIFT);
 }

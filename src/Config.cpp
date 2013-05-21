@@ -17,6 +17,12 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Configuration controller. 
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 #include <sys/stat.h>
 #ifdef __APPLE__
@@ -116,7 +122,8 @@ void Config::CheckEnvVars()
     const char *wolfdir = getenv("AUTOWOLFDIR");
     if(wolfdir)
     {
-        PString expanded = Basic::NewStringTildeExpand(wolfdir);
+        PString expanded;
+        Basic::SetStringTildeExpand(wolfdir, expanded);
         if(changeDirectory(expanded.buffer()))
             throw Exception(PString("Cannot change directory to ").concat(expanded).concat("\n"));
     }
@@ -292,7 +299,7 @@ void Config::CheckParameters(int argc, char *argv[])
                 else
                 {
                     // IOANCH 20130307: expand tilde
-                    dir = Basic::NewStringTildeExpand(argv[i]);
+                    Basic::SetStringTildeExpand(argv[i], dir);
                 }
             }
             else IFARG("--ignorenumchunks")
@@ -315,7 +322,8 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The wolfdir option is missing the dir argument!\n");
                 else
                 {
-                    PString trans = Basic::NewStringTildeExpand(argv[i]);
+                    PString trans;
+                    Basic::SetStringTildeExpand(argv[i], trans);
                     if(changeDirectory(trans.buffer()))
                         throw Exception(PString("Cannot change directory to ").concat(trans).concat("\n"));
                 }

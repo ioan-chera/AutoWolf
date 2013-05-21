@@ -22,17 +22,15 @@
 
 // this has been customized for WOLF
 
-/*
-=============================================================================
-
-Id Software Caching Manager
----------------------------
-
-Must be started BEFORE the memory manager, because it needs to get the headers
-loaded into the data segment
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// Id Software Caching Manager
+//
+// Must be started BEFORE the memory manager, because it needs to get the 
+// headers
+// loaded into the data segment
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // IOANCH 20121223: Cleaned up this file
 
@@ -54,13 +52,11 @@ loaded into the data segment
 
 #define THREEBYTEGRSTARTS
 
-/*
-=============================================================================
-
-                             LOCAL CONSTANTS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                             LOCAL CONSTANTS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 typedef struct
 {
@@ -75,13 +71,11 @@ typedef struct
 } mapfiletype;
 
 
-/*
-=============================================================================
-
-                             GLOBAL VARIABLES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                             GLOBAL VARIABLES
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #define BUFFERSIZE 0x1000
 static int32_t bufferseg[BUFFERSIZE/4];
@@ -99,13 +93,11 @@ word    RLEWtag;
 
 int     numEpisodesMissing = 0;
 
-/*
-=============================================================================
-
-                             LOCAL VARIABLES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                             LOCAL VARIABLES
+//
+////////////////////////////////////////////////////////////////////////////////
 
 PString extension; // Need a string, not constant to change cache files
 PString graphext;
@@ -151,13 +143,11 @@ static int32_t GRFILEPOS(const size_t idx)
 	return IMPALED(grstarts, [idx]);
 }
 
-/*
-=============================================================================
-
-                            LOW LEVEL ROUTINES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                            LOW LEVEL ROUTINES
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // CAL_GetGrChunkLength
@@ -219,13 +209,11 @@ Boolean CA_LoadFile(const char *filename, memptr *ptr)
     return true;
 }
 
-/*
-============================================================================
-
-                COMPRESSION routines, see JHUFF.C for more
-
-============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                COMPRESSION routines, see JHUFF.C for more
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // CAL_HuffExpand
@@ -390,18 +378,16 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
 
 
 
-/*
-=============================================================================
-
-                                         CACHE MANAGER ROUTINES
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                         CACHE MANAGER ROUTINES
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // CAL_SetupGrFile
 //
-static void CAL_SetupGrFile (void)
+static void CAL_SetupGrFile ()
 {
     PString fname;
     int handle;
@@ -516,7 +502,7 @@ static void CAL_SetupGrFile (void)
 //
 // CAL_SetupMapFile
 //
-static void CAL_SetupMapFile (void)
+static void CAL_SetupMapFile ()
 {
     int     i;
     int handle;
@@ -583,7 +569,7 @@ static void CAL_SetupMapFile (void)
 //
 // CAL_SetupAudioFile
 //
-static void CAL_SetupAudioFile (void)
+static void CAL_SetupAudioFile ()
 {
     PString fname;
 
@@ -614,7 +600,7 @@ static void CAL_SetupAudioFile (void)
 //
 // Open all files and load in headers
 //
-void CA_Startup (void)
+void CA_Startup ()
 {
 #ifdef PROFILE
     unlink ("PROFILE.TXT");
@@ -635,7 +621,7 @@ void CA_Startup (void)
 //
 // Closes all files
 //
-void CA_Shutdown (void)
+void CA_Shutdown ()
 {
     int i,start;
 
@@ -741,7 +727,7 @@ static void CAL_CacheAdlibSoundChunk (int chunk)
 //
 // Purges all sounds, then loads all new ones (mode switch)
 //
-void CA_LoadAllSounds (void)
+void CA_LoadAllSounds ()
 {
     unsigned start,i;
     unsigned char cachein = 0;

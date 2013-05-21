@@ -20,8 +20,6 @@
 #ifndef PATHARRAY_H_
 #define PATHARRAY_H_
 
-#include "wl_def.h"
-
 class PathArray
 {
 protected:

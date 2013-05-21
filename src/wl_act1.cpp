@@ -17,10 +17,16 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Routines dealing mostly with map features
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_ACT1.C
 
 #include "wl_def.h"
+
 #include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_play.h"
@@ -28,13 +34,11 @@
 #include "ioan_bas.h"	// IOANCH 29.09.2012
 #include "Config.h"
 
-/*
-=============================================================================
-
-                                                        STATICS
-
-=============================================================================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                                        STATICS
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
 statobj_t       statobjlist[MAXSTATS];
@@ -215,28 +219,28 @@ statinfo_sod[] =
     {-1}                                    // terminator
 };
 
-/*
-===============
-=
-= InitStaticList
-=
-===============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = InitStaticList
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-void InitStaticList (void)
+
+void InitStaticList ()
 {
     laststatobj = &statobjlist[0];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SpawnStatic
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-
-/*
-===============
-=
-= SpawnStatic
-=
-===============
-*/
 
 void SpawnStatic (int tilex, int tiley, int type)
 {
@@ -297,18 +301,18 @@ void SpawnStatic (int tilex, int tiley, int type)
         Quit ("Too many static objects!\n");
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = PlaceItemType
+// =
+// = Called during game play to drop actors' items.  It finds the proper
+// = item number based on the item type (bo_???).  If there are no free item
+// = spots, nothing is done.
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= PlaceItemType
-=
-= Called during game play to drop actors' items.  It finds the proper
-= item number based on the item type (bo_???).  If there are no free item
-= spots, nothing is done.
-=
-===============
-*/
 
 void PlaceItemType (int itemtype, int tilex, int tiley)
 {
@@ -359,32 +363,30 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
 	Basic::AddItemToList(spot->tilex, spot->tiley, spot->itemnumber);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                  DOORS
+//
+// doorobjlist[] holds most of the information for the doors
+//
+// doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
+//        this is directly accessed by AsmRefresh during rendering
+//
+// The number of doors is limited to 64 because a spot in tilemap holds the
+//        door number in the low 6 bits, with the high bit meaning a door 
+// center
+//        and bit 6 meaning a door side tile
+//
+// Open doors conect two areas, so sounds will travel between them and sight
+//        will be checked when the player is in a connected area.
+//
+// Areaconnect is incremented/decremented by each door. If >0 they connect
+//
+// Every time a door opens or closes the areabyplayer matrix gets recalculated.
+//        An area is true if it connects with the player's current spor.
+//
+////////////////////////////////////////////////////////////////////////////////
 
-
-/*
-=============================================================================
-
-                                  DOORS
-
-doorobjlist[] holds most of the information for the doors
-
-doorposition[] holds the amount the door is open, ranging from 0 to 0xffff
-        this is directly accessed by AsmRefresh during rendering
-
-The number of doors is limited to 64 because a spot in tilemap holds the
-        door number in the low 6 bits, with the high bit meaning a door center
-        and bit 6 meaning a door side tile
-
-Open doors conect two areas, so sounds will travel between them and sight
-        will be checked when the player is in a connected area.
-
-Areaconnect is incremented/decremented by each door. If >0 they connect
-
-Every time a door opens or closes the areabyplayer matrix gets recalculated.
-        An area is true if it connects with the player's current spor.
-
-=============================================================================
-*/
 
 #define DOORWIDTH       0x7800
 #define OPENTICS        300
@@ -400,15 +402,16 @@ byte            areaconnect[NUMAREAS][NUMAREAS];
 Boolean         areabyplayer[NUMAREAS];
 
 
-/*
-==============
-=
-= _ConnectAreas
-=
-= Scans outward from playerarea, marking all connected areas
-=
-==============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = _ConnectAreas
+// =
+// = Scans outward from playerarea, marking all connected areas
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 static void _RecursiveConnect (int areanumber)
 {
@@ -425,7 +428,7 @@ static void _RecursiveConnect (int areanumber)
 }
 
 
-static void _ConnectAreas (void)
+static void _ConnectAreas ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     areabyplayer[player->areanumber] = true;
@@ -433,24 +436,23 @@ static void _ConnectAreas (void)
 }
 
 
-void InitAreas (void)
+void InitAreas ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     if (player->areanumber < NUMAREAS)
         areabyplayer[player->areanumber] = true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = InitDoorList
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-===============
-=
-= InitDoorList
-=
-===============
-*/
-
-void InitDoorList (void)
+void InitDoorList ()
 {
     memset (areabyplayer,0,sizeof(areabyplayer));
     memset (areaconnect,0,sizeof(areaconnect));
@@ -460,13 +462,14 @@ void InitDoorList (void)
 }
 
 
-/*
-===============
-=
-= SpawnDoor
-=
-===============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = SpawnDoor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
 {
@@ -507,15 +510,14 @@ void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
     lastdoorobj++;
 }
 
-//===========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = OpenDoor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-=====================
-=
-= OpenDoor
-=
-=====================
-*/
 
 void OpenDoor (int door)
 {
@@ -526,13 +528,14 @@ void OpenDoor (int door)
 }
 
 
-/*
-=====================
-=
-= _CloseDoor
-=
-=====================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = _CloseDoor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 static void _CloseDoor (int door)
 {
@@ -604,15 +607,16 @@ static void _CloseDoor (int door)
 
 
 
-/*
-=====================
-=
-= OperateDoor
-=
-= The player wants to change the door's direction
-=
-=====================
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = OperateDoor
+// =
+// = The player wants to change the door's direction
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void OperateDoor (int door)
 {
@@ -642,17 +646,16 @@ void OperateDoor (int door)
 }
 
 
-//===========================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = _DoorOpen
+// =
+// = Close the door after three seconds
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-===============
-=
-= _DoorOpen
-=
-= Close the door after three seconds
-=
-===============
-*/
 
 static void _DoorOpen (int door)
 {
@@ -662,13 +665,14 @@ static void _DoorOpen (int door)
 
 
 
-/*
-===============
-=
-= _DoorOpening
-=
-===============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = _DoorOpening
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 static void _DoorOpening (int door)
 {
@@ -730,13 +734,14 @@ static void _DoorOpening (int door)
 }
 
 
-/*
-===============
-=
-= _DoorClosing
-=
-===============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = _DoorClosing
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 static void _DoorClosing (int door)
 {
@@ -798,20 +803,18 @@ static void _DoorClosing (int door)
     doorposition[door] = (word) position;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = MoveDoors
+// =
+// = Called from PlayLoop
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
-
-/*
-=====================
-=
-= MoveDoors
-=
-= Called from PlayLoop
-=
-=====================
-*/
-
-void MoveDoors (void)
+void MoveDoors ()
 {
     int door;
 
@@ -839,14 +842,12 @@ void MoveDoors (void)
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                PUSHABLE WALLS
+//
+////////////////////////////////////////////////////////////////////////////////
 
-/*
-=============================================================================
-
-                                PUSHABLE WALLS
-
-=============================================================================
-*/
 
 word pwallstate;
 word pwallpos;                  // amount a pushable wall has been moved (0-63)
@@ -854,13 +855,14 @@ word pwallx,pwally;
 byte pwalldir,pwalltile;
 static int _dirs[4][2]={{0,-1},{1,0},{0,1},{-1,0}};
 
-/*
-===============
-=
-= PushWall
-=
-===============
-*/
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = PushWall
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 void PushWall (int checkx, int checky, int dir)
 {
@@ -898,17 +900,16 @@ void PushWall (int checkx, int checky, int dir)
     SD_PlaySound (PUSHWALLSND);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = MovePWalls
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
 
 
-/*
-=================
-=
-= MovePWalls
-=
-=================
-*/
-
-void MovePWalls (void)
+void MovePWalls ()
 {
     int oldblock,oldtile;
 

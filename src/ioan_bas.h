@@ -20,7 +20,6 @@
 #ifndef IOAN_BAS_H_
 #define IOAN_BAS_H_
 
-#include "wl_def.h"
 #include "List.h"
 #include "PString.h"
 
@@ -120,7 +119,7 @@ namespace Basic
 	// ApproximateDistance
 	int ApproxDist(int dx, int dy);
     
-    PString NewStringTildeExpand(const char *basedir);
+    PString &SetStringTildeExpand(const char *basedir, PString &dest);
 
 };
 

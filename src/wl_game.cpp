@@ -17,12 +17,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Game maintenance
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_GAME.C
 
+#include "wl_def.h"
 #include "foreign.h"
 #include "version.h"
-#include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
 #include "wl_agent.h"
@@ -81,10 +86,10 @@ int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
 //
 int ElevatorBackTo[]={1,1,7,3,5,3};
 
-void SetupGameLevel (void);
-void DrawPlayScreen (void);
-void LoadLatchMem (void);
-void GameLoop (void);
+void SetupGameLevel ();
+void DrawPlayScreen ();
+void LoadLatchMem ();
+void GameLoop ();
 
 /*
 =============================================================================
@@ -222,7 +227,7 @@ void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
     }
 }
 
-void UpdateSoundLoc(void)
+void UpdateSoundLoc()
 {
 /*    if (SoundPositioned)
     {
@@ -255,7 +260,7 @@ void UpdateSoundLoc(void)
 ==========================
 */
 
-static void ScanInfoPlane(void)
+static void ScanInfoPlane()
 {
     unsigned x,y;
     int      tile;
@@ -668,7 +673,7 @@ static void ScanInfoPlane(void)
 ==================
 */
 
-void SetupGameLevel (void)
+void SetupGameLevel ()
 {
     int  x,y;
     word *map;
@@ -714,7 +719,7 @@ void SetupGameLevel (void)
 #endif
 	
 	// IOANCH 17.05.2012: initialize bot
-	BotMan::MapInit();
+	bot.MapInit();
 
 //
 // copy the wall data to a data segment array
@@ -845,7 +850,7 @@ void SetupGameLevel (void)
 =
 ===================
 */
-void DrawPlayBorderSides(void)
+void DrawPlayBorderSides()
 {
     if(viewsize == 21) return;
 
@@ -928,7 +933,7 @@ void DrawStatusBorder (byte color)
 ===================
 */
 
-void DrawPlayBorder (void)
+void DrawPlayBorder ()
 {
 	const int px = scaleFactor; // size of one "pixel"
 
@@ -976,7 +981,7 @@ void DrawPlayBorder (void)
 ===================
 */
 
-void DrawPlayScreen (void)
+void DrawPlayScreen ()
 {
     VWB_DrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/2,Config::ScreenHeight()-scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
     DrawPlayBorder ();
@@ -1078,7 +1083,7 @@ void StartDemoRecord (int levelnumber)
 ==================
 */
 
-void FinishDemoRecord (void)
+void FinishDemoRecord ()
 {
     int32_t    length,level;
 
@@ -1124,7 +1129,7 @@ void FinishDemoRecord (void)
 ==================
 */
 
-void RecordDemo (void)
+void RecordDemo ()
 {
     int level,esc,maps;
 
@@ -1195,8 +1200,8 @@ void RecordDemo (void)
     FinishDemoRecord ();
 }
 #else
-void FinishDemoRecord (void) {return;}
-void RecordDemo (void) {return;}
+void FinishDemoRecord () {return;}
+void RecordDemo () {return;}
 #endif
 
 
@@ -1275,7 +1280,7 @@ void PlayDemo (int demonumber)
 
 #define DEATHROTATE 2
 
-void Died (void)
+void Died ()
 {
     float   fangle;
     int32_t dx,dy;
@@ -1420,7 +1425,7 @@ void Died (void)
 ===================
 */
 
-void GameLoop (void)
+void GameLoop ()
 {
     Boolean died;
 #ifdef MYPROFILE

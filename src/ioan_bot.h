@@ -20,34 +20,16 @@
 #ifndef IOAN_BOT_H_
 #define IOAN_BOT_H_
 
-#include "wl_def.h"
+#include "HistoryRatio.h"
 #include "List.h"
-class HistoryRatio;
-class PathArray;
+#include "PathArray.h"
 
-//
-// SearchStage
-//
-// Separate search objects into stages. Must be in order here
-//
-enum SearchStage
-{
-	SSGeneral,		// search normal things
-	SSOnePushWalls,	// only now look for one-push-walls (TO BE MODIFIED)
-	SSSecretLift,	// only now look for secret exit
-	SSNormalLift,	// only now look for normal exit
-    SSMax
-};
 
-enum BotMood
-{
-    MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
-    MOOD_DONTBACKFORSECRETS = 2,
-    MOOD_DONTHUNTTREASURE = 4,
-    MOOD_DONTHUNTNAZIS = 8,
-    MOOD_DONTHUNTSECRETS = 0x10,
-    MOOD_JUSTGOTOEXIT = 0x20,
-};
+// Changing static to dynamic:
+// static keyword disappears WHERE IT APPLIES TO EACH INDIVIDUAL
+// put const on functions that don't change
+// put a constructor that zeroes the fields (and removes them from implementation
+// For now, put a global singleton here and in the implementation
 
 //
 // BotMan
@@ -56,97 +38,124 @@ enum BotMood
 //
 class BotMan
 {
-protected:
-	// search data structure
-	static PathArray path;
-
-	// protected variables
-	static Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
-	static byte pressuse;	// periodic switch for triggering button-down-only commands
-	static short retreatwaitdelay, retreatwaitcount, retreat;	// retreat (cover) controllers
-	static SearchStage searchstage;
-	static int exitx, exity;
-	static objtype *threater;
-	static List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemy locations
-    static unsigned mood;
+    //
+    // Mood
+    //    
+    // Daily mood for the bot. Can combine these values.
+    //
+    enum Mood
+    {
+        MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
+        MOOD_DONTBACKFORSECRETS = 2,
+        MOOD_DONTHUNTTREASURE = 4,
+        MOOD_DONTHUNTNAZIS = 8,
+        MOOD_DONTHUNTSECRETS = 0x10,
+        MOOD_JUSTGOTOEXIT = 0x20,
+    };
+    unsigned mood;
     
     //
-    // DATA GATHERED FROM DATABASE
+    // SearchStage
     //
-    static Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
-    static int knownExitX, knownExitY;
+    // Separate search objects into stages. Must be in order here
+    //
+    enum SearchStage
+    {
+        SSGeneral,		// search normal things
+        SSOnePushWalls,	// only now look for one-push-walls (TO BE MODIFIED)
+        SSSecretLift,	// only now look for secret exit
+        SSNormalLift,	// only now look for normal exit
+        SSMax
+    } searchstage;
+	PathArray path;     // search data structure
+	Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
+	byte pressuse;	// periodic switch for triggering button-down-only commands
+	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat controllers
+	int exitx, exity;
+	objtype *threater;
+	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
+    Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+    int knownExitX, knownExitY;
     
 
-	// protected functions
-	// Recursively explores from the given origin
-	static void ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall = false);
-	// Finds the closest object of interest (object, hidden door, exit)
-	static Boolean FindShortestPath(Boolean ignoreproj = false, Boolean mindnazis = false, byte retreating = 0, Boolean knifeinsight = false);
-	// move by strafing
-	static void MoveStrafe(short tangle, short dangle, Boolean tryuse, byte pressuse, int nx, int ny);
-	// Object of interest
-	static Boolean ObjectOfInterest(int dx, int dy, Boolean knifeinsight = false);
-	// Enemy on spot
-	static objtype *EnemyFound(int dx, int dy);
-	// Enemy targetted
-	static objtype *EnemyOnTarget(Boolean solidActors = false);
-	// Enemy visible
-	static objtype *EnemyVisible(short *angle, int *distance, Boolean solidActors = false);
-	// Enemy eager to follow
-	static objtype *EnemyEager();
-	// Automated and armed
-	static objtype *DamageThreat(objtype *targ);
-	// do retreat
-	static void DoRetreat(Boolean forth = false, objtype *cause = NULL);
-	// like EnemiesArmed, but not restricted to the player
-	static objtype *Crossfire(int x, int y, objtype *objignore = NULL, Boolean justexists = false);
-	// Like enemyvisible, but for any spot
-	static objtype *GenericEnemyVisible(int tx, int ty);
-	// Test if there's a projectile there
-	static objtype *IsProjectile(int tx, int ty, int dist = 1, short *angle = NULL, int *distance = NULL);
-	// Test if there's an enemy
-	static objtype *IsEnemyBlocking(int tx, int ty);
-	static objtype *IsEnemyNearby(int tx, int ty);
-	// Move by path only by strafing
-	static void MoveByStrafe();
-	// Choose weapon
-	static void ChooseWeapon();
-	// Do combat AI
-	static void DoCombatAI(int eangle, int edist);
-	// Do noncombat AI
-	static void DoNonCombatAI();
-	// Do knife AI (when guns won't work)
-	static void DoMeleeAI(short eangle, int edist);
-	// See if there's an active behind the corner that may be knifed
-	static objtype *DogGnawing(int *eangle = NULL);
-	// Turn the player
-	static void TurnToAngle(int dangle);
+	void ExploreFill(int tx, int ty, int ox, int oy,
+                            Boolean firstcall = false);
+
+	Boolean FindShortestPath(Boolean ignoreproj = false,
+                                    Boolean mindnazis = false,
+                                    byte retreating = 0,
+                                    Boolean knifeinsight = false);
+
+	void MoveStrafe(short tangle, short dangle, Boolean tryuse,
+                           byte pressuse, int nx, int ny);
+
+	Boolean ObjectOfInterest(int dx, int dy,
+                                    Boolean knifeinsight = false);
+	objtype *EnemyOnTarget(Boolean solidActors = false) const;
+	objtype *EnemyVisible(short *angle, int *distance,
+                                 Boolean solidActors = false);
+	objtype *EnemyEager() const;
+
+	objtype *DamageThreat(const objtype *targ) const;
+	void DoRetreat(Boolean forth = false, objtype *cause = NULL) const;
+	objtype *Crossfire(int x, int y, const objtype *objignore = NULL,
+                              Boolean justexists = false) const;
+	objtype *IsProjectile(int tx, int ty, int dist = 1,
+                          short *angle = NULL, int *distance = NULL) const;
+	objtype *IsEnemyBlocking(int tx, int ty) const;
+	objtype *IsEnemyNearby(int tx, int ty) const;
     
-    // Put explored data
-    static void PutExploredData();
-    // Get Explored data
-    static void GetExploredData();
+	void MoveByStrafe();
+	void ChooseWeapon() const;
+	void DoCombatAI(int eangle, int edist);
+	void DoNonCombatAI();
+	void DoMeleeAI(short eangle, int edist);
+	void TurnToAngle(int dangle) const;
+    
+    void StoreAcquiredData(const uint8_t *digeststring) const;
+    void GetExploredData(const uint8_t *digeststring);
 public:
+    
+    //
+    // BotMan
+    //
+    // Constructor
+    //
+    BotMan() :
+    searchstage(SSGeneral),
+    panic(false),
+    pressuse(0),
+    retreatwaitdelay(0),
+    retreatwaitcount(0),
+    retreat(0),
+    exitx(0),
+    exity(0),
+    knownExitX(0),
+    knownExitY(0),
+    threater(NULL),
+    mood(0)
+    {
+        memset(explored, 0, sizeof(explored));
+    }
+    
 	// Update the enemy's known position record
-	static void RecordEnemyPosition(objtype *enemy);
+	void RecordEnemyPosition(objtype *enemy);
 
-    static objtype *damagetaken;
-	static HistoryRatio shootRatio;
+    objtype *damagetaken;
+	HistoryRatio shootRatio;
 
 	// Finds the path to walk through
-	static void DoCommand();
+	void DoCommand();
 
 	// Unfinds the exit (on load and setup)
-	static void MapInit();
+	void MapInit();
 	
 	// Saves data to data file
-	static void SaveData();
-	
-	// Loads data from file
-	static void LoadData();
+	void SaveData() const;
     
     // Set occasional mood
-    static void SetMood();
+    void SetMood();
 };
+extern BotMan bot;
 
 #endif

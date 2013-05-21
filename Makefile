@@ -48,6 +48,7 @@ LDFLAGS += -static-libgcc
 endif
 
 SRCS :=
+SRCS += src/ActorStates.cpp
 SRCS += src/CheckSum.cpp
 SRCS += src/Config.cpp
 SRCS += src/DataFile.cpp
@@ -69,6 +70,7 @@ SRCS += src/ioan_secret.cpp
 SRCS += src/MasterDirectoryFile.cpp
 SRCS += src/obattrib.cpp
 SRCS += src/PathArray.cpp
+SRCS += src/Point2D.cpp
 SRCS += src/Property.cpp
 SRCS += src/PropertyFile.cpp
 SRCS += src/PString.cpp

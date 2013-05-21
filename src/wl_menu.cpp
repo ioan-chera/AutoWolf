@@ -17,13 +17,14 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //
 // WL_MENU.C
 // by John Romero (C) 1992 Id Software, Inc.
 //
-////////////////////////////////////////////////////////////////////
+// IOANCH: menu control
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -34,8 +35,8 @@
     #include <unistd.h>
 #endif
 
-#include "foreign.h"
 #include "wl_def.h"
+#include "foreign.h"
 #include "wl_agent.h"
 #include "wl_draw.h"
 #include "wl_game.h"
@@ -549,7 +550,7 @@ void EnableEndGameMenuItem()
 // DRAW MAIN MENU SCREEN
 //
 void
-DrawMainMenu (void)
+DrawMainMenu ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -605,7 +606,7 @@ DrawMainMenu (void)
 //
 ////////////////////////////////////////////////////////////////////
 void
-BossKey (void)
+BossKey ()
 {
 #ifdef NOTYET
     byte palette1[256][3];
@@ -1050,7 +1051,7 @@ firstpart:
 // DRAW NEW EPISODE MENU
 //
 void
-DrawNewEpisode (void)
+DrawNewEpisode ()
 {
     int i;
 
@@ -1084,7 +1085,7 @@ DrawNewEpisode (void)
 // DRAW NEW GAME MENU
 //
 void
-DrawNewGame (void)
+DrawNewGame ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -1258,7 +1259,7 @@ CP_Sound (int)
 // DRAW THE SOUND MENU
 //
 void
-DrawSoundMenu (void)
+DrawSoundMenu ()
 {
     int i, on;
 
@@ -1784,7 +1785,7 @@ CP_Control (int)
 // DRAW MOUSE SENSITIVITY SCREEN
 //
 void
-DrawMouseSens (void)
+DrawMouseSens ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -1907,7 +1908,7 @@ MouseSensitivity (int)
 // DRAW CONTROL MENU SCREEN
 //
 void
-DrawCtlScreen (void)
+DrawCtlScreen ()
 {
     int i, x, y;
 // IOANCH 20130301: unification culling
@@ -2019,7 +2020,7 @@ CustomControls (int)
 // DEFINE THE MOUSE BUTTONS
 //
 void
-DefineMouseBtns (void)
+DefineMouseBtns ()
 {
     CustomCtrls mouseallowed = { 0, 1, 1, 1 };
     EnterCtrlData (2, &mouseallowed, DrawCustMouse, PrintCustMouse, MOUSE);
@@ -2031,7 +2032,7 @@ DefineMouseBtns (void)
 // DEFINE THE JOYSTICK BUTTONS
 //
 void
-DefineJoyBtns (void)
+DefineJoyBtns ()
 {
     CustomCtrls joyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
@@ -2043,7 +2044,7 @@ DefineJoyBtns (void)
 // DEFINE THE KEYBOARD BUTTONS
 //
 void
-DefineKeyBtns (void)
+DefineKeyBtns ()
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
@@ -2055,7 +2056,7 @@ DefineKeyBtns (void)
 // DEFINE THE KEYBOARD BUTTONS
 //
 void
-DefineKeyMove (void)
+DefineKeyMove ()
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (10, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
@@ -2395,7 +2396,7 @@ FixupCustom (int w)
 // DRAW CUSTOMIZE SCREEN
 //
 void
-DrawCustomScreen (void)
+DrawCustomScreen ()
 {
     int i;
 
@@ -2825,7 +2826,7 @@ CP_Quit (int)
     {
 		// IOANCH 20121217: save data
 		if(ingame)
-			BotMan::SaveData();
+			bot.SaveData();
 		
         VW_UpdateScreen ();
         SD_MusicOff ();
@@ -2845,7 +2846,7 @@ CP_Quit (int)
 //
 ////////////////////////////////////////////////////////////////////
 void
-IntroScreen (void)
+IntroScreen ()
 {
     // IOANCH 20130303: unification
 #define MAINCOLOR (SPEAR() ? 0x4f : 0x6c)
@@ -2935,7 +2936,7 @@ IntroScreen (void)
 //
 ////////////////////////////////////////////////////////////////////
 void
-ClearMScreen (void)
+ClearMScreen ()
 {
     if(!SPEAR())
         VWB_Bar (0, 0, 320, 200, BORDCOLOR);
@@ -3000,7 +3001,7 @@ DrawOutline (int x, int y, int w, int h, int color1, int color2)
 //
 ////////////////////////////////////////////////////////////////////
 void
-SetupControlPanel (void)
+SetupControlPanel ()
 {
     //
     // CACHE GRAPHICS & SOUNDS
@@ -3074,7 +3075,7 @@ void SetupSaveGames()
 //
 ////////////////////////////////////////////////////////////////////
 void
-CleanupControlPanel (void)
+CleanupControlPanel ()
 {
     if(!SPEAR())
         UnCacheLump (SPEAR.g(CONTROLS_LUMP_START), SPEAR.g(CONTROLS_LUMP_END));
@@ -3466,7 +3467,7 @@ SetTextColor (CP_itemtype * items, int hlight)
 //
 ////////////////////////////////////////////////////////////////////
 void
-WaitKeyUp (void)
+WaitKeyUp ()
 {
     ControlInfo ci;
     while (ReadAnyControl (&ci), ci.button0 |
@@ -3705,7 +3706,7 @@ StartCPMusic (int song)
 }
 
 void
-FreeMusic (void)
+FreeMusic ()
 {
     UNCACHEAUDIOCHUNK (IMPALE(STARTMUSIC) + lastmusic);
 }
@@ -3737,7 +3738,7 @@ IN_GetScanName (ScanCode scan)
 //
 ///////////////////////////////////////////////////////////////////////////
 void
-CheckPause (void)
+CheckPause ()
 {
     if (Paused)
     {
@@ -3798,7 +3799,7 @@ DrawStripes (int y)
 }
 
 void
-ShootSnd (void)
+ShootSnd ()
 {
     SD_PlaySound (SHOOTSND);
 }
@@ -3809,7 +3810,7 @@ ShootSnd (void)
 // CHECK FOR EPISODES
 //
 ///////////////////////////////////////////////////////////////////////////
-void CheckForEpisodes (void)
+void CheckForEpisodes ()
 {
     struct stat statbuf;
 

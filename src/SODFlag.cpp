@@ -15,6 +15,12 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Master flags for Spear of Destiny and associated similars
+//
+////////////////////////////////////////////////////////////////////////////////
+
 
 
 #include "SODFlag.h"
@@ -23,6 +29,12 @@ SODFlag SPEAR;
 
 const char SODFlag::wolftitle[] = "Automatic Wolfenstein 3D";
 const char SODFlag::speartitle[] = "Automatic Spear of Destiny";
+
+//
+// SODFlag::gfxvmap
+//
+// Map for interface graphics
+//
 
 const unsigned int SODFlag::gfxvmap[][2] =
 {
@@ -281,6 +293,12 @@ const unsigned int SODFlag::gfxvmap[][2] =
     {3,TITLESCREEN_LUMP_END_sod},
     {3,TITLESCREEN_LUMP_START_sod},
 };
+
+//
+// SODFlag::sprmap
+//
+// Map for sprites
+//
 
 const unsigned int SODFlag::sprmap[][2] =
 {
@@ -820,6 +838,12 @@ const unsigned int SODFlag::sprmap[][2] =
     {0, SPR_WILL_W4_sod},
 };
 
+//
+// SODFlag::soundmap
+//
+// Map for sounds
+//
+
 const unsigned int SODFlag::soundmap[][2] =
 {
     {AHHHGSND_wl6,          AHHHGSND_sod},
@@ -926,6 +950,12 @@ const unsigned int SODFlag::soundmap[][2] =
 	{0,                     WILHELMSIGHTSND_sod},
 	{YEAHSND_wl6,           0},
 };
+
+//
+// SODFlag::Initialize
+//
+// Initializes the SOD flag depending on some key file names.
+//
 
 void SODFlag::Initialize(const PString &basePath)
 {

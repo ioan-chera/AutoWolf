@@ -16,6 +16,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+/*
+ =============================================================================
+ 
+ WL_TEXT DEFINITIONS
+ 
+ =============================================================================
+ */
+
+
 #ifndef WL_TEXT_H_
 #define WL_TEXT_H_
 
@@ -23,7 +32,7 @@ extern  char    helpfilename[];
 class PString;
 extern PString endfilename;
 
-extern  void    HelpScreens(void);
-extern  void    EndText(void);
+extern  void    HelpScreens();
+extern  void    EndText();
 
 #endif

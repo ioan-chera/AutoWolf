@@ -148,30 +148,30 @@ inline void Delay(int wolfticks)
 }
 
 // Function prototypes
-extern  void    SD_Startup(void),
-                SD_Shutdown(void);
+extern  void    SD_Startup(),
+                SD_Shutdown();
 
 extern  int     SD_GetChannelForDigi(int which);
 extern  void    SD_PositionSound(int leftvol,int rightvol);
 extern  Boolean SD_PlaySound(soundnames sound);
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
-extern  void    SD_StopSound(void),
-                SD_WaitSoundDone(void);
+extern  void    SD_StopSound(),
+                SD_WaitSoundDone();
 
 extern  void    SD_StartMusic(int chunk);
 extern  void    SD_ContinueMusic(int chunk, int startoffs);
-extern  void    SD_MusicOn(void),
-                SD_FadeOutMusic(void);
-extern  int     SD_MusicOff(void);
+extern  void    SD_MusicOn(),
+                SD_FadeOutMusic();
+extern  int     SD_MusicOff();
 
-extern  Boolean SD_MusicPlaying(void);
+extern  Boolean SD_MusicPlaying();
 extern  Boolean SD_SetSoundMode(SDMode mode);
 extern  Boolean SD_SetMusicMode(SMMode mode);
-extern  word    SD_SoundPlaying(void);
+extern  word    SD_SoundPlaying();
 
 extern  void    SD_SetDigiDevice(SDSMode);
 extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
-extern  void    SD_StopDigitized(void);
+extern  void    SD_StopDigitized();
 
 #endif

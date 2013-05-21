@@ -15,62 +15,87 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// MODULE FOR VARIOUS CHECKSUM CALCULATORS
+// MD5 data calculator
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
-#include "MasterDirectoryFile.h"
-#include "PropertyFile.h"
 #include "CheckSum.h"
 
-char digeststring[16];
+CheckSum mapsegsChecksum;
 
 //
-// leftrotate
+// MD5Input
 //
-// Does the rotation as described in the documentation
+// Message prepared for MD5 input (padded and ended)
 //
-inline static uint32_t leftrotate(uint32_t x, uint32_t c)
+// used by the MD5 calculator
+//
+class MD5Input
+{
+    uint8_t *controlledMessage;
+    size_t sizepadded;
+public:
+    MD5Input(const void *message, size_t messize)
+    {
+        // put this value at the end
+        uint64_t sizelarge = (uint64_t)messize;
+        // this will be the operated size of the message
+        // must have room left for 8 + 1 byte (9)
+        sizepadded = messize / 64 * 64 + (messize % 64 > 55 ? 128 : 64);
+        controlledMessage = (uint8_t *)malloc(sizepadded);
+        memset(controlledMessage, 0, sizepadded);
+        
+        memcpy(controlledMessage, message, messize);
+        // the 1-bit terminator
+        memcpy(controlledMessage + messize, "\x80", sizeof(uint8_t));
+        // the file size
+        memcpy(controlledMessage + sizepadded - sizeof(uint64_t), &sizelarge,
+               sizeof(uint64_t));
+    }
+    ~MD5Input()
+    {
+        free(controlledMessage);
+    }
+    
+    inline const uint8_t *ControlledMessage() const
+    {
+        return this->controlledMessage;
+    }
+    inline size_t SizePadded() const {return this->sizepadded;}
+};
+
+//
+// leftRotate
+//
+// Does the rotation as described in the MD5 documentation
+//
+inline static uint32_t leftRotate(uint32_t x, uint32_t c)
 {
 	return (x << c) | (x >> (32 - c));
 }
 
 //
-// CalcMapsegsChecksum
+// CalculateMD5Checksum
 //
-// Calculate MD5 hash of mapsegs
+// Calculate MD5 hash of
 //
 // Algorithm from http://en.wikipedia.org/wiki/MD5
 //
 // WARNING! dest must be allocated with 16 bytes
 //
-static void calcMapsegsChecksum(uint8_t *dest)
+void CheckSum::CalculateMD5Checksum(const void *message,
+                                 size_t messize)
 {
-	// ASSUMING DATA IS TWO PLANES OF 
-	uint8_t *controlledMessage;
-	// test data area
-	size_t mapsize = 2 * MAPPLANES * maparea;
-	uint64_t mapsizelarge = (uint64_t)mapsize;
-	size_t mapsizepadded;
+    MD5Input input(message, messize);
 	
-	// must have room left for 8 + 1 byte (9)
-	if(mapsize % 64 > 55)
-		mapsizepadded = 2 * MAPPLANES * maparea / 64 * 64 + 128;
-	else
-		mapsizepadded = 2 * MAPPLANES * maparea / 64 * 64 + 64;
-
-	controlledMessage = (uint8_t *)malloc(mapsizepadded);
-	memset(controlledMessage, 0, mapsizepadded);
+	// Note: All variables are unsigned 32 bit and wrap modulo 2^32 when
+    // calculating
 	
-	uint32_t i;
-	for(i = 0; i < MAPPLANES; ++i)
-		memcpy(controlledMessage + i * (2 * maparea), mapsegs[i], 2 * maparea);
-	// the 1-bit terminator
-	memcpy(controlledMessage + MAPPLANES * (2 * maparea), "\x80", sizeof(uint8_t));
-	// the file size
-	memcpy(controlledMessage + mapsizepadded - sizeof(uint64_t), &mapsizelarge, sizeof(uint64_t));
-	
-	//Note: All variables are unsigned 32 bit and wrap modulo 2^32 when calculating
-	
-	//r specifies the per-round shift amounts
+	// r specifies the per-round shift amounts
 	uint32_t r[64] =
 	{7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
 	5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
@@ -78,9 +103,10 @@ static void calcMapsegsChecksum(uint8_t *dest)
 		6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 	
 	
-	//(Or just use the following table):
+	// (Or just use the following table):
 	uint32_t k[64] =
-	{ 0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee ,
+	{
+    0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee ,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501 ,
 	0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be ,
 	0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821 ,
@@ -97,22 +123,22 @@ static void calcMapsegsChecksum(uint8_t *dest)
 	0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1 ,
 	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391 };
 	
-	//Initialize variables:
+	// Initialize variables:
 	uint32_t h0 = 0x67452301;   //A
 	uint32_t h1 = 0xefcdab89;   //B
 	uint32_t h2 = 0x98badcfe;   //C
 	uint32_t h3 = 0x10325476;   //D
 	
-	size_t chunkpos, wordpos;
 	uint32_t w[16];
-	for(chunkpos = 0; chunkpos < mapsizepadded; chunkpos += 64)
+	for(size_t chunkpos = 0; chunkpos < input.SizePadded(); chunkpos += 64)
 	{
-		for(wordpos = 0; wordpos < 16; ++wordpos)
+		for(size_t wordpos = 0; wordpos < 16; ++wordpos)
 		{
-			memcpy(&w[wordpos], controlledMessage + chunkpos + wordpos * 2, sizeof(uint32_t));
+			memcpy(&w[wordpos], input.ControlledMessage() + chunkpos +
+                   wordpos * 2, sizeof(uint32_t));
 		}
 		uint32_t a = h0, b = h1, c = h2, d = h3, f, g, temp;
-		for(i = 0; i < 64; ++i)
+		for(uint32_t i = 0; i < 64; ++i)
 		{
 			if(i <= 15)
 			{
@@ -137,7 +163,7 @@ static void calcMapsegsChecksum(uint8_t *dest)
 			temp = d;
 			d = c;
 			c = b;
-			b = b + leftrotate(a + f + k[i] + w[g], r[i]);
+			b = b + leftRotate(a + f + k[i] + w[g], r[i]);
 			a = temp;
 		}
 		
@@ -148,30 +174,74 @@ static void calcMapsegsChecksum(uint8_t *dest)
 	}
 	
 	// put it in little endian!!
-	dest[0]  = (uint8_t)( h0        % 256);
-	dest[1]  = (uint8_t)((h0 >>  8) % 256);
-	dest[2]  = (uint8_t)((h0 >> 16) % 256);
-	dest[3]  = (uint8_t)((h0 >> 24));
+
+	digeststring[0]  = (uint8_t)( h0        % 256);
+	digeststring[1]  = (uint8_t)((h0 >>  8) % 256);
+	digeststring[2]  = (uint8_t)((h0 >> 16) % 256);
+	digeststring[3]  = (uint8_t)((h0 >> 24));
 	
-	dest[4]  = (uint8_t)( h1        % 256);
-	dest[5]  = (uint8_t)((h1 >>  8) % 256);
-	dest[6]  = (uint8_t)((h1 >> 16) % 256);
-	dest[7]  = (uint8_t)((h1 >> 24));
+	digeststring[4]  = (uint8_t)( h1        % 256);
+	digeststring[5]  = (uint8_t)((h1 >>  8) % 256);
+	digeststring[6]  = (uint8_t)((h1 >> 16) % 256);
+	digeststring[7]  = (uint8_t)((h1 >> 24));
 	
-	dest[8]  = (uint8_t)( h2        % 256);
-	dest[9]  = (uint8_t)((h2 >>  8) % 256);
-	dest[10] = (uint8_t)((h2 >> 16) % 256);
-	dest[11] = (uint8_t)((h2 >> 24));
+	digeststring[8]  = (uint8_t)( h2        % 256);
+	digeststring[9]  = (uint8_t)((h2 >>  8) % 256);
+	digeststring[10] = (uint8_t)((h2 >> 16) % 256);
+	digeststring[11] = (uint8_t)((h2 >> 24));
 	
-	dest[12] = (uint8_t)( h3        % 256);
-	dest[13] = (uint8_t)((h3 >>  8) % 256);
-	dest[14] = (uint8_t)((h3 >> 16) % 256);
-	dest[15] = (uint8_t)((h3 >> 24));
-	
-	free(controlledMessage);
+	digeststring[12] = (uint8_t)( h3        % 256);
+	digeststring[13] = (uint8_t)((h3 >>  8) % 256);
+	digeststring[14] = (uint8_t)((h3 >> 16) % 256);
+	digeststring[15] = (uint8_t)((h3 >> 24));
 }
 
+//
+// byteToReadableHex
+//
+// Converts a single byte into 2 ASCII characters of hex number, lower case
+//
+static const char *byteToReadableHex(uint8_t b)
+{
+    static char ret[3];
+    snprintf(ret, 3, "%02x", b);
+    return ret;
+}
 
+//
+// GetHumanReadableHex
+//
+// Obtains the human-readable sequence of hex numbers, in lower-case (as 
+// returned by the md5 command-line executable)
+//
+void CheckSum::GetHumanReadableHex(PString &dest) const
+{
+    dest.clear();
+    for (int i = 0; i < 16; ++i)
+    {
+        dest.concat(byteToReadableHex(digeststring[i]), 2);
+    }
+}
+
+//
+// unfoldedMapSegs
+//
+// Helper function to unfold mapsegs
+//
+static const size_t mapSegsUnitLength = sizeof(word) * maparea;
+static const size_t mapSegsLength = MAPPLANES * mapSegsUnitLength;
+inline static const uint8_t *unfoldedMapSegs()
+{
+    static uint8_t mapSegsLinear[mapSegsLength];
+    
+    for(size_t i = 0; i < MAPPLANES; ++i)
+    {
+        memcpy(mapSegsLinear + i * mapSegsUnitLength, mapsegs[i],
+               mapSegsUnitLength);
+    }
+    
+    return mapSegsLinear;
+}
 
 //
 // CalculateMapsegsChecksum
@@ -180,8 +250,8 @@ static void calcMapsegsChecksum(uint8_t *dest)
 //
 void CalculateMapsegsChecksum()
 {
-	uint8_t digest[16];
-	calcMapsegsChecksum(digest);	// DO IT
-	
-	memcpy(digeststring, digest, 16*sizeof(char));
+    mapsegsChecksum.CalculateMD5Checksum(unfoldedMapSegs(), mapSegsLength);
+    PString test;
+    mapsegsChecksum.GetHumanReadableHex(test);
+    puts(test.buffer());
 }

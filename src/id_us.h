@@ -80,22 +80,22 @@ extern void			(*USL_DrawString)(const char *);
 extern int rndindex;
 
 extern	Boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
-extern	void		(*USL_ResetGame)(void);
+extern	void		(*USL_ResetGame)();
 extern	SaveGame	Games[MaxSaveGames];
 extern	HighScore	Scores[];
 
 #define	US_HomeWindow()	{PrintX = WindowX; PrintY = WindowY;}
 
-void            US_Startup(void);
-void            US_Shutdown(void);
-void			US_TextScreen(void),
-				US_UpdateTextScreen(void),
-				US_FinishTextScreen(void);
+void            US_Startup();
+void            US_Shutdown();
+void			US_TextScreen(),
+				US_UpdateTextScreen(),
+				US_FinishTextScreen();
 void			US_DrawWindow(word x,word y,word w,word h);
 void			US_CenterWindow(word,word);
 void			US_SaveWindow(WindowRec *win),
 				US_RestoreWindow(WindowRec *win);
-void 			US_ClearWindow(void);
+void 			US_ClearWindow();
 void			US_SetPrintRoutines(void (*measure)(const char *,word *,word *),
 									void (*print)(const char *));
 void			US_PrintCentered(const char *s),
@@ -107,13 +107,14 @@ void			US_CPrintf(const char *formatStr, ...);
 
 void			US_PrintUnsigned(longword n);
 void			US_PrintSigned(int32_t n);
-void			US_StartCursor(void),
-				US_ShutCursor(void);
+void			US_StartCursor(),
+				US_ShutCursor();
 void			US_CheckHighScore(int32_t score,word other);
 void			US_DisplayHighScores(int which);
-extern	Boolean	US_UpdateCursor(void);
+extern	Boolean	US_UpdateCursor();
 Boolean         US_LineInput(int x,int y,char *buf,const char *def,Boolean escok,
                              int maxchars,int maxwidth);
+
 
 void	        USL_PrintInCenter(const char *s,Rect r);
 char 	        *USL_GiveSaveName(word game);

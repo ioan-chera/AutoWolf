@@ -17,12 +17,17 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Routines dealing with intermission
+//
+////////////////////////////////////////////////////////////////////////////////
 
 // WL_INTER.C
 
+#include "wl_def.h"
 #include "foreign.h"
 #include "f_spear.h"
-#include "wl_def.h"
 #include "wl_agent.h"
 #include "wl_game.h"
 #include "wl_menu.h"
@@ -50,7 +55,7 @@ void Write (int x, int y, const char *string);
 */
 
 void
-ClearSplitVWB (void)
+ClearSplitVWB ()
 {
     WindowX = 0;
     WindowY = 0;
@@ -85,7 +90,7 @@ EndScreen (int palette, int screen)
 }
 
 
-void EndSpear (void)
+void EndSpear ()
 {
     SDL_Color pal[256];
 
@@ -143,7 +148,7 @@ void EndSpear (void)
 */
 
 void
-Victory (void)
+Victory ()
 {
 // IOANCH 20130301: unification culling
     int32_t sec;
@@ -339,7 +344,7 @@ Victory (void)
 */
 
 void
-PG13 (void)
+PG13 ()
 {
     VW_FadeOut ();
     VWB_Bar (0, 0, 320, 200, 0x82);     // background
@@ -438,7 +443,7 @@ Write (int x, int y, const char *string)
 // Breathe Mr. BJ!!!
 //
 void
-BJ_Breathe (void)
+BJ_Breathe ()
 {
     static int which = 0, max = 10;
     int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
@@ -471,7 +476,7 @@ BJ_Breathe (void)
 */
 
 void
-LevelCompleted (void)
+LevelCompleted ()
 {
 #define VBLWAIT 30
 #define PAR_AMOUNT      500
@@ -994,7 +999,7 @@ PreloadUpdate (unsigned current, unsigned total)
 }
 
 void
-PreloadGraphics (void)
+PreloadGraphics ()
 {
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
@@ -1032,7 +1037,7 @@ PreloadGraphics (void)
 */
 
 void
-DrawHighScores (void)
+DrawHighScores ()
 {
     char buffer[16];
 
@@ -1292,7 +1297,7 @@ CheckHighScore (int32_t score, word other)
 //
 ////////////////////////////////////////////////////////
 void
-NonShareware (void)
+NonShareware ()
 {
     VW_FadeOut ();
 

@@ -16,14 +16,21 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+/*
+ =============================================================================
+ 
+ WL_AGENT DEFINITIONS
+ 
+ =============================================================================
+ */
+
 #ifndef WL_AGENT_H_
 #define WL_AGENT_H_
 
-extern  short    anglefrac;
-extern  int      facecount, facetimes;
-extern  word     plux,pluy;         // player coordinates scaled to unsigned
-extern  int32_t  thrustspeed;
-extern  objtype  *LastAttacker;
+extern  short         anglefrac;
+extern  int           facecount, facetimes;
+extern  int32_t       thrustspeed;
+extern  objtype      *LastAttacker;
 
 void    Thrust (int angle, int32_t speed);
 void    SpawnPlayer (int tilex, int tiley, int dir);
@@ -39,15 +46,15 @@ void    GiveKey (int key);
 //
 
 void    StatusDrawFace(unsigned picnum);
-void    DrawFace (void);
-void    DrawHealth (void);
+void    DrawFace ();
+void    DrawHealth ();
 void    HealSelf (int points);
-void    DrawLevel (void);
-void    DrawLives (void);
-void    GiveExtraMan (void);
-void    DrawScore (void);
-void    DrawWeapon (void);
-void    DrawKeys (void);
-void    DrawAmmo (void);
+void    DrawLevel ();
+void    DrawLives ();
+void    GiveExtraMan ();
+void    DrawScore ();
+void    DrawWeapon ();
+void    DrawKeys ();
+void    DrawAmmo ();
 
 #endif

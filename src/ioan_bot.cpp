@@ -15,10 +15,14 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// MODULE FOR THE GAME BOT
+//
+////////////////////////////////////////////////////////////////////////////////
 
+#include "wl_def.h"
 
-#include <limits.h>
-#include <time.h>
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
@@ -34,22 +38,10 @@
 #include "wl_play.h"
 #include "wl_state.h"
 
-// static class member definition
-objtype *BotMan::damagetaken;
-// protected ones
-Boolean BotMan::panic;
-byte BotMan::pressuse;
-short BotMan::retreatwaitdelay, BotMan::retreatwaitcount, BotMan::retreat;
-SearchStage BotMan::searchstage;
-int BotMan::exitx, BotMan::exity;
-objtype *BotMan::threater;
-PathArray BotMan::path;
-Boolean BotMan::explored[MAPSIZE][MAPSIZE];
-int BotMan::knownExitX, BotMan::knownExitY;
-List <objtype *> BotMan::enemyrecord[MAPSIZE][MAPSIZE];
-unsigned BotMan::mood = 0;
+BotMan bot;
 
-HistoryRatio BotMan::shootRatio;
+// static class member definition
+// protected ones
 
 //
 // BotMan::MapInit
@@ -68,18 +60,21 @@ void BotMan::MapInit()
 	panic = false;
 	int i, j;
 	
-	
-	// IOANCH 20121213
-	// calculate checksum of it
 	memset(explored, 0, sizeof(explored));
-	CalculateMapsegsChecksum();
+
+    // IOANCH 20121213
+	// calculate checksum of it
+    CalculateMapsegsChecksum();
 	// get explored data
-	GetExploredData();
+	GetExploredData(mapsegsChecksum.DigestBuffer());
 	
-	// FIXME: this should be taken from loaded game data. I might put a LoadGameInit just for that.
+	// FIXME: this should be taken from loaded game data. I might put a
+    // LoadGameInit just for that.
 	for(i = 0; i < MAPSIZE; ++i)
+    {
 		for(j = 0; j < MAPSIZE; ++j)
 			enemyrecord[i][j].removeAll();
+    }
 }
 
 //
@@ -87,37 +82,25 @@ void BotMan::MapInit()
 //
 // Saves explored to data file (at death/victory, or quit -- must be ingame)
 //
-void BotMan::SaveData()
+void BotMan::SaveData() const
 {
-	PutExploredData();
+	StoreAcquiredData(mapsegsChecksum.DigestBuffer());
 	MasterDirectoryFile::MainDir().saveToFile();
 }
 
 //
-// BotMan::LoadData
+// BotMan::StoreAcquiredData
 //
-// Loads data from file (at startup)
-//
-void BotMan::LoadData()
-{
-	MasterDirectoryFile::MainDir().loadFromFile();
-}
-
-//
-// BotMan::PutExploredData
-//
-void BotMan::PutExploredData()
+void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 {
     // see if folder exists in AutoWolf/Maps
 	
 	// now to write the file
-	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
-	DirectoryFile *dir;
+	DirectoryFile *dir = MasterDirectoryFile::MainDir()
+    .makeDirectory(MASTERDIR_MAPSDIRECTORY)
+    ->makeDirectory(PString((const char *)digeststring, 16));
 	
-	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring, 16));
     // the hash-named directory
-    PString a(digeststring, 16);
     
     // Looking for files...
     // Get property file from digest folder.
@@ -126,17 +109,7 @@ void BotMan::PutExploredData()
     // If it doesn't, create it with the proper name.
     // If file doesn't exist, create it and give it the explored property.
 	
-    PropertyFile *propertyFile =
-    (PropertyFile *)dir->getFileWithName(PROPERTY_FILE_NAME);
-    
-    if(!propertyFile)
-    {
-        // File doesn't exist. Create it.
-        propertyFile = new PropertyFile;
-        propertyFile->initialize(PROPERTY_FILE_NAME);
-        dir->addFile(propertyFile);
-        
-    }
+    MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
     
     propertyFile->putExplored(explored);
     propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitX +
@@ -146,19 +119,18 @@ void BotMan::PutExploredData()
 //
 // BotMan::GetExploredData
 //
-void BotMan::GetExploredData()
+void BotMan::GetExploredData(const uint8_t *digeststring)
 {
     // see if folder exists in AutoWolf/Maps
-	memset(explored, 0, sizeof(maparea * sizeof(Boolean)));
+	memset(explored, 0, sizeof(explored));
 	
 	// now to write the file
 	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
 	DirectoryFile *dir;
 	
 	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString(digeststring, 16));
+	dir = dir->makeDirectory(PString((const char *)digeststring, 16));
     // the hash-named directory
-    PString a(digeststring, 16);
     
     // Looking for files...
     // Get property file from digest folder.
@@ -176,16 +148,20 @@ void BotMan::GetExploredData()
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
-            knownExitX = (int)(prop & 0x00ff);
-            knownExitY = (int)((prop & 0xff00) >> 8);
+            knownExitX = prop & 0x00ff;
+            knownExitY =(prop & 0xff00) >> 8;
         }
         else
-            knownExitX = knownExitY = -1;
+        {
+            knownExitY = knownExitX = -1;
+        }
     }
 }
 
 //
 // BotMan::SetMood
+//
+// Should always set the same value to mood, throughout the day
 //
 void BotMan::SetMood()
 {
@@ -194,10 +170,10 @@ void BotMan::SetMood()
     
     // Day will be used as random seed
     srand((unsigned)day);
-    mood = 0;
+    mood = 0;   // default it to 0
     if(rand() % 4 == 0)
     {
-        mood = (unsigned)rand();
+        mood = (unsigned)rand();    // Just scramble it
     }
     
     // scramble it now
@@ -334,7 +310,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // {tx, tx, tx + 1, tx - 1}
     
     // Nope. Let's make a lambda function here.
-    LAMSPEC(Boolean, secretVerify, int, int) = LAM(&tx, &ty)(int txofs, int tyofs)
+    auto secretVerify = [&](int txofs, int tyofs)
     {
         if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
 		{
@@ -449,7 +425,8 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 //
 // Finds the path to the nearest destination
 //
-Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte retreating, Boolean knifeinsight)
+Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
+                                 byte retreating, Boolean knifeinsight)
 {
 	int j;
 	
@@ -637,9 +614,9 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis, byte ret
 //
 // True if can shoot
 //
-objtype *BotMan::EnemyOnTarget(Boolean solidActors)
+objtype *BotMan::EnemyOnTarget(Boolean solidActors) const
 {
-	objtype *check,*closest,*oldclosest;
+	objtype *closest,*oldclosest;
 	int32_t  viewdist;
 
 	//
@@ -652,9 +629,12 @@ objtype *BotMan::EnemyOnTarget(Boolean solidActors)
 	{
 		oldclosest = closest;
 
-		for(check = (objtype *)Basic::livingNazis.firstObject(); check; check = (objtype *)Basic::livingNazis.nextObject())
+		for(objtype *
+            check = (objtype *)Basic::livingNazis.firstObject(); check;
+            check = (objtype *)Basic::livingNazis.nextObject())
 		{
-			if ((check->flags & FL_VISABLE) && abs(check->viewx-centerx) < shootdelta)
+			if ((check->flags & FL_VISABLE)
+                && abs(check->viewx-centerx) < shootdelta)
 			{
 				if (check->transx < viewdist)
 				{
@@ -665,7 +645,8 @@ objtype *BotMan::EnemyOnTarget(Boolean solidActors)
 		}
 
 		if (closest == oldclosest)
-			return NULL;                                         // no more targets, all missed
+			return NULL;
+            // no more targets, all missed
         
 		//
 		// trace a line from player to enemey
@@ -762,43 +743,15 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 }
 
 //
-// BotMan::GenericEnemyVisible
-//
-// True if an enemy is in sight
-//
-objtype *BotMan::GenericEnemyVisible(int tx, int ty)
-{
-	int x = Basic::Major(tx);
-	int y = Basic::Major(ty);
-	int j, k;
-	objtype *ret;
-
-	for(j = -15; j <= 15; ++j)
-	{
-		for(k = -15; k <= 15; ++k)
-		{
-			if(ty + j < 0 || ty + j >= MAPSIZE || tx + k < 0 || tx + k >= MAPSIZE)
-				continue;
-			ret = actorat[tx + k][ty + j];
-			if(ret && ISPOINTER(ret) && Basic::IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && Basic::GenericCheckLine(ret->x, ret->y, x, y))
-			{
-				return ret;
-			}
-		}
-	}
-	return NULL;
-}
-
-//
 // BotMan::EnemyEager
 //
 // True if 1 non-ambush enemies are afoot 
 //
-objtype *BotMan::EnemyEager()
+objtype *BotMan::EnemyEager() const
 {
-	objtype *ret;
-
-	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
+	for(objtype *
+        ret = (objtype *)Basic::livingNazis.firstObject(); ret;
+        ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
 		if(areabyplayer[ret->areanumber] && explored[ret->recordx >> TILESHIFT][ret->recordy >> TILESHIFT] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
@@ -812,9 +765,9 @@ objtype *BotMan::EnemyEager()
 //
 // true if damage is imminent and retreat should be done
 //
-objtype *BotMan::DamageThreat(objtype *targ)
+objtype *BotMan::DamageThreat(const objtype *targ) const
 {
-	objtype *objignore = targ;
+	const objtype *objignore = targ;
 	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && 
         gamestate.weapon < wp_machinegun && gamestate.weaponframe != 1) 
         /*|| (gamestate.weapon < wp_pistol && Basic::CheckKnifeEnemy() != targ)*/))
@@ -829,7 +782,8 @@ objtype *BotMan::DamageThreat(objtype *targ)
 //
 // Returns true if there's a crossfire in that spot
 //
-objtype *BotMan::Crossfire(int x, int y, objtype *objignore, Boolean justexists)
+objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
+                           Boolean justexists) const
 {
 	int j, k, dist;
 	objtype *ret;
@@ -857,75 +811,32 @@ objtype *BotMan::Crossfire(int x, int y, objtype *objignore, Boolean justexists)
 //
 // Retreats the bot sliding off walls
 //
-void BotMan::DoRetreat(Boolean forth, objtype *cause)
+void BotMan::DoRetreat(Boolean forth, objtype *cause) const
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
-	int j, backx, backy, sidex, sidey, tx = player->tilex, ty = player->tiley, dir;
-	if(player->angle > 0 && player->angle <= 45)
-	{
-		backx = -1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = 1*neg;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 45 && player->angle <= 90)
-	{
-		backx = 0;
-		backy = 1*neg;
-		sidex = -1*neg;
-		sidey = 0;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 90 && player->angle <= 135)
-	{
-		backx = 0;
-		backy = 1*neg;
-		sidex = 1*neg;
-		sidey = 0;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 135 && player->angle <= 180)
-	{
-		backx = 1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = 1*neg;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 180 && player->angle <= 225)
-	{
-		backx = 1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = -1*neg;
-		dir = RUNMOVE*neg;
-	}
-	else if(player->angle > 225 && player->angle <= 270)
-	{
-		backx = 0;
-		backy = -1*neg;
-		sidex = 1*neg;
-		sidey = 0;
-		dir = -RUNMOVE*neg;
-	}
-	else if(player->angle > 270 && player->angle <= 315)
-	{
-		backx = 0;
-		backy = -1*neg;
-		sidex = -1*neg;
-		sidey = 0;
-		dir = RUNMOVE*neg;
-	}
-	else
-	{
-		backx = -1*neg;
-		backy = 0;
-		sidex = 0;
-		sidey = -1*neg;
-		dir = -RUNMOVE*neg;
-	}
+	int j, backx, backy, sidex, sidey,
+        tx = player->tilex, ty = player->tiley, dir;
+    
+    const int backx_[] = {-neg, 0,    0,   neg, neg,  0,    0,    -neg};
+    const int backy_[] = {0,    neg,  neg, 0,   0,    -neg, -neg, 0};
+    const int sidex_[] = {0,    -neg, neg, 0,   0,    neg,  -neg, 0};
+    const int sidey_[] = {neg,  0,    0,   neg, -neg, 0,    0,    -neg};
+    const int dir_[]   = {RUNMOVE * neg, -RUNMOVE * neg};
+    
+    for(int factor = 0; factor < 8; ++factor)
+    {
+        if(player->angle >= 45 * factor && player->angle <= 45 * factor + 45)
+        {
+            backx = backx_[factor];
+            backy = backy_[factor];
+            sidex = sidex_[factor];
+            sidey = sidey_[factor];
+            dir = dir_[factor % 2];
+            break;
+        }
+    }
+    
 	if(tx <= 0 || tx >= MAPSIZE - 1 || ty <= 0 || ty >= MAPSIZE - 1)
 		return;
 
@@ -1015,7 +926,8 @@ solved:
 //
 // True if a flying projectile exists in this place
 //
-objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
+objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle,
+                              int *distance) const
 {
 	objtype *ret;
 
@@ -1074,7 +986,7 @@ retok:
 //
 // True if a living enemy exists around
 //
-objtype *BotMan::IsEnemyBlocking(int tx, int ty)
+objtype *BotMan::IsEnemyBlocking(int tx, int ty) const
 {
 	objtype *ret;
 	
@@ -1094,7 +1006,7 @@ objtype *BotMan::IsEnemyBlocking(int tx, int ty)
 //
 // True if a living enemy exists around
 //
-objtype *BotMan::IsEnemyNearby(int tx, int ty)
+objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 {
 	objtype *ret;
 	
@@ -1104,36 +1016,6 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty)
 			return ret;
 	}
 	return NULL;
-}
-
-//
-// BotMan::DogGnawing
-//
-// a living aggressive enemy is all behind the corner
-//
-objtype *BotMan::DogGnawing(int *eangle)
-{
-	objtype *check;
-    for (check=(objtype *)Basic::livingNazis.firstObject(); check; check=(objtype *)Basic::livingNazis.nextObject())
-    {
-        if(check->obclass == dogobj && (check->flags & FL_ATTACKMODE))
-		{
-			int dx = check->tilex - player->tilex, dy = check->tiley - player->tiley;
-			if(areabyplayer[check->areanumber] && abs(dx) <= 1 && 
-			   abs(dy) <= 1)
-			{
-				if(eangle)
-				{
-					double ddx = (double)dx, ddy = -(double)dy;
-					double dang = atan2(ddy, ddx);
-					*eangle = (int)(180.0/PI*dang);
-				}
-				return check;
-			}
-		}
-    }
-	
-    return NULL;
 }
 
 //
@@ -1258,7 +1140,8 @@ void BotMan::MoveByStrafe()
 				break;
 		}
 		// Press if there's an obstacle ahead
-		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+		if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny]))
+           && pressuse % 4 == 0)
 			buttonstate[bt_use] = true;
 		else
 			buttonstate[bt_use] = false;
@@ -1343,7 +1226,7 @@ void BotMan::MoveByStrafe()
 //
 // BotMan::ChooseWeapon
 //
-void BotMan::ChooseWeapon()
+void BotMan::ChooseWeapon() const
 {
 	if(gamestate.ammo > 0)
 	{
@@ -1351,9 +1234,12 @@ void BotMan::ChooseWeapon()
 			buttonstate[bt_readyknife + gamestate.bestweapon - wp_knife] = true;
 		if(gamestate.bestweapon == wp_chaingun)
 		{
-			if(!panic && gamestate.weapon != wp_machinegun && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
+			if(!panic && gamestate.weapon != wp_machinegun
+               && (gamestate.ammo < 30 || shootRatio.getValue() <= 2))
 				buttonstate[bt_readymachinegun] = true;
-			else if(gamestate.weapon != wp_chaingun && (panic || (gamestate.ammo >= 50 && shootRatio.getValue() > 7)))
+			else if(gamestate.weapon != wp_chaingun
+                    && (panic || (gamestate.ammo >= 50
+                                  && shootRatio.getValue() > 7)))
 				buttonstate[bt_readychaingun] = true;
 		}
 	}
@@ -1362,7 +1248,7 @@ void BotMan::ChooseWeapon()
 //
 // BotMan::TurnToAngle
 //
-void BotMan::TurnToAngle(int dangle)
+void BotMan::TurnToAngle(int dangle) const
 {
 	buttonstate[bt_strafe] = false;
 
