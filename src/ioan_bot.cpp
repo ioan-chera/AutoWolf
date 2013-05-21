@@ -177,20 +177,25 @@ void BotMan::aggregateMoods()
 //
 void BotMan::SetMood()
 {
-    time_t t = time(NULL);  // seconds
-    time_t day = t / 60 / 60 / 24;
+    // seconds
+    time_t day = time(NULL) / 60 / 60 / 24;
+    unsigned r;
+
+    // Same as C++11 minstd_rand
+    unsigned (*rnd)(unsigned) = [](unsigned r)
+    {
+        return r * 48271 % 2147483647;
+    };
     
     // Day will be used as random seed
-    srand((unsigned)day);
-    mood = 0;   // default it to 0
-    if(rand() % 4 == 0)
-    {
-        mood = (unsigned)rand();    // Just scramble it
-    }
-    aggregateMoods();
+    r = rnd((unsigned)day);
     
-    // scramble it now
-    srand((unsigned)time(NULL));
+    mood = 0;   // default it to 0
+    if(r % 4 == 0)
+    {
+        mood = rnd(r);
+        aggregateMoods();
+    }
 }
 
 // Bot moods: using today value as seed, use a random strategy, one or more:
