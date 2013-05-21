@@ -165,3 +165,5 @@ src/SODFlag.o
 src/dosbox/dbopl.d
 src/dosbox/dbopl.o
 src/macosx/CocoaFun.o
+src/ActorStates.d
+src/ActorStates.o
