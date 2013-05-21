@@ -156,3 +156,12 @@ lib/osx/universal/libogg.a
 lib/osx/universal/libsmpeg.a
 lib/osx/universal/libvorbis.a
 lib/osx/universal/libvorbisfile.a
+src/Config.d
+src/Config.o
+src/Exception.d
+src/Exception.o
+src/SODFlag.d
+src/SODFlag.o
+src/dosbox/dbopl.d
+src/dosbox/dbopl.o
+src/macosx/CocoaFun.o
