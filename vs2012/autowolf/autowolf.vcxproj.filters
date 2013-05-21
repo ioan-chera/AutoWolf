@@ -176,6 +176,12 @@
     <ClCompile Include="..\..\src\SODFlag.cpp">
       <Filter>Source Files\IOAN</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ActorStates.cpp">
+      <Filter>Source Files\TABLES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MapExploration.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\win\resource.h">
@@ -347,6 +353,12 @@
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\SODFlag.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ActorStates.h">
+      <Filter>Source Files\TABLES</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MapExploration.h">
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
   </ItemGroup>
