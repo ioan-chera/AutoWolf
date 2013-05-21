@@ -105,6 +105,7 @@ class BotMan
 	objtype *IsEnemyBlocking(int tx, int ty) const;
 	objtype *IsEnemyNearby(int tx, int ty) const;
     
+    void ExecuteStrafe(int mx, int my, int nx, int ny, Boolean tryuse) const;
 	void MoveByStrafe();
 	void ChooseWeapon() const;
 	void DoCombatAI(int eangle, int edist);

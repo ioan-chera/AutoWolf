@@ -1039,60 +1039,10 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 	return NULL;
 }
 
-//
-// BotMan::MoveByStrafe
-//
-// Move by strafing. Only searchset[1] is relevant.
-//
-void BotMan::MoveByStrafe()
+void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, Boolean tryuse) const
 {
-	int movedir;
-	
-	if(!path.length())
-	{
-		DoRetreat();
-		return;
-	}
-	
-	int nx, ny, mx, my;
-	Boolean tryuse = false;	// whether to try using
-	
-	mx = player->tilex;
-	my = player->tiley;
-	
-	// elevator
-	byte tile;
-	int nexton = path.getNextIndex(0);
-	if(nexton == -1)
-	{
-		// end of path; start a new search
-		path.reset();
-		if(exitx >= 0 && exity >= 0)
-		{
-			// elevator switch: press it now
-			nx = exitx;
-			ny = exity;
-			tryuse = true;
-		}
-		else
-		{
-			// if undefined, just go east
-			return;	// just quit
-			// nx = mx + 1;
-			// ny = my;
-		}
-	}
-	else
-	{
-		// in the path
-		path.getCoords(nexton, &nx, &ny);
-		tile = tilemap[nx][ny];
-		// whether to press to open a door
-		tryuse = (tile & 0x80) == 0x80 
-		&& (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
-	}
-	
-	// set up the target angle
+    int movedir;
+    // set up the target angle
 	// int tangle = Basic::DirAngle(mx,my,nx,ny);
 	int tangle = 0;
 	if(nx > mx)
@@ -1112,7 +1062,6 @@ void BotMan::MoveByStrafe()
 		movedir = 0;
 	else if(dangle >= -45 && dangle < 45)
 	{
-//		dangle -= 45;
 		movedir = 1;
 	}
 	else if(dangle >= 45 && dangle < 135)
@@ -1242,6 +1191,61 @@ void BotMan::MoveByStrafe()
 			}
 		}
 	}
+}
+
+//
+// BotMan::MoveByStrafe
+//
+// Move by strafing. Only searchset[1] is relevant.
+//
+void BotMan::MoveByStrafe()
+{
+	
+	
+	if(!path.length())
+	{
+		DoRetreat();
+		return;
+	}
+	
+	int nx, ny, mx, my;
+	Boolean tryuse = false;	// whether to try using
+	
+	mx = player->tilex;
+	my = player->tiley;
+	
+	// elevator
+	byte tile;
+    //int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
+	int nexton = path.getNextIndex(0);
+	if(nexton == -1)
+	{
+		// end of path; start a new search
+		path.reset();
+		if(exitx >= 0 && exity >= 0)
+		{
+			// elevator switch: press it now
+			nx = exitx;
+			ny = exity;
+			tryuse = true;
+		}
+		else
+		{
+			// if undefined, just go east
+			return;
+		}
+	}
+	else
+	{
+		// in the path
+		path.getCoords(nexton, &nx, &ny);
+		tile = tilemap[nx][ny];
+		// whether to press to open a door
+		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == 
+            dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+	}
+	
+	ExecuteStrafe(mx, my, nx, ny, tryuse);
 }
 
 //
@@ -1554,15 +1558,25 @@ void BotMan::DoNonCombatAI()
 		path.getCoords(nexton, &nx, &ny);
 		tile = tilemap[nx][ny];
 		// whether to press to open a door
-		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == 
+            dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
+//#if 0
+        
+//#endif
 	}
-	
+
+	if(!tryuse && nexton >= 0 && nexton2 == -1)
+    {
+        ExecuteStrafe(nx, ny, mx, my, tryuse);
+        return;
+    }
 	// set up the target angle
 	int tangle = Basic::DirAngle(mx,my,nx,ny);
 	int dangle = Basic::CentreAngle(tangle, player->angle);
 	
 	// Non-combat mode
-	if(gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && pressuse % 64 == 0 && EnemyEager())
+	if(gamestate.weapon >= wp_pistol && gamestate.ammo >= 20 && 
+        pressuse % 64 == 0 && EnemyEager())
 	{
 		// shoot something to alert nazis
 		// FIXME: more stealth gameplay considerations?
@@ -1585,7 +1599,9 @@ void BotMan::DoNonCombatAI()
 	//
 	// Solution? retreatwaitcount variable
 	//
-	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) || (!(nexton >= 0 && Crossfire(Basic::Major(nx), Basic::Major(ny))) && !(nexton2 >= 0 && Crossfire(Basic::Major(nx2), Basic::Major(ny2)))))
+	if(retreatwaitcount >= 10 || Crossfire(player->x, player->y) || 
+        (!(nexton >= 0 && Crossfire(Basic::Major(nx), Basic::Major(ny))) && 
+        !(nexton2 >= 0 && Crossfire(Basic::Major(nx2), Basic::Major(ny2)))))
 	{
 		if(retreatwaitcount < 10 && retreatwaitdelay > 0)
 			retreatwaitdelay -= tics;
