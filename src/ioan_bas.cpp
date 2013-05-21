@@ -600,6 +600,6 @@ PString &Basic::SetStringTildeExpand(const char *basedir, PString &dest)
             return dest.copy(home).concat(basedir + 1);
     }
     
-    return dest;
+    return dest.copy(basedir);
 }
 
