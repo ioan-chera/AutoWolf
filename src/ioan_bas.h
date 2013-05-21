@@ -81,8 +81,6 @@ namespace Basic
 	// get angle from dir
 	inline int DirAngle(int mx, int my, int nx, int ny)
 	{
-		nx = Basic::Major(nx);
-		ny = Basic::Major(ny);
 		
 		double dx = (double)(nx - mx);
 		double dy = -(double)(ny - my);

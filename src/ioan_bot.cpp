@@ -1510,8 +1510,8 @@ void BotMan::DoNonCombatAI()
 	Boolean tryuse = false;	// whether to try using
 	
 	
-	mx = player->x;
-	my = player->y;
+	mx = player->tilex;
+	my = player->tiley;
 	 
 	
 	// elevator
@@ -1539,14 +1539,14 @@ void BotMan::DoNonCombatAI()
 			int ptx, pty;
 			path.getCoords(prevon, &ptx, &pty);
 			// just go forward
-			nx = 2*(mx>>TILESHIFT) - ptx;
-			ny = 2*(my>>TILESHIFT) - pty;
+			nx = 2*mx - ptx;
+			ny = 2*my - pty;
 		}
 		else
 		{
 			// if undefined, just go east
-			nx = (mx>>TILESHIFT) + 1;
-			ny = my>>TILESHIFT;
+			nx = mx + 1;
+			ny = my;
 		}
 	}
 	else
@@ -1564,11 +1564,12 @@ void BotMan::DoNonCombatAI()
 
 	if(!tryuse && nexton >= 0 && nexton2 == -1)
     {
-        ExecuteStrafe(nx, ny, mx, my, tryuse);
+        ExecuteStrafe(mx, my, nx, ny, tryuse);
         return;
     }
 	// set up the target angle
-	int tangle = Basic::DirAngle(mx,my,nx,ny);
+	int tangle = Basic::DirAngle(player->x,player->y,
+                                 Basic::Major(nx),Basic::Major(ny));
 	int dangle = Basic::CentreAngle(tangle, player->angle);
 	
 	// Non-combat mode
