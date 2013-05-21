@@ -67,6 +67,7 @@ SRCS += src/id_vl.cpp
 SRCS += src/ioan_bas.cpp
 SRCS += src/ioan_bot.cpp
 SRCS += src/ioan_secret.cpp
+SRCS += src/MapExploration.cpp
 SRCS += src/MasterDirectoryFile.cpp
 SRCS += src/obattrib.cpp
 SRCS += src/PathArray.cpp

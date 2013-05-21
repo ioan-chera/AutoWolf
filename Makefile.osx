@@ -68,6 +68,7 @@ SRCS += src/ioan_bas.cpp
 SRCS += src/ioan_bot.cpp
 SRCS += src/ioan_secret.cpp
 SRCS += src/macosx/CocoaFun.mm
+SRCS += src/MapExploration.cpp
 SRCS += src/MasterDirectoryFile.cpp
 SRCS += src/obattrib.cpp
 SRCS += src/PathArray.cpp

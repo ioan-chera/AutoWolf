@@ -13,6 +13,7 @@
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */; };
 		4F267FBF174B83C100C00DBF /* Makefile.osx in Resources */ = {isa = PBXBuildFile; fileRef = 4F267FBE174B83C100C00DBF /* Makefile.osx */; };
+		4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F267FCC174B87E500C00DBF /* MapExploration.cpp */; };
 		4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F32BDAB1749441A00EF744B /* ActorStates.cpp */; };
 		4F3435031726973200A10A72 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F3435021726973200A10A72 /* Exception.cpp */; };
 		4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4717BA173A6A610018E82B /* SODFlag.cpp */; };
@@ -103,6 +104,8 @@
 		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = m_dllist.h; path = ../src/m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../src/e_hashkeys.cpp; sourceTree = "<group>"; };
 		4F267FBE174B83C100C00DBF /* Makefile.osx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.osx; path = ../Makefile.osx; sourceTree = SOURCE_ROOT; };
+		4F267FCB174B87E500C00DBF /* MapExploration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapExploration.h; path = ../src/MapExploration.h; sourceTree = SOURCE_ROOT; };
+		4F267FCC174B87E500C00DBF /* MapExploration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MapExploration.cpp; path = ../src/MapExploration.cpp; sourceTree = SOURCE_ROOT; };
 		4F32BDAB1749441A00EF744B /* ActorStates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ActorStates.cpp; path = ../src/ActorStates.cpp; sourceTree = "<group>"; };
 		4F32BDAC1749441B00EF744B /* ActorStates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActorStates.h; path = ../src/ActorStates.h; sourceTree = "<group>"; };
 		4F3435011726973200A10A72 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exception.h; path = ../src/Exception.h; sourceTree = SOURCE_ROOT; };
@@ -411,6 +414,8 @@
 				FAC97A481679D14E00949336 /* CheckSum.cpp */,
 				4F471991173BC0310018E82B /* Config.h */,
 				4F471992173BC0310018E82B /* Config.cpp */,
+				4F267FCB174B87E500C00DBF /* MapExploration.h */,
+				4F267FCC174B87E500C00DBF /* MapExploration.cpp */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -659,6 +664,7 @@
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
 				4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */,
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
+				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -167,3 +167,5 @@ src/dosbox/dbopl.o
 src/macosx/CocoaFun.o
 src/ActorStates.d
 src/ActorStates.o
+src/MapExploration.d
+src/MapExploration.o
