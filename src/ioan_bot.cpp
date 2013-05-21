@@ -159,15 +159,14 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
 }
 
 //
-// BotMan::aggregateMoods
+// BotMan::MoodBox::SetMood
 //
 // Connects some moods that are logically connected
 //
-void BotMan::aggregateMoods()
+void BotMan::MoodBox::SetMood(unsigned inMood)
 {
-    if (mood & MOOD_JUSTGOTOEXIT) {
-        mood |= MOOD_TAKEFIRSTEXIT;
-    }
+    mood = inMood;
+    aggregate();
 }
 
 //
@@ -190,11 +189,9 @@ void BotMan::SetMood()
     // Day will be used as random seed
     r = rnd((unsigned)day);
     
-    mood = 0;   // default it to 0
     if(r % 4 == 0)
     {
-        mood = rnd(r);
-        aggregateMoods();
+        moodBox.SetMood(rnd(r));
     }
 }
 
@@ -258,7 +255,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		case    bo_chalice:
 		case    bo_bible:
 		case    bo_crown:
-			if(!knifeinsight && !(mood & MOOD_DONTHUNTTREASURE))
+            if(!knifeinsight && !(moodBox() & MoodBox::MOOD_DONTHUNTTREASURE))
 				return true;
 			break;
 		case    bo_machinegun:
@@ -285,7 +282,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 				return true;
 			break;
 		case    bo_spear:
-			if(searchstage >= SSSecretLift || mood & MOOD_TAKEFIRSTEXIT)
+			if(searchstage >= SSSecretLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 				return true;
 			break;
                 
@@ -308,7 +305,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			enemyrecord[tx][ty].remove(check);	// flush dead/invalid records
 			check = enemyrecord[tx][ty].firstObject();
 		}
-		if(!(mood & MOOD_DONTHUNTNAZIS) && check)
+		if(!(moodBox() & MoodBox::MOOD_DONTHUNTNAZIS) && check)
 		{
 			searchstage = SSGeneral;	// reset counter if enemies here
 			return true;
@@ -351,7 +348,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     };
     
 	// secret door
-	if(!knifeinsight && (!(mood & MOOD_DONTHUNTSECRETS) || searchstage >= SSMax))	// don't look for secret doors if compromised
+	if(!knifeinsight && (!(moodBox() & MoodBox::MOOD_DONTHUNTSECRETS) || searchstage >= SSMax))	// don't look for secret doors if compromised
 	{
 		// PUSH SOUTH
         if (secretVerify(0, 1))
@@ -365,7 +362,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 	}
 
 	// exit switch
-	if(searchstage >= SSSecretLift || mood & MOOD_TAKEFIRSTEXIT)
+	if(searchstage >= SSSecretLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 	{
 		
 		// THROW WEST
@@ -375,7 +372,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			{
 				knownExitX = exitx = tx - 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
@@ -387,13 +384,13 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 			{
 				knownExitX = exitx = tx + 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
 
 		// exit pad
-		if(searchstage >= SSNormalLift || mood & MOOD_TAKEFIRSTEXIT)
+		if(searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
            if(*(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
 			return true;
 	}
@@ -458,7 +455,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 	path.makeEmpty();
 	if(retreating && threater != NULL)
 		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
-	else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
+	else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
         path.addStartNode(player->tilex, player->tiley, knownExitX, knownExitY);
     else
 		path.addStartNode(player->tilex, player->tiley);
@@ -613,7 +610,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 			
 			if(retreating && threater != NULL)
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
-			else if(mood & MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
+			else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
                 path.updateNode(ifound, imin, cx, cy, tentative_g_add, knownExitX, knownExitY);
             else
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add);
@@ -1496,7 +1493,7 @@ void BotMan::DoNonCombatAI()
 	// found path to exit
 	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
 	
-	if(nowon < 0 || (!pwallstate && waitpwall && !(mood & MOOD_DONTBACKFORSECRETS)))
+	if(nowon < 0 || (!pwallstate && waitpwall && !(moodBox() & MoodBox::MOOD_DONTBACKFORSECRETS)))
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
 		searchstage = SSGeneral;	// new areas revealed, so look

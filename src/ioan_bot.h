@@ -43,16 +43,36 @@ class BotMan
     //    
     // Daily mood for the bot. Can combine these values.
     //
-    enum Mood
+    class MoodBox
     {
-        MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
-        MOOD_DONTBACKFORSECRETS = 2,
-        MOOD_DONTHUNTTREASURE = 4,
-        MOOD_DONTHUNTNAZIS = 8,
-        MOOD_DONTHUNTSECRETS = 0x10,
-        MOOD_JUSTGOTOEXIT = 0x20,
-    };
-    unsigned mood;
+    public:
+        enum Mood
+        {
+            MOOD_TAKEFIRSTEXIT = 0x1,       // also part of MOOD_TAKEFIRSTEXIT
+            MOOD_DONTBACKFORSECRETS = 2,
+            MOOD_DONTHUNTTREASURE = 4,
+            MOOD_DONTHUNTNAZIS = 8,
+            MOOD_DONTHUNTSECRETS = 0x10,
+            MOOD_JUSTGOTOEXIT = 0x20,
+        };
+    private:
+        unsigned mood;
+        void aggregate()
+        {
+            if (mood & MOOD_JUSTGOTOEXIT) {
+                mood |= MOOD_TAKEFIRSTEXIT;
+            }
+        }
+    public:
+        MoodBox() : mood(0)
+        {
+        }
+        void SetMood(unsigned inMood);
+        unsigned operator()()
+        {
+            return mood;
+        }
+    } moodBox;
     
     //
     // SearchStage
@@ -114,8 +134,6 @@ class BotMan
     
     void StoreAcquiredData(const uint8_t *digeststring) const;
     void GetExploredData(const uint8_t *digeststring);
-    
-    void aggregateMoods();
 public:
     
     //
@@ -135,7 +153,7 @@ public:
     knownExitX(0),
     knownExitY(0),
     threater(NULL),
-    mood(0)
+    moodBox()
     {
         memset(explored, 0, sizeof(explored));
     }
