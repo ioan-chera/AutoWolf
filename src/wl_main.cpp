@@ -52,7 +52,7 @@
 #include "Config.h"
 #include "MasterDirectoryFile.h"
 #ifdef __APPLE__
-#include "CocoaFun.h"
+#include "macosx/CocoaFun.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1679,7 +1679,7 @@ int main (int argc, char *argv[])
     
     // IOANCH: prepare the OSX version for displaying a quit error
 #ifdef __APPLE__
-    atexit_b(^()
+    atexit([]()
              {
                  if(global_error && *global_error)
                      Cocoa_DisplayErrorAlert(global_error);

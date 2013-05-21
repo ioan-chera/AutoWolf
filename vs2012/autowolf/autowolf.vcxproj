@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\ActorStates.cpp" />
     <ClCompile Include="..\..\src\CheckSum.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
     <ClCompile Include="..\..\src\DataFile.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="..\..\src\ioan_bas.cpp" />
     <ClCompile Include="..\..\src\ioan_bot.cpp" />
     <ClCompile Include="..\..\src\ioan_secret.cpp" />
+    <ClCompile Include="..\..\src\MapExploration.cpp" />
     <ClCompile Include="..\..\src\MasterDirectoryFile.cpp" />
     <ClCompile Include="..\..\src\obattrib.cpp" />
     <ClCompile Include="..\..\src\OutOfRangeException.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="..\..\src\wl_text.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\ActorStates.h" />
     <ClInclude Include="..\..\src\audioabstract.h" />
     <ClInclude Include="..\..\src\audiosod.h" />
     <ClInclude Include="..\..\src\audiowl6.h" />
@@ -223,6 +226,7 @@
     <ClInclude Include="..\..\src\ioan_bot.h" />
     <ClInclude Include="..\..\src\ioan_secret.h" />
     <ClInclude Include="..\..\src\List.h" />
+    <ClInclude Include="..\..\src\MapExploration.h" />
     <ClInclude Include="..\..\src\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\src\m_dllist.h" />
     <ClInclude Include="..\..\src\obattrib.h" />

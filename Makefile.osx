@@ -1,7 +1,7 @@
 CONFIG ?= config.default
 -include $(CONFIG)
-CC = gcc
-CXX = g++ -std=c++11
+CC = gcc-mp-4.8
+CXX = g++-mp-4.8 -std=c++11
 
 BINARY    ?= autowolf
 PREFIX    ?= /usr/local
@@ -67,15 +67,15 @@ SRCS += src/id_vl.cpp
 SRCS += src/ioan_bas.cpp
 SRCS += src/ioan_bot.cpp
 SRCS += src/ioan_secret.cpp
+SRCS += src/macosx/CocoaFun.mm
 SRCS += src/MapExploration.cpp
 SRCS += src/MasterDirectoryFile.cpp
 SRCS += src/obattrib.cpp
 SRCS += src/PathArray.cpp
-SRCS += src/Point2D.cpp
 SRCS += src/Property.cpp
 SRCS += src/PropertyFile.cpp
 SRCS += src/PString.cpp
-SRCS += src/sdl_winmain.cpp
+#SRCS += src/sdl_winmain.cpp
 SRCS += src/signon.cpp
 SRCS += src/SODFlag.cpp
 SRCS += src/wl_act1.cpp

@@ -251,7 +251,5 @@ inline static const uint8_t *unfoldedMapSegs()
 void CalculateMapsegsChecksum()
 {
     mapsegsChecksum.CalculateMD5Checksum(unfoldedMapSegs(), mapSegsLength);
-    PString test;
-    mapsegsChecksum.GetHumanReadableHex(test);
-    puts(test.buffer());
+    
 }

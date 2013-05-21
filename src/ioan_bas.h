@@ -119,7 +119,6 @@ namespace Basic
 	// ApproximateDistance
 	int ApproxDist(int dx, int dy);
     
-    PString &SetStringTildeExpand(const char *basedir, PString &dest);
 
 };
 

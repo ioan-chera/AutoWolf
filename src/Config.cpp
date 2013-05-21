@@ -26,7 +26,7 @@
 
 #include <sys/stat.h>
 #ifdef __APPLE__
-#include "CocoaFun.h"
+#include "macosx/CocoaFun.h"
 #endif
 #include "Config.h"
 #include "PString.h"
@@ -122,10 +122,8 @@ void Config::CheckEnvVars()
     const char *wolfdir = getenv("AUTOWOLFDIR");
     if(wolfdir)
     {
-        PString expanded;
-        Basic::SetStringTildeExpand(wolfdir, expanded);
-        if(changeDirectory(expanded.buffer()))
-            throw Exception(PString("Cannot change directory to ").concat(expanded).concat("\n"));
+        if(changeDirectory(wolfdir))
+            throw Exception(PString("Cannot change directory to ").concat(wolfdir).concat("\n"));
     }
 }
 
@@ -299,7 +297,7 @@ void Config::CheckParameters(int argc, char *argv[])
                 else
                 {
                     // IOANCH 20130307: expand tilde
-                    Basic::SetStringTildeExpand(argv[i], dir);
+                    dir.copy(argv[i]);
                 }
             }
             else IFARG("--ignorenumchunks")
@@ -322,10 +320,8 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The wolfdir option is missing the dir argument!\n");
                 else
                 {
-                    PString trans;
-                    Basic::SetStringTildeExpand(argv[i], trans);
-                    if(changeDirectory(trans.buffer()))
-                        throw Exception(PString("Cannot change directory to ").concat(trans).concat("\n"));
+                    if(changeDirectory(argv[i]))
+                        throw Exception(PString("Cannot change directory to ").concat(argv[i]).concat("\n"));
                 }
             }
             else
@@ -337,7 +333,7 @@ void Config::CheckParameters(int argc, char *argv[])
         puts(e.info().buffer());
         printf(
                "AutoWolf v0.3\n"
-               "By Ioan Chera on Wolf4SDL codebase"
+               "By Ioan Chera on Wolf4SDL codebase\n"
                "Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
                "Original Wolfenstein 3D by id Software\n\n"
 #ifdef __APPLE__
