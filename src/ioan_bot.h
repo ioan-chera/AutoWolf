@@ -114,6 +114,8 @@ class BotMan
     
     void StoreAcquiredData(const uint8_t *digeststring) const;
     void GetExploredData(const uint8_t *digeststring);
+    
+    void aggregateMoods();
 public:
     
     //

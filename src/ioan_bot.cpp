@@ -159,6 +159,18 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
 }
 
 //
+// BotMan::aggregateMoods
+//
+// Connects some moods that are logically connected
+//
+void BotMan::aggregateMoods()
+{
+    if (mood & MOOD_JUSTGOTOEXIT) {
+        mood |= MOOD_TAKEFIRSTEXIT;
+    }
+}
+
+//
 // BotMan::SetMood
 //
 // Should always set the same value to mood, throughout the day
@@ -175,6 +187,7 @@ void BotMan::SetMood()
     {
         mood = (unsigned)rand();    // Just scramble it
     }
+    aggregateMoods();
     
     // scramble it now
     srand((unsigned)time(NULL));
@@ -673,7 +686,8 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 
 	if(enemy->recordx > 0 && enemy->recordy > 0)
 	{
-		enemyrecord[enemy->recordx >> TILESHIFT][enemy->recordy >> TILESHIFT].remove(enemy);
+		enemyrecord[enemy->recordx >> TILESHIFT][enemy->recordy >> TILESHIFT].
+            remove(enemy);
 	}
 	enemy->recordx = enemy->x;
 	enemy->recordy = enemy->y;
@@ -695,7 +709,8 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 
 	distmin = INT_MAX;
 
-	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; ret = (objtype *)Basic::livingNazis.nextObject())
+	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret;
+        ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		k = abs(ret->tilex - tx);
 		j = abs(ret->tiley - ty);
@@ -710,7 +725,8 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
 		RecordEnemyPosition(ret);
 
 		// don't change target if distance difference is too little (don't lose focus on the current threat)
-		if((abs(*distance - i) >= 2 && ret != oldret) || ret == oldret || (oldret && !(oldret->flags & FL_SHOOTABLE)))
+		if((abs(*distance - i) >= 2 && ret != oldret) || ret == oldret
+           || (oldret && !(oldret->flags & FL_SHOOTABLE)))
 		{
 			// choose closest target
 			if(i <= distmin)
