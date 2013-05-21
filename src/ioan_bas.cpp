@@ -575,7 +575,7 @@ void Basic::MarkovWrite(char *c, int nmax)
 //
 // Basic::ApproxDist
 //
-// Approx. distance (too lazy to use sqrt)
+// Approx. distance (too lazy to use sqrt). Inspired from Doom.
 //
 int Basic::ApproxDist(int dx, int dy)
 {
@@ -586,20 +586,4 @@ int Basic::ApproxDist(int dx, int dy)
 	return dx + dy - (dy >> 1);
 }
 
-//
-// Basic::SetStringTildeExpand
-//     
-// Create new string with 
-//
-PString &Basic::SetStringTildeExpand(const char *basedir, PString &dest)
-{
-    if(basedir[0] == '~')
-    {
-        const char *home = getenv("HOME");
-        if(home)
-            return dest.copy(home).concat(basedir + 1);
-    }
-    
-    return dest.copy(basedir);
-}
 
