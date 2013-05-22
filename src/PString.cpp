@@ -142,6 +142,25 @@ PString::PString(const PString &other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
     copy(other);
 }
 
+// IOANCH 20130522: move constructor
+PString::PString(PString &&other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+{
+    if (!other._isLocal()) 
+    {
+        _buffer = other._buffer;
+        _size = other._size;
+        _index = other._index;
+        other._buffer = NULL;
+    }
+    else 
+    {
+        // no heap allocation to move, use normal copy constructor
+        _buffer = _local;
+        memset(_local, 0, sizeof(_local));
+        copy(other);
+    }
+}
+
 PString::PString(size_t startSize) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 {
     _buffer = _local;

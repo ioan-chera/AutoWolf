@@ -61,6 +61,7 @@ public:
     PString(const char *cstr, size_t inLength);
     PString(const char *cstr);
     PString(const PString &other);
+    PString(PString &&other);   // IOANCH 20130522: move constructor
     PString(size_t startSize = 0);
     PString(int number);
     
