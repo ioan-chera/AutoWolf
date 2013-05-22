@@ -435,6 +435,18 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 	}
 }
 
+inline static Boolean hasKeyForDoor(byte lock, byte door)
+{
+    if (lock >= dr_lock1 && lock <= dr_lock4)
+        if (doorobjlist[door].action != dr_open &&
+            doorobjlist[door].action != dr_opening &&
+            !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+        {
+            return false;
+        }
+    return true;
+}
+
 //
 // BotMan::FindShortestPath
 //
@@ -584,11 +596,8 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 				// FIXME: take care with open locked doors, still without the key, not to get stuck
 				door = door & ~0x80;
 				byte lock = doorobjlist[door].lock;
-				if (lock >= dr_lock1 && lock <= dr_lock4)
-					if (doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
-					{
-						continue;
-					}
+                if(!hasKeyForDoor(lock, door))
+                    continue;
 			}
 
 			// this looks if the entry exists in the list
@@ -1558,7 +1567,14 @@ void BotMan::DoNonCombatAI()
 		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == 
             dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
 //#if 0
-        
+        tile &= ~0x80;
+        byte lock = doorobjlist[tile].lock;
+        if(!hasKeyForDoor(lock, tile))
+        {
+            searchstage = SSGeneral;
+            path.reset();
+            return;
+        }
 //#endif
 	}
 
