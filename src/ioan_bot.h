@@ -23,6 +23,7 @@
 #include "HistoryRatio.h"
 #include "List.h"
 #include "PathArray.h"
+#include "MapExploration.h"
 
 
 // Changing static to dynamic:
@@ -94,7 +95,7 @@ class BotMan
 	int exitx, exity;
 	objtype *threater;
 	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
-    Boolean explored[MAPSIZE][MAPSIZE];	// map of explored areas
+    MapExploration mapExploration;	// map of explored areas
     int knownExitX, knownExitY;
     
 
@@ -154,9 +155,10 @@ public:
     knownExitX(0),
     knownExitY(0),
     threater(NULL),
-    moodBox()
+    moodBox(),
+    mapExploration()
     {
-        memset(explored, 0, sizeof(explored));
+
     }
     
 	// Update the enemy's known position record

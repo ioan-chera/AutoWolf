@@ -19,6 +19,8 @@
 #ifndef MAPEXPLORATION_H_
 #define MAPEXPLORATION_H_
 
+#include "PString.h"
+
 //
 // MapExploration
 //
@@ -27,6 +29,20 @@
 //
 class MapExploration
 {
+public:
+    Boolean explored[MAPSIZE][MAPSIZE];
+    PString PackBooleanArray() const;
+    void UnpackBooleanArray(const PString &source);
+
+    void Reset()
+    {
+      	memset(explored, 0, sizeof(explored));
+    }
+    
+    MapExploration()
+    {
+        Reset();
+    }
     
 };
 #endif

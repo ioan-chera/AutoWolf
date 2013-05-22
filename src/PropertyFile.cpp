@@ -154,34 +154,6 @@ void PropertyFile::doWriteToFile(FILE *f)
 }
 
 //
-// PropertyFile::getExplored
-//
-// Gets explored matrix from file contents to bot data
-// FIXME: Optimization idea. Let the bot write directly to file.
-//
-void PropertyFile::getExplored(void *exploredTarget) 
-{
-    // File exists. Use its hash table
-    Property *prop = _propertyTable.objectForKey(PROPERTY_KEY_EXPLORED);
-    if(prop)
-    {
-        // Property exists. Get its data (expected is string).
-        // Make sure it IS string
-        if(prop->type == Property::PStringVal)
-        {
-            _UnpackBooleanArray(prop->stringValue(), exploredTarget, maparea);      
-        }
-        else
-        {
-            // it wasn't set as PString. Kill it.
-            _propertyTable.removeObject(prop);
-            delete prop;
-            _updateSize();
-        }
-    }
-}
-
-//
 // PropertyFile::_makeObjectWithKey
 //
 Property *PropertyFile::_makeObjectWithKey(const char *key)
@@ -227,78 +199,6 @@ void PropertyFile::_updateSize()
 }
 
 //
-// PropertyFile::_PackBooleanArray
-//
-PString PropertyFile::_PackBooleanArray(const void *byteArray, size_t arraySize)
-{
-    size_t pos;
-    uint8_t charac = 0;
-    
-    PString dataToWrite(arraySize/8);
-    
-    Boolean *baseaddress = (Boolean *)byteArray;
-    
-    for(pos = 0; pos < arraySize; ++pos)
-    {
-        charac = (charac << 1) + *(baseaddress + pos);
-        if((pos + 1) % 8 == 0)	// reached eight bits
-        {
-            dataToWrite.Putc((char)charac);
-            charac = 0;
-        }
-    }
-    
-    return dataToWrite;
-}
-
-//
-// PropertyFile::_UnpackBooleanArray
-//
-void PropertyFile::_UnpackBooleanArray(const PString &source, void *target,
-                                       size_t targetSize)
-{
-    const PString &explorstr = source;
-    const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
-    
-    int j;
-    size_t pos;
-    uint8_t mbyte;
-    
-    Boolean *baseaddress = (Boolean *)target;
-    
-    for(pos = 0; pos < targetSize; pos += 8)
-    {
-        mbyte = *explorbuf++;
-        for(j = 7; j >= 0; --j)
-        {
-            *(baseaddress + pos + j) = mbyte & 1;
-            mbyte >>= 1;
-        }
-    }
-}
-
-//
-// PropertyFile::putExplored
-//
-// Puts the explored data from given bot's memory to file's memory
-// FIXME: again, why waste resources to copy data around?
-//
-void PropertyFile::putExplored(const void *explored)
-{
-    // File exists. Look for its Explored property
-    Property *prop = _makeObjectWithKey(PROPERTY_KEY_EXPLORED);
-    
-    // Property exists. Change it
-    
-    PString dataToWrite = _PackBooleanArray(explored, maparea);
-    
-    // Written.
-    prop->type = Property::PStringVal;
-    prop->setStringValue(dataToWrite);
-    _updateSize();
-}
-
-//
 // PropertyFile::hasProperty
 //
 bool PropertyFile::hasProperty(const char *keyName) const
@@ -322,6 +222,19 @@ int PropertyFile::getIntValue(const char *keyName) const
 }
 
 //
+// PropertyFile::getStringValue
+//
+PString PropertyFile::getStringValue(const char *keyName) const
+{
+    Property *prop = _propertyTable.objectForKey(keyName);
+    if(prop && prop->type == Property::PStringVal)
+    {
+        return prop->stringValue();
+    }
+    return "";   // default to 0
+}
+
+//
 // PropertyFile::setIntValue
 //
 void PropertyFile::setIntValue(const char *keyName, int value)
@@ -329,5 +242,16 @@ void PropertyFile::setIntValue(const char *keyName, int value)
     Property *prop = _makeObjectWithKey(keyName);
     prop->type = Property::Int32;
     prop->intValue = (int32_t)value;
+    _updateSize();
+}
+
+//
+// PropertyFile::setStringValue
+//
+void PropertyFile::setStringValue(const char *keyName, const PString &value)
+{
+    Property *prop = _makeObjectWithKey(keyName);
+    prop->type = Property::PStringVal;
+    prop->setStringValue(value);
     _updateSize();
 }

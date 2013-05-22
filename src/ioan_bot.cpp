@@ -60,7 +60,7 @@ void BotMan::MapInit()
 	panic = false;
 	int i, j;
 	
-	memset(explored, 0, sizeof(explored));
+    mapExploration.Reset();
 
     // IOANCH 20121213
 	// calculate checksum of it
@@ -111,7 +111,8 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 	
     MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
     
-    propertyFile->putExplored(explored);
+    propertyFile->setStringValue(PROPERTY_KEY_EXPLORED, 
+                                 mapExploration.PackBooleanArray());
     propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitX +
                               (knownExitY << 8));
 }
@@ -122,7 +123,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 void BotMan::GetExploredData(const uint8_t *digeststring)
 {
     // see if folder exists in AutoWolf/Maps
-	memset(explored, 0, sizeof(explored));
+    mapExploration.Reset();
 	
 	// now to write the file
 	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
@@ -144,7 +145,7 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
     
     if(propertyFile)
     {
-        propertyFile->getExplored(explored);
+        mapExploration.UnpackBooleanArray(propertyFile->getStringValue(PROPERTY_KEY_EXPLORED));
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
@@ -214,7 +215,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 	objtype *check = actorat[tx][ty];
 	
 	// unexplored tile that's unoccupied by a solid block
-	if(!explored[tx][ty] && (!check || ISPOINTER(check)))
+	if(!mapExploration.explored[tx][ty] && (!check || ISPOINTER(check)))
 	{
 		return true;
 	}
@@ -298,7 +299,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 	check = enemyrecord[tx][ty].firstObject();
 	
 	// only look for check stuff
-	if(gamestate.health > 75 && gamestate.ammo > 50 && explored[tx][ty] && check)
+	if(gamestate.health > 75 && gamestate.ammo > 50 && mapExploration.explored[tx][ty] && check)
 	{
 		while(check && (!Basic::IsEnemy(check->obclass) || !(check->flags & FL_SHOOTABLE)))
 		{
@@ -426,7 +427,7 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 	
 	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy), Basic::Major(tx), Basic::Major(ty)))
 	{
-		explored[tx][ty] = true;
+		mapExploration.explored[tx][ty] = true;
 		
 		ExploreFill(tx - 1, ty, ox, oy);
 		ExploreFill(tx + 1, ty, ox, oy);
@@ -468,7 +469,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 	enemyrecord[player->tilex][player->tiley].removeAll();
 	
 	// if stepped on unexplored terrain, do a scan
-	if(!explored[player->tilex][player->tiley])
+	if(!mapExploration.explored[player->tilex][player->tiley])
 		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley, true);
 
 	path.makeEmpty();
@@ -787,7 +788,7 @@ objtype *BotMan::EnemyEager() const
         ret = (objtype *)Basic::livingNazis.nextObject())
 	{
 		// TODO: don't know about unexplored enemies (consider that it will know if map gets revisited)
-		if(areabyplayer[ret->areanumber] && explored[ret->recordx >> TILESHIFT][ret->recordy >> TILESHIFT] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
+		if(areabyplayer[ret->areanumber] && mapExploration.explored[ret->recordx >> TILESHIFT][ret->recordy >> TILESHIFT] && !(ret->flags & (FL_AMBUSH | FL_ATTACKMODE)))
 			return ret;
 	}
 	return NULL;

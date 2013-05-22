@@ -16,5 +16,62 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include "wl_def.h"
 #include "MapExploration.h"
 
+//
+// PropertyFile::_PackBooleanArray
+//
+PString MapExploration::PackBooleanArray() const
+{
+    size_t pos;
+    uint8_t charac = 0;
+    
+    size_t arraySize = maparea;
+    
+    PString dataToWrite(arraySize / 8);
+    
+    Boolean *baseaddress = const_cast<Boolean*>(explored[0]);
+    
+    for(pos = 0; pos < arraySize; ++pos)
+    {
+        charac = (charac << 1) + *(baseaddress + pos);
+        if((pos + 1) % 8 == 0)	// reached eight bits
+        {
+            dataToWrite.Putc((char)charac);
+            charac = 0;
+        }
+    }
+    
+    return dataToWrite;
+}
+
+//
+// PropertyFile::_UnpackBooleanArray
+//
+void MapExploration::UnpackBooleanArray(const PString &source)
+{
+    const PString &explorstr = source;
+    const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
+    
+    int j;
+    size_t pos, targetSize = maparea;
+    uint8_t mbyte;
+    
+    if (source.length() < targetSize / 8) 
+    {
+        return;
+    }
+    
+    Boolean *baseaddress = const_cast<Boolean*>(explored[0]);
+    
+    for(pos = 0; pos < targetSize; pos += 8)
+    {
+        mbyte = *explorbuf++;
+        for(j = 7; j >= 0; --j)
+        {
+            *(baseaddress + pos + j) = mbyte & 1;
+            mbyte >>= 1;
+        }
+    }
+}
