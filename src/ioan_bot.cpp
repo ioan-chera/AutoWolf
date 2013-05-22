@@ -435,6 +435,12 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 	}
 }
 
+//
+// canGoThruLockedDoor
+//
+// Mini-function to test if can pass through locked door
+// Warning: door is assumed to already be a door tile
+//
 inline static Boolean canGoThruLockedDoor(byte door)
 {
     byte lock = doorobjlist[door].lock;
