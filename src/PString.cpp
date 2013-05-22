@@ -145,20 +145,10 @@ PString::PString(const PString &other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 // IOANCH 20130522: move constructor
 PString::PString(PString &&other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 {
-    if (!other._isLocal()) 
-    {
-        _buffer = other._buffer;
-        _size = other._size;
-        _index = other._index;
-        other._buffer = NULL;
-    }
-    else 
-    {
-        // no heap allocation to move, use normal copy constructor
-        _buffer = _local;
-        memset(_local, 0, sizeof(_local));
-        copy(other);
-    }
+    _buffer = _local;
+    memset(_local, 0, sizeof(_local));
+    // no heap allocation to move, use normal copy constructor
+    copy(other);
 }
 
 PString::PString(size_t startSize) : _index(0), _size(PSTRING_LOCAL_LENGTH)
@@ -268,6 +258,25 @@ PString &PString::copy(const PString &src)
         clear();
     
     return concat(src);
+}
+
+PString &PString::copy(PString &&src)
+{
+    if (!src._isLocal()) 
+    {
+        _buffer = src._buffer;
+        _size = src._size;
+        _index = src._index;
+        src._buffer = NULL;
+        return *this;
+    }
+    else
+    {        
+        if(_index > 0)
+            clear();
+        
+        return concat(src);
+    }
 }
 
 PString &PString::copy(int number)
@@ -1280,6 +1289,10 @@ bool PString::operator != (const char *other) const
 // Assignment from a PString &
 //
 PString &PString::operator = (const PString &other)
+{
+    return copy(other);
+}
+PString &PString::operator = (PString &&other)
 {
     return copy(other);
 }

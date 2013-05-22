@@ -84,6 +84,7 @@ public:
     PString &copy(const char *str, size_t inLength);
     PString &copy(const char *str);
     PString &copy(const PString &src);
+    PString &copy(PString &&src);
     PString &copy(int number);
     PString &create();
     PString &createSize(size_t size);
@@ -149,6 +150,7 @@ public:
     bool     operator != (const PString &other) const;
     bool     operator != (const char    *other) const;
     PString &operator  = (const PString &other);
+    PString &operator  = (PString &&other);
     PString &operator  = (const char    *other);
     PString &operator  = (int   number);
     PString &operator += (const PString &other);
