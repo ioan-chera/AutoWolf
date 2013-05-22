@@ -262,8 +262,10 @@ PString &PString::copy(const PString &src)
 
 PString &PString::copy(PString &&src)
 {
-    if (!src._isLocal()) 
+    if (!src._isLocal() && src._size > basesize)
     {
+        if(_buffer && !_isLocal())
+            free(_buffer);
         _buffer = src._buffer;
         _size = src._size;
         _index = src._index;
