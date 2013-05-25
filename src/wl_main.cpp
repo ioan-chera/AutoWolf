@@ -1229,7 +1229,7 @@ static void InitGame()
 
     // initialize SDL
 #if defined _WIN32
-    putenv("SDL_VIDEODRIVER=directx");
+    putenv("SDL_VIDEODRIVER=windib");
 #endif
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
     {
