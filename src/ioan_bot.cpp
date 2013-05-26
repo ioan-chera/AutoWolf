@@ -178,7 +178,13 @@ void BotMan::MoodBox::SetMood(unsigned inMood)
 void BotMan::SetMood()
 {
     // seconds
-    time_t day = time(NULL) / 60 / 60 / 24;
+//    time_t day = time(NULL) / 60 / 60 / 24;
+    time_t rawtime;
+    tm *timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    int day = timeinfo->tm_yday + 366 * timeinfo->tm_year;
+    
     unsigned r;
 
     // Same as C++11 minstd_rand
