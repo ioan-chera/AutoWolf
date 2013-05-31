@@ -897,7 +897,9 @@ void PushWall (int checkx, int checky, int dir)
     *(mapsegs[1]+(pwally<<mapshift)+pwallx) = 0;   // remove P tile info
     *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex); // set correct floorcode (BrotherTank's fix)
 
-    SD_PlaySound (PUSHWALLSND);
+    // IOANCH 20130601: play at location
+    PlaySoundLocTile(PUSHWALLSND, pwallx, pwally);
+//    SD_PlaySound (PUSHWALLSND);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
