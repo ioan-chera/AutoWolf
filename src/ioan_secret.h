@@ -20,8 +20,76 @@
 #ifndef IOAN_SECRET_H_
 #define IOAN_SECRET_H_
 
-#include "wl_def.h"
-#include "Exception.h"
+#include "m_dllist.h"
+
+//
+// PushBlock
+//
+// Secret wall/block
+//
+struct PushBlock
+{
+    // Block coordinates
+    int tilex, tiley;
+    // list link
+    DLListItem<PushBlock> link;
+    // Constructor
+    PushBlock(int tx, int ty) : tilex(tx), tiley(ty)
+    {
+    }
+};
+
+
+
+//
+// ScoreMap
+//
+// Class for the game strategy map
+// Only set on map initialization
+//
+class ScoreMap
+{
+    //
+    // Solidity
+    //
+    // Solid block, or door (various kinds)
+    //
+    enum Solidity
+    {
+        Free,
+        Solid,
+        UnlockedDoor,
+        LockedDoor1,
+        LockedDoor2,
+        LockedDoor3,
+        LockedDoor4
+    };
+    
+    //
+    // ScoreBlock
+    //
+    // Class for various calculation
+    //
+    class ScoreBlock
+    {
+        friend class ScoreMap;
+        
+        Solidity solidity;
+        // Score given by this point
+        unsigned points;
+        // Possible pushwall here
+        PushBlock *secret;
+        
+    public:
+        // Constructor
+        ScoreBlock() : solidity(Free), points(0), secret(NULL)
+        {
+        }
+    } map[MAPSIZE][MAPSIZE];
+public:
+    void InitFromSegs();
+};
+
 
 //
 // Secret
@@ -30,43 +98,12 @@
 //
 namespace Secret
 {
-    // CalcScore recursive component
-    int RecursiveCalcScore(int tx, int ty, bool start = false);
-    extern byte visited[MAPSIZE][MAPSIZE];
     // calculate the available score from this current position
     int CalcScore(int tx, int ty);
-};
-
-//
-// Pushwall
-//
-class Pushwall
-{
-protected:
-    // Can still be pushed?
-    Boolean active;
-    // Current position
-    word tilex, tiley;
-    
-public:
-    Pushwall() : active(true), tilex(0), tiley(0)
-    {
-    }
-    Pushwall(word tilex, word tiley)
-    {
-        if(tilex >= MAPSIZE || tiley >= MAPSIZE)
-            Quit("pushwall tilex/tiley out of range");
-        this->tilex = tilex;
-        this->tiley = tiley;
-    }
-};
-
-//
-// ScoreMap
-//
-class ScoreMap
-{
-    
+    // Count the secrets
+    void CountMapSecrets();
+    // List of pushwalls
+    extern DLList<PushBlock, &PushBlock::link> pushBlockList;
 };
 
 #endif

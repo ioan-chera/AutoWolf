@@ -16,21 +16,27 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include "wl_def.h"
+
 #include "ioan_secret.h"
 #include "ioan_bas.h"
+
 #include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_play.h"
 #include "obattrib.h"
 
-byte Secret::visited[MAPSIZE][MAPSIZE];
+DLList<PushBlock, &PushBlock::link> Secret::pushBlockList = {NULL};
+
+// static block used by score calculators
+static byte visited[MAPSIZE][MAPSIZE];
 
 //
-// Secret::CalcScoreAdd
+// RecursiveCalcScore
 //
 // Recursive function for CalcScore
 //
-int Secret::RecursiveCalcScore(int tx, int ty, bool start)
+static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
 {
     static int totalscore = 0;
     
@@ -110,6 +116,39 @@ int Secret::RecursiveCalcScore(int tx, int ty, bool start)
 }
 
 //
+// ScoreMap::InitFromSegs
+//
+// Initializes the map from the mapsegs
+// Startup only for now
+//
+void ScoreMap::InitFromSegs()
+{
+    for(unsigned i = 0; i < MAPSIZE; ++i)
+    {
+        for(unsigned j = 0; j < MAPSIZE; ++j)
+        {
+            objtype *check = actorat[i][j];
+            byte door = tilemap[i][j];
+            if (door & 0x80)
+            {
+                map[i][j].solidity = Solidity::UnlockedDoor;
+                byte doorlock = doorobjlist[door & ~0x80].lock;
+                if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
+                {
+                    map[i][j].solidity = (Solidity)(doorlock
+                                            + (byte)Solidity::UnlockedDoor);
+                }
+            }
+            if (check && !ISPOINTER(check))
+            {
+                // solid block
+                map[i][j].solidity = Solidity::Solid;
+            }
+        }
+    }
+}
+
+//
 // Secret::CalcScore
 //
 // calculate the available score from this current position
@@ -124,4 +163,25 @@ int Secret::CalcScore(int tx, int ty)
 }
 
 //
-
+// Secret::CountMapSecrets
+//
+// Gets the list of all map secrets
+//
+void Secret::CountMapSecrets()
+{
+    // use MAPSPOT(x, y, 1) to scan for secret block
+    // MAPSIZE is the map side length
+    PushBlock *added;
+    for (unsigned i = 0; i < MAPSIZE; ++i)
+    {
+        for(unsigned j = 0; j < MAPSIZE; ++j)
+        {
+            if(MAPSPOT(i, j, 1) == PUSHABLETILE)
+            {
+                // Found a secret wall
+                added = new PushBlock(i, j);
+                pushBlockList.insert(added);
+            }
+        }
+    }
+}
