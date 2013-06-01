@@ -15,6 +15,11 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Dealing with secret wall puzzles in Wolfenstein
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
 
@@ -151,6 +156,41 @@ void ScoreMap::EmptyPushBlockList()
 }
 
 //
+// ScoreMap::RecursiveColourRegion
+//
+// Recursively floodfills the tiles to do region colouring
+//
+void ScoreMap::RecursiveColourRegion(int tx, int ty, int colour)
+{
+    if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
+        return;
+    if(map[tx][ty].solidity == Solid)
+        return;
+    if(map[tx][ty].region != 0)
+        return;
+    map[tx][ty].region = colour;
+    RecursiveColourRegion(tx - 1, ty, colour);
+    RecursiveColourRegion(tx + 1, ty, colour);
+    RecursiveColourRegion(tx, ty - 1, colour);
+    RecursiveColourRegion(tx, ty + 1, colour);
+}
+
+//
+// ScoreMap::ColourRegions()
+//
+// Colours the regions as delimited by solid walls (but not doors)
+// Needed for secret solving
+//
+void ScoreMap::ColourRegions()
+{
+    int colour = 0;
+    for(unsigned i = 0; i < MAPSIZE; ++i)
+        for(unsigned j = 0; j < MAPSIZE; ++j)
+            if(map[i][j].solidity != Solid && !map[i][j].region)
+                RecursiveColourRegion(i, j, ++colour);
+}
+
+//
 // ScoreMap::InitFromMapsegs
 //
 // Initializes the map from the mapsegs
@@ -167,8 +207,6 @@ void ScoreMap::InitFromMapsegs()
     {
         for(unsigned j = 0; j < MAPSIZE; ++j)
         {
-            
-            
             // Scan for either solid blocks (for solidity) or enemies (for score)
             objtype *check = actorat[i][j];
             bool solidblock = false;
@@ -180,18 +218,18 @@ void ScoreMap::InitFromMapsegs()
                     byte door = tilemap[i][j];
                     if (door & 0x80)
                     {
-                        map[i][j].solidity = Solidity::UnlockedDoor;
+                        map[i][j].solidity = UnlockedDoor;
                         byte doorlock = doorobjlist[door & ~0x80].lock;
                         if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
                         {
                             map[i][j].solidity = (Solidity)(doorlock
-                                                            + (byte)Solidity::UnlockedDoor);
+                                                            + (byte)UnlockedDoor);
                         }
                     }
                     else
                     {
                         // solid block
-                        map[i][j].solidity = Solidity::Solid;
+                        map[i][j].solidity = Solid;
                     }
                     solidblock = true;
                 }
@@ -222,6 +260,11 @@ void ScoreMap::InitFromMapsegs()
     }
 }
 
+//
+// ScoreMap::TestPushBlocks
+//
+// Function used for testing blocks
+//
 void ScoreMap::TestPushBlocks()
 {
     puts("Testing push blocks...");
@@ -237,12 +280,10 @@ void ScoreMap::TestPushBlocks()
     {
         for(unsigned j = 0; j < MAPSIZE; ++j)
         {
-            if (map[j][i].secret)
-            {
-                printf("%c", map[j][i].secret->usable ? '#' : '?');
-            }
+            if(map[j][i].region)
+                printf("%2d", map[j][i].region);
             else
-                printf("%d", map[j][i].solidity);
+                printf("  ");
         }
         puts("");
     }

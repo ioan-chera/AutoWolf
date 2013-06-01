@@ -77,27 +77,30 @@ class ScoreMap
     class ScoreBlock
     {
         friend class ScoreMap;
-        
-        Solidity solidity;
+
         // Score given by this point
         unsigned points;
+        // Region colour
+        int region;
         // Possible pushwall here
         PushBlock *secret;
-        
+        // Solidity kind
+        Solidity solidity;
     public:
         //
         // Constructor
         //
-        ScoreBlock() : solidity(Free), points(0), secret(NULL)
+        ScoreBlock() : points(0), region(0), secret(NULL), solidity(Free)
         {
         }
         
         // Reset the block
         void Reset()
         {
-            solidity = Free;
             points = 0;
+            region = 0;
             secret = NULL;
+            solidity = Free;
         }
     };
     
@@ -108,7 +111,9 @@ class ScoreMap
     
     void EmptyMap();
     void EmptyPushBlockList();
+    void RecursiveColourRegion(int tx, int ty, int colour);
 public:
+    void ColourRegions();
     void InitFromMapsegs();
     void TestPushBlocks();
     
