@@ -336,6 +336,10 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     {
         if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
 		{
+            objtype *check;
+            check = actorat[tx + txofs][ty + tyofs];
+            if(!check || (check && ISPOINTER(check)))
+                return (Boolean)false;
             int ty2ofs = ty + 2 * tyofs;
             int tx2ofs = tx + 2 * txofs;
             int ty3ofs = ty + 3 * tyofs;
