@@ -24,39 +24,46 @@
 // List
 //
 // A mutable list of objects
+// 20130601: Now uses m_dllist's model of fake double-linked list (copyright
+// James Haley et al. from Team Eternity)
 //
 template <typename T> class List
 {
 	struct Link
 	{
 		T obj;
-		Link *next;
+		Link *next, **prev;
 	} *base, *current;
 	
 public:
 	void add(T what)
 	{
 		current = base;
+        
 		base = new Link;
 		base->obj = what;
-		base->next = current;
+        
+        if((base->next = current))
+            current->prev = &base->next;
+        
+        base->prev = &base;
+        
 	}
 	void remove(T what)
 	{
-		Link *oldcur = 0;
 		for(current = base; current; current = current->next)
 		{
 			if(current->obj == what)
 			{
-				if(oldcur)
-					oldcur->next = current->next;
-				else {
-					base = base->next;
-				}
-				delete current;
+                Link **prev = current->prev;
+                Link  *next = current->next;
+                
+                if(prev && (*prev = next))
+                    next->prev = prev;
+                
+                delete current;
 				return;
 			}
-			oldcur = current;
 		}
 	}
 	void removeAll()
