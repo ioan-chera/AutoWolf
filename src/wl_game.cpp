@@ -42,6 +42,7 @@
 // IOANCH 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"
+#include "ioan_secret.h"
 #include "List.h"
 #include "Config.h"
 
@@ -832,7 +833,9 @@ void SetupGameLevel ()
 //
     CA_LoadAllSounds ();
 
-	 
+    // IOANCH: initialize score map here
+    scoreMap.InitFromMapsegs();
+
 }
 
 

@@ -61,7 +61,9 @@ class ScoreMap
         // list link
         DLListItem<PushBlock> link;
     public:
+        //
         // Constructor
+        //
         PushBlock(int tx, int ty, bool us) : tilex(tx), tiley(ty), usable(us)
         {
         }
@@ -83,18 +85,49 @@ class ScoreMap
         PushBlock *secret;
         
     public:
+        //
         // Constructor
+        //
         ScoreBlock() : solidity(Free), points(0), secret(NULL)
         {
         }
-    } map[MAPSIZE][MAPSIZE];
+        
+        // Reset the block
+        void Reset()
+        {
+            solidity = Free;
+            points = 0;
+            secret = NULL;
+        }
+    };
     
+    // map of the blocks
+    ScoreBlock map[MAPSIZE][MAPSIZE];
     // list of pushwalls
     DLList<PushBlock, &PushBlock::link> pushBlocks;
+    
+    void EmptyMap();
+    void EmptyPushBlockList();
 public:
     void InitFromMapsegs();
+    void TestPushBlocks();
+    
+    //
+    // Constructor
+    //
+    ScoreMap() : pushBlocks({NULL})
+    {
+    }
+    
+    //
+    // Destructor
+    //
+    ~ScoreMap()
+    {
+        EmptyPushBlockList();
+    }
 };
-
+extern ScoreMap scoreMap;
 
 //
 // Secret

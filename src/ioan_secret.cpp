@@ -26,6 +26,9 @@
 #include "wl_play.h"
 #include "obattrib.h"
 
+// The score map singleton
+ScoreMap scoreMap;
+
 // static block used by score calculators
 static byte visited[MAPSIZE][MAPSIZE];
 
@@ -34,7 +37,7 @@ static byte visited[MAPSIZE][MAPSIZE];
 //
 // Gets score of specified stat obj
 //
-int GetScore(byte objid)
+static int GetScore(byte objid)
 {
     switch(objid)
     {
@@ -117,6 +120,37 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
 }
 
 //
+// ScoreMap::EmptyMap
+//
+// Empties the map array
+//
+void ScoreMap::EmptyMap()
+{
+    for(unsigned i = 0; i < MAPSIZE; ++i)
+        for(unsigned j = 0; j < MAPSIZE; ++j)
+            map[i][j].Reset();
+}
+
+//
+// ScoreMap::EmptyPushBlockList
+//
+// Empties the DLList of blocks
+//
+void ScoreMap::EmptyPushBlockList()
+{
+    DLListItem<PushBlock> *entry, *aux;
+    
+    for (entry = pushBlocks.head; entry;)
+    {
+        aux = entry;
+        entry = entry->dllNext;
+        aux->remove();
+        delete aux->dllObject;  // also delete the owner
+    }
+    pushBlocks.head = NULL;
+}
+
+//
 // ScoreMap::InitFromMapsegs
 //
 // Initializes the map from the mapsegs
@@ -124,23 +158,16 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
 //
 void ScoreMap::InitFromMapsegs()
 {
+    // Reset from previous setup
+    EmptyPushBlockList();
+    EmptyMap();
+    
     // Scan for actorat or tilemap
     for(unsigned i = 0; i < MAPSIZE; ++i)
     {
         for(unsigned j = 0; j < MAPSIZE; ++j)
         {
-            // Scan for doors and set solidity
-            byte door = tilemap[i][j];
-            if (door & 0x80)
-            {
-                map[i][j].solidity = Solidity::UnlockedDoor;
-                byte doorlock = doorobjlist[door & ~0x80].lock;
-                if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
-                {
-                    map[i][j].solidity = (Solidity)(doorlock
-                                            + (byte)Solidity::UnlockedDoor);
-                }
-            }
+            
             
             // Scan for either solid blocks (for solidity) or enemies (for score)
             objtype *check = actorat[i][j];
@@ -149,8 +176,23 @@ void ScoreMap::InitFromMapsegs()
             {
                 if(!ISPOINTER(check))
                 {
-                    // solid block
-                    map[i][j].solidity = Solidity::Solid;
+                    // Scan for doors and set solidity
+                    byte door = tilemap[i][j];
+                    if (door & 0x80)
+                    {
+                        map[i][j].solidity = Solidity::UnlockedDoor;
+                        byte doorlock = doorobjlist[door & ~0x80].lock;
+                        if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
+                        {
+                            map[i][j].solidity = (Solidity)(doorlock
+                                                            + (byte)Solidity::UnlockedDoor);
+                        }
+                    }
+                    else
+                    {
+                        // solid block
+                        map[i][j].solidity = Solidity::Solid;
+                    }
                     solidblock = true;
                 }
                 else
@@ -177,6 +219,32 @@ void ScoreMap::InitFromMapsegs()
             continue;
         map[statptr->tilex][statptr->tiley].points
         = GetScore(statptr->itemnumber);
+    }
+}
+
+void ScoreMap::TestPushBlocks()
+{
+    puts("Testing push blocks...");
+    DLListItem<PushBlock> *entry;
+    
+    for (entry = pushBlocks.head; entry; entry = entry->dllNext)
+    {
+        printf("tx=%d ty=%d us=%d\n", entry->dllObject->tilex,
+               entry->dllObject->tiley,
+               entry->dllObject->usable);
+    }
+    for(unsigned i = 0; i < MAPSIZE; ++i)
+    {
+        for(unsigned j = 0; j < MAPSIZE; ++j)
+        {
+            if (map[j][i].secret)
+            {
+                printf("%c", map[j][i].secret->usable ? '#' : '?');
+            }
+            else
+                printf("%d", map[j][i].solidity);
+        }
+        puts("");
     }
 }
 
