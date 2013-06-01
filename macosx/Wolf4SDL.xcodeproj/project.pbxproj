@@ -115,6 +115,7 @@
 		4F4717BB173A6A610018E82B /* SODFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SODFlag.h; path = ../src/SODFlag.h; sourceTree = SOURCE_ROOT; };
 		4F471991173BC0310018E82B /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../src/Config.h; sourceTree = SOURCE_ROOT; };
 		4F471992173BC0310018E82B /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = ../src/Config.cpp; sourceTree = SOURCE_ROOT; };
+		4F74E1921759FCA40066CD25 /* m_collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = m_collection.h; path = ../src/m_collection.h; sourceTree = "<group>"; };
 		4F860DC017421D4B00A1979A /* libSDL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL.a; path = ../lib/osx/universal/libSDL.a; sourceTree = SOURCE_ROOT; };
 		4F86102A17421ED400A1979A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		4F86103017421EE400A1979A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -332,6 +333,7 @@
 				4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */,
 				4F1ECC3116EA4F5600A37742 /* m_dllist.h */,
 				4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */,
+				4F74E1921759FCA40066CD25 /* m_collection.h */,
 			);
 			name = Eternity;
 			sourceTree = "<group>";

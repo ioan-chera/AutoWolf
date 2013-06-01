@@ -1,9 +1,13 @@
 Authors:
 
-id Software: Wolfenstein 3D original
-Moritz "Ripper" Kroll: Wolf4SDL port
-Ioan Chera: Automatic Wolfenstein port
+  Automatic Wolfenstein project:      Ioan Chera
 
-Other credits:
+Imported code:
 
-James Haley, Lee Killough, Team TNT for the hash table and linked list codes
+  Double-linked lists, hash tables, collections, string class base: James Haley of Team Eternity
+
+Code base:
+
+  Wolf4SDL project:                   Moritz "Ripper" Kroll"
+  Wolfenstein 3D original engine:     id Software
+

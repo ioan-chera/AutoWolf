@@ -842,16 +842,11 @@ void SetupGameLevel ()
 
 //==========================================================================
 
-
-/*
-===================
-=
-= DrawPlayBorderSides
-=
-= To fix window overwrites
-=
-===================
-*/
+// 
+// DrawPlayBorderSides
+// 
+// To fix window overwrites
+//
 void DrawPlayBorderSides()
 {
     if(viewsize == 21) return;
