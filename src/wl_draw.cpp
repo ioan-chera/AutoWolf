@@ -207,26 +207,24 @@ void TransformActor (objtype *ob)
 
 //==========================================================================
 
-/*
-========================
-=
-= TransformTile
-=
-= Takes paramaters:
-=   tx,ty               : tile the object is centered in
-=
-= globals:
-=   viewx,viewy         : point of view
-=   viewcos,viewsin     : sin/cos of viewangle
-=   scale               : conversion from global value to screen value
-=
-= sets:
-=   screenx,transx,transy,screenheight: projected edge location and size
-=
-= Returns true if the tile is withing getting distance
-=
-========================
-*/
+//
+// 
+// TransformTile
+// 
+// Takes paramaters:
+//   tx,ty               : tile the object is centered in
+// 
+// globals:
+//   viewx,viewy         : point of view
+//   viewcos,viewsin     : sin/cos of viewangle
+//   scale               : conversion from global value to screen value
+// 
+// sets:
+//   screenx,transx,transy,screenheight: projected edge location and size
+// 
+// Returns true if the tile is withing getting distance
+// 
+//
 
 Boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {

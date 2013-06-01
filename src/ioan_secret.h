@@ -23,25 +23,6 @@
 #include "m_dllist.h"
 
 //
-// PushBlock
-//
-// Secret wall/block
-//
-struct PushBlock
-{
-    // Block coordinates
-    int tilex, tiley;
-    // list link
-    DLListItem<PushBlock> link;
-    // Constructor
-    PushBlock(int tx, int ty) : tilex(tx), tiley(ty)
-    {
-    }
-};
-
-
-
-//
 // ScoreMap
 //
 // Class for the game strategy map
@@ -66,6 +47,27 @@ class ScoreMap
     };
     
     //
+    // PushBlock
+    //
+    // Secret wall/block
+    //
+    struct PushBlock
+    {
+        friend class ScoreMap;
+        // Block coordinates
+        int tilex, tiley;
+        // Usable
+        bool usable;
+        // list link
+        DLListItem<PushBlock> link;
+    public:
+        // Constructor
+        PushBlock(int tx, int ty, bool us) : tilex(tx), tiley(ty), usable(us)
+        {
+        }
+    };
+    
+    //
     // ScoreBlock
     //
     // Class for various calculation
@@ -86,8 +88,11 @@ class ScoreMap
         {
         }
     } map[MAPSIZE][MAPSIZE];
+    
+    // list of pushwalls
+    DLList<PushBlock, &PushBlock::link> pushBlocks;
 public:
-    void InitFromSegs();
+    void InitFromMapsegs();
 };
 
 
@@ -100,10 +105,6 @@ namespace Secret
 {
     // calculate the available score from this current position
     int CalcScore(int tx, int ty);
-    // Count the secrets
-    void CountMapSecrets();
-    // List of pushwalls
-    extern DLList<PushBlock, &PushBlock::link> pushBlockList;
 };
 
 #endif

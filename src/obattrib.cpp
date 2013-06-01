@@ -25,6 +25,24 @@
 #include "obattrib.h"
 #include "ActorStates.h"
 
+//
+// atr::treasures
+//
+// Setups for Wolf treasures
+//
+const atr::treasure_t atr::treasures[] =
+{
+    {I_CROSSSCORE, BONUS1SND},
+    {I_CHALICESCORE, BONUS2SND},
+    {I_TREASURESCORE, BONUS3SND},
+    {I_CROWNSCORE, BONUS4SND},
+};
+
+//
+// atr::hitpoints
+//
+// Actor hitpoints, for each skill level
+//
 const int atr::hitpoints[][4]=
 {
     {-1,   -1,   -1,   -1},     // nothing,

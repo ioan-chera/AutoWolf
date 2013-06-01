@@ -40,6 +40,7 @@
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
 #include "Config.h"
+#include "obattrib.h"
 
 /*
 =============================================================================
@@ -720,22 +721,18 @@ void GiveKey (int key)
 
 
 
-/*
-=============================================================================
+////////////////////////////////////////////////////////////////////////////////
+//
+//                                MOVEMENT
+//
+////////////////////////////////////////////////////////////////////////////////
 
-                                MOVEMENT
+//
+// =
+// = GetBonus
+// =
+//
 
-=============================================================================
-*/
-
-
-/*
-===================
-=
-= GetBonus
-=
-===================
-*/
 void GetBonus (statobj_t *check)
 {
     switch (check->itemnumber)
@@ -756,24 +753,14 @@ void GetBonus (statobj_t *check)
             SD_PlaySound (GETKEYSND);
             break;
 
+            // IOANCH 20130601: use centralized atr:: attrib
         case    bo_cross:
-            SD_PlaySound (BONUS1SND);
-            GivePoints (I_CROSSSCORE);	// IOANCH
-            gamestate.treasurecount++;
-            break;
         case    bo_chalice:
-            SD_PlaySound (BONUS2SND);
-            GivePoints (I_CHALICESCORE);	// IOANCH
-            gamestate.treasurecount++;
-            break;
         case    bo_bible:
-            SD_PlaySound (BONUS3SND);
-            GivePoints (I_TREASURESCORE);	// IOANCH
-            gamestate.treasurecount++;
-            break;
         case    bo_crown:
-            SD_PlaySound (BONUS4SND);
-            GivePoints (I_CROWNSCORE);	// IOANCH
+            SD_PlaySound(atr::treasures[check->itemnumber - bo_cross].
+                         pickupsound);
+            GivePoints(atr::treasures[check->itemnumber - bo_cross].points);
             gamestate.treasurecount++;
             break;
 

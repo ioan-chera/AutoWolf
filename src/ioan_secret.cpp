@@ -26,10 +26,29 @@
 #include "wl_play.h"
 #include "obattrib.h"
 
-DLList<PushBlock, &PushBlock::link> Secret::pushBlockList = {NULL};
-
 // static block used by score calculators
 static byte visited[MAPSIZE][MAPSIZE];
+
+//
+// GetScore
+//
+// Gets score of specified stat obj
+//
+int GetScore(byte objid)
+{
+    switch(objid)
+    {
+        case bo_cross:
+        case bo_chalice:
+        case bo_bible:
+        case bo_crown:
+            return atr::treasures[objid - bo_cross].points;
+        case bo_fullheal:
+            return I_CROWNSCORE << 1;
+        default:
+            return 0;
+    }
+}
 
 //
 // RecursiveCalcScore
@@ -79,25 +98,7 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
     for(objid = Basic::FirstObjectAt(tx, ty); objid;
         objid = Basic::NextObjectAt(tx, ty))
     {
-        // FIXME: put these into a table
-        switch(objid)
-        {
-        case bo_cross:
-            score += I_CROSSSCORE;
-            break;
-        case bo_chalice:
-            score += I_CHALICESCORE;
-            break;
-        case bo_bible:
-            score += I_TREASURESCORE;
-            break;
-        case bo_crown:
-            score += I_CROWNSCORE;
-            break;
-        case bo_fullheal:
-            score += I_CROWNSCORE << 1;
-            break;
-        }
+        score += GetScore(objid);
     }
     // Possible error: multiple actors sharing same spot, only one is counted
     // (maybe even a corpse?)
@@ -116,18 +117,19 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
 }
 
 //
-// ScoreMap::InitFromSegs
+// ScoreMap::InitFromMapsegs
 //
 // Initializes the map from the mapsegs
 // Startup only for now
 //
-void ScoreMap::InitFromSegs()
+void ScoreMap::InitFromMapsegs()
 {
+    // Scan for actorat or tilemap
     for(unsigned i = 0; i < MAPSIZE; ++i)
     {
         for(unsigned j = 0; j < MAPSIZE; ++j)
         {
-            objtype *check = actorat[i][j];
+            // Scan for doors and set solidity
             byte door = tilemap[i][j];
             if (door & 0x80)
             {
@@ -139,12 +141,42 @@ void ScoreMap::InitFromSegs()
                                             + (byte)Solidity::UnlockedDoor);
                 }
             }
-            if (check && !ISPOINTER(check))
+            
+            // Scan for either solid blocks (for solidity) or enemies (for score)
+            objtype *check = actorat[i][j];
+            bool solidblock = false;
+            if (check)
             {
-                // solid block
-                map[i][j].solidity = Solidity::Solid;
+                if(!ISPOINTER(check))
+                {
+                    // solid block
+                    map[i][j].solidity = Solidity::Solid;
+                    solidblock = true;
+                }
+                else
+                {
+                    // is an actor
+                    map[i][j].points = (unsigned)atr::points[check->obclass];
+                }
+            }
+            
+            // Scan for secrets
+            if (MAPSPOT(i, j, 1) == PUSHABLETILE)
+            {
+                PushBlock *pushBlock = new PushBlock(i, j, solidblock);
+                map[i][j].secret = pushBlock;
+                pushBlocks.insert(pushBlock);
             }
         }
+    }
+    
+    // Scan for items
+    for (statobj_t *statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
+    {
+        if(!(statptr->flags & FL_BONUS))
+            continue;
+        map[statptr->tilex][statptr->tiley].points
+        = GetScore(statptr->itemnumber);
     }
 }
 
@@ -162,26 +194,3 @@ int Secret::CalcScore(int tx, int ty)
     return ret;
 }
 
-//
-// Secret::CountMapSecrets
-//
-// Gets the list of all map secrets
-//
-void Secret::CountMapSecrets()
-{
-    // use MAPSPOT(x, y, 1) to scan for secret block
-    // MAPSIZE is the map side length
-    PushBlock *added;
-    for (unsigned i = 0; i < MAPSIZE; ++i)
-    {
-        for(unsigned j = 0; j < MAPSIZE; ++j)
-        {
-            if(MAPSPOT(i, j, 1) == PUSHABLETILE)
-            {
-                // Found a secret wall
-                added = new PushBlock(i, j);
-                pushBlockList.insert(added);
-            }
-        }
-    }
-}

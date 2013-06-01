@@ -37,9 +37,21 @@
 namespace atr
 {
     //
+    // treasure_t
+    //
+    // Treasure item attributes
+    //
+    struct treasure_t
+    {
+        int32_t points;             // pick up points
+        soundnames pickupsound;     // pick up sound
+    };
+    
+    extern const treasure_t treasures[];
+    
+    //
     // IOANCH 20130305: class attributes
     //
-    // Hit points
     extern const int hitpoints[][4];
     // Moving speeds
     struct speed
@@ -80,7 +92,6 @@ namespace atr
     extern const uint64_t flags[];
     // points
     extern const int32_t points[];
-    
 };
 
 
