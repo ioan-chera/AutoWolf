@@ -181,13 +181,113 @@ void ScoreMap::RecursiveColourRegion(int tx, int ty, int colour)
 // Colours the regions as delimited by solid walls (but not doors)
 // Needed for secret solving
 //
+static bool *regionSet;
+static unsigned regionSetSize;   // auxiliary counter of regions, to easily
+                                 // allocate
 void ScoreMap::ColourRegions()
 {
-    int colour = 0;
+    delete []regionNeighList;
+    delete []regionSet;
+    
+    regionCount = 0;
     for(unsigned i = 0; i < MAPSIZE; ++i)
         for(unsigned j = 0; j < MAPSIZE; ++j)
             if(map[i][j].solidity != Solid && !map[i][j].region)
-                RecursiveColourRegion(i, j, ++colour);
+                RecursiveColourRegion(i, j, ++regionCount);
+    regionNeighList = new List<int>[regionCount];
+    
+    regionSet = new bool[regionCount + 1];
+    memset(regionSet, 0, regionCount * sizeof(*regionSet));
+}
+
+//
+// ScoreMap::RecursiveConnectRegion
+//
+// Scans all adjacent tiles, going through pushwalls, until encountering a 
+// region.
+// Then it adds that region to a set, which will connect all regions with edges
+//
+// Set of region flags (regionCount-size array)
+void ScoreMap::RecursiveConnectRegion(int tx, int ty, int ox, int oy,
+                                      unsigned level)
+{
+    if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
+        return;
+    
+    if (map[tx][ty].solidity == Solid)
+    {
+        PushBlock *sec = map[tx][ty].secret;
+        if(!sec || sec->visited)
+            return;         // solid non-secret block, ignore
+        // Is a secret. What do? Move around
+        if(level > 0)
+            regionSet[0] = true;        // set as special connection
+        sec->visited = true;
+        
+        RecursiveConnectRegion(tx - 1, ty, tx, ty, level + 1);
+        RecursiveConnectRegion(tx + 1, ty, tx, ty, level + 1);
+        RecursiveConnectRegion(tx, ty - 1, tx, ty, level + 1);
+        RecursiveConnectRegion(tx, ty + 1, tx, ty, level + 1);
+    }
+    else if (map[tx][ty].region)
+    {
+        // Check if it's at all pushable
+        int osx = 2 * ox - tx;
+        int osy = 2 * oy - ty;
+        if(map[osx][osy].solidity == Solid && !map[osx][osy].secret)
+            return; // don't register this, no way to push
+        
+        // Add this region to the set of connected
+        if(regionSet[map[tx][ty].region])
+            regionSet[0] = true;        // set as special connection
+        else
+        {
+            ++regionSetSize;
+            regionSet[map[tx][ty].region] = true;
+        }
+        return;
+    }
+}
+
+//
+// ScoreMap::ConnectRegions
+//
+// Connect the regions based on secret blocks
+//
+void ScoreMap::ConnectRegions()
+{
+    int *regions = new int[regionCount];
+    for(DLListItem<PushBlock> *entry = pushBlocks.head;
+        entry;
+        entry = entry->dllNext)
+    {
+        PushBlock &obj = *entry->dllObject;
+        if (obj.visited)
+            continue;
+        memset(regionSet, 0, (regionCount + 1) * sizeof(unsigned));
+        regionSetSize = 0;
+        RecursiveConnectRegion(obj.tilex, obj.tiley, 0, 0, 0);
+        if(regionSetSize)
+        {
+            // Found some regions, so do it.
+            int i, j = 0;
+            for(i = 1; i <= regionCount; ++i)
+                if(regionSet[i])
+                    regions[j++] = i;
+            // Now they're in a more compact set
+            
+            for (i = 0; i < regionSetSize; ++i)
+            {
+                for(j = i + 1; j < regionSetSize; ++j)
+                {
+                    // Put into adjacency neighbour-list
+                    regionNeighList[regions[i] - 1].add(regions[j]);
+                    regionNeighList[regions[j] - 1].add(regions[i]);
+                }
+            }
+        }
+    }
+    delete []regions;
 }
 
 //
@@ -282,10 +382,22 @@ void ScoreMap::TestPushBlocks()
         {
             if(map[j][i].region)
                 printf("%2d", map[j][i].region);
+            else if(map[j][i].secret)
+                printf("##");
             else
                 printf("  ");
         }
         puts("");
+    }
+    for (unsigned i = 0; i < regionCount; ++i)
+    {
+        printf("\nNeigh of %d: ", i + 1);
+        for (int j = regionNeighList[i].firstObject(); j;
+             j = regionNeighList[i].nextObject())
+        {
+            printf("%d ", j);
+        }
+        
     }
 }
 

@@ -20,6 +20,7 @@
 #ifndef IOAN_SECRET_H_
 #define IOAN_SECRET_H_
 
+#include "List.h"
 #include "m_dllist.h"
 
 //
@@ -54,17 +55,21 @@ class ScoreMap
     struct PushBlock
     {
         friend class ScoreMap;
-        // Block coordinates
-        int tilex, tiley;
-        // Usable
-        bool usable;
+        
         // list link
         DLListItem<PushBlock> link;
+        // Block coordinates
+        int tilex, tiley;
+        // Usable (can be pushed)
+        bool usable;
+        // Visited by various graph search schemes
+        bool visited;
     public:
         //
         // Constructor
         //
-        PushBlock(int tx, int ty, bool us) : tilex(tx), tiley(ty), usable(us)
+        PushBlock(int tx, int ty, bool us) : tilex(tx), tiley(ty), usable(us),
+        visited(false)
         {
         }
     };
@@ -108,19 +113,25 @@ class ScoreMap
     ScoreBlock map[MAPSIZE][MAPSIZE];
     // list of pushwalls
     DLList<PushBlock, &PushBlock::link> pushBlocks;
+    // Number of regions
+    int regionCount;
+    // Region planar graph
+    List<int> *regionNeighList;
     
     void EmptyMap();
     void EmptyPushBlockList();
     void RecursiveColourRegion(int tx, int ty, int colour);
+    void RecursiveConnectRegion(int tx, int ty, int ox, int oy, unsigned level);
 public:
     void ColourRegions();
+    void ConnectRegions();
     void InitFromMapsegs();
     void TestPushBlocks();
     
     //
     // Constructor
     //
-    ScoreMap() : pushBlocks({NULL})
+    ScoreMap() : pushBlocks({NULL}), regionCount(0), regionNeighList(NULL)
     {
     }
     
@@ -129,6 +140,7 @@ public:
     //
     ~ScoreMap()
     {
+        delete []regionNeighList;
         EmptyPushBlockList();
     }
 };
