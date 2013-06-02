@@ -125,6 +125,19 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
 }
 
 //
+// ScoreMap::DeleteRegionNeighList
+//
+// Empties the regionNeighList
+//
+void ScoreMap::DeleteRegionNeighList()
+{
+    if (regionCount > 0)
+        for (int i = 0; i < regionCount; ++i)
+            regionNeighList[i].killAll();
+    delete []regionNeighList;
+}
+
+//
 // ScoreMap::EmptyMap
 //
 // Empties the map array
@@ -143,24 +156,15 @@ void ScoreMap::EmptyMap()
 //
 void ScoreMap::EmptyPushBlockList()
 {
-    DLListItem<PushBlock> *entry, *aux;
-    
-    for (entry = pushBlocks.head; entry;)
-    {
-        aux = entry;
-        entry = entry->dllNext;
-        aux->remove();
-        delete aux->dllObject;  // also delete the owner
-    }
-    pushBlocks.head = NULL;
+    pushBlocks.killAll();
 }
 
 //
-// ScoreMap::RecursiveColourRegion
+// ScoreMap::RecursiveLabelRegions
 //
 // Recursively floodfills the tiles to do region colouring
 //
-void ScoreMap::RecursiveColourRegion(int tx, int ty, int colour)
+void ScoreMap::RecursiveLabelRegions(int tx, int ty, int colour)
 {
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
         return;
@@ -169,35 +173,34 @@ void ScoreMap::RecursiveColourRegion(int tx, int ty, int colour)
     if(map[tx][ty].region != 0)
         return;
     map[tx][ty].region = colour;
-    RecursiveColourRegion(tx - 1, ty, colour);
-    RecursiveColourRegion(tx + 1, ty, colour);
-    RecursiveColourRegion(tx, ty - 1, colour);
-    RecursiveColourRegion(tx, ty + 1, colour);
+    RecursiveLabelRegions(tx - 1, ty, colour);
+    RecursiveLabelRegions(tx + 1, ty, colour);
+    RecursiveLabelRegions(tx, ty - 1, colour);
+    RecursiveLabelRegions(tx, ty + 1, colour);
 }
 
 //
-// ScoreMap::ColourRegions()
+// ScoreMap::LabelRegions()
 //
 // Colours the regions as delimited by solid walls (but not doors)
 // Needed for secret solving
 //
-static bool *regionSet;
-static unsigned regionSetSize;   // auxiliary counter of regions, to easily
-                                 // allocate
-void ScoreMap::ColourRegions()
+void ScoreMap::LabelRegions()
 {
-    delete []regionNeighList;
-    delete []regionSet;
+    DeleteRegionNeighList();
     
     regionCount = 0;
     for(unsigned i = 0; i < MAPSIZE; ++i)
         for(unsigned j = 0; j < MAPSIZE; ++j)
             if(map[i][j].solidity != Solid && !map[i][j].region)
-                RecursiveColourRegion(i, j, ++regionCount);
-    regionNeighList = new List<int>[regionCount];
+                RecursiveLabelRegions(i, j, ++regionCount);
     
-    regionSet = new bool[regionCount + 1];
-    memset(regionSet, 0, regionCount * sizeof(*regionSet));
+    // Init the class-local data
+    regionNeighList
+    = new DLList<RegionConnection, &RegionConnection::link>[regionCount];
+    
+    for (int i = 0; i < regionCount; ++i)
+        regionNeighList[i].head = NULL;
 }
 
 //
@@ -207,9 +210,9 @@ void ScoreMap::ColourRegions()
 // region.
 // Then it adds that region to a set, which will connect all regions with edges
 //
-// Set of region flags (regionCount-size array)
-void ScoreMap::RecursiveConnectRegion(int tx, int ty, int ox, int oy,
-                                      unsigned level)
+void ScoreMap::RecursiveConnectRegion(int tx, int ty,
+                                      std::unordered_set<int> &regionSet,
+                                      std::unordered_set<PushBlock *> &secretSet)
 {
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
         return;
@@ -220,31 +223,20 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty, int ox, int oy,
         if(!sec || sec->visited)
             return;         // solid non-secret block, ignore
         // Is a secret. What do? Move around
-        if(level > 0)
-            regionSet[0] = true;        // set as special connection
         sec->visited = true;
+        secretSet.insert(sec);
         
-        RecursiveConnectRegion(tx - 1, ty, tx, ty, level + 1);
-        RecursiveConnectRegion(tx + 1, ty, tx, ty, level + 1);
-        RecursiveConnectRegion(tx, ty - 1, tx, ty, level + 1);
-        RecursiveConnectRegion(tx, ty + 1, tx, ty, level + 1);
+        RecursiveConnectRegion(tx - 1, ty, regionSet, secretSet);
+        RecursiveConnectRegion(tx + 1, ty, regionSet, secretSet);
+        RecursiveConnectRegion(tx, ty - 1, regionSet, secretSet);
+        RecursiveConnectRegion(tx, ty + 1, regionSet, secretSet);
     }
     else if (map[tx][ty].region)
     {
-        // Check if it's at all pushable
-        int osx = 2 * ox - tx;
-        int osy = 2 * oy - ty;
-        if(map[osx][osy].solidity == Solid && !map[osx][osy].secret)
-            return; // don't register this, no way to push
-        
         // Add this region to the set of connected
-        if(regionSet[map[tx][ty].region])
-            regionSet[0] = true;        // set as special connection
-        else
-        {
-            ++regionSetSize;
-            regionSet[map[tx][ty].region] = true;
-        }
+        
+        regionSet.insert(map[tx][ty].region);
+        
         return;
     }
 }
@@ -256,38 +248,87 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty, int ox, int oy,
 //
 void ScoreMap::ConnectRegions()
 {
-    int *regions = new int[regionCount];
     for(DLListItem<PushBlock> *entry = pushBlocks.head;
         entry;
         entry = entry->dllNext)
     {
-        PushBlock &obj = *entry->dllObject;
+        const PushBlock &obj = *entry->dllObject;
         if (obj.visited)
             continue;
-        memset(regionSet, 0, (regionCount + 1) * sizeof(unsigned));
-        regionSetSize = 0;
-        RecursiveConnectRegion(obj.tilex, obj.tiley, 0, 0, 0);
-        if(regionSetSize)
+
+        // Initialize the data
+        std::unordered_set<int> regionSet;
+        std::unordered_set<PushBlock *> secretSet;
+
+        // Do the recursive work
+        RecursiveConnectRegion(obj.tilex, obj.tiley, regionSet, secretSet);
+        
+        // What should the final result be:
+        // An array of regions. Each region will be associated with some neigh-
+        // bour regions. Each such neighbour will be associated with a set of
+        // pushwalls. It will also be either considerable or trivial
+        // It's trivial if it only has one pushwall, and it can only be pushed
+        // from one direction.
+        
+        // What I get from the beginning: a set of blocks and a set of regions,
+        // from the static space. I have to take every combination of such re-
+        // gions and edit the graph to have them neighbours with the other,
+        // adding those pushwalls there
+        
+        // How to add them: I already have regionNeighList created from the la-
+        // belling stage. For each region entry, I
+        // scan the List for the second combination, and if it's not there, I
+        // add it with the obtained secret set. If it's already there, I just
+        // merge the secretSet there.
+        
+        // no sets obtained of either type, move on
+        if(secretSet.size() < 1 || regionSet.size() < 1)
+            continue;
+        
+        // Auxiliary function to do the connection
+        // FIXME: make it a member function
+        auto doConnection = [&](int reg1, int reg2)
         {
-            // Found some regions, so do it.
-            int i, j = 0;
-            for(i = 1; i <= regionCount; ++i)
-                if(regionSet[i])
-                    regions[j++] = i;
-            // Now they're in a more compact set
-            
-            for (i = 0; i < regionSetSize; ++i)
+            bool found = false;
+            for (DLListItem<RegionConnection> *entry =
+                 regionNeighList[reg1 - 1].head;
+                 entry;
+                 entry = entry->dllNext)
             {
-                for(j = i + 1; j < regionSetSize; ++j)
+                if (entry->dllObject->region == reg2)
                 {
-                    // Put into adjacency neighbour-list
-                    regionNeighList[regions[i] - 1].add(regions[j]);
-                    regionNeighList[regions[j] - 1].add(regions[i]);
+                    // Neighbour region already set, just add the blocks
+                    entry->dllObject->pushBlocks.insert(secretSet.begin(),
+                                                        secretSet.end());
+                    found = true;
+                    break;  // done
+                }
+            }
+            if(!found)
+            {
+                RegionConnection *connection = new RegionConnection;
+                connection->region = reg2;
+                connection->pushBlocks = secretSet;
+                regionNeighList[reg1 - 1].insert(connection);
+            }
+        };
+        
+        if (regionSet.size() == 1)
+            doConnection(*regionSet.begin(), *regionSet.begin());
+        else
+        {
+            for (auto it1 = regionSet.begin(); it1 != regionSet.end(); ++it1)
+            {
+                for (auto it2 = it1; it2 != regionSet.end(); ++it2)
+                {
+                    if(it2 == it1)
+                        continue;
+                    doConnection(*it1, *it2);
+                    doConnection(*it2, *it1);
                 }
             }
         }
     }
-    delete []regions;
 }
 
 //
@@ -383,7 +424,7 @@ void ScoreMap::TestPushBlocks()
             if(map[j][i].region)
                 printf("%2d", map[j][i].region);
             else if(map[j][i].secret)
-                printf("##");
+                printf(" #");
             else
                 printf("  ");
         }
@@ -392,12 +433,21 @@ void ScoreMap::TestPushBlocks()
     for (unsigned i = 0; i < regionCount; ++i)
     {
         printf("\nNeigh of %d: ", i + 1);
-        for (int j = regionNeighList[i].firstObject(); j;
-             j = regionNeighList[i].nextObject())
-        {
-            printf("%d ", j);
-        }
         
+        for (DLListItem<RegionConnection> *entry = regionNeighList[i].head;
+             entry;
+             entry = entry->dllNext)
+        {
+            RegionConnection *obj = entry->dllObject;
+            printf("%d(", obj->region);
+            for (auto it = obj->pushBlocks.begin();
+                 it != obj->pushBlocks.end();
+                 ++it)
+            {
+                printf("[%d,%d,%d]", (*it)->tilex, (*it)->tiley, (*it)->usable);
+            }
+            printf(")");
+        }
     }
 }
 

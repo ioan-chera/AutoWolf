@@ -835,7 +835,7 @@ void SetupGameLevel ()
 
     // IOANCH: initialize score map here
     scoreMap.InitFromMapsegs();
-    scoreMap.ColourRegions();
+    scoreMap.LabelRegions();
     scoreMap.ConnectRegions();
 //    scoreMap.TestPushBlocks();
 }

@@ -109,23 +109,39 @@ class ScoreMap
         }
     };
     
+    //
+    // RegionConnection
+    //
+    // Simple structure that consists of a region index and a list of pushwalls
+    //
+    struct RegionConnection
+    {
+        int region;
+        std::unordered_set<PushBlock *> pushBlocks;
+        DLListItem<RegionConnection> link;
+    };
+    
     // map of the blocks
     ScoreBlock map[MAPSIZE][MAPSIZE];
     // list of pushwalls
     DLList<PushBlock, &PushBlock::link> pushBlocks;
     // Number of regions
     int regionCount;
-    // Region planar graph
-    List<int> *regionNeighList;
-    
+    // Region graph. Connects each region with the others, with the number of
+    // pushblocks as parameter
+    DLList<RegionConnection, &RegionConnection::link> *regionNeighList;
+
+    void DeleteRegionNeighList();
     void EmptyMap();
     void EmptyPushBlockList();
-    void RecursiveColourRegion(int tx, int ty, int colour);
-    void RecursiveConnectRegion(int tx, int ty, int ox, int oy, unsigned level);
+    void RecursiveConnectRegion(int tx, int ty,
+                                std::unordered_set<int> &regionSet,
+                                std::unordered_set<PushBlock *> &secretSet);
+    void RecursiveLabelRegions(int tx, int ty, int colour);
 public:
-    void ColourRegions();
     void ConnectRegions();
     void InitFromMapsegs();
+    void LabelRegions();
     void TestPushBlocks();
     
     //
@@ -140,7 +156,7 @@ public:
     //
     ~ScoreMap()
     {
-        delete []regionNeighList;
+        DeleteRegionNeighList();
         EmptyPushBlockList();
     }
 };
