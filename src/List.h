@@ -24,11 +24,22 @@
 // List
 //
 // A mutable list of objects
+//
 // 20130601: Now uses m_dllist's model of fake double-linked list (copyright
 // James Haley et al. from Team Eternity)
 //
+// Unlike DLList, it's not POD and must not own its objects (i.e. never be the
+// only heap object reference). It doesn't require or suggest the objects to
+// have link fields.
+//
 template <typename T> class List
 {
+    //
+    // Link
+    //
+    // Auxiliary structure for the list link
+    // Despite name, 'prev' doesn't link backwards as from a double-linked list.
+    //
 	struct Link
 	{
 		T obj;
@@ -36,6 +47,7 @@ template <typename T> class List
 	} *base, *current;
 	
 public:
+    // Adds an object with the given value
 	void add(T what)
 	{
 		current = base;
@@ -49,12 +61,15 @@ public:
         base->prev = &base;
         
 	}
+    // Searches for an element equal to 'what', and deletes its link (but does
+    // not delete any pointed object).
 	void remove(T what)
 	{
 		for(current = base; current; current = current->next)
 		{
 			if(current->obj == what)
 			{
+                // Use Eternity's DLList architecture
                 Link **prev = current->prev;
                 Link  *next = current->next;
                 
@@ -66,6 +81,7 @@ public:
 			}
 		}
 	}
+    // Removes all elements
 	void removeAll()
 	{
 		Link *next;
@@ -76,20 +92,27 @@ public:
 		}
 		base = current = 0;
 	}
+    //
+    // Constructor
+    //
 	List()
 	{
 		base = 0;
 	}
+    //
+    // Destructor
+    //
 	~List()
 	{
 		removeAll();
 	}
-	
+    // Very basic iterator (FIXME: try and the implement C++11 'for-each')
 	T firstObject()
 	{
 		current = base;
 		return current ? current->obj : 0;
 	}
+    // Must only be called in a 'for' loop, after firstObject was called
 	T nextObject()
 	{
 		current = current->next;

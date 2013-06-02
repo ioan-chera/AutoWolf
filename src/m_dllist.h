@@ -107,6 +107,18 @@ public:
     inline void remove(T *object) { (object->*link).remove();              }
     inline void insert(T &object) { insert(&object);                       }
     inline void remove(T &object) { remove(&object);                       }
+    
+    // IOANCH 20130602: add a killAll() purger. This will both remove the link
+    // and kill its parent!
+    void killAll()
+    {
+        DLListItem<T> *next;
+        for (; head; head = next)
+        {
+            next = head->dllNext;
+            delete head->dllObject;
+        }
+    }
 };
 
 #endif
