@@ -217,12 +217,9 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty,
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
         return;
     
-    if (map[tx][ty].solidity == Solid)
-    {
-        PushBlock *sec = map[tx][ty].secret;
-        if(!sec || sec->visited)
-            return;         // solid non-secret block, ignore
-        // Is a secret. What do? Move around
+    PushBlock *sec = map[tx][ty].secret;
+    if(sec && !sec->visited)
+    {    // Is a secret. What do? Move around
         sec->visited = true;
         secretSet.insert(sec);
         
@@ -231,7 +228,7 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty,
         RecursiveConnectRegion(tx, ty - 1, regionSet, secretSet);
         RecursiveConnectRegion(tx, ty + 1, regionSet, secretSet);
     }
-    else if (map[tx][ty].region)
+    if (map[tx][ty].region)
     {
         // Add this region to the set of connected
         
