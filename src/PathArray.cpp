@@ -51,16 +51,19 @@ PathArray::~PathArray()
 //
 // PathArray::addStartNode
 //
-// Adds the first node, without considering any destination
+// Adds the first node, on FindShortestPath initialization
 //
 int PathArray::addStartNode(int tx, int ty)
 {
+    // Normal case: no known destination or repellent
 	return addStartNode(tx, ty, tx, ty);
 }
 
 int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean negate)
 {
 	Node node;
+    
+    // May be inaccurate
 	int dist = Basic::ApproxDist((destx - tx) << 8, (desty - ty) << 8);
 	
 	// This resets and creates new data with possible negative distance
@@ -175,7 +178,8 @@ void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist)
 	updateNode(ichange, index, cx, cy, dist, cx, cy);
 }
 
-void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist, int destx, int desty, Boolean negate)
+void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist,
+                           int destx, int desty, Boolean negate)
 {
 	dist += nodes[index].g_score;
 	if(ichange == -1)

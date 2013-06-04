@@ -470,9 +470,28 @@ inline static Boolean canGoThruLockedDoor(byte door)
 //
 // Finds the path to the nearest destination
 //
+#define MEASURE_TIME_FSP
+#ifdef MEASURE_TIME_FSP
+
+#define START_CLOCK \
+static double CLK_passed = 0.0; \
+static clock_t CLK_begin, CLK_end; \
+CLK_begin = clock();
+
+#define END_CLOCK \
+CLK_end = clock(); \
+CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC; \
+printf("%s: %.16g\n", __FUNCTION__, CLK_passed);
+
+#else
+#define START_CLOCK
+#define END_CLOCK
+#endif
+
 Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
                                  byte retreating, Boolean knifeinsight)
 {
+    START_CLOCK
 	int j;
 	
 	// if stepped and reached on a former enemy position, remove it
@@ -480,15 +499,29 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 	
 	// if stepped on unexplored terrain, do a scan
 	if(!mapExploration.explored[player->tilex][player->tiley])
-		ExploreFill(player->tilex, player->tiley, player->tilex, player->tiley, true);
+    {
+		ExploreFill(player->tilex, player->tiley,
+                    player->tilex, player->tiley, true);
+    }
 
+    // Reset the search path
 	path.makeEmpty();
+    
+    // Start the path
 	if(retreating && threater != NULL)
-		path.addStartNode(player->tilex, player->tiley, threater->tilex, threater->tiley, true);
-	else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
+    {
+        // On retreating, prefer paths that run away from attacker
+		path.addStartNode(player->tilex, player->tiley,
+                          threater->tilex, threater->tiley, true);
+    }
+	else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT &&
+            knownExitX > -1 && knownExitY > -1)
+    {
+        // On "just going to exit", prefer paths that are closer to the exit
         path.addStartNode(player->tilex, player->tiley, knownExitX, knownExitY);
+    }
     else
-		path.addStartNode(player->tilex, player->tiley);
+		path.addStartNode(player->tilex, player->tiley);    // Normal
 
 	int imin, ifound;
 	int tx, ty, cx, cy;
@@ -514,6 +547,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 			{
 				// found goal
 				path.finish(imin);
+                END_CLOCK
 				return true;
 			}
 		}
@@ -528,6 +562,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 				   !Crossfire(Basic::Major(ptx), Basic::Major(pty)))
 				{
 					path.finish(imin);
+                    END_CLOCK
 					return true;
 				}
 			}
@@ -620,33 +655,51 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 			// this looks if the entry exists in the list
 			ifound = path.openCoordsIndex(cx, cy);
 			
-			if(ifound == -2)	// found it as closed. Don't try to visit it again, so pass
+			if(ifound == -2)
+            {
+                // found it as closed. Don't try to visit it again, so pass
 				continue;
+            }
 			
 			// This sets the score, depending on situation
 			if(j < 4)
 				tentative_g_add = 0x100;
 			else {
-				tentative_g_add = Basic::ApproxDist(0x100, 0x100);
+				tentative_g_add = 0x16a;    // approx is 0x180
 			}
 
-			// Increase the effective (time) distance if a closed door is in the way
-			if((door & 0x80 && doorobjlist[door].action != dr_open && doorobjlist[door].action != dr_opening) || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
+			// Increase the effective (time) distance if a closed door is in
+            // the way
+			if((door & 0x80 && doorobjlist[door].action != dr_open
+                && doorobjlist[door].action != dr_opening)
+               || Crossfire(Basic::Major(cx), Basic::Major(cy), NULL, true))
+            {
 				tentative_g_add <<= 2;
+            }
 			
 			if(retreating && threater != NULL)
-				path.updateNode(ifound, imin, cx, cy, tentative_g_add, threater->tilex, threater->tiley, true);
-			else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT && knownExitX > -1 && knownExitY > -1)
-                path.updateNode(ifound, imin, cx, cy, tentative_g_add, knownExitX, knownExitY);
+            {
+				path.updateNode(ifound, imin, cx, cy, tentative_g_add,
+                                threater->tilex, threater->tiley, true);
+            }
+			else if(moodBox() & MoodBox::MOOD_JUSTGOTOEXIT
+                    && knownExitX > -1 && knownExitY > -1)
+            {
+                path.updateNode(ifound, imin, cx, cy, tentative_g_add,
+                                knownExitX, knownExitY);
+            }
             else
 				path.updateNode(ifound, imin, cx, cy, tentative_g_add);
 			
 		}
 	}
 
+    // Found nothing with this search, so try to search for more on next attempt
+    // ObjectOfInterest will look for more
 	if(!pwallstate)
 		searchstage = (SearchStage)((int)searchstage + 1);
 
+    END_CLOCK
 	return false;
 }
 
@@ -1523,7 +1576,8 @@ void BotMan::DoNonCombatAI()
 	// found path to exit
 	int nowon = path.pathCoordsIndex(player->tilex, player->tiley);
 	
-	if(nowon < 0 || (!pwallstate && waitpwall && !(moodBox() & MoodBox::MOOD_DONTBACKFORSECRETS)))
+	if(nowon < 0 || (!pwallstate && waitpwall &&
+                     !(moodBox() & MoodBox::MOOD_DONTBACKFORSECRETS)))
 	{
 		// Reset if out of the path, or if a pushwall stopped moving
 		searchstage = SSGeneral;	// new areas revealed, so look

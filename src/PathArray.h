@@ -45,7 +45,8 @@ public:
 		numNodes = 0;
 	}
 	int addStartNode(int tx, int ty);
-	int addStartNode(int tx, int ty, int destx, int desty, Boolean negate = false);
+	int addStartNode(int tx, int ty, int destx, int desty,
+                     Boolean negate = false);
 	int bestScoreIndex() const;
 	void closeNode(int index)
 	{
@@ -84,7 +85,8 @@ public:
 		return nodes[index].g_score;
 	}
 	void updateNode(int ichange, int index, int cx, int cy, int dist);
-	void updateNode(int ichange, int index, int cx, int cy, int dist, int destx, int desty, Boolean negate = false);
+	void updateNode(int ichange, int index, int cx, int cy, int dist,
+                    int destx, int desty, Boolean negate = false);
 };
 
 #endif
