@@ -479,7 +479,7 @@ inline static Boolean canGoThruLockedDoor(byte door)
 //
 // Finds the path to the nearest destination
 //
-#define MEASURE_TIME_FSP
+//#define MEASURE_TIME_FSP
 #ifdef MEASURE_TIME_FSP
 
 #define START_CLOCK \

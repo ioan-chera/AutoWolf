@@ -64,7 +64,8 @@ int PathArray::addNode(const Node &node)
 	
 	nodes[numNodes - 1] = node;
     numOpenNodes += (int)node.open;
-    pathNodes[OnePacked(node.tilex, node.tiley)] = numNodes - 1;
+    pathNodes[node.tilex][node.tiley] = numNodes - 1;
+//    pathNodes[OnePacked(node.tilex, node.tiley)] = numNodes - 1;
 	return numNodes - 1;
 }
 
@@ -162,16 +163,23 @@ void PathArray::finish(int index)
 //
 int PathArray::openCoordsIndex(int cx, int cy) const
 {
-    int aggr = OnePacked(cx, cy);
-    if (pathNodes.count(aggr))
-    {
-        int i = pathNodes.at(aggr);
-        if (!nodes[i].open)
-            return -2;
-        else
-            return i;
-    }
-    return -1;
+    int i = pathNodes[cx][cy];
+//    printf("%d ", i);
+    if (i >= 0 && !nodes[i].open)
+        return -2;
+    return i;
+    
+//    int aggr = OnePacked(cx, cy);
+//    if (pathNodes.count(aggr))
+//    {
+//        int i = pathNodes.at(aggr);
+//        if (!nodes[i].open)
+//            return -2;
+//        else
+//            return i;
+//    }
+//    return -1;
+    
 //	for(int i = numNodes - 1; i >= 0; --i)
 //	{
 //		if(nodes[i].tilex == cx && nodes[i].tiley == cy)

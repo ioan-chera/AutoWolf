@@ -34,8 +34,9 @@ protected:
     //
 //    struct NodeTableRef
 //    {
-//        int coord;  // merged x-y coordinates, one for each 2-byte
-//        DLListItem<NodeTableRef> link;
+//        int coord;            // merged x-y coordinates, one for each 2-byte
+//        int index;                      // index of targeted node
+//        DLListItem<NodeTableRef> link;  // list link, for the EHashTable
 //    };
     
     //
@@ -54,8 +55,11 @@ protected:
     int numOpenNodes;                   // number of open nodes
 	int numNodes, numNodesAlloc;        // number of nodes, and allocated amount
 	Boolean pathexists;                 // whether the path has been built
-    std::unordered_map<int, int> pathNodes;  // set of used path nodes for easy
-                                             // look-up
+//    std::unordered_map<int, int> pathNodes;  // set of used path nodes for easy
+//                                             // look-up
+//    EHashTable<NodeTableRef, EIntHashKey,
+//    &NodeTableRef::coord, &NodeTableRef::link> pathNodes;
+    int pathNodes[MAPSIZE][MAPSIZE];
 	
 	int addNode(const Node &node);
 public:
@@ -94,13 +98,18 @@ public:
     // numNodes accessor
 	int length() const {return numNodes;}
     // Empty the array (FIXME: merge with reset?)
-	void makeEmpty() {numNodes = numOpenNodes = 0; pathNodes.clear();}
+	void makeEmpty()
+    {
+        numNodes = numOpenNodes = 0;
+        memset(pathNodes, -1, sizeof(pathNodes));
+    }
     //
     // Constructor
     //
 	PathArray() : nodes(0), numOpenNodes(0), numNodes(0), numNodesAlloc(0),
     pathexists(false)
 	{
+        memset(pathNodes, -1, sizeof(pathNodes));
 	}
     // pathexists disabling accessor
 	void reset() {pathexists = false;}
