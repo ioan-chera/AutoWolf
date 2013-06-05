@@ -20,9 +20,6 @@
 #ifndef __Wolf4SDL__Property__
 #define __Wolf4SDL__Property__
 
-#include <stdlib.h>
-#include <stdint.h>
-
 #include "PString.h"
 #include "m_dllist.h"
 
