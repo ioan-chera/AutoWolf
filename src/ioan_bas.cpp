@@ -206,7 +206,7 @@ static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
         newobj->flags |= FL_SHOOTABLE;
         newobj->active = ac_yes;
 
-        actorat[newobj->tilex][newobj->tiley] = NULL;           // don't use original spot
+        actorat[newobj->tilex][newobj->tiley] = NULL; // don't use original spot
 
         switch (dir)
         {
@@ -473,7 +473,7 @@ Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in,
                 {
                     const objtype *check = actorat[x][y];
                     if(check && (!ISPOINTER(check) || 
-                                 (ISPOINTER(check) && check->flags & FL_SHOOTABLE)))
+                            (ISPOINTER(check) && check->flags & FL_SHOOTABLE)))
                         return false;
                 }
 

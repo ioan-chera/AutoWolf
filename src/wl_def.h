@@ -505,7 +505,7 @@ typedef struct objstruct
 
     fixed       x,y;
     word        tilex,tiley;
-	fixed		recordx, recordy;	// IOANCH 20121211: record position for the bot
+	fixed		recordx, recordy;	// IOANCH 20121211: record position for bot
     byte        areanumber;
 
     short       viewx;

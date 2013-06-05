@@ -344,10 +344,12 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
             int tx2ofs = tx + 2 * txofs;
             int ty3ofs = ty + 3 * tyofs;
             int tx3ofs = tx + 3 * txofs;
-			if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0 && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
+			if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0
+               && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
 			{
 				if(searchstage >= SSOnePushWalls ||
-                   (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0 && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
+                   (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0
+                    && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
 				{
 					exity = ty + tyofs;
 					exitx = tx + txofs;
@@ -379,11 +381,14 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		// THROW WEST
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE || tx - 2 < 0 || !actorat[tx-2][ty]) 
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE
+                || tx - 2 < 0 || !actorat[tx-2][ty])
 			{
 				knownExitX = exitx = tx - 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE
+                   || searchstage >= SSNormalLift
+                   || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
@@ -391,11 +396,14 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		// THROW EAST
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE || tx + 2 >= MAPSIZE || !actorat[tx+2][ty]) 
+			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE
+                || tx + 2 >= MAPSIZE || !actorat[tx+2][ty])
 			{
 				knownExitX = exitx = tx + 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE || searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
+				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE
+                   || searchstage >= SSNormalLift
+                   || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
 			}
 		}
@@ -435,7 +443,8 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 			return;
 	}
 	
-	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy), Basic::Major(tx), Basic::Major(ty)))
+	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy),
+                               Basic::Major(tx), Basic::Major(ty)))
 	{
 		mapExploration.explored[tx][ty] = true;
 		
@@ -613,7 +622,8 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 					continue;	// Don't go diagonally if looking for retreat
 				check = actorat[cx][ty];
 				check2 = actorat[tx][cy];
-				if((check && !ISPOINTER(check)) || (check2 && !ISPOINTER(check2)))
+				if((check && !ISPOINTER(check))
+                   || (check2 && !ISPOINTER(check2)))
 				{
 					continue;
 				}
