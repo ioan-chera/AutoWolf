@@ -16,77 +16,79 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-
 #ifndef PATHARRAY_H_
 #define PATHARRAY_H_
 
+//
+// PathArray
+//
+// Class for bot's pathfinding in the Wolfenstein grid
+//
 class PathArray
 {
 protected:
+    //
+    // Node
+    //
+    // Dijkstra/A* search node
+    //
 	struct Node
 	{
-		int tilex, tiley;
-		int f_score, g_score, h_score;
-		int prev, next;
-		int diagonal;
-		Boolean open;
-	} *nodes;
-	int numNodes, numNodesAlloc;
-	Boolean pathexists;
+		int tilex, tiley;               // x, y tile coordinate
+		int f_score, g_score, h_score;  // total, so-far, to-dest heuristics
+		int prev, next;                 // previous and next index on path
+		int diagonal;                   // diagonal direction, if applicable
+		Boolean open;                   // node still open for search?
+	} *nodes;                           // array of nodes here
+	int numNodes, numNodesAlloc;        // number of nodes, and allocated amount
+	Boolean pathexists;                 // whether the path has been built
 	
 	int addNode(const Node &node);
 public:
-	PathArray() : nodes(0), numNodes(0), numNodesAlloc(0), pathexists(false)
-	{
-	}
-	~PathArray();
-	void makeEmpty()
-	{
-		numNodes = 0;
-	}
 	int addStartNode(int tx, int ty);
 	int addStartNode(int tx, int ty, int destx, int desty,
                      Boolean negate = false);
 	int bestScoreIndex() const;
-	void closeNode(int index)
-	{
-		nodes[index].open = false;
-	}
 	void finish(int index);
-	Boolean exists() const
-	{
-		return pathexists;
-	}
-	int length() const
-	{
-		return numNodes;
-	}
-	void reset()
-	{
-		pathexists = false;
-	}
+	int openCoordsIndex(int cx, int cy) const;
+	int pathCoordsIndex(int cx, int cy) const;
+	~PathArray();
+	void updateNode(int ichange, int index, int cx, int cy, int dist);
+	void updateNode(int ichange, int index, int cx, int cy, int dist,
+                    int destx, int desty, Boolean negate = false);
+    
+    // Node closing accessor
+	void closeNode(int index) {nodes[index].open = false;}
+    // pathexists accessor
+	Boolean exists() const {return pathexists;}
+    // node coordinates accessor
 	void getCoords(int index, int *tx, int *ty) const
 	{
 		*tx = nodes[index].tilex;
 		*ty = nodes[index].tiley;
 	}
+    // previous index accessor (or -1)
 	int getPrevIndex(int index) const
 	{
 		return index >= 0 ? nodes[index].prev : -1;
 	}
+    // next index accessor (or -1)
 	int getNextIndex(int index) const
 	{
 		return index >= 0 ? nodes[index].next : -1;
 	}
-	int openCoordsIndex(int cx, int cy) const;
-	int pathCoordsIndex(int cx, int cy) const;
-	int getGScore(int index) const
+    // numNodes accessor
+	int length() const {return numNodes;}
+    // Empty the array (FIXME: merge with reset?)
+	void makeEmpty() {numNodes = 0;}
+    //
+    // Constructor
+    //
+	PathArray() : nodes(0), numNodes(0), numNodesAlloc(0), pathexists(false)
 	{
-		return nodes[index].g_score;
 	}
-	void updateNode(int ichange, int index, int cx, int cy, int dist);
-	void updateNode(int ichange, int index, int cx, int cy, int dist,
-                    int destx, int desty, Boolean negate = false);
+    // pathexists disabling accessor
+	void reset() {pathexists = false;}
 };
 
 #endif

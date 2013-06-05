@@ -15,16 +15,21 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
+////////////////////////////////////////////////////////////////////////////////
+//
+// Bot pathfinding
+//
+////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
-
-#include <limits.h>
 
 #include "ioan_bas.h"
 #include "PathArray.h"
 
 //
 // PathArray::addNode
+//
+// Adds a node to the nodes array. It allocates if needed.
 //
 int PathArray::addNode(const Node &node)
 {
@@ -39,14 +44,11 @@ int PathArray::addNode(const Node &node)
 	return numNodes - 1;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 //
-// PathArray::~PathArray
+// Public methods
 //
-PathArray::~PathArray()
-{
-	if(nodes)
-		free(nodes);
-}
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // PathArray::addStartNode
@@ -83,6 +85,8 @@ int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean negate
 //
 // PathArray::bestScoreIndex
 //
+// Returns the node with the minimum (best) distance score
+//
 int PathArray::bestScoreIndex() const
 {
 	int fmin = INT_MAX, imin = -1, i;
@@ -100,17 +104,25 @@ int PathArray::bestScoreIndex() const
 //
 // PathArray::finish
 //
+// Finalizes the path, preparing the .next fields
+//
 void PathArray::finish(int index)
 {
 	nodes[index].next = -1;
 	int index2 = index;
-	for(index = nodes[index].prev; index != -1; index2 = index, index = nodes[index].prev)
+	for(index = nodes[index].prev; index != -1;
+        index2 = index, index = nodes[index].prev)
+    {
 		nodes[index].next = index2;
+    }
 	pathexists = true;
 }
 
 //
 // PathArray::openCoordsIndex
+//
+// Returns the index of the cx/cy coordinate, if open. Returns -2 if closed or
+// -1 if non-existent. FIXME: use 2d map for this?
 //
 int PathArray::openCoordsIndex(int cx, int cy) const
 {
@@ -129,6 +141,8 @@ int PathArray::openCoordsIndex(int cx, int cy) const
 
 //
 // PathArray::pathCoordsIndex
+//
+// Returns the index of the cx/cy coordinate, if it's on a path, or -1 else
 //
 int PathArray::pathCoordsIndex(int cx, int cy) const
 {
@@ -171,7 +185,20 @@ int PathArray::pathCoordsIndex(int cx, int cy) const
 }
 
 //
+// PathArray::~PathArray
+//
+// Destructor
+//
+PathArray::~PathArray()
+{
+	if(nodes)
+		free(nodes);
+}
+
+//
 // PathArray::updateNode
+//
+// Updates the score of the given node, or even creates a new one
 //
 void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist)
 {
