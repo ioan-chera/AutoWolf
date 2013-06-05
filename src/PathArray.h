@@ -40,6 +40,7 @@ protected:
 		int diagonal;                   // diagonal direction, if applicable
 		Boolean open;                   // node still open for search?
 	} *nodes;                           // array of nodes here
+    int numOpenNodes;                   // number of open nodes
 	int numNodes, numNodesAlloc;        // number of nodes, and allocated amount
 	Boolean pathexists;                 // whether the path has been built
 	
@@ -58,7 +59,7 @@ public:
                     int destx, int desty, Boolean negate = false);
     
     // Node closing accessor
-	void closeNode(int index) {nodes[index].open = false;}
+	void closeNode(int index) {nodes[index].open = false; --numOpenNodes;}
     // pathexists accessor
 	Boolean exists() const {return pathexists;}
     // node coordinates accessor
@@ -80,11 +81,12 @@ public:
     // numNodes accessor
 	int length() const {return numNodes;}
     // Empty the array (FIXME: merge with reset?)
-	void makeEmpty() {numNodes = 0;}
+	void makeEmpty() {numNodes = numOpenNodes = 0;}
     //
     // Constructor
     //
-	PathArray() : nodes(0), numNodes(0), numNodesAlloc(0), pathexists(false)
+	PathArray() : nodes(0), numOpenNodes(0), numNodes(0), numNodesAlloc(0),
+    pathexists(false)
 	{
 	}
     // pathexists disabling accessor

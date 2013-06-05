@@ -41,6 +41,7 @@ int PathArray::addNode(const Node &node)
 	}
 	
 	nodes[numNodes - 1] = node;
+    numOpenNodes += (int)node.open;
 	return numNodes - 1;
 }
 
@@ -89,14 +90,26 @@ int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean negate
 //
 int PathArray::bestScoreIndex() const
 {
-	int fmin = INT_MAX, imin = -1, i;
-	for(i = 0; i < numNodes; ++i)
+	int fmin = INT_MAX, imin = -1, j = numOpenNodes;
+//    printf("%d ", numOpenNodes);
+	for(int i = numNodes - 1; i >= 0; --i)
 	{
-		if(nodes[i].open && nodes[i].f_score < fmin)
-		{
-			fmin = nodes[i].f_score;
-			imin = i;
-		}
+		if(nodes[i].open)
+        {
+//            printf("%c", 'o');
+            --j;
+            if(nodes[i].f_score < fmin)
+            {
+                fmin = nodes[i].f_score;
+                imin = i;
+            }
+            if(!j)
+            {
+                //            puts("!!!");
+                break;
+            }
+        }
+
 	}
 	return imin;
 }
