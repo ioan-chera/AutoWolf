@@ -28,6 +28,17 @@ class PathArray
 {
 protected:
     //
+    // NodeTableRef
+    //
+    // Node reference used by a hash table for quick lookup of x/y coordinates
+    //
+//    struct NodeTableRef
+//    {
+//        int coord;  // merged x-y coordinates, one for each 2-byte
+//        DLListItem<NodeTableRef> link;
+//    };
+    
+    //
     // Node
     //
     // Dijkstra/A* search node
@@ -43,6 +54,8 @@ protected:
     int numOpenNodes;                   // number of open nodes
 	int numNodes, numNodesAlloc;        // number of nodes, and allocated amount
 	Boolean pathexists;                 // whether the path has been built
+    std::unordered_map<int, int> pathNodes;  // set of used path nodes for easy
+                                             // look-up
 	
 	int addNode(const Node &node);
 public:
@@ -81,7 +94,7 @@ public:
     // numNodes accessor
 	int length() const {return numNodes;}
     // Empty the array (FIXME: merge with reset?)
-	void makeEmpty() {numNodes = numOpenNodes = 0;}
+	void makeEmpty() {numNodes = numOpenNodes = 0; pathNodes.clear();}
     //
     // Constructor
     //

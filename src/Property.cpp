@@ -16,8 +16,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include <string.h>
-#pragma pack(1)
+#include "wl_def.h"
+
 #include "Property.h"
 
 #define NEW_ALLOC_2_RATIO 3

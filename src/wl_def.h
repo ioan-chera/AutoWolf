@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unordered_map>
 #include <unordered_set>
 #if defined(_arch_dreamcast)
 #	include <string.h>
