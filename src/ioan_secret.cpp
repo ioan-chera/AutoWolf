@@ -427,7 +427,7 @@ void ScoreMap::TestPushBlocks()
         }
         puts("");
     }
-    for (unsigned i = 0; i < regionCount; ++i)
+    for (unsigned i = 0; i < (unsigned)regionCount; ++i)
     {
         printf("\nNeigh of %d: ", i + 1);
         

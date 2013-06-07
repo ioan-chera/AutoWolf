@@ -147,8 +147,9 @@ public:
     //
     // Constructor
     //
-    ScoreMap() : pushBlocks({NULL}), regionCount(0), regionNeighList(NULL)
+    ScoreMap() : regionCount(0), regionNeighList(NULL)
     {
+        pushBlocks.head = NULL;
     }
     
     //
