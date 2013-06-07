@@ -1759,7 +1759,7 @@ void BotMan::DoCommand()
 	else if(retreat > 0)	// standard retreat, still moving
 	{
 		damagetaken = NULL;
-		edist = -1;
+		edist = -2;
 		retreat -= tics;
 		MoveByStrafe();
 	}
