@@ -160,6 +160,54 @@ void ScoreMap::EmptyPushBlockList()
 }
 
 //
+// ScoreMap::OutputRegionGraphTGF
+//
+// Writes the contents of the regionNeighList to a Trivial Graph Format text
+// file, which can be read by utilities such as yWorks yEd (free of charge)
+//
+// Format is very simple:
+// - list of node indices and their names, one for each line
+// - a line with a hash character ('#') as separator
+// - list of edges, represented by pairs of node indices, optionally with label
+//
+void ScoreMap::OutputRegionGraphTGF(FILE *f) const
+{
+    // Write regions
+    for(unsigned i = 1; i <= (unsigned)regionCount; ++i)
+    {
+        // print each node and its label (same label as the index) per line
+        fprintf(f, "%u %u\n", i, i);
+    }
+    fprintf(f, "#\n");
+    for(unsigned i = 1; i <= (unsigned)regionCount; ++i)
+    {
+        for (DLListItem<RegionConnection> *entry = regionNeighList[i - 1].head;
+             entry;
+             entry = entry->dllNext)
+        {
+            RegionConnection *obj = entry->dllObject;
+            int j = obj->region;
+            // First, print the pair
+            if(j >= i)
+            {
+                fprintf(f, "%u %d", i, j);
+                unsigned blockCount = 0;
+                for (auto it = obj->pushBlocks.begin();
+                     it != obj->pushBlocks.end();
+                     ++it)
+                {
+                    blockCount++;
+                }
+                // Print the number of walls, if larger than 0
+                if (blockCount > 0)
+                    fprintf(f, " %u", blockCount);
+                fprintf(f, "\n");
+            }
+        }
+    }
+}
+
+//
 // ScoreMap::RecursiveLabelRegions
 //
 // Recursively floodfills the tiles to do region colouring
@@ -427,25 +475,7 @@ void ScoreMap::TestPushBlocks()
         }
         puts("");
     }
-    for (unsigned i = 0; i < (unsigned)regionCount; ++i)
-    {
-        printf("\nNeigh of %d: ", i + 1);
-        
-        for (DLListItem<RegionConnection> *entry = regionNeighList[i].head;
-             entry;
-             entry = entry->dllNext)
-        {
-            RegionConnection *obj = entry->dllObject;
-            printf("%d(", obj->region);
-            for (auto it = obj->pushBlocks.begin();
-                 it != obj->pushBlocks.end();
-                 ++it)
-            {
-                printf("[%d,%d,%d]", (*it)->tilex, (*it)->tiley, (*it)->usable);
-            }
-            printf(")");
-        }
-    }
+    OutputRegionGraphTGF(stdout);
 }
 
 //

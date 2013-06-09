@@ -134,6 +134,7 @@ class ScoreMap
     void DeleteRegionNeighList();
     void EmptyMap();
     void EmptyPushBlockList();
+    void OutputRegionGraphTGF(FILE *f = stdout) const;
     void RecursiveConnectRegion(int tx, int ty,
                                 std::unordered_set<int> &regionSet,
                                 std::unordered_set<PushBlock *> &secretSet);
