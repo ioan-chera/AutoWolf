@@ -932,14 +932,14 @@ done:   itoanoreturn (kr, tempstr, 10);
     lastBreathTime = GetTimeCount();
     IN_StartAck ();
 
-	 // IOANCH 27.05.2012: let bots automatically hit after 3 seconds
+	 // IOANCH 27.05.2012: let bots automatically hit after 1 second
 	int botcount = 0;
     while (!IN_CheckAck ())
 	{
         BJ_Breathe ();
         if(Config::BotActive())
 		{
-			  if(++botcount == 600)
+			  if(++botcount == 200) // IOANCH 20130607: reduced to 1 second
 				  break;
 		  }
 	 }
