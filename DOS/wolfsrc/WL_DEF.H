@@ -1311,16 +1311,16 @@ boolean Basic_IsEnemy(classtype cls);
 #define Basic_Major(t) (((t) << TILESHIFT) + (1 << (TILESHIFT - 1)))
 
 // Check if it's armed
-boolean Basic_IsDamaging(objtype *ret, int dist);
+boolean Basic_IsDamaging(objtype *ret, char dist);
 
 // Generic check line
 boolean Basic_GenericCheckLine (long x1, long y1, int x2, int y2);
 
 typedef struct SData_s
 {
-    int tilex, tiley;
-    int f_score, g_score, h_score;
-    int prev, next;
+    char tilex, tiley;
+    short f_score, g_score, h_score;
+    short prev, next;
     boolean open;
 } SData;
 

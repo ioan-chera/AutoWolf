@@ -9,20 +9,21 @@
 #include "WL_DEF.H"
 #pragma hdrstop
 
-#define SET_SIZE 1000
+#define SET_SIZE 2048
 
 // protected ones
 static boolean pathexists, exitfound;
 static byte nothingleft, wakeupfire;
-static int exitx, exity, exfrontx;
+static char exitx, exity, exfrontx;
 //static SData *searchset;
 static SData far searchset[SET_SIZE];
 static int searchsize, searchlen;
 
 extern objtype *lastobj;
 
-static objtype *IsEnemyAround(int tx, int ty, int dist);
-static objtype *IsProjectile(int tx, int ty, int dist, short *angle, int *distance);
+static objtype *IsEnemyAround(char tx, char ty, char dist);
+static objtype *IsProjectile(char tx, char ty, char dist, short *angle,
+                             char *distance);
 static void EmptySet()
 {
 	 searchsize = searchlen = 0;
@@ -64,20 +65,6 @@ static long ApproxDist(long dx, long dy)
 //
 static boolean AddToSet(const SData *data)
 {
-//	 if(!searchset)
-//		  MM_GetPtr(&(memptr)searchset, MAPSIZE * MAPSIZE * sizeof(SData));
-//	if(++searchlen > searchsize)
-//	{
-//		  SData *oldsearchset = searchset;
-//		  int oldsearchsize = searchsize;
-//		  MM_GetPtr(&(memptr)searchset, searchsize < 32 ? (searchsize = 32) * sizeof(SData)
-//						: (searchsize = 2 * searchsize) * sizeof(SData));
-//		  if(oldsearchset != NULL)
-//		  {
-//		  memcpy(searchset, oldsearchset, oldsearchsize * sizeof(SData));
-//		  MM_FreePtr(&(memptr)oldsearchset);
-//		  }
-//	}
 	++searchlen;
 	if(searchlen >= SET_SIZE)
 	{
@@ -94,9 +81,9 @@ static boolean AddToSet(const SData *data)
 //
 // Pickable item, secret door, exit switch, exit pad
 //
-static boolean ObjectOfInterest(int tx, int ty)
+static boolean ObjectOfInterest(char tx, char ty)
 {
-	int i;
+	short i;
 	objtype *check;
 	exitx = -1;
 	exity = -1;
@@ -104,8 +91,9 @@ static boolean ObjectOfInterest(int tx, int ty)
 	// items
 	for(i = 0; &statobjlist[i] != laststatobj; ++i)
 	{
-		if(statobjlist[i].tilex == (byte)tx && statobjlist[i].tiley == (byte)ty && statobjlist[i].flags & FL_BONUS
-			  && statobjlist[i].shapenum >= 0)
+		if(statobjlist[i].tilex == (byte)tx && statobjlist[i].tiley == (byte)ty
+           && statobjlist[i].flags & FL_BONUS
+           && statobjlist[i].shapenum >= 0)
 		{
 			switch (statobjlist[i].itemnumber)
 			{
@@ -143,7 +131,7 @@ static boolean ObjectOfInterest(int tx, int ty)
 						  break;
 #ifdef SPEAR
 					 case    bo_25clip:
-						  if (gamestate.ammo < 74)
+						  if (gamestate.ammo <= 74)
 								return true;
 						  break;
 					 case    bo_spear:
@@ -159,7 +147,8 @@ static boolean ObjectOfInterest(int tx, int ty)
 
 	check = actorat[tx][ty];
 	if(gamestate.health > 75 && gamestate.ammo > 75 &&
-		 check >= objlist && Basic_IsEnemy(check->obclass) && check->flags & FL_SHOOTABLE)
+       check >= objlist && Basic_IsEnemy(check->obclass)
+       && check->flags & FL_SHOOTABLE)
 	{
 		nothingleft = 0;	// reset counter if enemies here
 		return true;
@@ -210,15 +199,21 @@ static boolean ObjectOfInterest(int tx, int ty)
 		{
 			exitx = tx - 1;
 			exity = ty;
-			if(*(mapsegs[0]+farmapylookup[ty]+tx) == ALTELEVATORTILE || nothingleft >= 2)
+			if(*(mapsegs[0]+farmapylookup[ty]+tx) == ALTELEVATORTILE
+               || nothingleft >= 2)
+            {
 				return true;
+            }
 		}
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
 			exitx = tx + 1;
 			exity = ty;
-			if(*(mapsegs[0]+farmapylookup[ty]+tx) == ALTELEVATORTILE || nothingleft >= 2)
+			if(*(mapsegs[0]+farmapylookup[ty]+tx) == ALTELEVATORTILE
+               || nothingleft >= 2)
+            {
 				return true;
+            }
 		}
 
 		// exit pad
@@ -229,20 +224,23 @@ static boolean ObjectOfInterest(int tx, int ty)
 }
 
 //
-// BotMan::FindPathToExit
+// FindRandomPath
 //
-// Finds the path to an exit (A*)
+// Finds a path to any object
 //
+short far pathused[MAPSIZE][MAPSIZE];
 static boolean FindRandomPath(boolean ignoreproj, boolean mindnazis)
 {
-	int i, j;
+    short i, k;
+    char j;
 	boolean openfound;
-	int fmin;
-	 int imin, ifound;
-	int cx, cy;
+	short fmin;
+    short imin, ifound;
+	char cx, cy;
 	objtype *check;
 	boolean neighinvalid, neighfound;
-	int tentative_g_score;
+	short tentative_g_score;
+    short numopen = 1;
 
 	SData data;
 
@@ -252,21 +250,24 @@ static boolean FindRandomPath(boolean ignoreproj, boolean mindnazis)
 	data.tilex = player->tilex;
 	data.tiley = player->tiley;
 	data.prev = -1;
-
+    _fmemset(pathused, 0, sizeof(pathused));
+    pathused[data.tilex][data.tiley] = 1;
 
 	EmptySet();
 
-	if(!AddToSet(&data)) goto bail;
+	if(!AddToSet(&data))
+        goto bail;
 
-	while(1)
+	for(;;)
 	{
 		// look for open sets
 		openfound = false;
-		fmin = 0x7fffl;
-		for(i = 0; i < searchlen; ++i)
+		fmin = 0x7fff;
+		for(k = numopen, i = searchlen - 1; k > 0 && i >= 0; --i)
 		{
 			if(searchset[i].open)
 			{
+                --k;
 				openfound = true;
 				if(searchset[i].f_score < fmin)
 				{
@@ -278,14 +279,18 @@ static boolean FindRandomPath(boolean ignoreproj, boolean mindnazis)
 		if(!openfound)
 			break;
 		searchset[imin].open = false;
+        --numopen;
 
 		if(ObjectOfInterest(searchset[imin].tilex, searchset[imin].tiley))
 		{
 			// found goal
 			searchset[imin].next = -1;
 			ifound = imin;
-			for(imin = searchset[imin].prev; imin != -1; ifound = imin, imin = searchset[imin].prev)
+			for(imin = searchset[imin].prev; imin != -1; ifound = imin,
+                imin = searchset[imin].prev)
+            {
 				searchset[imin].next = ifound;
+            }
 			pathexists = true;
 			return true;
 		}
@@ -295,62 +300,82 @@ static boolean FindRandomPath(boolean ignoreproj, boolean mindnazis)
 			byte door;
 			switch(j)
 			{
-					 case 0:
-						  cx = searchset[imin].tilex + 1;
-						  cy = searchset[imin].tiley;
-						  break;
-					 case 1:
-						  cx = searchset[imin].tilex;
-						  cy = searchset[imin].tiley + 1;
-						  break;
-					 case 2:
-						  cx = searchset[imin].tilex - 1;
-						  cy = searchset[imin].tiley;
-						  break;
-					 case 3:
-						  cx = searchset[imin].tilex;
-						  cy = searchset[imin].tiley - 1;
-						  break;
+                 case 0:
+                      cx = searchset[imin].tilex + 1;
+                      cy = searchset[imin].tiley;
+                      break;
+                 case 1:
+                      cx = searchset[imin].tilex;
+                      cy = searchset[imin].tiley + 1;
+                      break;
+                 case 2:
+                      cx = searchset[imin].tilex - 1;
+                      cy = searchset[imin].tiley;
+                      break;
+                 case 3:
+                      cx = searchset[imin].tilex;
+                      cy = searchset[imin].tiley - 1;
+                      break;
 			}
 			check = actorat[cx][cy];
 			door = tilemap[cx][cy];
 			if(check && check < objlist && !(door & 0x80)
-					||
-					(ABS(cx - player->tilex) > 1 || ABS(cy - player->tiley) > 1) && IsProjectile(cx, cy, 1, NULL, NULL) != NULL && !ignoreproj ||
-					IsEnemyAround(cx, cy, 1) != NULL && mindnazis)
+               || (ABS(cx - player->tilex) > 1 || ABS(cy - player->tiley) > 1)
+               && IsProjectile(cx, cy, 1, NULL, NULL) != NULL && !ignoreproj ||
+               IsEnemyAround(cx, cy, 1) != NULL && mindnazis)
+            {
 				continue;	// solid, can't be passed
+            }
 			else if (door & 0x80)
 			{
 				byte lock;
 				door = door & ~0x80;
 				lock = doorobjlist[door].lock;
 				if (lock >= dr_lock1 && lock <= dr_lock4)
+                {
 					if (doorobjlist[door].action != dr_open &&
-						doorobjlist[door].action != dr_opening && !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+						doorobjlist[door].action != dr_opening &&
+                        !(gamestate.keys & (1 << (lock-dr_lock1) ) ) )
+                    {
 						continue;
+                    }
+                }
 			}
 
 			neighinvalid = false;
 			neighfound = false;
-			for(i = searchlen - 1; i >= 0; --i)
-			{
-				if(searchset[i].tilex == cx && searchset[i].tiley == cy)
-				{
-					if(!searchset[i].open)
-						neighinvalid = true;
-					else
-					{
-						neighfound = true;
-						ifound = i;
-					}
-					break;
-				}
-			}
+//            for(i = searchlen - 1; i >= 0; --i)
+//			{
+//				if(searchset[i].tilex == cx && searchset[i].tiley == cy)
+//				{
+//					if(!searchset[i].open)
+//						neighinvalid = true;
+//					else
+//					{
+//						neighfound = true;
+//						ifound = i;
+//					}
+//					break;
+//				}
+//			}
+            i = pathused[cx][cy];
+            if(i >= 1)
+            {
+                --i;
+                if(!searchset[i].open)
+                    neighinvalid = true;
+                else
+                {
+                    neighfound = true;
+                    ifound = i;
+                }
+            }
 			if(neighinvalid)
 				continue;
 			tentative_g_score = searchset[imin].g_score + 1;
 			if(!neighfound)
 			{
+                ++numopen;
 				data.g_score = tentative_g_score;
 				data.h_score = 0;
 				data.f_score = data.g_score;
@@ -358,7 +383,9 @@ static boolean FindRandomPath(boolean ignoreproj, boolean mindnazis)
 				data.tilex = cx;
 				data.tiley = cy;
 				data.prev = imin;
-				if(!AddToSet(&data)) goto bail;
+				if(!AddToSet(&data))
+                    goto bail;
+                pathused[cx][cy] = searchlen;
 			}
 			else if(tentative_g_score < searchset[ifound].g_score)
 			{
@@ -426,16 +453,16 @@ static objtype *EnemyOnTarget(void)
 //
 // True if an enemy is in sight
 //
-static objtype *EnemyVisible(short *angle, int *distance)
+static objtype *EnemyVisible(short *angle, char *distance)
 {
-	int tx = player->tilex, ty = player->tiley;
-	int i, j, k, distmin;
+	char tx = player->tilex, ty = player->tiley;
+	char i, j, k, distmin;
 	objtype *ret, *retmin = NULL;
 	short angmin;
 	static objtype *oldret;
-	double dby, dbx;
+	float dby, dbx;
     
-	distmin = 0x7fffl;
+	distmin = 0x7f;
     
 	for(ret = lastobj; ret; ret = ret->prev)
 	{
@@ -445,17 +472,21 @@ static objtype *EnemyVisible(short *angle, int *distance)
         
 		if(k > 15 || j > 15)
 			continue;
-		if(!Basic_IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret))
+		if(!Basic_IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE)
+           || !CheckLine(ret))
+        {
 			continue;
+        }
         
-		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret || oldret && !(oldret->flags & FL_SHOOTABLE))
+		if(abs(*distance - i) >= 2 && ret != oldret || ret == oldret
+           || oldret && !(oldret->flags & FL_SHOOTABLE))
 		{
 			if(i <= distmin)
 			{
-				dby = -((double)(ret->y) - (double)(player->y));
-				dbx = (double)(ret->x) - (double)(player->x);
+				dby = -((float)(ret->y) - (float)(player->y));
+				dbx = (float)(ret->x) - (float)(player->x);
 				distmin = i;
-				angmin = (short)(180.0/PI*atan2(dby, dbx));
+				angmin = (short)(180.0f/PI*atan2(dby, dbx));
                 
 				if(angmin >= 360)
 					angmin -= 360;
@@ -502,8 +533,8 @@ static objtype *EnemyEager(void)
 //
 static objtype *DamageThreat(objtype *targ)
 {
-	int tx = player->tilex, ty = player->tiley;
-	int j, k, dist;
+	char tx = player->tilex, ty = player->tiley;
+	char j, k, dist;
 	objtype *ret;
     
 	// Threat types
@@ -526,7 +557,8 @@ static objtype *DamageThreat(objtype *targ)
 		k = ret->tilex - tx;
 		j = ret->tiley - ty;
 		dist = abs(j) > abs(k) ? abs(j) : abs(k);
-		if(dist > 16 || !Basic_IsEnemy(ret->obclass) || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret)
+		if(dist > 16 || !Basic_IsEnemy(ret->obclass)
+           || !(ret->flags & FL_SHOOTABLE) || !CheckLine(ret)
            || ret == targ && !Basic_IsBoss(ret->obclass))
 			continue;
         
@@ -734,7 +766,7 @@ static void DoRetreat(boolean forth, objtype *cause)
 //
 // True if a flying projectile exists in this place
 //
-objtype *IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
+objtype *IsProjectile(char tx, char ty, char dist, short *angle, char *distance)
 {
 	objtype *ret = lastobj;
     
@@ -750,13 +782,15 @@ objtype *IsProjectile(int tx, int ty, int dist, short *angle, int *distance)
                 case ghostobj:	// monsters count as projectiles
                     goto retok;
                 case rocketobj:
-						  if(ret->state != &s_boom1 && ret->state != &s_boom2 && ret->state != &s_boom3)
+						  if(ret->state != &s_boom1 && ret->state != &s_boom2
+                             && ret->state != &s_boom3)
                         goto retok;
                     break;
 #endif
 #ifdef SPEAR
                 case hrocketobj:
-                    if(ret->state != &s_hboom1 && ret->state != &s_hboom2 && ret->state != &s_hboom3)
+                    if(ret->state != &s_hboom1 && ret->state != &s_hboom2
+                       && ret->state != &s_hboom3)
                         goto retok;
                     break;
 					 case sparkobj:
@@ -773,10 +807,10 @@ retok:
 	if(angle && distance)
 	{
 		
-		double dby = -((double)(ret->y) - (double)(player->y));
-		double dbx = (double)(ret->x) - (double)(player->x);
+		float dby = -((float)(ret->y) - (float)(player->y));
+		float dbx = (float)(ret->x) - (float)(player->x);
         
-		*angle = (short)(180.0/PI*atan2(dby, dbx));
+		*angle = (short)(180.0f/PI*atan2(dby, dbx));
 		*distance = dist;
         
 		if(*angle >= 360)
@@ -793,14 +827,15 @@ retok:
 //
 // True if a living enemy exists around
 //
-static objtype *IsEnemyAround(int tx, int ty, int dist)
+static objtype *IsEnemyAround(char tx, char ty, char dist)
 {
 	objtype *ret = lastobj;
 
 	while(ret)
 	{
 		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
-			if(Basic_IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE && ret->flags & FL_ATTACKMODE)
+			if(Basic_IsEnemy(ret->obclass) && ret->flags & FL_SHOOTABLE
+               && ret->flags & FL_ATTACKMODE)
 				return ret;
 		ret = ret->prev;
 	}
@@ -808,25 +843,132 @@ static objtype *IsEnemyAround(int tx, int ty, int dist)
 }
 
 //
-// BotMan::FindPath
+// DoCombatAI
 //
-// Finds the path to walk through
+// Branch of DoCommand that does NAZI fighting
+//
+static byte retreat, pressuse;
+static boolean DoCombatAI(short eangle, char edist)
+{
+    short dangle, pangle, epangle;
+    objtype *check, *check2;
+    char proj = 0;
+    
+    nothingleft = 0;	// reset elevator counter if distracted
+    
+    if(gamestate.weapon == wp_knife)
+    {
+        if(FindRandomPath(false, true))
+        {
+            pathexists = false;
+            return false;
+        }
+    }
+    
+    pathexists = false;
+    // Enemy visible mode
+    // centred angle here
+    dangle = eangle - player->angle;
+    if(dangle > 180)
+        dangle -= 360;
+    else if(dangle <= -180)
+        dangle += 360;
+    
+    buttonstate[bt_strafe] = false;
+    // turn towards nearest target
+    
+    if(dangle > 15)
+        controlx = -RUNMOVE * tics;
+    else if(dangle > 0)
+        controlx = -BASEMOVE * tics;
+    else if(dangle < -15)
+        controlx = +RUNMOVE * tics;
+    else if(dangle < 0)
+        controlx = +BASEMOVE * tics;
+    
+    // FIXME: work around the numbness bug
+    check = EnemyOnTarget();
+    check2 = DamageThreat(check);
+    if(!check2)
+    {
+        check2 = IsProjectile(player->tilex, player->tiley, 2, &pangle, &proj);
+        proj = 1;
+    }
+    
+    if(check2 && (check2 != check || Basic_IsBoss(check->obclass))
+       && gamestate.weapon != wp_knife)
+    {
+        DoRetreat(false, check2);
+        
+        if(proj)
+        {
+            epangle = pangle - player->angle;
+            if(epangle > 180)
+                epangle -= 360;
+            else if(epangle <= -180)
+                epangle += 360;
+            buttonstate[bt_strafe] = true;
+            if(epangle >= 0)	// strafe right
+                controlx = RUNMOVE * tics;
+            else
+                controlx = -RUNMOVE * tics;
+        }
+        retreat = 10;
+        if(check2->obclass == mutantobj)
+            retreat = 5;
+    }
+    else
+        retreat = 0;
+    
+    if(!check && dangle >= -15 && dangle <= 15 && !retreat)
+        controly = -BASEMOVE * tics;	// something's wrong, so move a bit
+    
+    if(check)
+    {
+        // shoot according to how the weapon works
+        if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0
+            || gamestate.weapon > wp_pistol) && edist <= 10)
+        {
+            buttonstate[bt_attack] = true;
+        }
+        else
+            buttonstate[bt_attack] = false;
+        
+        // TODO: don't always charge when using the knife!
+        
+        if(!retreat && (!check2 || check2 == check) && edist > 6
+           || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
+        {
+            // otherwise
+            // TODO: use DoCharge here, to maintain slaloming
+            if(gamestate.weapon == wp_knife)
+                controly = -RUNMOVE * tics;
+            else
+                DoRetreat(true, NULL);
+        }
+    }
+    return true;
+}
+
+//
+// Bot_DoCommand
+//
+// Starting point for bot execution
 //
 void Bot_DoCommand(void)
 {
 	static short tangle, dangle;
-	static byte pressuse, retreat;
 
 	static short eangle = -1;
-	static int edist = -2;
-		short pangle, epangle; int proj = 0;
-				static boolean waitpwall;
-		// found path to exit
-		int searchpos = 0;
-		int nowon = -1;
-		int nx, ny, mx, my;
-		boolean tryuse = false;	// whether to try using
-		byte tile;
+	static char edist = -2;
+    short pangle, epangle;
+    static boolean waitpwall;
+	// found path to exit
+    short searchpos = 0;
+	short nowon = -1;
+	char nx, ny, mx, my;
+	boolean tryuse = false;	// whether to try using
+	byte tile;
 
 	objtype *check0, *check, *check2;
 	++pressuse;	// key press timer
@@ -835,92 +977,8 @@ void Bot_DoCommand(void)
 
 	if(check0)
 	{
-		nothingleft = 0;	// reset elevator counter if distracted
-
-		if(gamestate.weapon == wp_knife)
-			if(FindRandomPath(false, true))
-			{
-				pathexists = false;
-				goto disengage;
-			}
-
-		pathexists = false;
-		// Enemy visible mode
-		// centred angle here
-		dangle = eangle - player->angle;
-		if(dangle > 180)
-			dangle -= 360;
-		else if(dangle <= -180)
-			dangle += 360;
-
-		buttonstate[bt_strafe] = false;
-		// turn towards nearest target
-
-		if(dangle > 15)
-			controlx = -RUNMOVE * tics;
-		else if(dangle > 0)
-			controlx = -BASEMOVE * tics;
-		else if(dangle < -15)
-			controlx = +RUNMOVE * tics;
-		else if(dangle < 0)
-			controlx = +BASEMOVE * tics;
-
-		// FIXME: work around the numbness bug
-		check = EnemyOnTarget();
-		check2 = DamageThreat(check);
-		if(!check2)
-		{
-			check2 = IsProjectile(player->tilex, player->tiley, 2, &pangle, &proj);
-			proj = 1;
-		}
-
-		if(check2 && (check2 != check || Basic_IsBoss(check->obclass)) && gamestate.weapon != wp_knife)
-		{
-			DoRetreat(false, check2);
-
-			if(proj)
-			{
-				epangle = pangle - player->angle;
-				if(epangle > 180)
-					epangle -= 360;
-				else if(epangle <= -180)
-					epangle += 360;
-				buttonstate[bt_strafe] = true;
-				if(epangle >= 0)	// strafe right
-					controlx = RUNMOVE * tics;
-				else
-					controlx = -RUNMOVE * tics;
-			}
-			retreat = 10;
-			if(check2->obclass == mutantobj)
-				retreat = 5;
-		}
-		else
-			retreat = 0;
-
-		if(!check && dangle >= -15 && dangle <= 15 && !retreat)
-			controly = -BASEMOVE * tics;	// something's wrong, so move a bit
-
-		if(check)
-		{
-			// shoot according to how the weapon works
-			if((gamestate.weapon <= wp_pistol && pressuse % 4 == 0 || gamestate.weapon > wp_pistol) && edist <= 10)
-				buttonstate[bt_attack] = true;
-			else
-				buttonstate[bt_attack] = false;
-
-			// TODO: don't always charge when using the knife!
-
-			if(!retreat && (!check2 || check2 == check) && edist > 6 || dangle > -45 && dangle < 45 && gamestate.weapon == wp_knife)
-			{
-				// otherwise
-				// TODO: use DoCharge here, to maintain slaloming
-				if(gamestate.weapon == wp_knife)
-					controly = -RUNMOVE * tics;
-				else
-					DoRetreat(true, NULL);
-			}
-		}
+		if(!DoCombatAI(eangle, edist))
+            goto disengage;
 	}
 	else if(retreat)	// standard retreat, still moving
 	{
@@ -952,12 +1010,14 @@ void Bot_DoCommand(void)
 		// look if it's there
 		for(; searchpos != -1; searchpos = searchset[searchpos].next)
 		{
-			if(player->tilex == searchset[searchpos].tilex && player->tiley == searchset[searchpos].tiley)
+			if(player->tilex == searchset[searchpos].tilex
+               && player->tiley == searchset[searchpos].tiley)
 			{
 				nowon = searchpos;
 					 //				break;
 			}
-			if(nowon > -1 && IsProjectile(searchset[searchpos].tilex, searchset[searchpos].tiley,1,NULL,NULL) != NULL
+			if(nowon > -1 && IsProjectile(searchset[searchpos].tilex,
+                    searchset[searchpos].tiley,1,NULL,NULL) != NULL
 					&& (abs(searchset[searchpos].tilex - player->tilex) > 1 ||
 						 abs(searchset[searchpos].tiley - player->tiley) > 1))
 			{

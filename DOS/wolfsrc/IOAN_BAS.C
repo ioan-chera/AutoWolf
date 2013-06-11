@@ -27,7 +27,7 @@ extern statetype s_transshoot1, s_transshoot2, s_transshoot3, s_transshoot4, s_t
 extern statetype s_willshoot1, s_willshoot2, s_willshoot3, s_willshoot4, s_willshoot5, s_willshoot6;
 extern statetype s_ubershoot1, s_ubershoot2, s_ubershoot3, s_ubershoot4, s_ubershoot5, s_ubershoot6, s_ubershoot7;
 extern statetype s_deathshoot1, s_deathshoot2, s_deathshoot3, s_deathshoot4, s_deathshoot5;
-boolean Basic_IsDamaging(objtype *ret, int dist)
+boolean Basic_IsDamaging(objtype *ret, char dist)
 {
 	switch(ret->obclass)
 	{
