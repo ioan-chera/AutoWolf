@@ -65,7 +65,7 @@ public:
 
 protected:
    link_type    **chains;      // hash chains
-   bool           isInit;      // true if hash is initialized
+   //bool           isInit;      // true if hash is initialized
    unsigned int   numChains;   // number of chains
    unsigned int   numItems;    // number of items currently in table
    float          loadFactor;  // load = numitems / numchains
@@ -77,8 +77,10 @@ public:
    //
    // Constructor
    //
+   // IOANCH 20130611: no isInit needed
+   //
    EHashTable() 
-      : chains(NULL), isInit(false), numChains(0), numItems(0), 
+      : chains(NULL), numChains(0), numItems(0), 
         loadFactor(0.0f), iteratorPos(-1)
    {
        // IOANCH 20130308: just call it here now, that i don't depend on Doom
@@ -87,14 +89,13 @@ public:
    }
 
    EHashTable(unsigned int pNumChains)
-      : chains(NULL), isInit(false), numChains(0), numItems(0),
+      : chains(NULL), numChains(0), numItems(0),
         loadFactor(0.0f), iteratorPos(-1)
    {
       initialize(pNumChains);
    }
 
    // Basic accessors
-   int   isInitialized() const { return isInit;     }
    float getLoadFactor() const { return loadFactor; }
    
    unsigned int getNumItems()  const { return numItems;  }
@@ -110,12 +111,8 @@ public:
    //
    void initialize(unsigned int pNumChains)
    {
-      if(!isInit)
-      {
          numChains = pNumChains;
          chains    = (link_type **)calloc(numChains, sizeof(link_type *));
-         isInit    = true;
-      }
    }
 
    //
@@ -132,7 +129,6 @@ public:
          free(chains);
 
       chains      =  NULL;
-      isInit      =  false;
       numChains   =  0;
       numItems    =  0;
       loadFactor  =  0.0f;
@@ -147,8 +143,6 @@ public:
    //
    void addObject(item_type &object, unsigned int unmodHC)
    {
-      if(!isInit)
-         initialize(127);
 
       link_type &link = object.*linkPtr;
       link.dllData    = unmodHC; 
@@ -180,14 +174,11 @@ public:
    //
    void removeObject(item_type &object)
    {
-      if(isInit)
-      {
-         link_type &link = object.*linkPtr;
-         link.remove();
+      link_type &link = object.*linkPtr;
+      link.remove();
 
-         --numItems;
-         calcLoadFactor();
-      }
+      --numItems;
+      calcLoadFactor();
    }
 
    // Convenience overload for pointers
@@ -201,30 +192,52 @@ public:
    //
    item_type *objectForKey(param_key_type key, unsigned int unmodHC) const
    {
-      if(isInit)
-      {
-         unsigned int hc = unmodHC % numChains;
-         link_type *chain = chains[hc];
+      unsigned int hc = unmodHC % numChains;
+      link_type *chain = chains[hc];
 
-         while(chain && !key_type::Compare(chain->dllObject->*hashKey, key))
-            chain = chain->dllNext;
+      while(chain && !key_type::Compare(chain->dllObject->*hashKey, key))
+         chain = chain->dllNext;
 
-         return chain ? chain->dllObject : NULL;
-      }
-      else
-         return NULL;
+      return chain ? chain->dllObject : NULL;
    }
-
    //
    // objectForKey(key_type&)
    //
-   // Tries to find an object for the given key in the hash table. 
-   // Takes an argument of the key object type's basic_type typedef. 
+   // Tries to find an object for the given key in the hash table.
+   // Takes an argument of the key object type's basic_type typedef.
    // ie., an int, const char *, etc.
    //
    item_type *objectForKey(param_key_type key) const
    {
       return objectForKey(key, key_type::HashCode(key));
+   }
+   
+   // IOANCH 20130611: remove object for key, if existing
+   void removeObjectForKey(param_key_type key)
+   {
+      item_type *obj;
+      if ((obj = objectForKey(key))) {
+         removeObject(obj);
+      }
+   }
+    
+   // IOANCH 20130611: add object without repeating it
+   void addObjectUnique(item_type &object, unsigned int unmodHC)
+   {
+      if(!objectForKey(object.*hashKey, unmodHC))
+          addObject(object, unmodHC);
+   }
+   void addObjectUnique(item_type &object)
+   {
+      addObjectUnique(object, key_type::HashCode(object.*hashKey));
+   }
+   void addObjectUnique(item_type *object, unsigned int unmodHC)
+   {
+      addObjectUnique(*object, unmodHC);
+   }
+   void addObjectUnique(item_type *object)
+   {
+      addObjectUnique(*object);
    }
 
    //
@@ -236,15 +249,10 @@ public:
    //
    item_type *chainForKey(param_key_type key, unsigned int unmodHC)
    {
-      if(isInit)
-      {
-         unsigned int hc  = unmodHC % numChains;
-         link_type *chain = chains[hc];
+      unsigned int hc  = unmodHC % numChains;
+      link_type *chain = chains[hc];
 
-         return chain ? chain->dllObject : NULL;
-      }
-      else
-         return NULL;
+      return chain ? chain->dllObject : NULL;
    }
 
    //
@@ -267,14 +275,9 @@ public:
    //
    item_type *nextOnChain(item_type *object) const
    {
-      if(isInit)
-      {
-         link_type &link = object->*linkPtr;
+      link_type &link = object->*linkPtr;
 
-         return link.dllNext ? link.dllNext->dllObject : NULL;
-      }
-      else
-         return NULL;
+      return link.dllNext ? link.dllNext->dllObject : NULL;
    }
 
    //
@@ -299,9 +302,6 @@ public:
                           unsigned int unmodHC)
    {
       item_type *ret;
-
-      if(!isInit)
-         return NULL;
 
       if(!object) // starting a new search?
          ret = objectForKey(key, unmodHC);
@@ -333,9 +333,6 @@ public:
    {
       item_type *ret;
 
-      if(!isInit)
-         return NULL;
-
       if(!object) // starting a new search?
          ret = objectForKey(key);
       else
@@ -365,9 +362,6 @@ public:
    item_type *tableIterator(item_type *object)
    {
       item_type *ret = NULL;
-
-      if(!isInit)
-         return NULL;
 
       // already searching?
       if(object)
@@ -405,9 +399,6 @@ public:
       link_type    **prevobjs     = NULL;
       unsigned int   oldNumChains = numChains;
       unsigned int   i;
-
-      if(!isInit)
-         return;
 
       // allocate a new chains table
       chains = (link_type **)calloc(newNumChains, sizeof(link_type *));
@@ -449,6 +440,21 @@ public:
       free(prevobjs);
    }
 };
+
+//
+// EIntWrapper
+//
+// IOANCH 20130611: Structure for wrapping arbitrary key types for set
+// EHashTable semantics
+//
+template <typename T> struct EIntWrapper
+{
+   T key;
+   DLListItem<EIntWrapper<T> > link;
+};
+// The set typedef (integer)
+template <typename T> using EIntSet = EHashTable<EIntWrapper<T>, EIntHashKey,
+&EIntWrapper<T>::key, &EIntWrapper<T>::link>;
 
 #endif
 
