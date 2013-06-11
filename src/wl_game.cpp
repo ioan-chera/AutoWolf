@@ -834,9 +834,7 @@ void SetupGameLevel ()
     CA_LoadAllSounds ();
 
     // IOANCH: initialize score map here
-    scoreMap.InitFromMapsegs();
-    scoreMap.LabelRegions();
-    scoreMap.ConnectRegions();
+    scoreMap.Build();
 //    scoreMap.TestPushBlocks();
 }
 
