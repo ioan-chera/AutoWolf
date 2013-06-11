@@ -92,6 +92,20 @@ public:
 		}
 		base = current = 0;
 	}
+    
+    // Kills all elements (MUST BE POINTERS, of course)
+    void killAll()
+    {
+        Link *next;
+		for(current = base; current; current = next)
+		{
+			next = current->next;
+            delete current->obj;
+			delete current;
+		}
+		base = current = 0;
+    }
+    
     //
     // Constructor
     //
