@@ -42,7 +42,7 @@ static byte visited[MAPSIZE][MAPSIZE];
 //
 // Gets score of specified stat obj
 //
-static int GetScore(byte objid)
+inline static int GetScore(byte objid)
 {
     switch(objid)
     {
@@ -124,87 +124,96 @@ static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
     return totalscore;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 //
-// ScoreMap::DeleteRegionNeighList
+// ScoreMap private functions
 //
-// Empties the regionNeighList
-//
-void ScoreMap::DeleteRegionNeighList()
-{
-    if (regionCount > 0)
-        for (int i = 0; i < regionCount; ++i)
-            regionNeighList[i].killAll();
-    delete []regionNeighList;
-}
+////////////////////////////////////////////////////////////////////////////////
 
 //
-// ScoreMap::EmptyMap
+// ScoreMap::ClearData
 //
-// Empties the map array
+// Clears the entire data, either for destruction or rewriting upon level start
 //
-void ScoreMap::EmptyMap()
+void ScoreMap::ClearData()
 {
     for(unsigned i = 0; i < MAPSIZE; ++i)
         for(unsigned j = 0; j < MAPSIZE; ++j)
             map[i][j].Reset();
-}
-
-//
-// ScoreMap::EmptyPushBlockList
-//
-// Empties the DLList of blocks
-//
-void ScoreMap::EmptyPushBlockList()
-{
     pushBlocks.killAll();
+    regions.killAll();
+    regionCount = 0;
 }
 
 //
-// ScoreMap::OutputRegionGraphTGF
+// ScoreMap::InitFromLevelMap
 //
-// Writes the contents of the regionNeighList to a Trivial Graph Format text
-// file, which can be read by utilities such as yWorks yEd (free of charge)
+// Initializes the map from the mapsegs
+// Startup only for now
 //
-// Format is very simple:
-// - list of node indices and their names, one for each line
-// - a line with a hash character ('#') as separator
-// - list of edges, represented by pairs of node indices, optionally with label
-//
-void ScoreMap::OutputRegionGraphTGF(FILE *f) const
+void ScoreMap::InitFromLevelMap()
 {
-    // Write regions
-    for(unsigned i = 1; i <= (unsigned)regionCount; ++i)
+    // Reset from previous setup
+    ClearData();
+    
+    // Scan for actorat or tilemap
+    for(unsigned i = 0; i < MAPSIZE; ++i)
     {
-        // print each node and its label (same label as the index) per line
-        fprintf(f, "%u %u\n", i, i);
-    }
-    fprintf(f, "#\n");
-    for(unsigned i = 1; i <= (unsigned)regionCount; ++i)
-    {
-        for (DLListItem<RegionConnection> *entry = regionNeighList[i - 1].head;
-             entry;
-             entry = entry->dllNext)
+        for(unsigned j = 0; j < MAPSIZE; ++j)
         {
-            RegionConnection *obj = entry->dllObject;
-            int j = obj->region;
-            // First, print the pair
-            if(j >= i)
+            // Scan for either solid blocks (for solidity) or enemies (for score)
+            objtype *check = actorat[i][j];
+            bool solidblock = false;
+            if (check)
             {
-                fprintf(f, "%u %d", i, j);
-                unsigned blockCount = 0;
-                for (auto it = obj->pushBlocks.begin();
-                     it != obj->pushBlocks.end();
-                     ++it)
+                if(!ISPOINTER(check))   // is a wall or static blocking object
                 {
-                    blockCount++;
+                    // Scan for doors and set solidity
+                    byte door = tilemap[i][j];
+                    if (door & 0x80)
+                    {
+                        map[i][j].solidity = UnlockedDoor;
+                        byte doorlock = doorobjlist[door & ~0x80].lock;
+                        if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
+                        {
+                            map[i][j].solidity = (Solidity)(doorlock
+                                                    + (byte)UnlockedDoor);
+                        }
+                    }
+                    else
+                    {
+                        // solid block
+                        map[i][j].solidity = Solid;
+                    }
+                    solidblock = true;
                 }
-                // Print the number of walls, if larger than 0
-                if (blockCount > 0)
-                    fprintf(f, " %u", blockCount);
-                fprintf(f, "\n");
+                else
+                {
+                    // is an actor
+                    map[i][j].points = (unsigned)atr::points[check->obclass];
+                }
+            }
+            
+            // Scan for secrets
+            if (MAPSPOT(i, j, 1) == PUSHABLETILE)
+            {
+                PushBlock *pushBlock = new PushBlock(i, j, solidblock);
+                map[i][j].secret = pushBlock;
+                pushBlocks.add(pushBlock);
             }
         }
     }
+    
+    // Scan for items
+    for (statobj_t *statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
+    {
+        if(!(statptr->flags & FL_BONUS))
+            continue;
+        map[statptr->tilex][statptr->tiley].points
+        = GetScore(statptr->itemnumber);
+    }
+    
+    // How to map each region: have an array of map indices
 }
 
 //
@@ -212,19 +221,19 @@ void ScoreMap::OutputRegionGraphTGF(FILE *f) const
 //
 // Recursively floodfills the tiles to do region colouring
 //
-void ScoreMap::RecursiveLabelRegions(int tx, int ty, int colour)
+void ScoreMap::RecursiveLabelRegions(int tx, int ty, Region *region)
 {
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
         return;
     if(map[tx][ty].solidity == Solid)
         return;
-    if(map[tx][ty].region != 0)
+    if(map[tx][ty].region)
         return;
-    map[tx][ty].region = colour;
-    RecursiveLabelRegions(tx - 1, ty, colour);
-    RecursiveLabelRegions(tx + 1, ty, colour);
-    RecursiveLabelRegions(tx, ty - 1, colour);
-    RecursiveLabelRegions(tx, ty + 1, colour);
+    map[tx][ty].region = region;
+    RecursiveLabelRegions(tx - 1, ty, region);
+    RecursiveLabelRegions(tx + 1, ty, region);
+    RecursiveLabelRegions(tx, ty - 1, region);
+    RecursiveLabelRegions(tx, ty + 1, region);
 }
 
 //
@@ -235,31 +244,26 @@ void ScoreMap::RecursiveLabelRegions(int tx, int ty, int colour)
 //
 void ScoreMap::LabelRegions()
 {
-    DeleteRegionNeighList();
-    
-    regionCount = 0;
     for(unsigned i = 0; i < MAPSIZE; ++i)
         for(unsigned j = 0; j < MAPSIZE; ++j)
             if(map[i][j].solidity != Solid && !map[i][j].region)
-                RecursiveLabelRegions(i, j, ++regionCount);
-    
-    // Init the class-local data
-    regionNeighList
-    = new DLList<RegionConnection, &RegionConnection::link>[regionCount];
-    
-    for (int i = 0; i < regionCount; ++i)
-        regionNeighList[i].head = NULL;
+            {
+                ++regionCount;
+                Region *region = new Region;
+                RecursiveLabelRegions(i, j, region);
+                regions.add(region);
+            }
 }
 
 //
 // ScoreMap::RecursiveConnectRegion
 //
-// Scans all adjacent tiles, going through pushwalls, until encountering a 
+// Scans all adjacent tiles, going through pushwalls, until encountering a
 // region.
 // Then it adds that region to a set, which will connect all regions with edges
 //
 void ScoreMap::RecursiveConnectRegion(int tx, int ty,
-                                      std::unordered_set<int> &regionSet,
+                                      std::unordered_set<Region *> &regionSet,
                                       std::unordered_set<PushBlock *> &secretSet)
 {
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
@@ -293,20 +297,14 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty,
 //
 void ScoreMap::ConnectRegions()
 {
-    for(DLListItem<PushBlock> *entry = pushBlocks.head;
-        entry;
-        entry = entry->dllNext)
-    {
-        const PushBlock &obj = *entry->dllObject;
-        if (obj.visited)
-            continue;
-
+    for(PushBlock *entry = pushBlocks.firstObject(); entry; entry = pushBlocks.nextObject())
+    {        
         // Initialize the data
-        std::unordered_set<int> regionSet;
+        std::unordered_set<Region *> regionSet;
         std::unordered_set<PushBlock *> secretSet;
-
+        
         // Do the recursive work
-        RecursiveConnectRegion(obj.tilex, obj.tiley, regionSet, secretSet);
+        RecursiveConnectRegion(entry->tilex, entry->tiley, regionSet, secretSet);
         
         // What should the final result be:
         // An array of regions. Each region will be associated with some neigh-
@@ -332,19 +330,17 @@ void ScoreMap::ConnectRegions()
         
         // Auxiliary function to do the connection
         // FIXME: make it a member function
-        auto doConnection = [&](int reg1, int reg2)
+        auto doConnection = [&](Region *reg1, Region *reg2)
         {
             bool found = false;
-            for (DLListItem<RegionConnection> *entry =
-                 regionNeighList[reg1 - 1].head;
+            for (RegionConnection *entry = reg1->neighList.firstObject();
                  entry;
-                 entry = entry->dllNext)
+                 entry = reg1->neighList.nextObject())
             {
-                if (entry->dllObject->region == reg2)
+                if (entry->region == reg2)
                 {
                     // Neighbour region already set, just add the blocks
-                    entry->dllObject->pushBlocks.insert(secretSet.begin(),
-                                                        secretSet.end());
+                    entry->pushBlocks.insert(secretSet.begin(), secretSet.end());
                     found = true;
                     break;  // done
                 }
@@ -354,7 +350,7 @@ void ScoreMap::ConnectRegions()
                 RegionConnection *connection = new RegionConnection;
                 connection->region = reg2;
                 connection->pushBlocks = secretSet;
-                regionNeighList[reg1 - 1].insert(connection);
+                reg1->neighList.add(connection);
             }
         };
         
@@ -377,72 +373,55 @@ void ScoreMap::ConnectRegions()
 }
 
 //
-// ScoreMap::InitFromMapsegs
+// ScoreMap::OutputRegionGraphTGF
 //
-// Initializes the map from the mapsegs
-// Startup only for now
+// Writes the contents of the regionNeighList to a Trivial Graph Format text
+// file, which can be read by utilities such as yWorks yEd (free of charge)
 //
-void ScoreMap::InitFromMapsegs()
+// Format is very simple:
+// - list of node indices and their names, one for each line
+// - a line with a hash character ('#') as separator
+// - list of edges, represented by pairs of node indices, optionally with label
+//
+void ScoreMap::OutputRegionGraphTGF(FILE *f) 
 {
-    // Reset from previous setup
-    EmptyPushBlockList();
-    EmptyMap();
-    
-    // Scan for actorat or tilemap
-    for(unsigned i = 0; i < MAPSIZE; ++i)
+    // Write regions
+    for(Region *region = regions.firstObject();
+        region;
+        region = regions.nextObject())
     {
-        for(unsigned j = 0; j < MAPSIZE; ++j)
+        // print each node and its label (same label as the index) per line
+        fprintf(f, "%llu %llu\n", (unsigned long long)region,
+                (unsigned long long)region);
+    }
+    fprintf(f, "#\n");
+    for(Region *reg1 = regions.firstObject();
+        reg1;
+        reg1 = regions.nextObject())
+    {
+        for (RegionConnection *obj = reg1->neighList.firstObject();
+             obj;
+             obj = reg1->neighList.nextObject())
         {
-            // Scan for either solid blocks (for solidity) or enemies (for score)
-            objtype *check = actorat[i][j];
-            bool solidblock = false;
-            if (check)
+            Region *reg2 = obj->region;
+            // First, print the pair
+            if((unsigned long long)reg2 >= (unsigned long long)reg1)
             {
-                if(!ISPOINTER(check))
+                fprintf(f, "%llu %llu", (unsigned long long)reg1,
+                        (unsigned long long)reg2);
+                unsigned blockCount = 0;
+                for (auto it = obj->pushBlocks.begin();
+                     it != obj->pushBlocks.end();
+                     ++it)
                 {
-                    // Scan for doors and set solidity
-                    byte door = tilemap[i][j];
-                    if (door & 0x80)
-                    {
-                        map[i][j].solidity = UnlockedDoor;
-                        byte doorlock = doorobjlist[door & ~0x80].lock;
-                        if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
-                        {
-                            map[i][j].solidity = (Solidity)(doorlock
-                                                            + (byte)UnlockedDoor);
-                        }
-                    }
-                    else
-                    {
-                        // solid block
-                        map[i][j].solidity = Solid;
-                    }
-                    solidblock = true;
+                    blockCount++;
                 }
-                else
-                {
-                    // is an actor
-                    map[i][j].points = (unsigned)atr::points[check->obclass];
-                }
-            }
-            
-            // Scan for secrets
-            if (MAPSPOT(i, j, 1) == PUSHABLETILE)
-            {
-                PushBlock *pushBlock = new PushBlock(i, j, solidblock);
-                map[i][j].secret = pushBlock;
-                pushBlocks.insert(pushBlock);
+                // Print the number of walls, if larger than 0
+                if (blockCount > 0)
+                    fprintf(f, " %u", blockCount);
+                fprintf(f, "\n");
             }
         }
-    }
-    
-    // Scan for items
-    for (statobj_t *statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
-    {
-        if(!(statptr->flags & FL_BONUS))
-            continue;
-        map[statptr->tilex][statptr->tiley].points
-        = GetScore(statptr->itemnumber);
     }
 }
 
@@ -454,29 +433,42 @@ void ScoreMap::InitFromMapsegs()
 void ScoreMap::TestPushBlocks()
 {
     puts("Testing push blocks...");
-    DLListItem<PushBlock> *entry;
-    
-    for (entry = pushBlocks.head; entry; entry = entry->dllNext)
+
+    for (PushBlock *entry = pushBlocks.firstObject();
+         entry;
+         entry = pushBlocks.nextObject())
     {
-        printf("tx=%d ty=%d us=%d\n", entry->dllObject->tilex,
-               entry->dllObject->tiley,
-               entry->dllObject->usable);
-    }
-    for(unsigned i = 0; i < MAPSIZE; ++i)
-    {
-        for(unsigned j = 0; j < MAPSIZE; ++j)
-        {
-            if(map[j][i].region)
-                printf("%2d", map[j][i].region);
-            else if(map[j][i].secret)
-                printf(" #");
-            else
-                printf("  ");
-        }
-        puts("");
+        printf("tx=%d ty=%d us=%d\n", entry->tilex,
+               entry->tiley,
+               entry->usable);
     }
     OutputRegionGraphTGF(stdout);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ScoreMap public functions
+//
+////////////////////////////////////////////////////////////////////////////////
+
+//
+// ScoreMap::Build
+//
+// Does the entire score-map reset and build process, called from SetupGameLevel
+//
+void ScoreMap::Build()
+{
+    InitFromLevelMap();
+    LabelRegions();
+    ConnectRegions();
+//    TestPushBlocks();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Secret functions
+//
+////////////////////////////////////////////////////////////////////////////////
 
 //
 // Secret::CalcScore
@@ -486,9 +478,8 @@ void ScoreMap::TestPushBlocks()
 int Secret::CalcScore(int tx, int ty)
 {
     int ret = 0;
-
+    
     ret = RecursiveCalcScore(tx, ty, true);
     
     return ret;
 }
-
