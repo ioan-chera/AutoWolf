@@ -99,7 +99,7 @@
 		4F1ECC2216E7BEAB00A37742 /* obattrib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = obattrib.h; path = ../src/obattrib.h; sourceTree = "<group>"; };
 		4F1ECC2716E922B500A37742 /* Property.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Property.cpp; path = ../src/Property.cpp; sourceTree = "<group>"; };
 		4F1ECC2816E922B500A37742 /* Property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Property.h; path = ../src/Property.h; sourceTree = "<group>"; };
-		4F1ECC2F16EA4F5600A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = e_hash.h; path = ../src/e_hash.h; sourceTree = "<group>"; };
+		4F1ECC2F16EA4F5600A37742 /* e_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 3; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = e_hash.h; path = ../src/e_hash.h; sourceTree = "<group>"; tabWidth = 3; };
 		4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = e_hashkeys.h; path = ../src/e_hashkeys.h; sourceTree = "<group>"; };
 		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = m_dllist.h; path = ../src/m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../src/e_hashkeys.cpp; sourceTree = "<group>"; };
