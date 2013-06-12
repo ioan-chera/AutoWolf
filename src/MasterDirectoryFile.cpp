@@ -114,7 +114,11 @@ bool MasterDirectoryFile::loadFromFile()
 		return false;
 	}
 	
-	DirectoryFile::doReadFromFile(f);
+	if(!DirectoryFile::doReadFromFile(f))
+    {
+        fclose(f);
+        return false;
+    }
 	
 	fclose(f);
 	

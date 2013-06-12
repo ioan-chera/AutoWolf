@@ -176,7 +176,9 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 	fread(&numFiles, sizeof(uint32_t), 1, f);
 	fread(&addressOfList, sizeof(uint64_t), 1, f);
 	
-	fseek(f, (long)(baseaddr + addressOfList), SEEK_SET);
+	int seekresult = fseek(f, (long)(baseaddr + addressOfList), SEEK_SET);
+    if(seekresult < 0)  // error
+        return false;
 	
 	uint32_t i;
 	uint16_t namelen, oldnamelen = 0;
