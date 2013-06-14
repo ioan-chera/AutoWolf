@@ -297,7 +297,8 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty,
 //
 void ScoreMap::ConnectRegions()
 {
-    for(PushBlock *entry = pushBlocks.firstObject(); entry; entry = pushBlocks.nextObject())
+    for(PushBlock *entry = pushBlocks.firstObject(); entry; 
+        entry = pushBlocks.nextObject())
     {        
         // Initialize the data
         std::unordered_set<Region *> regionSet;
@@ -340,7 +341,8 @@ void ScoreMap::ConnectRegions()
                 if (entry->region == reg2)
                 {
                     // Neighbour region already set, just add the blocks
-                    entry->pushBlocks.insert(secretSet.begin(), secretSet.end());
+                    entry->pushBlocks.insert(secretSet.begin(), 
+                                             secretSet.end());
                     found = true;
                     break;  // done
                 }
@@ -443,6 +445,70 @@ void ScoreMap::TestPushBlocks()
                entry->usable);
     }
     OutputRegionGraphTGF(stdout);
+    printf("THEN\n");
+    for(Region *region = regions.firstObject();
+        region;
+        region = regions.nextObject())
+    {
+        printf("%u has: ", (unsigned long long)region);
+        for(RegionConnection *connection = region->neighList.firstObject();
+            connection; connection = region->neighList.nextObject())
+        {
+            for(auto it = connection->pushPositions.begin(); 
+                it != connection->pushPositions.end(); ++it)
+            {
+                RegionConnection::PushPosition *a = (*it);
+                printf("(%d %d)-(%d %d) ", a->tx, a->ty, a->block->tilex, 
+                       a->block->tiley);
+            }
+        }
+        printf("\n");
+    }
+}
+
+//
+// ScoreMap::GetPushPositions
+//
+// For each region and its neighbours, it looks for actually pushable blocks
+//
+static struct {char tx, ty;} rel[] = 
+{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+void ScoreMap::GetPushPositions()
+{
+    for(Region *region = regions.firstObject(); region; 
+        region = regions.nextObject())
+    {
+        for(RegionConnection *neigh = region->neighList.firstObject();
+            neigh;
+            neigh = region->neighList.nextObject())
+        {
+            for(auto it = neigh->pushBlocks.begin(); 
+                it != neigh->pushBlocks.end(); ++it)
+            {
+                PushBlock *block = *it;
+                for(char j = 0; j < 4; ++j)
+                {
+                    int reltx = block->tilex + rel[j].tx, 
+                        relty = block->tiley + rel[j].ty;
+                    if(map[reltx][relty].region == region)
+                    {
+                        // Got one of mine. See the other side now.
+                        if (!actorat[block->tilex - 2 * rel[j].tx]
+                                    [block->tiley - 2 * rel[j].ty]) 
+                        {
+                            // Free spot. So it's pushable
+                            RegionConnection::PushPosition *pp 
+                            = new RegionConnection::PushPosition;
+                            pp->tx = reltx;
+                            pp->ty = relty;
+                            pp->block = block;
+                            neigh->pushPositions.insert(pp);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -461,7 +527,8 @@ void ScoreMap::Build()
     InitFromLevelMap();
     LabelRegions();
     ConnectRegions();
-//    TestPushBlocks();
+    GetPushPositions();
+    TestPushBlocks();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

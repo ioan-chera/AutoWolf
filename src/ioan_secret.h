@@ -52,7 +52,7 @@ class ScoreMap
     //
     // Secret wall/block
     //
-    struct PushBlock
+    class PushBlock
     {
         friend class ScoreMap;
         
@@ -80,8 +80,15 @@ class ScoreMap
     class Region;
     struct RegionConnection
     {
+        struct PushPosition 
+        {
+            int tx, ty;
+            PushBlock *block;
+            Boolean operator ==(const PushPosition &other) const {return tx == other.tx && ty == other.ty && block == other.block;}
+        };
         Region *region;
         std::unordered_set<PushBlock *> pushBlocks;
+        std::unordered_set<PushPosition *> pushPositions;
     };
     
     class ScoreBlock;
@@ -99,8 +106,6 @@ class ScoreMap
         // Region graph. Connects each region with the others, with the number of
         // pushblocks as parameter
         List<RegionConnection *> neighList;
-        
-        
     };
     
     //
@@ -150,6 +155,7 @@ class ScoreMap
     void ClearData();
     void ConnectRegions();
     void DeleteRegionNeighList();
+    void GetPushPositions();
     void InitFromLevelMap();
     void LabelRegions();
     void OutputRegionGraphTGF(FILE *f = stdout);
