@@ -486,6 +486,8 @@ void ScoreMap::GetPushPositions()
                 it != neigh->pushBlocks.end(); ++it)
             {
                 PushBlock *block = *it;
+                if(!block->usable)
+                    continue;
                 for(char j = 0; j < 4; ++j)
                 {
                     int reltx = block->tilex + rel[j].tx, 
