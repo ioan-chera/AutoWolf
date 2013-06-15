@@ -1130,6 +1130,8 @@ void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, Boolean tryuse) const
     int movedir;
     // set up the target angle
 	// int tangle = Basic::DirAngle(mx,my,nx,ny);
+    if(nx == mx && ny == my)
+        return; // do nothing if stationary
 	int tangle = 0;
 	if(nx > mx)
 		tangle = 0;
@@ -1330,7 +1332,7 @@ void BotMan::MoveByStrafe()
 		tryuse = (tile & 0x80) == 0x80 && (doorobjlist[tile & ~0x80].action == 
             dr_closed || doorobjlist[tile & ~0x80].action == dr_closing);
 	}
-	
+	//printf("%d %d %d %d\n", mx, my, nx, ny);
 	ExecuteStrafe(mx, my, nx, ny, tryuse);
 }
 
