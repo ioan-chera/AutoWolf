@@ -450,14 +450,14 @@ void ScoreMap::TestPushBlocks()
         region;
         region = regions.nextObject())
     {
-        printf("%u has: ", (unsigned long long)region);
+        printf("%llu has: ", (unsigned long long)region);
         for(RegionConnection *connection = region->neighList.firstObject();
             connection; connection = region->neighList.nextObject())
         {
-            for(auto it = connection->pushPositions.begin(); 
-                it != connection->pushPositions.end(); ++it)
+            for(RegionConnection::PushPosition *a =
+                connection->pushPositions.firstObject(); 
+                a; a = connection->pushPositions.nextObject())
             {
-                RegionConnection::PushPosition *a = (*it);
                 printf("(%d %d)-(%d %d) ", a->tx, a->ty, a->block->tilex, 
                        a->block->tiley);
             }
@@ -493,8 +493,8 @@ void ScoreMap::GetPushPositions()
                     if(map[reltx][relty].region == region)
                     {
                         // Got one of mine. See the other side now.
-                        if (!actorat[block->tilex - 2 * rel[j].tx]
-                                    [block->tiley - 2 * rel[j].ty]) 
+                        if (!actorat[block->tilex - rel[j].tx]
+                                    [block->tiley - rel[j].ty]) 
                         {
                             // Free spot. So it's pushable
                             RegionConnection::PushPosition *pp 
@@ -502,7 +502,7 @@ void ScoreMap::GetPushPositions()
                             pp->tx = reltx;
                             pp->ty = relty;
                             pp->block = block;
-                            neigh->pushPositions.insert(pp);
+                            neigh->pushPositions.add(pp);
                         }
                     }
                 }

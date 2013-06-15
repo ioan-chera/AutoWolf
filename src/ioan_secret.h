@@ -78,8 +78,9 @@ class ScoreMap
     // Simple structure that consists of a region index and a list of pushwalls
     //
     class Region;
-    struct RegionConnection
+    class RegionConnection
     {
+    public:
         struct PushPosition 
         {
             int tx, ty;
@@ -88,7 +89,11 @@ class ScoreMap
         };
         Region *region;
         std::unordered_set<PushBlock *> pushBlocks;
-        std::unordered_set<PushPosition *> pushPositions;
+        List<PushPosition *> pushPositions;
+        ~RegionConnection()
+        {
+            pushPositions.killAll();
+        }
     };
     
     class ScoreBlock;
