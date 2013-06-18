@@ -45,6 +45,8 @@ template <typename T> class List
 		T obj;
 		Link *next, **prev;
 	} *base, *current;
+    
+    unsigned cnt;
 	
 public:
     // Adds an object with the given value
@@ -59,7 +61,7 @@ public:
             current->prev = &base->next;
         
         base->prev = &base;
-        
+        ++cnt;
 	}
     // Searches for an element equal to 'what', and deletes its link (but does
     // not delete any pointed object).
@@ -77,6 +79,7 @@ public:
                     next->prev = prev;
                 
                 delete current;
+                --cnt;
 				return;
 			}
 		}
@@ -91,6 +94,7 @@ public:
 			delete current;
 		}
 		base = current = 0;
+        cnt = 0;
 	}
     
     // Kills all elements (MUST BE POINTERS, of course)
@@ -104,6 +108,7 @@ public:
 			delete current;
 		}
 		base = current = 0;
+        cnt = 0;
     }
     
     //
@@ -111,6 +116,7 @@ public:
     //
 	List()
 	{
+        cnt = 0;
 		base = 0;
 	}
     //
@@ -132,6 +138,11 @@ public:
 		current = current->next;
 		return current ? current->obj : 0;
 	}
+    // Count objects
+    unsigned count() const
+    {
+        return cnt;
+    }
 };
 
 #endif
