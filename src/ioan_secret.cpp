@@ -411,16 +411,13 @@ void ScoreMap::OutputRegionGraphTGF(FILE *f)
             {
                 fprintf(f, "%llu %llu", (unsigned long long)reg1,
                         (unsigned long long)reg2);
-                unsigned blockCount = 0;
-                for (auto it = obj->pushBlocks.begin();
-                     it != obj->pushBlocks.end();
-                     ++it)
-                {
-                    blockCount++;
-                }
+                unsigned blockCount = obj->pushBlocks.size();
+                unsigned posCount = obj->pushPositions.count();
                 // Print the number of walls, if larger than 0
-                if (blockCount > 0)
-                    fprintf(f, " %u", blockCount);
+                if (blockCount + posCount > 0)
+                {
+                    fprintf(f, " %u+%u", blockCount, posCount);
+                }
                 fprintf(f, "\n");
             }
         }
