@@ -156,6 +156,8 @@ class ScoreMap
     int regionCount;
     // Region list
     List<Region *> regions;
+    // Player start region
+    Region *startRegion;
 
     void ClearData();
     void ConnectRegions();

@@ -230,6 +230,11 @@ void ScoreMap::RecursiveLabelRegions(int tx, int ty, Region *region)
     if(map[tx][ty].region)
         return;
     map[tx][ty].region = region;
+    
+    word mapslot = *(mapsegs[1] + (ty << mapshift) + tx);
+    if(mapslot >= PLAYER_START_NORTH && mapslot <= PLAYER_START_WEST)
+        startRegion = region;
+        
     RecursiveLabelRegions(tx - 1, ty, region);
     RecursiveLabelRegions(tx + 1, ty, region);
     RecursiveLabelRegions(tx, ty - 1, region);
@@ -432,6 +437,7 @@ void ScoreMap::OutputRegionGraphTGF(FILE *f)
 void ScoreMap::TestPushBlocks()
 {
     puts("Testing push blocks...");
+    printf("Start region: %llu\n", (unsigned long long)startRegion);
 
     for (PushBlock *entry = pushBlocks.firstObject();
          entry;
