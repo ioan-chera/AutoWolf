@@ -278,11 +278,11 @@ static void ScanInfoPlane()
 
             switch (tile)
             {
-                case 19:
-                case 20:
-                case 21:
-                case 22:
-                    SpawnPlayer(x,y,NORTH+tile-19);
+                case PLAYER_START_NORTH:
+                case PLAYER_START_EAST:
+                case PLAYER_START_SOUTH:
+                case PLAYER_START_WEST:
+                    SpawnPlayer(x, y, NORTH + tile - PLAYER_START_NORTH);
                     break;
 
                 case 23:
