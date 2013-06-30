@@ -453,8 +453,8 @@ template <typename T> struct EIntWrapper
    DLListItem<EIntWrapper<T> > link;
 };
 // The set typedef (integer)
-template <typename T> using EIntSet = EHashTable<EIntWrapper<T>, EIntHashKey,
-&EIntWrapper<T>::key, &EIntWrapper<T>::link>;
+// template <typename T> using EIntSet = EHashTable<EIntWrapper<T>, EIntHashKey,
+// &EIntWrapper<T>::key, &EIntWrapper<T>::link>;
 
 #endif
 

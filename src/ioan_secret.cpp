@@ -533,7 +533,7 @@ void ScoreMap::Build()
     LabelRegions();
     ConnectRegions();
     GetPushPositions();
-    TestPushBlocks();
+//    TestPushBlocks();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -175,6 +175,12 @@ void BotMan::MoodBox::SetMood(unsigned inMood)
 //
 // Should always set the same value to mood, throughout the day
 //
+
+// Same as C++11 minstd_rand
+static inline unsigned rnd(unsigned r)
+{
+	return r * 48271 % 2147483647;
+}
 void BotMan::SetMood()
 {
     // seconds
@@ -185,13 +191,7 @@ void BotMan::SetMood()
     timeinfo = localtime(&rawtime);
     int day = timeinfo->tm_yday + 366 * timeinfo->tm_year;
     
-    unsigned r;
-
-    // Same as C++11 minstd_rand
-    unsigned (*rnd)(unsigned) = [](unsigned r)
-    {
-        return r * 48271 % 2147483647;
-    };
+    unsigned r; 
     
     // Day will be used as random seed
     r = rnd((unsigned)day);
@@ -332,7 +332,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // {tx, tx, tx + 1, tx - 1}
     
     // Nope. Let's make a lambda function here.
-    auto secretVerify = [&](int txofs, int tyofs)
+    auto secretVerify = [&](int txofs, int tyofs) -> Boolean
     {
         if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
 		{

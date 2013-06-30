@@ -175,98 +175,108 @@ const atr::state atr::states[] =
 	{NULL,            NULL,        NULL,             NULL,       NULL,        NULL},        // sparkobj
 };
 
+inline static void NullAction() {}
+inline static void ResetSpeed()
+{
+	newobj->speed = SPDPATROL;
+    newobj->dir = nodir;
+}
+inline static void ResetSpeedSchabbs()
+{
+	newobj->speed = SPDPATROL;
+    newobj->dir = nodir;
+	if (DigiMode != sds_Off)
+		s_schabbdie2.tictime = 140;
+	else
+		s_schabbdie2.tictime = 5;
+}
+inline static void ResetSpeedHitler()
+{
+	newobj->speed = SPDPATROL;
+    newobj->dir = nodir;
+	if (DigiMode != sds_Off)
+		s_hitlerdie2.tictime = 140;
+	else
+		s_hitlerdie2.tictime = 5;
+}
+inline static void ResetSpeedGift()
+{
+	newobj->speed = SPDPATROL;
+    newobj->dir = nodir;
+	if (DigiMode != sds_Off)
+		s_giftdie2.tictime = 140;
+	else
+		s_giftdie2.tictime = 5;
+}
+inline static void ResetSpeedFat()
+{
+	newobj->speed = SPDPATROL;
+    newobj->dir = nodir;
+    if (DigiMode != sds_Off)
+        s_fatdie2.tictime = 140;
+    else
+        s_fatdie2.tictime = 5;
+}
+inline static void SetAsBonus()
+{
+	newobj->flags |= FL_BONUS;
+}
+inline static void AngelTics()
+{
+	if (SoundBlasterPresent && DigiMode != sds_Off)
+		s_angeldie11.tictime = 105;
+}
+inline static void TransTics()
+{
+	if (SoundBlasterPresent && DigiMode != sds_Off)
+		s_transdie01.tictime = 105;
+}
+inline static void UberTics()
+{
+	if (SoundBlasterPresent && DigiMode != sds_Off)
+		s_uberdie01.tictime = 70;
+}
+inline static void WillTics()
+{
+	if (SoundBlasterPresent && DigiMode != sds_Off)
+		s_willdie2.tictime = 70;
+}
+inline static void DeathTics()
+{
+	if (SoundBlasterPresent && DigiMode != sds_Off)
+		s_deathdie2.tictime = 105;
+}
 const atr::action atr::actions[] =
 {
-	{    []{},     []{}},	// nothing,
-	{    []{},     []{}},	// playerobj,
-	{    []{},     []{}},	// inertobj,
-	{    []{},     []{}},	// guardobj,
-	{    []{},     []{}},	// officerobj,
-	{    []{},     []{}},	// ssobj,
-	{    []{},     []{}},	// dogobj,
-	{    []{
-        newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-    },     []{}},	// bossobj,
-	{    []{
-		newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-		if (DigiMode != sds_Off)
-			s_schabbdie2.tictime = 140;
-		else
-			s_schabbdie2.tictime = 5;
-	},
-        []{}},	// schabbobj,
-	{    []{
-        newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-    },     []{}},	// fakeobj,
-	{    []{
-		newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-		if (DigiMode != sds_Off)
-			s_hitlerdie2.tictime = 140;
-		else
-			s_hitlerdie2.tictime = 5;
-	},
-        []{}},	// mechahitlerobj,
-	{    []{},     []{}},	// mutantobj,
-	{    []{},     []{}},	// needleobj,
-	{    []{},     []{}},	// fireobj,
-	{    []{},     []{}},	// bjobj,
-	{    []{},     []{}},	// ghostobj,
-	{    []{},     []{}},	// realhitlerobj,
-	{    []{
-        newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-    },     []{}},	// gretelobj,
-	{    []{
-        newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-		if (DigiMode != sds_Off)
-			s_giftdie2.tictime = 140;
-		else
-			s_giftdie2.tictime = 5;
-    },     []{}},	// giftobj,
-	{    []{
-        newobj->speed = SPDPATROL;
-        newobj->dir = nodir;
-        if (DigiMode != sds_Off)
-            s_fatdie2.tictime = 140;
-        else
-            s_fatdie2.tictime = 5;
-    },     []{}},	// fatobj,
-	{    []{},     []{}},	// rocketobj,
-	{    []{
-        newobj->flags |= FL_BONUS;
-    },     []{}},	// spectreobj,
-	{    []{
-		if (SoundBlasterPresent && DigiMode != sds_Off)
-			s_angeldie11.tictime = 105;
-	},
-        []{}},	// angelobj,
-	{    []{
-		if (SoundBlasterPresent && DigiMode != sds_Off)
-			s_transdie01.tictime = 105;
-	},
-        []{}},	// transobj,
-	{    []{
-		if (SoundBlasterPresent && DigiMode != sds_Off)
-			s_uberdie01.tictime = 70;
-	},
-        []{}},	// uberobj,
-	{    []{
-		if (SoundBlasterPresent && DigiMode != sds_Off)
-			s_willdie2.tictime = 70;
-	},
-        []{}},	// willobj,
-	{    []{
-		if (SoundBlasterPresent && DigiMode != sds_Off)
-			s_deathdie2.tictime = 105;
-	},
-        []{}},	// deathobj,
-	{    []{},     []{}},	// hrocketobj,
-	{    []{},     []{}},	// sparkobj
+	{    NullAction,     NullAction},	// nothing,
+	{    NullAction,     NullAction},	// playerobj,
+	{    NullAction,     NullAction},	// inertobj,
+	{    NullAction,     NullAction},	// guardobj,
+	{    NullAction,     NullAction},	// officerobj,
+	{    NullAction,     NullAction},	// ssobj,
+	{    NullAction,     NullAction},	// dogobj,
+	{    ResetSpeed,     NullAction},	// bossobj,
+	{    ResetSpeedSchabbs,        NullAction},	// schabbobj,
+	{    ResetSpeed,     NullAction},	// fakeobj,
+	{    ResetSpeedHitler,        NullAction},	// mechahitlerobj,
+	{    NullAction,     NullAction},	// mutantobj,
+	{    NullAction,     NullAction},	// needleobj,
+	{    NullAction,     NullAction},	// fireobj,
+	{    NullAction,     NullAction},	// bjobj,
+	{    NullAction,     NullAction},	// ghostobj,
+	{    NullAction,     NullAction},	// realhitlerobj,
+	{    ResetSpeed,     NullAction},	// gretelobj,
+	{    ResetSpeedGift,     NullAction},	// giftobj,
+	{    ResetSpeedFat,     NullAction},	// fatobj,
+	{    NullAction,     NullAction},	// rocketobj,
+	{    SetAsBonus,     NullAction},	// spectreobj,
+	{    AngelTics,        NullAction},	// angelobj,
+	{    TransTics,        NullAction},	// transobj,
+	{    UberTics,        NullAction},	// uberobj,
+	{    WillTics,        NullAction},	// willobj,
+	{    DeathTics,        NullAction},	// deathobj,
+	{    NullAction,     NullAction},	// hrocketobj,
+	{    NullAction,     NullAction},	// sparkobj
 };
 
 
