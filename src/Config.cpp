@@ -50,7 +50,7 @@ PString Config::dir;
 int     Config::extravbls = 0;
 
 Boolean Config::forcegrabmouse;
-Boolean Config::fullscreen = true;
+Boolean Config::fullscreen = false;
 
 #if defined(_arch_dreamcast)
 int     Config::joystickhat = 0;
