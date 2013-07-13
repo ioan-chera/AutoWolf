@@ -1572,7 +1572,70 @@ void    ThreeDRefresh ()
 
     VL_UnlockSurface(screenBuffer);
     vbuf = NULL;
+   
+   //
+   // IOANCH 20130713: opencv
+   //
+   // grayscale image creation
 
+   static CvVideoWriter *vid_writ = 0;
+   static unsigned nframes = 0;
+   
+   ++nframes;
+   if(nframes <= 350)
+   {
+      IplImage *img = cvCreateImage(cvSize(screenBuffer->w, screenBuffer->h),
+                                    IPL_DEPTH_8U, 1);
+
+      
+      PString avi = Config::Dir();
+      if(!vid_writ)
+         vid_writ =
+         cvCreateVideoWriter(avi.concatSubpath("autowolf.avi").buffer(),
+                             CV_FOURCC('M', 'J', 'P', 'G'), 70,
+                             cvSize(img->widthStep, img->height), 0);
+      
+      if(img && vid_writ)
+      {
+         uint8_t col_idx;
+         unsigned buf_idx, x, y;
+//         uint8_t *newimg;
+         
+         //if(!newimg)
+//         newimg = new uint8_t[img->widthStep * img->height];
+         
+         for(y = 0; y < screenBuffer->h; ++y)
+         {
+            for(x = 0; x < screenBuffer->w; ++x)
+            {
+               buf_idx = x + y * img->widthStep;
+               col_idx = ((uint8_t *)screenBuffer->pixels)[buf_idx];
+               
+               const SDL_Color &col =
+               screenBuffer->format->palette->colors[col_idx];
+
+               cvSet2D(img, y, x, cvScalar((col.r + col.g + col.b) / 3));
+//               img->imageData[buf_idx] = (col.r + col.g + col.b) / 3;
+            }
+         }
+//         img->imageData = (char *)newimg;
+//         cvSetData(img, newimg, img->widthStep);
+         
+         cvWriteFrame(vid_writ, img);
+         
+         if(nframes >= 350)
+         {
+            cvNamedWindow("Avem", 1);
+            cvShowImage("Avem", img);
+            cvReleaseVideoWriter(&vid_writ);
+            vid_writ = NULL;
+            cvWaitKey(0);
+            cvDestroyWindow("Avem");
+         }
+         cvReleaseImage(&img);
+
+      }
+   }
 //
 // show screen and time last cycle
 //
