@@ -43,6 +43,8 @@ CXXFLAGS += $(CFLAGS)
 
 LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lSDL_mixer
+LDFLAGS += -lopencv_core
+LDFLAGS += -lopencv_highgui
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
