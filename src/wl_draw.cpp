@@ -1580,10 +1580,10 @@ void    ThreeDRefresh ()
    // grayscale image creation
 
    static CvVideoWriter *vid_writ = 0;
-   static unsigned nframes = 0;
+   static unsigned nframes = 0, nset = 0;
    
    ++nframes;
-   if(nframes <= 350)
+   if(!nset)
    {
       IplImage *img = cvCreateImage(cvSize(screenBuffer->w, screenBuffer->h),
                                     IPL_DEPTH_8U, 1);
@@ -1626,6 +1626,7 @@ void    ThreeDRefresh ()
          
          if(nframes >= 350)
          {
+			 nset = 1;
             cvNamedWindow("Avem", 1);
             cvShowImage("Avem", img);
             cvReleaseVideoWriter(&vid_writ);
