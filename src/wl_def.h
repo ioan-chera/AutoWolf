@@ -55,11 +55,6 @@
 #	include <stdarg.h>
 #endif
 #include <SDL.h>
-//
-// IOANCH 20130713: opencv
-//
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
 
 #if !defined O_BINARY
 #	define O_BINARY 0

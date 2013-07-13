@@ -25,6 +25,7 @@
 
 // WL_DRAW.C
 
+#include "opencv_hdr.h"	// IOANCH 20130713: opencv
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
