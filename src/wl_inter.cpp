@@ -448,7 +448,7 @@ BJ_Breathe ()
     static int which = 0, max = 10;
     int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
 
-    SDL_Delay(5);
+    I_Delay(5);
 
     if ((int32_t) GetTimeCount () - lastBreathTime > max)
     {

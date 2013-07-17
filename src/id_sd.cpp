@@ -51,6 +51,7 @@
 
 #include "version.h"
 #include "wl_def.h"
+#include "i_system.h"
 #include "wl_main.h"
 #include <SDL_mixer.h>
 #if defined(GP2X_940)
@@ -245,8 +246,8 @@ static void SD_L_SoundFinished()
 
 #ifdef NOTYET
 
-void SDL_turnOnPCSpeaker(word timerval);
-#pragma aux SDL_turnOnPCSpeaker = \
+void SD_L_turnOnPCSpeaker(word timerval);
+#pragma aux SD_L_turnOnPCSpeaker = \
         "mov    al,0b6h" \
         "out    43h,al" \
         "mov    al,bl" \
@@ -259,15 +260,15 @@ void SDL_turnOnPCSpeaker(word timerval);
         parm [bx] \
         modify exact [al]
 
-void SDL_turnOffPCSpeaker();
-#pragma aux SDL_turnOffPCSpeaker = \
+void SD_L_turnOffPCSpeaker();
+#pragma aux SD_L_turnOffPCSpeaker = \
         "in     al,61h" \
         "and    al,0fch" \
         "out    61h,al" \
         modify exact [al]
 
-void SDL_setPCSpeaker(byte val);
-#pragma aux SDL_setPCSpeaker = \
+void SD_L_setPCSpeaker(byte val);
+#pragma aux SD_L_setPCSpeaker = \
         "in     al,61h" \
         "and    al,0fch" \
         "or     al,ah" \
@@ -275,7 +276,7 @@ void SDL_setPCSpeaker(byte val);
         parm [ah] \
         modify exact [al]
 
-void inline SDL_DoFX()
+void inline SD_L_DoFX()
 {
         if(pcSound)
         {
@@ -284,9 +285,9 @@ void inline SDL_DoFX()
                         pcLastSample=*pcSound;
 
                         if(pcLastSample)
-                                SDL_turnOnPCSpeaker(pcLastSample*60);
+                                SD_L_turnOnPCSpeaker(pcLastSample*60);
                         else
-                                SDL_turnOffPCSpeaker();
+                                SD_L_turnOffPCSpeaker();
                 }
                 pcSound++;
                 pcLengthLeft--;
@@ -296,23 +297,23 @@ void inline SDL_DoFX()
                         // IOANCH 20130301: unification
                         SoundNumber=0;
                         SoundPriority=0;
-                        SDL_turnOffPCSpeaker();
+                        SD_L_turnOffPCSpeaker();
                 }
         }
 
         // [adlib sound stuff removed...]
 }
 
-static void SDL_DigitizedDoneInIRQ();
+static void SD_L_DigitizedDoneInIRQ();
 
-void inline SDL_DoFast()
+void inline SD_L_DoFast()
 {
         count_fx++;
         if(count_fx>=5)
         {
                 count_fx=0;
 
-                SDL_DoFX();
+                SD_L_DoFX();
 
                 count_time++;
                 if(count_time>=2)
@@ -337,19 +338,19 @@ void inline SDL_DoFast()
 }
 
 // Timer 0 ISR for 7000Hz interrupts
-void __interrupt SDL_t0ExtremeAsmService()
+void __interrupt SD_L_t0ExtremeAsmService()
 {
         if(pcindicate)
         {
                 if(pcSound)
                 {
-                        SDL_setPCSpeaker(((*pcSound++)&0x80)>>6);
+                        SD_L_setPCSpeaker(((*pcSound++)&0x80)>>6);
                         pcLengthLeft--;
                         if(!pcLengthLeft)
                         {
                                 pcSound=0;
-                                SDL_turnOffPCSpeaker();
-                                SDL_DigitizedDoneInIRQ();
+                                SD_L_turnOffPCSpeaker();
+                                SD_L_DigitizedDoneInIRQ();
                         }
                 }
         }
@@ -357,20 +358,20 @@ void __interrupt SDL_t0ExtremeAsmService()
         if(extreme>=10)
         {
                 extreme=0;
-                SDL_DoFast();
+                SD_L_DoFast();
         }
         else
                 outp(0x20,0x20);
 }
 
 // Timer 0 ISR for 700Hz interrupts
-void __interrupt SDL_t0FastAsmService()
+void __interrupt SD_L_t0FastAsmService()
 {
-        SDL_DoFast();
+        SD_L_DoFast();
 }
 
 // Timer 0 ISR for 140Hz interrupts
-void __interrupt SDL_t0SlowAsmService()
+void __interrupt SD_L_t0SlowAsmService()
 {
         count_time++;
         if(count_time>=2)
@@ -379,7 +380,7 @@ void __interrupt SDL_t0SlowAsmService()
                 count_time=0;
         }
 
-        SDL_DoFX();
+        SD_L_DoFX();
 
         TimerCount+=TimerDivisor;
         if(*((word *)&TimerCount+1))
@@ -391,18 +392,18 @@ void __interrupt SDL_t0SlowAsmService()
                 outp(0x20,0x20);
 }
 
-void SDL_IndicatePC(Boolean ind)
+void SD_L_IndicatePC(Boolean ind)
 {
         pcindicate=ind;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_SetTimer0() - Sets system timer 0 to the specified speed
+//      SD_L_SetTimer0() - Sets system timer 0 to the specified speed
 //
 ////////////////////////////////////////////////////////////////////////////////
 static void
-SDL_SetTimer0(word speed)
+SD_L_SetTimer0(word speed)
 {
 #ifndef TPROF   // If using Borland's profiling, don't screw with the timer
 //      _asm pushfd
@@ -426,26 +427,26 @@ SDL_SetTimer0(word speed)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_SetIntsPerSec() - Uses SDL_SetTimer0() to set the number of
+//      SD_L_SetIntsPerSec() - Uses SD_L_SetTimer0() to set the number of
 //              interrupts generated by system timer 0 per second
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 //
-// SDL_SetIntsPerSec
+// SD_L_SetIntsPerSec
 //
 static void
-SDL_SetIntsPerSec(word ints)
+SD_L_SetIntsPerSec(word ints)
 {
         TimerRate = ints;
-        SDL_SetTimer0(1192030 / ints);
+        SD_L_SetTimer0(1192030 / ints);
 }
 
 //
-// SDL_SetTimerSpeed
+// SD_L_SetTimerSpeed
 //
 static void
-SDL_SetTimerSpeed()
+SD_L_SetTimerSpeed()
 {
         word    rate;
         void (_interrupt *isr)();
@@ -453,23 +454,23 @@ SDL_SetTimerSpeed()
         if ((DigiMode == sds_PC) && DigiPlaying)
         {
                 rate = TickBase * 100;
-                isr = SDL_t0ExtremeAsmService;
+                isr = SD_L_t0ExtremeAsmService;
         }
         else if ((MusicMode == smm_AdLib) || ((DigiMode == sds_SoundSource) && DigiPlaying)     )
         {
                 rate = TickBase * 10;
-                isr = SDL_t0FastAsmService;
+                isr = SD_L_t0FastAsmService;
         }
         else
         {
                 rate = TickBase * 2;
-                isr = SDL_t0SlowAsmService;
+                isr = SD_L_t0SlowAsmService;
         }
 
         if (rate != TimerRate)
         {
                 _dos_setvect(8,isr);
-                SDL_SetIntsPerSec(rate);
+                SD_L_SetIntsPerSec(rate);
                 TimerRate = rate;
         }
 }
@@ -480,7 +481,7 @@ SDL_SetTimerSpeed()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_PCPlaySample() - Plays the specified sample on the PC speaker
+//      SD_L_PCPlaySample() - Plays the specified sample on the PC speaker
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef  _MUSE_
@@ -488,7 +489,7 @@ void
 #else
 static void
 #endif
-SDL_PCPlaySample(byte *data,longword len,Boolean inIRQ)
+SD_L_PCPlaySample(byte *data,longword len,Boolean inIRQ)
 {
         if(!inIRQ)
         {
@@ -496,7 +497,7 @@ SDL_PCPlaySample(byte *data,longword len,Boolean inIRQ)
                 _asm    cli
         }
 
-        SDL_IndicatePC(true);
+        SD_L_IndicatePC(true);
 
         pcLengthLeft = len;
         pcSound = (volatile byte *)data;
@@ -510,7 +511,7 @@ SDL_PCPlaySample(byte *data,longword len,Boolean inIRQ)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_PCStopSample() - Stops a sample playing on the PC speaker
+//      SD_L_PCStopSample() - Stops a sample playing on the PC speaker
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef  _MUSE_
@@ -518,11 +519,11 @@ void
 #else
 static void
 #endif
-SDL_PCStopSampleInIRQ()
+SD_L_PCStopSampleInIRQ()
 {
         pcSound = 0;
 
-        SDL_IndicatePC(false);
+        SD_L_IndicatePC(false);
 
         _asm    in      al,0x61                 // Turn the speaker off
         _asm    and     al,0xfd                 // ~2
@@ -531,7 +532,7 @@ SDL_PCStopSampleInIRQ()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_PCPlaySound() - Plays the specified sound on the PC speaker
+//      SD_L_PCPlaySound() - Plays the specified sound on the PC speaker
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef  _MUSE_
@@ -539,7 +540,7 @@ void
 #else
 static void
 #endif
-SDL_PCPlaySound(PCSound *sound)
+SD_L_PCPlaySound(PCSound *sound)
 {
 //      _asm    pushfd
         _asm    cli
@@ -554,7 +555,7 @@ SDL_PCPlaySound(PCSound *sound)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_PCStopSound() - Stops the current sound playing on the PC Speaker
+//      SD_L_PCStopSound() - Stops the current sound playing on the PC Speaker
 //
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef  _MUSE_
@@ -562,7 +563,7 @@ void
 #else
 static void
 #endif
-SDL_PCStopSound()
+SD_L_PCStopSound()
 {
 //      _asm    pushfd
         _asm    cli
@@ -579,11 +580,11 @@ SDL_PCStopSound()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SDL_ShutPC() - Turns off the pc speaker
+//      SD_L_ShutPC() - Turns off the pc speaker
 //
 ////////////////////////////////////////////////////////////////////////////////
 static void
-SDL_ShutPC()
+SD_L_ShutPC()
 {
 //      _asm    pushfd
         _asm    cli
@@ -616,10 +617,10 @@ void SD_StopDigitized()
     switch (DigiMode)
     {
         case sds_PC:
-//            SDL_PCStopSampleInIRQ();
+//            SD_L_PCStopSampleInIRQ();
             break;
         case sds_SoundBlaster:
-//            SDL_SBStopSampleInIRQ();
+//            SD_L_SBStopSampleInIRQ();
             Mix_HaltChannel(-1);
             break;
 		default:
@@ -653,7 +654,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
     switch (DigiMode)
     {
         case sds_SoundBlaster:
-//            SDL_PositionSBP(leftpos,rightpos);
+//            SD_L_PositionSBP(leftpos,rightpos);
             Mix_SetPanning(channel, ((15 - leftpos) << 4) + 15,
                 ((15 - rightpos) << 4) + 15);
             break;
@@ -798,7 +799,7 @@ void SD_SetDigiDevice(SDSMode mode)
         DigiMode = mode;
 
 #ifdef NOTYET
-        SDL_SetTimerSpeed();
+        SD_L_SetTimerSpeed();
 #endif
     }
 }
@@ -993,7 +994,7 @@ static void SD_L_ShutDevice()
     switch (SoundMode)
     {
         case sdm_PC:
-//            SDL_ShutPC();
+//            SD_L_ShutPC();
             break;
         case sdm_AdLib:
             SD_L_ShutAL();
@@ -1097,7 +1098,7 @@ Boolean SD_SetMusicMode(SMMode mode)
 
     SD_FadeOutMusic();
     while (SD_MusicPlaying())
-        SDL_Delay(5);
+        I_Delay(5);
 
     switch (mode)
     {
@@ -1113,7 +1114,7 @@ Boolean SD_SetMusicMode(SMMode mode)
     if (result)
         MusicMode = mode;
 
-//    SDL_SetTimerSpeed();
+//    SD_L_SetTimerSpeed();
 
     return(result);
 }
@@ -1228,7 +1229,7 @@ void SD_Startup()
 
     // Init music
 
-    samplesPerMusicTick = Config::SampleRate() / 700;    // SDL_t0FastAsmService played at 700Hz
+    samplesPerMusicTick = Config::SampleRate() / 700;    // SD_L_t0FastAsmService played at 700Hz
 
     if(YM3812Init(1,3579545,Config::SampleRate()))
     {
@@ -1337,7 +1338,7 @@ Boolean SD_PlaySound(soundnames sound_abstract)
             if (s->priority < SoundPriority)
                 return 0;
 
-            SDL_PCStopSound();
+            SD_L_PCStopSound();
 
             SD_PlayDigitized(DigiMap[sound],lp,rp);
             SoundPositioned = ispos;
@@ -1375,7 +1376,7 @@ Boolean SD_PlaySound(soundnames sound_abstract)
     switch (SoundMode)
     {
         case sdm_PC:
-//            SDL_PCPlaySound((PCSound *)s);
+//            SD_L_PCPlaySound((PCSound *)s);
             break;
         case sdm_AdLib:
             SD_L_ALPlaySound((AdLibSound *)s);
@@ -1431,7 +1432,7 @@ void SD_StopSound()
     switch (SoundMode)
     {
         case sdm_PC:
-//            SDL_PCStopSound();
+//            SD_L_PCStopSound();
             break;
         case sdm_AdLib:
             SD_L_ALStopSound();
@@ -1453,7 +1454,7 @@ void SD_StopSound()
 void SD_WaitSoundDone()
 {
     while (SD_SoundPlaying())
-        SDL_Delay(5);
+        I_Delay(5);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

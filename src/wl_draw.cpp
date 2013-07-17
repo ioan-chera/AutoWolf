@@ -1046,7 +1046,7 @@ void CalcTics ()
     if(!tics)
     {
         // wait until end of current tic
-        SDL_Delay(((lasttimecount + 1) * 100) / 7 - curtime);
+        I_Delay(((lasttimecount + 1) * 100) / 7 - curtime);
         tics = 1;
     }
 

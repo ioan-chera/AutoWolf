@@ -38,6 +38,7 @@
 //
 
 #include "wl_def.h"
+#include "i_system.h"
 #include "wl_main.h"
 #include "Config.h"
 
@@ -680,7 +681,7 @@ Boolean IN_UserInput(longword delay)
         IN_ProcessEvents();
 		if (IN_CheckAck())
 			return true;
-        SDL_Delay(5);
+        I_Delay(5);
 	} while (GetTimeCount() - lasttime < delay);
 	return(false);
 }
