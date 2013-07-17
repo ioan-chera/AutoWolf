@@ -33,3 +33,13 @@ void I_Delay(unsigned ms)
 {
    SDL_Delay((Uint32)ms);
 }
+
+//
+// I_GetTicks
+//
+// Gets the number of ticks since start
+//
+uint32_t I_GetTicks(void)
+{
+   return (uint32_t)SDL_GetTicks();
+}

@@ -1153,7 +1153,7 @@ void DoJukebox()
     MenuFadeOut();
 
     // IOANCH 20130301: unification culling
-    start = SPEAR() ? 0 : ((SDL_GetTicks()/10)%3)*6;
+    start = SPEAR() ? 0 : ((I_GetTicks()/10)%3)*6;
 
     CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
     

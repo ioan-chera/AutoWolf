@@ -784,7 +784,7 @@ void US_InitRndT(int randomize)
 {
     if(randomize)
     {
-        rndindexbot = rndindex = (SDL_GetTicks() >> 4) & 0xff;
+        rndindexbot = rndindex = (I_GetTicks() >> 4) & 0xff;
     }
     else
         rndindexbot = rndindex = 0;

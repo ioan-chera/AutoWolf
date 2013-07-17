@@ -447,7 +447,7 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        uint32_t curtime = SDL_GetTicks();
+        uint32_t curtime = I_GetTicks();
         lasttimecount += DEMOTICS;
         int32_t timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)

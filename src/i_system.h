@@ -25,5 +25,6 @@
 #define __Wolf4SDL__i_system__
 
 void I_Delay(unsigned ms);
+uint32_t I_GetTicks(void);
 
 #endif /* defined(__Wolf4SDL__i_system__) */

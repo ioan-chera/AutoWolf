@@ -140,7 +140,8 @@ extern  SMMode          MusicMode;
 extern  int             DigiMap[];
 extern  int             DigiChannel[];
 
-#define GetTimeCount()  ((SDL_GetTicks()*7)/100)
+uint32_t I_GetTicks(void);
+#define GetTimeCount()  ((I_GetTicks()*7)/100)
 
 void I_Delay(unsigned ms);
 inline void Delay(int wolfticks)
