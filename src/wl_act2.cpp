@@ -1510,7 +1510,7 @@ void    A_StartDeathCam (objtype *ob)
         Write(0,7,STR_SEEAGAIN);
     }
     
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     if(Config::UseDoubleBuffering()) VH_UpdateScreen();
     
     IN_UserInput(300);

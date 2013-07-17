@@ -200,7 +200,7 @@ SetSoundLoc(fixed gx,fixed gy)
     US_PrintSigned(leftchannel);
     US_Print(",");
     US_PrintSigned(rightchannel);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
 #endif
 }
 
@@ -1102,7 +1102,7 @@ void FinishDemoRecord ()
     fontnumber=0;
     SETFONTCOLOR(0,15);
     US_Print(" Demo number (0-9): ");
-    VW_UpdateScreen();
+    VH_UpdateScreen();
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
@@ -1150,7 +1150,7 @@ void RecordDemo ()
         maps = 21;
     }
 
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     VW_FadeIn ();
     esc = !US_LineInput (px,py,str,NULL,true,2,0);
     if (esc)

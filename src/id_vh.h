@@ -84,7 +84,7 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VWB_VlinScaledCoord VW_Vlin
 
 void VH_UpdateScreen();
-#define VW_UpdateScreen VH_UpdateScreen
+// IOANCH 20130717: deleted VH_UpdateScreen
 
 //
 // wolfenstein EGA compatability stuff

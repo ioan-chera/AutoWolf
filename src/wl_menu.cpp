@@ -455,7 +455,7 @@ US_ControlPanel (ScanCode scancode)
                 VWB_DrawPic (0, 80, SPEAR.g(IDGUYS2PIC));
                 UNCACHEGRCHUNK (SPEAR.g(IDGUYS2PIC));
 
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
 
                 SDL_Color pal[256];
                 CA_CacheGrChunk (SPEAR.g(IDGUYSPALETTE));
@@ -594,7 +594,7 @@ DrawMainMenu ()
     }
 
     DrawMenu (&MainItems, &MainMenu[0]);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 // IOANCH 20130301: unification culling
@@ -832,7 +832,7 @@ CP_CheckQuick (ScanCode scancode)
             if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR() ? 9 : 0)]))
 #endif
             {
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 SD_MusicOff ();
                 SD_StopSound ();
                 MenuFadeOut ();
@@ -904,7 +904,7 @@ CP_ViewScores (int)
     }
 
     DrawHighScores ();
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
     fontnumber = 1;
 
@@ -1075,7 +1075,7 @@ DrawNewEpisode ()
     for (i = 0; i < 6; i++)
         VWB_DrawPic (NE_X + 32, NE_Y + i * 26, SPEAR.g(C_EPISODE1PIC) + i);
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1113,7 +1113,7 @@ DrawNewGame ()
 
     DrawMenu (&NewItems, &NewMenu[0]);
     DrawNewGameDiff (NewItems.curpos);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1358,7 +1358,7 @@ DrawSoundMenu ()
         }
 
     DrawMenuGun (&SndItems);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -1388,7 +1388,7 @@ DrawLSAction (int which)
     else
         US_Print (STR_SAVING "...");
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -1544,7 +1544,7 @@ DrawLoadSaveScreen (int loadsave)
         PrintLSEntry (i, TEXTCOLOR);
 
     DrawMenu (&LSItems, &LSMenu[0]);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1649,7 +1649,7 @@ CP_SaveGame (int quick)
                 {
                     DrawLoadSaveScreen (1);
                     PrintLSEntry (which, HIGHLIGHT);
-                    VW_UpdateScreen ();
+                    VH_UpdateScreen ();
                 }
             }
 
@@ -1662,7 +1662,7 @@ CP_SaveGame (int quick)
             if (!SaveGamesAvail[which])
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
 
             if (US_LineInput
                 (LSM_X + LSItems.indent + 2, LSM_Y + which * 13 + 1, input, input, true, 31,
@@ -1695,7 +1695,7 @@ CP_SaveGame (int quick)
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
                 PrintLSEntry (which, HIGHLIGHT);
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 SD_PlaySound (ESCPRESSEDSND);
                 continue;
             }
@@ -1823,7 +1823,7 @@ DrawMouseSens ()
     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
 }
 
@@ -1856,7 +1856,7 @@ MouseSensitivity (int)
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VW_UpdateScreen ();
+                    VH_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -1871,7 +1871,7 @@ MouseSensitivity (int)
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VW_UpdateScreen ();
+                    VH_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -1964,7 +1964,7 @@ DrawCtlScreen ()
     }
 
     DrawMenuGun (&CtlItems);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -2108,7 +2108,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
             PrintRtn (which);
             PrintX = x;
             SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             WaitKeyUp ();
             redraw = 0;
         }
@@ -2157,7 +2157,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                     }
                     tick ^= 1;
                     lastFlashTime = GetTimeCount();
-                    VW_UpdateScreen ();
+                    VH_UpdateScreen ();
                 }
                 else I_Delay(5);
 
@@ -2571,7 +2571,7 @@ DrawCustomScreen ()
             }
 
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     MenuFadeIn ();
 }
 
@@ -2731,7 +2731,7 @@ CP_ChangeView (int)
                     newview = 4;
                 if(newview >= 19) DrawChangeView(newview);
                 else ShowViewSize (newview);
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -2745,7 +2745,7 @@ CP_ChangeView (int)
                     DrawChangeView(newview);
                 }
                 else ShowViewSize (newview);
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -2802,7 +2802,7 @@ DrawChangeView (int view)
     US_CPrint (STR_SIZE1 "\n");
     US_CPrint (STR_SIZE2 "\n");
     US_CPrint (STR_SIZE3);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -2828,7 +2828,7 @@ CP_Quit (int)
 		if(ingame)
 			bot.SaveData();
 		
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         SD_MusicOff ();
         SD_StopSound ();
         MenuFadeOut ();
@@ -3120,7 +3120,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     //
     if (routine)
         routine (which);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     // IOANCH 20130302: unification
     shape = SPEAR.g(C_CURSOR1PIC);
@@ -3152,7 +3152,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
             VWB_DrawPic (x, y, shape);
             if (routine)
                 routine (which);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
         }
         else I_Delay(5);
 
@@ -3303,7 +3303,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
     if (routine)
         routine (which);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     item_i->curpos = which;
 
@@ -3343,7 +3343,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
     PrintX = item_i->x + item_i->indent;
     PrintY = item_i->y + which * 13;
     US_Print ((items + which)->string);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -3354,7 +3354,7 @@ void
 DrawHalfStep (int x, int y)
 {
     VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     SD_PlaySound (MOVEGUN1SND);
     I_Delay (8 * 100 / 7);
 }
@@ -3382,7 +3382,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
     //
     if (routine)
         routine (which);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     SD_PlaySound (MOVEGUN2SND);
 }
 
@@ -3602,7 +3602,7 @@ Confirm (const char *string)
                     PrintY = y;
                     US_Print ("_");
             }
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             tick ^= 1;
             lastBlinkTime = GetTimeCount();
         }
@@ -3680,7 +3680,7 @@ Message (const char *string)
     DrawOutline (WindowX - 5, PrintY - 5, mw + 10, h + 10, 0, HIGHLIGHT);
     SETFONTCOLOR (0, TEXTCOLOR);
     US_Print (string);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 ////////////////////////////////////////////////////////////////////

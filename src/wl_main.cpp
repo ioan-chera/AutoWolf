@@ -329,7 +329,7 @@ void DiskFlopAnim(int x,int y)
         return;
     // IOANCH 20130302: unification
     VWB_DrawPic(x,y,SPEAR.g(C_DISKLOADING1PIC)+which);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     which^=1;
 }
 
@@ -1183,7 +1183,7 @@ void DoJukebox()
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     MenuFadeIn();
 
     do
@@ -1197,7 +1197,7 @@ void DoJukebox()
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VW_UpdateScreen();
+            VH_UpdateScreen();
             lastsong = which;
         }
     } while(which>=0);
@@ -1274,7 +1274,7 @@ static void InitGame()
         }
     }
 #endif
-	VW_UpdateScreen();
+	VH_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
     MasterDirectoryFile::MainDir().loadFromFile();
@@ -1579,7 +1579,7 @@ static void DemoLoop()
                 CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
                 VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
                 UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
                 UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
@@ -1587,7 +1587,7 @@ static void DemoLoop()
             else
             {
                 CA_CacheScreen (SPEAR.g(TITLEPIC));
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 VW_FadeIn();
             }
             if (IN_UserInput(TickBase*15))
@@ -1597,7 +1597,7 @@ static void DemoLoop()
 // credits page
 //
             CA_CacheScreen (SPEAR.g(CREDITSPIC));
-            VW_UpdateScreen();
+            VH_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1606,7 +1606,7 @@ static void DemoLoop()
 // high scores
 //
             DrawHighScores ();
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             VW_FadeIn ();
 
             if (IN_UserInput(TickBase*10))
