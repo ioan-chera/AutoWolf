@@ -44,8 +44,8 @@
 #define INTROSONG       (SPEAR() ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
-#define CENTERX         ((int) Config::ScreenWidth() / 2)
-#define CENTERY         ((int) Config::ScreenHeight() / 2)
+#define CENTERX         ((int) cfg_screenWidth / 2)
+#define CENTERY         ((int) cfg_screenHeight / 2)
 
 #define MENU_X  76
 #define MENU_Y  55

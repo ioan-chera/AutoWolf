@@ -310,8 +310,8 @@ void ControlMovement (objtype *ob)
 
 void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-    LatchDrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/16 + scaleFactor*x,
-                             Config::ScreenHeight()-scaleFactor*(STATUSLINES-y),picnum);
+    LatchDrawPicScaledCoord ((cfg_screenWidth-scaleFactor*320)/16 + scaleFactor*x,
+                             cfg_screenHeight-scaleFactor*(STATUSLINES-y),picnum);
 }
 
 void StatusDrawFace(unsigned picnum)

@@ -697,7 +697,7 @@ again:
         {
             level = atoi (str);
             if (level>=0 && level<=8)
-                Config::SetExtraVBLs(level);
+               cfg_extravbls = level;
         }
         return 1;
     }

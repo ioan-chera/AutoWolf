@@ -202,7 +202,7 @@ Victory ()
     if(!SPEAR())
         CA_CacheGrChunk (SPEAR.g(C_TIMECODEPIC));
 
-    VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, cfg_screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -314,7 +314,7 @@ Victory ()
     IN_Ack ();
 
     VW_FadeOut ();
-    if(Config::ScreenHeight() % 200 != 0)
+    if(cfg_screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     if(!SPEAR())
@@ -606,7 +606,7 @@ LevelCompleted ()
 
     CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, cfg_screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
@@ -711,7 +711,7 @@ LevelCompleted ()
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
                     SD_PlaySound (ENDBONUS1SND);
-                if(!Config::UseDoubleBuffering() || !(i % (PAR_AMOUNT / 50))) VH_UpdateScreen ();
+                if(!cfg_usedoublebuffering || !(i % (PAR_AMOUNT / 50))) VH_UpdateScreen ();
                 while(SD_SoundPlaying ())
                     BJ_Breathe ();
                 if (IN_CheckAck ())
@@ -742,7 +742,7 @@ LevelCompleted ()
             Write (x, 14, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VH_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -784,7 +784,7 @@ LevelCompleted ()
             Write (x, 16, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VH_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -825,7 +825,7 @@ LevelCompleted ()
             Write (x, 18, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VH_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
             if (IN_CheckAck ())
@@ -937,7 +937,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     while (!IN_CheckAck ())
 	{
         BJ_Breathe ();
-        if(Config::BotActive())
+        if(cfg_botActive)
 		{
 			  if(++botcount == 200) // IOANCH 20130607: reduced to 1 second
 				  break;
@@ -1004,12 +1004,12 @@ PreloadGraphics ()
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
-    VWB_BarScaledCoord (0, 0, Config::ScreenWidth(), Config::ScreenHeight() - scaleFactor * (STATUSLINES - 1), bordercol);
-    LatchDrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*224)/16,
-        (Config::ScreenHeight()-scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
+    VWB_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
+    LatchDrawPicScaledCoord ((cfg_screenWidth-scaleFactor*224)/16,
+        (cfg_screenHeight-scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
 
-    WindowX = (Config::ScreenWidth() - scaleFactor*224)/2;
-    WindowY = (Config::ScreenHeight() - scaleFactor*(STATUSLINES+48))/2;
+    WindowX = (cfg_screenWidth - scaleFactor*224)/2;
+    WindowY = (cfg_screenHeight - scaleFactor*(STATUSLINES+48))/2;
     WindowW = scaleFactor * 28 * 8;
     WindowH = scaleFactor * 48;
 
@@ -1243,7 +1243,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = BORDCOLOR;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::BotActive())
+		      if(cfg_botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);
@@ -1265,7 +1265,7 @@ CheckHighScore (int32_t score, word other)
             backcolor = 0x9c;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::BotActive())
+		      if(cfg_botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);

@@ -385,8 +385,8 @@ void PollMouseMove (void)
     if(IN_IsInputGrabbed())
         IN_CenterMouse();
 
-    mousexmove -= Config::ScreenWidth() / 2;
-    mouseymove -= Config::ScreenHeight() / 2;
+    mousexmove -= cfg_screenWidth / 2;
+    mouseymove -= cfg_screenHeight / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -513,7 +513,7 @@ void PollControls (void)
      if (joystickenabled)
           PollJoystickMove ();
 
-     if(Config::BotActive())	// bot active: operate
+     if(cfg_botActive)	// bot active: operate
 	 {
 		 // Find A* path
          try
@@ -680,7 +680,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && Config::DebugMode())
+    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && cfg_debugmode)
     {
         ClearMemory ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
@@ -1404,8 +1404,8 @@ void PlayLoop (void)
             VW_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
-        if (Config::ExtraVBLs())
-            VW_WaitVBL (Config::ExtraVBLs());
+        if (cfg_extravbls)
+            VW_WaitVBL (cfg_extravbls);
 
         if (demoplayback)
         {

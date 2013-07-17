@@ -178,9 +178,9 @@ void IN_GetJoyDelta(int *dx,int *dy)
     int y = SDL_JoystickGetAxis(Joystick, 1) >> 8;
 #endif
 
-    if(Config::JoystickHat() != -1)
+    if(cfg_joystickhat != -1)
     {
-        uint8_t hatState = SDL_JoystickGetHat(Joystick, Config::JoystickHat());
+        uint8_t hatState = SDL_JoystickGetHat(Joystick, cfg_joystickhat);
         if(hatState & SDL_HAT_RIGHT)
             x += 127;
         else if(hatState & SDL_HAT_LEFT)
@@ -354,7 +354,7 @@ static void processEvent(SDL_Event *event)
 
         case SDL_ACTIVEEVENT:
         {
-            if(Config::FullScreen() && (event->active.state & SDL_APPACTIVE) != 0)
+            if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)
             {
                 if(event->active.gain)
                 {
@@ -422,22 +422,22 @@ void IN_Startup()
 
     IN_ClearKeysDown();
 
-    if(Config::JoystickIndex() >= 0 && Config::JoystickIndex() < SDL_NumJoysticks())
+    if(cfg_joystickindex >= 0 && cfg_joystickindex < SDL_NumJoysticks())
     {
-        Joystick = SDL_JoystickOpen(Config::JoystickIndex());
+        Joystick = SDL_JoystickOpen(cfg_joystickindex);
         if(Joystick)
         {
             JoyNumButtons = SDL_JoystickNumButtons(Joystick);
             if(JoyNumButtons > 32) JoyNumButtons = 32;      // only up to 32 buttons are supported
             JoyNumHats = SDL_JoystickNumHats(Joystick);
-            if(Config::JoystickHat() < -1 || Config::JoystickHat() >= JoyNumHats)
+            if(cfg_joystickhat < -1 || cfg_joystickhat >= JoyNumHats)
                 Quit("The joystickhat param must be between 0 and %i!", JoyNumHats - 1);
         }
     }
 
     SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 
-    if(Config::FullScreen() || Config::ForceGrabMouse())
+    if(cfg_fullscreen || cfg_forcegrabmouse)
     {
         GrabInput = true;
         SDL_WM_GrabInput(SDL_GRAB_ON);
@@ -717,5 +717,5 @@ bool IN_IsInputGrabbed()
 //
 void IN_CenterMouse()
 {
-    SDL_WarpMouse(Config::ScreenWidth() / 2, Config::ScreenHeight() / 2);
+    SDL_WarpMouse(cfg_screenWidth / 2, cfg_screenHeight / 2);
 }

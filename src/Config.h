@@ -28,64 +28,30 @@ class PString;
 //
 // Namespace for configuration variables
 //
-class Config 
-{
-	static Boolean  nonazis;	// no enemies spawned
-    static Boolean  secretstep3;
-    static Boolean  botActive;
-    static PString  dir;            // IOANCH 20130509: formerly configdir
-    static int      extravbls;
-    static Boolean  forcegrabmouse;
-    static Boolean  fullscreen;
-    static int      audiobuffer;
-    static int      samplerate;
-    static Boolean  debugmode;
-    static int      difficulty;
-    static Boolean  ignorenumchunks;
-    static int      joystickhat;
-    static int      joystickindex;
-    static int      mission;
-    static Boolean  nowait;
-    static int      tedlevel;
+extern Boolean  cfg_nonazis;	// no enemies spawned
+extern Boolean  cfg_secretstep3;
+extern Boolean  cfg_botActive;
+extern PString  cfg_dir;            // IOANCH 20130509: formerly configdir
+extern int      cfg_extravbls;
+extern Boolean  cfg_forcegrabmouse;
+extern Boolean  cfg_fullscreen;
+extern int      cfg_audiobuffer;
+extern int      cfg_samplerate;
+extern Boolean  cfg_debugmode;
+extern int      cfg_difficulty;
+extern Boolean  cfg_ignorenumchunks;
+extern int      cfg_joystickhat;
+extern int      cfg_joystickindex;
+extern int      cfg_mission;
+extern Boolean  cfg_nowait;
+extern int      cfg_tedlevel;
+extern unsigned cfg_screenBits;
+extern unsigned cfg_screenHeight;
+extern unsigned cfg_screenWidth;
+extern Boolean  cfg_usedoublebuffering;
+    
 
-    static unsigned screenBits;
-    static unsigned screenHeight;
-    static unsigned screenWidth;
-    static Boolean  usedoublebuffering;
-    
-    static void     CheckEnvVars();
-public:
-
-    static void     CheckParameters(int argc, char *argv[]);
-    static void     SetupConfigLocation();
-    
-    static Boolean  NoNazis()              {return nonazis;}
-    static Boolean  SecretStep3()          {return secretstep3;}
-    static Boolean  BotActive()            {return botActive;}
-    static PString  Dir()                  {return dir;}
-    static int      ExtraVBLs()            {return extravbls;}
-    static Boolean  ForceGrabMouse()       {return forcegrabmouse;}
-    static Boolean  FullScreen()           {return fullscreen;}
-    static int      AudioBuffer()          {return audiobuffer;}
-    static int      SampleRate()           {return samplerate;}
-    static Boolean  DebugMode()            {return debugmode;}
-    static int      Difficulty()           {return difficulty;}
-    static Boolean  IgnoreNumChunks()      {return ignorenumchunks;}
-    static int      JoystickHat()          {return joystickhat;}
-    static int      JoystickIndex()        {return joystickindex;}
-    static int      Mission()              {return mission;}
-    static Boolean  NoWait()               {return nowait;}
-    static int      TedLevel()             {return tedlevel;}
-    static unsigned ScreenBits()           {return screenBits;}
-    static unsigned ScreenHeight()         {return screenHeight;}
-    static unsigned ScreenWidth()          {return screenWidth;}
-    static Boolean  UseDoubleBuffering()   {return usedoublebuffering;}
-    
-    static void     SetExtraVBLs(int value){extravbls = value;}
-    static void     SetNoWait(Boolean value){nowait = value;}
-    static void     SetScreenBits(unsigned value){screenBits = value;}
-    static void     SetUseDoubleBuffering(Boolean value)
-    {usedoublebuffering = value;}
-};
+void     CFG_CheckParameters(int argc, char *argv[]);
+void     CFG_SetupConfigLocation();
 
 #endif

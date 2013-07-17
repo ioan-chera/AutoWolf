@@ -854,8 +854,8 @@ void DrawPlayBorderSides()
 {
     if(viewsize == 21) return;
 
-	const int sw = Config::ScreenWidth();
-	const int sh = Config::ScreenHeight();
+	const int sw = cfg_screenWidth;
+	const int sh = cfg_screenHeight;
 	const int vw = viewwidth;
 	const int vh = viewheight;
 	const int px = scaleFactor; // size of one "pixel"
@@ -903,24 +903,24 @@ void DrawPlayBorderSides()
 
 void DrawStatusBorder (byte color)
 {
-    int statusborderw = (Config::ScreenWidth()-scaleFactor*320)/2;
+    int statusborderw = (cfg_screenWidth-scaleFactor*320)/2;
 
-    VWB_BarScaledCoord (0,0,Config::ScreenWidth(),Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),color);
-    VWB_BarScaledCoord (0,Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),
+    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-scaleFactor*(STATUSLINES-3),color);
+    VWB_BarScaledCoord (0,cfg_screenHeight-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
-    VWB_BarScaledCoord (0,Config::ScreenHeight()-scaleFactor*2,Config::ScreenWidth(),scaleFactor*2,color);
-    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*8, Config::ScreenHeight()-scaleFactor*(STATUSLINES-3),
+    VWB_BarScaledCoord (0,cfg_screenHeight-scaleFactor*2,cfg_screenWidth,scaleFactor*2,color);
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*8, cfg_screenHeight-scaleFactor*(STATUSLINES-3),
         statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
 
-    VWB_BarScaledCoord (statusborderw+scaleFactor*9, Config::ScreenHeight()-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*9, cfg_screenHeight-scaleFactor*3,
         scaleFactor*97, scaleFactor*1, color-1);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*106, Config::ScreenHeight()-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*106, cfg_screenHeight-scaleFactor*3,
         scaleFactor*161, scaleFactor*1, color-2);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*267, Config::ScreenHeight()-scaleFactor*3,
+    VWB_BarScaledCoord (statusborderw+scaleFactor*267, cfg_screenHeight-scaleFactor*3,
         scaleFactor*44, scaleFactor*1, color-3);
-    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*9, Config::ScreenHeight()-scaleFactor*(STATUSLINES-4),
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*9, cfg_screenHeight-scaleFactor*(STATUSLINES-4),
         scaleFactor*1, scaleFactor*20, color-2);
-    VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-scaleFactor*9, Config::ScreenHeight()-scaleFactor*(STATUSLINES/2-4),
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*9, cfg_screenHeight-scaleFactor*(STATUSLINES/2-4),
         scaleFactor*1, scaleFactor*14, color-3);
 }
 
@@ -941,19 +941,19 @@ void DrawPlayBorder ()
         DrawStatusBorder(bordercol);
     else
     {
-        const int statusborderw = (Config::ScreenWidth()-px*320)/2;
-        VWB_BarScaledCoord (0, Config::ScreenHeight()-px*STATUSLINES,
+        const int statusborderw = (cfg_screenWidth-px*320)/2;
+        VWB_BarScaledCoord (0, cfg_screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
-        VWB_BarScaledCoord (Config::ScreenWidth()-statusborderw-px*8, Config::ScreenHeight()-px*STATUSLINES,
+        VWB_BarScaledCoord (cfg_screenWidth-statusborderw-px*8, cfg_screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
-    if((unsigned) viewheight == Config::ScreenHeight()) return;
+    if((unsigned) viewheight == cfg_screenHeight) return;
 
-    VWB_BarScaledCoord (0,0,Config::ScreenWidth(),Config::ScreenHeight()-px*STATUSLINES,bordercol);
+    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-px*STATUSLINES,bordercol);
 
-    const int xl = Config::ScreenWidth()/2-viewwidth/2;
-    const int yl = (Config::ScreenHeight()-px*STATUSLINES-viewheight)/2;
+    const int xl = cfg_screenWidth/2-viewwidth/2;
+    const int yl = (cfg_screenHeight-px*STATUSLINES-viewheight)/2;
     VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
@@ -983,7 +983,7 @@ void DrawPlayBorder ()
 
 void DrawPlayScreen ()
 {
-    VWB_DrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*320)/2,Config::ScreenHeight()-scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
+    VWB_DrawPicScaledCoord ((cfg_screenWidth-scaleFactor*320)/2,cfg_screenHeight-scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1030,8 +1030,8 @@ void ShowActStatus()
     int	picnum = SPEAR.g(STATUSBARPIC) - SPEAR.g(STARTPICS);
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
-    int destx = (Config::ScreenWidth()-scaleFactor*320)/2 + 9 * scaleFactor;
-    int desty = Config::ScreenHeight() - (height - 4) * scaleFactor;
+    int destx = (cfg_screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
+    int desty = cfg_screenHeight - (height - 4) * scaleFactor;
     VL_MemToScreenScaledCoord(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
@@ -1186,7 +1186,7 @@ void RecordDemo ()
     SetupGameLevel ();
     StartMusic ();
 
-    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
+    if(cfg_usedoublebuffering) VH_UpdateScreen();
     fizzlein = true;
 
     PlayLoop ();
@@ -1378,7 +1378,7 @@ void Died ()
     //
     FinishPaletteShifts ();
 
-    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
+    if(cfg_usedoublebuffering) VH_UpdateScreen();
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 
@@ -1593,7 +1593,7 @@ startplayloop:
                     break;                          // more lives left
 
                 VW_FadeOut ();
-                if(Config::ScreenHeight() % 200 != 0)
+                if(cfg_screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
 #ifdef _arch_dreamcast

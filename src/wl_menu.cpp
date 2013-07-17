@@ -696,7 +696,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(Config::ScreenHeight() % 200 != 0)
+                if(cfg_screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -775,7 +775,7 @@ CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(Config::ScreenHeight() % 200 != 0)
+                if(cfg_screenHeight % 200 != 0)
                     VL_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -1421,7 +1421,7 @@ int CP_LoadGame (int quick)
             DC_LoadFromVMU(name.buffer());
 #endif
 
-            loadpath.copy(Config::Dir()).concatSubpath(name);
+            loadpath.copy(cfg_dir).concatSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1463,7 +1463,7 @@ int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
-            loadpath.copy(Config::Dir()).concatSubpath(name);
+            loadpath.copy(cfg_dir).concatSubpath(name);
 
             file = fopen (loadpath.buffer(), "rb");
             fseek (file, 32, SEEK_SET);
@@ -1600,7 +1600,7 @@ CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            savepath.copy(Config::Dir()).concatSubpath(name);
+            savepath.copy(cfg_dir).concatSubpath(name);
 
             unlink (savepath.buffer());
             file = fopen (savepath.buffer(), "wb");
@@ -1671,7 +1671,7 @@ CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                savepath.copy(Config::Dir()).concatSubpath(name);
+                savepath.copy(cfg_dir).concatSubpath(name);
 
                 unlink (savepath.buffer());
                 file = fopen (savepath.buffer(), "wb");
@@ -2759,7 +2759,7 @@ CP_ChangeView (int)
         {
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
-            if(Config::ScreenHeight() % 200 != 0)
+            if(cfg_screenHeight % 200 != 0)
                 VL_ClearScreen(0);
             return 0;
         }
@@ -2775,7 +2775,7 @@ CP_ChangeView (int)
 
     ShootSnd ();
     MenuFadeOut ();
-    if(Config::ScreenHeight() % 200 != 0)
+    if(cfg_screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     return 0;
@@ -2789,12 +2789,12 @@ CP_ChangeView (int)
 void
 DrawChangeView (int view)
 {
-    int rescaledHeight = Config::ScreenHeight() / scaleFactor;
+    int rescaledHeight = cfg_screenHeight / scaleFactor;
     if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
-    PrintY = (Config::ScreenHeight() / scaleFactor) - 39;
+    PrintY = (cfg_screenHeight / scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
@@ -3015,7 +3015,7 @@ SetupControlPanel ()
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
     fontnumber = 1;
     WindowH = 200;
-    if(Config::ScreenHeight() % 200 != 0)
+    if(cfg_screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     if (!ingame)
@@ -3049,7 +3049,7 @@ void SetupSaveGames()
         if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
-            savepath.copy(Config::Dir()).concatSubpath(name);
+            savepath.copy(cfg_dir).concatSubpath(name);
 
             const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
             if(handle >= 0)
@@ -3855,7 +3855,7 @@ void CheckForEpisodes ()
     else
     {
 // IOANCH 20130301: unification culling
-        switch (Config::Mission())
+        switch (cfg_mission)
         {
             case 0:
                 if(!stat("VSWAP.SOD", &statbuf))
