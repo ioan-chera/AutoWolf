@@ -36,6 +36,9 @@
     <Filter Include="Source Files\IOAN\DataStruct\Exception">
       <UniqueIdentifier>{a6d65875-2da4-4ca6-ad66-57aad93ed17f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IOAN\HAL">
+      <UniqueIdentifier>{52100b6a-201d-497d-8507-c812244b2a66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\id_ca.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\MapExploration.cpp">
       <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\i_system.cpp">
+      <Filter>Source Files\IOAN\HAL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +366,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\MapExploration.h">
       <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\i_system.h">
+      <Filter>Source Files\IOAN\HAL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
