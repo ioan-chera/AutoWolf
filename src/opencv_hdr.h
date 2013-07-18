@@ -24,8 +24,7 @@
 #ifndef OPENCV_HDR_H_
 #define OPENCV_HDR_H_
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include <opencv2/opencv.hpp>
 
 #endif
 
