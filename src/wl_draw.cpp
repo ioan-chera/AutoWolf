@@ -1589,7 +1589,7 @@ void    ThreeDRefresh ()
                                     IPL_DEPTH_8U, 1);
 
       
-      PString avi = Config::Dir();
+      PString avi = cfg_dir;
       if(!vid_writ)
          vid_writ =
          cvCreateVideoWriter(avi.concatSubpath("autowolf.avi").buffer(),
