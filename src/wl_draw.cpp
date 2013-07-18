@@ -1581,50 +1581,52 @@ void    ThreeDRefresh ()
 
    static CvVideoWriter *vid_writ = 0;
    static unsigned nframes = 0, nset = 0;
+   static PString avi;
+   if(avi.length() <= 0)
+      (avi = cfg_dir).concatSubpath("autowolf.avi");
    
    ++nframes;
    if(!nset)
    {
-      IplImage *img = cvCreateImage(cvSize(screenBuffer->w, screenBuffer->h),
+      IplImage *img = cvCreateImageHeader(cvSize(screenBuffer->w, screenBuffer->h),
                                     IPL_DEPTH_8U, 1);
-
       
-      PString avi = cfg_dir;
       if(!vid_writ)
          vid_writ =
-         cvCreateVideoWriter(avi.concatSubpath("autowolf.avi").buffer(),
+         cvCreateVideoWriter(avi.buffer(),
                              CV_FOURCC('M', 'J', 'P', 'G'), 70,
-                             cvSize(img->widthStep, img->height), 0);
+                             cvSize(img->width, img->height), 0);
       
       if(img && vid_writ)
       {
-         uint8_t col_idx;
-         unsigned buf_idx, x, y;
+//         uint8_t col_idx;
+//         unsigned buf_idx, x, y;
 //         uint8_t *newimg;
          
          //if(!newimg)
 //         newimg = new uint8_t[img->widthStep * img->height];
-         
-         for(y = 0; y < screenBuffer->h; ++y)
-         {
-            for(x = 0; x < screenBuffer->w; ++x)
-            {
-               buf_idx = x + y * img->widthStep;
-               col_idx = ((uint8_t *)screenBuffer->pixels)[buf_idx];
-               
-               const SDL_Color &col =
-               screenBuffer->format->palette->colors[col_idx];
 
-               cvSet2D(img, y, x, cvScalar((col.r + col.g + col.b) / 3));
-//               img->imageData[buf_idx] = (col.r + col.g + col.b) / 3;
-            }
-         }
+         img->imageData = (char *)screenBuffer->pixels;
+//         for(y = 0; y < screenBuffer->h; ++y)
+//         {
+//            for(x = 0; x < screenBuffer->w; ++x)
+//            {
+//               buf_idx = x + y * img->widthStep;
+//               col_idx = ((uint8_t *)screenBuffer->pixels)[buf_idx];
+//               
+//               const SDL_Color &col =
+//               screenBuffer->format->palette->colors[col_idx];
+//
+//               cvSet2D(img, y, x, cvScalar((col.r + col.g + col.b) / 3));
+////               img->imageData[buf_idx] = (col.r + col.g + col.b) / 3;
+//            }
+//         }
 //         img->imageData = (char *)newimg;
 //         cvSetData(img, newimg, img->widthStep);
          
          cvWriteFrame(vid_writ, img);
          
-         if(nframes >= 350)
+         if(nframes >= 2400)
          {
 			 nset = 1;
             cvNamedWindow("Avem", 1);
