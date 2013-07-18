@@ -1594,7 +1594,12 @@ void    ThreeDRefresh ()
       if(!vid_writ)
          vid_writ =
          cvCreateVideoWriter(avi.buffer(),
-                             CV_FOURCC('M', 'J', 'P', 'G'), 70,
+#ifdef _WIN32
+                             -1, // windows doesn't have the same codecs as *nix
+#else
+                             CV_FOURCC('M', 'J', 'P', 'G'), 
+#endif
+                             70,
                              cvSize(img->width, img->height), 0);
       
       if(img && vid_writ)
