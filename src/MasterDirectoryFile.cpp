@@ -66,7 +66,7 @@ MasterDirectoryFile &MasterDirectoryFile::MainDir()
 void MasterDirectoryFile::initializeConfigLocation()
 {
     //    initialize(masterDirectoryFileName);
-    masterDirectoryFilePath.copy(Config::Dir()).concatSubpath(masterDirectoryFileName);
+    masterDirectoryFilePath.copy(cfg_dir).concatSubpath(masterDirectoryFileName);
 }
 
 //

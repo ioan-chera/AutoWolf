@@ -436,7 +436,7 @@ static void CAL_SetupGrFile ()
     else
         expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
 
-    if(!Config::IgnoreNumChunks() && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
+    if(!cfg_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"

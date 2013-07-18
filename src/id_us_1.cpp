@@ -751,11 +751,11 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 
 			cursorvis ^= true;
 		}
-		else SDL_Delay(5);
+		else I_Delay(5);
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		VW_UpdateScreen();
+		VH_UpdateScreen();
 	}
 
 	if (cursorvis)
@@ -766,7 +766,7 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 		py = y;
 		USL_DrawString(olds);
 	}
-	VW_UpdateScreen();
+	VH_UpdateScreen();
 
 	IN_ClearKeysDown();
 	return(result);
@@ -784,7 +784,7 @@ void US_InitRndT(int randomize)
 {
     if(randomize)
     {
-        rndindexbot = rndindex = (SDL_GetTicks() >> 4) & 0xff;
+        rndindexbot = rndindex = (I_GetTicks() >> 4) & 0xff;
     }
     else
         rndindexbot = rndindex = 0;

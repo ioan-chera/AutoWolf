@@ -197,7 +197,7 @@ void TimedPicCommand ()
     //
     // update the screen, and wait for time delay
     //
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     //
     // wait for time
@@ -643,7 +643,7 @@ void ShowArticle (char *article)
             newpage = false;
             // IOANCH 20130301: unification culling
             PageLayout (true);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             if (firstpage)
             {
                 // IOANCH 20130202: unification process
@@ -651,7 +651,7 @@ void ShowArticle (char *article)
                 firstpage = false;
             }
         }
-        SDL_Delay(5);
+        I_Delay(5);
 
         LastScan = 0;
         ReadAnyControl(&ci);

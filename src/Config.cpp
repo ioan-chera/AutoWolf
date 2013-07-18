@@ -42,60 +42,60 @@
 #include <unistd.h>
 #endif
 
-Boolean Config::nonazis;
-Boolean Config::secretstep3;
-Boolean Config::botActive;
+Boolean cfg_nonazis;
+Boolean cfg_secretstep3;
+Boolean cfg_botActive;
 
-PString Config::dir;
-int     Config::extravbls = 0;
+PString cfg_dir;
+int     cfg_extravbls = 0;
 
-Boolean Config::forcegrabmouse;
-Boolean Config::fullscreen = false;
+Boolean cfg_forcegrabmouse;
+Boolean cfg_fullscreen = false;
 
 #if defined(_arch_dreamcast)
-int     Config::joystickhat = 0;
-int     Config::samplerate = 11025;       // higher samplerates result in "out of memory"
-int     Config::audiobuffer = 4096 / (44100 / Config::samplerate);
+int     cfg_joystickhat = 0;
+int     cfg_samplerate = 11025;  // higher samplerates result in "out of memory"
+int     cfg_audiobuffer = 4096 / (44100 / cfg_samplerate);
 #elif defined(GP2X_940)
-int     Config::joystickhat = -1;
-int     Config::samplerate = 11025;       // higher samplerates result in "out of memory"
-int     Config::audiobuffer = 128;
+int     cfg_joystickhat = -1;
+int     cfg_samplerate = 11025;  // higher samplerates result in "out of memory"
+int     cfg_audiobuffer = 128;
 #else
-int     Config::joystickhat = -1;
-int     Config::samplerate = 44100;
-int     Config::audiobuffer = 2048 / (44100 / Config::samplerate);
+int     cfg_joystickhat = -1;
+int     cfg_samplerate = 44100;
+int     cfg_audiobuffer = 2048 / (44100 / cfg_samplerate);
 #endif
 
-Boolean Config::debugmode = false;
-int     Config::difficulty = 1;           // default is "normal"
-Boolean Config::ignorenumchunks = false;
-int     Config::joystickindex = 0;
+Boolean cfg_debugmode = false;
+int     cfg_difficulty = 1;           // default is "normal"
+Boolean cfg_ignorenumchunks = false;
+int     cfg_joystickindex = 0;
 
-int     Config::mission = 0;
-Boolean Config::nowait = false;
+int     cfg_mission = 0;
+Boolean cfg_nowait = false;
 
-int     Config::tedlevel = -1;            // default is not to start a level
+int     cfg_tedlevel = -1;            // default is not to start a level
 
 
 #if defined(_arch_dreamcast)
-Boolean  Config::usedoublebuffering = false;
-unsigned Config::screenWidth = 320;
-unsigned Config::screenHeight = 200;
-unsigned Config::screenBits = 8;
+Boolean  cfg_usedoublebuffering = false;
+unsigned cfg_screenWidth = 320;
+unsigned cfg_screenHeight = 200;
+unsigned cfg_screenBits = 8;
 #elif defined(GP2X)
-Boolean  Config::usedoublebuffering = true;
-unsigned Config::screenWidth = 320;
-unsigned Config::screenHeight = 240;
+Boolean  cfg_usedoublebuffering = true;
+unsigned cfg_screenWidth = 320;
+unsigned cfg_screenHeight = 240;
 #if defined(GP2X_940)
-unsigned Config::screenBits = 8;
+unsigned cfg_screenBits = 8;
 #else
-unsigned Config::screenBits = 16;
+unsigned cfg_screenBits = 16;
 #endif
 #else
-Boolean  Config::usedoublebuffering = true;
-unsigned Config::screenWidth = 640;
-unsigned Config::screenHeight = 400;
-unsigned Config::screenBits = -1;      // use "best" color depth according to libSDL
+Boolean  cfg_usedoublebuffering = true;
+unsigned cfg_screenWidth = 640;
+unsigned cfg_screenHeight = 400;
+unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 #endif
 
 
@@ -113,17 +113,18 @@ inline static int changeDirectory(const char *locdir)
 }
 
 //
-// Config::CheckEnvVars
+// CFG_checkEnvVars
 //
 // Called from CheckParameters
 //
-void Config::CheckEnvVars()
+static void CFG_checkEnvVars()
 {
     const char *wolfdir = getenv("AUTOWOLFDIR");
     if(wolfdir)
     {
         if(changeDirectory(wolfdir))
-            throw Exception(PString("Cannot change directory to ").concat(wolfdir).concat("\n"));
+            throw Exception(PString("Cannot change directory to ").
+                            concat(wolfdir).concat("\n"));
     }
 }
 
@@ -132,46 +133,47 @@ void Config::CheckEnvVars()
 //
 // Do it early.
 //
-void Config::CheckParameters(int argc, char *argv[])
+void CFG_CheckParameters(int argc, char *argv[])
 {
     bool sampleRateGiven = false, audioBufferGiven = false;
-    int defaultSampleRate = samplerate;
+    int defaultSampleRate = cfg_samplerate;
     
-    botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
+    cfg_botActive = true;	// IOANCH 26.05.2012: initialize with true, not false
     try
     {
-        CheckEnvVars();
+        CFG_checkEnvVars();
         for(int i = 1; i < argc; i++)
         {
             char *arg = argv[i];
             // IOANCH 20130303: unification
             if(!strcasecmp(arg, "--debugmode") || !strcasecmp(arg, "--goobers"))
-                debugmode = true;
+                cfg_debugmode = true;
             else IFARG("--baby")
-                difficulty = 0;
+                cfg_difficulty = 0;
             else IFARG("--easy")
-                difficulty = 1;
+                cfg_difficulty = 1;
             else IFARG("--normal")
-                difficulty = 2;
+                cfg_difficulty = 2;
             else IFARG("--hard")
-                difficulty = 3;
+                cfg_difficulty = 3;
             else IFARG("--nowait")
-                nowait = true;
+                cfg_nowait = true;
             else IFARG("--tedlevel")
             {
                 if(++i >= argc)
                     throw Exception("The tedlevel option is missing the level argument!\n");
                 else 
-                    tedlevel = atoi(argv[i]);
+                    cfg_tedlevel = atoi(argv[i]);
             }
             else IFARG("--windowed")
-                fullscreen = false;
+                cfg_fullscreen = false;
             else IFARG("--fullscreen")
-                fullscreen = true;  // IOANCH 20121611: added --fullscreen option
+                cfg_fullscreen = true;
+                // IOANCH 20121611: added --fullscreen option
             else IFARG("--windowed-mouse")
             {
-                fullscreen = false;
-                forcegrabmouse = true;
+                cfg_fullscreen = false;
+                cfg_forcegrabmouse = true;
             }
             else IFARG("--res")
             {
@@ -180,11 +182,12 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    screenWidth = atoi(argv[++i]);
-                    screenHeight = atoi(argv[++i]);
-                    unsigned factor = screenWidth / 320;
-                    if(screenWidth % 320 || (screenHeight != 200 * factor &&
-                                                     screenHeight != 240 * factor))
+                    cfg_screenWidth = atoi(argv[++i]);
+                    cfg_screenHeight = atoi(argv[++i]);
+                    unsigned factor = cfg_screenWidth / 320;
+                    if(cfg_screenWidth % 320 ||
+                       (cfg_screenHeight != 200 * factor &&
+                        cfg_screenHeight != 240 * factor))
                     {
                         throw Exception("Screen size must be a multiple of 320x200 or "
                                         "320x240!\n"); 
@@ -198,11 +201,11 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    screenWidth = atoi(argv[++i]);
-                    screenHeight = atoi(argv[++i]);
-                    if(screenWidth < 320)
+                    cfg_screenWidth = atoi(argv[++i]);
+                    cfg_screenHeight = atoi(argv[++i]);
+                    if(cfg_screenWidth < 320)
                         throw Exception("Screen width must be at least 320!\n");
-                    if(screenHeight < 200)
+                    if(cfg_screenHeight < 200)
                         throw Exception("Screen height must be at least 200!\n"); 
                 }
             }
@@ -213,8 +216,8 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "argument!\n");
                 else
                 {
-                    screenBits = atoi(argv[i]);
-                    switch(screenBits)
+                    cfg_screenBits = atoi(argv[i]);
+                    switch(cfg_screenBits)
                     {
                         case 8:
                         case 16:
@@ -230,15 +233,15 @@ void Config::CheckParameters(int argc, char *argv[])
                 }
             }
             else IFARG("--nodblbuf")
-                usedoublebuffering = false;
+                cfg_usedoublebuffering = false;
             else IFARG("--extravbls")
             {
                 if(++i >= argc)
                     throw Exception("The extravbls option is missing the vbls argument!\n");
                 else
                 {
-                    extravbls = atoi(argv[i]);
-                    if(extravbls < 0)
+                    cfg_extravbls = atoi(argv[i]);
+                    if(cfg_extravbls < 0)
                         throw Exception("Extravbls must be positive!\n");
                 }
             }
@@ -247,7 +250,7 @@ void Config::CheckParameters(int argc, char *argv[])
                 if(++i >= argc)
                     throw Exception("The joystick option is missing the index argument!\n");
                 else
-                    joystickindex = atoi(argv[i]);   
+                    cfg_joystickindex = atoi(argv[i]);
                 // index is checked in InitGame
             }
             else IFARG("--joystickhat")
@@ -256,7 +259,7 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The joystickhat option is missing the "
                                     "index argument!\n");
                 else 
-                    joystickhat = atoi(argv[i]);
+                    cfg_joystickhat = atoi(argv[i]);
             }
             else IFARG("--samplerate")
             {
@@ -264,7 +267,7 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The samplerate option is missing the "
                                     "rate argument!\n");
                 else 
-                    samplerate = atoi(argv[i]);
+                    cfg_samplerate = atoi(argv[i]);
                 sampleRateGiven = true;
             }
             else IFARG("--audiobuffer")
@@ -273,7 +276,7 @@ void Config::CheckParameters(int argc, char *argv[])
                     throw Exception("The audiobuffer option is missing the "
                                     "size argument!\n");
                 else 
-                    audiobuffer = atoi(argv[i]);
+                    cfg_audiobuffer = atoi(argv[i]);
                 audioBufferGiven = true;
             }
             else IFARG("--mission")
@@ -283,8 +286,8 @@ void Config::CheckParameters(int argc, char *argv[])
                                     "mission argument!\n");
                 else
                 {
-                    mission = atoi(argv[i]);
-                    if(mission < 0 || mission > 3)
+                    cfg_mission = atoi(argv[i]);
+                    if(cfg_mission < 0 || cfg_mission > 3)
                         throw Exception("The mission option must be between 0 "
                                         "and 3!\n");
                 }
@@ -297,22 +300,22 @@ void Config::CheckParameters(int argc, char *argv[])
                 else
                 {
                     // IOANCH 20130307: expand tilde
-                    dir.copy(argv[i]);
+                    cfg_dir.copy(argv[i]);
                 }
             }
             else IFARG("--ignorenumchunks")
-                ignorenumchunks = true;
+                cfg_ignorenumchunks = true;
             else IFARG("--help")
                 throw Exception();
             // IOANCH 17.05.2012: added --nobot parameter
             else IFARG("--nobot")
-                botActive = false;
+                cfg_botActive = false;
             // IOANCH 17.05.2012: added --nonazis
             else IFARG("--nonazis")
-                nonazis = true;
+                cfg_nonazis = true;
             // IOANCH 29.09.2012: added --secretstep3
             else IFARG("--secretstep3")
-                secretstep3 = true;
+                cfg_secretstep3 = true;
             else IFARG("--wolfdir")
             {
                 // IOANCH 20130304: added --wolfdir
@@ -389,19 +392,19 @@ void Config::CheckParameters(int argc, char *argv[])
     }
     
     if(sampleRateGiven && !audioBufferGiven)
-        audiobuffer = 2048 / (44100 / samplerate);
+        cfg_audiobuffer = 2048 / (44100 / cfg_samplerate);
 }
 
 //
 // SetupConfigLocation
 //
-void Config::SetupConfigLocation()
+void CFG_SetupConfigLocation()
 {
     struct stat statbuf;
     
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_arch_dreamcast)
-    if(dir.length() == 0)
+    if(cfg_dir.length() == 0)
     {
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
@@ -411,35 +414,35 @@ void Config::SetupConfigLocation()
         if(appsupdir == NULL)
             Quit("Your Application Support directory is not defined. You must "
                  "set this before playing.");
-        dir = appsupdir;
+        cfg_dir = appsupdir;
 #elif defined(_WIN32)
         TCHAR appdatdir[MAX_PATH];
         if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
             Quit("Your Application Data directory is not defined. You must "
                  "set this before playing.");
-        dir.copy(appdatdir).concatSubpath("AutoWolf");
+        cfg_dir.copy(appdatdir).concatSubpath("AutoWolf");
 #else
         const char *homeenv = getenv("HOME");
         if(homeenv == NULL)
             Quit("Your $HOME directory is not defined. You must set this before "
                  "playing.");
-        dir.copy(homeenv).concatSubpath(".autowolf");
+        cfg_dir.copy(homeenv).concatSubpath(".autowolf");
 #endif
     }
 #endif
-    if(dir.length() > 0)
+    if(cfg_dir.length() > 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(dir.buffer(), &statbuf) != 0)
+        if(stat(cfg_dir.buffer(), &statbuf) != 0)
         {
 #ifdef _WIN32
-            if(_mkdir(dir.buffer()) != 0)
+            if(_mkdir(cfg_dir.buffer()) != 0)
 #else
-            if(mkdir(dir.buffer(), 0755) != 0)
+            if(mkdir(cfg_dir.buffer(), 0755) != 0)
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.",
-                     dir.buffer());
+                     cfg_dir.buffer());
             }
         }
     }

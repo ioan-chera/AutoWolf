@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
+		4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F00B0E81796DA5E0091B7BD /* i_system.cpp */; };
 		4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
@@ -102,6 +103,8 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4F00B0E81796DA5E0091B7BD /* i_system.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = i_system.cpp; path = ../src/i_system.cpp; sourceTree = "<group>"; };
+		4F00B0E91796DA5E0091B7BD /* i_system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_system.h; path = ../src/i_system.h; sourceTree = "<group>"; };
 		4F00E0EA16F06A90006F3D16 /* wl_act1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_act1.h; path = ../src/wl_act1.h; sourceTree = SOURCE_ROOT; };
 		4F00E0EB16F06A90006F3D16 /* wl_act2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_act2.h; path = ../src/wl_act2.h; sourceTree = SOURCE_ROOT; };
 		4F00E0EC16F06A90006F3D16 /* wl_agent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_agent.h; path = ../src/wl_agent.h; sourceTree = SOURCE_ROOT; };
@@ -384,6 +387,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4F00B0E71796D97C0091B7BD /* HAL */ = {
+			isa = PBXGroup;
+			children = (
+				4F00B0E81796DA5E0091B7BD /* i_system.cpp */,
+				4F00B0E91796DA5E0091B7BD /* i_system.h */,
+			);
+			name = HAL;
+			sourceTree = "<group>";
+		};
 		4F1ECC3216EA503800A37742 /* Eternity */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,6 +497,7 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
+				4F00B0E71796D97C0091B7BD /* HAL */,
 				4F4717BA173A6A610018E82B /* SODFlag.cpp */,
 				4F4717BB173A6A610018E82B /* SODFlag.h */,
 				4F3435001726971E00A10A72 /* Exception */,
@@ -751,6 +764,7 @@
 				4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */,
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
+				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

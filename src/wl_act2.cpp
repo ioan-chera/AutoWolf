@@ -1487,12 +1487,12 @@ void    A_StartDeathCam (objtype *ob)
         return;
     }
     
-    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
+    if(cfg_usedoublebuffering) VH_UpdateScreen();
     
     gamestate.victoryflag = true;
-    unsigned fadeheight = viewsize != 21 ? Config::ScreenHeight()-scaleFactor*STATUSLINES : Config::ScreenHeight();
-    VL_BarScaledCoord (0, 0, Config::ScreenWidth(), fadeheight, bordercol);
-    FizzleFade(screenBuffer, 0, 0, Config::ScreenWidth(), fadeheight, 70, false);
+    unsigned fadeheight = viewsize != 21 ? cfg_screenHeight-scaleFactor*STATUSLINES : cfg_screenHeight;
+    VL_BarScaledCoord (0, 0, cfg_screenWidth, fadeheight, bordercol);
+    FizzleFade(screenBuffer, 0, 0, cfg_screenWidth, fadeheight, 70, false);
     
     if (bordercol != VIEWCOLOR)
     {
@@ -1510,8 +1510,8 @@ void    A_StartDeathCam (objtype *ob)
         Write(0,7,STR_SEEAGAIN);
     }
     
-    VW_UpdateScreen ();
-    if(Config::UseDoubleBuffering()) VH_UpdateScreen();
+    VH_UpdateScreen ();
+    if(cfg_usedoublebuffering) VH_UpdateScreen();
     
     IN_UserInput(300);
     

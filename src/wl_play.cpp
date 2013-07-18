@@ -385,8 +385,8 @@ void PollMouseMove (void)
     if(IN_IsInputGrabbed())
         IN_CenterMouse();
 
-    mousexmove -= Config::ScreenWidth() / 2;
-    mouseymove -= Config::ScreenHeight() / 2;
+    mousexmove -= cfg_screenWidth / 2;
+    mouseymove -= cfg_screenHeight / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);
@@ -447,11 +447,11 @@ void PollControls (void)
     if (demoplayback || demorecord)   // demo recording and playback needs to be constant
     {
         // wait up to DEMOTICS Wolf tics
-        uint32_t curtime = SDL_GetTicks();
+        uint32_t curtime = I_GetTicks();
         lasttimecount += DEMOTICS;
         int32_t timediff = (lasttimecount * 100) / 7 - curtime;
         if(timediff > 0)
-            SDL_Delay(timediff);
+            I_Delay(timediff);
 
         if(timediff < -2 * DEMOTICS)       // more than 2-times DEMOTICS behind?
             lasttimecount = (curtime * 7) / 100;    // yes, set to current timecount
@@ -513,7 +513,7 @@ void PollControls (void)
      if (joystickenabled)
           PollJoystickMove ();
 
-     if(Config::BotActive())	// bot active: operate
+     if(cfg_botActive)	// bot active: operate
 	 {
 		 // Find A* path
          try
@@ -680,7 +680,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && Config::DebugMode())
+    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && cfg_debugmode)
     {
         ClearMemory ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
@@ -1404,8 +1404,8 @@ void PlayLoop (void)
             VW_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
-        if (Config::ExtraVBLs())
-            VW_WaitVBL (Config::ExtraVBLs());
+        if (cfg_extravbls)
+            VW_WaitVBL (cfg_extravbls);
 
         if (demoplayback)
         {

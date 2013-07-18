@@ -410,8 +410,8 @@ static int log2_ceil(uint32_t x)
 //
 void VH_Startup()
 {
-    int rndbits_x = log2_ceil(Config::ScreenWidth());
-    rndbits_y = log2_ceil(Config::ScreenHeight());
+    int rndbits_x = log2_ceil(cfg_screenWidth);
+    rndbits_y = log2_ceil(cfg_screenHeight);
 
     int rndbits = rndbits_x + rndbits_y;
     if(rndbits < 17)
@@ -489,7 +489,7 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
                     // copy one pixel
                     //
 
-                    if(Config::ScreenBits() == 8)
+                    if(cfg_screenBits == 8)
                     {
                         *(destptr + (y1 + y) * screen->pitch + x1 + x)
                             = *(srcptr + (y1 + y) * source->pitch + x1 + x);
@@ -510,7 +510,7 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
             }
 
             // If there is no double buffering, we always use the "first frame" case
-            if(Config::UseDoubleBuffering()) first = 0;
+            if(cfg_usedoublebuffering) first = 0;
 
             VL_UnlockSurface(screen);
             SDL_Flip(screen);

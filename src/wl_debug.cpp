@@ -144,7 +144,7 @@ void CountObjects ()
     US_Print ("\nActive actors :");
     US_PrintUnsigned (active);
 
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     IN_Ack ();
 }
 
@@ -178,7 +178,7 @@ void PictureGrabber ()
 
     CenterWindow (18,2);
     US_PrintCentered ("Screenshot taken");
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     IN_Ack();
 }
 
@@ -243,7 +243,7 @@ void BasicOverhead ()
 
     // resize the border to match
 
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     IN_Ack();
 
 #ifdef MAPBORDER
@@ -284,7 +284,7 @@ void ShapeTest ()
     //      PageListStruct  far *page;
 
     CenterWindow(20,16);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     for (i = 0,done = false; !done;)
     {
         US_ClearWindow();
@@ -404,7 +404,7 @@ void ShapeTest ()
             }
         }
 
-        VW_UpdateScreen();
+        VH_UpdateScreen();
 
         IN_Ack();
         scan = LastScan;
@@ -474,7 +474,7 @@ int DebugKeys ()
         CenterWindow(20,3);
         PrintY+=6;
         US_Print(" Border color (0-56): ");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -512,7 +512,7 @@ int DebugKeys ()
             US_PrintCentered ("Darkone's FPS Counter OFF");
         else
             US_PrintCentered ("Darkone's FPS Counter ON");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         IN_Ack();
         fpscounter ^= 1;
         return 1;
@@ -540,7 +540,7 @@ int DebugKeys ()
             US_PrintUnsigned (spotvis[player->tilex][player->tiley]);
         else
             US_PrintUnsigned (actorat[player->tilex][player->tiley]->flags);
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         IN_Ack();
         return 1;
     }
@@ -555,7 +555,7 @@ int DebugKeys ()
         else if (godmode == 2)
             US_PrintCentered ("God mode OFF");
 
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         IN_Ack();
         if (godmode != 2)
             godmode++;
@@ -572,7 +572,7 @@ int DebugKeys ()
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         GivePoints (100000);
         HealSelf (I_PLAYERHEALTH - 1);	// IOANCH 25.10.2012: named constants
         if (gamestate.bestweapon<wp_chaingun)
@@ -589,7 +589,7 @@ int DebugKeys ()
         CenterWindow(16,3);
         PrintY+=6;
         US_Print("  Give Key (1-4): ");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
@@ -631,7 +631,7 @@ again:
             US_PrintUnsigned(LevelRatios[x].treasure);
             US_Print("%\n");
         }
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         IN_Ack();
         if (end == 10 && gamestate.mapon > 9)
         {
@@ -650,7 +650,7 @@ again:
             US_PrintCentered ("No clipping ON");
         else
             US_PrintCentered ("No clipping OFF");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         IN_Ack ();
         return 1;
     }
@@ -671,7 +671,7 @@ again:
         CenterWindow(30,3);
         PrintY+=6;
         US_Print(" Slow Motion steps (default 14): ");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -691,13 +691,13 @@ again:
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
             level = atoi (str);
             if (level>=0 && level<=8)
-                Config::SetExtraVBLs(level);
+               cfg_extravbls = level;
         }
         return 1;
     }
@@ -711,7 +711,7 @@ again:
         else
             US_Print("  Warp to which level(1-21): ");
 
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -729,7 +729,7 @@ again:
     {
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
-        VW_UpdateScreen();
+        VH_UpdateScreen();
         // DEBUG: put stuff here
         IN_Ack ();
         return 1;
@@ -749,7 +749,7 @@ again:
         US_Print("): ");
         int mappx = px, mappy = py;
         US_PrintUnsigned(curSky->colorMapIndex);
-        VW_UpdateScreen();
+        VH_UpdateScreen();
 
         sprintf(defstr, "%u", curSky->seed);
         esc = !US_LineInput(seekpx, seekpy, str, defstr, true, 10, 0);
@@ -769,7 +769,7 @@ again:
         {
             CenterWindow (18,3);
             US_PrintCentered ("Illegal color map!");
-            VW_UpdateScreen();
+            VH_UpdateScreen();
             IN_Ack ();
         }
     }

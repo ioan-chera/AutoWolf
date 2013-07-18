@@ -1042,12 +1042,12 @@ void CalcTics ()
     if (lasttimecount > (int32_t) GetTimeCount())
         lasttimecount = GetTimeCount();    // if the game was paused a LONG time
 
-    uint32_t curtime = SDL_GetTicks();
+    uint32_t curtime = I_GetTicks();
     tics = (curtime * 7) / 100 - lasttimecount;
     if(!tics)
     {
         // wait until end of current tic
-        SDL_Delay(((lasttimecount + 1) * 100) / 7 - curtime);
+        I_Delay(((lasttimecount + 1) * 100) / 7 - curtime);
         tics = 1;
     }
 
@@ -1644,7 +1644,7 @@ void    ThreeDRefresh ()
 
     if (fizzlein)
     {
-        FizzleFade(screenBuffer, 0, 0, Config::ScreenWidth(), Config::ScreenHeight(), 20, false);
+        FizzleFade(screenBuffer, 0, 0, cfg_screenWidth, cfg_screenHeight, 20, false);
         fizzlein = false;
 
         lasttimecount = GetTimeCount();          // don't make a big tic count

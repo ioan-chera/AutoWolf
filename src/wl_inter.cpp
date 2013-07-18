@@ -79,7 +79,7 @@ EndScreen (int palette, int screen)
 {
     SDL_Color pal[256];
     CA_CacheScreen (screen);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     CA_CacheGrChunk (palette);
     VL_ConvertPalette(grsegs[palette], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
@@ -97,7 +97,7 @@ void EndSpear ()
     EndScreen (SPEAR.g(END1PALETTE), SPEAR.g(ENDSCREEN11PIC));
 
     CA_CacheScreen (SPEAR.g(ENDSCREEN3PIC));
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     CA_CacheGrChunk (SPEAR.g(END3PALETTE));
     VL_ConvertPalette(grsegs[SPEAR.g(END3PALETTE)], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
@@ -110,7 +110,7 @@ void EndSpear ()
     PrintY = 180;
     US_CPrint (STR_ENDGAME1 "\n");
     US_CPrint (STR_ENDGAME2);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     IN_UserInput(700);
 
     PrintX = 0;
@@ -118,7 +118,7 @@ void EndSpear ()
     VWB_Bar (0, 180, 320, 20, 0);
     US_CPrint (STR_ENDGAME3 "\n");
     US_CPrint (STR_ENDGAME4);
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     IN_UserInput(700);
 
     VW_FadeOut ();
@@ -174,17 +174,17 @@ Victory ()
 
         VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_FadeIn ();
         VW_WaitVBL (2 * 70);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE2PIC));
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_WaitVBL (105);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE3PIC));
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_WaitVBL (105);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE4PIC));
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_WaitVBL (3 * 70);
 
         UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE1PIC));
@@ -202,7 +202,7 @@ Victory ()
     if(!SPEAR())
         CA_CacheGrChunk (SPEAR.g(C_TIMECODEPIC));
 
-    VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, cfg_screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -264,7 +264,7 @@ Victory ()
     VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec / 10));
     i += 2 * 8;
     VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     itoanoreturn (kr, tempstr, 10);
     x = RATIOX + 24 - (int) strlen(tempstr) * 2;
@@ -308,13 +308,13 @@ Victory ()
 
     fontnumber = 1;
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     VW_FadeIn ();
 
     IN_Ack ();
 
     VW_FadeOut ();
-    if(Config::ScreenHeight() % 200 != 0)
+    if(cfg_screenHeight % 200 != 0)
         VL_ClearScreen(0);
 
     if(!SPEAR())
@@ -351,7 +351,7 @@ PG13 ()
 
     CA_CacheGrChunk (SPEAR.g(PG13PIC));
     VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     UNCACHEGRCHUNK (SPEAR.g(PG13PIC));
 
@@ -448,13 +448,13 @@ BJ_Breathe ()
     static int which = 0, max = 10;
     int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
 
-    SDL_Delay(5);
+    I_Delay(5);
 
     if ((int32_t) GetTimeCount () - lastBreathTime > max)
     {
         which ^= 1;
         VWB_DrawPic (0, 16, pics[which]);
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         lastBreathTime = GetTimeCount();
         max = 35;
     }
@@ -606,7 +606,7 @@ LevelCompleted ()
 
     CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VWB_Bar (0, 0, 320, Config::ScreenHeight() / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VWB_Bar (0, 0, 320, cfg_screenHeight / scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
@@ -682,7 +682,7 @@ LevelCompleted ()
         i += 2 * 8;
         VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
 
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_FadeIn ();
 
 
@@ -711,14 +711,14 @@ LevelCompleted ()
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
                     SD_PlaySound (ENDBONUS1SND);
-                if(!Config::UseDoubleBuffering() || !(i % (PAR_AMOUNT / 50))) VW_UpdateScreen ();
+                if(!cfg_usedoublebuffering || !(i % (PAR_AMOUNT / 50))) VH_UpdateScreen ();
                 while(SD_SoundPlaying ())
                     BJ_Breathe ();
                 if (IN_CheckAck ())
                     goto done;
             }
 
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
 
             SD_PlaySound (ENDBONUS2SND);
             while (SD_SoundPlaying ())
@@ -742,7 +742,7 @@ LevelCompleted ()
             Write (x, 14, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VW_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -757,7 +757,7 @@ LevelCompleted ()
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             SD_PlaySound (PERCENT100SND);
         }
         else if (!ratio)
@@ -769,7 +769,7 @@ LevelCompleted ()
         else
             SD_PlaySound (ENDBONUS2SND);
 
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         while (SD_SoundPlaying ())
             BJ_Breathe ();
 
@@ -784,7 +784,7 @@ LevelCompleted ()
             Write (x, 16, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VW_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
@@ -799,7 +799,7 @@ LevelCompleted ()
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             SD_PlaySound (PERCENT100SND);
         }
         else if (!ratio)
@@ -810,7 +810,7 @@ LevelCompleted ()
         }
         else
             SD_PlaySound (ENDBONUS2SND);
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         while (SD_SoundPlaying ())
             BJ_Breathe ();
 
@@ -825,7 +825,7 @@ LevelCompleted ()
             Write (x, 18, tempstr);
             if (!(i % 10))
                 SD_PlaySound (ENDBONUS1SND);
-            if(!Config::UseDoubleBuffering() || !(i & 1)) VW_UpdateScreen ();
+            if(!cfg_usedoublebuffering || !(i & 1)) VH_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
             if (IN_CheckAck ())
@@ -839,7 +839,7 @@ LevelCompleted ()
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             SD_PlaySound (PERCENT100SND);
         }
         else if (!ratio)
@@ -850,7 +850,7 @@ LevelCompleted ()
         }
         else
             SD_PlaySound (ENDBONUS2SND);
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         while (SD_SoundPlaying ())
             BJ_Breathe ();
 
@@ -919,7 +919,7 @@ done:   itoanoreturn (kr, tempstr, 10);
 
         Write (10, 16, "15000 bonus!");
 
-        VW_UpdateScreen ();
+        VH_UpdateScreen ();
         VW_FadeIn ();
 
         GivePoints (15000);
@@ -927,7 +927,7 @@ done:   itoanoreturn (kr, tempstr, 10);
 
 
     DrawScore ();
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     lastBreathTime = GetTimeCount();
     IN_StartAck ();
@@ -937,7 +937,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     while (!IN_CheckAck ())
 	{
         BJ_Breathe ();
-        if(Config::BotActive())
+        if(cfg_botActive)
 		{
 			  if(++botcount == 200) // IOANCH 20130607: reduced to 1 second
 				  break;
@@ -988,7 +988,7 @@ PreloadUpdate (unsigned current, unsigned total)
             w - scaleFactor * 1, scaleFactor * 1, 0x32);
 
     }
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 //      if (LastScan == sc_Escape)
 //      {
 //              IN_ClearKeysDown();
@@ -1004,16 +1004,16 @@ PreloadGraphics ()
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
-    VWB_BarScaledCoord (0, 0, Config::ScreenWidth(), Config::ScreenHeight() - scaleFactor * (STATUSLINES - 1), bordercol);
-    LatchDrawPicScaledCoord ((Config::ScreenWidth()-scaleFactor*224)/16,
-        (Config::ScreenHeight()-scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
+    VWB_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - scaleFactor * (STATUSLINES - 1), bordercol);
+    LatchDrawPicScaledCoord ((cfg_screenWidth-scaleFactor*224)/16,
+        (cfg_screenHeight-scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
 
-    WindowX = (Config::ScreenWidth() - scaleFactor*224)/2;
-    WindowY = (Config::ScreenHeight() - scaleFactor*(STATUSLINES+48))/2;
+    WindowX = (cfg_screenWidth - scaleFactor*224)/2;
+    WindowY = (cfg_screenHeight - scaleFactor*(STATUSLINES+48))/2;
     WindowW = scaleFactor * 28 * 8;
     WindowH = scaleFactor * 48;
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     VW_FadeIn ();
 
 //      PM_Preload (PreloadUpdate);
@@ -1022,7 +1022,7 @@ PreloadGraphics ()
     VW_FadeOut ();
 
     DrawPlayBorder ();
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 }
 
 
@@ -1176,7 +1176,7 @@ DrawHighScores ()
 
     }
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
 
     if(SPEAR())
     {
@@ -1243,11 +1243,11 @@ CheckHighScore (int32_t score, word other)
             backcolor = BORDCOLOR;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::BotActive())
+		      if(cfg_botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);
-			      VW_UpdateScreen();
+			      VH_UpdateScreen();
 
 			      IN_ClearKeysDown ();
 			      IN_UserInput (500);
@@ -1261,15 +1261,15 @@ CheckHighScore (int32_t score, word other)
             PrintX = 16;
             fontnumber = 1;
             VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             backcolor = 0x9c;
             fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
-		      if(Config::BotActive())
+		      if(cfg_botActive)
 		      {
 			      Basic::MarkovWrite(Scores[n].name, 10);	// maximum 10 chars
 			      US_Print(Scores[n].name);
-			      VW_UpdateScreen();
+			      VH_UpdateScreen();
 
 			      IN_ClearKeysDown ();
 			      IN_UserInput (500);
@@ -1331,7 +1331,7 @@ NonShareware ()
 #endif
     US_Print ("        Id Software\n");
 
-    VW_UpdateScreen ();
+    VH_UpdateScreen ();
     VW_FadeIn ();
     IN_Ack ();
 }

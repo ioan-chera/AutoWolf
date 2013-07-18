@@ -135,7 +135,7 @@ void ReadConfig()
     DC_LoadFromVMU(configname.buffer());
 #endif
 
-    configpath.copy(Config::Dir()).concatSubpath(configname);
+    configpath.copy(cfg_dir).concatSubpath(configname);
 
     const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
     if (file != -1)
@@ -257,7 +257,7 @@ void WriteConfig()
     fs_unlink(configname.buffer());
 #endif
 
-    configpath.copy(Config::Dir()).concatSubpath(configname);
+    configpath.copy(cfg_dir).concatSubpath(configname);
 
     const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
@@ -329,7 +329,7 @@ void DiskFlopAnim(int x,int y)
         return;
     // IOANCH 20130302: unification
     VWB_DrawPic(x,y,SPEAR.g(C_DISKLOADING1PIC)+which);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     which^=1;
 }
 
@@ -881,7 +881,7 @@ void FinishSignon ()
 
         VH_UpdateScreen();
 
-        if (!Config::NoWait())
+        if (!cfg_nowait)
             IN_Ack ();
 
         // IOANCH 20130301: unification culling
@@ -906,7 +906,7 @@ void FinishSignon ()
     {
         VH_UpdateScreen();
 
-        if (!Config::NoWait())
+        if (!cfg_nowait)
             VW_WaitVBL(3*70);
     }
 
@@ -1153,7 +1153,7 @@ void DoJukebox()
     MenuFadeOut();
 
     // IOANCH 20130301: unification culling
-    start = SPEAR() ? 0 : ((SDL_GetTicks()/10)%3)*6;
+    start = SPEAR() ? 0 : ((I_GetTicks()/10)%3)*6;
 
     CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
     
@@ -1183,7 +1183,7 @@ void DoJukebox()
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VW_UpdateScreen();
+    VH_UpdateScreen();
     MenuFadeIn();
 
     do
@@ -1197,7 +1197,7 @@ void DoJukebox()
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VW_UpdateScreen();
+            VH_UpdateScreen();
             lastsong = which;
         }
     } while(which>=0);
@@ -1240,8 +1240,8 @@ static void InitGame()
     atexit(SDL_Quit);
 
     int numJoysticks = SDL_NumJoysticks();
-    if(Config::JoystickIndex() && (Config::JoystickIndex() < -1 || 
-                               Config::JoystickIndex() >= numJoysticks))
+    if(cfg_joystickindex && (cfg_joystickindex < -1 || 
+                               cfg_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
             printf("No joysticks are available to SDL!\n");
@@ -1259,7 +1259,7 @@ static void InitGame()
     SignonScreen ();
 
 #if defined _WIN32
-    if(!Config::FullScreen())
+    if(!cfg_fullscreen)
     {
         struct SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
@@ -1274,7 +1274,7 @@ static void InitGame()
         }
     }
 #endif
-	VW_UpdateScreen();
+	VH_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
     MasterDirectoryFile::MainDir().loadFromFile();
@@ -1392,13 +1392,13 @@ Boolean SetViewSize (unsigned width, unsigned height)
     viewheight = height&~1;                 // must be even
     centerx = viewwidth/2-1;
     shootdelta = viewwidth/10;
-    if((unsigned) viewheight == Config::ScreenHeight())
+    if((unsigned) viewheight == cfg_screenHeight)
         viewscreenx = viewscreeny = screenofs = 0;
     else
     {
-        viewscreenx = (Config::ScreenWidth()-viewwidth) / 2;
-        viewscreeny = (Config::ScreenHeight()-scaleFactor*STATUSLINES-viewheight)/2;
-        screenofs = viewscreeny*Config::ScreenWidth()+viewscreenx;
+        viewscreenx = (cfg_screenWidth-viewwidth) / 2;
+        viewscreeny = (cfg_screenHeight-scaleFactor*STATUSLINES-viewheight)/2;
+        screenofs = viewscreeny*cfg_screenWidth+viewscreenx;
     }
 
 //
@@ -1419,20 +1419,20 @@ void ShowViewSize (int width)
 
     if(width == 21)
     {
-        viewwidth = Config::ScreenWidth();
-        viewheight = Config::ScreenHeight();
-        VWB_BarScaledCoord (0, 0, Config::ScreenWidth(), Config::ScreenHeight(), 0);
+        viewwidth = cfg_screenWidth;
+        viewheight = cfg_screenHeight;
+        VWB_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight, 0);
     }
     else if(width == 20)
     {
-        viewwidth = Config::ScreenWidth();
-        viewheight = Config::ScreenHeight() - scaleFactor*STATUSLINES;
+        viewwidth = cfg_screenWidth;
+        viewheight = cfg_screenHeight - scaleFactor*STATUSLINES;
         DrawPlayBorder ();
     }
     else
     {
-        viewwidth = width*16*Config::ScreenWidth()/320;
-        viewheight = (int) (width*16*HEIGHTRATIO*Config::ScreenHeight()/200);
+        viewwidth = width*16*cfg_screenWidth/320;
+        viewheight = (int) (width*16*HEIGHTRATIO*cfg_screenHeight/200);
         DrawPlayBorder ();
     }
 
@@ -1445,11 +1445,11 @@ void NewViewSize (int width)
 {
     viewsize = width;
     if(viewsize == 21)
-        SetViewSize(Config::ScreenWidth(), Config::ScreenHeight());
+        SetViewSize(cfg_screenWidth, cfg_screenHeight);
     else if(viewsize == 20)
-        SetViewSize(Config::ScreenWidth(), Config::ScreenHeight() - scaleFactor * STATUSLINES);
+        SetViewSize(cfg_screenWidth, cfg_screenHeight - scaleFactor * STATUSLINES);
     else
-        SetViewSize(width*16*Config::ScreenWidth()/320, (unsigned) (width*16*HEIGHTRATIO*Config::ScreenHeight()/200));
+        SetViewSize(width*16*cfg_screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*cfg_screenHeight/200));
 }
 
 
@@ -1517,22 +1517,22 @@ static void DemoLoop()
 //
 // check for launch from ted
 //
-    if (Config::TedLevel() != -1)
+    if (cfg_tedlevel != -1)
     {
-        Config::SetNoWait(true);
+       cfg_nowait = true;
         EnableEndGameMenuItem();
-        NewGame(Config::Difficulty(),0);
+        NewGame(cfg_difficulty,0);
 
         // IOANCH 20130303: unification
         if(!SPEAR())
         {
-            gamestate.episode = Config::TedLevel()/10;
-            gamestate.mapon = Config::TedLevel()%10;
+            gamestate.episode = cfg_tedlevel/10;
+            gamestate.mapon = cfg_tedlevel%10;
         }
         else
         {
             gamestate.episode = 0;
-            gamestate.mapon = Config::TedLevel();
+            gamestate.mapon = cfg_tedlevel;
         }
         GameLoop();
         Quit (NULL);
@@ -1550,7 +1550,7 @@ static void DemoLoop()
     StartCPMusic(INTROSONG);
 // IOANCH 20130301: unification culling
 
-    if (!Config::NoWait())
+    if (!cfg_nowait)
         PG13 ();
 
 
@@ -1558,7 +1558,7 @@ static void DemoLoop()
 
     while (1)
     {
-        while (!Config::NoWait())
+        while (!cfg_nowait)
         {
 //
 // title page
@@ -1579,7 +1579,7 @@ static void DemoLoop()
                 CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
                 VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
                 UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
                 UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
@@ -1587,7 +1587,7 @@ static void DemoLoop()
             else
             {
                 CA_CacheScreen (SPEAR.g(TITLEPIC));
-                VW_UpdateScreen ();
+                VH_UpdateScreen ();
                 VW_FadeIn();
             }
             if (IN_UserInput(TickBase*15))
@@ -1597,7 +1597,7 @@ static void DemoLoop()
 // credits page
 //
             CA_CacheScreen (SPEAR.g(CREDITSPIC));
-            VW_UpdateScreen();
+            VH_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1606,7 +1606,7 @@ static void DemoLoop()
 // high scores
 //
             DrawHighScores ();
-            VW_UpdateScreen ();
+            VH_UpdateScreen ();
             VW_FadeIn ();
 
             if (IN_UserInput(TickBase*10))
@@ -1625,7 +1625,7 @@ static void DemoLoop()
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
-            if(Config::ScreenHeight() % 200 != 0)
+            if(cfg_screenHeight % 200 != 0)
                 VL_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
@@ -1633,7 +1633,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (Keyboard[sc_Tab] && Config::DebugMode())
+        if (Keyboard[sc_Tab] && cfg_debugmode)
             RecordDemo ();
         else
             US_ControlPanel (0);
@@ -1644,7 +1644,7 @@ static void DemoLoop()
         if (startgame || loadedgame)
         {
             GameLoop ();
-            if(!Config::NoWait())
+            if(!cfg_nowait)
             {
                 VW_FadeOut();
                 StartCPMusic(INTROSONG);
@@ -1792,7 +1792,7 @@ int main (int argc, char *argv[])
 #if defined(_arch_dreamcast)
     DC_Init();
 #else
-    Config::CheckParameters(argc, argv);
+    CFG_CheckParameters(argc, argv);
 #endif
     // IOANCH: unification: set the SPEAR() global var
     SPEAR.Initialize("");
@@ -1807,7 +1807,7 @@ int main (int argc, char *argv[])
 #endif
     
     // IOANCH 20130509: this changes config values. Call moved here from CFE.
-    Config::SetupConfigLocation();
+    CFG_SetupConfigLocation();
     CheckForEpisodes();
 
     InitGame();
