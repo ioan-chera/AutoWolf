@@ -23,8 +23,8 @@
 
 // Geared towards OS X 10.6 and later
 
-#include "CocoaFun.h"
 #import <Cocoa/Cocoa.h>
+#include "CocoaFun.h"
 
 #define APPLICATION_UTI @"com.ichera.autowolf"
 
@@ -74,7 +74,7 @@ void Cocoa_DisplayErrorAlert(const char *msg)
 // Posts a notification, either to the OS X 10.8 notification centre, or by
 // other means
 //
-void Cocoa_PostNotification(const char *msg)
+void Cocoa_PostNotification(const char *title, const char *msg)
 {
    BOOL notificationCenterIsAvailable =
    (NSClassFromString(@"NSUserNotificationCenter") != nil);
@@ -82,14 +82,16 @@ void Cocoa_PostNotification(const char *msg)
    if(notificationCenterIsAvailable)
    {
       NSUserNotification *notification = [[NSUserNotification alloc] init];
-      NSString *infoText = [[NSString alloc] initWithUTF8String:msg];
+      NSString *infoText = [[NSString alloc] initWithUTF8String:msg],
+      *notifTitle = [[NSString alloc] initWithUTF8String:title];
       
-      notification.title = @"Automatic Wolfenstein";
+      notification.title = notifTitle;
       notification.informativeText = infoText;
       NSUserNotificationCenter *notifCentre = [NSUserNotificationCenter
                                                defaultUserNotificationCenter];
       [notifCentre deliverNotification:notification];
       
+      [notifTitle release];
       [infoText release];
       [notification release];
    }

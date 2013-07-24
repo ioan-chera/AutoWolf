@@ -53,6 +53,6 @@ uint32_t I_GetTicks(void)
 void I_Notify(const char *msg)
 {
 #ifdef __APPLE__
-   Cocoa_PostNotification(msg);
+   Cocoa_PostNotification(SPEAR.FullTitle(), msg);
 #endif
 }
