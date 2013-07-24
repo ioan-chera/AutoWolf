@@ -120,6 +120,8 @@ public:
     
     // Accessors
     const char  *buffer() const { return _buffer; }
+    const char *operator () () const {return _buffer;}
+    const operator const char * () const {return _buffer;}
     char         charAt(size_t idx) const;
     bool         compare(const char *str, size_t inLength) const;
     bool         compare(const char *str) const;
@@ -165,7 +167,7 @@ public:
     PString &operator << (const char    *other);
     PString &operator << (char   ch);
     PString &operator << (int number);
-    
+   
     char       &operator [] (size_t idx);
     const char &operator [] (size_t idx) const;
     
