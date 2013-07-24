@@ -261,3 +261,7 @@ DOS/AUTOW3D.EXE
 DOS/autow3dsrc.zip
 Makefile~
 .gitignore~
+src/cv_video.d
+src/cv_video.o
+src/i_system.d
+src/i_system.o
