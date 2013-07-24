@@ -1478,6 +1478,8 @@ startplayloop:
 
         if (SPEAR() && spearflag)
         {
+           // IOANCH 20130725: added spear notification
+            I_Notify("Got the Spear!");
             SD_StopSound();
             SD_PlaySound(GETSPEARSND);
             if (DigiMode != sds_Off)
