@@ -39,6 +39,12 @@ typedef struct
 // table data after dataofs[rightpix-leftpix+1]
 } t_compshape;
 
+// IOANCH 20130724: delocalized vgaCeiling
+extern byte vgaCeiling_wl6[];
+extern byte vgaCeiling_sod[];
+
+// IOANCH: defined floor colour
+#define FLOOR_COLOUR 0x19
 
 #endif
 

@@ -611,12 +611,13 @@ void VGAClearScreen ()
     for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
         memset(ptr, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
     for(; y < viewheight; y++, ptr += vbufPitch)
-        memset(ptr, shadetable[GetShade((y - viewheight / 2) << 3)][0x19], viewwidth);
+        memset(ptr, shadetable[GetShade((y - viewheight / 2) << 3)][FLOOR_COLOUR],
+               viewwidth);
 #else
     for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
         memset(ptr, ceiling, viewwidth);
     for(; y < viewheight; y++, ptr += vbufPitch)
-        memset(ptr, 0x19, viewwidth);
+        memset(ptr, FLOOR_COLOUR, viewwidth);
 #endif
 }
 
