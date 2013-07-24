@@ -270,8 +270,8 @@ void ScoreMap::LabelRegions()
 // Then it adds that region to a set, which will connect all regions with edges
 //
 void ScoreMap::RecursiveConnectRegion(int tx, int ty,
-                                      std::unordered_set<Region *> &regionSet,
-                                      std::unordered_set<PushBlock *> &secretSet)
+                                      std::set<Region *> &regionSet,
+                                      std::set<PushBlock *> &secretSet)
 {
     if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
         return;
@@ -308,8 +308,8 @@ void ScoreMap::ConnectRegions()
         entry = pushBlocks.nextObject())
     {        
         // Initialize the data
-        std::unordered_set<Region *> regionSet;
-        std::unordered_set<PushBlock *> secretSet;
+        std::set<Region *> regionSet;
+        std::set<PushBlock *> secretSet;
         
         // Do the recursive work
         RecursiveConnectRegion(entry->tilex, entry->tiley, regionSet, secretSet);

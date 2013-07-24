@@ -25,7 +25,6 @@
 
 // WL_DRAW.C
 
-#include "opencv_hdr.h"	// IOANCH 20130713: opencv
 #include "wl_def.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
@@ -36,6 +35,7 @@
 #include "wl_play.h"
 #pragma hdrstop
 
+#include "cv_video.h"   // IOANCH 20130724
 #include "wl_cloudsky.h"
 #include "wl_atmos.h"
 #include "wl_shade.h"
@@ -1580,72 +1580,7 @@ void    ThreeDRefresh ()
    //
    // grayscale image creation
 
-   static CvVideoWriter *vid_writ = 0;
-   static unsigned nframes = 0, nset = 0;
-   static PString avi;
-   if(avi.length() <= 0)
-      (avi = cfg_dir).concatSubpath("autowolf.avi");
-   
-   ++nframes;
-   if(!nset)
-   {
-      IplImage *img = cvCreateImageHeader(cvSize(screenBuffer->w, screenBuffer->h),
-                                    IPL_DEPTH_8U, 1);
-      
-      if(!vid_writ)
-         vid_writ =
-         cvCreateVideoWriter(avi.buffer(),
-#ifdef _WIN32
-                             -1, // windows doesn't have the same codecs as *nix
-#else
-                             CV_FOURCC('M', 'J', 'P', 'G'), 
-#endif
-                             70,
-                             cvSize(img->width, img->height), 0);
-      
-      if(img && vid_writ)
-      {
-//         uint8_t col_idx;
-//         unsigned buf_idx, x, y;
-//         uint8_t *newimg;
-         
-         //if(!newimg)
-//         newimg = new uint8_t[img->widthStep * img->height];
-
-         img->imageData = (char *)screenBuffer->pixels;
-//         for(y = 0; y < screenBuffer->h; ++y)
-//         {
-//            for(x = 0; x < screenBuffer->w; ++x)
-//            {
-//               buf_idx = x + y * img->widthStep;
-//               col_idx = ((uint8_t *)screenBuffer->pixels)[buf_idx];
-//               
-//               const SDL_Color &col =
-//               screenBuffer->format->palette->colors[col_idx];
-//
-//               cvSet2D(img, y, x, cvScalar((col.r + col.g + col.b) / 3));
-////               img->imageData[buf_idx] = (col.r + col.g + col.b) / 3;
-//            }
-//         }
-//         img->imageData = (char *)newimg;
-//         cvSetData(img, newimg, img->widthStep);
-         
-         cvWriteFrame(vid_writ, img);
-         
-         if(nframes >= 2400)
-         {
-			 nset = 1;
-            cvNamedWindow("Avem", 1);
-            cvShowImage("Avem", img);
-            cvReleaseVideoWriter(&vid_writ);
-            vid_writ = NULL;
-            cvWaitKey(0);
-            cvDestroyWindow("Avem");
-         }
-         cvReleaseImage(&img);
-
-      }
-   }
+   videoEngine.processSDLSurface(screenBuffer);
 //
 // show screen and time last cycle
 //

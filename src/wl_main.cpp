@@ -1664,7 +1664,7 @@ void TestListPerf()
         DLListItem<intboolwrap> link;
     };
     int i, j = 0, N = 10000000;
-    std::unordered_set<int> set;
+    std::set<int> set;
     EHashTable<intboolwrap, EIntHashKey, &intboolwrap::key, &intboolwrap::link>
     eset(10000019);
     List<int> list;

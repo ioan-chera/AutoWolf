@@ -39,6 +39,7 @@
 #include "wl_play.h"
 #pragma hdrstop
 
+#include "cv_video.h"   // IOANCH 20130724
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
 // IOANCH 17.05.2012
@@ -1353,6 +1354,8 @@ void PlayLoop (void)
     if (demoplayback)
         IN_StartAck ();
 
+    // IOANCH 20130724: opencv, initialize video writer, once per session
+    videoEngine.startRecord();
     do
     {
         PollControls ();

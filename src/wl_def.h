@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include <time.h>
 #ifndef APPLE_NONCPP11
-#include <unordered_set>
+#include <set>
 #endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
@@ -55,6 +55,7 @@
 #	include <stdarg.h>
 #endif
 #include <SDL.h>
+#include <opencv2/opencv.hpp>
 
 #if !defined O_BINARY
 #	define O_BINARY 0

@@ -37,6 +37,8 @@
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FB3B41E1744183100C29DF4 /* Point2D.cpp */; };
+		4FBD7306179FEE2500937B50 /* cv_video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FBD7304179FEE2500937B50 /* cv_video.cpp */; };
+		4FBD733717A0218900937B50 /* libopencv_imgproc.2.4.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FBD733617A0218900937B50 /* libopencv_imgproc.2.4.6.dylib */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -146,6 +148,10 @@
 		4F9E982816E366C100B632BB /* CocoaFun.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CocoaFun.h; path = ../src/macosx/CocoaFun.h; sourceTree = "<group>"; };
 		4FB3B41E1744183100C29DF4 /* Point2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Point2D.cpp; path = ../src/Point2D.cpp; sourceTree = "<group>"; };
 		4FB3B41F1744183200C29DF4 /* Point2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Point2D.h; path = ../src/Point2D.h; sourceTree = "<group>"; };
+		4FBD7304179FEE2500937B50 /* cv_video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cv_video.cpp; path = ../src/cv_video.cpp; sourceTree = "<group>"; };
+		4FBD7305179FEE2500937B50 /* cv_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cv_video.h; path = ../src/cv_video.h; sourceTree = "<group>"; };
+		4FBD7307179FEE2F00937B50 /* opencv_hdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = opencv_hdr.h; path = ../src/opencv_hdr.h; sourceTree = "<group>"; };
+		4FBD733617A0218900937B50 /* libopencv_imgproc.2.4.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_imgproc.2.4.6.dylib; path = ../../../../../../opt/local/lib/libopencv_imgproc.2.4.6.dylib; sourceTree = "<group>"; };
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = sodpal.inc; path = ../src/sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = wolfpal.inc; path = ../src/wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../src/audioabstract.h; sourceTree = "<group>"; };
@@ -243,6 +249,7 @@
 				4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */,
 				4F00B0ED1797D3170091B7BD /* libopencv_core.2.4.6.dylib in Frameworks */,
 				4F00B0EE1797D3170091B7BD /* libopencv_highgui.2.4.6.dylib in Frameworks */,
+				4FBD733717A0218900937B50 /* libopencv_imgproc.2.4.6.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +417,16 @@
 			name = "OSX Specific";
 			sourceTree = "<group>";
 		};
+		4FBD7303179FEDDE00937B50 /* OPENCV */ = {
+			isa = PBXGroup;
+			children = (
+				4FBD7307179FEE2F00937B50 /* opencv_hdr.h */,
+				4FBD7304179FEE2500937B50 /* cv_video.cpp */,
+				4FBD7305179FEE2500937B50 /* cv_video.h */,
+			);
+			name = OPENCV;
+			sourceTree = "<group>";
+		};
 		4FFDC97B173AB25400DE48A0 /* Build scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -420,6 +437,7 @@
 		4FFF0CED1791850000C9DEA3 /* Dynamic Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				4FBD733617A0218900937B50 /* libopencv_imgproc.2.4.6.dylib */,
 				4F00B0EB1797D3170091B7BD /* libopencv_core.2.4.6.dylib */,
 				4F00B0EC1797D3170091B7BD /* libopencv_highgui.2.4.6.dylib */,
 			);
@@ -429,6 +447,7 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
+				4FBD7303179FEDDE00937B50 /* OPENCV */,
 				4F00B0E71796D97C0091B7BD /* HAL */,
 				4F4717BA173A6A610018E82B /* SODFlag.cpp */,
 				4F4717BB173A6A610018E82B /* SODFlag.h */,
@@ -697,6 +716,7 @@
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
 				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
+				4FBD7306179FEE2500937B50 /* cv_video.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,7 +739,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -815,7 +835,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -846,7 +866,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;

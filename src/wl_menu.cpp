@@ -50,7 +50,6 @@
 #include "PString.h"
 #include "Config.h"
 // IOANCH 20130303: Cocoa functions for Apple computers
-#include "macosx/CocoaFun.h"
 #include "MasterDirectoryFile.h"
 
 extern int lastgamemusicoffset;

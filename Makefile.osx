@@ -51,6 +51,7 @@ SRCS :=
 SRCS += src/ActorStates.cpp
 SRCS += src/CheckSum.cpp
 SRCS += src/Config.cpp
+SRCS += src/cv_video.cpp
 SRCS += src/DataFile.cpp
 SRCS += src/DirectoryFile.cpp
 SRCS += src/Exception.cpp
