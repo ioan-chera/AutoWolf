@@ -27,4 +27,6 @@
 void I_Delay(unsigned ms);
 uint32_t I_GetTicks(void);
 
+void I_Notify(const char *msg);
+
 #endif /* defined(__Wolf4SDL__i_system__) */

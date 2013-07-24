@@ -67,3 +67,30 @@ void Cocoa_DisplayErrorAlert(const char *msg)
 {
     [[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 }
+
+//
+// Cocoa_PostNotification
+//
+// Posts a notification, either to the OS X 10.8 notification centre, or by
+// other means
+//
+void Cocoa_PostNotification(const char *msg)
+{
+   BOOL notificationCenterIsAvailable =
+   (NSClassFromString(@"NSUserNotificationCenter") != nil);
+   
+   if(notificationCenterIsAvailable)
+   {
+      NSUserNotification *notification = [[NSUserNotification alloc] init];
+      NSString *infoText = [[NSString alloc] initWithUTF8String:msg];
+      
+      notification.title = @"Automatic Wolfenstein";
+      notification.informativeText = infoText;
+      NSUserNotificationCenter *notifCentre = [NSUserNotificationCenter
+                                               defaultUserNotificationCenter];
+      [notifCentre deliverNotification:notification];
+      
+      [infoText release];
+      [notification release];
+   }
+}
