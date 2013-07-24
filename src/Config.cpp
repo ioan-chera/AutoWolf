@@ -23,8 +23,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
+#include <direct.h>
+#include <Windows.h>
+#include <ShlObj.h>
+#else
+#include <unistd.h>
+#endif
 
 #include <sys/stat.h>
+#include "wl_def.h"
+#include "i_system.h"
 #ifdef __APPLE__
 #include "macosx/CocoaFun.h"
 #endif
@@ -34,13 +43,6 @@
 #include "MasterDirectoryFile.h"
 #include "ioan_bas.h"
 
-#ifdef _WIN32
-#include <direct.h>
-#include <Windows.h>
-#include <ShlObj.h>
-#else
-#include <unistd.h>
-#endif
 
 Boolean cfg_nonazis;
 Boolean cfg_secretstep3;
@@ -122,7 +124,7 @@ static void CFG_checkEnvVars()
     const char *wolfdir = getenv("AUTOWOLFDIR");
     if(wolfdir)
     {
-        if(changeDirectory(wolfdir))
+        if(!I_ChangeDir(wolfdir))
             throw Exception(PString("Cannot change directory to ").
                             concat(wolfdir).concat("\n"));
     }
@@ -323,7 +325,7 @@ void CFG_CheckParameters(int argc, char *argv[])
                     throw Exception("The wolfdir option is missing the dir argument!\n");
                 else
                 {
-                    if(changeDirectory(argv[i]))
+                    if(!I_ChangeDir(argv[i]))
                         throw Exception(PString("Cannot change directory to ").concat(argv[i]).concat("\n"));
                 }
             }
@@ -409,25 +411,8 @@ void CFG_SetupConfigLocation()
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
         // IOANCH 20130509: use PString for paths
-#ifdef __APPLE__
-        const char *appsupdir = Cocoa_ApplicationSupportDirectory();
-        if(appsupdir == NULL)
-            Quit("Your Application Support directory is not defined. You must "
-                 "set this before playing.");
-        cfg_dir = appsupdir;
-#elif defined(_WIN32)
-        TCHAR appdatdir[MAX_PATH];
-        if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
-            Quit("Your Application Data directory is not defined. You must "
-                 "set this before playing.");
-        cfg_dir.copy(appdatdir).concatSubpath("AutoWolf");
-#else
-        const char *homeenv = getenv("HOME");
-        if(homeenv == NULL)
-            Quit("Your $HOME directory is not defined. You must set this before "
-                 "playing.");
-        cfg_dir.copy(homeenv).concatSubpath(".autowolf");
-#endif
+       // IOANCH 20130725: abstracted this away
+       cfg_dir = I_GetSettingsDir();
     }
 #endif
     if(cfg_dir.length() > 0)
@@ -435,11 +420,7 @@ void CFG_SetupConfigLocation()
         // Ensure config directory exists and create if necessary
         if(stat(cfg_dir.buffer(), &statbuf) != 0)
         {
-#ifdef _WIN32
-            if(_mkdir(cfg_dir.buffer()) != 0)
-#else
-            if(mkdir(cfg_dir.buffer(), 0755) != 0)
-#endif
+            if(!I_MakeDir(cfg_dir))
             {
                 Quit("The configuration directory \"%s\" could not be created.",
                      cfg_dir.buffer());

@@ -21,6 +21,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <sys/stat.h>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 #include "wl_def.h"
 #include "CocoaFun.h"
 #include "i_system.h"
@@ -55,4 +61,61 @@ void I_Notify(const char *msg)
 #ifdef __APPLE__
    Cocoa_PostNotification(SPEAR.FullTitle(), msg);
 #endif
+}
+
+//
+// I_MakeDir
+//
+// Makes a directory
+//
+Boolean I_MakeDir(const char *dirname)
+{
+#ifdef _WIN32
+   return CreateDirectory(dirname, NULL);
+#else
+   return !mkdir(dirname, 0x755);
+#endif
+}
+
+//
+// I_ChangeDir
+//
+// Sets current dir
+//
+Boolean I_ChangeDir(const char *dirname)
+{
+#ifdef _WIN32
+   return SetCurrentDirectory(dirname);
+#else
+   return !chdir(dirname);
+#endif
+}
+
+//
+// I_GetSettingsDir
+//
+// Gets the settings directory
+//
+PString I_GetSettingsDir()
+{
+#ifdef __APPLE__
+   const char *appsupdir = Cocoa_ApplicationSupportDirectory();
+   if(appsupdir == NULL)
+      Quit("Your Application Support directory is not defined. You must "
+           "set this before playing.");
+   return appsupdir;
+#elif defined(_WIN32)
+   TCHAR appdatdir[MAX_PATH];
+   if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
+      Quit("Your Application Data directory is not defined. You must "
+           "set this before playing.");
+   return PString(appdatdir).concatSubpath("AutoWolf");
+#else
+   const char *homeenv = getenv("HOME");
+   if(homeenv == NULL)
+      Quit("Your $HOME directory is not defined. You must set this before "
+           "playing.");
+   return PString(homeenv).concatSubpath(".autowolf");
+#endif
+
 }
