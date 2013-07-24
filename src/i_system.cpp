@@ -22,6 +22,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
+#include "CocoaFun.h"
 #include "i_system.h"
 
 //
@@ -42,4 +43,16 @@ void I_Delay(unsigned ms)
 uint32_t I_GetTicks(void)
 {
    return (uint32_t)SDL_GetTicks();
+}
+
+//
+// I_Notify
+//
+// Posts a notification, depending on platform
+//
+void I_Notify(const char *msg)
+{
+#ifdef __APPLE__
+   Cocoa_PostNotification(msg);
+#endif
 }
