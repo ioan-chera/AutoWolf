@@ -20,6 +20,8 @@ DataFile.d
 DataFile.o
 DirectoryFile.d
 DirectoryFile.o
+Exception.d
+Exception.o
 HistoryRatio.d
 HistoryRatio.o
 MasterDirectoryFile.d
@@ -160,6 +162,8 @@ src/Config.d
 src/Config.o
 src/Exception.d
 src/Exception.o
+src/Point2D.d
+src/Point2D.o
 src/SODFlag.d
 src/SODFlag.o
 src/dosbox/dbopl.d
@@ -255,3 +259,9 @@ DOS/wolfsrc/WOLF.OBR
 DOS/wolfsrc/WOLF.~DE
 DOS/AUTOW3D.EXE
 DOS/autow3dsrc.zip
+Makefile~
+.gitignore~
+src/cv_video.d
+src/cv_video.o
+src/i_system.d
+src/i_system.o

@@ -42,6 +42,7 @@
 // IOANCH 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"
+#include "i_system.h"
 #ifndef APPLE_NONCPP11
 #include "ioan_secret.h"
 #endif
@@ -1508,10 +1509,15 @@ startplayloop:
         if (startgame || loadedgame)
             goto restartgame;
 
+       // IOANCH 20130725: send notifications on level exit
         switch (playstate)
         {
             case ex_completed:
             case ex_secretlevel:
+              
+                I_Notify(PString("Finished E").concat(gamestate.episode + 1).
+                       Putc('M').concat(gamestate.mapon + 1));
+              
                 if(viewsize == 21) DrawPlayScreen();
                 gamestate.keys = 0;
                 DrawKeys ();
@@ -1586,6 +1592,9 @@ startplayloop:
                 break;
 
             case ex_died:
+                I_Notify(PString("Died in E").concat(gamestate.episode + 1).
+                       Putc('M').concat(gamestate.mapon + 1));
+
                 Died ();
                 died = true;                    // don't "get psyched!"
 
@@ -1611,6 +1620,8 @@ startplayloop:
                 return;
 
             case ex_victorious:
+                I_Notify("Victory!");
+
                 if(viewsize == 21) DrawPlayScreen();
                 // IOANCH 20130302: unification
                 if(!SPEAR())
