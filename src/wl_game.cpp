@@ -1058,7 +1058,7 @@ void ShowActStatus()
 ==================
 */
 
-PString    demoname("DEMO?.");
+PString    cfg_demoname("DEMO?.");
 
 #ifndef REMDEBUG
 #define MAXDEMOSIZE     8192
@@ -1110,8 +1110,8 @@ void FinishDemoRecord ()
         level = atoi (str);
         if (level>=0 && level<=9)
         {
-            demoname[4] = (char)('0'+level);
-            CA_WriteFile (demoname.buffer(),demobuffer,length);
+            cfg_demoname[4] = (char)('0'+level);
+            CA_WriteFile (cfg_demoname.buffer(),demobuffer,length);
         }
     }
 
@@ -1230,8 +1230,8 @@ void PlayDemo (int demonumber)
     CA_CacheGrChunk(dems[demonumber]);
     demoptr = (int8_t *) grsegs[dems[demonumber]];
 #else
-    demoname[4] = '0'+demonumber;
-    CA_LoadFile (demoname.buffer(),&demobuffer);
+    cfg_demoname[4] = '0'+demonumber;
+    CA_LoadFile (cfg_demoname.buffer(),&demobuffer);
     demoptr = (int8_t *)demobuffer;
 #endif
 

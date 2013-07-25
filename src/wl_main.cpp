@@ -112,7 +112,7 @@ Boolean startgame;
 Boolean loadedgame;
 int     mouseadjustment;
 
-PString configname("CONFIG.");
+PString cfg_configname("CONFIG.");
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -132,10 +132,10 @@ void ReadConfig()
     PString configpath;
 
 #ifdef _arch_dreamcast
-    DC_LoadFromVMU(configname.buffer());
+    DC_LoadFromVMU(cfg_configname.buffer());
 #endif
 
-    configpath.copy(cfg_dir).concatSubpath(configname);
+    configpath.copy(cfg_dir).concatSubpath(cfg_configname);
 
     const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
     if (file != -1)
@@ -254,10 +254,10 @@ void WriteConfig()
     PString configpath;
 
 #ifdef _arch_dreamcast
-    fs_unlink(configname.buffer());
+    fs_unlink(cfg_configname.buffer());
 #endif
 
-    configpath.copy(cfg_dir).concatSubpath(configname);
+    configpath.copy(cfg_dir).concatSubpath(cfg_configname);
 
     const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
@@ -290,7 +290,7 @@ void WriteConfig()
         close(file);
     }
 #ifdef _arch_dreamcast
-    DC_SaveToVMU(configname.buffer(), NULL);
+    DC_SaveToVMU(cfg_configname.buffer(), NULL);
 #endif
 }
 

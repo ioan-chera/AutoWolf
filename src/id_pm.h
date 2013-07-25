@@ -27,36 +27,36 @@
 #define PMPageSize 4096
 #endif
 
-extern int ChunksInFile;
-extern int PMSpriteStart;
-extern int PMSoundStart;
+extern int pm_ChunksInFile;
+extern int pm_SpriteStart;
+extern int pm_SoundStart;
 
-extern bool PMSoundInfoPagePadded;
+extern bool pm_SoundInfoPagePadded;
 
-// ChunksInFile+1 pointers to page starts.
+// pm_ChunksInFile+1 pointers to page starts.
 // The last pointer points one byte after the last page.
-extern uint8_t **PMPages;
+extern uint8_t **pm_Pages;
 
 void PM_Startup();
 void PM_Shutdown();
 
 static inline uint32_t PM_GetPageSize(int page)
 {
-    if(page < 0 || page >= ChunksInFile)
+    if(page < 0 || page >= pm_ChunksInFile)
         Quit("PM_GetPageSize: Tried to access illegal page: %i", page);
-    return (uint32_t) (PMPages[page + 1] - PMPages[page]);
+    return (uint32_t) (pm_Pages[page + 1] - pm_Pages[page]);
 }
 
 static inline uint8_t *PM_GetPage(int page)
 {
-    if(page < 0 || page >= ChunksInFile)
+    if(page < 0 || page >= pm_ChunksInFile)
         Quit("PM_GetPage: Tried to access illegal page: %i", page);
-    return PMPages[page];
+    return pm_Pages[page];
 }
 
 static inline uint8_t *PM_GetEnd()
 {
-    return PMPages[ChunksInFile];
+    return pm_Pages[pm_ChunksInFile];
 }
 
 static inline byte *PM_GetTexture(int wallpic)
@@ -71,12 +71,12 @@ static inline uint16_t *PM_GetSprite(int shapenum, Boolean remap = true)
     // IOANCH 20130302: unification
     if(remap)
         shapenum = SPEAR.sp(shapenum);
-    return (uint16_t *) (void *) PM_GetPage(PMSpriteStart + shapenum);
+    return (uint16_t *) (void *) PM_GetPage(pm_SpriteStart + shapenum);
 }
 
 static inline byte *PM_GetSound(int soundpagenum)
 {
-    return PM_GetPage(PMSoundStart + soundpagenum);
+    return PM_GetPage(pm_SoundStart + soundpagenum);
 }
 
 #endif

@@ -810,8 +810,8 @@ void SD_SetDigiDevice(SDSMode mode)
 void SD_L_SetupDigi()
 {
     // Correct padding enforced by PM_Startup()
-    word *soundInfoPage = (word *) (void *) PM_GetPage(ChunksInFile-1);
-    NumDigi = (word) PM_GetPageSize(ChunksInFile - 1) / 4;
+    word *soundInfoPage = (word *) (void *) PM_GetPage(pm_ChunksInFile-1);
+    NumDigi = (word) PM_GetPageSize(pm_ChunksInFile - 1) / 4;
 
     DigiList = (digiinfo *) malloc(NumDigi * sizeof(digiinfo));
     int i;
@@ -821,7 +821,7 @@ void SD_L_SetupDigi()
         // the start page and the start page of the next sound
 
         DigiList[i].startpage = soundInfoPage[i * 2];
-        if((int) DigiList[i].startpage >= ChunksInFile - 1)
+        if((int) DigiList[i].startpage >= pm_ChunksInFile - 1)
         {
             NumDigi = i;
             break;
@@ -831,17 +831,17 @@ void SD_L_SetupDigi()
         if(i < NumDigi - 1)
         {
             lastPage = soundInfoPage[i * 2 + 2];
-            if(lastPage == 0 || lastPage + PMSoundStart > ChunksInFile - 1) lastPage = ChunksInFile - 1;
-            else lastPage += PMSoundStart;
+            if(lastPage == 0 || lastPage + pm_SoundStart > pm_ChunksInFile - 1) lastPage = pm_ChunksInFile - 1;
+            else lastPage += pm_SoundStart;
         }
-        else lastPage = ChunksInFile - 1;
+        else lastPage = pm_ChunksInFile - 1;
 
         int size = 0;
-        for(int page = PMSoundStart + DigiList[i].startpage; page < lastPage; page++)
+        for(int page = pm_SoundStart + DigiList[i].startpage; page < lastPage; page++)
             size += PM_GetPageSize(page);
 
         // Don't include padding of sound info page, if padding was added
-        if(lastPage == ChunksInFile - 1 && PMSoundInfoPagePadded) size--;
+        if(lastPage == pm_ChunksInFile - 1 && pm_SoundInfoPagePadded) size--;
 
         // Patch lower 16-bit of size with size from sound info page.
         // The original VSWAP contains padding which is included in the page size,

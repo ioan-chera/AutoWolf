@@ -42,6 +42,10 @@
 #include "Exception.h"
 #include "MasterDirectoryFile.h"
 #include "ioan_bas.h"
+#include "wl_game.h"
+#include "wl_main.h"
+#include "wl_menu.h"
+#include "wl_text.h"
 
 
 Boolean cfg_nonazis;
@@ -430,4 +434,94 @@ void CFG_SetupConfigLocation()
     
     // IOANCH 20130304: initialize bot master directory file location
     MasterDirectoryFile::MainDir().initializeConfigLocation();
+}
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CHECK FOR EPISODES
+//
+///////////////////////////////////////////////////////////////////////////
+void CFG_CheckForEpisodes ()
+{
+   struct stat statbuf;
+   
+   // IOANCH 20130301: unification culling
+   if(!SPEAR())
+   {
+      if(!stat("VSWAP.WL6", &statbuf))
+      {
+         cfg_extension = "WL6";
+         menu_newep[2].active =
+         menu_newep[4].active =
+         menu_newep[6].active =
+         menu_newep[8].active =
+         menu_newep[10].active =
+         menu_epselect[1] =
+         menu_epselect[2] =
+         menu_epselect[3] =
+         menu_epselect[4] =
+         menu_epselect[5] = 1;
+      }
+      else if(!stat("VSWAP.WL3", &statbuf))
+      {
+         cfg_extension = "WL3";
+         menu_missingep = 3;
+         menu_newep[2].active =
+         menu_newep[4].active =
+         menu_epselect[1] =
+         menu_epselect[2] = 1;
+      }
+      else if(!stat("VSWAP.WL1", &statbuf))
+      {
+         cfg_extension = "WL1";
+         menu_missingep = 5;
+      }
+      else
+         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+      
+      cfg_graphext = cfg_extension;
+      cfg_audioext = cfg_extension;
+      cfg_endfilename += cfg_extension;
+   }
+   else
+   {
+      // IOANCH 20130301: unification culling
+      switch (cfg_mission)
+      {
+         case 0:
+            if(!stat("VSWAP.SOD", &statbuf))
+               cfg_extension = "SOD";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 1:
+            if(!stat("VSWAP.SD1", &statbuf))
+               cfg_extension = "SD1";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 2:
+            if(!stat("VSWAP.SD2", &statbuf))
+               cfg_extension = "SD2";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 3:
+            if(!stat("VSWAP.SD3", &statbuf))
+               cfg_extension = "SD3";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         default:
+            Quit ("UNSUPPORTED MISSION!");
+            break;
+      }
+      
+      cfg_graphext = "SOD";
+      cfg_audioext = "SOD";
+   }
+   
+   cfg_configname += cfg_extension;
+   cfg_savename += cfg_extension;
+   cfg_demoname += cfg_extension;
 }

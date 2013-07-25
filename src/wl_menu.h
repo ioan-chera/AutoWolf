@@ -228,3 +228,9 @@ extern LRstruct LevelRatios[];
 void Write (int x,int y,const char *string);
 void NonShareware();
 int GetYorN(int x,int y,int pic);
+
+// IOANCH 20130726: made extern
+extern CP_itemtype menu_newep[];
+extern int menu_epselect[6];
+extern int menu_missingep;
+extern PString cfg_savename;

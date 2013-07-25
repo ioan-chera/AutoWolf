@@ -54,7 +54,7 @@
 #include "MasterDirectoryFile.h"
 
 extern int lastgamemusicoffset;
-extern int numEpisodesMissing;
+// IOANCH: made external
 
 //
 // PRIVATE PROTOTYPES
@@ -133,7 +133,7 @@ CP_itemtype CtlMenu[] = {
 };
 
 // IOANCH 20130303: unification
-CP_itemtype NewEmenu[] = {
+CP_itemtype menu_newep[] = {
     // IOANCH 20130301: unification culling
 #ifdef SPANISH
     {1, "Episodio 1\n" "Fuga desde Wolfenstein", 0},
@@ -204,7 +204,7 @@ CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             LSItems   = { LSM_X, LSM_Y, lengthof(LSMenu), 0, 24 },
             CtlItems  = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
             CusItems  = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0},
-            NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
+            NewEitems = { NE_X, NE_Y, lengthof(menu_newep), 0, 88 },
             NewItems  = { NM_X, NM_Y, lengthof(NewMenu), 2, 24 };
 // IOANCH 20130302: unification
 int color_hlite_wl6[] = {
@@ -232,7 +232,7 @@ int color_norml_sod[] = {
     0x6b
 };
 
-int EpisodeSelect[6] = { 1 };
+int menu_epselect[6] = { 1 };
 
 
 static int SaveGamesAvail[10];
@@ -240,7 +240,7 @@ static int StartGame;
 static int SoundStatus = 1;
 static int pickquick;
 static char SaveGameNames[10][32];
-static PString SaveName("SAVEGAM?.");
+PString cfg_savename("SAVEGAM?.");
 
 
 ////////////////////////////////////////////////////////////////////
@@ -943,7 +943,7 @@ firstpart:
         DrawNewEpisode ();
         do
         {
-            which = HandleMenu (&NewEitems, &NewEmenu[0], NULL);
+            which = HandleMenu (&NewEitems, &menu_newep[0], NULL);
             switch (which)
             {
                 case -1:
@@ -951,7 +951,7 @@ firstpart:
                     return 0;
 
                 default:
-                    if (!EpisodeSelect[which / 2])
+                    if (!menu_epselect[which / 2])
                     {
                         SD_PlaySound (NOWAYSND);
                         Message ("Please select \"Read This!\"\n"
@@ -1070,7 +1070,7 @@ DrawNewEpisode ()
 #endif
 
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
-    DrawMenu (&NewEitems, &NewEmenu[0]);
+    DrawMenu (&NewEitems, &menu_newep[0]);
     // IOANCH 20130302: unification
     for (i = 0; i < 6; i++)
         VWB_DrawPic (NE_X + 32, NE_Y + i * 26, SPEAR.g(C_EPISODE1PIC) + i);
@@ -1404,7 +1404,7 @@ int CP_LoadGame (int quick)
     PString name;
     PString loadpath;   // IOANCH 20130509: use PString for paths
 
-    name = SaveName;
+    name = cfg_savename;
 
     //
     // QUICKLOAD?
@@ -1587,7 +1587,7 @@ CP_SaveGame (int quick)
     PString savepath;   // IOANCH 20130509: use PString for paths
     char input[32];
 
-    name = SaveName;
+    name = cfg_savename;
 
     //
     // QUICKSAVE?
@@ -3040,7 +3040,7 @@ void SetupSaveGames()
     PString name;
     PString savepath;
 
-    name = SaveName;
+    name = cfg_savename;
     for(int i = 0; i < 10; i++)
     {
         name[7] = '0' + i;
@@ -3804,93 +3804,4 @@ ShootSnd ()
     SD_PlaySound (SHOOTSND);
 }
 
-// IOANCH 201307
-///////////////////////////////////////////////////////////////////////////
-//
-// CHECK FOR EPISODES
-//
-///////////////////////////////////////////////////////////////////////////
-void CFG_CheckForEpisodes ()
-{
-    struct stat statbuf;
-
-    // IOANCH 20130301: unification culling
-    if(!SPEAR())
-    {
-        if(!stat("VSWAP.WL6", &statbuf))
-        {
-            extension = "WL6";
-            NewEmenu[2].active = 
-            NewEmenu[4].active = 
-            NewEmenu[6].active =
-            NewEmenu[8].active = 
-            NewEmenu[10].active = 
-            EpisodeSelect[1] =
-            EpisodeSelect[2] = 
-            EpisodeSelect[3] = 
-            EpisodeSelect[4] = 
-            EpisodeSelect[5] = 1;
-        }
-        else if(!stat("VSWAP.WL3", &statbuf))
-        {
-            extension = "WL3";
-            numEpisodesMissing = 3;
-            NewEmenu[2].active =
-            NewEmenu[4].active =
-            EpisodeSelect[1] =
-            EpisodeSelect[2] = 1;
-        }
-        else if(!stat("VSWAP.WL1", &statbuf))
-        {
-            extension = "WL1";
-            numEpisodesMissing = 5;
-        }
-        else
-            Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
-        
-        graphext = extension;
-        audioext = extension;
-        endfilename += extension;
-    }
-    else
-    {
-// IOANCH 20130301: unification culling
-        switch (cfg_mission)
-        {
-            case 0:
-                if(!stat("VSWAP.SOD", &statbuf))
-                    extension = "SOD";
-                else
-                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-                break;
-            case 1:
-                if(!stat("VSWAP.SD1", &statbuf))
-                    extension = "SD1";
-                else
-                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-                break;
-            case 2:
-                if(!stat("VSWAP.SD2", &statbuf))
-                    extension = "SD2";
-                else
-                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-                break;
-            case 3:
-                if(!stat("VSWAP.SD3", &statbuf))
-                    extension = "SD3";
-                else
-                    Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-                break;
-            default:
-                Quit ("UNSUPPORTED MISSION!");
-                break;
-        }
-        
-        graphext = "SOD";
-        audioext = "SOD";
-    }
-
-    configname += extension;
-    SaveName += extension;
-    demoname += extension;
-}
+// IOANCH 20130726: moved this to CFG_

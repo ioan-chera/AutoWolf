@@ -722,7 +722,7 @@ int     endextern = T_ENDART1;
 int     helpextern = T_HELPART;
 #endif
 char helpfilename[13] = "HELPART.";
-PString endfilename("ENDART1.");
+PString cfg_endfilename("ENDART1.");
 
 /*
 =================
@@ -788,8 +788,8 @@ void EndText ()
     CA_CacheGrChunk (artnum);
     text = (char *)grsegs[artnum];
 #else
-    endfilename[6] = '1'+gamestate.episode;
-    CA_LoadFile (endfilename.buffer(),&layout);
+    cfg_endfilename[6] = '1'+gamestate.episode;
+    CA_LoadFile (cfg_endfilename.buffer(),&layout);
     text = (char *)layout;
 #endif
 

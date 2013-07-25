@@ -91,7 +91,7 @@ byte    *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 word    RLEWtag;
 
-int     numEpisodesMissing = 0;
+int     menu_missingep = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -99,9 +99,9 @@ int     numEpisodesMissing = 0;
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-PString extension; // Need a string, not constant to change cache files
-PString graphext;
-PString audioext;
+PString cfg_extension; // Need a string, not constant to change cache files
+PString cfg_graphext;
+PString cfg_audioext;
 static const char gheadname[] = "VGAHEAD.";
 static const char gfilename[] = "VGAGRAPH.";
 static const char gdictname[] = "VGADICT.";
@@ -407,7 +407,7 @@ static void CAL_SetupGrFile ()
 // load ???dict.ext (huffman dictionary for graphics files)
 //
 
-    fname.copy(gdictname).concat(graphext);  // IOANCH 20130509: don't
+    fname.copy(gdictname).concat(cfg_graphext);  // IOANCH 20130509: don't
                                             // withExtension yet
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -418,7 +418,7 @@ static void CAL_SetupGrFile ()
 
     // load the data offsets from ???head.ext
     
-    fname.copy(gheadname).concat(graphext);
+    fname.copy(gheadname).concat(cfg_graphext);
 
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -432,9 +432,9 @@ static void CAL_SetupGrFile ()
 	int expectedsize;
     
     if(SPEAR())
-        expectedsize = lengthof(grstarts_sod) - numEpisodesMissing;
+        expectedsize = lengthof(grstarts_sod) - menu_missingep;
     else
-        expectedsize = lengthof(grstarts_wl6) - numEpisodesMissing;
+        expectedsize = lengthof(grstarts_wl6) - menu_missingep;
 
     if(!cfg_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
@@ -476,7 +476,7 @@ static void CAL_SetupGrFile ()
 //
 // Open the graphics file, leaving it open until the game is finished
 //
-    fname.copy(gfilename).concat(graphext);
+    fname.copy(gfilename).concat(cfg_graphext);
 
     grhandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (grhandle == -1)
@@ -512,7 +512,7 @@ static void CAL_SetupMapFile ()
 //
 // load maphead.ext (offsets and tileinfo for map file)
 //
-    fname.copy(mheadname).concat(extension);
+    fname.copy(mheadname).concat(cfg_extension);
 
     handle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (handle == -1)
@@ -530,7 +530,7 @@ static void CAL_SetupMapFile ()
 // open the data file
 //
     // IOANCH 20130301: unification culling
-    fname.copy("GAMEMAPS.").concat(extension);
+    fname.copy("GAMEMAPS.").concat(cfg_extension);
 
     maphandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (maphandle == -1)
@@ -576,7 +576,7 @@ static void CAL_SetupAudioFile ()
 //
 // load AUDIOHED.ext (offsets for audio file)
 //
-    fname.copy(aheadname).concat(audioext);
+    fname.copy(aheadname).concat(cfg_audioext);
 
     void* ptr;
     if (!CA_LoadFile(fname.buffer(), &ptr))
@@ -586,7 +586,7 @@ static void CAL_SetupAudioFile ()
 //
 // open the data file
 //
-    fname.copy(afilename).concat(audioext);
+    fname.copy(afilename).concat(cfg_audioext);
 
     audiohandle = open(fname.buffer(), O_RDONLY | O_BINARY);
     if (audiohandle == -1)
@@ -1019,7 +1019,5 @@ void CA_CacheMap (int mapnum)
 void CA_CannotOpen(const char *string)
 {
     // IOANCH 20130510: don't use a statically allocated char array.
-    PString str("Can't open ");
-    str.concat(string).concat("!\n");
-    Quit (str.buffer());
+    Quit (PString("Can't open ").concat(string).concat("!\n")());
 }

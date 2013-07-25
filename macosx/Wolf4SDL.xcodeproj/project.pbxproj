@@ -427,8 +427,6 @@
 				FAB790E8163A7C3E003DC8E1 /* ioan_secret.cpp */,
 				FAC97A491679D14F00949336 /* CheckSum.h */,
 				FAC97A481679D14E00949336 /* CheckSum.cpp */,
-				4F471991173BC0310018E82B /* Config.h */,
-				4F471992173BC0310018E82B /* Config.cpp */,
 				4F267FCB174B87E500C00DBF /* MapExploration.h */,
 				4F267FCC174B87E500C00DBF /* MapExploration.cpp */,
 			);
@@ -486,6 +484,8 @@
 				D901F4F20FC0DBCB0040C290 /* wl_main.cpp */,
 				4F32BDAB1749441A00EF744B /* ActorStates.cpp */,
 				4F32BDAC1749441B00EF744B /* ActorStates.h */,
+				4F471991173BC0310018E82B /* Config.h */,
+				4F471992173BC0310018E82B /* Config.cpp */,
 			);
 			name = WL;
 			sourceTree = "<group>";

@@ -290,14 +290,14 @@ void ShapeTest ()
         US_ClearWindow();
         sound = (soundnames) -1;
 
-        //              page = &PMPages[i];
+        //              page = &pm_Pages[i];
         US_Print(" Page #");
         US_PrintUnsigned(i);
-        if (i < PMSpriteStart)
+        if (i < pm_SpriteStart)
             US_Print(" (Wall)");
-        else if (i < PMSoundStart)
+        else if (i < pm_SoundStart)
             US_Print(" (Sprite)");
-        else if (i == ChunksInFile - 1)
+        else if (i == pm_ChunksInFile - 1)
             US_Print(" (Sound Info)");
         else
             US_Print(" (Sound)");
@@ -329,7 +329,7 @@ void ShapeTest ()
 
         if (addr)
         {
-            if (i < PMSpriteStart)
+            if (i < pm_SpriteStart)
             {
                 //
                 // draw the wall
@@ -345,16 +345,16 @@ void ShapeTest ()
                 }
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i < PMSoundStart)
+            else if (i < pm_SoundStart)
             {
                 //
                 // draw the sprite
                 //
                 vbuf += 32*SCREENWIDTH;
-                SimpleScaleShape (160, i-PMSpriteStart, 64);
+                SimpleScaleShape (160, i-pm_SpriteStart, 64);
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i == ChunksInFile - 1)
+            else if (i == pm_ChunksInFile - 1)
             {
                 US_Print("\n\n Number of sounds: ");
                 US_PrintUnsigned(NumDigi);
@@ -374,8 +374,8 @@ void ShapeTest ()
                 for (j = 0;j < NumDigi;j++)
                 {
                     k = (DigiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
-                    if ((i >= PMSoundStart + DigiList[j * 2])
-                            && (i < PMSoundStart + DigiList[j * 2] + k))
+                    if ((i >= pm_SoundStart + DigiList[j * 2])
+                            && (i < pm_SoundStart + DigiList[j * 2] + k))
                         break;
                 }
                 if (j < NumDigi)
@@ -384,7 +384,7 @@ void ShapeTest ()
                     US_Print("\n Sound #");
                     US_PrintUnsigned(j);
                     US_Print("\n Segment #");
-                    US_PrintUnsigned(i - PMSoundStart - DigiList[j * 2]);
+                    US_PrintUnsigned(i - pm_SoundStart - DigiList[j * 2]);
                 }
                 for (j = 0;j < PageLengths[i];j += 32)
                 {
@@ -417,23 +417,23 @@ void ShapeTest ()
                     i--;
                 break;
             case sc_RightArrow:
-                if (++i >= ChunksInFile)
+                if (++i >= pm_ChunksInFile)
                     i--;
                 break;
             case sc_W:      // Walls
                 i = 0;
                 break;
             case sc_S:      // Sprites
-                i = PMSpriteStart;
+                i = pm_SpriteStart;
                 break;
             case sc_D:      // Digitized
-                i = PMSoundStart;
+                i = pm_SoundStart;
                 break;
             case sc_I:      // Digitized info
-                i = ChunksInFile - 1;
+                i = pm_ChunksInFile - 1;
                 break;
 /*            case sc_L:      // Load all pages
-                for (j = 0;j < ChunksInFile;j++)
+                for (j = 0;j < pm_ChunksInFile;j++)
                     PM_GetPage(j);
                 break;*/
             case sc_P:

@@ -56,9 +56,9 @@ extern  byte *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 extern  byte *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 class PString;
-extern  PString  extension;
-extern  PString  graphext;
-extern  PString  audioext;
+extern  PString  cfg_extension;
+extern  PString  cfg_graphext;
+extern  PString  cfg_audioext;
 
 //===========================================================================
 
