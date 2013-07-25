@@ -69,12 +69,12 @@ void Cocoa_DisplayErrorAlert(const char *msg)
 }
 
 //
-// Cocoa_PostNotification
+// Cocoa_Notify
 //
 // Posts a notification, either to the OS X 10.8 notification centre, or by
 // other means
 //
-void Cocoa_PostNotification(const char *title, const char *msg)
+void Cocoa_Notify(const char *title, const char *msg)
 {
    BOOL notificationCenterIsAvailable =
    (NSClassFromString(@"NSUserNotificationCenter") != nil);
