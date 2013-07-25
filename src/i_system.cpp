@@ -28,7 +28,7 @@
 #include <unistd.h>
 #endif
 #include "wl_def.h"
-#include "CocoaFun.h"
+#include "macosx/CocoaFun.h"
 #include "i_system.h"
 
 //
