@@ -3452,11 +3452,11 @@ SetTextColor (CP_itemtype * items, int hlight)
     // IOANCH 20130302: unification
     if (hlight)
     {
-        SETFONTCOLOR (IMPALED(color_hlite, [items->active]), BKGDCOLOR);
+        SETFONTCOLOR (IMPALE(color_hlite)[items->active], BKGDCOLOR);
     }
     else
     {
-        SETFONTCOLOR (IMPALED(color_norml, [items->active]), BKGDCOLOR);
+        SETFONTCOLOR (IMPALE(color_norml)[items->active], BKGDCOLOR);
     }
 }
 

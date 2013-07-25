@@ -140,7 +140,7 @@ static int32_t GRFILEPOS(const size_t idx)
         assert(idx < lengthof(grstarts_sod));
     else
         assert(idx < lengthof(grstarts_wl6));
-	return IMPALED(grstarts, [idx]);
+	return IMPALE(grstarts)[idx];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
