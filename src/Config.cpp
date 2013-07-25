@@ -420,7 +420,7 @@ void CFG_SetupConfigLocation()
         // Ensure config directory exists and create if necessary
         if(stat(cfg_dir.buffer(), &statbuf) != 0)
         {
-            if(!I_MakeDir(cfg_dir))
+            if(!I_MakeDir(cfg_dir()))
             {
                 Quit("The configuration directory \"%s\" could not be created.",
                      cfg_dir.buffer());

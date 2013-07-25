@@ -1518,7 +1518,7 @@ startplayloop:
             case ex_secretlevel:
               
                 I_Notify(PString("Finished E").concat(gamestate.episode + 1).
-                       Putc('M').concat(gamestate.mapon + 1));
+                       Putc('M').concat(gamestate.mapon + 1)());
               
                 if(viewsize == 21) DrawPlayScreen();
                 gamestate.keys = 0;
@@ -1595,7 +1595,7 @@ startplayloop:
 
             case ex_died:
                 I_Notify(PString("Died in E").concat(gamestate.episode + 1).
-                       Putc('M').concat(gamestate.mapon + 1));
+                       Putc('M').concat(gamestate.mapon + 1)());
 
                 Died ();
                 died = true;                    // don't "get psyched!"
