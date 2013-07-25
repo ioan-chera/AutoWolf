@@ -193,7 +193,7 @@ int  CP_CheckQuick(ScanCode scancode);
 int CustomControls(int);
 int MouseSensitivity(int);
 
-void CheckForEpisodes();
+void CFG_CheckForEpisodes();
 
 void FreeMusic();
 

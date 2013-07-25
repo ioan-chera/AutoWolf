@@ -1293,7 +1293,7 @@ static void InitGame()
     // right time anyway.
     // FUNCTIONS WHICH HAVE ALREADY TESTED FOR SPEAR AND MAY NEED RELOCATION:
     // SPEAR.Initialize (most definitely; should be set after the menu)
-    // CheckForEpisodes
+    // CFG_CheckForEpisodes
     // VL_SetVGAPlaneMode: sets SDL_WM_SetCaption (harmless)
     //                     SDL_SetColors and curpal (can be set later, I guess)
     // SignonScreen will appear later.
@@ -1808,7 +1808,7 @@ int main (int argc, char *argv[])
     
     // IOANCH 20130509: this changes config values. Call moved here from CFE.
     CFG_SetupConfigLocation();
-    CheckForEpisodes();
+    CFG_CheckForEpisodes();
 
     InitGame();
 
