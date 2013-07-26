@@ -1277,7 +1277,7 @@ static void InitGame()
 	VH_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
-    MasterDirectoryFile::MainDir().loadFromFile();
+    masterDir.loadFromFile();
     bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers

@@ -433,7 +433,7 @@ void CFG_SetupConfigLocation()
     }
     
     // IOANCH 20130304: initialize bot master directory file location
-    MasterDirectoryFile::MainDir().initializeConfigLocation();
+    masterDir.initializeConfigLocation();
 }
 
 ///////////////////////////////////////////////////////////////////////////
