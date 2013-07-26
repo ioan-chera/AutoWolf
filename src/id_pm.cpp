@@ -19,6 +19,7 @@
 //
 
 #include "wl_def.h"
+#include "i_system.h"
 
 int pm_ChunksInFile;
 int pm_SpriteStart;
@@ -39,8 +40,13 @@ uint8_t **pm_Pages;
 //
 void PM_Startup()
 {
-    PString fname;
-    fname.copy("VSWAP.").concat(cfg_extension);
+//    PString fname;
+//    fname.copy("VSWAP.").concat(cfg_extension);
+   
+    // IOANCH 20130726: case insensitive
+    PString fname = I_ResolveCaseInsensitivePath(".",
+                                         PString("VSWAP.").
+                                         concat(cfg_extension)());
 
     FILE *file = fopen(fname(),"rb");
     if(!file)

@@ -25,11 +25,14 @@
 #ifdef _WIN32
 #include <Windows.h>
 #else
+#include <dirent.h>
 #include <unistd.h>
 #endif
 #include "wl_def.h"
-#include "macosx/CocoaFun.h"
+#include "Config.h"
 #include "i_system.h"
+#include "macosx/CocoaFun.h"
+#include "wl_draw.h"
 
 //
 // I_Delay
@@ -119,6 +122,41 @@ PString I_GetSettingsDir()
 #endif
 
 }
+
+//
+// I_ResolveCaseInsensitivePath
+//
+// Returns the first file in a case insensitive file system at path
+// Designed to be used for finding files which weren't named with case sensiti-
+// vity in mind.
+//
+// If there are several files with the same letters (different cases), the
+// return value depends on readdir
+//
+// If directory can't be accessed or anything like that, just return what's
+// given - this function doesn't do more than that.
+//
+PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
+{
+#ifndef _WIN32
+   // POSIX
+   DIR *dir = opendir(dirname);
+   if(dir)
+   {
+      dirent *ent;
+      while ((ent = readdir(dir)))
+      {
+         if(!strcasecmp(ent->d_name, basename))
+            return PString(dirname).concatSubpath(ent->d_name);
+      }
+      closedir(dir);
+   }
+#endif
+   // not found or indifferent
+   return PString(dirname).concatSubpath(basename);
+
+}
+
 //
 // VL_SetVGAPlaneMode
 //

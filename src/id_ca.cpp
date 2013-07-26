@@ -409,22 +409,31 @@ static void CAL_SetupGrFile ()
 // load ???dict.ext (huffman dictionary for graphics files)
 //
 
-    fname.copy(gdictname).concat(cfg_graphext);  // IOANCH 20130509: don't
+   // IOANCH 20130726: case insensitive
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_gdictname).
+                                        concat(cfg_graphext)());
+
+//    fname.copy(ca_gdictname).concat(cfg_graphext);  // IOANCH 20130509: don't
                                             // withExtension yet
-    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
+    handle = open(fname(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname.buffer());
+        CA_CannotOpen(fname());
 
     read(handle, ca_grhuffman, sizeof(ca_grhuffman));
     close(handle);
 
     // load the data offsets from ???head.ext
-    
-    fname.copy(gheadname).concat(cfg_graphext);
+   
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_gheadname).
+                                        concat(cfg_graphext)());
 
-    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
+//    fname.copy(ca_gheadname).concat(cfg_graphext);
+
+    handle = open(fname(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname.buffer());
+        CA_CannotOpen(fname());
 
     long headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
@@ -443,7 +452,7 @@ static void CAL_SetupGrFile ()
             "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
             "Please check whether you are using the right executable!\n"
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
-            fname.buffer(), headersize / 3, expectedsize);
+            fname(), headersize / 3, expectedsize);
 
     if(SPEAR())
     {
@@ -478,7 +487,11 @@ static void CAL_SetupGrFile ()
 //
 // Open the graphics file, leaving it open until the game is finished
 //
-    fname.copy(gfilename).concat(cfg_graphext);
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_gfilename).
+                                        concat(cfg_graphext)());
+
+//    fname.copy(ca_gfilename).concat(cfg_graphext);
 
     ca_grhandle = open(fname(), O_RDONLY | O_BINARY);
     if (ca_grhandle == -1)
@@ -515,11 +528,15 @@ static void CAL_SetupMapFile ()
 //
 // load maphead.ext (offsets and tileinfo for map file)
 //
-    fname.copy(mheadname).concat(cfg_extension);
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_mheadname).
+                                        concat(cfg_extension)());
 
-    handle = open(fname.buffer(), O_RDONLY | O_BINARY);
+//    fname.copy(ca_mheadname).concat(cfg_extension);
+
+    handle = open(fname(), O_RDONLY | O_BINARY);
     if (handle == -1)
-        CA_CannotOpen(fname.buffer());
+        CA_CannotOpen(fname());
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
     mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
@@ -533,11 +550,15 @@ static void CAL_SetupMapFile ()
 // open the data file
 //
     // IOANCH 20130301: unification culling
-    fname.copy("GAMEMAPS.").concat(cfg_extension);
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString("GAMEMAPS.").
+                                        concat(cfg_extension)());
 
-    maphandle = open(fname.buffer(), O_RDONLY | O_BINARY);
-    if (maphandle == -1)
-        CA_CannotOpen(fname.buffer());
+//    fname.copy("GAMEMAPS.").concat(cfg_extension);
+
+    ca_maphandle = open(fname(), O_RDONLY | O_BINARY);
+    if (ca_maphandle == -1)
+        CA_CannotOpen(fname());
 
 //
 // load all map header
@@ -579,7 +600,11 @@ static void CAL_SetupAudioFile ()
 //
 // load AUDIOHED.ext (offsets for audio file)
 //
-    fname.copy(aheadname).concat(cfg_audioext);
+   // IOANCH 20130726: case insensitive
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_aheadname).
+                                        concat(cfg_audioext)());
+   // fname.copy(ca_aheadname).concat(cfg_audioext);
 
     void* ptr;
     if (!CA_LoadFile(fname(), &ptr))
@@ -589,11 +614,15 @@ static void CAL_SetupAudioFile ()
 //
 // open the data file
 //
-    fname.copy(afilename).concat(cfg_audioext);
+   fname = I_ResolveCaseInsensitivePath(".",
+                                        PString(ca_afilename).
+                                        concat(cfg_audioext)());
 
-    audiohandle = open(fname.buffer(), O_RDONLY | O_BINARY);
-    if (audiohandle == -1)
-        CA_CannotOpen(fname.buffer());
+//   fname.copy(ca_afilename).concat(cfg_audioext);
+
+    ca_audiohandle = open(fname(), O_RDONLY | O_BINARY);
+    if (ca_audiohandle == -1)
+        CA_CannotOpen(fname());
 }
 
 //==========================================================================
