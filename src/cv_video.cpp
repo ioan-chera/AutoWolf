@@ -33,7 +33,7 @@ AutoWolfVideoEngine videoEngine;
 
 inline static byte acquirePlaneColour(byte index)
 {
-   if(index == IMPALED(vgaCeiling, [gamestate.episode * 10 + mapon]))
+   if(index == IMPALE(vgaCeiling)[gamestate.episode * 10 + mapon])
       return 0x40;
    if(index == FLOOR_COLOUR) // floor
       return 0x80;

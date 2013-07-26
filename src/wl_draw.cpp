@@ -1580,7 +1580,7 @@ void    ThreeDRefresh ()
    //
    // grayscale image creation
 
-   videoEngine.processSDLSurface(screenBuffer);
+   videoEngine.processSDLSurface(vid_screenBuffer);
 //
 // show screen and time last cycle
 //
