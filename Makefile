@@ -46,6 +46,7 @@ LDFLAGS += $(LDFLAGS_SDL)
 LDFLAGS += -lSDL_mixer
 LDFLAGS += -lopencv_core
 LDFLAGS += -lopencv_highgui
+LDFLAGS += -lopencv_imgproc
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
