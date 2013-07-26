@@ -76,7 +76,7 @@ Boolean I_MakeDir(const char *dirname)
 #ifdef _WIN32
    return CreateDirectory(dirname, NULL);
 #else
-   return !mkdir(dirname, 0x755);
+   return !mkdir(dirname, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
 #endif
 }
 
