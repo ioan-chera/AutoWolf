@@ -36,7 +36,6 @@ class MasterDirectoryFile : public DirectoryFile
 	
 public:
 	MasterDirectoryFile();
-	static MasterDirectoryFile &MainDir();
 	// save it to file
 	void saveToFile();
 	// load it from file
@@ -45,5 +44,6 @@ public:
     void initializeConfigLocation();
 };
 
+extern MasterDirectoryFile masterDir;
 #endif
 

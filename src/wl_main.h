@@ -29,7 +29,7 @@ extern  unsigned screenofs;
 extern  Boolean  startgame;
 extern  char     str[80];
 class PString;
-extern  PString  configname;
+extern  PString  cfg_configname;
 
 
 void            NewGame (int difficulty,int episode);

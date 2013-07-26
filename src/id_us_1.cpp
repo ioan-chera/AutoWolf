@@ -755,7 +755,7 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		VH_UpdateScreen();
+		I_UpdateScreen();
 	}
 
 	if (cursorvis)
@@ -766,7 +766,7 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 		py = y;
 		USL_DrawString(olds);
 	}
-	VH_UpdateScreen();
+	I_UpdateScreen();
 
 	IN_ClearKeysDown();
 	return(result);

@@ -13,7 +13,7 @@ extern  gametype        gamestate;
 extern  byte            bordercol;
 extern  SDL_Surface     *latchpics[NUMLATCHPICS];
 class PString;
-extern  PString         demoname;
+extern  PString         cfg_demoname;
 
 void    SetupGameLevel ();
 void    GameLoop ();

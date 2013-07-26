@@ -23,7 +23,7 @@
 const char *Cocoa_ApplicationSupportDirectory();
 void        Cocoa_DisplayErrorAlert(const char *msg);
 
-void        Cocoa_PostNotification(const char *msg);
+void        Cocoa_Notify(const char *title, const char *msg);
 
 #endif
 

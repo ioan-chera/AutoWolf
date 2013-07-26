@@ -145,7 +145,7 @@ void InitLevelShadeTable()
     if(shadeDef->fogStrength == LSHADE_NOSHADING)
         NoShading();
     else
-        GenerateShadeTable(shadeDef->destRed, shadeDef->destGreen, shadeDef->destBlue, IMPALE(palette), shadeDef->fogStrength);// IOANCH 20130202: unification process
+        GenerateShadeTable(shadeDef->destRed, shadeDef->destGreen, shadeDef->destBlue, IMPALE(vid_palette), shadeDef->fogStrength);// IOANCH 20130202: unification process
 }
 
 int GetShade(int scale)

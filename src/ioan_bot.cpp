@@ -87,7 +87,7 @@ void BotMan::MapInit()
 void BotMan::SaveData() const
 {
 	StoreAcquiredData(mapsegsChecksum.DigestBuffer());
-	MasterDirectoryFile::MainDir().saveToFile();
+	masterDir.saveToFile();
 }
 
 //
@@ -98,8 +98,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
     // see if folder exists in AutoWolf/Maps
 	
 	// now to write the file
-	DirectoryFile *dir = MasterDirectoryFile::MainDir()
-    .makeDirectory(MASTERDIR_MAPSDIRECTORY)
+	DirectoryFile *dir = masterDir.makeDirectory(MASTERDIR_MAPSDIRECTORY)
     ->makeDirectory(PString((const char *)digeststring, 16));
 	
     // the hash-named directory
@@ -128,10 +127,9 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
     mapExploration.Reset();
 	
 	// now to write the file
-	MasterDirectoryFile &mainDir = MasterDirectoryFile::MainDir();
 	DirectoryFile *dir;
 	
-	dir = mainDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
+	dir = masterDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
 	dir = dir->makeDirectory(PString((const char *)digeststring, 16));
     // the hash-named directory
     
@@ -150,7 +148,8 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
         mapExploration.UnpackBooleanArray(propertyFile->getStringValue(PROPERTY_KEY_EXPLORED));
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
-            unsigned prop = (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
+            unsigned prop =
+           (unsigned)propertyFile->getIntValue(PROPERTY_KEY_EXITPOS);
             knownExitX = prop & 0x00ff;
             knownExitY =(prop & 0xff00) >> 8;
         }

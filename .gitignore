@@ -265,3 +265,4 @@ src/cv_video.d
 src/cv_video.o
 src/i_system.d
 src/i_system.o
+GnomeNotifier.d

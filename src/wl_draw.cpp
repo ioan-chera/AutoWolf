@@ -51,7 +51,7 @@
 */
 
 // the door is the last picture before the sprites
-#define DOORWALL        (PMSpriteStart-8)
+#define DOORWALL        (pm_SpriteStart-8)
 
 #define ACTORSIZE       0x4000
 
@@ -72,13 +72,13 @@ Boolean fpscounter;
 
 int fps_frames=0, fps_time=0, fps=0;
 
-int *wallheight;
+int *vid_wallheight;
 int min_wallheight;
 
 //
 // math tables
 //
-short *pixelangle;
+short *vid_pixelangle;
 int32_t finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];
 fixed *costable = sintable+(ANGLES/4);
@@ -314,10 +314,10 @@ void ScalePost()
     byte col;
 
 #ifdef USE_SHADING
-    byte *curshades = shadetable[GetShade(wallheight[postx])];
+    byte *curshades = shadetable[GetShade(vid_wallheight[postx])];
 #endif
 
-    ywcount = yd = wallheight[postx] >> 3;
+    ywcount = yd = vid_wallheight[postx] >> 3;
     if(yd <= 0) yd = 100;
 
     yoffs = (viewheight / 2 - ywcount) * vbufPitch;
@@ -457,11 +457,11 @@ void HitWall (hitwall_t orient)
         {
             ScalePost();
             postx = pixx;
-            wallheight[pixx] = wallheight[pixx-1];
+            vid_wallheight[pixx] = vid_wallheight[pixx-1];
             return;
         }
         ScalePost();
-        wallheight[pixx] = CalcHeight();
+        vid_wallheight[pixx] = CalcHeight();
         postsource+=texture-lasttexture;
         postwidth=1;
         postx=pixx;
@@ -475,7 +475,7 @@ void HitWall (hitwall_t orient)
     lastintercept=lastinterceptvar;
     lasttilehit=tilehit;
     lasttexture=texture;
-    wallheight[pixx] = CalcHeight();
+    vid_wallheight[pixx] = CalcHeight();
     postx = pixx;
     postwidth = 1;
 	
@@ -529,11 +529,11 @@ void HitDoor (hitwall_t orient)
         {
             ScalePost();
             postx=pixx;
-            wallheight[pixx] = wallheight[pixx-1];
+            vid_wallheight[pixx] = vid_wallheight[pixx-1];
             return;
         }
         ScalePost();
-        wallheight[pixx] = CalcHeight();
+        vid_wallheight[pixx] = CalcHeight();
         postsource+=texture-lasttexture;
         postwidth=1;
         postx=pixx;
@@ -546,7 +546,7 @@ void HitDoor (hitwall_t orient)
     lastside=2;
     lasttilehit=tilehit;
     lasttexture=texture;
-    wallheight[pixx] = CalcHeight();
+    vid_wallheight[pixx] = CalcHeight();
     postx = pixx;
     postwidth = 1;
 	
@@ -603,7 +603,7 @@ byte vgaCeiling_sod[]=
 void VGAClearScreen ()
 {
     // IOANCH 20130302: unification
-    byte ceiling=IMPALED(vgaCeiling, [gamestate.episode*10+mapon]);
+    byte ceiling=IMPALE(vgaCeiling)[gamestate.episode*10+mapon];
 
     int y;
     byte *ptr = vbuf;
@@ -704,7 +704,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
             cline=(byte *)shape + *cmdptr;
             while(lpix<rpix)
             {
-                if(wallheight[lpix]<=(int)height)
+                if(vid_wallheight[lpix]<=(int)height)
                 {
                     line=cline;
                     while((endy = READWORD(line)) != 0)
@@ -1069,7 +1069,7 @@ void AsmRefresh()
 
     for(pixx=0;pixx<viewwidth;pixx++)
     {
-        short angl=midangle+pixelangle[pixx];
+        short angl=midangle+vid_pixelangle[pixx];
         if(angl<0) angl+=FINEANGLES;
         if(angl>=3600) angl-=FINEANGLES;
         if(angl<900)
@@ -1522,11 +1522,11 @@ void    ThreeDRefresh ()
     spotvis[player->tilex][player->tiley] = 1;
     // Detect all sprites over player fix
 
-    vbuf = VL_LockSurface(screenBuffer);
+    vbuf = I_LockSurface(vid_screenBuffer);
     if(vbuf == NULL) return;
 
     vbuf += screenofs;
-    vbufPitch = bufferPitch;
+    vbufPitch = vid_bufferPitch;
 
     CalcViewVariables();
 
@@ -1569,10 +1569,10 @@ void    ThreeDRefresh ()
 
     DrawPlayerWeapon ();    // draw player's hands
 
-    if(Keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
+    if(in_keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
         ShowActStatus();
 
-    VL_UnlockSurface(screenBuffer);
+    I_UnlockSurface(vid_screenBuffer);
     vbuf = NULL;
    
    //
@@ -1587,7 +1587,7 @@ void    ThreeDRefresh ()
 
     if (fizzlein)
     {
-        FizzleFade(screenBuffer, 0, 0, cfg_screenWidth, cfg_screenHeight, 20, false);
+        FizzleFade(vid_screenBuffer, 0, 0, cfg_screenWidth, cfg_screenHeight, 20, false);
         fizzlein = false;
 
         lasttimecount = GetTimeCount();          // don't make a big tic count
@@ -1605,8 +1605,8 @@ void    ThreeDRefresh ()
             US_Print(" fps");
         }
 #endif
-        SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-        SDL_Flip(screen);
+        SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
+        SDL_Flip(vid_screen);
     }
 
 #ifndef REMDEBUG

@@ -32,8 +32,8 @@
     #define MAPPLANES       2
 #endif
 
-#define UNCACHEGRCHUNK(chunk) {if(grsegs[chunk]) {free(grsegs[chunk]); grsegs[chunk]=NULL;}}
-#define UNCACHEAUDIOCHUNK(chunk) {if(audiosegs[chunk]) {free(audiosegs[chunk]); audiosegs[chunk]=NULL;}}
+#define UNCACHEGRCHUNK(chunk) {if(ca_grsegs[chunk]) {free(ca_grsegs[chunk]); ca_grsegs[chunk]=NULL;}}
+#define UNCACHEAUDIOCHUNK(chunk) {if(ca_audiosegs[chunk]) {free(ca_audiosegs[chunk]); ca_audiosegs[chunk]=NULL;}}
 
 //===========================================================================
 
@@ -51,14 +51,14 @@ extern  int   mapon;
 
 extern  word *mapsegs[MAPPLANES];
 // IOANCH 20130301: unification
-extern  byte *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+extern  byte *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 						NUMSNDCHUNKS_wl6];
-extern  byte *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
+extern  byte *ca_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 class PString;
-extern  PString  extension;
-extern  PString  graphext;
-extern  PString  audioext;
+extern  PString  cfg_extension;
+extern  PString  cfg_graphext;
+extern  PString  cfg_audioext;
 
 //===========================================================================
 

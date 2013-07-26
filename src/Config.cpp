@@ -23,8 +23,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
+#include <direct.h>
+#include <Windows.h>
+#include <ShlObj.h>
+#else
+#include <unistd.h>
+#endif
 
 #include <sys/stat.h>
+#include "wl_def.h"
+#include "i_system.h"
 #ifdef __APPLE__
 #include "macosx/CocoaFun.h"
 #endif
@@ -33,14 +42,11 @@
 #include "Exception.h"
 #include "MasterDirectoryFile.h"
 #include "ioan_bas.h"
+#include "wl_game.h"
+#include "wl_main.h"
+#include "wl_menu.h"
+#include "wl_text.h"
 
-#ifdef _WIN32
-#include <direct.h>
-#include <Windows.h>
-#include <ShlObj.h>
-#else
-#include <unistd.h>
-#endif
 
 Boolean cfg_nonazis;
 Boolean cfg_secretstep3;
@@ -122,7 +128,7 @@ static void CFG_checkEnvVars()
     const char *wolfdir = getenv("AUTOWOLFDIR");
     if(wolfdir)
     {
-        if(changeDirectory(wolfdir))
+        if(!I_ChangeDir(wolfdir))
             throw Exception(PString("Cannot change directory to ").
                             concat(wolfdir).concat("\n"));
     }
@@ -323,7 +329,7 @@ void CFG_CheckParameters(int argc, char *argv[])
                     throw Exception("The wolfdir option is missing the dir argument!\n");
                 else
                 {
-                    if(changeDirectory(argv[i]))
+                    if(!I_ChangeDir(argv[i]))
                         throw Exception(PString("Cannot change directory to ").concat(argv[i]).concat("\n"));
                 }
             }
@@ -409,44 +415,115 @@ void CFG_SetupConfigLocation()
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
         // IOANCH 20130509: use PString for paths
-#ifdef __APPLE__
-        const char *appsupdir = Cocoa_ApplicationSupportDirectory();
-        if(appsupdir == NULL)
-            Quit("Your Application Support directory is not defined. You must "
-                 "set this before playing.");
-        cfg_dir = appsupdir;
-#elif defined(_WIN32)
-        TCHAR appdatdir[MAX_PATH];
-        if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
-            Quit("Your Application Data directory is not defined. You must "
-                 "set this before playing.");
-        cfg_dir.copy(appdatdir).concatSubpath("AutoWolf");
-#else
-        const char *homeenv = getenv("HOME");
-        if(homeenv == NULL)
-            Quit("Your $HOME directory is not defined. You must set this before "
-                 "playing.");
-        cfg_dir.copy(homeenv).concatSubpath(".autowolf");
-#endif
+       // IOANCH 20130725: abstracted this away
+       cfg_dir = I_GetSettingsDir();
     }
 #endif
     if(cfg_dir.length() > 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(cfg_dir.buffer(), &statbuf) != 0)
+        if(stat(cfg_dir(), &statbuf) != 0)
         {
-#ifdef _WIN32
-            if(_mkdir(cfg_dir.buffer()) != 0)
-#else
-            if(mkdir(cfg_dir.buffer(), 0755) != 0)
-#endif
+            if(!I_MakeDir(cfg_dir()))
             {
                 Quit("The configuration directory \"%s\" could not be created.",
-                     cfg_dir.buffer());
+                     cfg_dir());
             }
         }
     }
     
     // IOANCH 20130304: initialize bot master directory file location
-    MasterDirectoryFile::MainDir().initializeConfigLocation();
+    masterDir.initializeConfigLocation();
+}
+
+///////////////////////////////////////////////////////////////////////////
+//
+// CHECK FOR EPISODES
+//
+///////////////////////////////////////////////////////////////////////////
+void CFG_CheckForEpisodes ()
+{
+   struct stat statbuf;
+   
+   // IOANCH 20130301: unification culling
+   if(!SPEAR())
+   {
+      if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL6")(), &statbuf))
+      {
+         cfg_extension = "WL6";
+         menu_newep[2].active =
+         menu_newep[4].active =
+         menu_newep[6].active =
+         menu_newep[8].active =
+         menu_newep[10].active =
+         menu_epselect[1] =
+         menu_epselect[2] =
+         menu_epselect[3] =
+         menu_epselect[4] =
+         menu_epselect[5] = 1;
+      }
+      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL3")(), 
+	&statbuf))
+      {
+         cfg_extension = "WL3";
+         menu_missingep = 3;
+         menu_newep[2].active =
+         menu_newep[4].active =
+         menu_epselect[1] =
+         menu_epselect[2] = 1;
+      }
+      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL1")(), 
+	&statbuf))
+      {
+         cfg_extension = "WL1";
+         menu_missingep = 5;
+      }
+      else
+         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+      
+      cfg_graphext = cfg_extension;
+      cfg_audioext = cfg_extension;
+      cfg_endfilename += cfg_extension;
+   }
+   else
+   {
+      // IOANCH 20130301: unification culling
+      switch (cfg_mission)
+      {
+         case 0:
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD")(), &statbuf))
+               cfg_extension = "SOD";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 1:
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1")(), &statbuf))
+               cfg_extension = "SD1";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 2:
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2")(), &statbuf))
+               cfg_extension = "SD2";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         case 3:
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3")(), &statbuf))
+               cfg_extension = "SD3";
+            else
+               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+            break;
+         default:
+            Quit ("UNSUPPORTED MISSION!");
+            break;
+      }
+      
+      cfg_graphext = "SOD";
+      cfg_audioext = "SOD";
+   }
+   
+   cfg_configname += cfg_extension;
+   cfg_savename += cfg_extension;
+   cfg_demoname += cfg_extension;
 }

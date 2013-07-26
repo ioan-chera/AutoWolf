@@ -144,7 +144,7 @@ void CountObjects ()
     US_Print ("\nActive actors :");
     US_PrintUnsigned (active);
 
-    VH_UpdateScreen();
+    I_UpdateScreen();
     IN_Ack ();
 }
 
@@ -174,11 +174,11 @@ void PictureGrabber ()
 
     // overwrites WSHOT999.BMP if all wshot files exist
 
-    SDL_SaveBMP(curSurface, fname);
+    SDL_SaveBMP(vid_curSurface, fname);
 
     CenterWindow (18,2);
     US_PrintCentered ("Screenshot taken");
-    VH_UpdateScreen();
+    I_UpdateScreen();
     IN_Ack();
 }
 
@@ -243,7 +243,7 @@ void BasicOverhead ()
 
     // resize the border to match
 
-    VH_UpdateScreen();
+    I_UpdateScreen();
     IN_Ack();
 
 #ifdef MAPBORDER
@@ -267,8 +267,8 @@ void ShapeTest ()
 {
     //TODO
 #if NOTYET
-    extern  word    NumDigi;
-    extern  word    *DigiList;
+    extern  word    sd_numDigi;
+    extern  word    *sd_digiList;
     extern  int     postx;
     extern  int     postwidth;
     extern  byte    *postsource;
@@ -284,20 +284,20 @@ void ShapeTest ()
     //      PageListStruct  far *page;
 
     CenterWindow(20,16);
-    VH_UpdateScreen();
+    I_UpdateScreen();
     for (i = 0,done = false; !done;)
     {
         US_ClearWindow();
         sound = (soundnames) -1;
 
-        //              page = &PMPages[i];
+        //              page = &pm_Pages[i];
         US_Print(" Page #");
         US_PrintUnsigned(i);
-        if (i < PMSpriteStart)
+        if (i < pm_SpriteStart)
             US_Print(" (Wall)");
-        else if (i < PMSoundStart)
+        else if (i < pm_SoundStart)
             US_Print(" (Sprite)");
-        else if (i == ChunksInFile - 1)
+        else if (i == pm_ChunksInFile - 1)
             US_Print(" (Sound Info)");
         else
             US_Print(" (Sound)");
@@ -329,7 +329,7 @@ void ShapeTest ()
 
         if (addr)
         {
-            if (i < PMSpriteStart)
+            if (i < pm_SpriteStart)
             {
                 //
                 // draw the wall
@@ -340,28 +340,28 @@ void ShapeTest ()
                 postsource = addr;
                 for (x=0;x<64;x++,postx++,postsource+=64)
                 {
-                    wallheight[postx] = 256;
+                    vid_wallheight[postx] = 256;
                     ScalePost ();
                 }
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i < PMSoundStart)
+            else if (i < pm_SoundStart)
             {
                 //
                 // draw the sprite
                 //
                 vbuf += 32*SCREENWIDTH;
-                SimpleScaleShape (160, i-PMSpriteStart, 64);
+                SimpleScaleShape (160, i-pm_SpriteStart, 64);
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i == ChunksInFile - 1)
+            else if (i == pm_ChunksInFile - 1)
             {
                 US_Print("\n\n Number of sounds: ");
-                US_PrintUnsigned(NumDigi);
-                for (l = j = k = 0;j < NumDigi;j++)
+                US_PrintUnsigned(sd_numDigi);
+                for (l = j = k = 0;j < sd_numDigi;j++)
                 {
-                    l += DigiList[(j * 2) + 1];
-                    k += (DigiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
+                    l += sd_digiList[(j * 2) + 1];
+                    k += (sd_digiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
                 }
                 US_Print("\n Total bytes: ");
                 US_PrintUnsigned(l);
@@ -371,20 +371,20 @@ void ShapeTest ()
             else
             {
                 byte *dp = addr;
-                for (j = 0;j < NumDigi;j++)
+                for (j = 0;j < sd_numDigi;j++)
                 {
-                    k = (DigiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
-                    if ((i >= PMSoundStart + DigiList[j * 2])
-                            && (i < PMSoundStart + DigiList[j * 2] + k))
+                    k = (sd_digiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
+                    if ((i >= pm_SoundStart + sd_digiList[j * 2])
+                            && (i < pm_SoundStart + sd_digiList[j * 2] + k))
                         break;
                 }
-                if (j < NumDigi)
+                if (j < sd_numDigi)
                 {
                     sound = (soundnames) j;
                     US_Print("\n Sound #");
                     US_PrintUnsigned(j);
                     US_Print("\n Segment #");
-                    US_PrintUnsigned(i - PMSoundStart - DigiList[j * 2]);
+                    US_PrintUnsigned(i - pm_SoundStart - sd_digiList[j * 2]);
                 }
                 for (j = 0;j < PageLengths[i];j += 32)
                 {
@@ -404,7 +404,7 @@ void ShapeTest ()
             }
         }
 
-        VH_UpdateScreen();
+        I_UpdateScreen();
 
         IN_Ack();
         scan = LastScan;
@@ -417,23 +417,23 @@ void ShapeTest ()
                     i--;
                 break;
             case sc_RightArrow:
-                if (++i >= ChunksInFile)
+                if (++i >= pm_ChunksInFile)
                     i--;
                 break;
             case sc_W:      // Walls
                 i = 0;
                 break;
             case sc_S:      // Sprites
-                i = PMSpriteStart;
+                i = pm_SpriteStart;
                 break;
             case sc_D:      // Digitized
-                i = PMSoundStart;
+                i = pm_SoundStart;
                 break;
             case sc_I:      // Digitized info
-                i = ChunksInFile - 1;
+                i = pm_ChunksInFile - 1;
                 break;
 /*            case sc_L:      // Load all pages
-                for (j = 0;j < ChunksInFile;j++)
+                for (j = 0;j < pm_ChunksInFile;j++)
                     PM_GetPage(j);
                 break;*/
             case sc_P:
@@ -469,12 +469,12 @@ int DebugKeys ()
     Boolean esc;
     int level;
 
-    if (Keyboard[sc_B])             // B = border color
+    if (in_keyboard[sc_B])             // B = border color
     {
         CenterWindow(20,3);
         PrintY+=6;
         US_Print(" Border color (0-56): ");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -500,27 +500,27 @@ int DebugKeys ()
         }
         return 1;
     }
-    if (Keyboard[sc_C])             // C = count objects
+    if (in_keyboard[sc_C])             // C = count objects
     {
         CountObjects();
         return 1;
     }
-    if (Keyboard[sc_D])             // D = Darkone's FPS counter
+    if (in_keyboard[sc_D])             // D = Darkone's FPS counter
     {
         CenterWindow (22,2);
         if (fpscounter)
             US_PrintCentered ("Darkone's FPS Counter OFF");
         else
             US_PrintCentered ("Darkone's FPS Counter ON");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack();
         fpscounter ^= 1;
         return 1;
     }
-    if (Keyboard[sc_E])             // E = quit level
+    if (in_keyboard[sc_E])             // E = quit level
         playstate = ex_completed;
 
-    if (Keyboard[sc_F])             // F = facing spot
+    if (in_keyboard[sc_F])             // F = facing spot
     {
         char str[60];
         CenterWindow (14,6);
@@ -540,12 +540,12 @@ int DebugKeys ()
             US_PrintUnsigned (spotvis[player->tilex][player->tiley]);
         else
             US_PrintUnsigned (actorat[player->tilex][player->tiley]->flags);
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack();
         return 1;
     }
 
-    if (Keyboard[sc_G])             // G = god mode
+    if (in_keyboard[sc_G])             // G = god mode
     {
         CenterWindow (12,2);
         if (godmode == 0)
@@ -555,7 +555,7 @@ int DebugKeys ()
         else if (godmode == 2)
             US_PrintCentered ("God mode OFF");
 
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack();
         if (godmode != 2)
             godmode++;
@@ -563,16 +563,16 @@ int DebugKeys ()
             godmode = 0;
         return 1;
     }
-    if (Keyboard[sc_H])             // H = hurt self
+    if (in_keyboard[sc_H])             // H = hurt self
     {
         IN_ClearKeysDown ();
         TakeDamage (16,NULL);
     }
-    else if (Keyboard[sc_I])        // I = item cheat
+    else if (in_keyboard[sc_I])        // I = item cheat
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         GivePoints (100000);
         HealSelf (I_PLAYERHEALTH - 1);	// IOANCH 25.10.2012: named constants
         if (gamestate.bestweapon<wp_chaingun)
@@ -584,12 +584,12 @@ int DebugKeys ()
         IN_Ack ();
         return 1;
     }
-    else if (Keyboard[sc_K])        // K = give keys
+    else if (in_keyboard[sc_K])        // K = give keys
     {
         CenterWindow(16,3);
         PrintY+=6;
         US_Print("  Give Key (1-4): ");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
@@ -599,7 +599,7 @@ int DebugKeys ()
         }
         return 1;
     }
-    else if (Keyboard[sc_L])        // L = level ratios
+    else if (in_keyboard[sc_L])        // L = level ratios
     {
         byte x,start,end=LRpack;
 
@@ -631,7 +631,7 @@ again:
             US_PrintUnsigned(LevelRatios[x].treasure);
             US_Print("%\n");
         }
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack();
         if (end == 10 && gamestate.mapon > 9)
         {
@@ -642,7 +642,7 @@ again:
 
         return 1;
     }
-    else if (Keyboard[sc_N])        // N = no clip
+    else if (in_keyboard[sc_N])        // N = no clip
     {
         noclip^=1;
         CenterWindow (18,3);
@@ -650,28 +650,28 @@ again:
             US_PrintCentered ("No clipping ON");
         else
             US_PrintCentered ("No clipping OFF");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack ();
         return 1;
     }
-    else if (Keyboard[sc_O])        // O = basic overhead
+    else if (in_keyboard[sc_O])        // O = basic overhead
     {
         BasicOverhead();
         return 1;
     }
-    else if(Keyboard[sc_P])         // P = Ripper's picture grabber
+    else if(in_keyboard[sc_P])         // P = Ripper's picture grabber
     {
         PictureGrabber();
         return 1;
     }
-    else if (Keyboard[sc_Q])        // Q = fast quit
+    else if (in_keyboard[sc_Q])        // Q = fast quit
         Quit (NULL);
-    else if (Keyboard[sc_S])        // S = slow motion
+    else if (in_keyboard[sc_S])        // S = slow motion
     {
         CenterWindow(30,3);
         PrintY+=6;
         US_Print(" Slow Motion steps (default 14): ");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -681,17 +681,17 @@ again:
         }
         return 1;
     }
-    else if (Keyboard[sc_T])        // T = shape test
+    else if (in_keyboard[sc_T])        // T = shape test
     {
         ShapeTest ();
         return 1;
     }
-    else if (Keyboard[sc_V])        // V = extra VBLs
+    else if (in_keyboard[sc_V])        // V = extra VBLs
     {
         CenterWindow(30,3);
         PrintY+=6;
         US_Print("  Add how many extra VBLs(0-8): ");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,1,0);
         if (!esc)
         {
@@ -701,7 +701,7 @@ again:
         }
         return 1;
     }
-    else if (Keyboard[sc_W])        // W = warp to level
+    else if (in_keyboard[sc_W])        // W = warp to level
     {
         CenterWindow(26,3);
         PrintY+=6;
@@ -711,7 +711,7 @@ again:
         else
             US_Print("  Warp to which level(1-21): ");
 
-        VH_UpdateScreen();
+        I_UpdateScreen();
         esc = !US_LineInput (px,py,str,NULL,true,2,0);
         if (!esc)
         {
@@ -725,17 +725,17 @@ again:
         }
         return 1;
     }
-    else if (Keyboard[sc_X])        // X = item cheat
+    else if (in_keyboard[sc_X])        // X = item cheat
     {
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
-        VH_UpdateScreen();
+        I_UpdateScreen();
         // DEBUG: put stuff here
         IN_Ack ();
         return 1;
     }
 #ifdef USE_CLOUDSKY
-    else if(Keyboard[sc_Z])
+    else if(in_keyboard[sc_Z])
     {
         char defstr[15];
 
@@ -749,7 +749,7 @@ again:
         US_Print("): ");
         int mappx = px, mappy = py;
         US_PrintUnsigned(curSky->colorMapIndex);
-        VH_UpdateScreen();
+        I_UpdateScreen();
 
         sprintf(defstr, "%u", curSky->seed);
         esc = !US_LineInput(seekpx, seekpy, str, defstr, true, 10, 0);
@@ -769,7 +769,7 @@ again:
         {
             CenterWindow (18,3);
             US_PrintCentered ("Illegal color map!");
-            VH_UpdateScreen();
+            I_UpdateScreen();
             IN_Ack ();
         }
     }
@@ -895,7 +895,7 @@ void ViewMap ()
 
         OverheadRefresh ();
 
-    } while (!Keyboard[sc_Escape]);
+    } while (!in_keyboard[sc_Escape]);
 
     IN_ClearKeysDown ();
 }

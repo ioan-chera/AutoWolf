@@ -42,12 +42,12 @@ void VWB_DrawPropString(const char* string)
 	int i;
 	unsigned sx, sy;
 
-	byte *vbuf = VL_LockSurface(curSurface);
+	byte *vbuf = I_LockSurface(vid_curSurface);
 	if(vbuf == NULL) return;
 
-	font = (fontstruct *) grsegs[SPEAR.g(STARTFONT)+fontnumber];
+	font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT)+fontnumber];
 	height = font->height;
-	dest = vbuf + scaleFactor * (py * curPitch + px);
+	dest = vbuf + vid_scaleFactor * (py * vid_curPitch + px);
 
 	while ((ch = (byte)*string++)!=0)
 	{
@@ -59,26 +59,24 @@ void VWB_DrawPropString(const char* string)
 			{
 				if(source[i*step])
 				{
-					for(sy=0; sy<scaleFactor; sy++)
-						for(sx=0; sx<scaleFactor; sx++)
-							dest[(scaleFactor*i+sy)*curPitch+sx]=fontcolor;
+					for(sy=0; sy<vid_scaleFactor; sy++)
+						for(sx=0; sx<vid_scaleFactor; sx++)
+							dest[(vid_scaleFactor*i+sy)*vid_curPitch+sx]=fontcolor;
 				}
 			}
 
 			source++;
 			px++;
-			dest+=scaleFactor;
+			dest+=vid_scaleFactor;
 		}
 	}
 
-	VL_UnlockSurface(curSurface);
+	I_UnlockSurface(vid_curSurface);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// =
-// = VL_MungePic
-// =
+// VL_MungePic
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -134,7 +132,7 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 //
 void VW_MeasurePropString (const char *string, word *width, word *height)
 {
-	VWL_MeasureString(string,width,height,(fontstruct *)grsegs[SPEAR.g(STARTFONT)+fontnumber]);
+	VWL_MeasureString(string,width,height,(fontstruct *)ca_grsegs[SPEAR.g(STARTFONT)+fontnumber]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,15 +142,7 @@ void VW_MeasurePropString (const char *string, word *width, word *height)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-//
-// VH_UpdateScreen
-//
-void VH_UpdateScreen()
-{
-	SDL_BlitSurface(screenBuffer, NULL, screen, NULL);
-	SDL_Flip(screen);
-}
-
+// IOANCH 20130726: moved updatescreen to i_system
 //
 // VWB_DrawTile8
 //
@@ -166,7 +156,7 @@ void VWB_DrawTile8 (int x, int y, int tile)
 //
 void VWB_DrawTile8M (int x, int y, int tile)
 {
-	VL_MemToScreen (((byte *)grsegs[SPEAR.g(STARTTILE8M)])+tile*64,8,8,x,y);
+	VL_MemToScreen (((byte *)ca_grsegs[SPEAR.g(STARTTILE8M)])+tile*64,8,8,x,y);
 }
 
 //
@@ -182,7 +172,7 @@ void VWB_DrawPic (int x, int y, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-	VL_MemToScreen (grsegs[chunknum],width,height,x,y);
+	VL_MemToScreen (ca_grsegs[chunknum],width,height,x,y);
 }
 
 //
@@ -196,7 +186,7 @@ void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 	width = pictable[picnum].width;
 	height = pictable[picnum].height;
 
-    VL_MemToScreenScaledCoord (grsegs[chunknum],width,height,scx,scy);
+    VL_MemToScreenScaledCoord (ca_grsegs[chunknum],width,height,scx,scy);
 }
 
 //
@@ -212,7 +202,7 @@ void VWB_Bar (int x, int y, int width, int height, int color)
 //
 void VWB_Plot (int x, int y, int color)
 {
-    if(scaleFactor == 1)
+    if(vid_scaleFactor == 1)
         VW_Plot(x,y,color);
     else
         VW_Bar(x, y, 1, 1, color);
@@ -223,7 +213,7 @@ void VWB_Plot (int x, int y, int color)
 //
 void VWB_Hlin (int x1, int x2, int y, int color)
 {
-    if(scaleFactor == 1)
+    if(vid_scaleFactor == 1)
     	VW_Hlin(x1,x2,y,color);
     else
         VW_Bar(x1, y, x2-x1+1, 1, color);
@@ -234,7 +224,7 @@ void VWB_Hlin (int x1, int x2, int y, int color)
 //
 void VWB_Vlin (int y1, int y2, int x, int color)
 {
-    if(scaleFactor == 1)
+    if(vid_scaleFactor == 1)
 		VW_Vlin(y1,y2,x,color);
     else
         VW_Bar(x, y1, 1, y2-y1+1, color);
@@ -311,11 +301,11 @@ void LoadLatchMem ()
         Quit("Unable to create surface for tiles!");
     }
     // IOANCH 20130202: unification process
-    SDL_SetColors(surf, IMPALE(palette), 0, 256);
+    SDL_SetColors(surf, IMPALE(vid_palette), 0, 256);
 
 	latchpics[0] = surf;
 	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
-	src = grsegs[SPEAR.g(STARTTILE8)];
+	src = ca_grsegs[SPEAR.g(STARTTILE8)];
 
 	for (i=0;i<(signed int)SPEAR.g(NUMTILE8);i++)
 	{
@@ -342,11 +332,11 @@ void LoadLatchMem ()
             Quit("Unable to create surface for picture!");
         }
         // IOANCH 20130202: unification process
-        SDL_SetColors(surf, IMPALE(palette), 0, 256);
+        SDL_SetColors(surf, IMPALE(vid_palette), 0, 256);
 
 		latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);
-		VL_MemToLatch (grsegs[i], width, height, surf, 0, 0);
+		VL_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
 		UNCACHEGRCHUNK(i);
 	}
 }
@@ -370,7 +360,7 @@ void LoadLatchMem ()
 
 
 // XOR masks for the pseudo-random number sequence starting with n=17 bits
-static const uint32_t rndmasks[] = {
+static const uint32_t fiz_rndmasks[] = {
                     // n    XNOR from (starting at 1, not 0 as usual)
     0x00012000,     // 17   17,14
     0x00020400,     // 18   18,11
@@ -383,10 +373,10 @@ static const uint32_t rndmasks[] = {
     0x01200000,     // 25   25,22      (this is enough for 8191x4095)
 };
 
-static unsigned int rndbits_y;
-static unsigned int rndmask;
+static unsigned int fiz_rndbits_y;
+static unsigned int fiz_rndmask;
 
-extern SDL_Color curpal[256];
+// IOANCH 20130726: made extern
 
 //
 // log2_ceil
@@ -411,21 +401,22 @@ static int log2_ceil(uint32_t x)
 void VH_Startup()
 {
     int rndbits_x = log2_ceil(cfg_screenWidth);
-    rndbits_y = log2_ceil(cfg_screenHeight);
+    fiz_rndbits_y = log2_ceil(cfg_screenHeight);
 
-    int rndbits = rndbits_x + rndbits_y;
+    int rndbits = rndbits_x + fiz_rndbits_y;
     if(rndbits < 17)
         rndbits = 17;       // no problem, just a bit slower
     else if(rndbits > 25)
         rndbits = 25;       // fizzle fade will not fill whole screen
 
-    rndmask = rndmasks[rndbits - 17];
+    fiz_rndmask = fiz_rndmasks[rndbits - 17];
 }
 
 //
 // FizzleFade
 //
-Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigned height, unsigned frames, Boolean abortable)
+Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
+                    unsigned height, unsigned frames, Boolean abortable)
 {
     unsigned x, y, frame, pixperframe;
     int32_t  rndval, lastrndval;
@@ -437,8 +428,9 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
     IN_StartAck ();
 
     frame = GetTimeCount();
-    byte *srcptr = VL_LockSurface(source);
-    if(srcptr == NULL) return false;
+    byte *srcptr = I_LockSurface(source);
+    if(srcptr == NULL)
+       return false;
 
     do
     {
@@ -446,13 +438,13 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
 
         if(abortable && IN_CheckAck ())
         {
-            VL_UnlockSurface(source);
-            SDL_BlitSurface(source, NULL, screen, NULL);
-            SDL_Flip(screen);
+            I_UnlockSurface(source);
+            SDL_BlitSurface(source, NULL, vid_screen, NULL);
+            SDL_Flip(vid_screen);
             return true;
         }
 
-        byte *destptr = VL_LockSurface(screen);
+        byte *destptr = I_LockSurface(vid_screen);
 
         if(destptr != NULL)
         {
@@ -468,14 +460,14 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
                     // seperate random value into x/y pair
                     //
 
-                    x = rndval >> rndbits_y;
-                    y = rndval & ((1 << rndbits_y) - 1);
+                    x = rndval >> fiz_rndbits_y;
+                    y = rndval & ((1 << fiz_rndbits_y) - 1);
 
                     //
                     // advance to next random element
                     //
 
-                    rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : rndmask);
+                    rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : fiz_rndmask);
 
                     if(x >= width || y >= height)
                     {
@@ -491,29 +483,36 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
 
                     if(cfg_screenBits == 8)
                     {
-                        *(destptr + (y1 + y) * screen->pitch + x1 + x)
+                        *(destptr + (y1 + y) * vid_screen->pitch + x1 + x)
                             = *(srcptr + (y1 + y) * source->pitch + x1 + x);
                     }
                     else
                     {
                         byte col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
-                        uint32_t fullcol = SDL_MapRGB(screen->format, curpal[col].r, curpal[col].g, curpal[col].b);
-                        memcpy(destptr + (y1 + y) * screen->pitch + (x1 + x) * screen->format->BytesPerPixel,
-                            &fullcol, screen->format->BytesPerPixel);
+                        uint32_t fullcol = SDL_MapRGB(vid_screen->format,
+                                                      vid_curpal[col].r,
+                                                      vid_curpal[col].g,
+                                                      vid_curpal[col].b);
+                        memcpy(destptr + (y1 + y) * vid_screen->pitch +
+                               (x1 + x) * vid_screen->format->BytesPerPixel,
+                            &fullcol, vid_screen->format->BytesPerPixel);
                     }
 
                     if(rndval == 0)		// entire sequence has been completed
                         goto finished;
                 }
 
-                if(!i || first) lastrndval = rndval;
+                if(!i || first)
+                   lastrndval = rndval;
             }
 
-            // If there is no double buffering, we always use the "first frame" case
-            if(cfg_usedoublebuffering) first = 0;
+            // If there is no double buffering, we always use the "first frame"
+            // case
+            if(cfg_usedoublebuffering)
+               first = 0;
 
-            VL_UnlockSurface(screen);
-            SDL_Flip(screen);
+            I_UnlockSurface(vid_screen);
+            SDL_Flip(vid_screen);
         }
         else
         {
@@ -522,7 +521,7 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
             {
                 for(unsigned p = 0; p < pixperframe; p++)
                 {
-                    rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : rndmask);
+                    rndval = (rndval >> 1) ^ (rndval & 1 ? 0 : fiz_rndmask);
                     if(rndval == 0)
                         goto finished;
                 }
@@ -534,9 +533,9 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width, unsigne
     } while (1);
 
 finished:
-    VL_UnlockSurface(source);
-    VL_UnlockSurface(screen);
-    SDL_BlitSurface(source, NULL, screen, NULL);
-    SDL_Flip(screen);
+    I_UnlockSurface(source);
+    I_UnlockSurface(vid_screen);
+    SDL_BlitSurface(source, NULL, vid_screen, NULL);
+    SDL_Flip(vid_screen);
     return false;
 }

@@ -29,7 +29,7 @@
 #define __ID_SD__
 
 
-#define alOut(n,b) YM3812Write(oplChip, n, b)
+#define alOut(n,b) SD_L_YM3812Write(sd_oplChip, n, b)
 
 #define TickBase        70      // 70Hz per tick - used as a base for timer 0
 
@@ -131,14 +131,14 @@ typedef struct
 extern globalsoundpos channelSoundPos[];
 
 // Global variables
-extern  Boolean         AdLibPresent,
-                        SoundBlasterPresent,
-                        SoundPositioned;
+extern  Boolean         sd_adLibPresent,
+                        sd_soundBlasterPresent,
+                        sd_soundPositioned;
 extern  SDMode          SoundMode;
-extern  SDSMode         DigiMode;
-extern  SMMode          MusicMode;
-extern  int             DigiMap[];
-extern  int             DigiChannel[];
+extern  SDSMode         sd_digiMode;
+extern  SMMode          sd_musicMode;
+extern  int             sd_digiMap[];
+extern  int             sd_digiChannel[];
 
 uint32_t I_GetTicks(void);
 #define GetTimeCount()  ((I_GetTicks()*7)/100)

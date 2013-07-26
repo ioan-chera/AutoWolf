@@ -26,6 +26,7 @@ CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
 CFLAGS += -Wwrite-strings
 CFLAGS += -Wcast-align
+CFLAGS += -Wno-unused-result
 
 ifdef GPL
     CFLAGS += -DUSE_GPL

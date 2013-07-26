@@ -121,7 +121,7 @@ public:
     // Accessors
     const char  *buffer() const { return _buffer; }
     const char *operator () () const {return _buffer;}
-    const operator const char * () const {return _buffer;}
+    //operator const char * () const {return _buffer;}
     char         charAt(size_t idx) const;
     bool         compare(const char *str, size_t inLength) const;
     bool         compare(const char *str) const;

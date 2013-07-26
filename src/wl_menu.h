@@ -36,7 +36,7 @@
 #define VIEWCOLOR       0x7f
 #define TEXTCOLOR       0x17
 #define HIGHLIGHT       0x13
-#define MenuFadeIn()    VL_FadeIn(0,255,IMPALE(palette),10)
+#define MenuFadeIn()    VL_FadeIn(0,255,IMPALE(vid_palette),10)
 
             // IOANCH 20130301: unification music
 #define MENUSONG        IMPALE((int)WONDERIN_MUS)
@@ -193,7 +193,7 @@ int  CP_CheckQuick(ScanCode scancode);
 int CustomControls(int);
 int MouseSensitivity(int);
 
-void CheckForEpisodes();
+void CFG_CheckForEpisodes();
 
 void FreeMusic();
 
@@ -228,3 +228,9 @@ extern LRstruct LevelRatios[];
 void Write (int x,int y,const char *string);
 void NonShareware();
 int GetYorN(int x,int y,int pic);
+
+// IOANCH 20130726: made extern
+extern CP_itemtype menu_newep[];
+extern int menu_epselect[6];
+extern int menu_missingep;
+extern PString cfg_savename;

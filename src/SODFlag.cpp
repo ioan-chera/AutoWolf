@@ -21,8 +21,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
+#include "wl_def.h"
+#include "i_system.h"
 #include "SODFlag.h"
 
 SODFlag SPEAR;
@@ -960,23 +960,21 @@ const unsigned int SODFlag::soundmap[][2] =
 void SODFlag::Initialize(const PString &basePath)
 {
     FILE *f;
-    
-    PString compPath;
-    
-    f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD3").buffer(), "rb");
+   
+    f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3")(), "rb");
     if(!f)
     {
-        f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD2").buffer(), "rb");
+        f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2")(), "rb");
         if(!f)
         {
-            f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SD1").buffer(), "rb");
+            f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1")(), "rb");
             if(!f)
             {
-                f = fopen(compPath.copy(basePath).concatSubpath("VSWAP.SOD").buffer(), "rb");
+                f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD")(), "rb");
                 if(!f)
                 {
                     this->flag = false;
-					return;	// none found: assume Wolf3D
+                   return;	// none found: assume Wolf3D
                 }
             }
         }

@@ -28,5 +28,16 @@ void I_Delay(unsigned ms);
 uint32_t I_GetTicks(void);
 
 void I_Notify(const char *msg);
+Boolean I_MakeDir(const char *dirname);
+Boolean I_ChangeDir(const char *dirname);
+PString I_GetSettingsDir();
+PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
+
+void I_InitEngine();
+byte *I_LockSurface(SDL_Surface *surface);
+void I_UnlockSurface(SDL_Surface *surface);
+void I_UpdateScreen();
+void I_InitAfterSignon();
+
 
 #endif /* defined(__Wolf4SDL__i_system__) */

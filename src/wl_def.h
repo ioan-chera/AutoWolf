@@ -31,10 +31,6 @@
 #ifndef WL_DEF_H
 #define WL_DEF_H
 
-// IOANCH 20130303: SPEAR() variable
-#define IMPALE(a) (SPEAR() ? a##_sod : a##_wl6)
-#define IMPALED(a, b) (SPEAR() ? a##_sod b : a##_wl6 b)
-
 #include <assert.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -108,6 +104,10 @@ void Quit(const char *errorStr, ...);
 
 =============================================================================
 */
+
+// IOANCH 20130303: SPEAR() variable
+#define IMPALE(a) (SPEAR() ? a##_sod : a##_wl6)
+
 
 #define MAXTICS 10
 #define DEMOTICS        4

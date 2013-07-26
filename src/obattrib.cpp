@@ -185,7 +185,7 @@ inline static void ResetSpeedSchabbs()
 {
 	newobj->speed = SPDPATROL;
     newobj->dir = nodir;
-	if (DigiMode != sds_Off)
+	if (sd_digiMode != sds_Off)
 		s_schabbdie2.tictime = 140;
 	else
 		s_schabbdie2.tictime = 5;
@@ -194,7 +194,7 @@ inline static void ResetSpeedHitler()
 {
 	newobj->speed = SPDPATROL;
     newobj->dir = nodir;
-	if (DigiMode != sds_Off)
+	if (sd_digiMode != sds_Off)
 		s_hitlerdie2.tictime = 140;
 	else
 		s_hitlerdie2.tictime = 5;
@@ -203,7 +203,7 @@ inline static void ResetSpeedGift()
 {
 	newobj->speed = SPDPATROL;
     newobj->dir = nodir;
-	if (DigiMode != sds_Off)
+	if (sd_digiMode != sds_Off)
 		s_giftdie2.tictime = 140;
 	else
 		s_giftdie2.tictime = 5;
@@ -212,7 +212,7 @@ inline static void ResetSpeedFat()
 {
 	newobj->speed = SPDPATROL;
     newobj->dir = nodir;
-    if (DigiMode != sds_Off)
+    if (sd_digiMode != sds_Off)
         s_fatdie2.tictime = 140;
     else
         s_fatdie2.tictime = 5;
@@ -223,27 +223,27 @@ inline static void SetAsBonus()
 }
 inline static void AngelTics()
 {
-	if (SoundBlasterPresent && DigiMode != sds_Off)
+	if (sd_soundBlasterPresent && sd_digiMode != sds_Off)
 		s_angeldie11.tictime = 105;
 }
 inline static void TransTics()
 {
-	if (SoundBlasterPresent && DigiMode != sds_Off)
+	if (sd_soundBlasterPresent && sd_digiMode != sds_Off)
 		s_transdie01.tictime = 105;
 }
 inline static void UberTics()
 {
-	if (SoundBlasterPresent && DigiMode != sds_Off)
+	if (sd_soundBlasterPresent && sd_digiMode != sds_Off)
 		s_uberdie01.tictime = 70;
 }
 inline static void WillTics()
 {
-	if (SoundBlasterPresent && DigiMode != sds_Off)
+	if (sd_soundBlasterPresent && sd_digiMode != sds_Off)
 		s_willdie2.tictime = 70;
 }
 inline static void DeathTics()
 {
-	if (SoundBlasterPresent && DigiMode != sds_Off)
+	if (sd_soundBlasterPresent && sd_digiMode != sds_Off)
 		s_deathdie2.tictime = 105;
 }
 const atr::action atr::actions[] =

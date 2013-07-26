@@ -30,7 +30,7 @@ PString masterDirectoryFilePath;
 //
 ////////////
 
-MasterDirectoryFile *mainDataFile;
+MasterDirectoryFile masterDir;
 
 ////////////
 //
@@ -46,18 +46,6 @@ MasterDirectoryFile::MasterDirectoryFile()
 	_filename = masterDirectoryFileName;
 	_initialized = true;
 	strcpy(_header, MASTERDIR_HEADER);
-}
-
-//
-// MasterDirectoryFile::MainDir
-//
-// Access the global main object
-//
-MasterDirectoryFile &MasterDirectoryFile::MainDir()
-{
-    if(!mainDataFile)
-        mainDataFile = new MasterDirectoryFile;
-	return *mainDataFile;
 }
 
 //

@@ -262,7 +262,7 @@ void DrawClouds(byte *vbuf, unsigned vbufPitch, int min_wallheight)
         gv -= (viewwidth >> 1)*dv;          // starting point (leftmost)
         for(int x = 0, top_add = top_offset; x < viewwidth; x++, top_add++)
         {
-            if(wallheight[x] >> 3 <= y)
+            if(vid_wallheight[x] >> 3 <= y)
             {
                 u = (gu >> 13) & 255;
                 v = (gv >> 13) & 255;
