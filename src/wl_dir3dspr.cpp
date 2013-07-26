@@ -88,7 +88,7 @@ void Scale3DShaper(int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
 
             scale1=(unsigned)(height>>15);
 
-            if(wallheight[slinex]<(height>>12) && scale1 /*&& scale1<=maxscale*/)
+            if(vid_wallheight[slinex]<(height>>12) && scale1 /*&& scale1<=maxscale*/)
             {
 #ifdef USE_SHADING
                 byte *curshades;

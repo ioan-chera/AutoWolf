@@ -47,8 +47,9 @@
 #include "wl_def.h"
 #include "wl_main.h"
 #pragma hdrstop
-#include "PString.h"
 #include "Config.h"
+#include "i_system.h"
+#include "PString.h"
 
 #define THREEBYTEGRSTARTS
 
@@ -66,7 +67,7 @@ typedef struct
 
 typedef struct
 {
-    word RLEWtag;
+    word ca_RLEWtag;
     int32_t headeroffsets[100];
 } mapfiletype;
 
@@ -78,18 +79,18 @@ typedef struct
 ////////////////////////////////////////////////////////////////////////////////
 
 #define BUFFERSIZE 0x1000
-static int32_t bufferseg[BUFFERSIZE/4];
+static int32_t ca_bufferseg[BUFFERSIZE/4];
 
 int     mapon;
 
 word    *mapsegs[MAPPLANES];
-static maptype* mapheaderseg[NUMMAPS];
+static maptype* ca_mapheaderseg[NUMMAPS];
 // IOANCH 20130301: unification
-byte    *audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+byte    *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 				   NUMSNDCHUNKS_wl6];
-byte    *grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
+byte    *ca_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
-word    RLEWtag;
+word    ca_RLEWtag;
 
 int     menu_missingep = 0;
 
@@ -102,33 +103,33 @@ int     menu_missingep = 0;
 PString cfg_extension; // Need a string, not constant to change cache files
 PString cfg_graphext;
 PString cfg_audioext;
-static const char gheadname[] = "VGAHEAD.";
-static const char gfilename[] = "VGAGRAPH.";
-static const char gdictname[] = "VGADICT.";
-static const char mheadname[] = "MAPHEAD.";
-static const char mfilename[] = "maptemp.";
-static const char aheadname[] = "AUDIOHED.";
-static const char afilename[] = "AUDIOT.";
+static const char ca_gheadname[] = "VGAHEAD.";
+static const char ca_gfilename[] = "VGAGRAPH.";
+static const char ca_gdictname[] = "VGADICT.";
+static const char ca_mheadname[] = "MAPHEAD.";
+static const char ca_mfilename[] = "maptemp.";
+static const char ca_aheadname[] = "AUDIOHED.";
+static const char ca_afilename[] = "AUDIOT.";
 
-static int32_t  grstarts_wl6[NUMCHUNKS_wl6 + 1];
-static int32_t  grstarts_sod[NUMCHUNKS_sod + 1];
+static int32_t  ca_grstarts_wl6[NUMCHUNKS_wl6 + 1];
+static int32_t  ca_grstarts_sod[NUMCHUNKS_sod + 1];
 
-// static int32_t  grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
-static int32_t* audiostarts; // array of offsets in audio / AUDIOT
+// static int32_t  ca_grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
+static int32_t* ca_audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
-huffnode *grhuffman;
+huffnode *ca_grhuffman;
 #else
-huffnode grhuffman[255];
+huffnode ca_grhuffman[255];
 #endif
 
-int    grhandle = -1;               // handle to EGAGRAPH
-int    maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
-int    audiohandle = -1;            // handle to AUDIOT / AUDIO
+int    ca_grhandle = -1;               // handle to EGAGRAPH
+int    ca_maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
+int    ca_audiohandle = -1;            // handle to AUDIOT / AUDIO
 
-int32_t   chunkcomplen,chunkexplen;
+int32_t   ca_chunkcomplen,ca_chunkexplen;
 
-SDMode oldsoundmode;
+SDMode ca_oldsoundmode;
 
 
 //
@@ -137,10 +138,10 @@ SDMode oldsoundmode;
 static int32_t GRFILEPOS(const size_t idx)
 {
     if(SPEAR())
-        assert(idx < lengthof(grstarts_sod));
+        assert(idx < lengthof(ca_grstarts_sod));
     else
-        assert(idx < lengthof(grstarts_wl6));
-	return IMPALE(grstarts)[idx];
+        assert(idx < lengthof(ca_grstarts_wl6));
+	return IMPALE(ca_grstarts)[idx];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,9 +158,9 @@ static int32_t GRFILEPOS(const size_t idx)
 //
 static void CAL_GetGrChunkLength(int chunk)
 {
-    lseek(grhandle, GRFILEPOS(chunk), SEEK_SET);
-    read(grhandle, &chunkexplen, sizeof(chunkexplen));
-    chunkcomplen = GRFILEPOS(chunk + 1) - GRFILEPOS(chunk) - 4;
+    lseek(ca_grhandle, GRFILEPOS(chunk), SEEK_SET);
+    read(ca_grhandle, &ca_chunkexplen, sizeof(ca_chunkexplen));
+    ca_chunkcomplen = GRFILEPOS(chunk + 1) - GRFILEPOS(chunk) - 4;
 }
 
 //
@@ -218,7 +219,8 @@ Boolean CA_LoadFile(const char *filename, memptr *ptr)
 //
 // CAL_HuffExpand
 //
-static void CAL_HuffExpand(byte *source, byte *dest, int32_t length, huffnode *hufftable)
+static void CAL_HuffExpand(byte *source, byte *dest, int32_t length,
+                           huffnode *hufftable)
 {
     byte *end;
     huffnode *headptr, *huffptr;
@@ -395,11 +397,11 @@ static void CAL_SetupGrFile ()
 
 #ifdef GRHEADERLINKED
 
-    grhuffman = (huffnode *)&EGAdict;
+    ca_grhuffman = (huffnode *)&EGAdict;
     if(SPEAR())
-        grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
+        ca_grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
     else
-        grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
+        ca_grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
 
 #else	//  !defined(GRHEADERLINKED)
 
@@ -413,7 +415,7 @@ static void CAL_SetupGrFile ()
     if (handle == -1)
         CA_CannotOpen(fname.buffer());
 
-    read(handle, grhuffman, sizeof(grhuffman));
+    read(handle, ca_grhuffman, sizeof(ca_grhuffman));
     close(handle);
 
     // load the data offsets from ???head.ext
@@ -428,13 +430,13 @@ static void CAL_SetupGrFile ()
     lseek(handle, 0, SEEK_SET);
 
     // IOANCH 20130301: unification culling
-//    int testexp = sizeof(grstarts_wl6);
+//    int testexp = sizeof(ca_grstarts_wl6);
 	int expectedsize;
     
     if(SPEAR())
-        expectedsize = lengthof(grstarts_sod) - menu_missingep;
+        expectedsize = lengthof(ca_grstarts_sod) - menu_missingep;
     else
-        expectedsize = lengthof(grstarts_wl6) - menu_missingep;
+        expectedsize = lengthof(ca_grstarts_wl6) - menu_missingep;
 
     if(!cfg_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
         Quit("AutoWolf was not compiled for these data files:\n"
@@ -445,12 +447,12 @@ static void CAL_SetupGrFile ()
 
     if(SPEAR())
     {
-        byte data[lengthof(grstarts_sod) * 3];
+        byte data[lengthof(ca_grstarts_sod) * 3];
         read(handle, data, sizeof(data));
         close(handle);
 
         const byte* d = data;
-        for (int32_t* i = grstarts_sod; i != endof(grstarts_sod); ++i)
+        for (int32_t* i = ca_grstarts_sod; i != endof(ca_grstarts_sod); ++i)
         {
             const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
             *i = (val == 0x00FFFFFF ? -1 : val);
@@ -459,12 +461,12 @@ static void CAL_SetupGrFile ()
     }
     else
     {
-        byte data[lengthof(grstarts_wl6) * 3];
+        byte data[lengthof(ca_grstarts_wl6) * 3];
         read(handle, data, sizeof(data));
         close(handle);
         
         const byte* d = data;
-        for (int32_t* i = grstarts_wl6; i != endof(grstarts_wl6); ++i)
+        for (int32_t* i = ca_grstarts_wl6; i != endof(ca_grstarts_wl6); ++i)
         {
             const int32_t val = d[0] | d[1] << 8 | d[2] << 16;
             *i = (val == 0x00FFFFFF ? -1 : val);
@@ -478,9 +480,9 @@ static void CAL_SetupGrFile ()
 //
     fname.copy(gfilename).concat(cfg_graphext);
 
-    grhandle = open(fname.buffer(), O_RDONLY | O_BINARY);
-    if (grhandle == -1)
-        CA_CannotOpen(fname.buffer());
+    ca_grhandle = open(fname(), O_RDONLY | O_BINARY);
+    if (ca_grhandle == -1)
+        CA_CannotOpen(fname());
 
 
 //
@@ -489,11 +491,12 @@ static void CAL_SetupGrFile ()
     
     pictable=(pictabletype *) malloc(SPEAR.g(NUMPICS)*sizeof(pictabletype));
     CHECKMALLOCRESULT(pictable);
-    CAL_GetGrChunkLength(SPEAR.g(STRUCTPIC));                // position file pointer
-    compseg=(byte *) malloc(chunkcomplen);
+    CAL_GetGrChunkLength(SPEAR.g(STRUCTPIC));        // position file pointer
+    compseg=(byte *) malloc(ca_chunkcomplen);
     CHECKMALLOCRESULT(compseg);
-    read (grhandle,compseg,chunkcomplen);
-    CAL_HuffExpand(compseg, (byte*)pictable, SPEAR.g(NUMPICS) * sizeof(pictabletype), grhuffman);
+    read (ca_grhandle,compseg,ca_chunkcomplen);
+    CAL_HuffExpand(compseg, (byte*)pictable, SPEAR.g(NUMPICS) *
+                   sizeof(pictabletype), ca_grhuffman);
     free(compseg);
 }
 
@@ -524,7 +527,7 @@ static void CAL_SetupMapFile ()
     read(handle, tinf, length);
     close(handle);
 
-    RLEWtag=tinf->RLEWtag;
+    ca_RLEWtag=tinf->ca_RLEWtag;
 
 //
 // open the data file
@@ -545,10 +548,10 @@ static void CAL_SetupMapFile ()
         if (pos<0)                          // $FFFFFFFF start is a sparse map
             continue;
 
-        mapheaderseg[i]=(maptype *) malloc(sizeof(maptype));
-        CHECKMALLOCRESULT(mapheaderseg[i]);
-        lseek(maphandle,pos,SEEK_SET);
-        read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype));
+        ca_mapheaderseg[i]=(maptype *) malloc(sizeof(maptype));
+        CHECKMALLOCRESULT(ca_mapheaderseg[i]);
+        lseek(ca_maphandle,pos,SEEK_SET);
+        read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
     }
 
     free(tinf);
@@ -579,9 +582,9 @@ static void CAL_SetupAudioFile ()
     fname.copy(aheadname).concat(cfg_audioext);
 
     void* ptr;
-    if (!CA_LoadFile(fname.buffer(), &ptr))
-        CA_CannotOpen(fname.buffer());
-    audiostarts = (int32_t*)ptr;
+    if (!CA_LoadFile(fname(), &ptr))
+        CA_CannotOpen(fname());
+    ca_audiostarts = (int32_t*)ptr;
 
 //
 // open the data file
@@ -625,18 +628,18 @@ void CA_Shutdown ()
 {
     int i,start;
 
-    if(maphandle != -1)
-        close(maphandle);
-    if(grhandle != -1)
-        close(grhandle);
-    if(audiohandle != -1)
-        close(audiohandle);
+    if(ca_maphandle != -1)
+        close(ca_maphandle);
+    if(ca_grhandle != -1)
+        close(ca_grhandle);
+    if(ca_audiohandle != -1)
+        close(ca_audiohandle);
 
     for(i=0; i<(signed int)SPEAR.g(NUMCHUNKS); i++)
         UNCACHEGRCHUNK(i);
     free(pictable);
 
-    switch(oldsoundmode)
+    switch(ca_oldsoundmode)
     {
         case sdm_Off:
             return;
@@ -662,17 +665,17 @@ void CA_Shutdown ()
 //
 int32_t CA_CacheAudioChunk (int chunk)
 {
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    int32_t pos = ca_audiostarts[chunk];
+    int32_t size = ca_audiostarts[chunk+1]-pos;
 
-    if (audiosegs[chunk])
+    if (ca_audiosegs[chunk])
         return size;                        // already in memory
 
-    audiosegs[chunk]=(byte *) malloc(size);
-    CHECKMALLOCRESULT(audiosegs[chunk]);
+    ca_audiosegs[chunk]=(byte *) malloc(size);
+    CHECKMALLOCRESULT(ca_audiosegs[chunk]);
 
-    lseek(audiohandle,pos,SEEK_SET);
-    read(audiohandle,audiosegs[chunk],size);
+    lseek(ca_audiohandle,pos,SEEK_SET);
+    read(ca_audiohandle,ca_audiosegs[chunk],size);
 
     return size;
 }
@@ -682,19 +685,19 @@ int32_t CA_CacheAudioChunk (int chunk)
 //
 static void CAL_CacheAdlibSoundChunk (int chunk)
 {
-    int32_t pos = audiostarts[chunk];
-    int32_t size = audiostarts[chunk+1]-pos;
+    int32_t pos = ca_audiostarts[chunk];
+    int32_t size = ca_audiostarts[chunk+1]-pos;
 
-    if (audiosegs[chunk])
+    if (ca_audiosegs[chunk])
         return;                        // already in memory
 
-    lseek(audiohandle, pos, SEEK_SET);
-    read(audiohandle, bufferseg, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
+    lseek(ca_audiohandle, pos, SEEK_SET);
+    read(ca_audiohandle, ca_bufferseg, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
 
     AdLibSound *sound = (AdLibSound *) malloc(size + sizeof(AdLibSound) - ORIG_ADLIBSOUND_SIZE);
     CHECKMALLOCRESULT(sound);
 
-    byte *ptr = (byte *) bufferseg;
+    byte *ptr = (byte *) ca_bufferseg;
     sound->common.length = READLONGWORD(ptr);
     sound->common.priority = READWORD(ptr);
     sound->inst.mChar = *ptr++;
@@ -715,9 +718,9 @@ static void CAL_CacheAdlibSoundChunk (int chunk)
     sound->inst.unused[2] = *ptr++;
     sound->block = *ptr++;
 
-    read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
+    read(ca_audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
 
-    audiosegs[chunk]=(byte *) sound;
+    ca_audiosegs[chunk]=(byte *) sound;
 }
 
 //===========================================================================
@@ -733,7 +736,7 @@ void CA_LoadAllSounds ()
     unsigned char cachein = 0;
     // IOANCH 20130303: don't use label use variable
 
-    switch (oldsoundmode)
+    switch (ca_oldsoundmode)
     {
         case sdm_Off:
             cachein = 1;
@@ -754,7 +757,7 @@ void CA_LoadAllSounds ()
         for (i=0;i<NUMSOUNDS_cur;i++,start++)
             UNCACHEAUDIOCHUNK(start);
 
-    oldsoundmode = SoundMode;
+    ca_oldsoundmode = SoundMode;
 
     switch (SoundMode)
     {
@@ -829,9 +832,9 @@ static void CAL_ExpandGrChunk (int chunk, int32_t *source)
     // allocate final space, decompress it, and free bigbuffer
     // Sprites need to have shifts made and various other junk
     //
-    grsegs[chunk]=(byte *) malloc(expanded);
-    CHECKMALLOCRESULT(grsegs[chunk]);
-    CAL_HuffExpand((byte *) source, grsegs[chunk], expanded, grhuffman);
+    ca_grsegs[chunk]=(byte *) malloc(expanded);
+    CHECKMALLOCRESULT(ca_grsegs[chunk]);
+    CAL_HuffExpand((byte *) source, ca_grsegs[chunk], expanded, ca_grhuffman);
 }
 
 //
@@ -845,7 +848,7 @@ void CA_CacheGrChunk (int chunk)
     int32_t *source;
     int  next;
 
-    if (grsegs[chunk])
+    if (ca_grsegs[chunk])
         return;                             // already in memory
 
 //
@@ -862,18 +865,18 @@ void CA_CacheGrChunk (int chunk)
 
     compressed = GRFILEPOS(next)-pos;
 
-    lseek(grhandle,pos,SEEK_SET);
+    lseek(ca_grhandle,pos,SEEK_SET);
 
     if (compressed<=BUFFERSIZE)
     {
-        read(grhandle,bufferseg,compressed);
-        source = bufferseg;
+        read(ca_grhandle,ca_bufferseg,compressed);
+        source = ca_bufferseg;
     }
     else
     {
         source = (int32_t *) malloc(compressed);
         CHECKMALLOCRESULT(source);
-        read(grhandle,source,compressed);
+        read(ca_grhandle,source,compressed);
     }
 
     CAL_ExpandGrChunk (chunk,source);
@@ -910,11 +913,11 @@ void CA_CacheScreen (int chunk)
         next++;
     compressed = GRFILEPOS(next)-pos;
 
-    lseek(grhandle,pos,SEEK_SET);
+    lseek(ca_grhandle,pos,SEEK_SET);
 
     bigbufferseg=malloc(compressed);
     CHECKMALLOCRESULT(bigbufferseg);
-    read(grhandle,bigbufferseg,compressed);
+    read(ca_grhandle,bigbufferseg,compressed);
     source = (int32_t *) bigbufferseg;
 
     expanded = *source++;
@@ -925,22 +928,22 @@ void CA_CacheScreen (int chunk)
 //
     pic = (byte *) malloc(64000);
     CHECKMALLOCRESULT(pic);
-    CAL_HuffExpand((byte *) source, pic, expanded, grhuffman);
+    CAL_HuffExpand((byte *) source, pic, expanded, ca_grhuffman);
 
-    vbuf = VL_LockSurface(curSurface);
+    vbuf = I_LockSurface(vid_curSurface);
     if(vbuf != NULL)
     {
-        for(y = 0, scy = 0; y < 200; y++, scy += scaleFactor)
+        for(y = 0, scy = 0; y < 200; y++, scy += vid_scaleFactor)
         {
-            for(x = 0, scx = 0; x < 320; x++, scx += scaleFactor)
+            for(x = 0, scx = 0; x < 320; x++, scx += vid_scaleFactor)
             {
                 byte col = pic[(y * 80 + (x >> 2)) + (x & 3) * 80 * 200];
-                for(i = 0; i < scaleFactor; i++)
-                    for(j = 0; j < scaleFactor; j++)
-                        vbuf[(scy + i) * curPitch + scx + j] = col;
+                for(i = 0; i < vid_scaleFactor; i++)
+                    for(j = 0; j < vid_scaleFactor; j++)
+                        vbuf[(scy + i) * vid_curPitch + scx + j] = col;
             }
         }
-        VL_UnlockSurface(curSurface);
+        I_UnlockSurface(vid_curSurface);
     }
     free(pic);
     free(bigbufferseg);
@@ -974,14 +977,14 @@ void CA_CacheMap (int mapnum)
 
     for (plane = 0; plane<MAPPLANES; plane++)
     {
-        pos = mapheaderseg[mapnum]->planestart[plane];
-        compressed = mapheaderseg[mapnum]->planelength[plane];
+        pos = ca_mapheaderseg[mapnum]->planestart[plane];
+        compressed = ca_mapheaderseg[mapnum]->planelength[plane];
 
         dest = mapsegs[plane];
 
-        lseek(maphandle,pos,SEEK_SET);
+        lseek(ca_maphandle,pos,SEEK_SET);
         if (compressed<=BUFFERSIZE)
-            source = (word *) bufferseg;
+            source = (word *) ca_bufferseg;
         else
         {
             bigbufferseg=malloc(compressed);
@@ -989,7 +992,7 @@ void CA_CacheMap (int mapnum)
             source = (word *) bigbufferseg;
         }
 
-        read(maphandle,source,compressed);
+        read(ca_maphandle,source,compressed);
         // IOANCH 20130301: unification culling
         //
         // unhuffman, then unRLEW
@@ -1002,7 +1005,7 @@ void CA_CacheMap (int mapnum)
         buffer2seg = (word *) malloc(expanded);
         CHECKMALLOCRESULT(buffer2seg);
         CAL_CarmackExpand((byte *) source, buffer2seg,expanded);
-        CAL_RLEWexpand(buffer2seg+1,dest,size,RLEWtag);
+        CAL_RLEWexpand(buffer2seg+1,dest,size,ca_RLEWtag);
         free(buffer2seg);
 
 

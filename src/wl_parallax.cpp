@@ -59,7 +59,7 @@ void DrawParallax(byte *vbuf, unsigned vbufPitch)
 
     for(int x = 0; x < viewwidth; x++)
     {
-        int curang = pixelangle[x] + midangle;
+        int curang = vid_pixelangle[x] + midangle;
         if(curang < 0) curang += FINEANGLES;
         else if(curang >= FINEANGLES) curang -= FINEANGLES;
         int xtex = curang * USE_PARALLAX * TEXTURESIZE / FINEANGLES;
@@ -70,7 +70,7 @@ void DrawParallax(byte *vbuf, unsigned vbufPitch)
             skytex = PM_GetTexture(startpage - curtex);
         }
         int texoffs = TEXTUREMASK - ((xtex & (TEXTURESIZE - 1)) << TEXTURESHIFT);
-        int yend = skyheight - (wallheight[x] >> 3);
+        int yend = skyheight - (vid_wallheight[x] >> 3);
         if(yend <= 0) continue;
 
         for(int y = 0, offs = x; y < yend; y++, offs += vbufPitch)

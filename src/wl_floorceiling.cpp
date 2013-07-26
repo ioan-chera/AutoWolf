@@ -61,7 +61,7 @@ void DrawFloorAndCeiling(byte *vbuf, unsigned vbufPitch, int min_wallheight)
         for(int x = 0, bot_add = bot_offset, top_add = top_offset;
             x < viewwidth; x++, bot_add++, top_add++)
         {
-            if(wallheight[x] >> 3 <= y)
+            if(vid_wallheight[x] >> 3 <= y)
             {
                 int curx = (gu >> TILESHIFT) & (MAPSIZE - 1);
                 int cury = (-(gv >> TILESHIFT) - 1) & (MAPSIZE - 1);

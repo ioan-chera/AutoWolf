@@ -83,8 +83,8 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VWB_HlinScaledCoord VW_Hlin
 #define VWB_VlinScaledCoord VW_Vlin
 
-void VH_UpdateScreen();
-// IOANCH 20130717: deleted VH_UpdateScreen
+void I_UpdateScreen();
+// IOANCH 20130717: deleted I_UpdateScreen
 
 //
 // wolfenstein EGA compatability stuff
@@ -99,7 +99,7 @@ void VH_UpdateScreen();
 #define VW_DrawPic		    VH_DrawPic
 #define VW_WaitVBL		    VL_WaitVBL
 // IOANCH 20130202: unification process
-#define VW_FadeIn()		    VL_FadeIn(0,255,IMPALE(palette),30);
+#define VW_FadeIn()		    VL_FadeIn(0,255,IMPALE(vid_palette),30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30)
 #define VW_ScreenToScreen	VL_ScreenToScreen
 void	VW_MeasurePropString (const char *string, word *width, word *height);
@@ -118,3 +118,6 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1,
 
 #define NUMLATCHPICS	100
 extern	SDL_Surface *latchpics[NUMLATCHPICS];
+
+// IOANCH 20130726: made extern
+extern SDL_Color vid_curpal[256];

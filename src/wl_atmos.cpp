@@ -151,7 +151,7 @@ void DrawRain(byte *vbuf, uint32_t vbufPitch)
         yy = hvheight - actheight;
         height = (heightnumerator << 10) / z;
         if(actheight < 0) actheight = -actheight;
-        if(actheight < (wallheight[xx] >> 3) && height < wallheight[xx]) continue;
+        if(actheight < (vid_wallheight[xx] >> 3) && height < vid_wallheight[xx]) continue;
 
         if(xx >= 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
@@ -215,7 +215,7 @@ void DrawSnow(byte *vbuf, uint32_t vbufPitch)
         yy = hvheight - actheight;
         height = (heightnumerator << 10) / z;
         if(actheight < 0) actheight = -actheight;
-        if(actheight < (wallheight[xx] >> 3) && height < wallheight[xx]) continue;
+        if(actheight < (vid_wallheight[xx] >> 3) && height < vid_wallheight[xx]) continue;
         if(xx > 0 && xx < viewwidth && yy > 0 && yy < viewheight)
         {
 #if defined(USE_FLOORCEILINGTEX) && defined(FIXRAINSNOWLEAKS)

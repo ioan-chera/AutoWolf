@@ -201,7 +201,7 @@ SetSoundLoc(fixed gx,fixed gy)
     US_PrintSigned(leftchannel);
     US_Print(",");
     US_PrintSigned(rightchannel);
-    VH_UpdateScreen();
+    I_UpdateScreen();
 #endif
 }
 
@@ -233,7 +233,7 @@ void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
 
 void UpdateSoundLoc()
 {
-/*    if (SoundPositioned)
+/*    if (sd_soundPositioned)
     {
         SetSoundLoc(globalsoundx,globalsoundy);
         SD_SetPosition(leftchannel,rightchannel);
@@ -859,7 +859,7 @@ void DrawPlayBorderSides()
 	const int sh = cfg_screenHeight;
 	const int vw = viewwidth;
 	const int vh = viewheight;
-	const int px = scaleFactor; // size of one "pixel"
+	const int px = vid_scaleFactor; // size of one "pixel"
 
 	const int h  = sh - px * STATUSLINES;
 	const int xl = sw / 2 - vw / 2;
@@ -904,25 +904,25 @@ void DrawPlayBorderSides()
 
 void DrawStatusBorder (byte color)
 {
-    int statusborderw = (cfg_screenWidth-scaleFactor*320)/2;
+    int statusborderw = (cfg_screenWidth-vid_scaleFactor*320)/2;
 
-    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-scaleFactor*(STATUSLINES-3),color);
-    VWB_BarScaledCoord (0,cfg_screenHeight-scaleFactor*(STATUSLINES-3),
-        statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
-    VWB_BarScaledCoord (0,cfg_screenHeight-scaleFactor*2,cfg_screenWidth,scaleFactor*2,color);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*8, cfg_screenHeight-scaleFactor*(STATUSLINES-3),
-        statusborderw+scaleFactor*8,scaleFactor*(STATUSLINES-4),color);
+    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),color);
+    VWB_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+        statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
+    VWB_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*2,cfg_screenWidth,vid_scaleFactor*2,color);
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*8, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+        statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
 
-    VWB_BarScaledCoord (statusborderw+scaleFactor*9, cfg_screenHeight-scaleFactor*3,
-        scaleFactor*97, scaleFactor*1, color-1);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*106, cfg_screenHeight-scaleFactor*3,
-        scaleFactor*161, scaleFactor*1, color-2);
-    VWB_BarScaledCoord (statusborderw+scaleFactor*267, cfg_screenHeight-scaleFactor*3,
-        scaleFactor*44, scaleFactor*1, color-3);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*9, cfg_screenHeight-scaleFactor*(STATUSLINES-4),
-        scaleFactor*1, scaleFactor*20, color-2);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-scaleFactor*9, cfg_screenHeight-scaleFactor*(STATUSLINES/2-4),
-        scaleFactor*1, scaleFactor*14, color-3);
+    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*3,
+        vid_scaleFactor*97, vid_scaleFactor*1, color-1);
+    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*106, cfg_screenHeight-vid_scaleFactor*3,
+        vid_scaleFactor*161, vid_scaleFactor*1, color-2);
+    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*267, cfg_screenHeight-vid_scaleFactor*3,
+        vid_scaleFactor*44, vid_scaleFactor*1, color-3);
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-4),
+        vid_scaleFactor*1, vid_scaleFactor*20, color-2);
+    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES/2-4),
+        vid_scaleFactor*1, vid_scaleFactor*14, color-3);
 }
 
 
@@ -936,7 +936,7 @@ void DrawStatusBorder (byte color)
 
 void DrawPlayBorder ()
 {
-	const int px = scaleFactor; // size of one "pixel"
+	const int px = vid_scaleFactor; // size of one "pixel"
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder(bordercol);
@@ -984,7 +984,7 @@ void DrawPlayBorder ()
 
 void DrawPlayScreen ()
 {
-    VWB_DrawPicScaledCoord ((cfg_screenWidth-scaleFactor*320)/2,cfg_screenHeight-scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
+    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*320)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1027,12 +1027,12 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = grsegs[SPEAR.g(STATUSBARPIC)];
+    byte *source = ca_grsegs[SPEAR.g(STATUSBARPIC)];
     int	picnum = SPEAR.g(STATUSBARPIC) - SPEAR.g(STARTPICS);
     int width = pictable[picnum].width;
     int height = pictable[picnum].height;
-    int destx = (cfg_screenWidth-scaleFactor*320)/2 + 9 * scaleFactor;
-    int desty = cfg_screenHeight - (height - 4) * scaleFactor;
+    int destx = (cfg_screenWidth-vid_scaleFactor*320)/2 + 9 * vid_scaleFactor;
+    int desty = cfg_screenHeight - (height - 4) * vid_scaleFactor;
     VL_MemToScreenScaledCoord(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
 
     ingame = false;
@@ -1103,7 +1103,7 @@ void FinishDemoRecord ()
     fontnumber=0;
     SETFONTCOLOR(0,15);
     US_Print(" Demo number (0-9): ");
-    VH_UpdateScreen();
+    I_UpdateScreen();
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
@@ -1151,7 +1151,7 @@ void RecordDemo ()
         maps = 21;
     }
 
-    VH_UpdateScreen();
+    I_UpdateScreen();
     VW_FadeIn ();
     esc = !US_LineInput (px,py,str,NULL,true,2,0);
     if (esc)
@@ -1187,7 +1187,7 @@ void RecordDemo ()
     SetupGameLevel ();
     StartMusic ();
 
-    if(cfg_usedoublebuffering) VH_UpdateScreen();
+    if(cfg_usedoublebuffering) I_UpdateScreen();
     fizzlein = true;
 
     PlayLoop ();
@@ -1228,7 +1228,7 @@ void PlayDemo (int demonumber)
     int dems[4]={static_cast<int>(SPEAR.g(T_DEMO0)),static_cast<int>(SPEAR.g(T_DEMO1)),static_cast<int>(SPEAR.g(T_DEMO2)),static_cast<int>(SPEAR.g(T_DEMO3))};
 
     CA_CacheGrChunk(dems[demonumber]);
-    demoptr = (int8_t *) grsegs[dems[demonumber]];
+    demoptr = (int8_t *) ca_grsegs[dems[demonumber]];
 #else
     cfg_demoname[4] = '0'+demonumber;
     CA_LoadFile (cfg_demoname.buffer(),&demobuffer);
@@ -1379,13 +1379,13 @@ void Died ()
     //
     FinishPaletteShifts ();
 
-    if(cfg_usedoublebuffering) VH_UpdateScreen();
+    if(cfg_usedoublebuffering) I_UpdateScreen();
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 
     IN_ClearKeysDown ();
 
-    FizzleFade(screenBuffer,viewscreenx,viewscreeny,viewwidth,viewheight,70,false);
+    FizzleFade(vid_screenBuffer,viewscreenx,viewscreeny,viewwidth,viewheight,70,false);
 
     IN_UserInput(100);
     SD_WaitSoundDone ();
@@ -1482,7 +1482,7 @@ startplayloop:
             I_Notify("Got the Spear!");
             SD_StopSound();
             SD_PlaySound(GETSPEARSND);
-            if (DigiMode != sds_Off)
+            if (sd_digiMode != sds_Off)
             {
                 Delay(150);
             }

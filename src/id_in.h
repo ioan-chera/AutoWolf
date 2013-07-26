@@ -156,17 +156,17 @@ typedef	struct		{
 									joyMultXH,joyMultYH;
 					} JoystickDef;
 // Global variables
-extern  volatile Boolean    Keyboard[];
-extern           Boolean    MousePresent;
+extern  volatile Boolean    in_keyboard[];
+extern           Boolean    in_mousePresent;
 extern  volatile Boolean    Paused;
 extern  volatile char       LastASCII;
 extern  volatile ScanCode   LastScan;
-extern           int        JoyNumButtons;
+extern           int        in_joyNumButtons;
 
 
 // Function prototypes
-#define	IN_KeyDown(code)	(Keyboard[(code)])
-#define	IN_ClearKey(code)	{Keyboard[code] = false;\
+#define	IN_KeyDown(code)	(in_keyboard[(code)])
+#define	IN_ClearKey(code)	{in_keyboard[code] = false;\
 							if (code == LastScan) LastScan = sc_None;}
 
 // DEBUG - put names in prototypes

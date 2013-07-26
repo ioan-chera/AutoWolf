@@ -437,7 +437,7 @@ US_ControlPanel (ScanCode scancode)
             //
             // EASTER EGG FOR SPEAR() OF DESTINY!
             //
-            if (Keyboard[sc_I] && Keyboard[sc_D])
+            if (in_keyboard[sc_I] && in_keyboard[sc_D])
             {
                 VW_FadeOut ();
                             // IOANCH 20130301: unification music
@@ -455,15 +455,15 @@ US_ControlPanel (ScanCode scancode)
                 VWB_DrawPic (0, 80, SPEAR.g(IDGUYS2PIC));
                 UNCACHEGRCHUNK (SPEAR.g(IDGUYS2PIC));
 
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
 
                 SDL_Color pal[256];
                 CA_CacheGrChunk (SPEAR.g(IDGUYSPALETTE));
-                VL_ConvertPalette(grsegs[SPEAR.g(IDGUYSPALETTE)], pal, 256);
+                VL_ConvertPalette(ca_grsegs[SPEAR.g(IDGUYSPALETTE)], pal, 256);
                 VL_FadeIn (0, 255, pal, 30);
                 UNCACHEGRCHUNK (SPEAR.g(IDGUYSPALETTE));
 
-                while (Keyboard[sc_I] || Keyboard[sc_D])
+                while (in_keyboard[sc_I] || in_keyboard[sc_D])
                     IN_WaitAndProcessEvents();
                 IN_ClearKeysDown ();
                 IN_Ack ();
@@ -594,7 +594,7 @@ DrawMainMenu ()
     }
 
     DrawMenu (&MainItems, &MainMenu[0]);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 // IOANCH 20130301: unification culling
@@ -715,7 +715,7 @@ CP_CheckQuick (ScanCode scancode)
                     playstate = ex_abort;
                 lasttimecount = GetTimeCount ();
 
-                if (MousePresent && IN_IsInputGrabbed())
+                if (in_mousePresent && IN_IsInputGrabbed())
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
                 if(!SPEAR())
@@ -795,7 +795,7 @@ CP_CheckQuick (ScanCode scancode)
 
                 lasttimecount = GetTimeCount ();
 
-                if (MousePresent && IN_IsInputGrabbed())
+                if (in_mousePresent && IN_IsInputGrabbed())
                     IN_CenterMouse();     // Clear accumulated mouse movement
 
                 // IOANCH 20130302: unification
@@ -832,7 +832,7 @@ CP_CheckQuick (ScanCode scancode)
             if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR() ? 9 : 0)]))
 #endif
             {
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 SD_MusicOff ();
                 SD_StopSound ();
                 MenuFadeOut ();
@@ -904,7 +904,7 @@ CP_ViewScores (int)
     }
 
     DrawHighScores ();
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
     fontnumber = 1;
 
@@ -1075,7 +1075,7 @@ DrawNewEpisode ()
     for (i = 0; i < 6; i++)
         VWB_DrawPic (NE_X + 32, NE_Y + i * 26, SPEAR.g(C_EPISODE1PIC) + i);
 
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1113,7 +1113,7 @@ DrawNewGame ()
 
     DrawMenu (&NewItems, &NewMenu[0]);
     DrawNewGameDiff (NewItems.curpos);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1196,14 +1196,14 @@ CP_Sound (int)
                 // DIGITIZED SOUND
                 //
             case 5:
-                if (DigiMode != sds_Off)
+                if (sd_digiMode != sds_Off)
                 {
                     SD_SetDigiDevice (sds_Off);
                     DrawSoundMenu ();
                 }
                 break;
             case 6:
-/*                if (DigiMode != sds_SoundSource)
+/*                if (sd_digiMode != sds_SoundSource)
                 {
                     SD_SetDigiDevice (sds_SoundSource);
                     DrawSoundMenu ();
@@ -1211,7 +1211,7 @@ CP_Sound (int)
                 }*/
                 break;
             case 7:
-                if (DigiMode != sds_SoundBlaster)
+                if (sd_digiMode != sds_SoundBlaster)
                 {
                     SD_SetDigiDevice (sds_SoundBlaster);
                     DrawSoundMenu ();
@@ -1223,7 +1223,7 @@ CP_Sound (int)
                 // MUSIC
                 //
             case 10:
-                if (MusicMode != smm_Off)
+                if (sd_musicMode != smm_Off)
                 {
                     SD_SetMusicMode (smm_Off);
                     DrawSoundMenu ();
@@ -1231,7 +1231,7 @@ CP_Sound (int)
                 }
                 break;
             case 11:
-                if (MusicMode != smm_AdLib)
+                if (sd_musicMode != smm_AdLib)
                 {
                     SD_SetMusicMode (smm_AdLib);
                     DrawSoundMenu ();
@@ -1277,15 +1277,15 @@ DrawSoundMenu ()
     //
     // IF NO ADLIB, NON-CHOOSENESS!
     //
-    if (!AdLibPresent && !SoundBlasterPresent)
+    if (!sd_adLibPresent && !sd_soundBlasterPresent)
     {
         SndMenu[2].active = SndMenu[10].active = SndMenu[11].active = 0;
     }
 
-    if (!SoundBlasterPresent)
+    if (!sd_soundBlasterPresent)
         SndMenu[7].active = 0;
 
-    if (!SoundBlasterPresent)
+    if (!sd_soundBlasterPresent)
         SndMenu[5].active = 0;
 
     DrawMenu (&SndItems, &SndMenu[0]);
@@ -1326,15 +1326,15 @@ DrawSoundMenu ()
                     // DIGITIZED SOUND
                     //
                 case 5:
-                    if (DigiMode == sds_Off)
+                    if (sd_digiMode == sds_Off)
                         on = 1;
                     break;
                 case 6:
-//                    if (DigiMode == sds_SoundSource)
+//                    if (sd_digiMode == sds_SoundSource)
 //                        on = 1;
                     break;
                 case 7:
-                    if (DigiMode == sds_SoundBlaster)
+                    if (sd_digiMode == sds_SoundBlaster)
                         on = 1;
                     break;
 
@@ -1342,11 +1342,11 @@ DrawSoundMenu ()
                     // MUSIC
                     //
                 case 10:
-                    if (MusicMode == smm_Off)
+                    if (sd_musicMode == smm_Off)
                         on = 1;
                     break;
                 case 11:
-                    if (MusicMode == smm_AdLib)
+                    if (sd_musicMode == smm_AdLib)
                         on = 1;
                     break;
             }
@@ -1358,7 +1358,7 @@ DrawSoundMenu ()
         }
 
     DrawMenuGun (&SndItems);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 
@@ -1388,7 +1388,7 @@ DrawLSAction (int which)
     else
         US_Print (STR_SAVING "...");
 
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 
@@ -1423,7 +1423,7 @@ int CP_LoadGame (int quick)
 
             loadpath.copy(cfg_dir).concatSubpath(name);
 
-            file = fopen (loadpath.buffer(), "rb");
+            file = fopen (loadpath(), "rb");
             fseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
@@ -1465,7 +1465,7 @@ int CP_LoadGame (int quick)
 #endif
             loadpath.copy(cfg_dir).concatSubpath(name);
 
-            file = fopen (loadpath.buffer(), "rb");
+            file = fopen (loadpath(), "rb");
             fseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
@@ -1544,7 +1544,7 @@ DrawLoadSaveScreen (int loadsave)
         PrintLSEntry (i, TEXTCOLOR);
 
     DrawMenu (&LSItems, &LSMenu[0]);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
     WaitKeyUp ();
 }
@@ -1602,8 +1602,8 @@ CP_SaveGame (int quick)
 
             savepath.copy(cfg_dir).concatSubpath(name);
 
-            unlink (savepath.buffer());
-            file = fopen (savepath.buffer(), "wb");
+            unlink (savepath());
+            file = fopen (savepath(), "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
 
@@ -1649,7 +1649,7 @@ CP_SaveGame (int quick)
                 {
                     DrawLoadSaveScreen (1);
                     PrintLSEntry (which, HIGHLIGHT);
-                    VH_UpdateScreen ();
+                    I_UpdateScreen ();
                 }
             }
 
@@ -1662,7 +1662,7 @@ CP_SaveGame (int quick)
             if (!SaveGamesAvail[which])
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
 
             if (US_LineInput
                 (LSM_X + LSItems.indent + 2, LSM_Y + which * 13 + 1, input, input, true, 31,
@@ -1673,8 +1673,8 @@ CP_SaveGame (int quick)
 
                 savepath.copy(cfg_dir).concatSubpath(name);
 
-                unlink (savepath.buffer());
-                file = fopen (savepath.buffer(), "wb");
+                unlink (savepath());
+                file = fopen (savepath(), "wb");
                 fwrite (input, 32, 1, file);
                 fseek (file, 32, SEEK_SET);
 
@@ -1695,7 +1695,7 @@ CP_SaveGame (int quick)
                 VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
                 PrintLSEntry (which, HIGHLIGHT);
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 SD_PlaySound (ESCPRESSEDSND);
                 continue;
             }
@@ -1823,7 +1823,7 @@ DrawMouseSens ()
     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
 
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
 }
 
@@ -1856,7 +1856,7 @@ MouseSensitivity (int)
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VH_UpdateScreen ();
+                    I_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -1871,7 +1871,7 @@ MouseSensitivity (int)
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
-                    VH_UpdateScreen ();
+                    I_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
                 }
@@ -1880,9 +1880,9 @@ MouseSensitivity (int)
 				;
         }
 
-        if (ci.button0 || Keyboard[sc_Space] || Keyboard[sc_Enter])
+        if (ci.button0 || in_keyboard[sc_Space] || in_keyboard[sc_Enter])
             exit = 1;
-        else if (ci.button1 || Keyboard[sc_Escape])
+        else if (ci.button1 || in_keyboard[sc_Escape])
             exit = 2;
 
     }
@@ -1924,7 +1924,7 @@ DrawCtlScreen ()
     if (IN_JoyPresent())
         CtlMenu[CTL_JOYENABLE].active = 1;
 
-    if (MousePresent)
+    if (in_mousePresent)
     {
         CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEENABLE].active = 1;
     }
@@ -1964,7 +1964,7 @@ DrawCtlScreen ()
     }
 
     DrawMenuGun (&CtlItems);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 
@@ -2108,7 +2108,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
             PrintRtn (which);
             PrintX = x;
             SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
             WaitKeyUp ();
             redraw = 0;
         }
@@ -2157,7 +2157,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                     }
                     tick ^= 1;
                     lastFlashTime = GetTimeCount();
-                    VH_UpdateScreen ();
+                    I_UpdateScreen ();
                 }
                 else I_Delay(5);
 
@@ -2571,7 +2571,7 @@ DrawCustomScreen ()
             }
 
 
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     MenuFadeIn ();
 }
 
@@ -2731,7 +2731,7 @@ CP_ChangeView (int)
                     newview = 4;
                 if(newview >= 19) DrawChangeView(newview);
                 else ShowViewSize (newview);
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -2745,7 +2745,7 @@ CP_ChangeView (int)
                     DrawChangeView(newview);
                 }
                 else ShowViewSize (newview);
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 SD_PlaySound (HITWALLSND);
                 TicDelay (10);
                 break;
@@ -2753,9 +2753,9 @@ CP_ChangeView (int)
 				;
         }
 
-        if (ci.button0 || Keyboard[sc_Enter])
+        if (ci.button0 || in_keyboard[sc_Enter])
             exit = 1;
-        else if (ci.button1 || Keyboard[sc_Escape])
+        else if (ci.button1 || in_keyboard[sc_Escape])
         {
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
@@ -2789,12 +2789,12 @@ CP_ChangeView (int)
 void
 DrawChangeView (int view)
 {
-    int rescaledHeight = cfg_screenHeight / scaleFactor;
+    int rescaledHeight = cfg_screenHeight / vid_scaleFactor;
     if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
-    PrintY = (cfg_screenHeight / scaleFactor) - 39;
+    PrintY = (cfg_screenHeight / vid_scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
@@ -2802,7 +2802,7 @@ DrawChangeView (int view)
     US_CPrint (STR_SIZE1 "\n");
     US_CPrint (STR_SIZE2 "\n");
     US_CPrint (STR_SIZE3);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 
@@ -2828,7 +2828,7 @@ CP_Quit (int)
 		if(ingame)
 			bot.SaveData();
 		
-        VH_UpdateScreen ();
+        I_UpdateScreen ();
         SD_MusicOff ();
         SD_StopSound ();
         MenuFadeOut ();
@@ -2905,16 +2905,16 @@ IntroScreen ()
     //
     // FILL BOXES
     //
-    if (MousePresent)
+    if (in_mousePresent)
         VWB_Bar (164, 82, 12, 2, FILLCOLOR);
 
     if (IN_JoyPresent())
         VWB_Bar (164, 105, 12, 2, FILLCOLOR);
 
-    if (AdLibPresent && !SoundBlasterPresent)
+    if (sd_adLibPresent && !sd_soundBlasterPresent)
         VWB_Bar (164, 128, 12, 2, FILLCOLOR);
 
-    if (SoundBlasterPresent)
+    if (sd_soundBlasterPresent)
         VWB_Bar (164, 151, 12, 2, FILLCOLOR);
 
 //    if (SoundSourcePresent)
@@ -2967,7 +2967,7 @@ UnCacheLump (int lumpstart, int lumpend)
     int i;
 
     for (i = lumpstart; i <= lumpend; i++)
-        if (grsegs[i])
+        if (ca_grsegs[i])
             UNCACHEGRCHUNK (i);
 }
 
@@ -3051,7 +3051,7 @@ void SetupSaveGames()
 #endif
             savepath.copy(cfg_dir).concatSubpath(name);
 
-            const int handle = open(savepath.buffer(), O_RDONLY | O_BINARY);
+            const int handle = open(savepath(), O_RDONLY | O_BINARY);
             if(handle >= 0)
             {
                 char temp[32];
@@ -3120,7 +3120,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     //
     if (routine)
         routine (which);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 
     // IOANCH 20130302: unification
     shape = SPEAR.g(C_CURSOR1PIC);
@@ -3152,7 +3152,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
             VWB_DrawPic (x, y, shape);
             if (routine)
                 routine (which);
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
         }
         else I_Delay(5);
 
@@ -3275,10 +3275,10 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 				;
         }
 
-        if (ci.button0 || Keyboard[sc_Space] || Keyboard[sc_Enter])
+        if (ci.button0 || in_keyboard[sc_Space] || in_keyboard[sc_Enter])
             exit = 1;
 
-        if ((ci.button1 && !Keyboard[sc_Alt]) || Keyboard[sc_Escape])
+        if ((ci.button1 && !in_keyboard[sc_Alt]) || in_keyboard[sc_Escape])
             exit = 2;
 
     }
@@ -3303,7 +3303,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
     if (routine)
         routine (which);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 
     item_i->curpos = which;
 
@@ -3343,7 +3343,7 @@ EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
     PrintX = item_i->x + item_i->indent;
     PrintY = item_i->y + which * 13;
     US_Print ((items + which)->string);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 
@@ -3354,7 +3354,7 @@ void
 DrawHalfStep (int x, int y)
 {
     VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     SD_PlaySound (MOVEGUN1SND);
     I_Delay (8 * 100 / 7);
 }
@@ -3382,7 +3382,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
     //
     if (routine)
         routine (which);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
     SD_PlaySound (MOVEGUN2SND);
 }
 
@@ -3472,7 +3472,7 @@ WaitKeyUp ()
     ControlInfo ci;
     while (ReadAnyControl (&ci), ci.button0 |
            ci.button1 |
-           ci.button2 | ci.button3 | Keyboard[sc_Space] | Keyboard[sc_Enter] | Keyboard[sc_Escape])
+           ci.button2 | ci.button3 | in_keyboard[sc_Space] | in_keyboard[sc_Enter] | in_keyboard[sc_Escape])
     {
         IN_WaitAndProcessEvents();
     }
@@ -3602,7 +3602,7 @@ Confirm (const char *string)
                     PrintY = y;
                     US_Print ("_");
             }
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
             tick ^= 1;
             lastBlinkTime = GetTimeCount();
         }
@@ -3610,20 +3610,20 @@ Confirm (const char *string)
 
 #ifdef SPANISH
     }
-    while (!Keyboard[sc_S] && !Keyboard[sc_N] && !Keyboard[sc_Escape]);
+    while (!in_keyboard[sc_S] && !in_keyboard[sc_N] && !in_keyboard[sc_Escape]);
 #else
     }
-    while (!Keyboard[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape] && !ci.button0 && !ci.button1);
+    while (!in_keyboard[sc_Y] && !in_keyboard[sc_N] && !in_keyboard[sc_Escape] && !ci.button0 && !ci.button1);
 #endif
 
 #ifdef SPANISH
-    if (Keyboard[sc_S] || ci.button0)
+    if (in_keyboard[sc_S] || ci.button0)
     {
         xit = 1;
         ShootSnd ();
     }
 #else
-    if (Keyboard[sc_Y] || ci.button0)
+    if (in_keyboard[sc_Y] || ci.button0)
     {
         xit = 1;
         ShootSnd ();
@@ -3655,7 +3655,7 @@ Message (const char *string)
 
     CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
     fontnumber = 1;
-    font = (fontstruct *) grsegs[SPEAR.g(STARTFONT) + fontnumber];
+    font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT) + fontnumber];
     h = font->height;
     for (i = 0; i < len; i++)
     {
@@ -3680,7 +3680,7 @@ Message (const char *string)
     DrawOutline (WindowX - 5, PrintY - 5, mw + 10, h + 10, 0, HIGHLIGHT);
     SETFONTCOLOR (0, TEXTCOLOR);
     US_Print (string);
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 }
 
 ////////////////////////////////////////////////////////////////////

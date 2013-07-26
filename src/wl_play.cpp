@@ -299,7 +299,7 @@ void PollKeyboardButtons (void)
     int i;
 
     for (i = 0; i < NUMBUTTONS; i++)
-        if (Keyboard[buttonscan[i]])
+        if (in_keyboard[buttonscan[i]])
             buttonstate[i] = true;
 }
 
@@ -338,7 +338,7 @@ void PollJoystickButtons (void)
 {
     int buttons = IN_JoyButtons();
 
-    for(int i = 0, val = 1; i < JoyNumButtons; i++, val <<= 1)
+    for(int i = 0, val = 1; i < in_joyNumButtons; i++, val <<= 1)
     {
         if(buttons & val)
             buttonstate[buttonjoy[i]] = true;
@@ -358,13 +358,13 @@ void PollKeyboardMove (void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
-    if (Keyboard[dirscan[di_north]])
+    if (in_keyboard[dirscan[di_north]])
         controly -= delta;
-    if (Keyboard[dirscan[di_south]])
+    if (in_keyboard[dirscan[di_south]])
         controly += delta;
-    if (Keyboard[dirscan[di_west]])
+    if (in_keyboard[dirscan[di_west]])
         controlx -= delta;
-    if (Keyboard[dirscan[di_east]])
+    if (in_keyboard[dirscan[di_east]])
         controlx += delta;
 }
 
@@ -621,7 +621,7 @@ void CheckKeys (void)
         //
         // SECRET CHEAT CODE: TAB-G-F10
         //
-        if (Keyboard[sc_Tab] && Keyboard[sc_G] && Keyboard[sc_F10])
+        if (in_keyboard[sc_Tab] && in_keyboard[sc_G] && in_keyboard[sc_F10])
         {
             WindowH = 160;
             if (godmode)
@@ -647,7 +647,7 @@ void CheckKeys (void)
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-    if (Keyboard[sc_M] && Keyboard[sc_L] && Keyboard[sc_I])
+    if (in_keyboard[sc_M] && in_keyboard[sc_L] && in_keyboard[sc_I])
     {
         gamestate.health = I_PLAYERHEALTH;	// IOANCH 25.10.2012: named constants
         gamestate.ammo = I_MAXAMMO;	// IOANCH
@@ -680,7 +680,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_BackSpace] && Keyboard[sc_LShift] && Keyboard[sc_Alt] && cfg_debugmode)
+    if (in_keyboard[sc_BackSpace] && in_keyboard[sc_LShift] && in_keyboard[sc_Alt] && cfg_debugmode)
     {
         ClearMemory ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
@@ -699,7 +699,7 @@ void CheckKeys (void)
     //
     // TRYING THE KEEN CHEAT CODE!
     //
-    if (Keyboard[sc_B] && Keyboard[sc_A] && Keyboard[sc_T])
+    if (in_keyboard[sc_B] && in_keyboard[sc_A] && in_keyboard[sc_T])
     {
         ClearMemory ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
@@ -725,11 +725,11 @@ void CheckKeys (void)
     {
         int lastoffs = StopMusic();
         LatchDrawPic (20 - 4, 80 - 2 * 8, SPEAR.g(PAUSEDPIC));
-        VH_UpdateScreen();
+        I_UpdateScreen();
         IN_Ack ();
         Paused = false;
         ContinueMusic(lastoffs);
-        if (MousePresent && IN_IsInputGrabbed())
+        if (in_mousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
         lasttimecount = GetTimeCount();
         return;
@@ -776,7 +776,7 @@ void CheckKeys (void)
         if (loadedgame)
             playstate = ex_abort;
         lasttimecount = GetTimeCount();
-        if (MousePresent && IN_IsInputGrabbed())
+        if (in_mousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
         return;
     }
@@ -785,7 +785,7 @@ void CheckKeys (void)
 // TAB-? debug keys
 //
 #ifdef DEBUGKEYS
-    if (Keyboard[sc_Tab] && DebugOk)
+    if (in_keyboard[sc_Tab] && DebugOk)
     {
         CA_CacheGrChunk (SPEAR.g(STARTFONT));
         fontnumber = 0;
@@ -793,7 +793,7 @@ void CheckKeys (void)
         if (DebugKeys () && viewsize < 20)
             DrawPlayBorder ();       // dont let the blue borders flash
 
-        if (MousePresent && IN_IsInputGrabbed())
+        if (in_mousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement
 
         lasttimecount = GetTimeCount();
@@ -1045,7 +1045,7 @@ void InitRedShifts (void)
     {
         workptr = redshifts[i - 1];
         // IOANCH 20130202: unification process
-        baseptr = IMPALE(palette);
+        baseptr = IMPALE(vid_palette);
 
         for (j = 0; j <= 255; j++)
         {
@@ -1064,7 +1064,7 @@ void InitRedShifts (void)
     {
         workptr = whiteshifts[i - 1];
         // IOANCH 20130202: unification process
-        baseptr = IMPALE(palette);
+        baseptr = IMPALE(vid_palette);
 
         for (j = 0; j <= 255; j++)
         {
@@ -1175,7 +1175,7 @@ void UpdatePaletteShifts (void)
     else if (palshifted)
     {
         // IOANCH 20130202: unification process
-        VL_SetPalette (IMPALE(palette), false);        // back to normal
+        VL_SetPalette (IMPALE(vid_palette), false);        // back to normal
         palshifted = false;
     }
 }
@@ -1197,7 +1197,7 @@ void FinishPaletteShifts (void)
     {
         palshifted = 0;
         // IOANCH 20130202: unification process
-        VL_SetPalette (IMPALE(palette), true);
+        VL_SetPalette (IMPALE(vid_palette), true);
     }
 }
 
@@ -1347,7 +1347,7 @@ void PlayLoop (void)
     memset (buttonstate, 0, sizeof (buttonstate));
     ClearPaletteShifts ();
 
-    if (MousePresent && IN_IsInputGrabbed())
+    if (in_mousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();         // Clear accumulated mouse movement
 
     if (demoplayback)

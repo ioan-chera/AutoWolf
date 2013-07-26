@@ -197,7 +197,7 @@ void TimedPicCommand ()
     //
     // update the screen, and wait for time delay
     //
-    VH_UpdateScreen ();
+    I_UpdateScreen ();
 
     //
     // wait for time
@@ -643,11 +643,11 @@ void ShowArticle (char *article)
             newpage = false;
             // IOANCH 20130301: unification culling
             PageLayout (true);
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
             if (firstpage)
             {
                 // IOANCH 20130202: unification process
-                VL_FadeIn(0,255,IMPALE(palette),10);
+                VL_FadeIn(0,255,IMPALE(vid_palette),10);
                 firstpage = false;
             }
         }
@@ -745,7 +745,7 @@ void HelpScreens ()
     // IOANCH 20130302: helpextern used to be here
     artnum = SPEAR.g(T_HELPART);
     CA_CacheGrChunk (artnum);
-    text = (char *)grsegs[artnum];
+    text = (char *)ca_grsegs[artnum];
 #else
     CA_LoadFile (helpfilename,&layout);
     text = (char *)layout;
@@ -786,7 +786,7 @@ void EndText ()
     // IOANCH 20130302: unification: map it here. (endextern used to be SPEAR.g(T_ENDART1)
     artnum = SPEAR.g(T_ENDART1)+gamestate.episode;
     CA_CacheGrChunk (artnum);
-    text = (char *)grsegs[artnum];
+    text = (char *)ca_grsegs[artnum];
 #else
     cfg_endfilename[6] = '1'+gamestate.episode;
     CA_LoadFile (cfg_endfilename.buffer(),&layout);
@@ -805,7 +805,7 @@ void EndText ()
     VW_FadeOut();
     SETFONTCOLOR(0,15);
     IN_ClearKeysDown();
-    if (MousePresent && IN_IsInputGrabbed())
+    if (in_mousePresent && IN_IsInputGrabbed())
         IN_CenterMouse();  // Clear accumulated mouse movement
 
     FreeMusic ();

@@ -43,17 +43,18 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
-#include "wl_atmos.h"
 #include <SDL_syswm.h>
 // IOANCH 17.05.2012
-#include "ioan_bot.h"
-#include "ioan_bas.h"
-#include "List.h"
 #include "Config.h"
+#include "i_system.h"
+#include "ioan_bas.h"
+#include "ioan_bot.h"
+#include "List.h"
 #include "MasterDirectoryFile.h"
 #ifdef __APPLE__
 #include "macosx/CocoaFun.h"
 #endif
+#include "wl_atmos.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -137,7 +138,7 @@ void ReadConfig()
 
     configpath.copy(cfg_dir).concatSubpath(cfg_configname);
 
-    const int file = open(configpath.buffer(), O_RDONLY | O_BINARY);
+    const int file = open(configpath(), O_RDONLY | O_BINARY);
     if (file != -1)
     {
         //
@@ -175,14 +176,14 @@ void ReadConfig()
 
         close(file);
 
-        if ((sd == sdm_AdLib || sm == smm_AdLib) && !AdLibPresent
-                && !SoundBlasterPresent)
+        if ((sd == sdm_AdLib || sm == smm_AdLib) && !sd_adLibPresent
+                && !sd_soundBlasterPresent)
         {
             sd = sdm_PC;
             sm = smm_Off;
         }
 
-        if ((sds == sds_SoundBlaster && !SoundBlasterPresent))
+        if ((sds == sds_SoundBlaster && !sd_soundBlasterPresent))
             sds = sds_Off;
 
         // make sure values are correct
@@ -190,7 +191,7 @@ void ReadConfig()
         if(mouseenabled) mouseenabled=true;
         if(joystickenabled) joystickenabled=true;
 
-        if (!MousePresent)
+        if (!in_mousePresent)
             mouseenabled = false;
         if (!IN_JoyPresent())
             joystickenabled = false;
@@ -210,7 +211,7 @@ void ReadConfig()
         // no config file, so select by hardware
         //
 noconfig:
-        if (SoundBlasterPresent || AdLibPresent)
+        if (sd_soundBlasterPresent || sd_adLibPresent)
         {
             sd = sdm_AdLib;
             sm = smm_AdLib;
@@ -221,12 +222,12 @@ noconfig:
             sm = smm_Off;
         }
 
-        if (SoundBlasterPresent)
+        if (sd_soundBlasterPresent)
             sds = sds_SoundBlaster;
         else
             sds = sds_Off;
 
-        if (MousePresent)
+        if (in_mousePresent)
             mouseenabled = true;
 
         if (IN_JoyPresent())
@@ -259,7 +260,7 @@ void WriteConfig()
 
     configpath.copy(cfg_dir).concatSubpath(cfg_configname);
 
-    const int file = open(configpath.buffer(), O_CREAT | O_WRONLY | O_BINARY, 0644);
+    const int file = open(configpath(), O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
     {
         word tmp=0xfefa;
@@ -267,8 +268,8 @@ void WriteConfig()
         write(file,Scores,sizeof(HighScore) * MaxScores);
 
         write(file,&SoundMode,sizeof(SoundMode));
-        write(file,&MusicMode,sizeof(MusicMode));
-        write(file,&DigiMode,sizeof(DigiMode));
+        write(file,&sd_musicMode,sizeof(sd_musicMode));
+        write(file,&sd_digiMode,sizeof(sd_digiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
         write(file,&joystickenabled,sizeof(joystickenabled));
@@ -329,7 +330,7 @@ void DiskFlopAnim(int x,int y)
         return;
     // IOANCH 20130302: unification
     VWB_DrawPic(x,y,SPEAR.g(C_DISKLOADING1PIC)+which);
-    VH_UpdateScreen();
+    I_UpdateScreen();
     which^=1;
 }
 
@@ -803,8 +804,8 @@ void CalcProjection (int32_t focal)
         tang = (int32_t)i*VIEWGLOBAL/viewwidth/facedist;
         angle = (float) atan(tang);
         intang = (int) (angle*radtoint);
-        pixelangle[halfview-1-i] = intang;
-        pixelangle[halfview+i] = -intang;
+        vid_pixelangle[halfview-1-i] = intang;
+        vid_pixelangle[halfview+i] = -intang;
     }
 }
 
@@ -842,7 +843,8 @@ void SetupWalls ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void SignonScreen ()                        // VGA version
+// IOANCH 20130726: gave prefix
+void VL_SignonScreen ()                        // VGA version
 {
     // IOANCH 20130510: moved the VGA function upstream right above this one
 
@@ -879,7 +881,7 @@ void FinishSignon ()
 
 
 
-        VH_UpdateScreen();
+        I_UpdateScreen();
 
         if (!cfg_nowait)
             IN_Ack ();
@@ -897,14 +899,14 @@ void FinishSignon ()
         US_CPrint ("Working...");
         #endif
 
-        VH_UpdateScreen();
+        I_UpdateScreen();
 
 
         SETFONTCOLOR(0,15);
     }
     else
     {
-        VH_UpdateScreen();
+        I_UpdateScreen();
 
         if (!cfg_nowait)
             VW_WaitVBL(3*70);
@@ -1054,8 +1056,8 @@ void InitDigiMap ()
 
     for (; *map != lastvalue; map += 3)
     {
-        DigiMap[map[0]] = map[1];
-        DigiChannel[map[1]] = map[2];
+        sd_digiMap[map[0]] = map[1];
+        sd_digiChannel[map[1]] = map[2];
         SD_PrepareSound(map[1]);
     }
 }
@@ -1147,7 +1149,7 @@ void DoJukebox()
     CP_itemtype *MusicMenu = IMPALE(MusicMenu);
 
     IN_ClearKeysDown();
-    if (!AdLibPresent && !SoundBlasterPresent)
+    if (!sd_adLibPresent && !sd_soundBlasterPresent)
         return;
 
     MenuFadeOut();
@@ -1183,7 +1185,7 @@ void DoJukebox()
     US_CPrint ("Robert's Jukebox");
 
     SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
-    VH_UpdateScreen();
+    I_UpdateScreen();
     MenuFadeIn();
 
     do
@@ -1197,7 +1199,7 @@ void DoJukebox()
             StartCPMusic(songs[start + which]);
             MusicMenu[start+which].active = 2;
             DrawMenu (&MusicItems,&MusicMenu[start]);
-            VH_UpdateScreen();
+            I_UpdateScreen();
             lastsong = which;
         }
     } while(which>=0);
@@ -1227,54 +1229,17 @@ static void InitGame()
 // IOANCH 20130301: unification culling
     Boolean didjukebox=false;
 
-    // initialize SDL
-#if defined _WIN32
-    putenv("SDL_VIDEODRIVER=windib");
-#endif
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
-    {
-        printf("Unable to init SDL: %s\n", SDL_GetError());
-        exit(1);
-    }
 
-    atexit(SDL_Quit);
-
-    int numJoysticks = SDL_NumJoysticks();
-    if(cfg_joystickindex && (cfg_joystickindex < -1 || 
-                               cfg_joystickindex >= numJoysticks))
-    {
-        if(!numJoysticks)
-            printf("No joysticks are available to SDL!\n");
-        else
-            printf("The joystick index must be between -1 and %i!\n", 
-                   numJoysticks - 1);
-        exit(1);
-    }
-
-#if defined(GP2X_940)
-    GP2X_MemoryInit();
-#endif
+   
+   // IOANCH 20130726: moved SDL init away
+   I_InitEngine();
+   
     // IOANCH 20130510: moved the function here
-    VL_SetVGAPlaneMode ();
-    SignonScreen ();
+    VL_SignonScreen ();
+   
+   I_InitAfterSignon();
 
-#if defined _WIN32
-    if(!cfg_fullscreen)
-    {
-        struct SDL_SysWMinfo wmInfo;
-        SDL_VERSION(&wmInfo.version);
-
-        if(SDL_GetWMInfo(&wmInfo) != -1)
-        {
-            HWND hwndSDL = wmInfo.window;
-            DWORD style = GetWindowLong(hwndSDL, GWL_STYLE) & ~WS_SYSMENU;
-            SetWindowLong(hwndSDL, GWL_STYLE, style);
-            SetWindowPos(hwndSDL, NULL, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | 
-                         SWP_NOZORDER | SWP_FRAMECHANGED);
-        }
-    }
-#endif
-	VH_UpdateScreen();
+	I_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
     masterDir.loadFromFile();
@@ -1310,7 +1275,7 @@ static void InitGame()
         byte *screen;
 
         CA_CacheGrChunk (SPEAR.g(ERRORSCREEN));
-        screen = grsegs[SPEAR.g(ERRORSCREEN)];
+        screen = ca_grsegs[SPEAR.g(ERRORSCREEN)];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1334,7 +1299,7 @@ static void InitGame()
 	IN_ProcessEvents();
 
 // IOANCH 20130301: unification culling
-    if (Keyboard[sc_M])
+    if (in_keyboard[sc_M])
     {
         DoJukebox();
         didjukebox=true;
@@ -1397,7 +1362,7 @@ Boolean SetViewSize (unsigned width, unsigned height)
     else
     {
         viewscreenx = (cfg_screenWidth-viewwidth) / 2;
-        viewscreeny = (cfg_screenHeight-scaleFactor*STATUSLINES-viewheight)/2;
+        viewscreeny = (cfg_screenHeight-vid_scaleFactor*STATUSLINES-viewheight)/2;
         screenofs = viewscreeny*cfg_screenWidth+viewscreenx;
     }
 
@@ -1426,7 +1391,7 @@ void ShowViewSize (int width)
     else if(width == 20)
     {
         viewwidth = cfg_screenWidth;
-        viewheight = cfg_screenHeight - scaleFactor*STATUSLINES;
+        viewheight = cfg_screenHeight - vid_scaleFactor*STATUSLINES;
         DrawPlayBorder ();
     }
     else
@@ -1447,7 +1412,7 @@ void NewViewSize (int width)
     if(viewsize == 21)
         SetViewSize(cfg_screenWidth, cfg_screenHeight);
     else if(viewsize == 20)
-        SetViewSize(cfg_screenWidth, cfg_screenHeight - scaleFactor * STATUSLINES);
+        SetViewSize(cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * STATUSLINES);
     else
         SetViewSize(width*16*cfg_screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*cfg_screenHeight/200));
 }
@@ -1570,7 +1535,7 @@ static void DemoLoop()
             {
                 SDL_Color pal[256];
                 CA_CacheGrChunk (SPEAR.g(TITLEPALETTE));
-                VL_ConvertPalette(grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
+                VL_ConvertPalette(ca_grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
 
                 CA_CacheGrChunk (SPEAR.g(TITLE1PIC));
                 VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC));
@@ -1579,7 +1544,7 @@ static void DemoLoop()
                 CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
                 VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
                 UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
                 UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
@@ -1587,7 +1552,7 @@ static void DemoLoop()
             else
             {
                 CA_CacheScreen (SPEAR.g(TITLEPIC));
-                VH_UpdateScreen ();
+                I_UpdateScreen ();
                 VW_FadeIn();
             }
             if (IN_UserInput(TickBase*15))
@@ -1597,7 +1562,7 @@ static void DemoLoop()
 // credits page
 //
             CA_CacheScreen (SPEAR.g(CREDITSPIC));
-            VH_UpdateScreen();
+            I_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))
                 break;
@@ -1606,7 +1571,7 @@ static void DemoLoop()
 // high scores
 //
             DrawHighScores ();
-            VH_UpdateScreen ();
+            I_UpdateScreen ();
             VW_FadeIn ();
 
             if (IN_UserInput(TickBase*10))
@@ -1633,7 +1598,7 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (Keyboard[sc_Tab] && cfg_debugmode)
+        if (in_keyboard[sc_Tab] && cfg_debugmode)
             RecordDemo ();
         else
             US_ControlPanel (0);

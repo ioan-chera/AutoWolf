@@ -36,7 +36,7 @@
 #define VIEWCOLOR       0x7f
 #define TEXTCOLOR       0x17
 #define HIGHLIGHT       0x13
-#define MenuFadeIn()    VL_FadeIn(0,255,IMPALE(palette),10)
+#define MenuFadeIn()    VL_FadeIn(0,255,IMPALE(vid_palette),10)
 
             // IOANCH 20130301: unification music
 #define MENUSONG        IMPALE((int)WONDERIN_MUS)

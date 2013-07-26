@@ -32,17 +32,17 @@ void Quit (const char *error,...);
 
 //===========================================================================
 
-extern SDL_Surface *screen, *screenBuffer, *curSurface;
+extern SDL_Surface *vid_screen, *vid_screenBuffer, *vid_curSurface;
 
-extern  unsigned screenPitch, bufferPitch, curPitch;
-extern  unsigned scaleFactor;
+extern  unsigned vid_screenPitch, vid_bufferPitch, vid_curPitch;
+extern  unsigned vid_scaleFactor;
 
 extern	Boolean  screenfaded;
 extern	unsigned bordercolor;
 
 // IOANCH 20130202: unification process
-extern SDL_Color palette_sod[256];
-extern SDL_Color palette_wl6[256];
+extern SDL_Color vid_palette_sod[256];
+extern SDL_Color vid_palette_wl6[256];
 
 //===========================================================================
 
@@ -65,8 +65,8 @@ void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);
 
-byte *VL_LockSurface(SDL_Surface *surface);
-void VL_UnlockSurface(SDL_Surface *surface);
+byte *I_LockSurface(SDL_Surface *surface);
+void I_UnlockSurface(SDL_Surface *surface);
 
 byte VL_GetPixel        (int x, int y);
 void VL_Plot            (int x, int y, int color);
@@ -75,12 +75,12 @@ void VL_Vlin            (int x, int y, int height, int color);
 void VL_BarScaledCoord  (int scx, int scy, int scwidth, int scheight, int color);
 void inline VL_Bar      (int x, int y, int width, int height, int color)
 {
-    VL_BarScaledCoord(scaleFactor*x, scaleFactor*y,
-        scaleFactor*width, scaleFactor*height, color);
+    VL_BarScaledCoord(vid_scaleFactor*x, vid_scaleFactor*y,
+        vid_scaleFactor*width, vid_scaleFactor*height, color);
 }
 void inline VL_ClearScreen(int color)
 {
-    SDL_FillRect(curSurface, NULL, color);
+    SDL_FillRect(vid_curSurface, NULL, color);
 }
 
 void VL_MungePic                (byte *source, unsigned width, unsigned height);
@@ -95,7 +95,7 @@ void VL_MemToScreenScaledCoord  (byte *source, int origwidth, int origheight, in
 void inline VL_MemToScreen (byte *source, int width, int height, int x, int y)
 {
     VL_MemToScreenScaledCoord(source, width, height,
-        scaleFactor*x, scaleFactor*y);
+        vid_scaleFactor*x, vid_scaleFactor*y);
 }
 
 void VL_MaskedToScreen (byte *source, int width, int height, int x, int y);
@@ -107,7 +107,7 @@ void inline VL_LatchToScreen (SDL_Surface *source, int xsrc, int ysrc,
     int width, int height, int xdest, int ydest)
 {
     VL_LatchToScreenScaledCoord(source,xsrc,ysrc,width,height,
-        scaleFactor*xdest,scaleFactor*ydest);
+        vid_scaleFactor*xdest,vid_scaleFactor*ydest);
 }
 void inline VL_LatchToScreenScaledCoord (SDL_Surface *source, int scx, int scy)
 {
@@ -116,5 +116,5 @@ void inline VL_LatchToScreenScaledCoord (SDL_Surface *source, int scx, int scy)
 void inline VL_LatchToScreen (SDL_Surface *source, int x, int y)
 {
     VL_LatchToScreenScaledCoord(source,0,0,source->w,source->h,
-        scaleFactor*x,scaleFactor*y);
+        vid_scaleFactor*x,vid_scaleFactor*y);
 }

@@ -33,13 +33,13 @@
 //
 //      Globals:
 //              For User Mgr:
-//                      SoundBlasterPresent - SoundBlaster card present?
+//                      sd_soundBlasterPresent - SoundBlaster card present?
 //                      AdLibPresent - AdLib card present?
 //                      SoundMode - What device is used for sound effects
 //                              (Use SM_SetSoundMode() to set)
-//                      MusicMode - What device is used for music
+//                      sd_musicMode - What device is used for music
 //                              (Use SM_SetMusicMode() to set)
-//                      DigiMode - What device is used for digitized sound effects
+//                      sd_digiMode - What device is used for digitized sound effects
 //                              (Use SM_SetDigiDevice() to set)
 //
 //              For Cache Mgr:
@@ -107,20 +107,20 @@ static byte      *SoundBuffers[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 >
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 
 //      Global variables
-        Boolean         AdLibPresent,
-                        SoundBlasterPresent,SBProPresent,
-                        SoundPositioned;
+        Boolean         sd_adLibPresent,
+                        sd_soundBlasterPresent,SBProPresent,
+                        sd_soundPositioned;
         SDMode          SoundMode;
-        SMMode          MusicMode;
-        SDSMode         DigiMode;
+        SMMode          sd_musicMode;
+        SDSMode         sd_digiMode;
 static  byte          **SoundTable;
 
 // IOANCH 20130301: unification
-int             DigiMap[(unsigned int)LASTSOUND_wl6 > 
+int             sd_digiMap[(unsigned int)LASTSOUND_wl6 > 
 						(unsigned int)LASTSOUND_sod ? 
 						(unsigned int)LASTSOUND_wl6 : 
 						(unsigned int)LASTSOUND_sod];
-int DigiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod - 
+int sd_digiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod - 
 				STARTDIGISOUNDS_sod ? STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
 				STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
@@ -129,15 +129,15 @@ static  Boolean                 SD_Started;
 static  Boolean                 nextsoundpos;
 // IOANCH 20130301: unification
 static  unsigned int            SoundNumber;
-static  unsigned int            DigiNumber;
+static  unsigned int            sd_digiNumber;
 static  word                    SoundPriority;
-static  word                    DigiPriority;
+static  word                    sd_digiPriority;
 static  int                     LeftPosition;
 static  int                     RightPosition;
 
-        word                    NumDigi;
-static  digiinfo               *DigiList;
-static  Boolean                 DigiPlaying;
+        word                    sd_numDigi;
+static  digiinfo               *sd_digiList;
+static  Boolean                 sd_digiPlaying;
 
 //      PC Sound variables
 // static  volatile byte           pcLastSample;
@@ -149,7 +149,7 @@ static  byte * volatile         pcSound;
 static  byte * volatile         alSound;
 static  byte                    alBlock;
 static  longword                alLengthLeft;
-static  longword                alTimeCount;
+static  longword                sd_alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
@@ -162,21 +162,21 @@ static  longword                sqHackTime;
 
 #ifdef USE_GPL
 
-DBOPL::Chip oplChip;
+DBOPL::Chip sd_oplChip;
 
 //
-// YM3812Init
+// SD_L_YM3812Init
 //
-static inline bool YM3812Init(int numChips, int clock, int rate)
+static inline bool SD_L_YM3812Init(int numChips, int clock, int rate)
 {
-	oplChip.Setup(rate);
+	sd_oplChip.Setup(rate);
 	return false;
 }
 
 //
-// YM3812Write
+// SD_L_YM3812Write
 //
-static inline void YM3812Write(DBOPL::Chip &which, Bit32u reg, Bit8u val)
+static inline void SD_L_YM3812Write(DBOPL::Chip &which, Bit32u reg, Bit8u val)
 {
 	which.WriteReg(reg, val);
 }
@@ -189,7 +189,7 @@ static inline void YM3812UpdateOne(DBOPL::Chip &which, int16_t *stream, int leng
 	Bit32s buffer[512 * 2];
 	int i;
 
-	// length is at maximum samplesPerMusicTick = param_samplerate / 700
+	// length is at maximum sd_samplesPerMusicTick = param_samplerate / 700
 	// so 512 is sufficient for a sample rate of 358.4 kHz (default 44.1 kHz)
 	if(length > 512)
 		length = 512;
@@ -229,7 +229,7 @@ static inline void YM3812UpdateOne(DBOPL::Chip &which, int16_t *stream, int leng
 
 #else
 
-static const int oplChip = 0;
+static const int sd_oplChip = 0;
 
 #endif
 
@@ -451,12 +451,12 @@ SD_L_SetTimerSpeed()
         word    rate;
         void (_interrupt *isr)();
 
-        if ((DigiMode == sds_PC) && DigiPlaying)
+        if ((sd_digiMode == sds_PC) && sd_digiPlaying)
         {
                 rate = TickBase * 100;
                 isr = SD_L_t0ExtremeAsmService;
         }
-        else if ((MusicMode == smm_AdLib) || ((DigiMode == sds_SoundSource) && DigiPlaying)     )
+        else if ((sd_musicMode == smm_AdLib) || ((sd_digiMode == sds_SoundSource) && sd_digiPlaying)     )
         {
                 rate = TickBase * 10;
                 isr = SD_L_t0FastAsmService;
@@ -606,15 +606,15 @@ SD_L_ShutPC()
 //
 void SD_StopDigitized()
 {
-    DigiPlaying = false;
+    sd_digiPlaying = false;
     // IOANCH 20130301: unification
-    DigiNumber = 0;
-    DigiPriority = 0;
-    SoundPositioned = false;
-    if ((DigiMode == sds_PC) && (SoundMode == sdm_PC))
+    sd_digiNumber = 0;
+    sd_digiPriority = 0;
+    sd_soundPositioned = false;
+    if ((sd_digiMode == sds_PC) && (SoundMode == sdm_PC))
         SD_L_SoundFinished();
 
-    switch (DigiMode)
+    switch (sd_digiMode)
     {
         case sds_PC:
 //            SD_L_PCStopSampleInIRQ();
@@ -633,7 +633,7 @@ void SD_StopDigitized()
 //
 int SD_GetChannelForDigi(int which)
 {
-    if(DigiChannel[which] != -1) return DigiChannel[which];
+    if(sd_digiChannel[which] != -1) return sd_digiChannel[which];
 
     int channel = Mix_GroupAvailable(1);
     if(channel == -1) channel = Mix_GroupOldest(1);
@@ -651,7 +651,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
             || ((leftpos == 15) && (rightpos == 15)))
         Quit("SD_SetPosition: Illegal position");
 
-    switch (DigiMode)
+    switch (sd_digiMode)
     {
         case sds_SoundBlaster:
 //            SD_L_PositionSBP(leftpos,rightpos);
@@ -688,11 +688,11 @@ Sint16 GetSample(float csample, byte *samples, int size)
 //
 void SD_PrepareSound(int which)
 {
-    if(DigiList == NULL)
-        Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
+    if(sd_digiList == NULL)
+        Quit("SD_PrepareSound(%i): sd_digiList not initialized!\n", which);
 
-    int page = DigiList[which].startpage;
-    int size = DigiList[which].length;
+    int page = sd_digiList[which].startpage;
+    int size = sd_digiList[which].length;
 
     byte *origsamples = PM_GetSound(page);
     if(origsamples + size >= PM_GetEnd())
@@ -736,16 +736,16 @@ void SD_PrepareSound(int which)
 //
 int SD_PlayDigitized(word which,int leftpos,int rightpos)
 {
-    if (!DigiMode)
+    if (!sd_digiMode)
         return 0;
 
-    if (which >= NumDigi)
+    if (which >= sd_numDigi)
         Quit("SD_PlayDigitized: bad sound number %i", which);
 
     int channel = SD_GetChannelForDigi(which);
     SD_SetPosition(channel, leftpos,rightpos);
 
-    DigiPlaying = true;
+    sd_digiPlaying = true;
 
     Mix_Chunk *sample = SoundChunks[which];
     if(sample == NULL)
@@ -778,7 +778,7 @@ void SD_SetDigiDevice(SDSMode mode)
 {
     Boolean devicenotpresent;
 
-    if (mode == DigiMode)
+    if (mode == sd_digiMode)
         return;
 
     SD_StopDigitized();
@@ -787,7 +787,7 @@ void SD_SetDigiDevice(SDSMode mode)
     switch (mode)
     {
         case sds_SoundBlaster:
-            if (!SoundBlasterPresent)
+            if (!sd_soundBlasterPresent)
                 devicenotpresent = true;
             break;
 		default:
@@ -796,7 +796,7 @@ void SD_SetDigiDevice(SDSMode mode)
 
     if (!devicenotpresent)
     {
-        DigiMode = mode;
+        sd_digiMode = mode;
 
 #ifdef NOTYET
         SD_L_SetTimerSpeed();
@@ -811,33 +811,35 @@ void SD_L_SetupDigi()
 {
     // Correct padding enforced by PM_Startup()
     word *soundInfoPage = (word *) (void *) PM_GetPage(pm_ChunksInFile-1);
-    NumDigi = (word) PM_GetPageSize(pm_ChunksInFile - 1) / 4;
+    sd_numDigi = (word) PM_GetPageSize(pm_ChunksInFile - 1) / 4;
 
-    DigiList = (digiinfo *) malloc(NumDigi * sizeof(digiinfo));
+    sd_digiList = (digiinfo *) malloc(sd_numDigi * sizeof(digiinfo));
     int i;
-    for(i = 0; i < NumDigi; i++)
+    for(i = 0; i < sd_numDigi; i++)
     {
         // Calculate the size of the digi from the sizes of the pages between
         // the start page and the start page of the next sound
 
-        DigiList[i].startpage = soundInfoPage[i * 2];
-        if((int) DigiList[i].startpage >= pm_ChunksInFile - 1)
+        sd_digiList[i].startpage = soundInfoPage[i * 2];
+        if((int) sd_digiList[i].startpage >= pm_ChunksInFile - 1)
         {
-            NumDigi = i;
+            sd_numDigi = i;
             break;
         }
 
         int lastPage;
-        if(i < NumDigi - 1)
+        if(i < sd_numDigi - 1)
         {
             lastPage = soundInfoPage[i * 2 + 2];
-            if(lastPage == 0 || lastPage + pm_SoundStart > pm_ChunksInFile - 1) lastPage = pm_ChunksInFile - 1;
+            if(lastPage == 0 || lastPage + pm_SoundStart > pm_ChunksInFile - 1)
+               lastPage = pm_ChunksInFile - 1;
             else lastPage += pm_SoundStart;
         }
         else lastPage = pm_ChunksInFile - 1;
 
         int size = 0;
-        for(int page = pm_SoundStart + DigiList[i].startpage; page < lastPage; page++)
+        for(int page = pm_SoundStart + sd_digiList[i].startpage;
+            page < lastPage; page++)
             size += PM_GetPageSize(page);
 
         // Don't include padding of sound info page, if padding was added
@@ -850,15 +852,15 @@ void SD_L_SetupDigi()
             size -= 0x10000;
         size = (size & 0xffff0000) | soundInfoPage[i * 2 + 1];
 
-        DigiList[i].length = size;
+        sd_digiList[i].length = size;
     }
 
 	// IOANCH 20130301: unification
 	unsigned int LASTSOUND_max = IMPALE((unsigned int)LASTSOUND);
     for(i = 0; i < (signed int)LASTSOUND_max; i++)
     {
-        DigiMap[i] = -1;
-        DigiChannel[i] = -1;
+        sd_digiMap[i] = -1;
+        sd_digiChannel[i] = -1;
     }
 }
 
@@ -1012,7 +1014,7 @@ static void SD_L_ShutDevice()
 ////////////////////////////////////////////////////////////////////////////////
 static void SD_L_CleanDevice()
 {
-    if ((SoundMode == sdm_AdLib) || (MusicMode == smm_AdLib))
+    if ((SoundMode == sdm_AdLib) || (sd_musicMode == smm_AdLib))
         SD_L_CleanAL();
 }
 
@@ -1052,7 +1054,7 @@ Boolean SD_SetSoundMode(SDMode mode)
 
     SD_StopSound();
 
-    if ((mode == sdm_AdLib) && !AdLibPresent)
+    if ((mode == sdm_AdLib) && !sd_adLibPresent)
         mode = sdm_PC;
 
     switch (mode)
@@ -1068,14 +1070,14 @@ Boolean SD_SetSoundMode(SDMode mode)
             break;
         case sdm_AdLib:
             tableoffset = IMPALE((word)STARTADLIBSOUNDS);
-            if (AdLibPresent)
+            if (sd_adLibPresent)
                 result = true;
             break;
         default:
             Quit("SD_SetSoundMode: Invalid sound mode %i", mode);
             return false;
     }
-    SoundTable = &audiosegs[tableoffset];
+    SoundTable = &ca_audiosegs[tableoffset];
 
     if (result && (mode != SoundMode))
     {
@@ -1106,13 +1108,13 @@ Boolean SD_SetMusicMode(SMMode mode)
             result = true;
             break;
         case smm_AdLib:
-            if (AdLibPresent)
+            if (sd_adLibPresent)
                 result = true;
             break;
     }
 
     if (result)
-        MusicMode = mode;
+        sd_musicMode = mode;
 
 //    SD_L_SetTimerSpeed();
 
@@ -1124,7 +1126,7 @@ byte *curAlSound = 0;
 byte *curAlSoundPtr = 0;
 longword curAlLengthLeft = 0;
 int soundTimeCounter = 5;
-int samplesPerMusicTick;
+int sd_samplesPerMusicTick;
 
 //
 // SD_L_IMFMusicPlayer
@@ -1141,13 +1143,13 @@ void SD_L_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
         {
             if(numreadysamples<sampleslen)
             {
-                YM3812UpdateOne(oplChip, stream16, numreadysamples);
+                YM3812UpdateOne(sd_oplChip, stream16, numreadysamples);
                 stream16 += numreadysamples*2;
                 sampleslen -= numreadysamples;
             }
             else
             {
-                YM3812UpdateOne(oplChip, stream16, sampleslen);
+                YM3812UpdateOne(sd_oplChip, stream16, sampleslen);
                 numreadysamples -= sampleslen;
                 return;
             }
@@ -1185,23 +1187,23 @@ void SD_L_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
         {
             do
             {
-                if(sqHackTime > alTimeCount) break;
-                sqHackTime = alTimeCount + *(sqHackPtr+1);
+                if(sqHackTime > sd_alTimeCount) break;
+                sqHackTime = sd_alTimeCount + *(sqHackPtr+1);
                 alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1));
                 sqHackPtr += 2;
                 sqHackLen -= 4;
             }
             while(sqHackLen>0);
-            alTimeCount++;
+            sd_alTimeCount++;
             if(!sqHackLen)
             {
                 sqHackPtr = sqHack;
                 sqHackLen = sqHackSeqLen;
                 sqHackTime = 0;
-                alTimeCount = 0;
+                sd_alTimeCount = 0;
             }
         }
-        numreadysamples = samplesPerMusicTick;
+        numreadysamples = sd_samplesPerMusicTick;
     }
 }
 
@@ -1229,25 +1231,27 @@ void SD_Startup()
 
     // Init music
 
-    samplesPerMusicTick = cfg_samplerate / 700;    // SD_L_t0FastAsmService played at 700Hz
+    sd_samplesPerMusicTick = cfg_samplerate / 700;
+   // SD_L_t0FastAsmService played at 700Hz
 
-    if(YM3812Init(1,3579545,cfg_samplerate))
+    if(SD_L_YM3812Init(1,3579545,cfg_samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
     }
 
     for(i=1;i<0xf6;i++)
-        YM3812Write(oplChip,i,0);
+        SD_L_YM3812Write(sd_oplChip,i,0);
 
-    YM3812Write(oplChip,1,0x20); // Set WSE=1
-//    YM3812Write(0,8,0); // Set CSM=0 & SEL=0		 // already set in for statement
+    SD_L_YM3812Write(sd_oplChip,1,0x20); // Set WSE=1
+//    SD_L_YM3812Write(0,8,0); // Set CSM=0 & SEL=0
+   // already set in for statement
 
     Mix_HookMusic(SD_L_IMFMusicPlayer, 0);
     Mix_ChannelFinished(SD_ChannelFinished);
-    AdLibPresent = true;
-    SoundBlasterPresent = true;
+    sd_adLibPresent = true;
+    sd_soundBlasterPresent = true;
 
-    alTimeCount = 0;
+    sd_alTimeCount = 0;
 
     SD_SetSoundMode(sdm_Off);
     SD_SetMusicMode(smm_Off);
@@ -1281,7 +1285,7 @@ void SD_Shutdown()
         if(SoundBuffers[i]) free(SoundBuffers[i]);
     }
 
-    free(DigiList);
+    free(sd_digiList);
 
     SD_Started = false;
 }
@@ -1322,7 +1326,7 @@ Boolean SD_PlaySound(soundnames sound_abstract)
     ispos = nextsoundpos;
     nextsoundpos = false;
 
-    if (sound == -1 || (DigiMode == sds_Off && SoundMode == sdm_Off))
+    if (sound == -1 || (sd_digiMode == sds_Off && SoundMode == sdm_Off))
         return 0;
 
     s = (SoundCommon *) SoundTable[sound];
@@ -1330,9 +1334,9 @@ Boolean SD_PlaySound(soundnames sound_abstract)
     if ((SoundMode != sdm_Off) && !s)
             Quit("SD_PlaySound() - Uncached sound");
 
-    if ((DigiMode != sds_Off) && (DigiMap[sound] != -1))
+    if ((sd_digiMode != sds_Off) && (sd_digiMap[sound] != -1))
     {
-        if ((DigiMode == sds_PC) && (SoundMode == sdm_PC))
+        if ((sd_digiMode == sds_PC) && (SoundMode == sdm_PC))
         {
 #ifdef NOTYET
             if (s->priority < SoundPriority)
@@ -1340,8 +1344,8 @@ Boolean SD_PlaySound(soundnames sound_abstract)
 
             SD_L_PCStopSound();
 
-            SD_PlayDigitized(DigiMap[sound],lp,rp);
-            SoundPositioned = ispos;
+            SD_PlayDigitized(sd_digiMap[sound],lp,rp);
+            sd_soundPositioned = ispos;
             SoundNumber = sound;
             SoundPriority = s->priority;
 #else
@@ -1351,14 +1355,14 @@ Boolean SD_PlaySound(soundnames sound_abstract)
         else
         {
 #ifdef NOTYET
-            if (s->priority < DigiPriority)
+            if (s->priority < sd_digiPriority)
                 return(false);
 #endif
 
-            int channel = SD_PlayDigitized(DigiMap[sound], lp, rp);
-            SoundPositioned = ispos;
-            DigiNumber = sound;
-            DigiPriority = s->priority;
+            int channel = SD_PlayDigitized(sd_digiMap[sound], lp, rp);
+            sd_soundPositioned = ispos;
+            sd_digiNumber = sound;
+            sd_digiPriority = s->priority;
             return channel + 1;
         }
 
@@ -1426,7 +1430,7 @@ word SD_SoundPlaying()
 ////////////////////////////////////////////////////////////////////////////////
 void SD_StopSound()
 {
-    if (DigiPlaying)
+    if (sd_digiPlaying)
         SD_StopDigitized();
 
     switch (SoundMode)
@@ -1441,7 +1445,7 @@ void SD_StopSound()
 			;
     }
 
-    SoundPositioned = false;
+    sd_soundPositioned = false;
 
     SD_L_SoundFinished();
 }
@@ -1478,7 +1482,7 @@ int SD_MusicOff()
     word    i;
 
     sqActive = false;
-    switch (MusicMode)
+    switch (sd_musicMode)
     {
         case smm_AdLib:
             alOut(alEffects, 0);
@@ -1501,15 +1505,15 @@ void SD_StartMusic(int chunk)
 {
     SD_MusicOff();
 
-    if (MusicMode == smm_AdLib)
+    if (sd_musicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (word *)(void *) ca_audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
         sqHackTime = 0;
-        alTimeCount = 0;
+        sd_alTimeCount = 0;
         SD_MusicOn();
     }
 }
@@ -1518,10 +1522,10 @@ void SD_ContinueMusic(int chunk, int startoffs)
 {
     SD_MusicOff();
 
-    if (MusicMode == smm_AdLib)
+    if (sd_musicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
+        sqHack = (word *)(void *) ca_audiosegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
@@ -1546,7 +1550,7 @@ void SD_ContinueMusic(int chunk, int startoffs)
             sqHackLen -= 4;
         }
         sqHackTime = 0;
-        alTimeCount = 0;
+        sd_alTimeCount = 0;
 
         SD_MusicOn();
     }
@@ -1561,7 +1565,7 @@ void SD_ContinueMusic(int chunk, int startoffs)
 ////////////////////////////////////////////////////////////////////////////////
 void SD_FadeOutMusic()
 {
-    switch (MusicMode)
+    switch (sd_musicMode)
     {
         case smm_AdLib:
             // DEBUG - quick hack to turn the music off
@@ -1583,7 +1587,7 @@ Boolean SD_MusicPlaying()
 {
     Boolean result;
 
-    switch (MusicMode)
+    switch (sd_musicMode)
     {
         case smm_AdLib:
             result = sqActive;

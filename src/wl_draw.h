@@ -13,11 +13,11 @@
 //
 // math tables
 //
-extern  short *pixelangle;
+extern  short *vid_pixelangle;
 extern  int32_t finetangent[FINEANGLES/4];
 extern  fixed sintable[];
 extern  fixed *costable;
-extern  int *wallheight;
+extern  int *vid_wallheight;
 extern  word horizwall[],vertwall[];
 extern  int32_t    lasttimecount;
 extern  int32_t    frameon;
