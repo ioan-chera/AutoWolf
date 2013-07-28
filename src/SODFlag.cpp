@@ -961,16 +961,16 @@ void SODFlag::Initialize(const PString &basePath)
 {
     FILE *f;
    
-    f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3")(), "rb");
+    f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD3")(), "rb");
     if(!f)
     {
-        f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2")(), "rb");
+        f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD2")(), "rb");
         if(!f)
         {
-            f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1")(), "rb");
+            f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD1")(), "rb");
             if(!f)
             {
-                f = fopen(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD")(), "rb");
+                f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SOD")(), "rb");
                 if(!f)
                 {
                     this->flag = false;

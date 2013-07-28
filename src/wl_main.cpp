@@ -1760,7 +1760,7 @@ int main (int argc, char *argv[])
     CFG_CheckParameters(argc, argv);
 #endif
     // IOANCH: unification: set the SPEAR() global var
-    SPEAR.Initialize("");
+    SPEAR.Initialize(".");
     
     // IOANCH: prepare the OSX version for displaying a quit error
 #ifdef __APPLE__
