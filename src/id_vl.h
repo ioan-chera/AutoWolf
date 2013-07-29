@@ -93,21 +93,24 @@ void inline VL_MemToScreen (byte *source, int width, int height, int x, int y)
 
 void VL_MaskedToScreen (byte *source, int width, int height, int x, int y);
 
-void VL_LatchToScreenScaledCoord (SDL_Surface *source, int xsrc, int ysrc,
+void VL_LatchToScreenScaledCoord (int surf_index, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest);
 
-void inline VL_LatchToScreen (SDL_Surface *source, int xsrc, int ysrc,
+void inline VL_LatchToScreen (int surf_index, int xsrc, int ysrc,
     int width, int height, int xdest, int ydest)
 {
-    VL_LatchToScreenScaledCoord(source,xsrc,ysrc,width,height,
+    VL_LatchToScreenScaledCoord(surf_index,xsrc,ysrc,width,height,
         vid_scaleFactor*xdest,vid_scaleFactor*ydest);
 }
-void inline VL_LatchToScreenScaledCoord (SDL_Surface *source, int scx, int scy)
+extern SDL_Surface     *vid_latchpics[];
+void inline VL_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
 {
-    VL_LatchToScreenScaledCoord(source,0,0,source->w,source->h,scx,scy);
+   SDL_Surface *source = vid_latchpics[surf_index];
+    VL_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
 }
-void inline VL_LatchToScreen (SDL_Surface *source, int x, int y)
+void inline VL_LatchToScreen (int surf_index, int x, int y)
 {
-    VL_LatchToScreenScaledCoord(source,0,0,source->w,source->h,
+   SDL_Surface *source = vid_latchpics[surf_index];
+    VL_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,
         vid_scaleFactor*x,vid_scaleFactor*y);
 }

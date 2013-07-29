@@ -360,7 +360,7 @@ static void processEvent(SDL_Event *event)
                 {
                     if(NeedRestore)
                     {
-                        FreeLatchMem();
+                        VH_FreeLatchMem();
                         VH_LoadLatchMem();
                     }
 

@@ -327,7 +327,7 @@ byte VL_GetPixel (int x, int y)
     ptr = I_LockSurface(vid_screenBuffer);
     if(ptr == NULL) return 0;
 
-    col = ((byte *) vid_screenBuffer->pixels)[y * vid_bufferPitch + x];
+    col = ptr[y * vid_bufferPitch + x];   // IOANCH: just use ptr
 
     I_UnlockSurface(vid_screenBuffer);
 
@@ -569,13 +569,14 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
+void VL_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest)
 {
 	assert(scxdest >= 0 && scxdest + width * vid_scaleFactor <= cfg_screenWidth
 			&& scydest >= 0 && scydest + height * vid_scaleFactor <= cfg_screenHeight
 			&& "VL_LatchToScreenScaledCoord: Destination rectangle out of bounds!");
 
+   SDL_Surface *source = vid_latchpics[surf_index];
 	if(vid_scaleFactor == 1)
     {
         // HACK: If screenBits is not 8 and the screen is faded out, the
