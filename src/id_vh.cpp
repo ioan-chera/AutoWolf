@@ -20,6 +20,7 @@
 
 #include "wl_def.h"
 #include "Config.h"
+#include "i_system.h"   // IOANCH
 
 pictabletype	*pictable;
 SDL_Surface     *latchpics[NUMLATCHPICS];
@@ -273,13 +274,13 @@ void FreeLatchMem()
 ////////////////////////////////////////////////////////////////////////////////
 //
 // =
-// = LoadLatchMem
+// = VH_LoadLatchMem
 // =
 //
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void LoadLatchMem ()
+void VH_LoadLatchMem ()
 {
 	int	i,width,height,start,end;
 	byte *src;
@@ -288,14 +289,8 @@ void LoadLatchMem ()
 //
 // tile 8s
 //
-    surf = SDL_CreateRGBSurface(SDL_HWSURFACE, 8*8,
-        ((SPEAR.g(NUMTILE8) + 7) / 8) * 8, 8, 0, 0, 0, 0);
-    if(surf == NULL)
-    {
-        Quit("Unable to create surface for tiles!");
-    }
-    // IOANCH 20130202: unification process
-    SDL_SetColors(surf, IMPALE(vid_palette), 0, 256);
+   // IOANCH: use I_ call
+   surf = I_CreateSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
 
 	latchpics[0] = surf;
 	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
@@ -320,13 +315,7 @@ void LoadLatchMem ()
 	{
 		width = pictable[i-SPEAR.g(STARTPICS)].width;
 		height = pictable[i-SPEAR.g(STARTPICS)].height;
-		surf = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 8, 0, 0, 0, 0);
-        if(surf == NULL)
-        {
-            Quit("Unable to create surface for picture!");
-        }
-        // IOANCH 20130202: unification process
-        SDL_SetColors(surf, IMPALE(vid_palette), 0, 256);
+      surf = I_CreateSurface(SDL_HWSURFACE, width, height);
 
 		latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);

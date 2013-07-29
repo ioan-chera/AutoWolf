@@ -37,6 +37,7 @@ void I_InitEngine();
 byte *I_LockSurface(SDL_Surface *surface);
 void I_UnlockSurface(SDL_Surface *surface);
 void I_UpdateScreen();
+SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
 void I_InitAfterSignon();
 
 

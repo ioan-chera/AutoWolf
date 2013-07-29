@@ -628,7 +628,7 @@ BossKey ()
         palette1[0][i] = 0;
 
     VL_SetPalette (&palette1[0][0]);
-    LoadLatchMem ();
+    VH_LoadLatchMem ();
 #endif
 }
 
@@ -2846,7 +2846,7 @@ CP_Quit (int)
 //
 ////////////////////////////////////////////////////////////////////
 void
-IntroScreen ()
+menu_IntroScreen ()
 {
     // IOANCH 20130303: unification
 #define MAINCOLOR (SPEAR() ? 0x4f : 0x6c)
@@ -3035,7 +3035,7 @@ SetupControlPanel ()
 // SEE WHICH SAVE GAME FILES ARE AVAILABLE & READ STRING IN
 //
 ////////////////////////////////////////////////////////////////////
-void SetupSaveGames()
+void menu_SetupSaveGames()
 {
     PString name;
     PString savepath;

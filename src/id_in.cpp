@@ -361,7 +361,7 @@ static void processEvent(SDL_Event *event)
                     if(NeedRestore)
                     {
                         FreeLatchMem();
-                        LoadLatchMem();
+                        VH_LoadLatchMem();
                     }
 
                     NeedRestore = false;

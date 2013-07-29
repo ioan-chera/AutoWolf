@@ -158,6 +158,23 @@ PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
 }
 
 //
+// I_CreateSurface
+//
+// Creates a RGB surface and gives it the game palette
+//
+SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height)
+{
+   SDL_Surface *ret;
+   ret = SDL_CreateRGBSurface(flags, width, height, 8, 0, 0, 0, 0);
+   if(!ret)
+   {
+      Quit("Unable to create %dx%d buffer surface: %s\n", width, height, SDL_GetError());
+   }
+   SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
+   return ret;
+}
+
+//
 // VL_SetVGAPlaneMode
 //
 // moved from wl_main or related
@@ -198,16 +215,8 @@ static void I_setVGAPlaneMode ()
    SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
    memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
    
-   vid_screenBuffer = SDL_CreateRGBSurface(SDL_SWSURFACE, cfg_screenWidth,
-                                           cfg_screenHeight, 8, 0, 0, 0, 0);
-   if(!vid_screenBuffer)
-   {
-      printf("Unable to create screen buffer surface: %s\n", SDL_GetError());
-      exit(1);
-   }
-   
-   // IOANCH 20130202: unification process
-   SDL_SetColors(vid_screenBuffer, IMPALE(vid_palette), 0, 256);
+   vid_screenBuffer = I_CreateSurface(SDL_SWSURFACE, cfg_screenWidth,
+                                      cfg_screenHeight);
    
    vid_screenPitch = vid_screen->pitch;
    vid_bufferPitch = vid_screenBuffer->pitch;

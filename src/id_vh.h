@@ -109,7 +109,7 @@ void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 void    LatchDrawPic (unsigned x, unsigned y, unsigned picnum);
 void    LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum);
-void    LoadLatchMem ();
+void    VH_LoadLatchMem ();
 void    FreeLatchMem();
 
 void    VH_Startup();

@@ -119,7 +119,7 @@ void US_ControlPanel(ScanCode);
 void EnableEndGameMenuItem();
 
 void SetupControlPanel();
-void SetupSaveGames();
+void menu_SetupSaveGames();
 void CleanupControlPanel();
 
 void DrawMenu(CP_iteminfo *item_i,CP_itemtype *items);

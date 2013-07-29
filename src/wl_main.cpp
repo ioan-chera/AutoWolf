@@ -121,10 +121,10 @@ PString cfg_configname("CONFIG.");
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  ReadConfig
+//  main_ReadConfig
 //
 ////////////////////////////////////////////////////////////////////////////////
-void ReadConfig()
+void main_ReadConfig()
 {
     SDMode  sd;
     SMMode  sm;
@@ -918,7 +918,7 @@ void FinishSignon ()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// InitDigiMap
+// main_InitDigiMap
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1046,7 +1046,7 @@ static int wolfdigimap_sod[] =
 	LASTSOUND_sod
 };
 
-void InitDigiMap ()
+void main_InitDigiMap ()
 {
     int *map;
 	
@@ -1254,7 +1254,7 @@ static void InitGame()
     // Note that palette already got selected while drawing the signon screen.
     // In fact, I can postpone its drawing after the startup menu ends
     // I added notes below what each function reads
-    // Note that IntroScreen also draws to Signon - but it will happen at the
+    // Note that menu_IntroScreen also draws to Signon - but it will happen at the
     // right time anyway.
     // FUNCTIONS WHICH HAVE ALREADY TESTED FOR SPEAR AND MAY NEED RELOCATION:
     // SPEAR.Initialize (most definitely; should be set after the menu)
@@ -1287,11 +1287,11 @@ static void InitGame()
 //
 // build some tables
 //
-    InitDigiMap ();
+    main_InitDigiMap ();
 
-    ReadConfig ();
+    main_ReadConfig ();
 
-    SetupSaveGames();
+    menu_SetupSaveGames();
 
 //
 // HOLDING DOWN 'M' KEY?
@@ -1310,7 +1310,7 @@ static void InitGame()
 //
 // draw intro screen stuff
 //
-    IntroScreen ();
+    menu_IntroScreen ();
 
 #ifdef _arch_dreamcast
     //TODO: VMU Selection Screen
@@ -1323,7 +1323,7 @@ static void InitGame()
     CA_CacheGrChunk(SPEAR.g(STARTFONT));
     CA_CacheGrChunk(SPEAR.g(STATUSBARPIC));
 
-    LoadLatchMem ();
+    VH_LoadLatchMem ();
     BuildTables ();          // trig tables
     SetupWalls ();
 
