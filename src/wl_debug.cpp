@@ -203,7 +203,7 @@ void BasicOverhead ()
 
 #ifdef MAPBORDER
     int temp = viewsize;
-    NewViewSize(16);
+    main_NewViewSize(16);
     DrawPlayBorder();
 #endif
 
@@ -247,7 +247,7 @@ void BasicOverhead ()
     IN_Ack();
 
 #ifdef MAPBORDER
-    NewViewSize(temp);
+    main_NewViewSize(temp);
     DrawPlayBorder();
 #endif
 }

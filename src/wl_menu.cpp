@@ -2770,7 +2770,7 @@ CP_ChangeView (int)
     {
         SD_PlaySound (SHOOTSND);
         Message (STR_THINK "...");
-        NewViewSize (newview);
+        main_NewViewSize (newview);
     }
 
     ShootSnd ();

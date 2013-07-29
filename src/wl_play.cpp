@@ -1018,8 +1018,8 @@ void ContinueMusic (int offs)
 #define WHITETICS       6
 
 
-SDL_Color redshifts[NUMREDSHIFTS][256];
-SDL_Color whiteshifts[NUMWHITESHIFTS][256];
+SDL_Color vid_redshifts[NUMREDSHIFTS][256];
+SDL_Color vid_whiteshifts[NUMWHITESHIFTS][256];
 
 int damagecount, bonuscount;
 Boolean palshifted;
@@ -1043,7 +1043,7 @@ void InitRedShifts (void)
 //
     for (i = 1; i <= NUMREDSHIFTS; i++)
     {
-        workptr = redshifts[i - 1];
+        workptr = vid_redshifts[i - 1];
         // IOANCH 20130202: unification process
         baseptr = IMPALE(vid_palette);
 
@@ -1062,7 +1062,7 @@ void InitRedShifts (void)
 
     for (i = 1; i <= NUMWHITESHIFTS; i++)
     {
-        workptr = whiteshifts[i - 1];
+        workptr = vid_whiteshifts[i - 1];
         // IOANCH 20130202: unification process
         baseptr = IMPALE(vid_palette);
 
@@ -1164,12 +1164,12 @@ void UpdatePaletteShifts (void)
 
     if (red)
     {
-        VL_SetPalette (redshifts[red - 1], false);
+        VL_SetPalette (vid_redshifts[red - 1], false);
         palshifted = true;
     }
     else if (white)
     {
-        VL_SetPalette (whiteshifts[white - 1], false);
+        VL_SetPalette (vid_whiteshifts[white - 1], false);
         palshifted = true;
     }
     else if (palshifted)

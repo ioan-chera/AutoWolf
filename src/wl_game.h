@@ -11,7 +11,7 @@
 
 extern  gametype        gamestate;
 extern  byte            bordercol;
-extern  SDL_Surface     *latchpics[NUMLATCHPICS];
+extern  SDL_Surface     *vid_latchpics[NUMLATCHPICS];
 class PString;
 extern  PString         cfg_demoname;
 

@@ -90,7 +90,7 @@ short   viewangle;
 fixed   viewsin,viewcos;
 
 void    TransformActor (objtype *ob);
-void    BuildTables ();
+void    main_BuildTables ();
 void    ClearScreen ();
 int     CalcRotate (objtype *ob);
 void    DrawScaleds ();

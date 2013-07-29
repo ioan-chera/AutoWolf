@@ -23,7 +23,7 @@
 #include "i_system.h"   // IOANCH
 
 pictabletype	*pictable;
-SDL_Surface     *latchpics[NUMLATCHPICS];
+SDL_Surface     *vid_latchpics[NUMLATCHPICS];
 
 int	    px,py;
 byte	fontcolor,backcolor;
@@ -244,7 +244,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 
 void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-	VL_LatchToScreen (latchpics[2+picnum-SPEAR.g(LATCHPICS_LUMP_START)], x*8, y);
+	VL_LatchToScreen (vid_latchpics[2+picnum-SPEAR.g(LATCHPICS_LUMP_START)], x*8, y);
 }
 
 //
@@ -252,7 +252,7 @@ void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 //
 void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 {
-	VL_LatchToScreenScaledCoord (latchpics[2+picnum-SPEAR.g(LATCHPICS_LUMP_START)], scx*8, scy);
+	VL_LatchToScreenScaledCoord (vid_latchpics[2+picnum-SPEAR.g(LATCHPICS_LUMP_START)], scx*8, scy);
 }
 
 
@@ -266,8 +266,8 @@ void FreeLatchMem()
     int i;
     for(i = 0; i < (2 + (signed int)SPEAR.g(LATCHPICS_LUMP_END) - (signed int)SPEAR.g(LATCHPICS_LUMP_START)); i++)
     {
-        SDL_FreeSurface(latchpics[i]);
-        latchpics[i] = NULL;
+        SDL_FreeSurface(vid_latchpics[i]);
+        vid_latchpics[i] = NULL;
     }
 }
 
@@ -292,7 +292,7 @@ void VH_LoadLatchMem ()
    // IOANCH: use I_ call
    surf = I_CreateSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
 
-	latchpics[0] = surf;
+	vid_latchpics[0] = surf;
 	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
 	src = ca_grsegs[SPEAR.g(STARTTILE8)];
 
@@ -303,7 +303,7 @@ void VH_LoadLatchMem ()
 	}
 	UNCACHEGRCHUNK (SPEAR.g(STARTTILE8));
 
-	latchpics[1] = NULL;  // not used
+	vid_latchpics[1] = NULL;  // not used
 
 //
 // pics
@@ -317,7 +317,7 @@ void VH_LoadLatchMem ()
 		height = pictable[i-SPEAR.g(STARTPICS)].height;
       surf = I_CreateSurface(SDL_HWSURFACE, width, height);
 
-		latchpics[2+i-start] = surf;
+		vid_latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);
 		VL_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
 		UNCACHEGRCHUNK(i);

@@ -91,8 +91,7 @@ void I_UpdateScreen();
 //
 
 
-#define VW_Shutdown		    VL_Shutdown
-// IOANCH: removed redundant entry
+// IOANCH: removed redundant entries
 #define VW_Plot			    VL_Plot
 #define VW_Hlin(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
 #define VW_Vlin(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
@@ -104,8 +103,8 @@ void I_UpdateScreen();
 #define VW_ScreenToScreen	VL_ScreenToScreen
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 
-#define LatchDrawChar(x,y,p) VL_LatchToScreen(latchpics[0],((p)&7)*8,((p)>>3)*8*64,8,8,x,y)
-#define LatchDrawTile(x,y,p) VL_LatchToScreen(latchpics[1],(p)*64,0,16,16,x,y)
+#define LatchDrawChar(x,y,p) VL_LatchToScreen(vid_latchpics[0],((p)&7)*8,((p)>>3)*8*64,8,8,x,y)
+#define LatchDrawTile(x,y,p) VL_LatchToScreen(vid_latchpics[1],(p)*64,0,16,16,x,y)
 
 void    LatchDrawPic (unsigned x, unsigned y, unsigned picnum);
 void    LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum);
@@ -117,7 +116,7 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1,
     unsigned width, unsigned height, unsigned frames, Boolean abortable);
 
 #define NUMLATCHPICS	100
-extern	SDL_Surface *latchpics[NUMLATCHPICS];
+extern	SDL_Surface *vid_latchpics[NUMLATCHPICS];
 
 // IOANCH 20130726: made extern
 extern SDL_Color vid_curpal[256];

@@ -34,7 +34,7 @@ extern  PString  cfg_configname;
 
 void            NewGame (int difficulty,int episode);
 void            CalcProjection (int32_t focal);
-void            NewViewSize (int width);
+void            main_NewViewSize (int width);
 Boolean         SetViewSize (unsigned width, unsigned height);
 Boolean         LoadTheGame(FILE *file,int x,int y);
 Boolean         SaveTheGame(FILE *file,int x,int y);

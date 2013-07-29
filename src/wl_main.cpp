@@ -700,7 +700,7 @@ void ShutdownId ()
     SD_Shutdown ();
     PM_Shutdown ();
     IN_Shutdown ();
-    VW_Shutdown ();
+    VL_Shutdown ();
     CA_Shutdown ();
 #if defined(GP2X_940)
     GP2X_Shutdown();
@@ -712,7 +712,7 @@ void ShutdownId ()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  BuildTables
+//  main_BuildTables
 //
 //  Calculates:
 //
@@ -723,7 +723,7 @@ void ShutdownId ()
 
 const float radtoint = (float)(FINEANGLES/2/PI);
 
-void BuildTables ()
+void main_BuildTables ()
 {
     //
     // calculate fine tangents
@@ -815,13 +815,13 @@ void CalcProjection (int32_t focal)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// SetupWalls
+// main_SetupWalls
 //
 // Map tile values to scaled pics
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void SetupWalls ()
+void main_SetupWalls ()
 {
     int     i;
 
@@ -1324,10 +1324,10 @@ static void InitGame()
     CA_CacheGrChunk(SPEAR.g(STATUSBARPIC));
 
     VH_LoadLatchMem ();
-    BuildTables ();          // trig tables
-    SetupWalls ();
+    main_BuildTables ();          // trig tables
+    main_SetupWalls ();
 
-    NewViewSize (viewsize);
+    main_NewViewSize (viewsize);
 
 //
 // initialize variables
@@ -1406,7 +1406,7 @@ void ShowViewSize (int width)
 }
 
 
-void NewViewSize (int width)
+void main_NewViewSize (int width)
 {
     viewsize = width;
     if(viewsize == 21)
