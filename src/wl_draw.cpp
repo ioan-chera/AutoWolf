@@ -1600,8 +1600,6 @@ void    ThreeDRefresh ()
 #endif
        // IOANCH: use special call
        I_UpdateScreen();
-//        SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-//        SDL_Flip(vid_screen);
     }
 
 #ifndef REMDEBUG

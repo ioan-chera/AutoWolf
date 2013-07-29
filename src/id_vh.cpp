@@ -43,12 +43,12 @@ void VWB_DrawPropString(const char* string)
 	int i;
 	unsigned sx, sy;
 
-	byte *vbuf = I_LockSurface(vid_curSurface);
+	byte *vbuf = I_LockSurface(vid_screenBuffer);
 	if(vbuf == NULL) return;
 
 	font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT)+fontnumber];
 	height = font->height;
-	dest = vbuf + vid_scaleFactor * (py * vid_curPitch + px);
+	dest = vbuf + vid_scaleFactor * (py * vid_bufferPitch + px);
 
 	while ((ch = (byte)*string++)!=0)
 	{
@@ -62,7 +62,7 @@ void VWB_DrawPropString(const char* string)
 				{
 					for(sy=0; sy<vid_scaleFactor; sy++)
 						for(sx=0; sx<vid_scaleFactor; sx++)
-							dest[(vid_scaleFactor*i+sy)*vid_curPitch+sx]=fontcolor;
+							dest[(vid_scaleFactor*i+sy)*vid_bufferPitch+sx]=fontcolor;
 				}
 			}
 
@@ -72,7 +72,7 @@ void VWB_DrawPropString(const char* string)
 		}
 	}
 
-	I_UnlockSurface(vid_curSurface);
+	I_UnlockSurface(vid_screenBuffer);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

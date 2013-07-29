@@ -91,9 +91,8 @@ static void I_setVGAPlaneMode ()
    
    vid_screenPitch = vid_screen->pitch;
    vid_bufferPitch = vid_screenBuffer->pitch;
-   
-   vid_curSurface = vid_screenBuffer;
-   vid_curPitch = vid_bufferPitch;
+
+   // IOANCH: removed vid_curSurface, was redundant
    
    vid_scaleFactor = cfg_screenWidth/320;
    if(cfg_screenHeight/200 < vid_scaleFactor)
@@ -232,8 +231,8 @@ void I_SetColor	(int color, int red, int green, int blue)
       SDL_SetPalette(vid_screen, SDL_PHYSPAL, &col, color, 1);
    else
    {
-      SDL_SetPalette(vid_curSurface, SDL_LOGPAL, &col, color, 1);
-      SDL_BlitSurface(vid_curSurface, NULL, vid_screen, NULL);
+      SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, &col, color, 1);
+      SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
       SDL_Flip(vid_screen);
    }
 }

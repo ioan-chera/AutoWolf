@@ -32,9 +32,9 @@ void Quit (const char *error,...);
 
 //===========================================================================
 
-extern SDL_Surface *vid_screen, *vid_screenBuffer, *vid_curSurface;
+extern SDL_Surface *vid_screen, *vid_screenBuffer;
 
-extern  unsigned vid_screenPitch, vid_bufferPitch, vid_curPitch;
+extern  unsigned vid_screenPitch, vid_bufferPitch;
 extern  unsigned vid_scaleFactor;
 
 extern	Boolean  screenfaded;

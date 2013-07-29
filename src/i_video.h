@@ -36,7 +36,7 @@ SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
 void I_InitAfterSignon();
 static void inline I_ClearScreen(int color)
 {
-   SDL_FillRect(vid_curSurface, NULL, color);
+   SDL_FillRect(vid_screenBuffer, NULL, color);
 }
 void I_SetColor    (int color, int red, int green, int blue);
 void I_GetColor    (int color, int *red, int *green, int *blue);
