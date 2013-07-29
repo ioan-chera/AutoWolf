@@ -49,6 +49,7 @@
 #pragma hdrstop
 #include "Config.h"
 #include "i_system.h"
+#include "i_video.h"
 #include "PString.h"
 
 #define THREEBYTEGRSTARTS

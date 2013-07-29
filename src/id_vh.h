@@ -101,8 +101,8 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30)
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 
-#define LatchDrawChar(x,y,p) VL_LatchToScreen(0,((p)&7)*8,((p)>>3)*8*64,8,8,x,y)
-#define LatchDrawTile(x,y,p) VL_LatchToScreen(1,(p)*64,0,16,16,x,y)
+#define LatchDrawChar(x,y,p) I_LatchToScreen(0,((p)&7)*8,((p)>>3)*8*64,8,8,x,y)
+#define LatchDrawTile(x,y,p) I_LatchToScreen(1,(p)*64,0,16,16,x,y)
 
 void    LatchDrawPic (unsigned x, unsigned y, unsigned picnum);
 void    LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum);

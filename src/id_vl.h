@@ -62,9 +62,6 @@ void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn      (int start, int end, SDL_Color *palette, int steps);
 
-byte *I_LockSurface(SDL_Surface *surface);
-void I_UnlockSurface(SDL_Surface *surface);
-
 byte VL_GetPixel        (int x, int y);
 void VL_Plot            (int x, int y, int color);
 void VL_Hlin            (unsigned x, unsigned y, unsigned width, int color);
@@ -93,24 +90,3 @@ void inline VL_MemToScreen (byte *source, int width, int height, int x, int y)
 
 void VL_MaskedToScreen (byte *source, int width, int height, int x, int y);
 
-void VL_LatchToScreenScaledCoord (int surf_index, int xsrc, int ysrc,
-    int width, int height, int scxdest, int scydest);
-
-void inline VL_LatchToScreen (int surf_index, int xsrc, int ysrc,
-    int width, int height, int xdest, int ydest)
-{
-    VL_LatchToScreenScaledCoord(surf_index,xsrc,ysrc,width,height,
-        vid_scaleFactor*xdest,vid_scaleFactor*ydest);
-}
-extern SDL_Surface     *vid_latchpics[];
-void inline VL_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
-{
-   SDL_Surface *source = vid_latchpics[surf_index];
-    VL_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
-}
-void inline VL_LatchToScreen (int surf_index, int x, int y)
-{
-   SDL_Surface *source = vid_latchpics[surf_index];
-    VL_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,
-        vid_scaleFactor*x,vid_scaleFactor*y);
-}

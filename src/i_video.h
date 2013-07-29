@@ -41,4 +41,30 @@ static void inline I_ClearScreen(int color)
 void I_SetColor    (int color, int red, int green, int blue);
 void I_GetColor    (int color, int *red, int *green, int *blue);
 void I_SetPalette  (SDL_Color *palette, bool forceupdate);
+void I_LatchToScreenScaledCoord (int surf_index, int xsrc, int ysrc,
+                                 int width, int height, int scxdest, int scydest);
+
+static void inline I_LatchToScreen (int surf_index, int xsrc, int ysrc,
+                                    int width, int height, int xdest, int ydest)
+{
+   I_LatchToScreenScaledCoord(surf_index,xsrc,ysrc,width,height,
+                               vid_scaleFactor*xdest,vid_scaleFactor*ydest);
+}
+static void inline I_LatchToScreen (int surf_index, int x, int y)
+{
+   SDL_Surface *source = vid_latchpics[surf_index];
+   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,
+                               vid_scaleFactor*x,vid_scaleFactor*y);
+}
+
+
+
+
+static void inline I_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
+{
+   SDL_Surface *source = vid_latchpics[surf_index];
+   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
+}
+
+
 #endif /* defined(__Wolf4SDL__i_video__) */
