@@ -1534,20 +1534,17 @@ static void DemoLoop()
             if(SPEAR())
             {
                 SDL_Color pal[256];
-                CA_CacheGrChunk (SPEAR.g(TITLEPALETTE));
-                VL_ConvertPalette(ca_grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
-
-                CA_CacheGrChunk (SPEAR.g(TITLE1PIC));
-                VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC));
-                UNCACHEGRCHUNK (SPEAR.g(TITLE1PIC));
-
-                CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
-                VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
-                UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
-                I_UpdateScreen ();
-                VL_FadeIn(0,255,pal,30);
-
-                UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
+               // IOANCH: added temporary caching class use here and over
+               WITH_GRCACHE(TITLEPALETTE,
+               {
+                  VL_ConvertPalette(ca_grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
+                  
+                  WITH_GRCACHE(TITLE1PIC, VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC)))
+                  WITH_GRCACHE(TITLE2PIC, VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC)))
+                  
+                  I_UpdateScreen ();
+                  VL_FadeIn(0,255,pal,30);
+               })
             }
             else
             {

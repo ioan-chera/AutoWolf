@@ -82,4 +82,26 @@ void CA_CacheScreen (int chunk);
 
 void CA_CannotOpen(const char *name);
 
+//
+// CacheGr
+//
+// IOANCH 20130729: added a class for automatic uncaching
+//
+//class CacheGr
+//{
+//   int dat;
+//public:
+//   CacheGr(int chunk)
+//   {
+//      CA_CacheGrChunk(dat = SPEAR.g(chunk));
+//   }
+//   ~CacheGr()
+//   {
+//      UNCACHEGRCHUNK(dat);
+//   }
+//};
+
+#define WITH_GRCACHE(chunk, instr) CA_CacheGrChunk(SPEAR.g(chunk)); instr; UNCACHEGRCHUNK(SPEAR.g(chunk));
+
+
 #endif
