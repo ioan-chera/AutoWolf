@@ -610,7 +610,7 @@ void CheckKeys (void)
     ScanCode scan;
 
 
-    if (screenfaded || demoplayback)    // don't do anything with a faded screen
+    if (vid_screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
     scan = LastScan;
@@ -1391,7 +1391,7 @@ void PlayLoop (void)
         gamestate.TimeCount += tics;
 
         UpdateSoundLoc ();      // JAB
-        if (screenfaded)
+        if (vid_screenfaded)
             VW_FadeIn ();
 
         CheckKeys ();

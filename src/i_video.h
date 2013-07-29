@@ -24,6 +24,10 @@
 #ifndef __Wolf4SDL__i_video__
 #define __Wolf4SDL__i_video__
 
+extern SDL_Surface *vid_screen, *vid_screenBuffer;
+
+extern  unsigned vid_screenPitch, vid_bufferPitch;
+
 void I_InitEngine();
 byte *I_LockSurface(SDL_Surface *surface);
 void I_UnlockSurface(SDL_Surface *surface);

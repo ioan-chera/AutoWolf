@@ -32,13 +32,9 @@ void Quit (const char *error,...);
 
 //===========================================================================
 
-extern SDL_Surface *vid_screen, *vid_screenBuffer;
-
-extern  unsigned vid_screenPitch, vid_bufferPitch;
 extern  unsigned vid_scaleFactor;
 
-extern	Boolean  screenfaded;
-extern	unsigned bordercolor;
+extern	Boolean  vid_screenfaded;
 
 // IOANCH 20130202: unification process
 extern SDL_Color vid_palette_sod[256];

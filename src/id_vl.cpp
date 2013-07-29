@@ -38,31 +38,8 @@
 #define assert_ret(x) assert(x)
 #endif
 
-
-
-#if defined(_arch_dreamcast)
-
-#elif defined(GP2X)
-
-
-#if defined(GP2X_940)
-#else
-#endif
-#else
-
-
-#endif
-
-SDL_Surface *vid_screen = NULL;
-unsigned vid_screenPitch;
-
-SDL_Surface *vid_screenBuffer = NULL;
-unsigned vid_bufferPitch;
-
 unsigned vid_scaleFactor;
-
-Boolean	 screenfaded;
-unsigned bordercolor;
+Boolean	 vid_screenfaded;
 
 SDL_Color palette1[256], palette2[256];
 SDL_Color vid_curpal[256];
@@ -233,7 +210,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 //
 	VL_FillPalette (red,green,blue);
 
-	screenfaded = true;
+	vid_screenfaded = true;
 }
 
 
@@ -277,7 +254,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 // final color
 //
 	I_SetPalette (palette, true);
-	screenfaded = false;
+	vid_screenfaded = false;
 }
 // IOANCH 20130726: moved to i_system
 

@@ -1287,7 +1287,7 @@ void Died ()
     int32_t dx,dy;
     int     iangle,curangle,clockwise,counter,change;
 
-    if (screenfaded)
+    if (vid_screenfaded)
     {
         ThreeDRefresh ();
         VW_FadeIn ();

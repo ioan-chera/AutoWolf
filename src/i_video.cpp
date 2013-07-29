@@ -27,6 +27,11 @@
 #include "i_video.h"
 #include "wl_draw.h"
 
+SDL_Surface *vid_screen = NULL;
+unsigned vid_screenPitch;
+
+SDL_Surface *vid_screenBuffer = NULL;
+unsigned vid_bufferPitch;
 
 //
 // I_CreateSurface
