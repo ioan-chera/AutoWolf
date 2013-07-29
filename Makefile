@@ -59,6 +59,7 @@ SRCS += src/dosbox/dbopl.cpp
 SRCS += src/e_hashkeys.cpp
 SRCS += src/HistoryRatio.cpp
 SRCS += src/i_system.cpp
+SRCS += src/i_video.cpp
 SRCS += src/id_ca.cpp
 SRCS += src/id_in.cpp
 SRCS += src/id_pm.cpp

@@ -33,6 +33,7 @@
 #include "wl_menu.h"
 #include "wl_text.h"
 #pragma hdrstop
+#include "i_video.h"
 #include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"
 #include "Config.h"
@@ -315,7 +316,7 @@ Victory ()
 
     VW_FadeOut ();
     if(cfg_screenHeight % 200 != 0)
-        VL_ClearScreen(0);
+        I_ClearScreen(0);
 
     if(!SPEAR())
         UNCACHEGRCHUNK (SPEAR.g(C_TIMECODEPIC));

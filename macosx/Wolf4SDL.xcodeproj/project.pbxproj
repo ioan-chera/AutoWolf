@@ -35,6 +35,7 @@
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FB3B41E1744183100C29DF4 /* Point2D.cpp */; };
+		4FF097C517A6869C00706687 /* i_video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FF097C317A6869C00706687 /* i_video.cpp */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -145,6 +146,8 @@
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = sodpal.inc; path = ../src/sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = wolfpal.inc; path = ../src/wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../src/audioabstract.h; sourceTree = "<group>"; };
+		4FF097C317A6869C00706687 /* i_video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = i_video.cpp; path = ../src/i_video.cpp; sourceTree = "<group>"; };
+		4FF097C417A6869C00706687 /* i_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_video.h; path = ../src/i_video.h; sourceTree = "<group>"; };
 		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../src/OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
 		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../src/OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -334,6 +337,8 @@
 			children = (
 				4F00B0E81796DA5E0091B7BD /* i_system.cpp */,
 				4F00B0E91796DA5E0091B7BD /* i_system.h */,
+				4FF097C317A6869C00706687 /* i_video.cpp */,
+				4FF097C417A6869C00706687 /* i_video.h */,
 			);
 			name = HAL;
 			sourceTree = "<group>";
@@ -681,6 +686,7 @@
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
 				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
+				4FF097C517A6869C00706687 /* i_video.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -47,6 +47,7 @@
 // IOANCH 17.05.2012
 #include "Config.h"
 #include "i_system.h"
+#include "i_video.h"
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "List.h"
@@ -1591,7 +1592,7 @@ static void DemoLoop()
                 break;
             VW_FadeOut();
             if(cfg_screenHeight % 200 != 0)
-                VL_ClearScreen(0);
+                I_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
 

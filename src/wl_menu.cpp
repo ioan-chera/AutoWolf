@@ -46,6 +46,8 @@
 #include "wl_play.h"
 #include "wl_text.h"
 #pragma hdrstop
+#include "i_system.h"
+#include "i_video.h"
 #include "ioan_bot.h"	// IOANCH 20121217: bot
 #include "PString.h"
 #include "Config.h"
@@ -697,7 +699,7 @@ CP_CheckQuick (ScanCode scancode)
 
                 VW_FadeOut ();
                 if(cfg_screenHeight % 200 != 0)
-                    VL_ClearScreen(0);
+                    I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
                 pickquick = CP_SaveGame (0);
@@ -776,7 +778,7 @@ CP_CheckQuick (ScanCode scancode)
 
                 VW_FadeOut ();
                 if(cfg_screenHeight % 200 != 0)
-                    VL_ClearScreen(0);
+                    I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
                 pickquick = CP_LoadGame (0);    // loads lastgamemusicoffs
@@ -2760,7 +2762,7 @@ CP_ChangeView (int)
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
             if(cfg_screenHeight % 200 != 0)
-                VL_ClearScreen(0);
+                I_ClearScreen(0);
             return 0;
         }
     }
@@ -2776,7 +2778,7 @@ CP_ChangeView (int)
     ShootSnd ();
     MenuFadeOut ();
     if(cfg_screenHeight % 200 != 0)
-        VL_ClearScreen(0);
+        I_ClearScreen(0);
 
     return 0;
 }
@@ -3016,7 +3018,7 @@ SetupControlPanel ()
     fontnumber = 1;
     WindowH = 200;
     if(cfg_screenHeight % 200 != 0)
-        VL_ClearScreen(0);
+        I_ClearScreen(0);
 
     if (!ingame)
         CA_LoadAllSounds ();

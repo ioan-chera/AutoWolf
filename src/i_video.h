@@ -17,22 +17,22 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Miscellaneous system operations. Inspired from Doom/Eternity's
+// Video operations. Library-specific ops isolated here
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __Wolf4SDL__i_system__
-#define __Wolf4SDL__i_system__
+#ifndef __Wolf4SDL__i_video__
+#define __Wolf4SDL__i_video__
 
-void I_Delay(unsigned ms);
-uint32_t I_GetTicks(void);
+void I_InitEngine();
+byte *I_LockSurface(SDL_Surface *surface);
+void I_UnlockSurface(SDL_Surface *surface);
+void I_UpdateScreen();
+SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
+void I_InitAfterSignon();
+static void inline I_ClearScreen(int color)
+{
+   SDL_FillRect(vid_curSurface, NULL, color);
+}
 
-void I_Notify(const char *msg);
-Boolean I_MakeDir(const char *dirname);
-Boolean I_ChangeDir(const char *dirname);
-PString I_GetSettingsDir();
-PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
-
-
-
-#endif /* defined(__Wolf4SDL__i_system__) */
+#endif /* defined(__Wolf4SDL__i_video__) */

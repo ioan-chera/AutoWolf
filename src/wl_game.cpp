@@ -42,6 +42,7 @@
 // IOANCH 17.05.2012
 #include "ioan_bas.h"
 #include "ioan_bot.h"
+#include "i_video.h"
 #include "i_system.h"
 #ifndef APPLE_NONCPP11
 #include "ioan_secret.h"
@@ -1605,7 +1606,7 @@ startplayloop:
 
                 VW_FadeOut ();
                 if(cfg_screenHeight % 200 != 0)
-                    VL_ClearScreen(0);
+                    I_ClearScreen(0);
 
 #ifdef _arch_dreamcast
                 DC_StatusClearLCD();

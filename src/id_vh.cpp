@@ -20,7 +20,7 @@
 
 #include "wl_def.h"
 #include "Config.h"
-#include "i_system.h"   // IOANCH
+#include "i_video.h"   // IOANCH
 
 pictabletype	*pictable;
 SDL_Surface     *vid_latchpics[NUMLATCHPICS];
