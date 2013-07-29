@@ -210,9 +210,49 @@ void I_UnlockSurface(SDL_Surface *surface)
 //
 // I_UpdateScreen
 //
-void I_UpdateScreen()
+// moved inline
+
+//===========================================================================
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = I_SetColor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+void I_SetColor	(int color, int red, int green, int blue)
 {
-	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-	SDL_Flip(vid_screen);
+   SDL_Color col = { static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue) };
+   vid_curpal[color] = col;
+   
+   if(cfg_screenBits == 8)
+      SDL_SetPalette(vid_screen, SDL_PHYSPAL, &col, color, 1);
+   else
+   {
+      SDL_SetPalette(vid_curSurface, SDL_LOGPAL, &col, color, 1);
+      SDL_BlitSurface(vid_curSurface, NULL, vid_screen, NULL);
+      SDL_Flip(vid_screen);
+   }
 }
 
+//===========================================================================
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = I_GetColor
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+void I_GetColor	(int color, int *red, int *green, int *blue)
+{
+   SDL_Color *col = &vid_curpal[color];
+   *red = col->r;
+   *green = col->g;
+   *blue = col->b;
+}

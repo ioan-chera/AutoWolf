@@ -38,14 +38,14 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
-
+#include "Exception.h"
+#include "Config.h"
+#include "i_video.h"
+#include "ioan_bot.h"
+#include "PString.h"
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
 // IOANCH 17.05.2012
-#include "ioan_bot.h"
-#include "Exception.h"
-#include "PString.h"
-#include "Config.h"
 
 /*
 =============================================================================

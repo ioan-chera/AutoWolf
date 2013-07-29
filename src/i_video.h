@@ -27,12 +27,17 @@
 void I_InitEngine();
 byte *I_LockSurface(SDL_Surface *surface);
 void I_UnlockSurface(SDL_Surface *surface);
-void I_UpdateScreen();
+inline static void I_UpdateScreen()
+{
+	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
+	SDL_Flip(vid_screen);
+}
 SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
 void I_InitAfterSignon();
 static void inline I_ClearScreen(int color)
 {
    SDL_FillRect(vid_curSurface, NULL, color);
 }
-
+void I_SetColor    (int color, int red, int green, int blue);
+void I_GetColor    (int color, int *red, int *green, int *blue);
 #endif /* defined(__Wolf4SDL__i_video__) */

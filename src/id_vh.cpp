@@ -198,7 +198,7 @@ void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 void VWB_Plot (int x, int y, int color)
 {
     if(vid_scaleFactor == 1)
-        VW_Plot(x,y,color);
+        VL_Plot(x,y,color);
     else
         VL_Bar(x, y, 1, 1, color);
 }

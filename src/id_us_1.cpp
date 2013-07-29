@@ -41,6 +41,7 @@
 //
 
 #include "wl_def.h"
+#include "i_video.h"
 #include "wl_menu.h"
 
 #pragma	hdrstop

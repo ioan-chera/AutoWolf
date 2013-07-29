@@ -37,12 +37,13 @@
 #include "wl_play.h"
 #include "wl_state.h"
 #pragma hdrstop
-#include "ioan_bot.h"	// include bot
+#include "ActorStates.h"
+#include "Config.h"
+#include "i_video.h"
 #include "ioan_bas.h"
+#include "ioan_bot.h"	// include bot
 #include "List.h"
 #include "obattrib.h"   // IOANCH 20130306
-#include "Config.h"
-#include "ActorStates.h"
 
 //
 // IOANCH 20130311: corrected T_ names to A_ names when used as one-shot

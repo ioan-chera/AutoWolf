@@ -42,7 +42,7 @@
 #include "wl_play.h"
 #pragma hdrstop
 #include "Config.h"
-
+#include "i_video.h"
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
 #endif

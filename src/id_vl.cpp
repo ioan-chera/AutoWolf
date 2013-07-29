@@ -159,51 +159,7 @@ void VL_FillPalette (int red, int green, int blue)
 
     VL_SetPalette(pal, true);
 }
-
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_SetColor
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_SetColor	(int color, int red, int green, int blue)
-{
-    SDL_Color col = { static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue) };
-    vid_curpal[color] = col;
-
-    if(cfg_screenBits == 8)
-        SDL_SetPalette(vid_screen, SDL_PHYSPAL, &col, color, 1);
-    else
-    {
-        SDL_SetPalette(vid_curSurface, SDL_LOGPAL, &col, color, 1);
-        SDL_BlitSurface(vid_curSurface, NULL, vid_screen, NULL);
-        SDL_Flip(vid_screen);
-    }
-}
-
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_GetColor
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_GetColor	(int color, int *red, int *green, int *blue)
-{
-    SDL_Color *col = &vid_curpal[color];
-    *red = col->r;
-    *green = col->g;
-    *blue = col->b;
-}
+// IOANCH: abstracted away
 
 //===========================================================================
 

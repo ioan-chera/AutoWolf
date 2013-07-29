@@ -34,12 +34,12 @@
 #include "wl_main.h"
 #include "wl_play.h"
 #pragma hdrstop
-
-#include "wl_cloudsky.h"
-#include "wl_atmos.h"
-#include "wl_shade.h"
-#include "Config.h"
 #include "ActorStates.h"
+#include "Config.h"
+#include "i_video.h"
+#include "wl_atmos.h"
+#include "wl_cloudsky.h"
+#include "wl_shade.h"
 
 /*
 =============================================================================
@@ -1598,8 +1598,10 @@ void    ThreeDRefresh ()
             US_Print(" fps");
         }
 #endif
-        SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-        SDL_Flip(vid_screen);
+       // IOANCH: use special call
+       I_UpdateScreen();
+//        SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
+//        SDL_Flip(vid_screen);
     }
 
 #ifndef REMDEBUG

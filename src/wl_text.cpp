@@ -26,6 +26,7 @@
 // WL_TEXT.C
 
 #include "wl_def.h"
+#include "i_video.h"
 #include "version.h"
 #include "wl_game.h"
 #include "wl_main.h"
