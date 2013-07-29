@@ -25,6 +25,7 @@
 #include "wl_draw.h"
 #pragma hdrstop
 #include "Config.h"
+#include "i_video.h"
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
 //#define IGNORE_BAD_DEST
@@ -179,10 +180,7 @@ void VL_SetPalette (SDL_Color *palette, bool forceupdate)
     {
         SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, palette, 0, 256);
         if(forceupdate)
-        {
-            SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-            SDL_Flip(vid_screen);
-        }
+           I_UpdateScreen();
     }
 }
 

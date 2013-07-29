@@ -398,7 +398,9 @@ void VH_Startup()
 //
 // FizzleFade
 //
-Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
+// IOANCH: removed first parameter, SDL_Surface vid_screenBuffer
+//
+Boolean FizzleFade (int x1, int y1, unsigned width,
                     unsigned height, unsigned frames, Boolean abortable)
 {
     unsigned x, y, frame, pixperframe;
@@ -411,7 +413,7 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
     IN_StartAck ();
 
     frame = GetTimeCount();
-    byte *srcptr = I_LockSurface(source);
+    byte *srcptr = I_LockSurface(vid_screenBuffer);
     if(srcptr == NULL)
        return false;
 
@@ -421,9 +423,8 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
 
         if(abortable && IN_CheckAck ())
         {
-            I_UnlockSurface(source);
-            SDL_BlitSurface(source, NULL, vid_screen, NULL);
-            SDL_Flip(vid_screen);
+            I_UnlockSurface(vid_screenBuffer);
+           I_UpdateScreen();
             return true;
         }
 
@@ -467,11 +468,11 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
                     if(cfg_screenBits == 8)
                     {
                         *(destptr + (y1 + y) * vid_screen->pitch + x1 + x)
-                            = *(srcptr + (y1 + y) * source->pitch + x1 + x);
+                            = *(srcptr + (y1 + y) * vid_screenBuffer->pitch + x1 + x);
                     }
                     else
                     {
-                        byte col = *(srcptr + (y1 + y) * source->pitch + x1 + x);
+                        byte col = *(srcptr + (y1 + y) * vid_screenBuffer->pitch + x1 + x);
                         uint32_t fullcol = SDL_MapRGB(vid_screen->format,
                                                       vid_curpal[col].r,
                                                       vid_curpal[col].g,
@@ -516,9 +517,8 @@ Boolean FizzleFade (SDL_Surface *source, int x1, int y1, unsigned width,
     } while (1);
 
 finished:
-    I_UnlockSurface(source);
+    I_UnlockSurface(vid_screenBuffer);
     I_UnlockSurface(vid_screen);
-    SDL_BlitSurface(source, NULL, vid_screen, NULL);
-    SDL_Flip(vid_screen);
+   I_UpdateScreen();
     return false;
 }

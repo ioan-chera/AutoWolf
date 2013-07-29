@@ -1386,7 +1386,7 @@ void Died ()
 
     IN_ClearKeysDown ();
 
-    FizzleFade(vid_screenBuffer,viewscreenx,viewscreeny,viewwidth,viewheight,70,false);
+    FizzleFade(viewscreenx,viewscreeny,viewwidth,viewheight,70,false);
 
     IN_UserInput(100);
     SD_WaitSoundDone ();

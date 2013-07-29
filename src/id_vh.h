@@ -99,7 +99,6 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 // IOANCH 20130202: unification process
 #define VW_FadeIn()		    VL_FadeIn(0,255,IMPALE(vid_palette),30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30)
-#define VW_ScreenToScreen	VL_ScreenToScreen
 void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 #define LatchDrawChar(x,y,p) VL_LatchToScreen(vid_latchpics[0],((p)&7)*8,((p)>>3)*8*64,8,8,x,y)
@@ -111,7 +110,7 @@ void    VH_LoadLatchMem ();
 void    FreeLatchMem();
 
 void    VH_Startup();
-Boolean FizzleFade (SDL_Surface *source, int x1, int y1,
+Boolean FizzleFade (int x1, int y1,
     unsigned width, unsigned height, unsigned frames, Boolean abortable);
 
 #define NUMLATCHPICS	100
