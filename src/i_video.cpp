@@ -184,11 +184,11 @@ void I_InitAfterSignon()
 ////////////////////////////////////////////////////////////////////////////////
 
 //
-// I_LockSurface
+// I_lockSurface
 //
 // Prepares a surface for editing. Returns the pixel byte array
 //
-byte *I_LockSurface(SDL_Surface *surface)
+inline static byte *I_lockSurface(SDL_Surface *surface)
 {
    if(SDL_MUSTLOCK(surface))
    {
@@ -199,16 +199,49 @@ byte *I_LockSurface(SDL_Surface *surface)
 }
 
 //
+// I_LockBuffer
+//
+// Prepares a surface for editing. Returns the pixel byte array
+//
+byte *I_LockBuffer()
+{
+   return I_lockSurface(vid_screenBuffer);
+}
+
+//
+// I_LockDirect
+//
+// Prepares a surface for editing. Returns the pixel byte array
+//
+byte *I_LockDirect()
+{
+   return I_lockSurface(vid_screen);
+}
+
+//
 // I_UnlockSurface
 //
 // Releases the surface for blitting
 //
-void I_UnlockSurface(SDL_Surface *surface)
+inline static void I_unlockSurface(SDL_Surface *surface)
 {
    if(SDL_MUSTLOCK(surface))
    {
       SDL_UnlockSurface(surface);
    }
+}
+//
+// I_UnlockBuffer
+//
+// Releases the surface for blitting
+//
+void I_UnlockBuffer()
+{
+   I_unlockSurface(vid_screenBuffer);
+}
+void I_UnlockDirect()
+{
+   I_unlockSurface(vid_screen);
 }
 
 //
@@ -322,12 +355,12 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
          unsigned srcPitch;
          int i, j;
          
-         src = I_LockSurface(source);
+         src = I_lockSurface(source);
          if(src == NULL) return;
          
          srcPitch = source->pitch;
          
-         dest = I_LockSurface(vid_screenBuffer);
+         dest = I_LockBuffer();
          if(dest == NULL) return;
          
          for(j = 0; j < height; j++)
@@ -338,8 +371,8 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
                dest[(scydest + j) * vid_bufferPitch + scxdest + i] = col;
             }
          }
-         I_UnlockSurface(vid_screenBuffer);
-         I_UnlockSurface(source);
+         I_UnlockBuffer();
+         I_unlockSurface(source);
       }
       else
       {
@@ -355,12 +388,12 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
       int i, j, sci, scj;
       unsigned m, n;
       
-      src = I_LockSurface(source);
+      src = I_lockSurface(source);
       if(src == NULL) return;
       
       srcPitch = source->pitch;
       
-      dest = I_LockSurface(vid_screenBuffer);
+      dest = I_LockBuffer();
       if(dest == NULL) return;
       
       for(j = 0, scj = 0; j < height; j++, scj += vid_scaleFactor)
@@ -377,8 +410,8 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
             }
          }
       }
-      I_UnlockSurface(vid_screenBuffer);
-      I_UnlockSurface(source);
+      I_UnlockBuffer();
+      I_unlockSurface(source);
    }
 }
 
@@ -471,7 +504,7 @@ void I_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
           && y >= 0 && (unsigned) y + height <= cfg_screenHeight
           && "I_MemToLatch: Destination rectangle out of bounds!");
    
-   ptr = I_LockSurface(destSurface);
+   ptr = I_lockSurface(destSurface);
    if(ptr == NULL) return;
    
    pitch = destSurface->pitch;
@@ -484,5 +517,5 @@ void I_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
                                            + (xsrc & 3) * (width >> 2) * height];
       }
    }
-   I_UnlockSurface(destSurface);
+   I_unlockSurface(destSurface);
 }

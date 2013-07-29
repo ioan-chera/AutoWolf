@@ -29,13 +29,20 @@ extern SDL_Surface *vid_screen, *vid_screenBuffer;
 extern  unsigned vid_screenPitch, vid_bufferPitch;
 
 void I_InitEngine();
-byte *I_LockSurface(SDL_Surface *surface);
-void I_UnlockSurface(SDL_Surface *surface);
+byte *I_LockBuffer();
+byte *I_LockDirect();
+void I_UnlockBuffer();
+void I_UnlockDirect();
 inline static void I_UpdateScreen()
 {
 	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
 	SDL_Flip(vid_screen);
 }
+inline static void I_UpdateDirect()
+{
+	SDL_Flip(vid_screen);
+}
+
 SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
 void I_InitAfterSignon();
 static void inline I_ClearScreen(int color)
@@ -75,5 +82,16 @@ void    I_LoadLatchMem ();
 void I_MemToLatch              (byte *source, int width, int height,
                                 SDL_Surface *destSurface, int x, int y);
 
+inline static void I_PutDirectFullColour(int col, byte *destptr, int x, int y)
+{
+   uint32_t fullcol = SDL_MapRGB(vid_screen->format,
+                                 vid_curpal[col].r,
+                                 vid_curpal[col].g,
+                                 vid_curpal[col].b);
+   memcpy(destptr + y * vid_screen->pitch +
+          x * vid_screen->format->BytesPerPixel,
+          &fullcol, vid_screen->format->BytesPerPixel);
+
+}
 
 #endif /* defined(__Wolf4SDL__i_video__) */

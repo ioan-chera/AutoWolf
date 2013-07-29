@@ -1521,7 +1521,7 @@ void    ThreeDRefresh ()
     spotvis[player->tilex][player->tiley] = 1;
     // Detect all sprites over player fix
 
-    vbuf = I_LockSurface(vid_screenBuffer);
+    vbuf = I_LockBuffer();
     if(vbuf == NULL) return;
 
     vbuf += screenofs;
@@ -1571,7 +1571,7 @@ void    ThreeDRefresh ()
     if(in_keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
         ShowActStatus();
 
-    I_UnlockSurface(vid_screenBuffer);
+    I_UnlockBuffer();
     vbuf = NULL;
 
 //

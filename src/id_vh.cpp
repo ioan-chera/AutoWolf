@@ -43,7 +43,7 @@ void VWB_DrawPropString(const char* string)
 	int i;
 	unsigned sx, sy;
 
-	byte *vbuf = I_LockSurface(vid_screenBuffer);
+	byte *vbuf = I_LockBuffer();
 	if(vbuf == NULL) return;
 
 	font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT)+fontnumber];
@@ -72,7 +72,7 @@ void VWB_DrawPropString(const char* string)
 		}
 	}
 
-	I_UnlockSurface(vid_screenBuffer);
+	I_UnlockBuffer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -344,7 +344,7 @@ Boolean FizzleFade (int x1, int y1, unsigned width,
     IN_StartAck ();
 
     frame = GetTimeCount();
-    byte *srcptr = I_LockSurface(vid_screenBuffer);
+    byte *srcptr = I_LockBuffer();
     if(srcptr == NULL)
        return false;
 
@@ -354,12 +354,12 @@ Boolean FizzleFade (int x1, int y1, unsigned width,
 
         if(abortable && IN_CheckAck ())
         {
-            I_UnlockSurface(vid_screenBuffer);
+            I_UnlockBuffer();
            I_UpdateScreen();
             return true;
         }
 
-        byte *destptr = I_LockSurface(vid_screen);
+        byte *destptr = I_LockDirect();
 
         if(destptr != NULL)
         {
@@ -398,19 +398,13 @@ Boolean FizzleFade (int x1, int y1, unsigned width,
 
                     if(cfg_screenBits == 8)
                     {
-                        *(destptr + (y1 + y) * vid_screen->pitch + x1 + x)
-                            = *(srcptr + (y1 + y) * vid_screenBuffer->pitch + x1 + x);
+                        *(destptr + (y1 + y) * vid_screenPitch + x1 + x)
+                            = *(srcptr + (y1 + y) * vid_bufferPitch + x1 + x);
                     }
                     else
                     {
-                        byte col = *(srcptr + (y1 + y) * vid_screenBuffer->pitch + x1 + x);
-                        uint32_t fullcol = SDL_MapRGB(vid_screen->format,
-                                                      vid_curpal[col].r,
-                                                      vid_curpal[col].g,
-                                                      vid_curpal[col].b);
-                        memcpy(destptr + (y1 + y) * vid_screen->pitch +
-                               (x1 + x) * vid_screen->format->BytesPerPixel,
-                            &fullcol, vid_screen->format->BytesPerPixel);
+                        byte col = *(srcptr + (y1 + y) * vid_bufferPitch + x1 + x);
+                       I_PutDirectFullColour(col, destptr, x1 + x, y1 + y);
                     }
 
                     if(rndval == 0)		// entire sequence has been completed
@@ -426,8 +420,8 @@ Boolean FizzleFade (int x1, int y1, unsigned width,
             if(cfg_usedoublebuffering)
                first = 0;
 
-            I_UnlockSurface(vid_screen);
-            SDL_Flip(vid_screen);
+            I_UnlockDirect();
+           I_UpdateDirect();
         }
         else
         {
@@ -448,8 +442,8 @@ Boolean FizzleFade (int x1, int y1, unsigned width,
     } while (1);
 
 finished:
-    I_UnlockSurface(vid_screenBuffer);
-    I_UnlockSurface(vid_screen);
+    I_UnlockBuffer();
+    I_UnlockDirect();
    I_UpdateScreen();
     return false;
 }
