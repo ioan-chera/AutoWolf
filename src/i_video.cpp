@@ -255,3 +255,28 @@ void I_GetColor	(int color, int *red, int *green, int *blue)
    *green = col->g;
    *blue = col->b;
 }
+
+//===========================================================================
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = I_SetPalette
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+void I_SetPalette (SDL_Color *palette, bool forceupdate)
+{
+   memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
+   
+   if(cfg_screenBits == 8)
+      SDL_SetPalette(vid_screen, SDL_PHYSPAL, palette, 0, 256);
+   else
+   {
+      SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, palette, 0, 256);
+      if(forceupdate)
+         I_UpdateScreen();
+   }
+}

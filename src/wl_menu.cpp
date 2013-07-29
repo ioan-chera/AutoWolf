@@ -629,7 +629,7 @@ BossKey ()
     for (int i = 0; i < 768; i++)
         palette1[0][i] = 0;
 
-    VL_SetPalette (&palette1[0][0]);
+    I_SetPalette (&palette1[0][0]);
     VH_LoadLatchMem ();
 #endif
 }

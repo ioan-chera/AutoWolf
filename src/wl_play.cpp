@@ -1164,18 +1164,18 @@ void UpdatePaletteShifts (void)
 
     if (red)
     {
-        VL_SetPalette (vid_redshifts[red - 1], false);
+        I_SetPalette (vid_redshifts[red - 1], false);
         palshifted = true;
     }
     else if (white)
     {
-        VL_SetPalette (vid_whiteshifts[white - 1], false);
+        I_SetPalette (vid_whiteshifts[white - 1], false);
         palshifted = true;
     }
     else if (palshifted)
     {
         // IOANCH 20130202: unification process
-        VL_SetPalette (IMPALE(vid_palette), false);        // back to normal
+        I_SetPalette (IMPALE(vid_palette), false);        // back to normal
         palshifted = false;
     }
 }
@@ -1197,7 +1197,7 @@ void FinishPaletteShifts (void)
     {
         palshifted = 0;
         // IOANCH 20130202: unification process
-        VL_SetPalette (IMPALE(vid_palette), true);
+        I_SetPalette (IMPALE(vid_palette), true);
     }
 }
 

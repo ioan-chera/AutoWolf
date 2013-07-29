@@ -155,35 +155,9 @@ void VL_FillPalette (int red, int green, int blue)
         pal[i].b = blue;
     }
 
-    VL_SetPalette(pal, true);
+    I_SetPalette(pal, true);
 }
 // IOANCH: abstracted away
-
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_SetPalette
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_SetPalette (SDL_Color *palette, bool forceupdate)
-{
-    memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
-
-    if(cfg_screenBits == 8)
-        SDL_SetPalette(vid_screen, SDL_PHYSPAL, palette, 0, 256);
-    else
-    {
-        SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, palette, 0, 256);
-        if(forceupdate)
-           I_UpdateScreen();
-    }
-}
-
 
 //===========================================================================
 
@@ -251,7 +225,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 		}
 
 		if(!cfg_usedoublebuffering || cfg_screenBits == 8) VL_WaitVBL(1);
-		VL_SetPalette (palette2, true);
+		I_SetPalette (palette2, true);
 	}
 
 //
@@ -296,13 +270,13 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 		}
 
 		if(!cfg_usedoublebuffering || cfg_screenBits == 8) VL_WaitVBL(1);
-		VL_SetPalette(palette2, true);
+		I_SetPalette(palette2, true);
 	}
 
 //
 // final color
 //
-	VL_SetPalette (palette, true);
+	I_SetPalette (palette, true);
 	screenfaded = false;
 }
 // IOANCH 20130726: moved to i_system

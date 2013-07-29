@@ -40,4 +40,5 @@ static void inline I_ClearScreen(int color)
 }
 void I_SetColor    (int color, int red, int green, int blue);
 void I_GetColor    (int color, int *red, int *green, int *blue);
+void I_SetPalette  (SDL_Color *palette, bool forceupdate);
 #endif /* defined(__Wolf4SDL__i_video__) */
