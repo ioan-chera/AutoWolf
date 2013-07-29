@@ -38,9 +38,10 @@
 //
 
 #include "wl_def.h"
-#include "i_system.h"
-#include "wl_main.h"
 #include "Config.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "wl_main.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -360,8 +361,8 @@ static void processEvent(SDL_Event *event)
                 {
                     if(NeedRestore)
                     {
-                        VH_FreeLatchMem();
-                        VH_LoadLatchMem();
+                        I_FreeLatchMem();
+                        I_LoadLatchMem();
                     }
 
                     NeedRestore = false;

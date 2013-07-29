@@ -1324,7 +1324,7 @@ static void InitGame()
     CA_CacheGrChunk(SPEAR.g(STARTFONT));
     CA_CacheGrChunk(SPEAR.g(STATUSBARPIC));
 
-    VH_LoadLatchMem ();
+    I_LoadLatchMem ();
     main_BuildTables ();          // trig tables
     main_SetupWalls ();
 

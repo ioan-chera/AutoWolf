@@ -93,7 +93,6 @@ int ElevatorBackTo[]={1,1,7,3,5,3};
 
 void SetupGameLevel ();
 void DrawPlayScreen ();
-void VH_LoadLatchMem ();
 void GameLoop ();
 
 /*

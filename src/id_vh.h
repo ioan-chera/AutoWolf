@@ -106,8 +106,6 @@ void	VW_MeasurePropString (const char *string, word *width, word *height);
 
 void    LatchDrawPic (unsigned x, unsigned y, unsigned picnum);
 void    LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum);
-void    VH_LoadLatchMem ();
-void    VH_FreeLatchMem();
 
 void    VH_Startup();
 Boolean FizzleFade (int x1, int y1,

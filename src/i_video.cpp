@@ -376,3 +376,72 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
       I_UnlockSurface(source);
    }
 }
+
+//==========================================================================
+
+//
+// I_FreeLatchMem
+//
+void I_FreeLatchMem()
+{
+   int i;
+   for(i = 0; i < (2 + (signed int)SPEAR.g(LATCHPICS_LUMP_END) - (signed int)SPEAR.g(LATCHPICS_LUMP_START)); i++)
+   {
+      SDL_FreeSurface(vid_latchpics[i]);
+      vid_latchpics[i] = NULL;
+   }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = I_LoadLatchMem
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+void I_LoadLatchMem ()
+{
+	int	i,width,height,start,end;
+	byte *src;
+	SDL_Surface *surf;
+   
+   //
+   // tile 8s
+   //
+   // IOANCH: use I_ call
+   surf = I_CreateSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
+   
+	vid_latchpics[0] = surf;
+	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
+	src = ca_grsegs[SPEAR.g(STARTTILE8)];
+   
+	for (i=0;i<(signed int)SPEAR.g(NUMTILE8);i++)
+	{
+		VL_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
+		src += 64;
+	}
+	UNCACHEGRCHUNK (SPEAR.g(STARTTILE8));
+   
+	vid_latchpics[1] = NULL;  // not used
+   
+   //
+   // pics
+   //
+	start = SPEAR.g(LATCHPICS_LUMP_START);
+	end = SPEAR.g(LATCHPICS_LUMP_END);
+   
+	for (i=start;i<=end;i++)
+	{
+		width = pictable[i-SPEAR.g(STARTPICS)].width;
+		height = pictable[i-SPEAR.g(STARTPICS)].height;
+      surf = I_CreateSurface(SDL_HWSURFACE, width, height);
+      
+		vid_latchpics[2+i-start] = surf;
+		CA_CacheGrChunk (i);
+		VL_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
+		UNCACHEGRCHUNK(i);
+	}
+}

@@ -66,5 +66,8 @@ static void inline I_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
    I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
 }
 
+void    I_FreeLatchMem();
+void    I_LoadLatchMem ();
+
 
 #endif /* defined(__Wolf4SDL__i_video__) */

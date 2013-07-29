@@ -630,7 +630,7 @@ BossKey ()
         palette1[0][i] = 0;
 
     I_SetPalette (&palette1[0][0]);
-    VH_LoadLatchMem ();
+    I_LoadLatchMem ();
 #endif
 }
 
