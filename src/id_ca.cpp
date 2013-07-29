@@ -387,6 +387,20 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
 ////////////////////////////////////////////////////////////////////////////////
 
 //
+// CAL_SafeOpen
+//
+// IOANCH: added a safe opening routine, as it's fairly largely used in this
+// code (20130729)
+//
+static int CAL_SafeOpen(const char *path, int oflag)
+{
+   int ret = open(path, oflag);
+   if(ret == -1)
+      CA_CannotOpen(path);
+   return ret;
+}
+
+//
 // CAL_SetupGrFile
 //
 static void CAL_SetupGrFile ()
@@ -416,9 +430,7 @@ static void CAL_SetupGrFile ()
 
 //    fname.copy(ca_gdictname).concat(cfg_graphext);  // IOANCH 20130509: don't
                                             // withExtension yet
-    handle = open(fname(), O_RDONLY | O_BINARY);
-    if (handle == -1)
-        CA_CannotOpen(fname());
+   handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     read(handle, ca_grhuffman, sizeof(ca_grhuffman));
     close(handle);
@@ -431,9 +443,7 @@ static void CAL_SetupGrFile ()
 
 //    fname.copy(ca_gheadname).concat(cfg_graphext);
 
-    handle = open(fname(), O_RDONLY | O_BINARY);
-    if (handle == -1)
-        CA_CannotOpen(fname());
+   handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     long headersize = lseek(handle, 0, SEEK_END);
     lseek(handle, 0, SEEK_SET);
@@ -493,10 +503,7 @@ static void CAL_SetupGrFile ()
 
 //    fname.copy(ca_gfilename).concat(cfg_graphext);
 
-    ca_grhandle = open(fname(), O_RDONLY | O_BINARY);
-    if (ca_grhandle == -1)
-        CA_CannotOpen(fname());
-
+   ca_grhandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
 //
 // load the pic and sprite headers into the arrays in the data segment
@@ -534,9 +541,7 @@ static void CAL_SetupMapFile ()
 
 //    fname.copy(ca_mheadname).concat(cfg_extension);
 
-    handle = open(fname(), O_RDONLY | O_BINARY);
-    if (handle == -1)
-        CA_CannotOpen(fname());
+   handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
     mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
@@ -556,9 +561,7 @@ static void CAL_SetupMapFile ()
 
 //    fname.copy("GAMEMAPS.").concat(cfg_extension);
 
-    ca_maphandle = open(fname(), O_RDONLY | O_BINARY);
-    if (ca_maphandle == -1)
-        CA_CannotOpen(fname());
+   ca_maphandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
 //
 // load all map header
@@ -620,9 +623,7 @@ static void CAL_SetupAudioFile ()
 
 //   fname.copy(ca_afilename).concat(cfg_audioext);
 
-    ca_audiohandle = open(fname(), O_RDONLY | O_BINARY);
-    if (ca_audiohandle == -1)
-        CA_CannotOpen(fname());
+   ca_audiohandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 }
 
 //==========================================================================
