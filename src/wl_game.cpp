@@ -867,29 +867,29 @@ void DrawPlayBorderSides()
 
     if(xl != 0)
     {
-	    VWB_BarScaledCoord(0,            0, xl - px,     h, bordercol);                 // left side
-	    VWB_BarScaledCoord(xl + vw + px, 0, xl - px * 2, h, bordercol);                 // right side
+	    VL_BarScaledCoord(0,            0, xl - px,     h, bordercol);                 // left side
+	    VL_BarScaledCoord(xl + vw + px, 0, xl - px * 2, h, bordercol);                 // right side
     }
 
     if(yl != 0)
     {
-	    VWB_BarScaledCoord(0, 0,            sw, yl - px, bordercol);                    // upper side
-	    VWB_BarScaledCoord(0, yl + vh + px, sw, yl - px, bordercol);                    // lower side
+	    VL_BarScaledCoord(0, 0,            sw, yl - px, bordercol);                    // upper side
+	    VL_BarScaledCoord(0, yl + vh + px, sw, yl - px, bordercol);                    // lower side
     }
 
     if(xl != 0)
     {
         // Paint game view border lines
-	    VWB_BarScaledCoord(xl - px, yl - px, vw + px, px,          0);                      // upper border
-	    VWB_BarScaledCoord(xl,      yl + vh, vw + px, px,          bordercol - 2);          // lower border
-	    VWB_BarScaledCoord(xl - px, yl - px, px,      vh + px,     0);                      // left border
-	    VWB_BarScaledCoord(xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          // right border
-	    VWB_BarScaledCoord(xl - px, yl + vh, px,      px,          bordercol - 3);          // lower left highlight
+	    VL_BarScaledCoord(xl - px, yl - px, vw + px, px,          0);                      // upper border
+	    VL_BarScaledCoord(xl,      yl + vh, vw + px, px,          bordercol - 2);          // lower border
+	    VL_BarScaledCoord(xl - px, yl - px, px,      vh + px,     0);                      // left border
+	    VL_BarScaledCoord(xl + vw, yl - px, px,      vh + px * 2, bordercol - 2);          // right border
+	    VL_BarScaledCoord(xl - px, yl + vh, px,      px,          bordercol - 3);          // lower left highlight
     }
     else
     {
         // Just paint a lower border line
-        VWB_BarScaledCoord(0, yl+vh, vw, px, bordercol-2);       // lower border
+        VL_BarScaledCoord(0, yl+vh, vw, px, bordercol-2);       // lower border
     }
 }
 
@@ -906,22 +906,22 @@ void DrawStatusBorder (byte color)
 {
     int statusborderw = (cfg_screenWidth-vid_scaleFactor*320)/2;
 
-    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),color);
-    VWB_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),color);
+    VL_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
         statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
-    VWB_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*2,cfg_screenWidth,vid_scaleFactor*2,color);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*8, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*2,cfg_screenWidth,vid_scaleFactor*2,color);
+    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*8, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
         statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
 
-    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*3,
         vid_scaleFactor*97, vid_scaleFactor*1, color-1);
-    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*106, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*106, cfg_screenHeight-vid_scaleFactor*3,
         vid_scaleFactor*161, vid_scaleFactor*1, color-2);
-    VWB_BarScaledCoord (statusborderw+vid_scaleFactor*267, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*267, cfg_screenHeight-vid_scaleFactor*3,
         vid_scaleFactor*44, vid_scaleFactor*1, color-3);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-4),
+    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-4),
         vid_scaleFactor*1, vid_scaleFactor*20, color-2);
-    VWB_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES/2-4),
+    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES/2-4),
         vid_scaleFactor*1, vid_scaleFactor*14, color-3);
 }
 
@@ -943,33 +943,33 @@ void DrawPlayBorder ()
     else
     {
         const int statusborderw = (cfg_screenWidth-px*320)/2;
-        VWB_BarScaledCoord (0, cfg_screenHeight-px*STATUSLINES,
+        VL_BarScaledCoord (0, cfg_screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
-        VWB_BarScaledCoord (cfg_screenWidth-statusborderw-px*8, cfg_screenHeight-px*STATUSLINES,
+        VL_BarScaledCoord (cfg_screenWidth-statusborderw-px*8, cfg_screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
     if((unsigned) viewheight == cfg_screenHeight) return;
 
-    VWB_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-px*STATUSLINES,bordercol);
+    VL_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-px*STATUSLINES,bordercol);
 
     const int xl = cfg_screenWidth/2-viewwidth/2;
     const int yl = (cfg_screenHeight-px*STATUSLINES-viewheight)/2;
-    VWB_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
+    VL_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
     {
         // Paint game view border lines
-        VWB_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
-        VWB_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
-        VWB_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     // left border
-        VWB_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  // right border
-        VWB_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              // lower left highlight
+        VL_BarScaledCoord(xl-px, yl-px, viewwidth+px, px, 0);                      // upper border
+        VL_BarScaledCoord(xl, yl+viewheight, viewwidth+px, px, bordercol-2);       // lower border
+        VL_BarScaledCoord(xl-px, yl-px, px, viewheight+px, 0);                     // left border
+        VL_BarScaledCoord(xl+viewwidth, yl-px, px, viewheight+2*px, bordercol-2);  // right border
+        VL_BarScaledCoord(xl-px, yl+viewheight, px, px, bordercol-3);              // lower left highlight
     }
     else
     {
         // Just paint a lower border line
-        VWB_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
+        VL_BarScaledCoord(0, yl+viewheight, viewwidth, px, bordercol-2);       // lower border
     }
 }
 

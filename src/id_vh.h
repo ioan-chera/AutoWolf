@@ -69,19 +69,13 @@ void VWB_DrawPropString	 (const char *string);
 
 void VWB_DrawTile8 (int x, int y, int tile);
 void VWB_DrawTile8M (int x, int y, int tile);
-void VWB_DrawTile16 (int x, int y, int tile);
-void VWB_DrawTile16M (int x, int y, int tile);
 void VWB_DrawPic (int x, int y, int chunknum);
 void VWB_DrawPicScaledCoord (int x, int y, int chunknum);
-void VWB_DrawMPic(int x, int y, int chunknum);
 void VL_Bar (int x, int y, int width, int height, int color);
-#define VWB_BarScaledCoord VL_BarScaledCoord
+// IOANCH: removed redundant defs
 void VWB_Plot (int x, int y, int color);
-#define VWB_PlotScaledCoord VL_Plot
 void VWB_Hlin (int x1, int x2, int y, int color);
 void VWB_Vlin (int y1, int y2, int x, int color);
-#define VWB_HlinScaledCoord VW_Hlin
-#define VWB_VlinScaledCoord VW_Vlin
 
 // void I_UpdateScreen();
 // IOANCH 20130717: deleted I_UpdateScreen
@@ -94,8 +88,6 @@ void VWB_Vlin (int y1, int y2, int x, int color);
 // IOANCH: removed redundant entries
 #define VW_Hlin(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
 #define VW_Vlin(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)
-#define VW_DrawPic		    VH_DrawPic
-#define VW_WaitVBL		    VL_WaitVBL
 // IOANCH 20130202: unification process
 #define VW_FadeIn()		    VL_FadeIn(0,255,IMPALE(vid_palette),30);
 #define VW_FadeOut()	    VL_FadeOut(0,255,0,0,0,30)

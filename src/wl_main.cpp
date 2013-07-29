@@ -910,7 +910,7 @@ void FinishSignon ()
         I_UpdateScreen();
 
         if (!cfg_nowait)
-            VW_WaitVBL(3*70);
+            VL_WaitVBL(3*70);
     }
 
 }
@@ -1387,7 +1387,7 @@ void ShowViewSize (int width)
     {
         viewwidth = cfg_screenWidth;
         viewheight = cfg_screenHeight;
-        VWB_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight, 0);
+        VL_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight, 0);
     }
     else if(width == 20)
     {
@@ -1446,7 +1446,7 @@ void Quit (const char *errorStr, ...)
         if (global_error && *global_error)
         {
             puts(global_error);
-            VW_WaitVBL(100);
+            VL_WaitVBL(100);
         }
         exit(1);
     }
@@ -1461,7 +1461,7 @@ void Quit (const char *errorStr, ...)
     if (global_error && *global_error)
     {
         puts(global_error);
-        VW_WaitVBL(200);
+        VL_WaitVBL(200);
         exit(1);
     }
     

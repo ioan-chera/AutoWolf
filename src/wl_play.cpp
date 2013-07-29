@@ -1401,11 +1401,11 @@ void PlayLoop (void)
 //
         if (singlestep)
         {
-            VW_WaitVBL (singlestep);
+            VL_WaitVBL (singlestep);
             lasttimecount = GetTimeCount();
         }
         if (cfg_extravbls)
-            VW_WaitVBL (cfg_extravbls);
+            VL_WaitVBL (cfg_extravbls);
 
         if (demoplayback)
         {

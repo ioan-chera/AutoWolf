@@ -1480,7 +1480,7 @@ void    A_StartDeathCam (objtype *ob)
     
     FinishPaletteShifts ();
     
-    VW_WaitVBL (100);
+    VL_WaitVBL (100);
     
     if (gamestate.victoryflag)
     {

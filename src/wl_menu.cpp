@@ -3755,7 +3755,7 @@ CheckPause ()
         }
 
         SoundStatus ^= 1;
-        VW_WaitVBL (3);
+        VL_WaitVBL (3);
         IN_ClearKeysDown ();
         Paused = false;
     }

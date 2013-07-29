@@ -177,16 +177,16 @@ Victory ()
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
         I_UpdateScreen ();
         VW_FadeIn ();
-        VW_WaitVBL (2 * 70);
+        VL_WaitVBL (2 * 70);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE2PIC));
         I_UpdateScreen ();
-        VW_WaitVBL (105);
+        VL_WaitVBL (105);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE3PIC));
         I_UpdateScreen ();
-        VW_WaitVBL (105);
+        VL_WaitVBL (105);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE4PIC));
         I_UpdateScreen ();
-        VW_WaitVBL (3 * 70);
+        VL_WaitVBL (3 * 70);
 
         UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE1PIC));
         UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE2PIC));
@@ -752,7 +752,7 @@ LevelCompleted ()
         }
         if (ratio >= 100)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
@@ -763,7 +763,7 @@ LevelCompleted ()
         }
         else if (!ratio)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             SD_PlaySound (NOBONUSSND);
         }
@@ -794,7 +794,7 @@ LevelCompleted ()
         }
         if (ratio >= 100)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
@@ -805,7 +805,7 @@ LevelCompleted ()
         }
         else if (!ratio)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             SD_PlaySound (NOBONUSSND);
         }
@@ -834,7 +834,7 @@ LevelCompleted ()
         }
         if (ratio >= 100)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
@@ -845,7 +845,7 @@ LevelCompleted ()
         }
         else if (!ratio)
         {
-            VW_WaitVBL (VBLWAIT);
+            VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
             SD_PlaySound (NOBONUSSND);
         }
@@ -978,14 +978,14 @@ PreloadUpdate (unsigned current, unsigned total)
 {
     unsigned w = WindowW - vid_scaleFactor * 10;
 
-    VWB_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
+    VL_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
         w, vid_scaleFactor * 2, BLACK);
     w = ((int32_t) w * current) / total;
     if (w)
     {
-        VWB_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
+        VL_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
             w, vid_scaleFactor * 2, 0x37);       //SECONDCOLOR);
-        VWB_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
+        VL_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
             w - vid_scaleFactor * 1, vid_scaleFactor * 1, 0x32);
 
     }
@@ -1005,7 +1005,7 @@ PreloadGraphics ()
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
-    VWB_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
+    VL_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
     LatchDrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*224)/16,
         (cfg_screenHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
 
