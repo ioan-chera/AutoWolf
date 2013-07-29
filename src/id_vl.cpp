@@ -430,40 +430,6 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_MemToLatch
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
-                   int x, int y)
-{
-    byte *ptr;
-    int xsrc, ysrc, pitch;
-
-    assert(x >= 0 && (unsigned) x + width <= cfg_screenWidth
-            && y >= 0 && (unsigned) y + height <= cfg_screenHeight
-            && "VL_MemToLatch: Destination rectangle out of bounds!");
-
-    ptr = I_LockSurface(destSurface);
-    if(ptr == NULL) return;
-
-    pitch = destSurface->pitch;
-    ptr += y * pitch + x;
-    for(ysrc = 0; ysrc < height; ysrc++)
-    {
-        for(xsrc = 0; xsrc < width; xsrc++)
-        {
-            ptr[ysrc * pitch + xsrc] = source[(ysrc * (width >> 2) + (xsrc >> 2))
-                + (xsrc & 3) * (width >> 2) * height];
-        }
-    }
-    I_UnlockSurface(destSurface);
-}
 
 //===========================================================================
 

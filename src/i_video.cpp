@@ -420,7 +420,7 @@ void I_LoadLatchMem ()
    
 	for (i=0;i<(signed int)SPEAR.g(NUMTILE8);i++)
 	{
-		VL_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
+		I_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
 		src += 64;
 	}
 	UNCACHEGRCHUNK (SPEAR.g(STARTTILE8));
@@ -441,7 +441,43 @@ void I_LoadLatchMem ()
       
 		vid_latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);
-		VL_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
+		I_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
 		UNCACHEGRCHUNK(i);
 	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = I_MemToLatch
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+
+
+void I_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
+                  int x, int y)
+{
+   byte *ptr;
+   int xsrc, ysrc, pitch;
+   
+   assert(x >= 0 && (unsigned) x + width <= cfg_screenWidth
+          && y >= 0 && (unsigned) y + height <= cfg_screenHeight
+          && "I_MemToLatch: Destination rectangle out of bounds!");
+   
+   ptr = I_LockSurface(destSurface);
+   if(ptr == NULL) return;
+   
+   pitch = destSurface->pitch;
+   ptr += y * pitch + x;
+   for(ysrc = 0; ysrc < height; ysrc++)
+   {
+      for(xsrc = 0; xsrc < width; xsrc++)
+      {
+         ptr[ysrc * pitch + xsrc] = source[(ysrc * (width >> 2) + (xsrc >> 2))
+                                           + (xsrc & 3) * (width >> 2) * height];
+      }
+   }
+   I_UnlockSurface(destSurface);
 }
