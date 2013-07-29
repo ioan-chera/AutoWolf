@@ -33,12 +33,14 @@ unsigned vid_screenPitch;
 SDL_Surface *vid_screenBuffer = NULL;
 unsigned vid_bufferPitch;
 
+SDL_Surface     *vid_latchpics[NUMLATCHPICS];
+
 //
-// I_CreateSurface
+// I_createSurface
 //
 // Creates a RGB surface and gives it the game palette
 //
-SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height)
+static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
 {
    SDL_Surface *ret;
    ret = SDL_CreateRGBSurface(flags, width, height, 8, 0, 0, 0, 0);
@@ -91,7 +93,7 @@ static void I_setVGAPlaneMode ()
    SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
    memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
    
-   vid_screenBuffer = I_CreateSurface(SDL_SWSURFACE, cfg_screenWidth,
+   vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth,
                                       cfg_screenHeight);
    
    vid_screenPitch = vid_screen->pitch;
@@ -247,7 +249,34 @@ void I_UnlockDirect()
 //
 // I_UpdateScreen
 //
-// moved inline
+void I_UpdateScreen()
+{
+	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
+	SDL_Flip(vid_screen);
+}
+void I_UpdateDirect()
+{
+	SDL_Flip(vid_screen);
+}
+void I_ClearScreen(int color)
+{
+   SDL_FillRect(vid_screenBuffer, NULL, color);
+}
+void I_PutDirectFullColour(int col, byte *destptr, int x, int y)
+{
+   uint32_t fullcol = SDL_MapRGB(vid_screen->format,
+                                 vid_curpal[col].r,
+                                 vid_curpal[col].g,
+                                 vid_curpal[col].b);
+   memcpy(destptr + y * vid_screen->pitch +
+          x * vid_screen->format->BytesPerPixel,
+          &fullcol, vid_screen->format->BytesPerPixel);
+   
+}
+void I_SaveBufferBMP(const char *fname)
+{
+   SDL_SaveBMP(vid_screenBuffer, fname);
+}
 
 //===========================================================================
 
@@ -450,7 +479,7 @@ void I_LoadLatchMem ()
    // tile 8s
    //
    // IOANCH: use I_ call
-   surf = I_CreateSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
+   surf = I_createSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
    
 	vid_latchpics[0] = surf;
 	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
@@ -475,7 +504,7 @@ void I_LoadLatchMem ()
 	{
 		width = pictable[i-SPEAR.g(STARTPICS)].width;
 		height = pictable[i-SPEAR.g(STARTPICS)].height;
-      surf = I_CreateSurface(SDL_HWSURFACE, width, height);
+      surf = I_createSurface(SDL_HWSURFACE, width, height);
       
 		vid_latchpics[2+i-start] = surf;
 		CA_CacheGrChunk (i);
@@ -519,3 +548,29 @@ void I_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
    }
    I_unlockSurface(destSurface);
 }
+
+//===========================================================================
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// =
+// = VL_ScreenToScreen
+// =
+//
+////////////////////////////////////////////////////////////////////////////////
+void I_LatchToScreen (int surf_index, int x, int y)
+{
+   SDL_Surface *source = vid_latchpics[surf_index];
+   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,
+                              vid_scaleFactor*x,vid_scaleFactor*y);
+}
+void I_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
+{
+   SDL_Surface *source = vid_latchpics[surf_index];
+   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
+}
+
+//void VL_ScreenToScreen (SDL_Surface *source, SDL_Surface *dest)
+//{
+//   SDL_BlitSurface(source, NULL, dest, NULL);
+//}

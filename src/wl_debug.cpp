@@ -174,7 +174,8 @@ void PictureGrabber ()
 
     // overwrites WSHOT999.BMP if all wshot files exist
 
-    SDL_SaveBMP(vid_screenBuffer, fname);
+   I_SaveBufferBMP(fname);
+
 
     CenterWindow (18,2);
     US_PrintCentered ("Screenshot taken");

@@ -24,34 +24,22 @@
 #ifndef __Wolf4SDL__i_video__
 #define __Wolf4SDL__i_video__
 
-extern SDL_Surface *vid_screen, *vid_screenBuffer;
-
 extern  unsigned vid_screenPitch, vid_bufferPitch;
 
 void I_InitEngine();
+void I_InitAfterSignon();
 byte *I_LockBuffer();
 byte *I_LockDirect();
 void I_UnlockBuffer();
 void I_UnlockDirect();
-inline static void I_UpdateScreen()
-{
-	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-	SDL_Flip(vid_screen);
-}
-inline static void I_UpdateDirect()
-{
-	SDL_Flip(vid_screen);
-}
+void I_UpdateScreen();
+void I_UpdateDirect();
 
-SDL_Surface *I_CreateSurface(Uint32 flags, int width, int height);
-void I_InitAfterSignon();
-static void inline I_ClearScreen(int color)
-{
-   SDL_FillRect(vid_screenBuffer, NULL, color);
-}
+void I_ClearScreen(int color);
 void I_SetColor    (int color, int red, int green, int blue);
 void I_GetColor    (int color, int *red, int *green, int *blue);
 void I_SetPalette  (SDL_Color *palette, bool forceupdate);
+
 void I_LatchToScreenScaledCoord (int surf_index, int xsrc, int ysrc,
                                  int width, int height, int scxdest, int scydest);
 
@@ -61,37 +49,20 @@ static void inline I_LatchToScreen (int surf_index, int xsrc, int ysrc,
    I_LatchToScreenScaledCoord(surf_index,xsrc,ysrc,width,height,
                                vid_scaleFactor*xdest,vid_scaleFactor*ydest);
 }
-static void inline I_LatchToScreen (int surf_index, int x, int y)
-{
-   SDL_Surface *source = vid_latchpics[surf_index];
-   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,
-                               vid_scaleFactor*x,vid_scaleFactor*y);
-}
+void I_LatchToScreen (int surf_index, int x, int y);
 
-
-
-
-static void inline I_LatchToScreenScaledCoord (int surf_index, int scx, int scy)
-{
-   SDL_Surface *source = vid_latchpics[surf_index];
-   I_LatchToScreenScaledCoord(surf_index,0,0,source->w,source->h,scx,scy);
-}
+void I_LatchToScreenScaledCoord (int surf_index, int scx, int scy);
 
 void    I_FreeLatchMem();
 void    I_LoadLatchMem ();
 void I_MemToLatch              (byte *source, int width, int height,
                                 SDL_Surface *destSurface, int x, int y);
 
-inline static void I_PutDirectFullColour(int col, byte *destptr, int x, int y)
-{
-   uint32_t fullcol = SDL_MapRGB(vid_screen->format,
-                                 vid_curpal[col].r,
-                                 vid_curpal[col].g,
-                                 vid_curpal[col].b);
-   memcpy(destptr + y * vid_screen->pitch +
-          x * vid_screen->format->BytesPerPixel,
-          &fullcol, vid_screen->format->BytesPerPixel);
+void I_PutDirectFullColour(int col, byte *destptr, int x, int y);
 
-}
+void I_SaveBufferBMP(const char *fname);
+
+//void VL_ScreenToScreen          (SDL_Surface *source, SDL_Surface *dest);
+
 
 #endif /* defined(__Wolf4SDL__i_video__) */

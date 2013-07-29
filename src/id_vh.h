@@ -111,8 +111,6 @@ void    VH_Startup();
 Boolean FizzleFade (int x1, int y1,
     unsigned width, unsigned height, unsigned frames, Boolean abortable);
 
-#define NUMLATCHPICS	100
-extern	SDL_Surface *vid_latchpics[NUMLATCHPICS];
 
 // IOANCH 20130726: made extern
 extern SDL_Color vid_curpal[256];

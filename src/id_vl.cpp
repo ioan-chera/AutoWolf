@@ -501,18 +501,3 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
     I_UnlockBuffer();
 }
 
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_ScreenToScreen
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_ScreenToScreen (SDL_Surface *source, SDL_Surface *dest)
-{
-    SDL_BlitSurface(source, NULL, dest, NULL);
-}

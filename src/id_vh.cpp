@@ -23,7 +23,6 @@
 #include "i_video.h"   // IOANCH
 
 pictabletype	*pictable;
-SDL_Surface     *vid_latchpics[NUMLATCHPICS];
 
 int	    px,py;
 byte	fontcolor,backcolor;
