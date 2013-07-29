@@ -189,13 +189,7 @@ void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
     VL_MemToScreenScaledCoord (ca_grsegs[chunknum],width,height,scx,scy);
 }
 
-//
-// VWB_Bar
-//
-void VWB_Bar (int x, int y, int width, int height, int color)
-{
-	VW_Bar (x,y,width,height,color);
-}
+// IOANCH: removed VWB_Bar, was redundant
 
 //
 // VWB_Plot
@@ -205,7 +199,7 @@ void VWB_Plot (int x, int y, int color)
     if(vid_scaleFactor == 1)
         VW_Plot(x,y,color);
     else
-        VW_Bar(x, y, 1, 1, color);
+        VL_Bar(x, y, 1, 1, color);
 }
 
 //
@@ -216,7 +210,7 @@ void VWB_Hlin (int x1, int x2, int y, int color)
     if(vid_scaleFactor == 1)
     	VW_Hlin(x1,x2,y,color);
     else
-        VW_Bar(x1, y, x2-x1+1, 1, color);
+        VL_Bar(x1, y, x2-x1+1, 1, color);
 }
 
 //
@@ -227,7 +221,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
     if(vid_scaleFactor == 1)
 		VW_Vlin(y1,y2,x,color);
     else
-        VW_Bar(x, y1, 1, y2-y1+1, color);
+        VL_Bar(x, y1, 1, y2-y1+1, color);
 }
 
 

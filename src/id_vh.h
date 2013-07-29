@@ -74,7 +74,7 @@ void VWB_DrawTile16M (int x, int y, int tile);
 void VWB_DrawPic (int x, int y, int chunknum);
 void VWB_DrawPicScaledCoord (int x, int y, int chunknum);
 void VWB_DrawMPic(int x, int y, int chunknum);
-void VWB_Bar (int x, int y, int width, int height, int color);
+void VL_Bar (int x, int y, int width, int height, int color);
 #define VWB_BarScaledCoord VL_BarScaledCoord
 void VWB_Plot (int x, int y, int color);
 #define VWB_PlotScaledCoord VW_Plot
@@ -92,7 +92,7 @@ void I_UpdateScreen();
 
 
 #define VW_Shutdown		    VL_Shutdown
-#define VW_Bar			    VL_Bar
+// IOANCH: removed redundant entry
 #define VW_Plot			    VL_Plot
 #define VW_Hlin(x,z,y,c)	VL_Hlin(x,y,(z)-(x)+1,c)
 #define VW_Vlin(y,z,x,c)	VL_Vlin(x,y,(z)-(y)+1,c)

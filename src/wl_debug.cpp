@@ -211,7 +211,7 @@ void BasicOverhead ()
 
     for(x=0;x<MAPSIZE;x++)
         for(y=0;y<MAPSIZE;y++)
-            VWB_Bar(x*z+offx, y*z+offy,z,z,(unsigned)(uintptr_t)actorat[x][y]);
+            VL_Bar(x*z+offx, y*z+offy,z,z,(unsigned)(uintptr_t)actorat[x][y]);
 
     // left side (filtered)
 
@@ -235,11 +235,11 @@ void BasicOverhead ()
             else if (tile < 128) color = 154;  // walls
             else if (tile < 256) color = 146;  // doors
 
-            VWB_Bar(x*z+offx, y*z+offy,z,z,color);
+            VL_Bar(x*z+offx, y*z+offy,z,z,color);
         }
     }
 
-    VWB_Bar(player->tilex*z+offx,player->tiley*z+offy,z,z,15); // player
+    VL_Bar(player->tilex*z+offx,player->tiley*z+offy,z,z,15); // player
 
     // resize the border to match
 

@@ -1660,7 +1660,7 @@ CP_SaveGame (int quick)
 
             fontnumber = 0;
             if (!SaveGamesAvail[which])
-                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
+                VL_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
             I_UpdateScreen ();
 
@@ -1692,7 +1692,7 @@ CP_SaveGame (int quick)
             }
             else
             {
-                VWB_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
+                VL_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
                          LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
                 PrintLSEntry (which, HIGHLIGHT);
                 I_UpdateScreen ();
@@ -1818,10 +1818,10 @@ DrawMouseSens ()
 #endif
 
 
-    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
+    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+    VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
 
     I_UpdateScreen ();
     MenuFadeIn ();
@@ -1852,10 +1852,10 @@ MouseSensitivity (int)
                 if (mouseadjustment)
                 {
                     mouseadjustment--;
-                    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
+                    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+                    VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
@@ -1867,10 +1867,10 @@ MouseSensitivity (int)
                 if (mouseadjustment < 9)
                 {
                     mouseadjustment++;
-                    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
+                    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+                    VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
@@ -2148,7 +2148,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                     switch (tick)
                     {
                         case 0:
-                            VWB_Bar (x, PrintY + 1, CST_SPC - 2, 10, TEXTCOLOR);
+                            VL_Bar (x, PrintY + 1, CST_SPC - 2, 10, TEXTCOLOR);
                             break;
                         case 1:
                             PrintX = x;
@@ -2790,7 +2790,7 @@ void
 DrawChangeView (int view)
 {
     int rescaledHeight = cfg_screenHeight / vid_scaleFactor;
-    if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
+    if(view != 21) VL_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
@@ -2869,7 +2869,7 @@ IntroScreen ()
     memory = (1023l + mminfo.nearheap + mminfo.farheap) / 1024l;
     for (i = 0; i < 10; i++)
         if (memory >= main[i])
-            VWB_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
+            VL_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
 
     //
     // DRAW EMS MEMORY
@@ -2879,7 +2879,7 @@ IntroScreen ()
         emshere = 4l * EMSPagesAvail;
         for (i = 0; i < 10; i++)
             if (emshere >= ems[i])
-                VWB_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
+                VL_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
     }
 
     //
@@ -2890,15 +2890,15 @@ IntroScreen ()
         xmshere = 4l * XMSPagesAvail;
         for (i = 0; i < 10; i++)
             if (xmshere >= xms[i])
-                VWB_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
+                VL_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
     }
 #else
     for (i = 0; i < 10; i++)
-        VWB_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
+        VL_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
     for (i = 0; i < 10; i++)
-        VWB_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
+        VL_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
     for (i = 0; i < 10; i++)
-        VWB_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
+        VL_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
 #endif
 
 
@@ -2906,19 +2906,19 @@ IntroScreen ()
     // FILL BOXES
     //
     if (in_mousePresent)
-        VWB_Bar (164, 82, 12, 2, FILLCOLOR);
+        VL_Bar (164, 82, 12, 2, FILLCOLOR);
 
     if (IN_JoyPresent())
-        VWB_Bar (164, 105, 12, 2, FILLCOLOR);
+        VL_Bar (164, 105, 12, 2, FILLCOLOR);
 
     if (sd_adLibPresent && !sd_soundBlasterPresent)
-        VWB_Bar (164, 128, 12, 2, FILLCOLOR);
+        VL_Bar (164, 128, 12, 2, FILLCOLOR);
 
     if (sd_soundBlasterPresent)
-        VWB_Bar (164, 151, 12, 2, FILLCOLOR);
+        VL_Bar (164, 151, 12, 2, FILLCOLOR);
 
 //    if (SoundSourcePresent)
-//        VWB_Bar (164, 174, 12, 2, FILLCOLOR);
+//        VL_Bar (164, 174, 12, 2, FILLCOLOR);
 }
 
 
@@ -2939,7 +2939,7 @@ void
 ClearMScreen ()
 {
     if(!SPEAR())
-        VWB_Bar (0, 0, 320, 200, BORDCOLOR);
+        VL_Bar (0, 0, 320, 200, BORDCOLOR);
     else
     // IOANCH 20130302: unification
         VWB_DrawPic (0, 0, SPEAR.g(C_BACKDROPPIC));
@@ -2980,7 +2980,7 @@ UnCacheLump (int lumpstart, int lumpend)
 void
 DrawWindow (int x, int y, int w, int h, int wcolor)
 {
-    VWB_Bar (x, y, w, h, wcolor);
+    VL_Bar (x, y, w, h, wcolor);
     DrawOutline (x, y, w, h, BORD2COLOR, DEACTIVE);
 }
 
@@ -3292,7 +3292,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     //
     if (lastitem != which)
     {
-        VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
+        VL_Bar (x - 1, y, 25, 16, BKGDCOLOR);
         PrintX = item_i->x + item_i->indent;
         PrintY = item_i->y + which * 13;
         US_Print ((items + which)->string);
@@ -3337,7 +3337,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 void
 EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
 {
-    VWB_Bar (x - 1, y, 25, 16, BKGDCOLOR);
+    VL_Bar (x - 1, y, 25, 16, BKGDCOLOR);
     SetTextColor (items + which, 0);
 
     PrintX = item_i->x + item_i->indent;
@@ -3367,7 +3367,7 @@ void
 DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
          void (*routine) (int w))
 {
-    VWB_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
+    VL_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
     *y = basey + which * 13;
     // IOANCH 20130302: unification
     VWB_DrawPic (x, *y, SPEAR.g(C_CURSOR1PIC));
@@ -3595,7 +3595,7 @@ Confirm (const char *string)
             switch (tick)
             {
                 case 0:
-                    VWB_Bar (x, y, 8, 13, TEXTCOLOR);
+                    VL_Bar (x, y, 8, 13, TEXTCOLOR);
                     break;
                 case 1:
                     PrintX = x;
@@ -3788,12 +3788,12 @@ DrawStripes (int y)
 {
     if(!SPEAR())
     {
-        VWB_Bar (0, y, 320, 24, 0);
+        VL_Bar (0, y, 320, 24, 0);
         VWB_Hlin (0, 319, y + 22, STRIPE);
     }
     else
     {
-        VWB_Bar (0, y, 320, 22, 0);
+        VL_Bar (0, y, 320, 22, 0);
         VWB_Hlin (0, 319, y + 23, 0);
     }
 }

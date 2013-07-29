@@ -115,7 +115,7 @@ void EndSpear ()
 
     PrintX = 0;
     PrintY = 180;
-    VWB_Bar (0, 180, 320, 20, 0);
+    VL_Bar (0, 180, 320, 20, 0);
     US_CPrint (STR_ENDGAME3 "\n");
     US_CPrint (STR_ENDGAME4);
     I_UpdateScreen ();
@@ -172,7 +172,7 @@ Victory ()
         CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE3PIC));
         CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE4PIC));
 
-        VWB_Bar (0, 0, 320, 200, VIEWCOLOR);
+        VL_Bar (0, 0, 320, 200, VIEWCOLOR);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
         I_UpdateScreen ();
         VW_FadeIn ();
@@ -202,7 +202,7 @@ Victory ()
     if(!SPEAR())
         CA_CacheGrChunk (SPEAR.g(C_TIMECODEPIC));
 
-    VWB_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -347,7 +347,7 @@ void
 PG13 ()
 {
     VW_FadeOut ();
-    VWB_Bar (0, 0, 320, 200, 0x82);     // background
+    VL_Bar (0, 0, 320, 200, 0x82);     // background
 
     CA_CacheGrChunk (SPEAR.g(PG13PIC));
     VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
@@ -606,7 +606,7 @@ LevelCompleted ()
 
     CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VWB_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
@@ -1260,7 +1260,7 @@ CheckHighScore (int32_t score, word other)
 
             PrintX = 16;
             fontnumber = 1;
-            VWB_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
+            VL_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
             I_UpdateScreen ();
             backcolor = 0x9c;
             fontcolor = 15;

@@ -864,7 +864,7 @@ void FinishSignon ()
     // IOANCH 20130303: unification
     if(!SPEAR())
     {
-        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+        VL_Bar (0,189,300,11,VL_GetPixel(0,0));
         WindowX = 0;
         WindowW = 320;
         PrintY = 190;
@@ -888,7 +888,7 @@ void FinishSignon ()
 
         // IOANCH 20130301: unification culling
 
-        VW_Bar (0,189,300,11,VL_GetPixel(0,0));
+        VL_Bar (0,189,300,11,VL_GetPixel(0,0));
 
         PrintY = 190;
         SETFONTCOLOR(10,4);

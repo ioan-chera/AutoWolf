@@ -346,7 +346,7 @@ void US_CPrintf(const char *formatStr, ...)
 ////////////////////////////////////////////////////////////////////////////////
 void US_ClearWindow()
 {
-	VWB_Bar(WindowX,WindowY,WindowW,WindowH,WHITE);
+	VL_Bar(WindowX,WindowY,WindowW,WindowH,WHITE);
 	PrintX = WindowX;
 	PrintY = WindowY;
 }

@@ -231,7 +231,7 @@ void HandleCommand ()
             picx=ParseNumber();
             picwidth=ParseNumber();
             picheight=ParseNumber();
-            VWB_Bar(picx,picy,picwidth,picheight,BACKCOLOR);
+            VL_Bar(picx,picy,picwidth,picheight,BACKCOLOR);
             RipToEOL();
             break;
         case ';':               // comment
@@ -454,7 +454,7 @@ void PageLayout (Boolean shownumber)
     //
     // clear the screen
     //
-    VWB_Bar (0,0,320,200,BACKCOLOR);
+    VL_Bar (0,0,320,200,BACKCOLOR);
     VWB_DrawPic (0,0,SPEAR.g(H_TOPWINDOWPIC));
     VWB_DrawPic (0,8,SPEAR.g(H_LEFTWINDOWPIC));
     VWB_DrawPic (312,8,SPEAR.g(H_RIGHTWINDOWPIC));
@@ -630,7 +630,7 @@ void ShowArticle (char *article)
     oldfontnumber = fontnumber;
     fontnumber = 0;
     CA_CacheGrChunk(SPEAR.g(STARTFONT));
-    VWB_Bar (0,0,320,200,BACKCOLOR);
+    VL_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
 
     newpage = true;
