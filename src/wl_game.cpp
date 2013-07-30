@@ -1065,8 +1065,7 @@ PString    cfg_demoname("DEMO?.");
 
 void StartDemoRecord (int levelnumber)
 {
-    demobuffer=malloc(MAXDEMOSIZE);
-    CHECKMALLOCRESULT(demobuffer);
+    demobuffer=I_CheckedMalloc(MAXDEMOSIZE);
     demoptr = (int8_t *) demobuffer;
     lastdemoptr = demoptr+MAXDEMOSIZE;
 

@@ -23,6 +23,7 @@
 
 #include "wl_def.h"
 
+#include "i_system.h"
 #include "ioan_bas.h"
 #include "PathArray.h"
 
@@ -58,8 +59,7 @@ int PathArray::addNode(const Node &node)
 	if(++numNodes > numNodesAlloc)
 	{
 		numNodesAlloc = 2*numNodes;
-		nodes = (Node*)realloc(nodes, numNodesAlloc * sizeof(Node));
-		CHECKMALLOCRESULT(nodes);
+		nodes = (Node*)I_CheckedRealloc(nodes, numNodesAlloc * sizeof(Node));
 	}
 	
 	nodes[numNodes - 1] = node;

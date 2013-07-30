@@ -701,10 +701,11 @@ void SD_PrepareSound(int which)
     int destsamples = (int) ((float) size * (float) cfg_samplerate
         / (float) ORIGSAMPLERATE);
 
-    byte *wavebuffer = (byte *) malloc(sizeof(headchunk) + sizeof(wavechunk)
-        + destsamples * 2);     // dest are 16-bit samples
-    if(wavebuffer == NULL)
-        Quit("Unable to allocate wave buffer for sound %i!\n", which);
+   // IOANCH: check
+    byte *wavebuffer = (byte *) I_CheckedMalloc(sizeof(headchunk) +
+                                                sizeof(wavechunk) +
+                                                destsamples * 2);
+   // dest are 16-bit samples
 
     headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
         {'f','m','t',' '}, 0x10, 0x0001, 1, static_cast<longword>(cfg_samplerate),

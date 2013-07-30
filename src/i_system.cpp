@@ -156,3 +156,30 @@ PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
    return PString(dirname).concatSubpath(basename);
 
 }
+
+//
+// I_CheckedMalloc
+//
+// Does malloc and quits if null. Replaced all CHECKMALLOCRESULT occurences with
+// this. I lost the file and line information with this, though.
+//
+void *I_CheckedMalloc(size_t sz)
+{
+   void *ret = malloc(sz);
+   if(!ret)
+      Quit("Out of memory!");
+   return ret;
+}
+
+//
+// I_CheckedRealloc
+//
+// Same as above, but with realloc
+//
+void *I_CheckedRealloc(void *ptr, size_t sz)
+{
+   void *ret = realloc(ptr, sz);
+   if(!ret)
+      Quit("Out of memory!");
+   return ret;
+}

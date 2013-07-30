@@ -20,6 +20,7 @@
 
 #include "wl_def.h"
 #include "Config.h"
+#include "i_system.h"
 #include "i_video.h"   // IOANCH
 
 pictabletype	*pictable;
@@ -93,8 +94,8 @@ void VL_MungePic (byte *source, unsigned width, unsigned height)
 //
 // copy the pic to a temp buffer
 //
-	temp=(byte *) malloc(size);
-    CHECKMALLOCRESULT(temp);
+	temp=(byte *) I_CheckedMalloc(size);
+
 	memcpy (temp,source,size);
 
 //

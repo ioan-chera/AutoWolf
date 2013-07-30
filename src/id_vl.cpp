@@ -25,6 +25,7 @@
 #include "wl_draw.h"
 #pragma hdrstop
 #include "Config.h"
+#include "i_system.h"
 #include "i_video.h"
 // Uncomment the following line, if you get destination out of bounds
 // assertion errors and want to ignore them during debugging
@@ -512,8 +513,8 @@ void VL_SetViewportValues()
    if(cfg_screenHeight/200 < vid_scaleFactor)
       vid_scaleFactor = cfg_screenHeight/200;
    
-   vid_pixelangle = (short *) malloc(cfg_screenWidth * sizeof(short));
-   CHECKMALLOCRESULT(vid_pixelangle);
-   vid_wallheight = (int *) malloc(cfg_screenWidth * sizeof(int));
-   CHECKMALLOCRESULT(vid_wallheight);
+   vid_pixelangle = (short *) I_CheckedMalloc(cfg_screenWidth * sizeof(short));
+
+   vid_wallheight = (int *) I_CheckedMalloc(cfg_screenWidth * sizeof(int));
+
 }

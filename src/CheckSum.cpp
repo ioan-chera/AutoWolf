@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
+#include "i_system.h"
 #include "CheckSum.h"
 
 CheckSum mapsegsChecksum;
@@ -46,7 +47,7 @@ public:
         // this will be the operated size of the message
         // must have room left for 8 + 1 byte (9)
         sizepadded = messize / 64 * 64 + (messize % 64 > 55 ? 128 : 64);
-        controlledMessage = (uint8_t *)malloc(sizepadded);
+        controlledMessage = (uint8_t *)I_CheckedMalloc(sizepadded);
         memset(controlledMessage, 0, sizepadded);
         
         memcpy(controlledMessage, message, messize);
