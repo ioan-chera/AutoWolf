@@ -32,6 +32,7 @@
 #define WL_DEF_H
 
 #include <assert.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <math.h>
