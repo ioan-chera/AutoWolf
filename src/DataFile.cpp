@@ -17,8 +17,7 @@
 //
 
 
-#include <string.h>
-#pragma pack(1)
+#include "wl_def.h"
 #include "DataFile.h"
 
 //
