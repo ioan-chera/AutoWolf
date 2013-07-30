@@ -1266,8 +1266,7 @@ static void InitGame()
     // VL_SetVGAPlaneMode: sets SDL_WM_SetCaption (harmless)
     //                     SDL_SetColors and curpal (can be set later, I guess)
     // SignonScreen will appear later.
-   vSwapData.loadFile(I_ResolveCaseInsensitivePath(".",
-                                                   PString("VSWAP.").
+   vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", PString("VSWAP.").
                                                 concat(cfg_extension)())());
 
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
@@ -1771,7 +1770,7 @@ int main (int argc, char *argv[])
     
     // IOANCH: prepare the OSX version for displaying a quit error
 #ifdef __APPLE__
-    atexit([]()
+    atexit_b(^()
              {
                  if(global_error && *global_error)
                      Cocoa_DisplayErrorAlert(global_error);
