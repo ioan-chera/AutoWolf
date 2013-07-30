@@ -83,3 +83,5 @@ void inline VL_MemToScreen (byte *source, int width, int height, int x, int y)
 
 void VL_MaskedToScreen (byte *source, int width, int height, int x, int y);
 
+// IOANCH: from setvgaplanemode
+void VL_SetViewportValues();

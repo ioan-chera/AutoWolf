@@ -501,3 +501,19 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
     I_UnlockBuffer();
 }
 
+//
+// VL_SetViewportValues
+//
+// IOANCH: moved from I_ here, because not low-level enough
+//
+void VL_SetViewportValues()
+{
+   vid_scaleFactor = cfg_screenWidth/320;
+   if(cfg_screenHeight/200 < vid_scaleFactor)
+      vid_scaleFactor = cfg_screenHeight/200;
+   
+   vid_pixelangle = (short *) malloc(cfg_screenWidth * sizeof(short));
+   CHECKMALLOCRESULT(vid_pixelangle);
+   vid_wallheight = (int *) malloc(cfg_screenWidth * sizeof(int));
+   CHECKMALLOCRESULT(vid_wallheight);
+}

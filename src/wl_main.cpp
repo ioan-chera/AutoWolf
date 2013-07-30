@@ -1235,6 +1235,9 @@ static void InitGame()
    // IOANCH 20130726: moved SDL init away
    I_InitEngine();
    
+   // IOANCH: set scale factor and pixelangle/wallheights values/arrays
+   VL_SetViewportValues();
+   
     // IOANCH 20130510: moved the function here
     VL_SignonScreen ();
    

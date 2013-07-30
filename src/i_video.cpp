@@ -101,14 +101,7 @@ static void I_setVGAPlaneMode ()
 
    // IOANCH: removed vid_curSurface, was redundant
    
-   vid_scaleFactor = cfg_screenWidth/320;
-   if(cfg_screenHeight/200 < vid_scaleFactor)
-      vid_scaleFactor = cfg_screenHeight/200;
-   
-   vid_pixelangle = (short *) malloc(cfg_screenWidth * sizeof(short));
-   CHECKMALLOCRESULT(vid_pixelangle);
-   vid_wallheight = (int *) malloc(cfg_screenWidth * sizeof(int));
-   CHECKMALLOCRESULT(vid_wallheight);
+   // IOANCH: moved further calls elsewhere
 }
 
 //
