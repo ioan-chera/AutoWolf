@@ -105,12 +105,12 @@ bool VSwapContainer::loadFile(const char *filename
    
    pageOffsets = (uint32_t *) I_CheckedMalloc((n.m_numChunks + 1) *
                                               sizeof(int32_t));
-   for (u = 0; u <= n.m_numChunks; ++u)
+   for (u = 0; u <= (unsigned)n.m_numChunks; ++u)
       fread(pageOffsets + u, 1, sizeof(uint32_t), file);
    
    pageLengths = (word *) I_CheckedMalloc(n.m_numChunks * sizeof(word));
    
-   for (u = 0; u < n.m_numChunks; ++u)
+   for (u = 0; u < (unsigned)n.m_numChunks; ++u)
       fread(pageLengths + u, 1, sizeof(word), file);
    
    fseek(file, 0, SEEK_END);
@@ -134,7 +134,7 @@ bool VSwapContainer::loadFile(const char *filename
    dataStart = pageOffsets[0];
    
    // Check that all pageOffsets are valid
-   for(u = 0; u < n.m_numChunks; ++u)
+   for(u = 0; u < (unsigned)n.m_numChunks; ++u)
    {
       if(!pageOffsets[u])
          continue;   // sparse page
@@ -157,7 +157,7 @@ bool VSwapContainer::loadFile(const char *filename
    
    // Calculate total amount of padding needed for sprites and sound info page
    alignPadding = 0;
-   for(u = n.m_spriteStart; u < n.m_soundStart; ++u)
+   for(u = n.m_spriteStart; u < (unsigned)n.m_soundStart; ++u)
    {
       if(!pageOffsets[u])
          continue;   // sparse page
@@ -175,9 +175,9 @@ bool VSwapContainer::loadFile(const char *filename
    
    // Load pages and initialize pn.m_Pages pointers
    ptr = (uint8_t *) n.m_pageData;
-   for(u = 0; u < n.m_numChunks; u++)
+   for(u = 0; u < (unsigned)n.m_numChunks; u++)
    {
-      if((u >= n.m_spriteStart && u < n.m_soundStart) || u == n.m_numChunks - 1)
+      if((u >= (unsigned)n.m_spriteStart && u < (unsigned)n.m_soundStart) || u == n.m_numChunks - 1)
       {
          size_t offs = ptr - (uint8_t *) n.m_pageData;
          

@@ -43,7 +43,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #pragma hdrstop
-#include <SDL_syswm.h>
+
 // IOANCH 17.05.2012
 #include "Config.h"
 #include "i_system.h"

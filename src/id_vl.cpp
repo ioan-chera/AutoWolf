@@ -47,7 +47,7 @@ SDL_Color vid_curpal[256];
 
 
 #define CASSERT(x) extern int ASSERT_COMPILE[((x) != 0) * 2 - 1];
-#define RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
+#define PAL_RGB(r, g, b) {(r)*255/63, (g)*255/63, (b)*255/63, 0}
 
 // IOANCH 20130202: unification process
 // SDL_Color gamepal[]={

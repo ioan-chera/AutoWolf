@@ -418,7 +418,7 @@ void ScoreMap::OutputRegionGraphTGF(FILE *f)
             {
                 fprintf(f, "%llu %llu", (unsigned long long)reg1,
                         (unsigned long long)reg2);
-                unsigned blockCount = obj->pushBlocks.size();
+                unsigned blockCount = (unsigned)obj->pushBlocks.size();
                 unsigned posCount = obj->pushPositions.count();
                 // Print the number of walls, if larger than 0
                 if (blockCount + posCount > 0)

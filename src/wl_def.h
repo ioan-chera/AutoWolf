@@ -52,6 +52,7 @@
 #	include <stdarg.h>
 #endif
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 #if !defined O_BINARY
 #	define O_BINARY 0
