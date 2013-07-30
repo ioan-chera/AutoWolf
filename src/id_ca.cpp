@@ -65,13 +65,7 @@ typedef struct
     word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
 } huffnode;
 
-
-typedef struct
-{
-    word ca_RLEWtag;
-    int32_t headeroffsets[100];
-} mapfiletype;
-
+// IOANCH: moved structure into a local scope, only used there
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -531,6 +525,12 @@ static void CAL_SetupMapFile ()
     int handle;
     int32_t length,pos;
     PString fname;
+   // IOANCH: moved struct here, only used here
+   struct mapfiletype
+   {
+      word ca_RLEWtag;
+      int32_t headeroffsets[100];
+   } tinf; // IOANCH: created on stack
 
 //
 // load maphead.ext (offsets and tileinfo for map file)
@@ -544,11 +544,11 @@ static void CAL_SetupMapFile ()
    handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
-   mapfiletype *tinf = (mapfiletype *)I_CheckedMalloc(sizeof(mapfiletype));
-    read(handle, tinf, length);
+//   tinf = (mapfiletype *)I_CheckedMalloc(sizeof(mapfiletype));
+    read(handle, &tinf, length);
     close(handle);
 
-    ca_RLEWtag=tinf->ca_RLEWtag;
+    ca_RLEWtag=tinf.ca_RLEWtag;
 
 //
 // open the data file
@@ -567,7 +567,7 @@ static void CAL_SetupMapFile ()
 //
     for (i=0;i<NUMMAPS;i++)
     {
-        pos = tinf->headeroffsets[i];
+        pos = tinf.headeroffsets[i];
         if (pos<0)                          // $FFFFFFFF start is a sparse map
             continue;
 
@@ -576,7 +576,7 @@ static void CAL_SetupMapFile ()
         read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
     }
 
-    free(tinf);
+//    free(tinf);
 
 //
 // allocate space for 3 64*64 planes
