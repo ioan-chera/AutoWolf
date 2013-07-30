@@ -28,8 +28,8 @@ int pm_SoundStart;
 bool pm_SoundInfoPagePadded = false;
 
 // holds the whole VSWAP
-uint32_t *pm_PageData;
-size_t pm_PageDataSize;
+static uint32_t *pm_PageData;
+static size_t pm_PageDataSize;
 
 // pm_ChunksInFile+1 pointers to page starts.
 // The last pointer points one byte after the last page.
