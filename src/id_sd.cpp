@@ -67,7 +67,6 @@
 
 #include "Config.h"
 
-#pragma pack(push, 1)
  struct headchunk
 {
 	char RIFF[4];
@@ -94,7 +93,6 @@ struct  digiinfo
     uint32_t startpage;
     uint32_t length;
 };
-#pragma pack(pop)
 // IOANCH 20130301: unification
 static Mix_Chunk *SoundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
 							  STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
