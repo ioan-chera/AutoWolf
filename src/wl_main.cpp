@@ -699,7 +699,7 @@ void ShutdownId ()
 {
     US_Shutdown ();         // This line is completely useless...
     SD_Shutdown ();
-    PM_Shutdown ();
+   vSwapData.clear();
     IN_Shutdown ();
     VL_Shutdown ();
     CA_Shutdown ();
@@ -1266,7 +1266,10 @@ static void InitGame()
     // VL_SetVGAPlaneMode: sets SDL_WM_SetCaption (harmless)
     //                     SDL_SetColors and curpal (can be set later, I guess)
     // SignonScreen will appear later.
-    PM_Startup ();  // VSWAP (walls, sprites, digi sounds - nothing for menu)
+   vSwapData.loadFile(I_ResolveCaseInsensitivePath(".",
+                                                   PString("VSWAP.").
+                                                concat(cfg_extension)())());
+
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
     CA_Startup ();  // The rest of the data.
     US_Startup ();  // Miscellaneous (like random numbers)

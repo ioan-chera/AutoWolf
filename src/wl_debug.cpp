@@ -291,14 +291,14 @@ void ShapeTest ()
         US_ClearWindow();
         sound = (soundnames) -1;
 
-        //              page = &pm_Pages[i];
+        //              page = &vSwapData.pages()[i];
         US_Print(" Page #");
         US_PrintUnsigned(i);
-        if (i < pm_SpriteStart)
+        if (i < vSwapData.spriteStart())
             US_Print(" (Wall)");
-        else if (i < pm_SoundStart)
+        else if (i < vSwapData.soundStart())
             US_Print(" (Sprite)");
-        else if (i == pm_ChunksInFile - 1)
+        else if (i == vSwapData.numChunks() - 1)
             US_Print(" (Sound Info)");
         else
             US_Print(" (Sound)");
@@ -324,13 +324,13 @@ void ShapeTest ()
         US_PrintUnsigned(page->lastHit);*/
 
         US_Print("\n Address: ");
-        addr = (byte *) PM_GetPage(i);
+        addr = (const byte *) vSwapData[i];
         sprintf(buf,"0x%08X",(int32_t) addr);
         US_Print(buf);
 
         if (addr)
         {
-            if (i < pm_SpriteStart)
+            if (i < vSwapData.spriteStart())
             {
                 //
                 // draw the wall
@@ -346,16 +346,16 @@ void ShapeTest ()
                 }
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i < pm_SoundStart)
+            else if (i < vSwapData.soundStart())
             {
                 //
                 // draw the sprite
                 //
                 vbuf += 32*SCREENWIDTH;
-                SimpleScaleShape (160, i-pm_SpriteStart, 64);
+                SimpleScaleShape (160, i-vSwapData.spriteStart(), 64);
                 vbuf -= 32*SCREENWIDTH;
             }
-            else if (i == pm_ChunksInFile - 1)
+            else if (i == vSwapData.numChunks() - 1)
             {
                 US_Print("\n\n Number of sounds: ");
                 US_PrintUnsigned(sd_numDigi);
@@ -375,8 +375,8 @@ void ShapeTest ()
                 for (j = 0;j < sd_numDigi;j++)
                 {
                     k = (sd_digiList[(j * 2) + 1] + (PMPageSize - 1)) / PMPageSize;
-                    if ((i >= pm_SoundStart + sd_digiList[j * 2])
-                            && (i < pm_SoundStart + sd_digiList[j * 2] + k))
+                    if ((i >= vSwapData.soundStart() + sd_digiList[j * 2])
+                            && (i < vSwapData.soundStart() + sd_digiList[j * 2] + k))
                         break;
                 }
                 if (j < sd_numDigi)
@@ -385,7 +385,7 @@ void ShapeTest ()
                     US_Print("\n Sound #");
                     US_PrintUnsigned(j);
                     US_Print("\n Segment #");
-                    US_PrintUnsigned(i - pm_SoundStart - sd_digiList[j * 2]);
+                    US_PrintUnsigned(i - vSwapData.soundStart() - sd_digiList[j * 2]);
                 }
                 for (j = 0;j < PageLengths[i];j += 32)
                 {
@@ -418,24 +418,24 @@ void ShapeTest ()
                     i--;
                 break;
             case sc_RightArrow:
-                if (++i >= pm_ChunksInFile)
+                if (++i >= vSwapData.numChunks())
                     i--;
                 break;
             case sc_W:      // Walls
                 i = 0;
                 break;
             case sc_S:      // Sprites
-                i = pm_SpriteStart;
+                i = vSwapData.spriteStart();
                 break;
             case sc_D:      // Digitized
-                i = pm_SoundStart;
+                i = vSwapData.soundStart();
                 break;
             case sc_I:      // Digitized info
-                i = pm_ChunksInFile - 1;
+                i = vSwapData.numChunks() - 1;
                 break;
 /*            case sc_L:      // Load all pages
-                for (j = 0;j < pm_ChunksInFile;j++)
-                    PM_GetPage(j);
+                for (j = 0;j < vSwapData.numChunks();j++)
+                    vSwapData[j];
                 break;*/
             case sc_P:
                 if (sound != -1)
@@ -445,7 +445,7 @@ void ShapeTest ()
                 done = true;
                 break;
 /*            case sc_Enter:
-                PM_GetPage(i);
+                vSwapData[i];
                 break;*/
         }
     }

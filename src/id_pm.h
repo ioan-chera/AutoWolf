@@ -97,7 +97,7 @@ public:
    //
    // Gets size of a given entry
    //
-   uint32_t getPageSize(int page)
+   uint32_t getPageSize(int page) const
    {
       // Just use Quit for now,
       if(page < 0 || page >= m_numChunks)
@@ -110,11 +110,16 @@ public:
    //
    // Returns the pointer to the given buffer info
    //
-   const uint8_t *getPage(int page)
+   const uint8_t *getPage(int page) const
    {
       if(page < 0 || page >= m_numChunks)
          Quit("PM_GetPage: Tried to access illegal page: %i", page);
       return m_pages[page];
+   }
+   
+   const uint8_t *operator[](int page) const
+   {
+      return getPage(page);
    }
    
    //
@@ -122,7 +127,7 @@ public:
    //
    // Returns pointer to end of buffer
    //
-   const uint8_t *PM_GetEnd()
+   const uint8_t *getEnd() const
    {
       return m_pages[m_numChunks];
    }
@@ -132,7 +137,7 @@ public:
    //
    // Returns the texture at index
    //
-   const byte *getTexture(int wallpic)
+   const byte *getTexture(int wallpic) const
    {
       return m_pages[wallpic];
    }
@@ -142,11 +147,11 @@ public:
    //
    // Returns the sprite at offset index
    //
-   const uint16_t *getSprite(int shapenum, bool remap = true)
+   const uint16_t *getSprite(int shapenum, bool remap = true) const
    {
       if(remap)
          shapenum = SPEAR.sp(shapenum);
-      return (uint16_t *) (void *) getPage(m_spriteStart + shapenum);
+      return (const uint16_t *) (const void *) getPage(m_spriteStart + shapenum);
    }
    
    //
@@ -154,65 +159,12 @@ public:
    //
    // Returns the sound at offset index
    //
-   const byte *getSound(int soundpagenum)
+   const byte *getSound(int soundpagenum) const
    {
       return getPage(m_soundStart + soundpagenum);
    }
 };
 extern VSwapContainer vSwapData;
 
-
-
-extern int pm_ChunksInFile;
-extern int pm_SpriteStart;
-extern int pm_SoundStart;
-
-extern bool pm_SoundInfoPagePadded;
-
-// pm_ChunksInFile+1 pointers to page starts.
-// The last pointer points one byte after the last page.
-extern uint8_t **pm_Pages;
-
-void PM_Startup();
-void PM_Shutdown();
-
-static inline uint32_t PM_GetPageSize(int page)
-{
-    if(page < 0 || page >= pm_ChunksInFile)
-        Quit("PM_GetPageSize: Tried to access illegal page: %i", page);
-    return (uint32_t) (pm_Pages[page + 1] - pm_Pages[page]);
-}
-
-static inline uint8_t *PM_GetPage(int page)
-{
-    if(page < 0 || page >= pm_ChunksInFile)
-        Quit("PM_GetPage: Tried to access illegal page: %i", page);
-    return pm_Pages[page];
-}
-
-static inline uint8_t *PM_GetEnd()
-{
-    return pm_Pages[pm_ChunksInFile];
-}
-
-static inline byte *PM_GetTexture(int wallpic)
-{
-    return PM_GetPage(wallpic);
-}
-
-// IOANCH 20130303: choose whether to remap
-static inline uint16_t *PM_GetSprite(int shapenum, Boolean remap = true)
-{
-    // correct alignment is enforced by PM_Startup()
-    // IOANCH 20130302: unification
-    if(remap)
-        shapenum = SPEAR.sp(shapenum);
-    return (uint16_t *) (void *) PM_GetPage(pm_SpriteStart + shapenum);
-}
-
-static inline byte *PM_GetSound(int soundpagenum)
-{
-    return PM_GetPage(pm_SoundStart + soundpagenum);
-}
 
 #endif

@@ -50,7 +50,7 @@
 */
 
 // the door is the last picture before the sprites
-#define DOORWALL        (pm_SpriteStart-8)
+#define DOORWALL        (vSwapData.spriteStart()-8)
 
 #define ACTORSIZE       0x4000
 
@@ -303,7 +303,7 @@ int CalcHeight()
 ===================
 */
 
-byte *postsource;
+const byte *postsource;
 int postx;
 int postwidth;
 
@@ -489,7 +489,7 @@ void HitWall (hitwall_t orient)
     else
         wallpic = wallarray[tilehit];
 	
-    postsource = PM_GetTexture(wallpic) + texture;
+    postsource = vSwapData.getTexture(wallpic) + texture;
 }
 
 //==========================================================================
@@ -565,7 +565,7 @@ void HitDoor (hitwall_t orient)
             break;
     }
 	
-    postsource = PM_GetTexture(doorpage) + texture;
+    postsource = vSwapData.getTexture(doorpage) + texture;
 }
 
 //==========================================================================
@@ -658,7 +658,7 @@ int CalcRotate (objtype *ob)
 
 void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 {
-    t_compshape *shape;
+    const t_compshape *shape;
     unsigned scale,pixheight;
     unsigned starty,endy;
     word *cmdptr;
@@ -679,7 +679,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
         curshades = shadetable[GetShade(height)];
 #endif
 
-    shape = (t_compshape *) PM_GetSprite(shapenum);
+    shape = (const t_compshape *) vSwapData.getSprite(shapenum);
 
     scale=height>>3;                 // low three bits are fractional
     if(!scale) return;   // too close or far away
@@ -749,10 +749,10 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 
 void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
 {
-    t_compshape   *shape;
+    const t_compshape   *shape;
     unsigned scale,pixheight;
     unsigned starty,endy;
-    word *cmdptr;
+    const word *cmdptr;
     byte *cline;
     byte *line;
     int actx,i,upperedge;
@@ -763,7 +763,7 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
     byte *vmem;
 
     // IOANCH 20130303: don't remap
-    shape = (t_compshape *) PM_GetSprite(shapenum, false);
+    shape = (const t_compshape *) vSwapData.getSprite(shapenum, false);
 
     scale=height>>1;
     pixheight=scale*SPRITESCALEFACTOR;

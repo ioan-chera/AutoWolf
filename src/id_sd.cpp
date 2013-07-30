@@ -666,7 +666,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 //
 // GetSample
 //
-Sint16 GetSample(float csample, byte *samples, int size)
+Sint16 GetSample(float csample, const byte *samples, int size)
 {
     float s0=0, s1=0, s2=0;
     int cursample = (int) csample;
@@ -694,8 +694,8 @@ void SD_PrepareSound(int which)
     int page = sd_digiList[which].startpage;
     int size = sd_digiList[which].length;
 
-    byte *origsamples = PM_GetSound(page);
-    if(origsamples + size >= PM_GetEnd())
+    const byte *origsamples = (const byte *)vSwapData.getSound(page);
+    if(origsamples + size >= vSwapData.getEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
 
     int destsamples = (int) ((float) size * (float) cfg_samplerate
@@ -811,8 +811,9 @@ void SD_SetDigiDevice(SDSMode mode)
 void SD_L_SetupDigi()
 {
     // Correct padding enforced by PM_Startup()
-    word *soundInfoPage = (word *) (void *) PM_GetPage(pm_ChunksInFile-1);
-    sd_numDigi = (word) PM_GetPageSize(pm_ChunksInFile - 1) / 4;
+    const word *soundInfoPage = (const word *) (const void *)
+         vSwapData[vSwapData.numChunks() - 1];
+    sd_numDigi = (word) vSwapData.getPageSize(vSwapData.numChunks() - 1) / 4;
 
     sd_digiList = (digiinfo *) malloc(sd_numDigi * sizeof(digiinfo));
     int i;
@@ -822,7 +823,7 @@ void SD_L_SetupDigi()
         // the start page and the start page of the next sound
 
         sd_digiList[i].startpage = soundInfoPage[i * 2];
-        if((int) sd_digiList[i].startpage >= pm_ChunksInFile - 1)
+        if((int) sd_digiList[i].startpage >= vSwapData.numChunks() - 1)
         {
             sd_numDigi = i;
             break;
@@ -832,19 +833,21 @@ void SD_L_SetupDigi()
         if(i < sd_numDigi - 1)
         {
             lastPage = soundInfoPage[i * 2 + 2];
-            if(lastPage == 0 || lastPage + pm_SoundStart > pm_ChunksInFile - 1)
-               lastPage = pm_ChunksInFile - 1;
-            else lastPage += pm_SoundStart;
+            if(lastPage == 0 || lastPage + vSwapData.soundStart() >
+               vSwapData.numChunks() - 1)
+               lastPage = vSwapData.numChunks() - 1;
+            else lastPage += vSwapData.soundStart();
         }
-        else lastPage = pm_ChunksInFile - 1;
+        else lastPage = vSwapData.numChunks() - 1;
 
         int size = 0;
-        for(int page = pm_SoundStart + sd_digiList[i].startpage;
+        for(int page = vSwapData.soundStart() + sd_digiList[i].startpage;
             page < lastPage; page++)
-            size += PM_GetPageSize(page);
+            size += vSwapData.getPageSize(page);
 
         // Don't include padding of sound info page, if padding was added
-        if(lastPage == pm_ChunksInFile - 1 && pm_SoundInfoPagePadded) size--;
+        if(lastPage == vSwapData.numChunks() - 1 &&
+           vSwapData.soundInfoPagePadded()) size--;
 
         // Patch lower 16-bit of size with size from sound info page.
         // The original VSWAP contains padding which is included in the page size,

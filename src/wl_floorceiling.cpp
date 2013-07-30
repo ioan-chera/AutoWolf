@@ -72,13 +72,13 @@ void DrawFloorAndCeiling(byte *vbuf, unsigned vbufPitch, int min_wallheight)
                     if (curtoptex != lasttoptex)
                     {
                         lasttoptex = curtoptex;
-                        toptex = PM_GetTexture(curtoptex);
+                        toptex = vSwapData.getTexture(curtoptex);
                     }
                     unsigned curbottex = curtex & 0xff;
                     if (curbottex != lastbottex)
                     {
                         lastbottex = curbottex;
-                        bottex = PM_GetTexture(curbottex);
+                        bottex = vSwapData.getTexture(curbottex);
                     }
                     u = (gu >> (TILESHIFT - TEXTURESHIFT)) & (TEXTURESIZE - 1);
                     v = (gv >> (TILESHIFT - TEXTURESHIFT)) & (TEXTURESIZE - 1);

@@ -27,7 +27,7 @@
 static int GetParallaxStartTexture()
 {
     int startTex = ffDataBottomLeft;
-    assert(startTex >= 0 && startTex < pm_SpriteStart);
+    assert(startTex >= 0 && startTex < vSwapData.spriteStart());
     return startTex;
 }
 
@@ -41,7 +41,7 @@ static int GetParallaxStartTexture()
         case  0: startTex = 20; break;
         default: startTex =  0; break;
     }
-    assert(startTex >= 0 && startTex < pm_SpriteStart);
+    assert(startTex >= 0 && startTex < vSwapData.spriteStart());
     return startTex;
 }
 
@@ -67,7 +67,7 @@ void DrawParallax(byte *vbuf, unsigned vbufPitch)
         if(newtex != curtex)
         {
             curtex = newtex;
-            skytex = PM_GetTexture(startpage - curtex);
+            skytex = vSwapData.getTexture(startpage - curtex);
         }
         int texoffs = TEXTUREMASK - ((xtex & (TEXTURESIZE - 1)) << TEXTURESHIFT);
         int yend = skyheight - (vid_wallheight[x] >> 3);

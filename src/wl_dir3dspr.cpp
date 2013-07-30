@@ -45,7 +45,7 @@ void Scale3DShaper(int x1, int x2, int shapenum, uint32_t flags, fixed ny1, fixe
     fixed dxa=0,dza=0;
     byte col;
 
-    shape = (t_compshape *) PM_GetSprite(shapenum);
+    shape = (t_compshape *) vSwapData.getSprite(shapenum);
 
     len=shape->rightpix-shape->leftpix+1;
     if(!len) return;
