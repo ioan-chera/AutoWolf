@@ -60,12 +60,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(push, 1)
 struct huffnode
 {
     word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
 };
-#pragma pack(pop)
 
 // IOANCH: moved structure into a local scope, only used there
 
@@ -428,7 +426,11 @@ static void CAL_SetupGrFile ()
                                             // withExtension yet
    handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
-    read(handle, ca_grhuffman, sizeof(ca_grhuffman));
+   for(int i = 0; i < lengthof(ca_grhuffman); ++i)
+   {
+      read(handle, &ca_grhuffman[i].bit0, sizeof(word));
+      read(handle, &ca_grhuffman[i].bit1, sizeof(word));
+   }
     close(handle);
 
     // load the data offsets from ???head.ext
@@ -528,13 +530,12 @@ static void CAL_SetupMapFile ()
     int32_t length,pos;
     PString fname;
    // IOANCH: moved struct here, only used here
-#pragma pack(push, 1)
+
    struct mapfiletype
    {
       word ca_RLEWtag;
       int32_t headeroffsets[100];
    } tinf; // IOANCH: created on stack
-#pragma pack(pop)
 
 //
 // load maphead.ext (offsets and tileinfo for map file)
@@ -547,7 +548,8 @@ static void CAL_SetupMapFile ()
    handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
-    read(handle, &tinf, length);
+   read(handle, &tinf.ca_RLEWtag, sizeof(word));
+   read(handle, tinf.headeroffsets, length - sizeof(word));
     close(handle);
 
     ca_RLEWtag = tinf.ca_RLEWtag;
@@ -574,7 +576,9 @@ static void CAL_SetupMapFile ()
 
        ca_mapheaderseg[i] = (maptype *)I_CheckedMalloc(sizeof(maptype));
         lseek(ca_maphandle,pos,SEEK_SET);
-        read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
+       read(ca_maphandle, ca_mapheaderseg[i]->planestart, 3 * sizeof(int32_t));
+       read(ca_maphandle, ca_mapheaderseg[i]->planelength, 5 * sizeof(word));
+       read(ca_maphandle, ca_mapheaderseg[i]->name, 16 * sizeof(char));
     }
 
 //
