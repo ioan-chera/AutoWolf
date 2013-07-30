@@ -49,11 +49,12 @@ typedef enum
     sds_Off,sds_PC,sds_SoundBlaster
 } SDSMode;
 
-typedef struct
+#pragma pack(push, 1)
+struct SoundCommon
 {
     longword        length;
     word            priority;
-} SoundCommon;
+};
 
 #define ORIG_SOUNDCOMMON_SIZE 6
 
@@ -64,11 +65,11 @@ typedef struct
 
 #define pcSpkBits       3
 
-typedef struct
+struct PCSound
 {
     SoundCommon     common;
     byte            data[1];
-} PCSound;
+};
 
 //      Register addresses
 // Operator stuff
@@ -84,7 +85,7 @@ typedef struct
 // Global stuff
 #define alEffects       0xbd
 
-typedef struct
+struct Instrument
 {
     byte    mChar,cChar,
             mScale,cScale,
@@ -97,17 +98,17 @@ typedef struct
             voice,
             mode;
     byte    unused[3];
-} Instrument;
+};
 
 #define ORIG_INSTRUMENT_SIZE 16
 
-typedef struct
+struct AdLibSound
 {
     SoundCommon     common;
     Instrument      inst;
     byte            block;
     byte            data[1];
-} AdLibSound;
+};
 
 #define ORIG_ADLIBSOUND_SIZE (ORIG_SOUNDCOMMON_SIZE + ORIG_INSTRUMENT_SIZE + 2)
 
@@ -116,18 +117,18 @@ typedef struct
 //
 #define sqMaxTracks     10
 
-typedef struct
+struct MusicGroup
 {
     word    length;
     word    values[1];
-} MusicGroup;
+} ;
 
-typedef struct
+struct globalsoundpos
 {
     int valid;
     fixed globalsoundx, globalsoundy;
-} globalsoundpos;
-
+} ;
+#pragma pack(pop)
 extern globalsoundpos channelSoundPos[];
 
 // Global variables

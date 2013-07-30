@@ -44,16 +44,18 @@
 statobj_t       statobjlist[MAXSTATS];
 statobj_t       *laststatobj;
 
+#pragma pack(push,1)
 // IOANCH 11.06.2012: added name to made compiler stop complaining
 struct _statinfo_t
 {
     short      picnum;
     wl_stat_t  type;
     uint32_t   specialFlags;    // they are ORed to the statobj_t flags
-}
+};
+#pragma pack(pop)
 
 // IOANCH 20130202: unification process
-statinfo_wl6[] =
+_statinfo_t statinfo_wl6[] =
 {
     {SPR_STAT_0},                           // puddle          spr1v
     {SPR_STAT_1,block},                     // Green Barrel    "

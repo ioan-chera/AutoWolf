@@ -41,32 +41,33 @@
 
 #define	MaxHighName	57
 #define	MaxScores	7
-typedef	struct
+#pragma pack(push,1)
+	struct HighScore
 {
     char	name[MaxHighName + 1];
     int32_t	score;
     word	completed,episode;
-} HighScore;
+} ;
 
 #define	MaxGameName		32
 #define	MaxSaveGames	6
-typedef	struct
+	struct SaveGame
 {
     char	signature[4];
     word	*oldtest;
     Boolean	present;
     char	name[MaxGameName + 1];
-} SaveGame;
+} ;
 
 #define	MaxString	128	// Maximum input string size
 
-typedef	struct
+struct WindowRec
 {
     int	x,y,
         w,h,
         px,py;
-} WindowRec;	// Record used to save & restore screen windows
-
+} ;	// Record used to save & restore screen windows
+#pragma pack(pop)
 extern	Boolean		ingame,		// Set by game code if a game is in progress
 					loadedgame;	// Set if the current game was loaded
 extern	word		PrintX,PrintY;	// Current printing location in the window

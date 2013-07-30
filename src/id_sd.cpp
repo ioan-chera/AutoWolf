@@ -67,7 +67,8 @@
 
 #include "Config.h"
 
-typedef struct
+#pragma pack(push, 1)
+ struct headchunk
 {
 	char RIFF[4];
 	longword filelenminus8;
@@ -80,20 +81,20 @@ typedef struct
 	longword bytespersec;
 	word bytespersample;
 	word bitspersample;
-} headchunk;
+} ;
 
-typedef struct
+struct wavechunk
 {
 	char chunkid[4];
 	longword chunklength;
-} wavechunk;
+};
 
-typedef struct
+struct  digiinfo
 {
     uint32_t startpage;
     uint32_t length;
-} digiinfo;
-
+};
+#pragma pack(pop)
 // IOANCH 20130301: unification
 static Mix_Chunk *SoundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
 							  STARTMUSIC_sod - STARTDIGISOUNDS_sod ?

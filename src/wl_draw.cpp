@@ -834,7 +834,8 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
 
 #define MAXVISABLE 250
 
-typedef struct
+#pragma pack(push, 1)
+struct visobj_t
 {
     short      viewx,
                viewheight,
@@ -844,7 +845,8 @@ typedef struct
 #ifdef USE_DIR3DSPR
     statobj_t *transsprite;
 #endif
-} visobj_t;
+};
+#pragma pack(pop)
 
 visobj_t vislist[MAXVISABLE];
 visobj_t *visptr,*visstep,*farthest;

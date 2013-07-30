@@ -60,10 +60,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct
+#pragma pack(push, 1)
+struct huffnode
 {
     word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
-} huffnode;
+};
+#pragma pack(pop)
 
 // IOANCH: moved structure into a local scope, only used there
 
@@ -526,11 +528,13 @@ static void CAL_SetupMapFile ()
     int32_t length,pos;
     PString fname;
    // IOANCH: moved struct here, only used here
+#pragma pack(push, 1)
    struct mapfiletype
    {
       word ca_RLEWtag;
       int32_t headeroffsets[100];
    } tinf; // IOANCH: created on stack
+#pragma pack(pop)
 
 //
 // load maphead.ext (offsets and tileinfo for map file)

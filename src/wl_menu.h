@@ -93,19 +93,24 @@
 //
 // TYPEDEFS
 //
-typedef struct {
-                short x,y,amount,curpos,indent;
-                } CP_iteminfo;
+#pragma pack(push, 1)
+struct CP_iteminfo
+{
+   short x,y,amount,curpos,indent;
+} ;
 
-typedef struct {
-                short active;
-                char string[36];
-                int (* routine)(int temp1);
-                } CP_itemtype;
+struct CP_itemtype
+{
+   short active;
+   char string[36];
+   int (* routine)(int temp1);
+} ;
 
-typedef struct {
-                short allowed[4];
-                } CustomCtrls;
+struct CustomCtrls
+{
+    short allowed[4];
+} ;
+#pragma pack(pop)
 
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
@@ -218,10 +223,13 @@ enum menuitems
 //
 // WL_INTER
 //
-typedef struct {
-                int kill,secret,treasure;
-                int32_t time;
-                } LRstruct;
+#pragma pack(push,1)
+struct  LRstruct
+{
+ int kill,secret,treasure;
+ int32_t time;
+};
+#pragma pack(pop)
 
 extern LRstruct LevelRatios[];
 

@@ -33,19 +33,20 @@
 
 #define MAXSHIFTS	1
 
-typedef struct
+#pragma pack(push, 1)
+struct pictabletype
 {
 	int16_t width,height;
-} pictabletype;
+};
 
 
-typedef struct
+struct fontstruct
 {
 	int16_t height;
 	int16_t location[256];
 	int8_t width[256];
-} fontstruct;
-
+} ;
+#pragma pack(pop)
 
 //===========================================================================
 

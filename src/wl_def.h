@@ -58,8 +58,6 @@
 #	define O_BINARY 0
 #endif
 
-#pragma pack(1)
-
 // IOANCH 20130307: path length
 #define MAX_PATH_LENGTH 2048
 
@@ -70,14 +68,14 @@ typedef uint32_t longword;
 typedef int8_t Boolean;
 typedef void * memptr;
 
-typedef struct
+struct Point
 {
     int x,y;
-} Point;
-typedef struct
+};
+struct Rect
 {
     Point ul,lr;
-} Rect;
+};
 
 void Quit(const char *message);
 
@@ -234,7 +232,7 @@ void Quit(const char *message);
 
 // object flag values
 
-typedef enum
+enum objflag_t
 {
     FL_SHOOTABLE        = 0x00000001,
     FL_BONUS            = 0x00000002,
@@ -266,7 +264,7 @@ typedef enum
     FL_DIR_MASK         = 0x00000e00,
 #endif
     // next free bit is   0x00001000
-} objflag_t;
+};
 
 //
 // IOANCH 25.10.2012
@@ -441,16 +439,18 @@ typedef void (* statefunc) (void *);
 // IOANCH 20130306: added state flags
 #define STF_DAMAGING 1
 
-typedef struct statestruct
+#pragma pack(push, 1)
+struct statetype
 {
     Boolean rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void    (*think) (void *),(*action) (void *);
-    struct  statestruct *next;
+    statetype *next;
     // IOANCH 20130306: added state flags
     uint64_t flags;
-} statetype;
+} ;
+#pragma pack(pop)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -458,15 +458,16 @@ typedef struct statestruct
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct statstruct
+#pragma pack(push, 1)
+struct statobj_t
 {
     byte      tilex,tiley;
     short     shapenum;           // if shapenum == -1 the obj has been removed
     byte      *visspot;
     uint32_t  flags;
     byte      itemnumber;
-} statobj_t;
-
+};
+#pragma pack(pop)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -474,20 +475,21 @@ typedef struct statstruct
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef enum
+enum doortype
 {
     dr_open,dr_closed,dr_opening,dr_closing
-} doortype;
+};
 
-typedef struct doorstruct
+#pragma pack(push, 1)
+ struct doorobj_t
 {
     byte     tilex,tiley;
     Boolean  vertical;
     byte     lock;
     doortype action;
     short    ticcount;
-} doorobj_t;
-
+} ;
+#pragma pack(pop)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -495,7 +497,8 @@ typedef struct doorstruct
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct objstruct
+#pragma pack(push, 1)
+struct objtype
 {
     activetype  active;
     short       ticcount;
@@ -521,8 +524,10 @@ typedef struct objstruct
     int32_t     speed;
 
     short       temp1,temp2,hidden;
-    struct objstruct *next,*prev;
-} objtype;
+    objtype *next,*prev;
+} ;
+#pragma pack(pop)
+
 
 enum
 {
@@ -550,14 +555,14 @@ enum
 
 
 //#define NUMWEAPONS      4
-typedef enum
+enum weapontype
 {
     wp_knife,
     wp_pistol,
     wp_machinegun,
     wp_chaingun,
     NUMWEAPONS
-} weapontype;
+} ;
 
 
 enum
@@ -574,7 +579,8 @@ enum
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-typedef struct
+#pragma pack(push, 1)
+struct gametype
 {
     short       difficulty;
     short       mapon;
@@ -593,10 +599,10 @@ typedef struct
     int32_t     TimeCount;
     int32_t     killx,killy;
     Boolean     victoryflag;            // set during victory animations
-} gametype;
+} ;
+#pragma pack(pop)
 
-
-typedef enum
+enum exit_t
 {
     ex_stillplaying,
     ex_completed,
@@ -608,7 +614,7 @@ typedef enum
     ex_abort,
     ex_demodone,
     ex_secretlevel
-} exit_t;
+};
 
 
 extern word *mapsegs[MAPPLANES];
