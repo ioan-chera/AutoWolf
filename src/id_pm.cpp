@@ -27,13 +27,13 @@ int pm_SoundStart;
 
 bool pm_SoundInfoPagePadded = false;
 
-// holds the whole VSWAP
-static uint32_t *pm_PageData;
-static size_t pm_PageDataSize;
-
 // pm_ChunksInFile+1 pointers to page starts.
 // The last pointer points one byte after the last page.
 uint8_t **pm_Pages;
+
+// holds the whole VSWAP
+static uint32_t *pm_pageData;
+static size_t pm_pageDataSize;
 
 //
 // PM_Startup
@@ -61,7 +61,6 @@ void PM_Startup()
 
     uint32_t *pageOffsets = (uint32_t *) I_CheckedMalloc((pm_ChunksInFile + 1) *
                                                 sizeof(int32_t));
-
    
     fread(pageOffsets, sizeof(uint32_t), pm_ChunksInFile, file);
 
@@ -92,11 +91,12 @@ void PM_Startup()
 
     // Calculate total amount of padding needed for sprites and sound info page
     int alignPadding = 0;
+   uint32_t offs;
     for(i = pm_SpriteStart; i < pm_SoundStart; i++)
     {
         if(!pageOffsets[i])
            continue;   // sparse page
-        uint32_t offs = pageOffsets[i] - dataStart + alignPadding;
+        offs = pageOffsets[i] - dataStart + alignPadding;
         if(offs & 1)
             alignPadding++;
     }
@@ -104,19 +104,19 @@ void PM_Startup()
     if((pageOffsets[pm_ChunksInFile - 1] - dataStart + alignPadding) & 1)
         alignPadding++;
 
-    pm_PageDataSize = (size_t) pageDataSize + alignPadding;
-    pm_PageData = (uint32_t *) I_CheckedMalloc(pm_PageDataSize);
+    pm_pageDataSize = (size_t) pageDataSize + alignPadding;
+    pm_pageData = (uint32_t *) I_CheckedMalloc(pm_pageDataSize);
 
     pm_Pages = (uint8_t **) I_CheckedMalloc((pm_ChunksInFile + 1) *
                                             sizeof(uint8_t *));
 
     // Load pages and initialize pm_Pages pointers
-    uint8_t *ptr = (uint8_t *) pm_PageData;
+    uint8_t *ptr = (uint8_t *) pm_pageData;
     for(i = 0; i < pm_ChunksInFile; i++)
     {
         if((i >= pm_SpriteStart && i < pm_SoundStart) || i == pm_ChunksInFile - 1)
         {
-            size_t offs = ptr - (uint8_t *) pm_PageData;
+            size_t offs = ptr - (uint8_t *) pm_pageData;
 
             // pad with zeros to make it 2-byte aligned
             if(offs & 1)
@@ -156,5 +156,5 @@ void PM_Startup()
 void PM_Shutdown()
 {
     free(pm_Pages);
-    free(pm_PageData);
+    free(pm_pageData);
 }
