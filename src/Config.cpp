@@ -339,7 +339,7 @@ void CFG_CheckParameters(int argc, char *argv[])
     }
     catch(const Exception &e)
     {
-        puts(e.info().buffer());
+        puts(e.info());
         printf(
                "AutoWolf v0.3\n"
                "By Ioan Chera on Wolf4SDL codebase\n"

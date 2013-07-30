@@ -21,7 +21,11 @@
 #include "wl_def.h"
 #include "PString.h"
 
-
+//
+// Exception
+//
+// Throwable entity for AutoWolf
+//
 class Exception
 {
     static Boolean showred;
@@ -31,9 +35,9 @@ public:
     Exception(const PString &txt);
     Exception(const char *filestr, int linestr);
     Exception(const PString &txt, const char *filestr, int linestr);
-    const PString &info() const
+    const char *info() const
     {
-        return exctext;
+        return exctext();
     }
     friend void DrawPlayBorder();
 };
