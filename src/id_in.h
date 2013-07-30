@@ -134,7 +134,7 @@ typedef	enum		{
 						dir_West,dir_NorthWest,
 						dir_None
 					} Direction;
-#pragma pack(push, 1)
+
 struct  CursorInfo
 {
    Boolean		button0,button1,button2,button3;
@@ -142,10 +142,9 @@ struct  CursorInfo
    Motion		xaxis,yaxis;
    Direction	dir;
 };
-#pragma pack(pop)
+
 
 typedef	CursorInfo	ControlInfo;
-#pragma pack(push, 1)
 struct  KeyboardDef
 {
    ScanCode	button0,button1,
@@ -164,7 +163,6 @@ struct  JoystickDef
             joyMultXH,joyMultYH;
 };
 
-#pragma pack(pop)
 // Global variables
 extern  volatile Boolean    in_keyboard[];
 extern           Boolean    in_mousePresent;
