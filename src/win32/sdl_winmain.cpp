@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define NO_STDIO_REDIRECT  // IOANCH: we have better means now to retrieve error message
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

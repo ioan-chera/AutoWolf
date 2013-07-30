@@ -199,5 +199,7 @@ void I_DisplayAlertOnError()
       return;
 #ifdef __APPLE__
    Cocoa_DisplayErrorAlert(global_error());
+#elif defined(_WIN32)
+   MessageBox(NULL, global_error(), "AutoWolf Error", MB_ICONERROR | MB_OK);
 #endif
 }
