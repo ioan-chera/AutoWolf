@@ -539,16 +539,14 @@ static void CAL_SetupMapFile ()
                                         PString(ca_mheadname).
                                         concat(cfg_extension)());
 
-//    fname.copy(ca_mheadname).concat(cfg_extension);
 
    handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
-//   tinf = (mapfiletype *)I_CheckedMalloc(sizeof(mapfiletype));
     read(handle, &tinf, length);
     close(handle);
 
-    ca_RLEWtag=tinf.ca_RLEWtag;
+    ca_RLEWtag = tinf.ca_RLEWtag;
 
 //
 // open the data file
@@ -558,7 +556,6 @@ static void CAL_SetupMapFile ()
                                         PString("GAMEMAPS.").
                                         concat(cfg_extension)());
 
-//    fname.copy("GAMEMAPS.").concat(cfg_extension);
 
    ca_maphandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
@@ -575,8 +572,6 @@ static void CAL_SetupMapFile ()
         lseek(ca_maphandle,pos,SEEK_SET);
         read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
     }
-
-//    free(tinf);
 
 //
 // allocate space for 3 64*64 planes
