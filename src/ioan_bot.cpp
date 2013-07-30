@@ -1539,7 +1539,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	if(check)
 	{
 		// shoot according to how the weapon works
-		if(((gamestate.weapon <= wp_pistol && pressuse % 4 == 0) || gamestate.weapon > wp_pistol) && edist <= 10)
+		if(((gamestate.weapon <= wp_pistol && pressuse % 3 == 0) || gamestate.weapon > wp_pistol) && edist <= 10)
 			buttonstate[bt_attack] = true;
 		
 		if((retreat <= 0 && (!check2 || check2 == check) && edist > 6) || 
