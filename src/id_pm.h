@@ -117,9 +117,24 @@ public:
       return m_pages[page];
    }
    
+   //
+   // operator[]
+   //
+   // short for getPage
+   //
    const uint8_t *operator[](int page) const
    {
       return getPage(page);
+   }
+   
+   //
+   // getPagePString
+   //
+   // Gets the page as a pstring
+   //
+   PString getPagePString(int page) const
+   {
+      return PString((const char *)getPage(page), getPageSize(page));
    }
    
    //
