@@ -61,7 +61,7 @@ protected:
         size_t newnumalloc = numalloc + amtToAdd;
         if(newnumalloc > numalloc)
         {
-            ptrArray = realloc(T *, ptrArray, newnumalloc * sizeof(T));
+            ptrArray = (T*)realloc(ptrArray, newnumalloc * sizeof(T));
             memset(static_cast<void *>(ptrArray + numalloc), 0,
                    (newnumalloc - numalloc) * sizeof(T));
             numalloc = newnumalloc;
@@ -170,6 +170,19 @@ public:
     {
         this->resize(initSize);
     }
+   
+   // IOANCH: variadic constructor
+   PODCollection(size_t initSize, T firstArg, ...) : BaseCollection<T>()
+   {
+      this->resize(initSize);
+      va_list vlist;
+      va_start(vlist, firstArg);
+      for (size_t i = 0; i < initSize; ++i)
+      {
+         this->add((T)va_arg(vlist, T));
+      }
+      va_end(vlist);
+   }
     
     // Assignment
     void assign(const PODCollection<T> &other)
@@ -193,7 +206,26 @@ public:
     {
         this->assign(other);
     }
-    
+   
+   // Assignment. IOANCH 20130710: move semantics
+   void assign(PODCollection<T> &&other)
+   {
+      
+      if(this->ptrArray == other.ptrArray) // same object?
+         return;
+      
+      this->ptrArray = other.ptrArray;
+      this->length = other.length;
+      this->numalloc = other.numalloc;
+      this->wrapiterator = other.wrapiterator;
+      other.ptrArray = NULL;
+   }
+   // IOANCH 20130710: add move constructor
+   PODCollection<T>(PODCollection<T> &&other) : BaseCollection<T>()
+   {
+      this->assign(other);
+   }
+   
     // Destructor
     ~PODCollection() { clear(); }
     
@@ -349,7 +381,7 @@ public:
             
             if(newnumalloc > this->numalloc)
             {
-                T *newItems = calloc(T *, newnumalloc, sizeof(T));
+                T *newItems = (T*)calloc(newnumalloc, sizeof(T));
                 for(size_t i = 0; i < this->length; i++)
                 {
                     ::new (&newItems[i]) T(std::move(this->ptrArray[i]));
