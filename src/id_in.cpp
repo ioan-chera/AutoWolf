@@ -433,8 +433,7 @@ void IN_Startup()
                in_joyNumButtons = 32;      // only up to 32 buttons are supported
             in_joyNumHats = SDL_JoystickNumHats(in_joystick);
             if(cfg_joystickhat < -1 || cfg_joystickhat >= in_joyNumHats)
-                Quit("The joystickhat param must be between 0 and %i!",
-                     in_joyNumHats - 1);
+                Quit(PString("The joystickhat param must be between 0 and ").concat(in_joyNumHats - 1).concat("!")());
         }
     }
 

@@ -23,6 +23,7 @@
 // IOANCH 20130308: this is an excerpt from an Eternity module. It has been mo-
 //                  dified to use Wolfenstein functions.
 #include "wl_def.h"
+#include "wl_main.h"
 
 //
 // Shared Hash functions

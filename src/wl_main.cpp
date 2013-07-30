@@ -108,8 +108,6 @@ fixed    scale;
 int32_t  heightnumerator;
 
 
-void    Quit (const char *error,...);
-
 Boolean startgame;
 Boolean loadedgame;
 int     mouseadjustment;
@@ -1224,7 +1222,7 @@ void DoJukebox()
 // Load a few things right away
 //
 ////////////////////////////////////////////////////////////////////////////////
-static char global_error[256];
+PString global_error;
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
@@ -1433,39 +1431,36 @@ void main_NewViewSize (int width)
 //
 ////////////////////////////////////////////////////////////////////////////////
 // IOANCH 20130509: now the error is stored globally, so it can be gathered
-void Quit (const char *errorStr, ...)
+void Quit (const char *message)
 {
-    if(errorStr != NULL)
+   bool has_error = false;
+    if(message && *message)
     {
-        va_list vlist;
-        va_start(vlist, errorStr);
-        vsprintf(global_error, errorStr, vlist);
-        va_end(vlist);
+       global_error = message;
+       has_error = true;
     }
-    else
-        global_error[0] = 0;
 
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (global_error && *global_error)
+        if (has_error)
         {
-            puts(global_error);
+            puts(global_error());
             VL_WaitVBL(100);
         }
         exit(1);
     }
 
-    if (!global_error || !*global_error)
+    if (!has_error)
     {
         WriteConfig ();
     }
 
     ShutdownId ();
 
-    if (global_error && *global_error)
+    if (has_error)
     {
-        puts(global_error);
+        puts(global_error());
         VL_WaitVBL(200);
         exit(1);
     }
@@ -1769,13 +1764,7 @@ int main (int argc, char *argv[])
     SPEAR.Initialize(".");
     
     // IOANCH: prepare the OSX version for displaying a quit error
-#ifdef __APPLE__
-    atexit_b(^()
-             {
-                 if(global_error && *global_error)
-                     Cocoa_DisplayErrorAlert(global_error);
-             });
-#endif
+   atexit(I_DisplayAlertOnError);
     
     // IOANCH 20130509: this changes config values. Call moved here from CFE.
     CFG_SetupConfigLocation();

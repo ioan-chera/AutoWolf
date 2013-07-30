@@ -156,7 +156,7 @@ void InitSky()
 {
     unsigned cloudskyid = GetCloudSkyDefID();
     if(cloudskyid >= lengthof(cloudSkys))
-        Quit("Illegal cloud sky id: %u", cloudskyid);
+        Quit(PString("Illegal cloud sky id: ").concat(cloudskyid)());
     curSky = &cloudSkys[cloudskyid];
 
     memset(skyc, 0, sizeof(skyc));

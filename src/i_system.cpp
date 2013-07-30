@@ -33,6 +33,7 @@
 #include "i_system.h"
 #include "macosx/CocoaFun.h"
 #include "wl_draw.h"
+#include "wl_main.h"
 
 //
 // I_Delay
@@ -182,4 +183,18 @@ void *I_CheckedRealloc(void *ptr, size_t sz)
    if(!ret)
       Quit("Out of memory!");
    return ret;
+}
+
+//
+// I_DisplayAlertOnError
+//
+// 
+//
+void I_DisplayAlertOnError()
+{
+   if(global_error.length() <= 0)
+      return;
+#ifdef __APPLE__
+   Cocoa_DisplayErrorAlert(global_error());
+#endif
 }

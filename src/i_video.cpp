@@ -25,6 +25,7 @@
 #include "wl_def.h"
 #include "Config.h"
 #include "i_video.h"
+#include "wl_main.h"
 #include "wl_draw.h"
 
 SDL_Surface *vid_screen = NULL;
@@ -46,7 +47,7 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
    ret = SDL_CreateRGBSurface(flags, width, height, 8, 0, 0, 0, 0);
    if(!ret)
    {
-      Quit("Unable to create %dx%d buffer surface: %s\n", width, height, SDL_GetError());
+      Quit((PString("Unable to create ")<<width<<"x"<<height<<" buffer surface: "<<SDL_GetError())());
    }
    SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
    return ret;

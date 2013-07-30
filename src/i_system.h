@@ -36,4 +36,6 @@ PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
 void *I_CheckedMalloc(size_t sz);
 void *I_CheckedRealloc(void *ptr, size_t sz);
 
+void I_DisplayAlertOnError();
+
 #endif /* defined(__Wolf4SDL__i_system__) */

@@ -426,8 +426,7 @@ void CFG_SetupConfigLocation()
         {
             if(!I_MakeDir(cfg_dir()))
             {
-                Quit("The configuration directory \"%s\" could not be created.",
-                     cfg_dir());
+                Quit((PString("The configuration directory \"") << cfg_dir << "\" could not be created.")());
             }
         }
     }

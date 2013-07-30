@@ -30,6 +30,7 @@ extern  Boolean  startgame;
 extern  char     str[80];
 class PString;
 extern  PString  cfg_configname;
+extern PString global_error;
 
 
 void            NewGame (int difficulty,int episode);
@@ -40,5 +41,6 @@ Boolean         LoadTheGame(FILE *file,int x,int y);
 Boolean         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 void            ShutdownId ();
+
 
 #endif

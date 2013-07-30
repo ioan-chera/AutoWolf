@@ -22,9 +22,6 @@
 
 // wolf compatability
 
-
-void Quit (const char *error,...);
-
 //===========================================================================
 
 #define CHARWIDTH		2

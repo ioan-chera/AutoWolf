@@ -681,7 +681,6 @@ void SetupGameLevel ()
     word *map;
     word tile;
 
-
     if (!loadedgame)
     {
         gamestate.TimeCount

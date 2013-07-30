@@ -78,7 +78,7 @@ typedef struct
     Point ul,lr;
 } Rect;
 
-void Quit(const char *errorStr, ...);
+void Quit(const char *message);
 
 #include "SODFlag.h"
 #include "id_pm.h"

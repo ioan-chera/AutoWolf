@@ -101,7 +101,7 @@ public:
    {
       // Just use Quit for now,
       if(page < 0 || page >= m_numChunks)
-         Quit("PM_GetPageSize: Tried to access illegal page: %i", page);
+         Quit((PString("PM_GetPageSize: Tried to access illegal page: ") << page)());
       return (uint32_t) (m_pages[page + 1] - m_pages[page]);
    }
    
@@ -113,7 +113,7 @@ public:
    const uint8_t *getPage(int page) const
    {
       if(page < 0 || page >= m_numChunks)
-         Quit("PM_GetPage: Tried to access illegal page: %i", page);
+         Quit(PString("PM_GetPage: Tried to access illegal page: ").concat(page)());
       return m_pages[page];
    }
    

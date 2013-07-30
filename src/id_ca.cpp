@@ -458,11 +458,11 @@ static void CAL_SetupGrFile ()
         expectedsize = lengthof(ca_grstarts_wl6) - menu_missingep;
 
     if(!cfg_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
-        Quit("AutoWolf was not compiled for these data files:\n"
-            "%s contains a wrong number of offsets (%i instead of %i)!\n\n"
+        Quit((PString("AutoWolf was not compiled for these data files:\n")<<fname<<
+            " contains a wrong number of offsets ("<<int(headersize/3)<<
+             " instead of "<<expectedsize<<")!\n\n"
             "Please check whether you are using the right executable!\n"
-            "(For mod developers: perhaps you forgot to update NUMCHUNKS?)",
-            fname(), headersize / 3, expectedsize);
+            "(For mod developers: perhaps you forgot to update NUMCHUNKS?)")());
 
     if(SPEAR())
     {
@@ -1049,5 +1049,5 @@ void CA_CacheMap (int mapnum)
 void CA_CannotOpen(const char *string)
 {
     // IOANCH 20130510: don't use a statically allocated char array.
-    Quit (PString("Can't open ").concat(string).concat("!\n")());
+    Quit ((PString("Can't open ") << string << "!\n")());
 }

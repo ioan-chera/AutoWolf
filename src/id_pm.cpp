@@ -20,6 +20,7 @@
 
 #include "wl_def.h"
 #include "i_system.h"
+#include "wl_main.h"
 
 VSwapContainer vSwapData;
 
@@ -124,7 +125,7 @@ bool VSwapContainer::loadFile(const char *filename
       free(pageOffsets);
       free(pageLengths);
       fclose(file);
-      Quit("The page file \"%s\" is too large!", filename);
+      Quit(PString("The page file \"").concat(filename).concat("\" is too large!")());
       return false;
    }
    
@@ -145,8 +146,7 @@ bool VSwapContainer::loadFile(const char *filename
 //            concat(pageOffsets[u]).concat(" (filesize: ").
 //            concat(fileSize).concat(")");
 //         }
-         Quit("Illegal page offset for page %i: %u (filesize: %u)",
-              u, pageOffsets[u], fileSize);
+         Quit(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat(fileSize).concat(")")());
          free(pageOffsets);
          free(pageLengths);
          fclose(file);

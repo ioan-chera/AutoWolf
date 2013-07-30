@@ -689,14 +689,14 @@ Sint16 GetSample(float csample, const byte *samples, int size)
 void SD_PrepareSound(int which)
 {
     if(sd_digiList == NULL)
-        Quit("SD_PrepareSound(%i): sd_digiList not initialized!\n", which);
+        Quit((PString("SD_PrepareSound(")<<which<<"): sd_digiList not initialized!")());
 
     int page = sd_digiList[which].startpage;
     int size = sd_digiList[which].length;
 
     const byte *origsamples = (const byte *)vSwapData.getSound(page);
     if(origsamples + size >= vSwapData.getEnd())
-        Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
+        Quit((PString("SD_PrepareSound(")<<which<<"): Sound reaches out of page file!\n")());
 
     int destsamples = (int) ((float) size * (float) cfg_samplerate
         / (float) ORIGSAMPLERATE);
@@ -741,7 +741,7 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
         return 0;
 
     if (which >= sd_numDigi)
-        Quit("SD_PlayDigitized: bad sound number %i", which);
+        Quit((PString("SD_PlayDigitized: bad sound number ")<<which)());
 
     int channel = SD_GetChannelForDigi(which);
     SD_SetPosition(channel, leftpos,rightpos);
@@ -1078,7 +1078,7 @@ Boolean SD_SetSoundMode(SDMode mode)
                 result = true;
             break;
         default:
-            Quit("SD_SetSoundMode: Invalid sound mode %i", mode);
+            Quit(PString("SD_SetSoundMode: Invalid sound mode ").concat(mode)());
             return false;
     }
     SoundTable = &ca_audiosegs[tableoffset];
