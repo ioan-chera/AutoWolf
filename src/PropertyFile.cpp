@@ -36,7 +36,7 @@ PropertyFile::~PropertyFile()
 
     Property *prop = NULL;
     
-    while((prop = _propertyTable.tableIterator(prop)))
+    while((prop = _propertyTable.tableIterator(NULL)))
     {
         _propertyTable.removeObject(prop);
         delete prop;

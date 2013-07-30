@@ -36,7 +36,7 @@ DirectoryFile::~DirectoryFile()
 {
     DataFile *file = NULL;
 
-    while((file = fileHash.tableIterator(file)))
+    while((file = fileHash.tableIterator(NULL)))
     {
         fileHash.removeObject(file);
         delete file;
