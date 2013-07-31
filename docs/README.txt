@@ -8,7 +8,15 @@ first-person shooter Wolfenstein 3D, with the purpose of implementing
 competitive bots (computer controlled players) who should be able to solve any
 level, at maximum score.
 
-This version is 1.0. It's therefore the first 'feature-complete' version after
+This version is 1.0a. It's only released for OS X because it contains some critical
+fixes over 1.0. Namely:
+- no longer two executables, one for 10.6 and another for 10.7+. Instead, support
+has been extended to Mac OS X 10.4, but hasn't been tested on that platform.
+- the 10.7+ version didn't even work.
+- NOTE: at the time of release, I can't guarantee how well it will work on OS X versions
+prior 10.8.
+
+Version 1.0 is the first 'feature-complete' version after
 the two alphas (01 and 02). Currently the bot can finish most maps with enough
 speed and efficiency, but it doesn't know advanced stuff like solving pushwall
 puzzles.
