@@ -250,12 +250,12 @@ noconfig:
 /*
 ====================
 =
-= WriteConfig
+= main_WriteConfig
 =
 ====================
 */
 
-void WriteConfig()
+void main_WriteConfig()
 {
     PString configpath;
 
@@ -1470,7 +1470,7 @@ void Quit (const char *message)
 
     if (!has_error)
     {
-        WriteConfig ();
+        main_WriteConfig ();
     }
 
     ShutdownId ();
