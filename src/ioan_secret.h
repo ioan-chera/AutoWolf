@@ -88,7 +88,7 @@ class ScoreMap
             Boolean operator ==(const PushPosition &other) const {return tx == other.tx && ty == other.ty && block == other.block;}
         };
         Region *region;
-        std::unordered_set<PushBlock *> pushBlocks;
+        std::set<PushBlock *> pushBlocks;
         List<PushPosition *> pushPositions;
         ~RegionConnection()
         {
@@ -167,8 +167,8 @@ class ScoreMap
     void LabelRegions();
     void OutputRegionGraphTGF(FILE *f = stdout);
     void RecursiveConnectRegion(int tx, int ty,
-                                std::unordered_set<Region *> &regionSet,
-                                std::unordered_set<PushBlock *> &secretSet);
+                                std::set<Region *> &regionSet,
+                                std::set<PushBlock *> &secretSet);
     void RecursiveLabelRegions(int tx, int ty, Region *region);
     void TestPushBlocks();
     
