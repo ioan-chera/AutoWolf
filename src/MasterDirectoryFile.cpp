@@ -21,7 +21,7 @@
 #include "MasterDirectoryFile.h"
 #include "Config.h"
 
-PString masterDirectoryFilePath;
+//PString masterDirectoryFilePath;
 
 ////////////
 //
@@ -42,18 +42,7 @@ MasterDirectoryFile masterDir;
 //
 MasterDirectoryFile::MasterDirectoryFile()
 {
-	_filename = masterDirectoryFileName;
-	_initialized = true;
 	strcpy(_header, MASTERDIR_HEADER);
-}
-
-//
-// MasterDirectoryFile::initializeConfigLocation
-//
-void MasterDirectoryFile::initializeConfigLocation()
-{
-    //    initialize(masterDirectoryFileName);
-    masterDirectoryFilePath.copy(cfg_dir).concatSubpath(masterDirectoryFileName);
 }
 
 //
@@ -61,11 +50,11 @@ void MasterDirectoryFile::initializeConfigLocation()
 //
 // save it to file
 //
-void MasterDirectoryFile::saveToFile()
+void MasterDirectoryFile::saveToFile(const PString &fpath)
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFilePath.buffer(), "wb");
+	f = fopen(fpath.buffer(), "wb");
 	this->MasterDirectoryFile::doWriteToFile(f);
 	fclose(f);
 }
@@ -82,11 +71,11 @@ void MasterDirectoryFile::saveToFile()
 // Read each eight-character header, and depending on it, create a new object of each type
 // and call that one's reader. When that is finished, go to the next address (remmeber the previous)
 //
-bool MasterDirectoryFile::loadFromFile()
+bool MasterDirectoryFile::loadFromFile(const PString &fpath)
 {
 	FILE *f;
 	
-	f = fopen(masterDirectoryFilePath.buffer(), "rb");
+	f = fopen(fpath.buffer(), "rb");
 	if(!f)
 		return false;	// no file, no worry
 

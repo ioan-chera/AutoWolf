@@ -201,10 +201,12 @@ void PropertyFile::_updateSize()
 //
 // PropertyFile::hasProperty
 //
-bool PropertyFile::hasProperty(const char *keyName) const
+bool PropertyFile::hasProperty(const char *keyName, Property::Type tp) const
 {
-    if (_propertyTable.objectForKey(keyName))
-        return true;
+   Property *prop = _propertyTable.objectForKey(keyName);
+    if (prop)
+       if(tp == Property::Unknown || prop->type == tp)
+          return true;
     return false;
 }
 

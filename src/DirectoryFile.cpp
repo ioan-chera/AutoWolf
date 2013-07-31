@@ -90,10 +90,20 @@ DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 //
 // access file with name
 //
-DataFile *DirectoryFile::getFileWithName(const PString &fname)
+DataFile *DirectoryFile::getFileWithName(const PString &fname,
+                                         const char *header)
 {
 	// FIXME: Implement faster, proven searching methods than this
-    return fileHash.objectForKey(fname);
+    DataFile *ret =  fileHash.objectForKey(fname);
+   if(ret)
+   {
+      if (header && strcmp(ret->header(), header))
+      {
+         return NULL;
+      }
+      return ret;
+   }
+   return NULL;
 }
 
 //

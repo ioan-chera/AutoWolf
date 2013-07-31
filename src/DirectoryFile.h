@@ -78,8 +78,8 @@ public:
 	bool addFile(DataFile *file);
 	
 	// access file with name
-	DataFile *getFileWithName(const PString &fname);
-	
+	DataFile *getFileWithName(const PString &fname, const char *header = NULL);
+   
 	// create folder if not exist
 	DirectoryFile *makeDirectory(const PString &fname);
 };

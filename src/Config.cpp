@@ -42,6 +42,7 @@
 #include "Exception.h"
 #include "MasterDirectoryFile.h"
 #include "ioan_bas.h"
+#include "ioan_bot.h"
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_menu.h"
@@ -432,7 +433,8 @@ void CFG_SetupConfigLocation()
     }
     
     // IOANCH 20130304: initialize bot master directory file location
-    masterDir.initializeConfigLocation();
+   masterDir.initialize(masterDirectoryFileName);
+    bot_initializeConfigLocation();
 }
 
 ///////////////////////////////////////////////////////////////////////////

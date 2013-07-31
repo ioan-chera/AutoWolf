@@ -61,7 +61,7 @@ public:
     ~PropertyFile();
 
     // hasProperty
-    bool hasProperty(const char *keyName) const;
+   bool hasProperty(const char *keyName, Property::Type tp = Property::Unknown) const;
     // getIntValue
     int getIntValue(const char *keyName) const;
     // getStringValue

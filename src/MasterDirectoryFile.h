@@ -22,9 +22,7 @@
 
 #include "DirectoryFile.h"
 
-#define MASTERDIR_MAPSDIRECTORY "Maps"
 #define MASTERDIR_HEADER "AutoWolf"
-const char masterDirectoryFileName[] = "AutoWolf.data";
 
 //
 // MasterDirectoryFile
@@ -37,11 +35,9 @@ class MasterDirectoryFile : public DirectoryFile
 public:
 	MasterDirectoryFile();
 	// save it to file
-	void saveToFile();
+	void saveToFile(const PString &fpath);
 	// load it from file
-	bool loadFromFile();
-    // Initialize location
-    void initializeConfigLocation();
+	bool loadFromFile(const PString &fpath);
 };
 
 extern MasterDirectoryFile masterDir;

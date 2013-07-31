@@ -41,6 +41,7 @@
 #include "wl_state.h"
 
 BotMan bot;
+PString masterDirectoryFilePath;
 
 // static class member definition
 // protected ones
@@ -87,7 +88,7 @@ void BotMan::MapInit()
 void BotMan::SaveData() const
 {
 	StoreAcquiredData(mapsegsChecksum.DigestBuffer());
-	masterDir.saveToFile();
+	masterDir.saveToFile(masterDirectoryFilePath);
 }
 
 //

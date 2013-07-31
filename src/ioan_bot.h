@@ -32,6 +32,15 @@
 // put a constructor that zeroes the fields (and removes them from implementation
 // For now, put a global singleton here and in the implementation
 
+const char masterDirectoryFileName[] = "AutoWolf.data";
+#define MASTERDIR_MAPSDIRECTORY "Maps"
+
+extern PString masterDirectoryFilePath, cfg_dir;
+static void bot_initializeConfigLocation()
+{
+   masterDirectoryFilePath.copy(cfg_dir).concatSubpath(masterDirectoryFileName);
+}
+
 //
 // BotMan
 //

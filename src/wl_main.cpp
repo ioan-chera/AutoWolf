@@ -110,7 +110,7 @@ int32_t  heightnumerator;
 
 Boolean startgame;
 Boolean loadedgame;
-int     mouseadjustment;
+int32_t     mouseadjustment;  // IOANCH: int32_t for safely saving
 
 PString cfg_configname("CONFIG.");
 
@@ -118,133 +118,215 @@ PString cfg_configname("CONFIG.");
 //
 // LOCAL VARIABLES
 //
-////////////////////////////////////////////////////////////////////////////////
+
 //
-//  main_ReadConfig
+// main_configHardwareValues
 //
-////////////////////////////////////////////////////////////////////////////////
+// Sets the default values
+//
+static void main_configHardwareValues(SDMode &sd, SMMode  &sm, SDSMode &sds)
+{
+   if (sd_soundBlasterPresent || sd_adLibPresent)
+   {
+      sd = sdm_AdLib;
+      sm = smm_AdLib;
+   }
+   else
+   {
+      sd = sdm_PC;
+      sm = smm_Off;
+   }
+   
+   if (sd_soundBlasterPresent)
+      sds = sds_SoundBlaster;
+   else
+      sds = sds_Off;
+   
+   if (in_mousePresent)
+      mouseenabled = true;
+   
+   if (IN_JoyPresent())
+      joystickenabled = true;
+   
+   viewsize = 19;                          // start with a good size
+   mouseadjustment=5;
+
+}
+
+//
+// main_continueReadOldConfig
+//
+// IOANCH: Reads the old config, after the 0xfefa signature. Fixed it so it's
+// surely type size correct
+//
+static void main_continueReadOldConfig(FILE *file, SDMode &o_sd, SMMode  &o_sm,
+                                       SDSMode &o_sds)
+{
+//   SDMode  sd;
+//   SMMode  sm;
+//   SDSMode sds;
+   int32_t  sd;
+   int32_t  sm;
+   int32_t sds;
+
+   for (int i = 0; i < MaxScores; ++i)
+   {
+      fread(Scores[i].name, sizeof(Scores[i].name), 1, file);
+      fread(&Scores[i].score, sizeof(Scores[i].score), 1, file);
+      fread(&Scores[i].completed, sizeof(Scores[i].completed), 1, file);
+      fread(&Scores[i].episode, sizeof(Scores[i].episode), 1, file);
+   }
+   
+   fread(&sd,sizeof(sd), 1, file);
+   fread(&sm,sizeof(sm), 1, file);
+   fread(&sds,sizeof(sds), 1, file);
+   
+   fread(&mouseenabled,sizeof(mouseenabled), 1, file);
+   fread(&joystickenabled,sizeof(joystickenabled), 1, file);
+   Boolean dummyJoypadEnabled;
+   fread(&dummyJoypadEnabled,sizeof(dummyJoypadEnabled), 1, file);
+   Boolean dummyJoystickProgressive;
+   fread(&dummyJoystickProgressive,sizeof(dummyJoystickProgressive), 1, file);
+   int32_t dummyJoystickPort = 0;
+   fread(&dummyJoystickPort,sizeof(dummyJoystickPort), 1, file);
+   
+   fread(dirscan,sizeof(dirscan), 1, file);
+   fread(buttonscan,sizeof(buttonscan), 1, file);
+   fread(buttonmouse,sizeof(buttonmouse), 1, file);
+   fread(buttonjoy,sizeof(buttonjoy), 1, file);
+   
+   fread(&viewsize,sizeof(viewsize), 1, file);
+   fread(&mouseadjustment,sizeof(mouseadjustment), 1, file);
+   
+   fclose(file);
+   
+   
+   o_sm = (SMMode)sm;
+   o_sd = (SDMode)sd;
+   o_sds = (SDSMode)sds;
+}
+
+//
+// main_ReadConfig
+//
+// Reads the settings file
+// IOANCH 20130731: modified to use fopen/fread and MasterDirectoryFile
+//
 void main_ReadConfig()
 {
-    SDMode  sd;
-    SMMode  sm;
-    SDSMode sds;
+   SDMode  sd;
+   SMMode  sm;
+   SDSMode sds;
 
-    PString configpath;
+   PString configpath;
 
 #ifdef _arch_dreamcast
-    DC_LoadFromVMU(cfg_configname.buffer());
+   DC_LoadFromVMU(cfg_configname.buffer());
 #endif
 
-    configpath.copy(cfg_dir).concatSubpath(cfg_configname);
+   configpath.copy(cfg_dir).concatSubpath(cfg_configname);
+   
+   main_configHardwareValues(sd, sm, sds);
 
-    const int file = open(configpath(), O_RDONLY | O_BINARY);
-    if (file != -1)
-    {
-        //
-        // valid config file
-        //
-        word tmp;
-        read(file,&tmp,sizeof(tmp));
-        if(tmp!=0xfefa)
-        {
-            close(file);
-            goto noconfig;
-        }
-       for (int i = 0; i < MaxScores; ++i)
-       {
-          read(file, Scores[i].name, sizeof(Scores[i].name));
-          read(file, &Scores[i].score, sizeof(Scores[i].score));
-          read(file, &Scores[i].completed, sizeof(Scores[i].completed));
-          read(file, &Scores[i].episode, sizeof(Scores[i].episode));
-       }
+   FILE *file = fopen(configpath(), "rb");
+   if (file)
+   {
+      //
+      // valid config file
+      //
+      // IOANCH: look first for old cfg signature
+      //
+      word tmp;
+      fread(&tmp, sizeof(tmp), 1, file);
+      if(tmp == 0xfefa)
+      {
+         // File is old config
+         main_continueReadOldConfig(file, sd, sm, sds);
+         fclose(file);
+      }
+      else
+      {
+         fclose(file);
+         // File is probably a master directory
+         MasterDirectoryFile cfgFile;
+         cfgFile.initialize(cfg_configname);
+         if(cfgFile.loadFromFile(configpath))
+         {
+            PropertyFile *pfile = (PropertyFile *)cfgFile.getFileWithName("Config",
+                                                         PROPERTY_FILE_HEADER);
+            if(pfile)
+            {
+             
+               // Now read it. Do it like Wolf4SDL
+               PString buf;
+#define GET_STR_PROPERTY(name, sz) \
+if(pfile->hasProperty(#name, Property::PStringVal)) \
+{ \
+   buf = pfile->getStringValue(#name); \
+   if(buf.length() == (sz)) \
+      memcpy(name, buf(), (sz)); \
+}
 
-        read(file,&sd,sizeof(sd));
-        read(file,&sm,sizeof(sm));
-        read(file,&sds,sizeof(sds));
+#define GET_INT_PROPERTY(name, spectype) \
+if(pfile->hasProperty(#name, Property::Int32)) \
+   (name) = (spectype)pfile->getIntValue(#name);
 
-        read(file,&mouseenabled,sizeof(mouseenabled));
-        read(file,&joystickenabled,sizeof(joystickenabled));
-        Boolean dummyJoypadEnabled;
-        read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        Boolean dummyJoystickProgressive;
-        read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
+               GET_STR_PROPERTY(Scores, sizeof(HighScore) * MaxScores)
+               
+               GET_INT_PROPERTY(sd, SDMode)
+               GET_INT_PROPERTY(sm, SMMode)
+               GET_INT_PROPERTY(sds, SDSMode)
+               
+               GET_INT_PROPERTY(mouseenabled, Boolean)
+               GET_INT_PROPERTY(joystickenabled, Boolean)
+               
+               GET_STR_PROPERTY(dirscan, sizeof(dirscan))
+               GET_STR_PROPERTY(buttonscan, sizeof(buttonscan))
+               GET_STR_PROPERTY(buttonmouse, sizeof(buttonmouse))
+               GET_STR_PROPERTY(buttonjoy, sizeof(buttonjoy))
+               
+               GET_INT_PROPERTY(viewsize, int)
+               GET_INT_PROPERTY(mouseadjustment, int32_t)
+            
+            }
+#undef GET_STR_PROPERTY
+#undef GET_INT_PROPERTY
+         }
+      }
+   }
+   
+   if ((sd == sdm_AdLib || sm == smm_AdLib) && !sd_adLibPresent
+       && !sd_soundBlasterPresent)
+   {
+      sd = sdm_PC;
+      sm = smm_Off;
+   }
+   
+   if ((sds == sds_SoundBlaster && !sd_soundBlasterPresent))
+      sds = sds_Off;
+   
+   // make sure values are correct
+   
+   if(mouseenabled) mouseenabled=true;
+   if(joystickenabled) joystickenabled=true;
+   
+   if (!in_mousePresent)
+      mouseenabled = false;
+   if (!IN_JoyPresent())
+      joystickenabled = false;
+   
+   if(mouseadjustment<0) mouseadjustment=0;
+   else if(mouseadjustment>9) mouseadjustment=9;
+   
+   if(viewsize<4) viewsize=4;
+   else if(viewsize>21) viewsize=21;
+   
+   MainMenu[6].active=1;
+   MainItems.curpos=0;
 
-        read(file,dirscan,sizeof(dirscan));
-        read(file,buttonscan,sizeof(buttonscan));
-        read(file,buttonmouse,sizeof(buttonmouse));
-        read(file,buttonjoy,sizeof(buttonjoy));
-
-        read(file,&viewsize,sizeof(viewsize));
-        read(file,&mouseadjustment,sizeof(mouseadjustment));
-
-        close(file);
-
-        if ((sd == sdm_AdLib || sm == smm_AdLib) && !sd_adLibPresent
-                && !sd_soundBlasterPresent)
-        {
-            sd = sdm_PC;
-            sm = smm_Off;
-        }
-
-        if ((sds == sds_SoundBlaster && !sd_soundBlasterPresent))
-            sds = sds_Off;
-
-        // make sure values are correct
-
-        if(mouseenabled) mouseenabled=true;
-        if(joystickenabled) joystickenabled=true;
-
-        if (!in_mousePresent)
-            mouseenabled = false;
-        if (!IN_JoyPresent())
-            joystickenabled = false;
-
-        if(mouseadjustment<0) mouseadjustment=0;
-        else if(mouseadjustment>9) mouseadjustment=9;
-
-        if(viewsize<4) viewsize=4;
-        else if(viewsize>21) viewsize=21;
-
-        MainMenu[6].active=1;
-        MainItems.curpos=0;
-    }
-    else
-    {
-        //
-        // no config file, so select by hardware
-        //
-noconfig:
-        if (sd_soundBlasterPresent || sd_adLibPresent)
-        {
-            sd = sdm_AdLib;
-            sm = smm_AdLib;
-        }
-        else
-        {
-            sd = sdm_PC;
-            sm = smm_Off;
-        }
-
-        if (sd_soundBlasterPresent)
-            sds = sds_SoundBlaster;
-        else
-            sds = sds_Off;
-
-        if (in_mousePresent)
-            mouseenabled = true;
-
-        if (IN_JoyPresent())
-            joystickenabled = true;
-
-        viewsize = 19;                          // start with a good size
-        mouseadjustment=5;
-    }
-
-    SD_SetMusicMode (sm);
-    SD_SetSoundMode (sd);
-    SD_SetDigiDevice (sds);
+   SD_SetMusicMode (sm);
+   SD_SetSoundMode (sd);
+   SD_SetDigiDevice (sds);
 }
 
 /*
@@ -254,7 +336,7 @@ noconfig:
 =
 ====================
 */
-
+// IOANCH: same changes as with write
 void main_WriteConfig()
 {
     PString configpath;
@@ -264,43 +346,37 @@ void main_WriteConfig()
 #endif
 
     configpath.copy(cfg_dir).concatSubpath(cfg_configname);
-
-    const int file = open(configpath(), O_CREAT | O_WRONLY | O_BINARY, 0644);
-    if (file != -1)
-    {
-        word tmp=0xfefa;
-        write(file,&tmp,sizeof(tmp));
-       for (int i = 0; i < MaxScores; ++i)
-       {
-          write(file, Scores[i].name, sizeof(Scores[i].name));
-          write(file, &Scores[i].score, sizeof(Scores[i].score));
-          write(file, &Scores[i].completed, sizeof(Scores[i].completed));
-          write(file, &Scores[i].episode, sizeof(Scores[i].episode));
-       }
-
-        write(file,&SoundMode,sizeof(SoundMode));
-        write(file,&sd_musicMode,sizeof(sd_musicMode));
-        write(file,&sd_digiMode,sizeof(sd_digiMode));
-
-        write(file,&mouseenabled,sizeof(mouseenabled));
-        write(file,&joystickenabled,sizeof(joystickenabled));
-        Boolean dummyJoypadEnabled = false;
-        write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
-        Boolean dummyJoystickProgressive = false;
-        write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
-        int dummyJoystickPort = 0;
-        write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
-        write(file,dirscan,sizeof(dirscan));
-        write(file,buttonscan,sizeof(buttonscan));
-        write(file,buttonmouse,sizeof(buttonmouse));
-        write(file,buttonjoy,sizeof(buttonjoy));
-
-        write(file,&viewsize,sizeof(viewsize));
-        write(file,&mouseadjustment,sizeof(mouseadjustment));
-
-        close(file);
-    }
+   
+   MasterDirectoryFile cfgFile;
+   cfgFile.initialize(cfg_configname);
+   PropertyFile *pFile = new PropertyFile;
+   pFile->initialize("Config");
+#define PUT_STR_PROPERTY(name, sz) \
+pFile->setStringValue(#name, PString((const char *)(name), (sz)));
+#define PUT_INT_PROPERTY(name) \
+pFile->setIntValue(#name, (int)(name));
+   PUT_STR_PROPERTY(Scores, sizeof(HighScore) * MaxScores)
+   
+   PUT_INT_PROPERTY(SoundMode)
+   PUT_INT_PROPERTY(sd_musicMode)
+   PUT_INT_PROPERTY(sd_digiMode)
+   
+   PUT_INT_PROPERTY(mouseenabled)
+   PUT_INT_PROPERTY(joystickenabled)
+   PUT_STR_PROPERTY(dirscan, sizeof(dirscan))
+   PUT_STR_PROPERTY(buttonscan, sizeof(buttonscan))
+   PUT_STR_PROPERTY(buttonmouse, sizeof(buttonmouse))
+   PUT_STR_PROPERTY(buttonjoy, sizeof(buttonjoy))
+   
+   PUT_INT_PROPERTY(viewsize)
+   PUT_INT_PROPERTY(mouseadjustment)
+   
+   cfgFile.addFile(pFile);
+   cfgFile.saveToFile(configpath);
+   
+#undef PUT_INT_PROPERTY
+#undef PUT_STR_PROPERTY
+   
 #ifdef _arch_dreamcast
     DC_SaveToVMU(cfg_configname.buffer(), NULL);
 #endif
@@ -1261,7 +1337,7 @@ static void InitGame()
 	I_UpdateScreen();
 	
 	// IOANCH 20121218: Load bot data
-    masterDir.loadFromFile();
+    masterDir.loadFromFile(masterDirectoryFilePath);
     bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
