@@ -662,7 +662,7 @@ void CheckKeys (void)
         DrawAmmo ();
         DrawScore ();
 
-        ClearMemory ();
+        SD_StopDigitized ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -683,7 +683,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (in_keyboard[sc_BackSpace] && in_keyboard[sc_LShift] && in_keyboard[sc_Alt] && cfg_debugmode)
     {
-        ClearMemory ();
+        SD_StopDigitized ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -702,7 +702,7 @@ void CheckKeys (void)
     //
     if (in_keyboard[sc_B] && in_keyboard[sc_A] && in_keyboard[sc_T])
     {
-        ClearMemory ();
+        SD_StopDigitized ();
         CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -748,7 +748,7 @@ void CheckKeys (void)
 		// IOANCH 11.06.2012: commented to made compiler stop complaining
         //short oldmapon = gamestate.mapon;
         //short oldepisode = gamestate.episode;
-        ClearMemory ();
+        SD_StopDigitized ();
         ClearSplitVWB ();
         US_ControlPanel (scan);
 
@@ -762,7 +762,7 @@ void CheckKeys (void)
     if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
     {
         int lastoffs = StopMusic ();
-        ClearMemory ();
+        SD_StopDigitized ();
         VW_FadeOut ();
 
         US_ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);

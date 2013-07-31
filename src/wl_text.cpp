@@ -777,7 +777,7 @@ void EndText ()
     memptr  layout;
 #endif
 
-    ClearMemory ();
+    SD_StopDigitized ();
 
     // IOANCH 20130301: unification culling
 

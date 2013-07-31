@@ -1194,7 +1194,7 @@ void RecordDemo ()
 
     StopMusic ();
     VW_FadeOut ();
-    ClearMemory ();
+    SD_StopDigitized ();
 
     FinishDemoRecord ();
 }
@@ -1264,7 +1264,7 @@ void PlayDemo (int demonumber)
     demoplayback = false;
 
     StopMusic ();
-    ClearMemory ();
+    SD_StopDigitized ();
 }
 
 //==========================================================================
@@ -1387,7 +1387,7 @@ void Died ()
 
     IN_UserInput(100);
     SD_WaitSoundDone ();
-    ClearMemory();
+    SD_StopDigitized();
 
     gamestate.lives--;
 
@@ -1432,7 +1432,7 @@ void GameLoop ()
 #endif
 
 restartgame:
-    ClearMemory ();
+    SD_StopDigitized ();
     SETFONTCOLOR(0,15);
     VW_FadeOut();
     DrawPlayScreen ();
@@ -1487,7 +1487,7 @@ startplayloop:
             else
                 SD_WaitSoundDone();
 
-            ClearMemory ();
+            SD_StopDigitized ();
             gamestate.oldscore = gamestate.score;
             gamestate.mapon = 20;
             SetupGameLevel ();
@@ -1523,7 +1523,7 @@ startplayloop:
                 DrawKeys ();
                 VW_FadeOut ();
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 LevelCompleted ();              // do the intermission
                 if(viewsize == 21) DrawPlayScreen();
@@ -1609,7 +1609,7 @@ startplayloop:
                 DC_StatusClearLCD();
 #endif
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
@@ -1628,11 +1628,11 @@ startplayloop:
                     VW_FadeOut ();
                 else
                     VL_FadeOut (0,255,0,17,17,300);
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 Victory ();
 
-                ClearMemory ();
+                SD_StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
@@ -1644,7 +1644,7 @@ startplayloop:
 
             default:
                 if(viewsize == 21) DrawPlayScreen();
-                ClearMemory ();
+                SD_StopDigitized ();
                 break;
         }
     } while (1);

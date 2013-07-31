@@ -31,8 +31,7 @@ extern  int32_t            spearx,speary;
 extern  unsigned        spearangle;
 extern  Boolean         spearflag;
 
-#define ClearMemory SD_StopDigitized
-
+// IOANCH: cleared ClearMemory
 // IOANCH 20130621: added constant #defines for player starts
 #define PLAYER_START_NORTH 19
 #define PLAYER_START_EAST  20
