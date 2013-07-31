@@ -90,12 +90,12 @@ void    T_Attack (objtype *ob);
 
 statetype   s_player = {false,0,0,(statefunc) T_Player,NULL,NULL};
 statetype   s_attack = {false,0,0,(statefunc) T_Attack,NULL,NULL};
-#pragma pack(push,1)
+
 struct atkinf
 {
     int8_t    tics,attack,frame;              // attack is 1 for gun, 2 for knife
 };
-#pragma pack(pop)
+
 atkinf attackinfo[4][14] =
 {
     { {6,0,1},{6,2,2},{6,0,3},{6,-1,4} },
