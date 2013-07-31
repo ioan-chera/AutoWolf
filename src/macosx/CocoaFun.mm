@@ -21,8 +21,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-// Geared towards OS X 10.6 and later
-
 #import <Cocoa/Cocoa.h>
 #include "CocoaFun.h"
 
@@ -36,28 +34,12 @@
 //
 const char *Cocoa_ApplicationSupportDirectory()
 {
-    NSFileManager* sharedFM = [NSFileManager defaultManager];
-    NSArray* possibleURLs = [sharedFM URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
-    NSURL* appSupportDir = nil;
-    NSURL* appDirectory = nil;
-    
-    if ([possibleURLs count] >= 1)
-    {
-        // Use the first directory (if multiple are returned)
-        appSupportDir = [possibleURLs objectAtIndex:0];
-    }
-    
-    // If a valid app support directory exists, add the
-    // app's bundle ID to it to specify the final directory.
-    if (appSupportDir)
-    {
-        NSString* appBundleID = APPLICATION_UTI;
-        appDirectory = [appSupportDir URLByAppendingPathComponent:appBundleID];
-    }
-    
-    const char *res = [[appDirectory path] cStringUsingEncoding:NSUTF8StringEncoding];
-    
-    return res;
+   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+   if([paths count] <= 0)
+      return ".";
+   
+   NSString *applicationSupportDirectory = [paths objectAtIndex:0];
+   return [[applicationSupportDirectory stringByAppendingPathComponent:APPLICATION_UTI] cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
 //

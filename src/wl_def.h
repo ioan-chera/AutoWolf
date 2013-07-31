@@ -41,7 +41,7 @@
 #include <stdlib.h>
 #include <time.h>
 #ifndef APPLE_NONCPP11
-#include <unordered_set>
+#include <set>
 #endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
