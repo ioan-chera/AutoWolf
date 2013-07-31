@@ -150,7 +150,13 @@ void main_ReadConfig()
             close(file);
             goto noconfig;
         }
-        read(file,Scores,sizeof(HighScore) * MaxScores);
+       for (int i = 0; i < MaxScores; ++i)
+       {
+          read(file, Scores[i].name, sizeof(Scores[i].name));
+          read(file, &Scores[i].score, sizeof(Scores[i].score));
+          read(file, &Scores[i].completed, sizeof(Scores[i].completed));
+          read(file, &Scores[i].episode, sizeof(Scores[i].episode));
+       }
 
         read(file,&sd,sizeof(sd));
         read(file,&sm,sizeof(sm));
@@ -264,7 +270,13 @@ void WriteConfig()
     {
         word tmp=0xfefa;
         write(file,&tmp,sizeof(tmp));
-        write(file,Scores,sizeof(HighScore) * MaxScores);
+       for (int i = 0; i < MaxScores; ++i)
+       {
+          write(file, Scores[i].name, sizeof(Scores[i].name));
+          write(file, &Scores[i].score, sizeof(Scores[i].score));
+          write(file, &Scores[i].completed, sizeof(Scores[i].completed));
+          write(file, &Scores[i].episode, sizeof(Scores[i].episode));
+       }
 
         write(file,&SoundMode,sizeof(SoundMode));
         write(file,&sd_musicMode,sizeof(sd_musicMode));

@@ -41,13 +41,14 @@
 
 #define	MaxHighName	57
 #define	MaxScores	7
-#pragma pack(push,1)
-	struct HighScore
+
+struct HighScore
 {
     char	name[MaxHighName + 1];
     int32_t	score;
     word	completed,episode;
 } ;
+#pragma pack(push,1)
 
 #define	MaxGameName		32
 #define	MaxSaveGames	6
