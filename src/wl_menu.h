@@ -93,7 +93,6 @@
 //
 // TYPEDEFS
 //
-#pragma pack(push, 1)
 struct CP_iteminfo
 {
    short x,y,amount,curpos,indent;
@@ -110,7 +109,6 @@ struct CustomCtrls
 {
     short allowed[4];
 } ;
-#pragma pack(pop)
 
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
