@@ -49,7 +49,6 @@ typedef enum
     sds_Off,sds_PC,sds_SoundBlaster
 } SDSMode;
 
-#pragma pack(push, 1)
 struct SoundCommon
 {
     longword        length;
@@ -128,7 +127,7 @@ struct globalsoundpos
     int valid;
     fixed globalsoundx, globalsoundy;
 } ;
-#pragma pack(pop)
+
 extern globalsoundpos channelSoundPos[];
 
 // Global variables
