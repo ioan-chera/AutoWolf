@@ -221,13 +221,11 @@ enum menuitems
 //
 // WL_INTER
 //
-#pragma pack(push,1)
 struct  LRstruct
 {
- int kill,secret,treasure;
+ int32_t kill,secret,treasure;   // IOANCH: since it's serialized, it is int32_t
  int32_t time;
 };
-#pragma pack(pop)
 
 extern LRstruct LevelRatios[];
 
