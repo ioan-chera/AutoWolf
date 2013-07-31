@@ -33,12 +33,10 @@
 
 #define MAXSHIFTS	1
 
-#pragma pack(push, 1)
 struct pictabletype
 {
 	int16_t width,height;
 };
-
 
 struct fontstruct
 {
@@ -46,13 +44,11 @@ struct fontstruct
 	int16_t location[256];
 	int8_t width[256];
 } ;
-#pragma pack(pop)
 
 //===========================================================================
 
 
 extern	pictabletype	*pictable;
-extern	pictabletype	*picmtable;
 
 extern  byte            fontcolor,backcolor;
 extern	int             fontnumber;
