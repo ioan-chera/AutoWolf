@@ -32,14 +32,12 @@ extern  fixed   viewsin,viewcos;
 void    ThreeDRefresh ();
 void    CalcTics ();
 
-#pragma pack(push, 1)
 struct t_compshape
 {
     word leftpix,rightpix;
     word dataofs[64];
 // table data after dataofs[rightpix-leftpix+1]
 };
-#pragma pack(pop)
 
 // IOANCH 20130724: delocalized vgaCeiling
 extern byte vgaCeiling_wl6[];
