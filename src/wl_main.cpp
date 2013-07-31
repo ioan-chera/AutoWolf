@@ -448,6 +448,8 @@ Boolean SaveTheGame(FILE *file,int x,int y)
     DiskFlopAnim(x,y);
     memcpy(&nullobj,ob,sizeof(nullobj));
     nullobj.state=(statetype *) ((uintptr_t)nullobj.state-(uintptr_t)&s_player);
+   
+//   nullobj.writeToFile(file);
     fwrite(&nullobj,sizeof(nullobj),1,file);
     ob = ob->next;
 
@@ -456,10 +458,12 @@ Boolean SaveTheGame(FILE *file,int x,int y)
     {
         memcpy(&nullobj,ob,sizeof(nullobj));
         nullobj.state=(statetype *) ((uintptr_t)nullobj.state-(uintptr_t)&s_grdstand);
+//       nullobj.writeToFile(file);
         fwrite(&nullobj,sizeof(nullobj),1,file);
     }
     nullobj.active = ac_badobject;          // end of file marker
     DiskFlopAnim(x,y);
+//   nullobj.writeToFile(file);
     fwrite(&nullobj,sizeof(nullobj),1,file);
 
     DiskFlopAnim(x,y);
@@ -472,6 +476,7 @@ Boolean SaveTheGame(FILE *file,int x,int y)
     {
         memcpy(&nullstat,statobjlist+i,sizeof(nullstat));
         nullstat.visspot=(byte *) ((uintptr_t) nullstat.visspot-(uintptr_t)spotvis);
+//       nullstat.writeToFile(file);
         fwrite(&nullstat,sizeof(nullstat),1,file);
         checksum = DoChecksum((byte *)&nullstat,sizeof(nullstat),checksum);
     }

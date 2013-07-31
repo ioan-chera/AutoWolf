@@ -439,7 +439,7 @@ typedef void (* statefunc) (void *);
 // IOANCH 20130306: added state flags
 #define STF_DAMAGING 1
 
-#pragma pack(push, 1)
+
 struct statetype
 {
     Boolean rotate;
@@ -450,7 +450,7 @@ struct statetype
     // IOANCH 20130306: added state flags
     uint64_t flags;
 } ;
-#pragma pack(pop)
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -458,7 +458,6 @@ struct statetype
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(push, 1)
 struct statobj_t
 {
     byte      tilex,tiley;
@@ -466,8 +465,28 @@ struct statobj_t
     byte      *visspot;
     uint32_t  flags;
     byte      itemnumber;
+   
+//   void writeToFile(FILE *file)
+//   {
+//      fwrite(&tilex, sizeof(tilex), 1, file);
+//      fwrite(&tiley, sizeof(tiley), 1, file);
+//      fwrite(&shapenum, sizeof(shapenum), 1, file);
+//      fwrite(&visspot, sizeof(visspot), 1, file);  // IOANCH: not portable between 32 and 64 bits!!!
+//      fwrite(&flags, sizeof(flags), 1, file);
+//      fwrite(&itemnumber, sizeof(itemnumber), 1, file);
+//   }
+//   int32_t doChecksum(int32_t checksum)
+//   {
+//      checksum += ((byte*)tilex)[0] ^ ((byte*)tiley)[1];
+//      checksum += ((byte*)tiley)[0] ^ ((byte*)shapenum)[0];
+//      checksum += ((byte*)shapenum)[0] ^ ((byte*)shapenum)[1];
+//      checksum += ((byte*)shapenum)[1] ^ ((byte*)visspot)[0];
+//      checksum += ((byte*)visspot)[0] ^ ((byte*)visspot)[1];
+//      checksum += ((byte*)visspot)[1] ^ ((byte*)visspot)[2];
+//      checksum += ((byte*)visspot)[2] ^ ((byte*)visspot)[3];
+//      return checksum;
+//   }
 };
-#pragma pack(pop)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -480,7 +499,6 @@ enum doortype
     dr_open,dr_closed,dr_opening,dr_closing
 };
 
-#pragma pack(push, 1)
  struct doorobj_t
 {
     byte     tilex,tiley;
@@ -489,7 +507,6 @@ enum doortype
     doortype action;
     short    ticcount;
 } ;
-#pragma pack(pop)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -497,7 +514,6 @@ enum doortype
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(push, 1)
 struct objtype
 {
     activetype  active;
@@ -525,8 +541,36 @@ struct objtype
 
     short       temp1,temp2,hidden;
     objtype *next,*prev;
+   
+   void writeToFile(FILE *file)
+   {
+      fwrite(&active, sizeof(active), 1, file);
+      fwrite(&ticcount, sizeof(ticcount), 1, file);
+      fwrite(&obclass, sizeof(obclass), 1, file);
+      fwrite(&state, sizeof(state), 1, file);  // IOANCH: not portable between 32 and 64 bits!!!
+      fwrite(&flags, sizeof(flags), 1, file);
+      fwrite(&distance, sizeof(distance), 1, file);
+      fwrite(&dir, sizeof(dir), 1, file);
+      fwrite(&x, sizeof(x), 1, file);
+      fwrite(&y, sizeof(y), 1, file);
+      fwrite(&tilex, sizeof(tilex), 1, file);
+      fwrite(&tiley, sizeof(tiley), 1, file);
+      // IOANCH: don't write recordx and recordy. They'll be saved separately TODO
+      fwrite(&areanumber, sizeof(areanumber), 1, file);
+      fwrite(&viewx, sizeof(viewx), 1, file);
+      fwrite(&viewheight, sizeof(viewheight), 1, file);
+      fwrite(&transx, sizeof(transx), 1, file);
+      fwrite(&transy, sizeof(transy), 1, file);
+      fwrite(&angle, sizeof(angle), 1, file);
+      fwrite(&hitpoints, sizeof(hitpoints), 1, file);
+      fwrite(&speed, sizeof(speed), 1, file);
+      fwrite(&temp1, sizeof(temp1), 1, file);
+      fwrite(&temp2, sizeof(temp2), 1, file);
+      fwrite(&hidden, sizeof(hidden), 1, file);
+      fwrite(&next, sizeof(next), 1, file);
+      fwrite(&prev, sizeof(prev), 1, file);
+   }
 } ;
-#pragma pack(pop)
 
 
 enum
@@ -579,7 +623,6 @@ enum
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(push, 1)
 struct gametype
 {
     short       difficulty;
@@ -600,7 +643,6 @@ struct gametype
     int32_t     killx,killy;
     Boolean     victoryflag;            // set during victory animations
 } ;
-#pragma pack(pop)
 
 enum exit_t
 {
