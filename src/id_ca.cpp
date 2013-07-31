@@ -426,11 +426,7 @@ static void CAL_SetupGrFile ()
                                             // withExtension yet
    handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
 
-   for(int i = 0; i < lengthof(ca_grhuffman); ++i)
-   {
-      read(handle, &ca_grhuffman[i].bit0, sizeof(word));
-      read(handle, &ca_grhuffman[i].bit1, sizeof(word));
-   }
+    read(handle, ca_grhuffman, sizeof(ca_grhuffman));
     close(handle);
 
     // load the data offsets from ???head.ext
@@ -576,9 +572,7 @@ static void CAL_SetupMapFile ()
 
        ca_mapheaderseg[i] = (maptype *)I_CheckedMalloc(sizeof(maptype));
         lseek(ca_maphandle,pos,SEEK_SET);
-       read(ca_maphandle, ca_mapheaderseg[i]->planestart, 3 * sizeof(int32_t));
-       read(ca_maphandle, ca_mapheaderseg[i]->planelength, 5 * sizeof(word));
-       read(ca_maphandle, ca_mapheaderseg[i]->name, 16 * sizeof(char));
+        read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
     }
 
 //
