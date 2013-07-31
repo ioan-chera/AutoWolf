@@ -44,7 +44,6 @@
 statobj_t       statobjlist[MAXSTATS];
 statobj_t       *laststatobj;
 
-#pragma pack(push,1)
 // IOANCH 11.06.2012: added name to made compiler stop complaining
 struct _statinfo_t
 {
@@ -52,7 +51,6 @@ struct _statinfo_t
     wl_stat_t  type;
     uint32_t   specialFlags;    // they are ORed to the statobj_t flags
 };
-#pragma pack(pop)
 
 // IOANCH 20130202: unification process
 _statinfo_t statinfo_wl6[] =
