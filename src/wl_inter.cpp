@@ -482,13 +482,11 @@ LevelCompleted ()
 #define VBLWAIT 30
 #define PAR_AMOUNT      500
 #define PERCENT100AMT   10000
-#pragma pack(push, 1)
    struct times
     {
         float time;
         char timestr[6];
     } ;
-#pragma pack(pop)
 
     int x, i, min, sec, ratio, kr, sr, tr;
     char tempstr[10];
