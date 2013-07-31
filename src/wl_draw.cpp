@@ -661,7 +661,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
     const t_compshape *shape;
     unsigned scale,pixheight;
     unsigned starty,endy;
-    word *cmdptr;
+    const word *cmdptr;
     byte *cline;
     byte *line;
     byte *vmem;
@@ -679,7 +679,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
         curshades = shadetable[GetShade(height)];
 #endif
 
-    shape = (const t_compshape *) vSwapData.getSprite(shapenum);
+    shape = vSwapData.getSprite(shapenum);
 
     scale=height>>3;                 // low three bits are fractional
     if(!scale) return;   // too close or far away
@@ -688,7 +688,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
     actx=xcenter-scale;
     upperedge=viewheight/2-scale;
 
-    cmdptr=(word *) shape->dataofs;
+    cmdptr = shape->dataofs;
 
     for(i=shape->leftpix,pixcnt=i*pixheight,rpix=(pixcnt>>6)+actx;i<=shape->rightpix;i++,cmdptr++)
     {
@@ -763,7 +763,7 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
     byte *vmem;
 
     // IOANCH 20130303: don't remap
-    shape = (const t_compshape *) vSwapData.getSprite(shapenum, false);
+    shape = vSwapData.getSprite(shapenum, false);
 
     scale=height>>1;
     pixheight=scale*SPRITESCALEFACTOR;

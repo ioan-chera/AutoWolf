@@ -27,6 +27,8 @@
 #define PMPageSize 4096
 #endif
 
+struct t_compshape;
+
 //
 // VSwapContainer
 //
@@ -162,11 +164,12 @@ public:
    //
    // Returns the sprite at offset index
    //
-   const uint16_t *getSprite(int shapenum, bool remap = true) const
+   const t_compshape *getSprite(int shapenum, bool remap = true) const
    {
       if(remap)
          shapenum = SPEAR.sp(shapenum);
-      return (const uint16_t *) (const void *) getPage(m_spriteStart + shapenum);
+      return (const t_compshape *) (const void *)
+      getPage(m_spriteStart + shapenum);
    }
    
    //
