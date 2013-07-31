@@ -62,7 +62,6 @@ static	Boolean		US_Started;
 		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
 
-		SaveGame	Games[MaxSaveGames];
 		HighScore	Scores[MaxScores] =
 					{
 						{"id software-'92",10000,1},

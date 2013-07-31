@@ -48,18 +48,8 @@ struct HighScore
     int32_t	score;
     word	completed,episode;
 } ;
-#pragma pack(push,1)
 
-#define	MaxGameName		32
-#define	MaxSaveGames	6
-	struct SaveGame
-{
-    char	signature[4];
-    word	*oldtest;
-    Boolean	present;
-    char	name[MaxGameName + 1];
-} ;
-
+// IOANCH: Removed SaveGame as it wasn't used
 #define	MaxString	128	// Maximum input string size
 
 struct WindowRec
@@ -68,7 +58,7 @@ struct WindowRec
         w,h,
         px,py;
 } ;	// Record used to save & restore screen windows
-#pragma pack(pop)
+
 extern	Boolean		ingame,		// Set by game code if a game is in progress
 					loadedgame;	// Set if the current game was loaded
 extern	word		PrintX,PrintY;	// Current printing location in the window
@@ -83,7 +73,6 @@ extern int rndindex;
 
 extern	Boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
 extern	void		(*USL_ResetGame)();
-extern	SaveGame	Games[MaxSaveGames];
 extern	HighScore	Scores[];
 
 #define	US_HomeWindow()	{PrintX = WindowX; PrintY = WindowY;}
