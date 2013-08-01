@@ -242,7 +242,6 @@ void main_ReadConfig()
       {
          // File is old config
          main_continueReadOldConfig(file, sd, sm, sds);
-         fclose(file);
       }
       else
       {
