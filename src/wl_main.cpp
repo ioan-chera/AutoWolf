@@ -340,6 +340,9 @@ if(pfile->hasProperty(#name, Property::Int32)) \
 void main_WriteConfig()
 {
     PString configpath;
+   SDMode sd = SoundMode;
+   SMMode sm = sd_musicMode;
+   SDSMode sds = sd_digiMode;
 
 #ifdef _arch_dreamcast
     fs_unlink(cfg_configname.buffer());
@@ -357,9 +360,9 @@ pFile->setStringValue(#name, PString((const char *)(name), (sz)));
 pFile->setIntValue(#name, (int)(name));
    PUT_STR_PROPERTY(Scores, sizeof(HighScore) * MaxScores)
    
-   PUT_INT_PROPERTY(SoundMode)
-   PUT_INT_PROPERTY(sd_musicMode)
-   PUT_INT_PROPERTY(sd_digiMode)
+   PUT_INT_PROPERTY(sd)
+   PUT_INT_PROPERTY(sm)
+   PUT_INT_PROPERTY(sds)
    
    PUT_INT_PROPERTY(mouseenabled)
    PUT_INT_PROPERTY(joystickenabled)
