@@ -106,8 +106,8 @@ void SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state)
     newobj->state = state;
     if (state->tictime)
         newobj->ticcount = DEMOCHOOSE_ORIG_SDL(
-                US_RndT () % state->tictime,
-                US_RndT () % state->tictime + 1);     // Chris' moonwalk bugfix ;D
+                wolfRnd () % state->tictime,
+                wolfRnd () % state->tictime + 1);     // Chris' moonwalk bugfix ;D
     else
         newobj->ticcount = 0;
 
@@ -473,7 +473,7 @@ void SelectDodgeDir (objtype *ob)
         dirtry[4] = tdir;
     }
 
-    if (US_RndT() < 128)
+    if (wolfRnd() < 128)
     {
         tdir = dirtry[1];
         dirtry[1] = dirtry[2];
@@ -584,7 +584,7 @@ void SelectChaseDir (objtype *ob)
             return;
     }
 
-    if (US_RndT()>128)      /*randomly determine direction of search*/
+    if (wolfRnd()>128)      /*randomly determine direction of search*/
     {
         for (tdir=north; tdir<=west; tdir=(dirtype)(tdir+1))
         {
@@ -669,7 +669,7 @@ void SelectRunDir (objtype *ob)
 
     /* there is no direct path to the player, so pick another direction */
 
-    if (US_RndT()>128)      /*randomly determine direction of search*/
+    if (wolfRnd()>128)      /*randomly determine direction of search*/
     {
         for (tdir=north; tdir<=west; tdir=(dirtype)(tdir+1))
         {
@@ -1257,19 +1257,19 @@ Boolean SightPlayer (objtype *ob)
         switch (ob->obclass)
         {
             case guardobj:
-                ob->temp2 = 1+US_RndT()/4;
+                ob->temp2 = 1+wolfRnd()/4;
                 break;
             case officerobj:
                 ob->temp2 = 2;
                 break;
             case mutantobj:
-                ob->temp2 = 1+US_RndT()/6;
+                ob->temp2 = 1+wolfRnd()/6;
                 break;
             case ssobj:
-                ob->temp2 = 1+US_RndT()/6;
+                ob->temp2 = 1+wolfRnd()/6;
                 break;
             case dogobj:
-                ob->temp2 = 1+US_RndT()/8;
+                ob->temp2 = 1+wolfRnd()/8;
                 break;
 
             case bossobj:

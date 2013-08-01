@@ -42,6 +42,52 @@
 #define	MaxHighName	57
 #define	MaxScores	7
 
+//
+// LegacyRandomGenerator
+//
+// IOANCH 20130801: add randomness class
+// This one is the old Wolf3d 256-bound generator
+//
+class LegacyRandomGenerator
+{
+   static const byte m_RndTable[];
+   
+   int m_index;
+public:
+   void initialize(bool randomize);
+   int operator() ();
+};
+extern LegacyRandomGenerator wolfRnd;
+
+//
+// RandomGenerator
+//
+// Basic linear congruential, 31-bit bound
+//
+class RandomGenerator
+{
+   uint64_t state;
+public:
+   int operator() ()
+   {
+      return (int)(state = state * 48271 % INT32_MAX);
+   }
+   void initialize(int inState)
+   {
+      state = (uint64_t)inState % INT32_MAX;
+   }
+   // Sets it to the current day value
+   void initializeByDay()
+   {
+      time_t rawtime;
+      tm *timeinfo;
+      time(&rawtime);
+      timeinfo = localtime(&rawtime);
+      state = timeinfo->tm_yday + 366 * timeinfo->tm_year;
+
+   }
+};
+
 struct HighScore
 {
     char	name[MaxHighName + 1];
@@ -67,9 +113,6 @@ extern	word		WindowX,WindowY,// Current location of window
 
 extern	void		(*USL_MeasureString)(const char *,word *,word *);
 extern void			(*USL_DrawString)(const char *);
-
-// IOANCH 27.05.2012: add rndindex
-extern int rndindex;
 
 extern	Boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
 extern	void		(*USL_ResetGame)();
@@ -109,9 +152,5 @@ Boolean         US_LineInput(int x,int y,char *buf,const char *def,Boolean escok
 
 void	        USL_PrintInCenter(const char *s,Rect r);
 char 	        *USL_GiveSaveName(word game);
-
-void            US_InitRndT(int randomize);
-int             US_RndT();
-int             US_RndTBot();
 
 #endif

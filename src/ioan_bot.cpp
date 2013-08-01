@@ -62,6 +62,8 @@ void BotMan::MapInit()
 	path.makeEmpty();
 	panic = false;
 	int i, j;
+   
+   botRnd.initialize(I_GetTicks());
 	
     mapExploration.Reset();
 
@@ -179,28 +181,21 @@ void BotMan::MoodBox::SetMood(unsigned inMood)
 //
 
 // Same as C++11 minstd_rand
-static inline unsigned rnd(unsigned r)
-{
-	return r * 48271 % 2147483647;
-}
 void BotMan::SetMood()
 {
     // seconds
 //    time_t day = time(NULL) / 60 / 60 / 24;
-    time_t rawtime;
-    tm *timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    int day = timeinfo->tm_yday + 366 * timeinfo->tm_year;
-    
-    unsigned r; 
+   RandomGenerator dayRnd;
+   dayRnd.initializeByDay();
+   
+//    unsigned r;
     
     // Day will be used as random seed
-    r = rnd((unsigned)day);
+//    r = rnd((unsigned)day);
     
-    if(r % 4 == 0)
+    if(dayRnd() % 4 == 0)
     {
-        moodBox.SetMood(rnd(r));
+        moodBox.SetMood(dayRnd());
     }
 }
 
@@ -1443,7 +1438,7 @@ void BotMan::DoMeleeAI(short eangle, int edist)
         {
             controly = -RUNMOVE * tics;
 //            buttonstate[bt_strafe] = true;
-            controlx += (US_RndTBot() % 30 - 15) * tics;
+            controlx += (botRnd() % 30 - 15) * tics;
             
         }
     }

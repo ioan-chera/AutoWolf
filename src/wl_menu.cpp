@@ -831,7 +831,7 @@ CP_CheckQuick (ScanCode scancode)
             if (Confirm (ENDGAMESTR))
 #else
             // IOANCH 20130202: unification process
-            if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR() ? 9 : 0)]))
+            if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR() ? 9 : 0)]))
 #endif
             {
                 I_UpdateScreen ();
@@ -2822,7 +2822,7 @@ CP_Quit (int)
     if (Confirm (ENDGAMESTR))
 #else
     // IOANCH 20130202: unification process
-    if (Confirm (endStrings[US_RndT () & 0x7 + (US_RndT () & 1) + (SPEAR() ? 9 : 0)]))
+    if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR() ? 9 : 0)]))
 #endif
 
     {

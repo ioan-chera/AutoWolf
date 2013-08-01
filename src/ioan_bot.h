@@ -106,6 +106,7 @@ class BotMan
 	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
     MapExploration mapExploration;	// map of explored areas
     int knownExitX, knownExitY;
+   RandomGenerator botRnd;
     
 
 	void ExploreFill(int tx, int ty, int ox, int oy,

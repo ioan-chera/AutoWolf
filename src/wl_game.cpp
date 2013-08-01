@@ -696,9 +696,13 @@ void SetupGameLevel ()
     }
 
     if (demoplayback || demorecord)
-        US_InitRndT (false);
+    {
+       wolfRnd.initialize(false);
+    }
     else
-        US_InitRndT (true);
+    {
+       wolfRnd.initialize(true);
+    }
 
 //
 // load the level

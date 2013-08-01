@@ -175,15 +175,15 @@ void T_Projectile (objtype *ob)
         switch (ob->obclass)
         {
             case needleobj:
-                damage = (US_RndT() >>3) + 20;
+                damage = (wolfRnd() >>3) + 20;
                 break;
             case rocketobj:
             case hrocketobj:
             case sparkobj:
-                damage = (US_RndT() >>3) + 30;
+                damage = (wolfRnd() >>3) + 30;
                 break;
             case fireobj:
-                damage = (US_RndT() >>3);
+                damage = (wolfRnd() >>3);
                 break;
             default:
                 ;
@@ -219,7 +219,7 @@ void A_DeathScream (objtype *ob)
     // IOANCH 20130301: unification culling
     
     // IOANCH 20130202: unification process
-    if (!US_RndT() && ((!SPEAR() && mapSegs.map()==9) ||
+    if (!wolfRnd() && ((!SPEAR() && mapSegs.map()==9) ||
                        (SPEAR() && (mapSegs.map() == 18 || mapSegs.map() == 19))))
     {
         switch(ob->obclass)
@@ -258,7 +258,7 @@ void A_DeathScream (objtype *ob)
             };
             // IOANCH 20130301: unification culling
             
-            PlaySoundLocActor(sounds[US_RndT()%8],ob);
+            PlaySoundLocActor(sounds[wolfRnd()%8],ob);
             break;
         }
         default:
@@ -412,7 +412,7 @@ void A_Relaunch (objtype *ob)
         return;
     }
     
-    if (US_RndT()&1)
+    if (wolfRnd()&1)
     {
         NewState (ob,&s_angelchase1);
         return;
@@ -499,7 +499,7 @@ void T_ProjectileBossChase(objtype *ob)
     if (CheckLine(ob))                                              // got a shot at player?
     {
         ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<3) && objfreelist)
+        if ( (unsigned) wolfRnd() < (tics<<3) && objfreelist)
         {
             //
             // go into attack frame
@@ -761,7 +761,7 @@ void T_Fake (objtype *ob)
     if (CheckLine(ob))                      // got a shot at player?
     {
         ob->hidden = false;
-        if ( (unsigned) US_RndT() < (tics<<1) && objfreelist)
+        if ( (unsigned) wolfRnd() < (tics<<1) && objfreelist)
         {
             //
             // go into attack frame
@@ -899,7 +899,7 @@ void T_Chase (objtype *ob)
             }
         }
         
-        if ( US_RndT()<chance)
+        if ( wolfRnd()<chance)
         {
             //
             // go into attack frame
@@ -1244,14 +1244,14 @@ void A_Shoot (objtype *ob)
     
     // see if the shot was a hit
     
-    if (US_RndT()<hitchance)
+    if (wolfRnd()<hitchance)
     {
         if (dist<2)
-            damage = US_RndT()>>2;
+            damage = wolfRnd()>>2;
         else if (dist<4)
-            damage = US_RndT()>>3;
+            damage = wolfRnd()>>3;
         else
-            damage = US_RndT()>>4;
+            damage = wolfRnd()>>4;
         
         TakeDamage (damage,ob);
     }
@@ -1312,9 +1312,9 @@ void A_Bite (objtype *ob)
         dy -= TILEGLOBAL;
         if (dy <= MINACTORDIST)
         {
-            if (US_RndT()<180)
+            if (wolfRnd()<180)
             {
-                TakeDamage (US_RndT()>>4,ob);
+                TakeDamage (wolfRnd()>>4,ob);
                 return;
             }
         }

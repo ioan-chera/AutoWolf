@@ -1384,7 +1384,7 @@ void PlayLoop (void)
                 funnyticount = 0;
                 // IOANCH 20130302: unification
                 if(viewsize != 21)
-                    StatusDrawFace(SPEAR.g(BJWAITING1PIC) + (US_RndT () & 1));
+                    StatusDrawFace(SPEAR.g(BJWAITING1PIC) + (wolfRnd () & 1));
                 facecount = 0;
             }
         }

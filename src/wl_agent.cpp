@@ -385,9 +385,9 @@ void UpdateFace ()
         return;
 
     facecount += tics;
-    if (facecount > US_RndT())
+    if (facecount > wolfRnd())
     {
-        gamestate.faceframe = (US_RndT()>>6);
+        gamestate.faceframe = (wolfRnd()>>6);
         if (gamestate.faceframe==3)
             gamestate.faceframe = 1;
 
@@ -1251,7 +1251,7 @@ void    KnifeAttack (objtype *ob)
     
     // hit something
     if(closest)
-        DamageActor (closest,US_RndT() >> 4);
+        DamageActor (closest,wolfRnd() >> 4);
 }
 
 
@@ -1325,18 +1325,18 @@ void    GunAttack (objtype *ob)
     dy = ABS(closest->tiley - player->tiley);
     dist = dx>dy ? dx:dy;
     if (dist<2)
-        damage = US_RndT() / 4;
+        damage = wolfRnd() / 4;
     else if (dist<4)
-        damage = US_RndT() / 6;
+        damage = wolfRnd() / 6;
     else
     {
-        if ( (US_RndT() / 12) < dist)           // missed
+        if ( (wolfRnd() / 12) < dist)           // missed
 		{
 			// IOANCH 26.06.2012: efficiency
 			bot.shootRatio.addFail();
             return;
 		}
-        damage = US_RndT() / 6;
+        damage = wolfRnd() / 6;
     }
 	// IOANCH 26.06.2012: efficiency
 	bot.shootRatio.addSuccess();

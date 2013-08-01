@@ -544,19 +544,20 @@ objtype *Basic::CheckKnifeEnemy()
 //
 void Basic::MarkovWrite(char *c, int nmax)
 {
-	int oldindex = rndindex;	// don't let random table affect demos and such
+   // don't let random table affect demos and such
 
 	int i,j,r,s, n = 0;
+   
+   RandomGenerator rngM;
+   rngM.initialize(I_GetTicks());
 
-	srand((unsigned)US_RndT());
-
-	rndindex = oldindex;
+//	srand((unsigned)wolfRnd());
 
 	j = 26;
 	
 	do
 	{
-		r = rand()%_marktot[j];
+		r = rngM() % _marktot[j];
 		s = 0;
 		for(i = 0; i < 27; i++)
 		{
