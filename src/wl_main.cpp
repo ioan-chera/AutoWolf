@@ -1252,7 +1252,7 @@ void DoJukebox()
     // IOANCH 20130301: unification culling
     start = SPEAR() ? 0 : ((I_GetTicks()/10)%3)*6;
 
-    CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT)+1);
     
     if(SPEAR())
         CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
@@ -1374,8 +1374,8 @@ static void InitGame()
     {
         byte *screen;
 
-        CA_CacheGrChunk (SPEAR.g(ERRORSCREEN));
-        screen = ca_grsegs[SPEAR.g(ERRORSCREEN)];
+        graphSegs.cacheChunk (SPEAR.g(ERRORSCREEN));
+        screen = graphSegs[SPEAR.g(ERRORSCREEN)];
         ShutdownId();
 /*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
         gotoxy (1,23);*/
@@ -1420,8 +1420,8 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    CA_CacheGrChunk(SPEAR.g(STARTFONT));
-    CA_CacheGrChunk(SPEAR.g(STATUSBARPIC));
+    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR.g(STATUSBARPIC));
 
     I_LoadLatchMem ();
     main_BuildTables ();          // trig tables
@@ -1536,7 +1536,7 @@ void Quit (const char *message)
        has_error = true;
     }
 
-    if (!pictable)  // don't try to display the red box before it's loaded
+    if (!graphSegs.hasPictable())  // don't try to display the red box before it's loaded
     {
         ShutdownId();
         if (has_error)
@@ -1631,24 +1631,24 @@ static void DemoLoop()
             if(SPEAR())
             {
                 SDL_Color pal[256];
-                CA_CacheGrChunk (SPEAR.g(TITLEPALETTE));
-                VL_ConvertPalette(ca_grsegs[SPEAR.g(TITLEPALETTE)], pal, 256);
+                graphSegs.cacheChunk (SPEAR.g(TITLEPALETTE));
+                VL_ConvertPalette(graphSegs[SPEAR.g(TITLEPALETTE)], pal, 256);
 
-                CA_CacheGrChunk (SPEAR.g(TITLE1PIC));
+                graphSegs.cacheChunk (SPEAR.g(TITLE1PIC));
                 VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC));
-                UNCACHEGRCHUNK (SPEAR.g(TITLE1PIC));
+                graphSegs.uncacheChunk (SPEAR.g(TITLE1PIC));
 
-                CA_CacheGrChunk (SPEAR.g(TITLE2PIC));
+                graphSegs.cacheChunk (SPEAR.g(TITLE2PIC));
                 VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
-                UNCACHEGRCHUNK (SPEAR.g(TITLE2PIC));
+                graphSegs.uncacheChunk (SPEAR.g(TITLE2PIC));
                 I_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
-                UNCACHEGRCHUNK (SPEAR.g(TITLEPALETTE));
+                graphSegs.uncacheChunk (SPEAR.g(TITLEPALETTE));
             }
             else
             {
-                CA_CacheScreen (SPEAR.g(TITLEPIC));
+                graphSegs.cacheScreen (SPEAR.g(TITLEPIC));
                 I_UpdateScreen ();
                 VW_FadeIn();
             }
@@ -1658,7 +1658,7 @@ static void DemoLoop()
 //
 // credits page
 //
-            CA_CacheScreen (SPEAR.g(CREDITSPIC));
+            graphSegs.cacheScreen (SPEAR.g(CREDITSPIC));
             I_UpdateScreen();
             VW_FadeIn ();
             if (IN_UserInput(TickBase*10))

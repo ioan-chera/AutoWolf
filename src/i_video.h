@@ -55,7 +55,7 @@ void I_LatchToScreenScaledCoord (int surf_index, int scx, int scy);
 
 void    I_FreeLatchMem();
 void    I_LoadLatchMem ();
-void I_MemToLatch              (byte *source, int width, int height,
+void I_MemToLatch              (const byte *source, int width, int height,
                                 SDL_Surface *destSurface, int x, int y);
 
 void I_PutDirectFullColour(int col, byte *destptr, int x, int y);

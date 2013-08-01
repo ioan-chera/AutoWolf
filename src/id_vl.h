@@ -49,7 +49,7 @@ void VL_SetVGAPlaneMode ();
 void VL_SetTextMode ();
 void VL_Shutdown ();
 
-void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors);
+void VL_ConvertPalette(const byte *srcpal, SDL_Color *destpal, int numColors);
 void VL_FillPalette (int red, int green, int blue);
 void VL_GetPalette  (SDL_Color *palette);
 void VL_FadeOut     (int start, int end, int red, int green, int blue, int steps);
@@ -68,11 +68,11 @@ void inline VL_Bar      (int x, int y, int width, int height, int color)
 
 void VL_MungePic                (byte *source, unsigned width, unsigned height);
 void VL_DrawPicBare             (int x, int y, byte *pic, int width, int height);
-void VL_MemToScreenScaledCoord  (byte *source, int width, int height, int scx, int scy);
-void VL_MemToScreenScaledCoord  (byte *source, int origwidth, int origheight, int srcx, int srcy,
+void VL_MemToScreenScaledCoord  (const byte *source, int width, int height, int scx, int scy);
+void VL_MemToScreenScaledCoord  (const byte *source, int origwidth, int origheight, int srcx, int srcy,
                                     int destx, int desty, int width, int height);
 
-void inline VL_MemToScreen (byte *source, int width, int height, int x, int y)
+void inline VL_MemToScreen (const byte *source, int width, int height, int x, int y)
 {
     VL_MemToScreenScaledCoord(source, width, height,
         vid_scaleFactor*x, vid_scaleFactor*y);

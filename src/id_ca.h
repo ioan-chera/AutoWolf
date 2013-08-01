@@ -32,7 +32,6 @@
     #define MAPPLANES       2
 #endif
 
-#define UNCACHEGRCHUNK(chunk) {if(ca_grsegs[chunk]) {free(ca_grsegs[chunk]); ca_grsegs[chunk]=NULL;}}
 #define UNCACHEAUDIOCHUNK(chunk) {if(ca_audiosegs[chunk]) {free(ca_audiosegs[chunk]); ca_audiosegs[chunk]=NULL;}}
 
 // IOANCH 20130801: use classes
@@ -111,15 +110,98 @@ public:
    }
 };
 extern MapLoader mapSegs;
-//===========================================================================
 
+struct huffnode
+{
+   word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
+};
+
+//
+// GraphicLoader
+//
+// Class to cache graphic chunks from VGAGRAPH
+//
+class GraphicLoader
+{
+public:
+   struct pictabletype
+   {
+      int16_t width, height;
+   };
+private:
+   
+   FILE *m_file;
+   huffnode m_grhuffman[255];
+   int32_t  m_grstarts_wl6[NUMCHUNKS_wl6 + 1];
+   int32_t  m_grstarts_sod[NUMCHUNKS_sod + 1];
+   pictabletype m_pictable[NUMPICS_wl6 > NUMPICS_sod ? NUMPICS_wl6 : NUMPICS_sod];
+   byte *m_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
+   
+   int32_t grFilePos(size_t idx);
+   int32_t getChunkLength(int chunk);
+   void expandChunk(int chunk, const int32_t *source);
+   
+   void emptyFields()
+   {
+      m_file = NULL;
+      memset(m_grhuffman, 0, sizeof(m_grhuffman));
+      memset(m_grstarts_sod, 0, sizeof(m_grstarts_sod));
+      memset(m_grstarts_wl6, 0, sizeof(m_grstarts_wl6));
+      memset(m_pictable, 0, sizeof(m_pictable));
+      memset(m_grsegs, 0, sizeof(m_grsegs));
+   }
+   
+public:
+   GraphicLoader()
+   {
+      emptyFields();
+   }
+   void close()
+   {
+      if(m_file)
+         fclose(m_file);
+      for (int i = 0; i < (signed int)SPEAR.g(NUMCHUNKS); ++i)
+         uncacheChunk(i);
+      emptyFields();
+   }
+   
+   void uncacheChunk(int chunk)
+   {
+      if(m_grsegs[chunk])
+      {
+         free(m_grsegs[chunk]);
+         m_grsegs[chunk] = NULL;
+      }
+   }
+
+   ~GraphicLoader()
+   {
+      close();
+   }
+   void loadFromFile(const char *vgadict, const char *vgahead,
+                     const char *vgagraph);
+   void cacheChunk(int chunk);
+   void cacheScreen(int chunk);
+   const byte *operator [](int index) const
+   {
+      return m_grsegs[index];
+   }
+   pictabletype sizeAt(int index) const
+   {
+      return m_pictable[index];
+   }
+   bool hasPictable() const
+   {
+      return m_file != NULL;
+   }
+};
+extern GraphicLoader graphSegs;
 
 //===========================================================================
 
 // IOANCH 20130301: unification
 extern  byte *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 						NUMSNDCHUNKS_wl6];
-extern  byte *ca_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
 
 class PString;
 extern  PString  cfg_extension;
@@ -140,10 +222,6 @@ void CA_Shutdown ();
 
 int32_t CA_CacheAudioChunk (int chunk);
 void CA_LoadAllSounds ();
-
-void CA_CacheGrChunk (int chunk);
-
-void CA_CacheScreen (int chunk);
 
 void CA_CannotOpen(const char *name);
 

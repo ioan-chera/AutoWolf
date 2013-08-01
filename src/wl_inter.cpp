@@ -79,12 +79,12 @@ void
 EndScreen (int palette, int screen)
 {
     SDL_Color pal[256];
-    CA_CacheScreen (screen);
+    graphSegs.cacheScreen (screen);
     I_UpdateScreen ();
-    CA_CacheGrChunk (palette);
-    VL_ConvertPalette(ca_grsegs[palette], pal, 256);
+    graphSegs.cacheChunk (palette);
+    VL_ConvertPalette(graphSegs[palette], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    UNCACHEGRCHUNK (palette);
+    graphSegs.uncacheChunk (palette);
     IN_ClearKeysDown ();
     IN_Ack ();
     VW_FadeOut ();
@@ -97,12 +97,12 @@ void EndSpear ()
 
     EndScreen (SPEAR.g(END1PALETTE), SPEAR.g(ENDSCREEN11PIC));
 
-    CA_CacheScreen (SPEAR.g(ENDSCREEN3PIC));
+    graphSegs.cacheScreen (SPEAR.g(ENDSCREEN3PIC));
     I_UpdateScreen ();
-    CA_CacheGrChunk (SPEAR.g(END3PALETTE));
-    VL_ConvertPalette(ca_grsegs[SPEAR.g(END3PALETTE)], pal, 256);
+    graphSegs.cacheChunk (SPEAR.g(END3PALETTE));
+    VL_ConvertPalette(graphSegs[SPEAR.g(END3PALETTE)], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    UNCACHEGRCHUNK (SPEAR.g(END3PALETTE));
+    graphSegs.uncacheChunk (SPEAR.g(END3PALETTE));
     fontnumber = 0;
     fontcolor = 0xd0;
     WindowX = 0;
@@ -168,10 +168,10 @@ Victory ()
         StartCPMusic (XTHEEND_MUS_sod);
 
         // IOANCH 20130302: unification
-        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE1PIC));
-        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE2PIC));
-        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE3PIC));
-        CA_CacheGrChunk (SPEAR.g(BJCOLLAPSE4PIC));
+        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE1PIC));
+        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE2PIC));
+        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE3PIC));
+        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE4PIC));
 
         VL_Bar (0, 0, 320, 200, VIEWCOLOR);
         VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
@@ -188,20 +188,20 @@ Victory ()
         I_UpdateScreen ();
         VL_WaitVBL (3 * 70);
 
-        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE1PIC));
-        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE2PIC));
-        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE3PIC));
-        UNCACHEGRCHUNK (SPEAR.g(BJCOLLAPSE4PIC));
+        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE1PIC));
+        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE2PIC));
+        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE3PIC));
+        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE4PIC));
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
     StartCPMusic (IMPALE((int)URAHERO_MUS));
     ClearSplitVWB ();
     CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
-    CA_CacheGrChunk (SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT));
 
     if(!SPEAR())
-        CA_CacheGrChunk (SPEAR.g(C_TIMECODEPIC));
+        graphSegs.cacheChunk (SPEAR.g(C_TIMECODEPIC));
 
     VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
@@ -319,7 +319,7 @@ Victory ()
         I_ClearScreen(0);
 
     if(!SPEAR())
-        UNCACHEGRCHUNK (SPEAR.g(C_TIMECODEPIC));
+        graphSegs.uncacheChunk (SPEAR.g(C_TIMECODEPIC));
     UnCacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
 
 
@@ -350,11 +350,11 @@ PG13 ()
     VW_FadeOut ();
     VL_Bar (0, 0, 320, 200, 0x82);     // background
 
-    CA_CacheGrChunk (SPEAR.g(PG13PIC));
+    graphSegs.cacheChunk (SPEAR.g(PG13PIC));
     VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
     I_UpdateScreen ();
 
-    UNCACHEGRCHUNK (SPEAR.g(PG13PIC));
+    graphSegs.uncacheChunk (SPEAR.g(PG13PIC));
 
     VW_FadeIn ();
     IN_UserInput (TickBase * 7);
@@ -1053,13 +1053,13 @@ DrawHighScores ()
 
     if(!SPEAR())
     {
-        CA_CacheGrChunk (SPEAR.g(HIGHSCORESPIC));
-        CA_CacheGrChunk (SPEAR.g(STARTFONT));
+        graphSegs.cacheChunk (SPEAR.g(HIGHSCORESPIC));
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT));
         // IOANCH 20130301: unification culling
 
-        CA_CacheGrChunk (SPEAR.g(C_LEVELPIC));
-        CA_CacheGrChunk (SPEAR.g(C_SCOREPIC));
-        CA_CacheGrChunk (SPEAR.g(C_NAMEPIC));
+        graphSegs.cacheChunk (SPEAR.g(C_LEVELPIC));
+        graphSegs.cacheChunk (SPEAR.g(C_SCOREPIC));
+        graphSegs.cacheChunk (SPEAR.g(C_NAMEPIC));
 
 
 
@@ -1068,7 +1068,7 @@ DrawHighScores ()
         DrawStripes (10);
 
         VWB_DrawPic (48, 0, SPEAR.g(HIGHSCORESPIC));
-        UNCACHEGRCHUNK (SPEAR.g(HIGHSCORESPIC));
+        graphSegs.uncacheChunk (SPEAR.g(HIGHSCORESPIC));
 
         // IOANCH 20130301: unification culling
 
@@ -1088,7 +1088,7 @@ DrawHighScores ()
         UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
 
         CacheLump (SPEAR.g(HIGHSCORES_LUMP_START), SPEAR.g(HIGHSCORES_LUMP_END));
-        CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         VWB_DrawPic (0, 0, SPEAR.g(HIGHSCORESPIC));
 
         fontnumber = 1;
@@ -1305,7 +1305,7 @@ NonShareware ()
     ClearMScreen ();
     DrawStripes (10);
 
-    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
     fontnumber = 1;
 
     SETFONTCOLOR (READHCOLOR, BKGDCOLOR);

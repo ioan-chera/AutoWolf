@@ -33,11 +33,6 @@
 
 #define MAXSHIFTS	1
 
-struct pictabletype
-{
-	int16_t width,height;
-};
-
 struct fontstruct
 {
 	int16_t height;
@@ -47,8 +42,6 @@ struct fontstruct
 
 //===========================================================================
 
-
-extern	pictabletype	*pictable;
 
 extern  byte            fontcolor,backcolor;
 extern	int             fontnumber;

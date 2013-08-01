@@ -449,21 +449,21 @@ US_ControlPanel (ScanCode scancode)
                 SD_StopDigitized ();
 
 
-                CA_CacheGrChunk (SPEAR.g(IDGUYS1PIC));
+                graphSegs.cacheChunk (SPEAR.g(IDGUYS1PIC));
                 VWB_DrawPic (0, 0, SPEAR.g(IDGUYS1PIC));
-                UNCACHEGRCHUNK (SPEAR.g(IDGUYS1PIC));
+                graphSegs.uncacheChunk (SPEAR.g(IDGUYS1PIC));
 
-                CA_CacheGrChunk (SPEAR.g(IDGUYS2PIC));
+                graphSegs.cacheChunk (SPEAR.g(IDGUYS2PIC));
                 VWB_DrawPic (0, 80, SPEAR.g(IDGUYS2PIC));
-                UNCACHEGRCHUNK (SPEAR.g(IDGUYS2PIC));
+                graphSegs.uncacheChunk (SPEAR.g(IDGUYS2PIC));
 
                 I_UpdateScreen ();
 
                 SDL_Color pal[256];
-                CA_CacheGrChunk (SPEAR.g(IDGUYSPALETTE));
-                VL_ConvertPalette(ca_grsegs[SPEAR.g(IDGUYSPALETTE)], pal, 256);
+                graphSegs.cacheChunk (SPEAR.g(IDGUYSPALETTE));
+                VL_ConvertPalette(graphSegs[SPEAR.g(IDGUYSPALETTE)], pal, 256);
                 VL_FadeIn (0, 255, pal, 30);
-                UNCACHEGRCHUNK (SPEAR.g(IDGUYSPALETTE));
+                graphSegs.uncacheChunk (SPEAR.g(IDGUYSPALETTE));
 
                 while (in_keyboard[sc_I] || in_keyboard[sc_D])
                     IN_WaitAndProcessEvents();
@@ -649,7 +649,7 @@ CP_CheckQuick (ScanCode scancode)
         // END GAME
         //
         case sc_F7:
-            CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+            graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
 
             WindowH = 160;
             // IOANCH 20130301: unification culling
@@ -671,7 +671,7 @@ CP_CheckQuick (ScanCode scancode)
         case sc_F8:
             if (SaveGamesAvail[LSItems.curpos] && pickquick)
             {
-                CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+                graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
                 fontnumber = 1;
                 Message (STR_SAVING "...");
                 CP_SaveGame (1);
@@ -683,18 +683,18 @@ CP_CheckQuick (ScanCode scancode)
                 // IOANCH 20130302: unification
                 if(!SPEAR())
                 {
-                    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR1PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR2PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_SAVEGAMEPIC));
-                    CA_CacheGrChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR2PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING2PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_SAVEGAMEPIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_MOUSELBACKPIC));
                 }
                 else
                 {
                     CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
                 }
 
                 VW_FadeOut ();
@@ -723,12 +723,12 @@ CP_CheckQuick (ScanCode scancode)
                 if(!SPEAR())
                 {
                     // IOANCH 20130302: unification
-                    UNCACHEGRCHUNK (SPEAR.g(C_CURSOR1PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_CURSOR2PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_DISKLOADING1PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_DISKLOADING2PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_SAVEGAMEPIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR2PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING1PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING2PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_SAVEGAMEPIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_MOUSELBACKPIC));
                 }
                 else
                 {
@@ -746,7 +746,7 @@ CP_CheckQuick (ScanCode scancode)
                 char string[100] = STR_LGC;
 
 
-                CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+                graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
                 fontnumber = 1;
 
                 strcat (string, SaveGameNames[LSItems.curpos]);
@@ -761,18 +761,18 @@ CP_CheckQuick (ScanCode scancode)
             {
                 if(!SPEAR())
                 {
-                    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+                    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
                     // IOANCH 20130302: unification
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR1PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR2PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    CA_CacheGrChunk (SPEAR.g(C_LOADGAMEPIC));
-                    CA_CacheGrChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR2PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING2PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_LOADGAMEPIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_MOUSELBACKPIC));
                 }
                 else
                 {
-                    CA_CacheGrChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
                     CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
                 }
 
@@ -803,12 +803,12 @@ CP_CheckQuick (ScanCode scancode)
                 // IOANCH 20130302: unification
                 if(!SPEAR())
                 {
-                    UNCACHEGRCHUNK (SPEAR.g(C_CURSOR1PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_CURSOR2PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_DISKLOADING1PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_DISKLOADING2PIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_LOADGAMEPIC));
-                    UNCACHEGRCHUNK (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR1PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR2PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING1PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING2PIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_LOADGAMEPIC));
+                    graphSegs.uncacheChunk (SPEAR.g(C_MOUSELBACKPIC));
                 }
                 else
                 {
@@ -821,7 +821,7 @@ CP_CheckQuick (ScanCode scancode)
         // QUIT
         //
         case sc_F10:
-            CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+            graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
 
             WindowX = WindowY = 0;
             WindowW = 320;
@@ -2959,7 +2959,7 @@ CacheLump (int lumpstart, int lumpend)
     int i;
 
     for (i = lumpstart; i <= lumpend; i++)
-        CA_CacheGrChunk (i);
+        graphSegs.cacheChunk (i);
 }
 
 
@@ -2969,8 +2969,8 @@ UnCacheLump (int lumpstart, int lumpend)
     int i;
 
     for (i = lumpstart; i <= lumpend; i++)
-        if (ca_grsegs[i])
-            UNCACHEGRCHUNK (i);
+        if (graphSegs[i])
+            graphSegs.uncacheChunk (i);
 }
 
 
@@ -3008,7 +3008,7 @@ SetupControlPanel ()
     //
     // CACHE GRAPHICS & SOUNDS
     //
-    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
     if(!SPEAR())
         CacheLump (SPEAR.g(CONTROLS_LUMP_START), SPEAR.g(CONTROLS_LUMP_END));
     else
@@ -3655,9 +3655,9 @@ Message (const char *string)
     fontstruct *font;
 
 
-    CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
     fontnumber = 1;
-    font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT) + fontnumber];
+    font = (fontstruct *) graphSegs[SPEAR.g(STARTFONT) + fontnumber];
     h = font->height;
     for (i = 0; i < len; i++)
     {

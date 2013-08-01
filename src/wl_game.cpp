@@ -1026,13 +1026,13 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    byte *source = ca_grsegs[SPEAR.g(STATUSBARPIC)];
+    const byte *source = graphSegs[SPEAR.g(STATUSBARPIC)];
     int	picnum = SPEAR.g(STATUSBARPIC) - SPEAR.g(STARTPICS);
-    int width = pictable[picnum].width;
-    int height = pictable[picnum].height;
+   GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
     int destx = (cfg_screenWidth-vid_scaleFactor*320)/2 + 9 * vid_scaleFactor;
-    int desty = cfg_screenHeight - (height - 4) * vid_scaleFactor;
-    VL_MemToScreenScaledCoord(source, width, height, 9, 4, destx, desty, width - 18, height - 7);
+    int desty = cfg_screenHeight - (psize.height - 4) * vid_scaleFactor;
+    VL_MemToScreenScaledCoord(source, psize.width, psize.height, 9, 4, destx,
+                              desty, psize.width - 18, psize.height - 7);
 
     ingame = false;
     DrawFace ();
@@ -1134,7 +1134,7 @@ void RecordDemo ()
 
     CenterWindow(26,3);
     PrintY+=6;
-    CA_CacheGrChunk(SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
     fontnumber=0;
     SETFONTCOLOR(0,15);
     if(!SPEAR())
@@ -1225,8 +1225,8 @@ void PlayDemo (int demonumber)
     // IOANCH 20130301: unification culling
     int dems[4]={static_cast<int>(SPEAR.g(T_DEMO0)),static_cast<int>(SPEAR.g(T_DEMO1)),static_cast<int>(SPEAR.g(T_DEMO2)),static_cast<int>(SPEAR.g(T_DEMO3))};
 
-    CA_CacheGrChunk(dems[demonumber]);
-    demoptr = (int8_t *) ca_grsegs[dems[demonumber]];
+    graphSegs.cacheChunk(dems[demonumber]);
+    demoptr = (int8_t *) graphSegs[dems[demonumber]];
 #else
     cfg_demoname[4] = '0'+demonumber;
     CA_LoadFile (cfg_demoname.buffer(),&demobuffer);
@@ -1256,7 +1256,7 @@ void PlayDemo (int demonumber)
     PlayLoop ();
 
 #ifdef DEMOSEXTERN
-    UNCACHEGRCHUNK(dems[demonumber]);
+    graphSegs.uncacheChunk(dems[demonumber]);
 #else
     MM_FreePtr (&demobuffer);
 #endif

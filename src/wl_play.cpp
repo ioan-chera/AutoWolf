@@ -663,13 +663,13 @@ void CheckKeys (void)
         DrawScore ();
 
         SD_StopDigitized ();
-        CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        UNCACHEGRCHUNK (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -684,11 +684,11 @@ void CheckKeys (void)
     if (in_keyboard[sc_BackSpace] && in_keyboard[sc_LShift] && in_keyboard[sc_Alt] && cfg_debugmode)
     {
         SD_StopDigitized ();
-        CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
-        UNCACHEGRCHUNK (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -703,14 +703,14 @@ void CheckKeys (void)
     if (in_keyboard[sc_B] && in_keyboard[sc_A] && in_keyboard[sc_T])
     {
         SD_StopDigitized ();
-        CA_CacheGrChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message ("Commander Keen is also\n"
                  "available from Apogee, but\n"
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
-        UNCACHEGRCHUNK (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
         IN_ClearKeysDown ();
         IN_Ack ();
 
@@ -788,7 +788,7 @@ void CheckKeys (void)
 #ifdef DEBUGKEYS
     if (in_keyboard[sc_Tab] && DebugOk)
     {
-        CA_CacheGrChunk (SPEAR.g(STARTFONT));
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT));
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)

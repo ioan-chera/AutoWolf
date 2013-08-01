@@ -102,7 +102,7 @@ void	VL_Shutdown ()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void VL_ConvertPalette(byte *srcpal, SDL_Color *destpal, int numColors)
+void VL_ConvertPalette(const byte *srcpal, SDL_Color *destpal, int numColors)
 {
     for(int i=0; i<numColors; i++)
     {
@@ -421,7 +421,7 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void VL_MemToScreenScaledCoord (byte *source, int width, int height,
+void VL_MemToScreenScaledCoord (const byte *source, int width, int height,
                                 int destx, int desty)
 {
     byte *ptr;
@@ -469,7 +469,7 @@ void VL_MemToScreenScaledCoord (byte *source, int width, int height,
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int srcx, int srcy,
+void VL_MemToScreenScaledCoord (const byte *source, int origwidth, int origheight, int srcx, int srcy,
                                 int destx, int desty, int width, int height)
 {
     byte *ptr;

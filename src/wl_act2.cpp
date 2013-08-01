@@ -1497,12 +1497,12 @@ void    A_StartDeathCam (objtype *ob)
     
     if (bordercol != VIEWCOLOR)
     {
-        CA_CacheGrChunk (SPEAR.g(STARTFONT)+1);
+        graphSegs.cacheChunk (SPEAR.g(STARTFONT)+1);
         fontnumber = 1;
         SETFONTCOLOR(15,bordercol);
         PrintX = 68; PrintY = 45;
         US_Print (STR_SEEAGAIN);
-        UNCACHEGRCHUNK(SPEAR.g(STARTFONT)+1);
+        graphSegs.uncacheChunk(SPEAR.g(STARTFONT)+1);
     }
     else
     {

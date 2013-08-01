@@ -465,8 +465,9 @@ void I_FreeLatchMem()
 
 void I_LoadLatchMem ()
 {
-	int	i,width,height,start,end;
-	byte *src;
+   GraphicLoader::pictabletype psize;
+	int	i,start,end;
+	const byte *src;
 	SDL_Surface *surf;
    
    //
@@ -476,15 +477,15 @@ void I_LoadLatchMem ()
    surf = I_createSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
    
 	vid_latchpics[0] = surf;
-	CA_CacheGrChunk (SPEAR.g(STARTTILE8));
-	src = ca_grsegs[SPEAR.g(STARTTILE8)];
+   graphSegs.cacheChunk(SPEAR.g(STARTTILE8));
+	src = graphSegs[SPEAR.g(STARTTILE8)];
    
 	for (i=0;i<(signed int)SPEAR.g(NUMTILE8);i++)
 	{
 		I_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
 		src += 64;
 	}
-	UNCACHEGRCHUNK (SPEAR.g(STARTTILE8));
+	graphSegs.uncacheChunk (SPEAR.g(STARTTILE8));
    
 	vid_latchpics[1] = NULL;  // not used
    
@@ -496,14 +497,13 @@ void I_LoadLatchMem ()
    
 	for (i=start;i<=end;i++)
 	{
-		width = pictable[i-SPEAR.g(STARTPICS)].width;
-		height = pictable[i-SPEAR.g(STARTPICS)].height;
-      surf = I_createSurface(SDL_HWSURFACE, width, height);
+		psize = graphSegs.sizeAt(i-SPEAR.g(STARTPICS));
+      surf = I_createSurface(SDL_HWSURFACE, psize.width, psize.height);
       
 		vid_latchpics[2+i-start] = surf;
-		CA_CacheGrChunk (i);
-		I_MemToLatch (ca_grsegs[i], width, height, surf, 0, 0);
-		UNCACHEGRCHUNK(i);
+		graphSegs.cacheChunk (i);
+		I_MemToLatch (graphSegs[i], psize.width, psize.height, surf, 0, 0);
+		graphSegs.uncacheChunk(i);
 	}
 }
 
@@ -517,7 +517,7 @@ void I_LoadLatchMem ()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void I_MemToLatch(byte *source, int width, int height, SDL_Surface *destSurface,
+void I_MemToLatch(const byte *source, int width, int height, SDL_Surface *destSurface,
                   int x, int y)
 {
    byte *ptr;

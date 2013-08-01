@@ -23,8 +23,6 @@
 #include "i_system.h"
 #include "i_video.h"   // IOANCH
 
-pictabletype	*pictable;
-
 int	    px,py;
 byte	fontcolor,backcolor;
 int	    fontnumber;
@@ -36,7 +34,7 @@ int	    fontnumber;
 //
 void VWB_DrawPropString(const char* string)
 {
-	fontstruct  *font;
+	const fontstruct  *font;
 	int		    width, step, height;
 	byte	    *source, *dest;
 	byte	    ch;
@@ -46,7 +44,7 @@ void VWB_DrawPropString(const char* string)
 	byte *vbuf = I_LockBuffer();
 	if(vbuf == NULL) return;
 
-	font = (fontstruct *) ca_grsegs[SPEAR.g(STARTFONT)+fontnumber];
+	font = (const fontstruct *) graphSegs[SPEAR.g(STARTFONT)+fontnumber];
 	height = font->height;
 	dest = vbuf + vid_scaleFactor * (py * vid_bufferPitch + px);
 
@@ -121,7 +119,7 @@ void VL_MungePic (byte *source, unsigned width, unsigned height)
 //
 // VWL_MeasureString
 //
-void VWL_MeasureString (const char *string, word *width, word *height, fontstruct *font)
+void VWL_MeasureString (const char *string, word *width, word *height, const fontstruct *font)
 {
 	*height = font->height;
 	for (*width = 0;*string;string++)
@@ -133,7 +131,7 @@ void VWL_MeasureString (const char *string, word *width, word *height, fontstruc
 //
 void VW_MeasurePropString (const char *string, word *width, word *height)
 {
-	VWL_MeasureString(string,width,height,(fontstruct *)ca_grsegs[SPEAR.g(STARTFONT)+fontnumber]);
+	VWL_MeasureString(string,width,height,(const fontstruct *)graphSegs[SPEAR.g(STARTFONT)+fontnumber]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +155,8 @@ void VWB_DrawTile8 (int x, int y, int tile)
 //
 void VWB_DrawTile8M (int x, int y, int tile)
 {
-	VL_MemToScreen (((byte *)ca_grsegs[SPEAR.g(STARTTILE8M)])+tile*64,8,8,x,y);
+	VL_MemToScreen ((const byte *)graphSegs[SPEAR.g(STARTTILE8M)] + tile * 64, 8,
+                   8, x, y);
 }
 
 //
@@ -166,14 +165,13 @@ void VWB_DrawTile8M (int x, int y, int tile)
 void VWB_DrawPic (int x, int y, int chunknum)
 {
 	int	picnum = chunknum - SPEAR.g(STARTPICS);
-	unsigned width,height;
+   GraphicLoader::pictabletype psize;
 
 	x &= ~7;
 
-	width = pictable[picnum].width;
-	height = pictable[picnum].height;
+   psize = graphSegs.sizeAt(picnum);
 
-	VL_MemToScreen (ca_grsegs[chunknum],width,height,x,y);
+	VL_MemToScreen (graphSegs[chunknum],psize.width,psize.height,x,y);
 }
 
 //
@@ -182,12 +180,11 @@ void VWB_DrawPic (int x, int y, int chunknum)
 void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 {
 	int	picnum = chunknum - SPEAR.g(STARTPICS);
-	unsigned width,height;
 
-	width = pictable[picnum].width;
-	height = pictable[picnum].height;
+   GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
 
-    VL_MemToScreenScaledCoord (ca_grsegs[chunknum],width,height,scx,scy);
+    VL_MemToScreenScaledCoord (graphSegs[chunknum],psize.width,psize.height,scx,
+                               scy);
 }
 
 // IOANCH: removed VWB_Bar, was redundant

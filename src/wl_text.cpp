@@ -86,7 +86,7 @@ static int numpages;
 
 static unsigned leftmargin[TEXTROWS];
 static unsigned rightmargin[TEXTROWS];
-static char*    text;
+static const char*    text;
 static unsigned rowon;
 
 static int     picx;
@@ -281,8 +281,8 @@ void HandleCommand ()
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
             VWB_DrawPic (picx&~7,picy,picnum);
-            picwidth = pictable[picnum-SPEAR.g(STARTPICS)].width;
-            picheight = pictable[picnum-SPEAR.g(STARTPICS)].height;
+            picwidth = graphSegs.sizeAt(picnum-SPEAR.g(STARTPICS)).width;
+            picheight = graphSegs.sizeAt(picnum-SPEAR.g(STARTPICS)).height;
             //
             // adjust margins
             //
@@ -567,7 +567,7 @@ void BackPage ()
 */
 void CacheLayoutGraphics ()
 {
-    char    *bombpoint, *textstart;
+    const char    *bombpoint, *textstart;
     char    ch;
 
     textstart = text;
@@ -583,10 +583,10 @@ void CacheLayoutGraphics ()
                 numpages++;
             if (ch == 'E')          // end of file, so load graphics and return
             {
-                CA_CacheGrChunk(SPEAR.g(H_TOPWINDOWPIC));
-                CA_CacheGrChunk(SPEAR.g(H_LEFTWINDOWPIC));
-                CA_CacheGrChunk(SPEAR.g(H_RIGHTWINDOWPIC));
-                CA_CacheGrChunk(SPEAR.g(H_BOTTOMINFOPIC));
+                graphSegs.cacheChunk(SPEAR.g(H_TOPWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR.g(H_LEFTWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR.g(H_RIGHTWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR.g(H_BOTTOMINFOPIC));
                 //                              CA_CacheMarks ();
                 text = textstart;
                 return;
@@ -594,12 +594,12 @@ void CacheLayoutGraphics ()
             if (ch == 'G')          // draw graphic command, so mark graphics
             {
                 ParsePicCommand ();
-                CA_CacheGrChunk (picnum);
+                graphSegs.cacheChunk (picnum);
             }
             if (ch == 'T')          // timed draw graphic command, so mark graphics
             {
                 ParseTimedCommand ();
-                CA_CacheGrChunk (picnum);
+                graphSegs.cacheChunk (picnum);
             }
         }
         else
@@ -618,7 +618,7 @@ void CacheLayoutGraphics ()
 =====================
 */
 // IOANCH 20130301: unification culling
-void ShowArticle (char *article)
+void ShowArticle (const char *article)
 {
     // IOANCH 20130301: unification culling
 
@@ -630,7 +630,7 @@ void ShowArticle (char *article)
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
-    CA_CacheGrChunk(SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
     VL_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
 
@@ -735,7 +735,7 @@ PString cfg_endfilename("ENDART1.");
 void HelpScreens ()
 {
     int     artnum;
-    char    *text;
+    const char    *text;
 #ifndef ARTSEXTERN
     memptr  layout;
 #endif
@@ -745,17 +745,17 @@ void HelpScreens ()
 #ifdef ARTSEXTERN
     // IOANCH 20130302: helpextern used to be here
     artnum = SPEAR.g(T_HELPART);
-    CA_CacheGrChunk (artnum);
-    text = (char *)ca_grsegs[artnum];
+    graphSegs.cacheChunk (artnum);
+    text = (const char *)graphSegs[artnum];
 #else
     CA_LoadFile (helpfilename,&layout);
-    text = (char *)layout;
+    text = (const char *)layout;
 #endif
 
     ShowArticle (text);
 
 #ifdef ARTSEXTERN
-    UNCACHEGRCHUNK(artnum);
+    graphSegs.uncacheChunk(artnum);
 #else
     free(layout);
 #endif
@@ -772,7 +772,7 @@ void HelpScreens ()
 void EndText ()
 {
     int     artnum;
-    char    *text;
+    const char    *text;
 #ifndef ARTSEXTERN
     memptr  layout;
 #endif
@@ -786,8 +786,8 @@ void EndText ()
 #ifdef ARTSEXTERN
     // IOANCH 20130302: unification: map it here. (endextern used to be SPEAR.g(T_ENDART1)
     artnum = SPEAR.g(T_ENDART1)+gamestate.episode;
-    CA_CacheGrChunk (artnum);
-    text = (char *)ca_grsegs[artnum];
+    graphSegs.cacheChunk (artnum);
+    text = (const char *)graphSegs[artnum];
 #else
     cfg_endfilename[6] = '1'+gamestate.episode;
     CA_LoadFile (cfg_endfilename.buffer(),&layout);
@@ -797,7 +797,7 @@ void EndText ()
     ShowArticle (text);
 
 #ifdef ARTSEXTERN
-    UNCACHEGRCHUNK(artnum);
+    graphSegs.uncacheChunk(artnum);
 #else
     free(layout);
 #endif
