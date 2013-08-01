@@ -112,7 +112,7 @@ globalsoundpos channelSoundPos[MIX_CHANNELS];
         SDMode          SoundMode;
         SMMode          sd_musicMode;
         SDSMode         sd_digiMode;
-static  byte          **SoundTable;
+static  const byte          * const*SoundTable;
 
 // IOANCH 20130301: unification
 int             sd_digiMap[(unsigned int)LASTSOUND_wl6 > 
@@ -153,8 +153,8 @@ static  Instrument              alZeroInst;
 
 //      Sequencer variables
 static  volatile Boolean        sqActive;
-static  word                   *sqHack;
-static  word                   *sqHackPtr;
+static  const word                   *sqHack;
+static  const word                   *sqHackPtr;
 static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
@@ -1080,7 +1080,7 @@ Boolean SD_SetSoundMode(SDMode mode)
             Quit(PString("SD_SetSoundMode: Invalid sound mode ").concat(mode)());
             return false;
     }
-    SoundTable = &ca_audiosegs[tableoffset];
+    SoundTable = audioSegs.ptr(tableoffset);
 
     if (result && (mode != SoundMode))
     {
@@ -1510,8 +1510,8 @@ void SD_StartMusic(int chunk)
 
     if (sd_musicMode == smm_AdLib)
     {
-        int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) ca_audiosegs[chunk];     // alignment is correct
+        int32_t chunkLen = audioSegs.cacheChunk(chunk);
+        sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;
@@ -1527,8 +1527,8 @@ void SD_ContinueMusic(int chunk, int startoffs)
 
     if (sd_musicMode == smm_AdLib)
     {
-        int32_t chunkLen = CA_CacheAudioChunk(chunk);
-        sqHack = (word *)(void *) ca_audiosegs[chunk];     // alignment is correct
+        int32_t chunkLen = audioSegs.cacheChunk(chunk);
+        sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
         if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
         else sqHackLen = sqHackSeqLen = *sqHack++;
         sqHackPtr = sqHack;

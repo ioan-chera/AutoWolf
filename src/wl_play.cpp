@@ -964,7 +964,7 @@ int StopMusic (void)
     int lastoffs = SD_MusicOff ();
 
 	// IOANCH 20130301: unification
-    UNCACHEAUDIOCHUNK (IMPALE(STARTMUSIC) + lastmusicchunk);
+   audioSegs.uncacheChunk(IMPALE(STARTMUSIC) + lastmusicchunk);
 
     return lastoffs;
 }

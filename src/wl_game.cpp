@@ -833,7 +833,7 @@ void SetupGameLevel ()
 // have the caching manager load and purge stuff to make sure all marks
 // are in memory
 //
-    CA_LoadAllSounds ();
+   audioSegs.loadAllSounds(SoundMode);
 
     // IOANCH: initialize score map here
 #ifndef APPLE_NONCPP11

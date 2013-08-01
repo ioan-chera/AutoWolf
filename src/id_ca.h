@@ -32,8 +32,6 @@
     #define MAPPLANES       2
 #endif
 
-#define UNCACHEAUDIOCHUNK(chunk) {if(ca_audiosegs[chunk]) {free(ca_audiosegs[chunk]); ca_audiosegs[chunk]=NULL;}}
-
 // IOANCH 20130801: use classes
 
 //
@@ -197,11 +195,60 @@ public:
 };
 extern GraphicLoader graphSegs;
 
-//===========================================================================
+//
+// AudioLoader
+//
+// for ADLIB and PC SOUND
+//
+class AudioLoader
+{
+   FILE *m_file;
+   int32_t *m_audiostarts;
+   byte *m_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
+                      NUMSNDCHUNKS_wl6];
+   void emptyFields()
+   {
+      m_file = NULL;
+      m_audiostarts = NULL;
+      memset(m_audiosegs, 0, sizeof(m_audiosegs));
+      m_oldsoundmode = sdm_Off;
+   }
+   SDMode m_oldsoundmode;
+public:
+   void uncacheChunk(int chunk)
+   {
+      if(m_audiosegs[chunk])
+      {
+         free(m_audiosegs[chunk]);
+         m_audiosegs[chunk] = NULL;
+      }
+   }
+   void close();
+   AudioLoader()
+   {
+      emptyFields();
+   }
+   ~AudioLoader()
+   {
+      close();
+   }
+   void loadFromFile(const char *audiohed, const char *audiot);
+   int32_t cacheChunk (int chunk);
+   void cacheAdlibChunk (int chunk);
+   void loadAllSounds (SDMode newMode);
+   
+   const byte * const* ptr(int index) const
+   {
+      return &m_audiosegs[index];
+   }
+   const byte *operator[] (int index) const
+   {
+      return m_audiosegs[index];
+   }
+};
+extern AudioLoader audioSegs;
 
-// IOANCH 20130301: unification
-extern  byte *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
-						NUMSNDCHUNKS_wl6];
+//===========================================================================
 
 class PString;
 extern  PString  cfg_extension;
@@ -219,9 +266,6 @@ Boolean CA_WriteFile (const char *filename, void *ptr, int32_t length);
 
 void CA_Startup ();
 void CA_Shutdown ();
-
-int32_t CA_CacheAudioChunk (int chunk);
-void CA_LoadAllSounds ();
 
 void CA_CannotOpen(const char *name);
 

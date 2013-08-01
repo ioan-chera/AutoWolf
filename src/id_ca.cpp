@@ -54,6 +54,7 @@
 
 MapLoader mapSegs;
 GraphicLoader graphSegs;
+AudioLoader audioSegs;
 
 //
 // MapLoader::loadFromFile
@@ -637,13 +638,195 @@ void GraphicLoader::cacheScreen (int chunk)
    free(bigbufferseg);
 }
 
+//
+// AudioLoader::loadFromFile
+//
+void AudioLoader::loadFromFile (const char *audiohed, const char *audiot)
+{
+   //
+   // load AUDIOHED.ext (offsets for audio file)
+   //
+   
+   void* ptr;
+   if (!CA_LoadFile(audiohed, &ptr))
+      CA_CannotOpen(audiohed);
+   m_audiostarts = (int32_t*)ptr;
+   
+   //
+   // open the data file
+   //
+   
+   m_file = fopen(audiot, "rb");
+   if(!m_file)
+      CA_CannotOpen(audiot);
+}
+
+//
+// AudioLoader::cacheChunk
+//
+int32_t AudioLoader::cacheChunk (int chunk)
+{
+   int32_t pos = m_audiostarts[chunk];
+   int32_t size = m_audiostarts[chunk+1]-pos;
+   
+   if (m_audiosegs[chunk])
+      return size;                        // already in memory
+   
+   m_audiosegs[chunk]=(byte *) I_CheckedMalloc(size);
+   
+   fseek(m_file, pos, SEEK_SET);
+   fread(m_audiosegs[chunk], 1, size, m_file);
+   
+   return size;
+}
+
+//
+// AudioLoader::cacheAdlibChunk
+//
+void AudioLoader::cacheAdlibChunk (int chunk)
+{
+   int32_t pos = m_audiostarts[chunk];
+   int32_t size = m_audiostarts[chunk+1]-pos;
+   
+   if (m_audiosegs[chunk])
+      return;                        // already in memory
+   
+   int32_t bufferseg[BUFFERSIZE/4];
+   
+   fseek(m_file, pos, SEEK_SET);
+   fread(bufferseg, 1, ORIG_ADLIBSOUND_SIZE - 1, m_file);
+   // without data[1]
+   
+   AdLibSound *sound = (AdLibSound *) I_CheckedMalloc(size +
+                                                      sizeof(AdLibSound) -
+                                                      ORIG_ADLIBSOUND_SIZE);
+   
+   byte *ptr = (byte *) bufferseg;
+   sound->common.length = READLONGWORD(ptr);
+   sound->common.priority = READWORD(ptr);
+   sound->inst.mChar = *ptr++;
+   sound->inst.cChar = *ptr++;
+   sound->inst.mScale = *ptr++;
+   sound->inst.cScale = *ptr++;
+   sound->inst.mAttack = *ptr++;
+   sound->inst.cAttack = *ptr++;
+   sound->inst.mSus = *ptr++;
+   sound->inst.cSus = *ptr++;
+   sound->inst.mWave = *ptr++;
+   sound->inst.cWave = *ptr++;
+   sound->inst.nConn = *ptr++;
+   sound->inst.voice = *ptr++;
+   sound->inst.mode = *ptr++;
+   sound->inst.unused[0] = *ptr++;
+   sound->inst.unused[1] = *ptr++;
+   sound->inst.unused[2] = *ptr++;
+   sound->block = *ptr++;
+   
+   fread(sound->data, 1, size - ORIG_ADLIBSOUND_SIZE + 1, m_file);  // + 1 because of byte data[1]
+   
+   m_audiosegs[chunk]=(byte *) sound;
+}
+
+//
+// AudioLoader::loadAllSounds
+//
+// Purges all sounds, then loads all new ones (mode switch)
+//
+void AudioLoader::loadAllSounds (SDMode newMode)
+{
+   unsigned start,i;
+   unsigned char cachein = 0;
+   // IOANCH 20130303: don't use label use variable
+   
+   switch (m_oldsoundmode)
+   {
+      case sdm_Off:
+         cachein = 1;
+         break;
+      case sdm_PC:
+			// IOANCH 20130301: unification
+         start = IMPALE(STARTPCSOUNDS);
+         break;
+      case sdm_AdLib:
+         start = IMPALE((unsigned)STARTADLIBSOUNDS);
+         break;
+   }
+   
+	// IOANCH 20130301: unification
+	const unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
+   
+   if(!cachein)
+      for (i=0;i<NUMSOUNDS_cur;i++,start++)
+         uncacheChunk(start);
+   
+   m_oldsoundmode = newMode;
+   
+   switch (newMode)
+   {
+      case sdm_Off:
+			// IOANCH 20130301: unification
+         start = IMPALE((unsigned)STARTADLIBSOUNDS);
+			// needed for priorities...
+         break;
+      case sdm_PC:
+         start = IMPALE(STARTPCSOUNDS);
+         break;
+      case sdm_AdLib:
+         start = IMPALE((unsigned)STARTADLIBSOUNDS);
+         break;
+   }
+   
+	// IOANCH 20130301: unification
+   if(start == IMPALE((unsigned)STARTADLIBSOUNDS))
+   {
+      for (i = 0; i < NUMSOUNDS_cur; i++, start++)
+         cacheAdlibChunk(start);
+   }
+   else
+   {
+      for (i = 0; i < NUMSOUNDS_cur; i++, start++)
+         cacheChunk(start);
+   }
+}
+
+//
+// AudioLoader::close
+//
+// Cleaner
+//
+void AudioLoader::close()
+{
+   if(m_file)
+   {
+      fclose(m_file);
+   }
+   free(m_audiostarts);
+   int start = -1;
+   switch (m_oldsoundmode)
+   {
+      case sdm_Off:
+         break;
+      case sdm_PC:
+         start = IMPALE(STARTPCSOUNDS);
+         break;
+      case sdm_AdLib:
+         start = IMPALE((int)STARTADLIBSOUNDS);
+         break;
+   }
+   if(start > -1)
+   {
+      unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
+      for(int i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
+         uncacheChunk(start);
+   }
+   emptyFields();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //                             LOCAL CONSTANTS
 //
 ////////////////////////////////////////////////////////////////////////////////
-static int32_t ca_bufferseg[BUFFERSIZE/4];
-
 // IOANCH: moved structure into a local scope, only used there
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -651,13 +834,6 @@ static int32_t ca_bufferseg[BUFFERSIZE/4];
 //                             GLOBAL VARIABLES
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-// IOANCH 20130301: unification
-byte    *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
-				   NUMSNDCHUNKS_wl6];
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -677,18 +853,11 @@ static const char ca_aheadname[] = "AUDIOHED.";
 static const char ca_afilename[] = "AUDIOT.";
 
 
-// static int32_t  ca_grstarts[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod + 1 : NUMCHUNKS_wl6 + 1];
-static int32_t* ca_audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
 static huffnode *ca_grhuffman;
 #else
 #endif
-
-static int    ca_audiohandle = -1;            // handle to AUDIOT / AUDIO
-
-static SDMode ca_oldsoundmode;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -720,25 +889,27 @@ Boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
 // CA_LoadFile
 //
 // Allocate space for and load a file
+// IOANCH: uses fopen now
 //
 Boolean CA_LoadFile(const char *filename, memptr *ptr)
 {
     int32_t size;
 
-    const int handle = open(filename, O_RDONLY | O_BINARY);
-    if(handle == -1)
+   FILE *file = fopen(filename, "rb");
+    if(!file)
         return false;
 
-    size = lseek(handle, 0, SEEK_END);
-    lseek(handle, 0, SEEK_SET);
+   fseek(file, 0, SEEK_END);
+   size = ftell(file);
+   fseek(file, 0, SEEK_SET);
    *ptr = I_CheckedMalloc(size);
-    if(!read(handle, *ptr, size))
+    if(fread(*ptr, 1, size, file) < size)
     {
-        close(handle);
+        fclose(file);
         return false;
     }
 
-    close(handle);
+    fclose(file);
     return true;
 }
 
@@ -762,45 +933,6 @@ static int CAL_SafeOpen(const char *path, int oflag)
    return ret;
 }
 
-
-//==========================================================================
-
-
-
-//==========================================================================
-
-//
-// CAL_SetupAudioFile
-//
-static void CAL_SetupAudioFile ()
-{
-    PString fname;
-
-//
-// load AUDIOHED.ext (offsets for audio file)
-//
-   // IOANCH 20130726: case insensitive
-   fname = I_ResolveCaseInsensitivePath(".",
-                                        PString(ca_aheadname).
-                                        concat(cfg_audioext)());
-   // fname.copy(ca_aheadname).concat(cfg_audioext);
-
-    void* ptr;
-    if (!CA_LoadFile(fname(), &ptr))
-        CA_CannotOpen(fname());
-    ca_audiostarts = (int32_t*)ptr;
-
-//
-// open the data file
-//
-   fname = I_ResolveCaseInsensitivePath(".",
-                                        PString(ca_afilename).
-                                        concat(cfg_audioext)());
-
-//   fname.copy(ca_afilename).concat(cfg_audioext);
-
-   ca_audiohandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
-}
 
 //==========================================================================
 
@@ -834,7 +966,12 @@ void CA_Startup ()
                                                        PString(ca_gfilename).
                                                        concat(cfg_graphext)())());
 
-    CAL_SetupAudioFile ();
+   audioSegs.loadFromFile(I_ResolveCaseInsensitivePath(".",
+                                                       PString(ca_aheadname).
+                                                       concat(cfg_audioext)())(),
+                          I_ResolveCaseInsensitivePath(".",
+                                                       PString(ca_afilename).
+                                                       concat(cfg_audioext)())());
 }
 
 //==========================================================================
@@ -846,166 +983,10 @@ void CA_Startup ()
 //
 void CA_Shutdown ()
 {
-    int i,start;
-
    mapSegs.close();
    graphSegs.close();
-    if(ca_audiohandle != -1)
-        close(ca_audiohandle);
-
-    switch(ca_oldsoundmode)
-    {
-        case sdm_Off:
-            return;
-        case sdm_PC:
-			// IOANCH 20130301: unification
-            start = IMPALE(STARTPCSOUNDS);
-            break;
-        case sdm_AdLib:
-            start = IMPALE((int)STARTADLIBSOUNDS);
-            break;
-    }
-
-	// IOANCH 20130301: unification
-	unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
-    for(i=0; i<(signed int)NUMSOUNDS_cur; i++,start++)
-        UNCACHEAUDIOCHUNK(start);
+   audioSegs.close();
 }
-
-//===========================================================================
-
-//
-// CA_CacheAudioChunk
-//
-int32_t CA_CacheAudioChunk (int chunk)
-{
-    int32_t pos = ca_audiostarts[chunk];
-    int32_t size = ca_audiostarts[chunk+1]-pos;
-
-    if (ca_audiosegs[chunk])
-        return size;                        // already in memory
-
-    ca_audiosegs[chunk]=(byte *) I_CheckedMalloc(size);
-
-    lseek(ca_audiohandle,pos,SEEK_SET);
-    read(ca_audiohandle,ca_audiosegs[chunk],size);
-
-    return size;
-}
-
-//
-// CAL_CacheAdlibSoundChunk
-//
-static void CAL_CacheAdlibSoundChunk (int chunk)
-{
-    int32_t pos = ca_audiostarts[chunk];
-    int32_t size = ca_audiostarts[chunk+1]-pos;
-
-    if (ca_audiosegs[chunk])
-        return;                        // already in memory
-
-    lseek(ca_audiohandle, pos, SEEK_SET);
-    read(ca_audiohandle, ca_bufferseg, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
-
-    AdLibSound *sound = (AdLibSound *) I_CheckedMalloc(size +
-                                                       sizeof(AdLibSound) -
-                                                       ORIG_ADLIBSOUND_SIZE);
-
-    byte *ptr = (byte *) ca_bufferseg;
-    sound->common.length = READLONGWORD(ptr);
-    sound->common.priority = READWORD(ptr);
-    sound->inst.mChar = *ptr++;
-    sound->inst.cChar = *ptr++;
-    sound->inst.mScale = *ptr++;
-    sound->inst.cScale = *ptr++;
-    sound->inst.mAttack = *ptr++;
-    sound->inst.cAttack = *ptr++;
-    sound->inst.mSus = *ptr++;
-    sound->inst.cSus = *ptr++;
-    sound->inst.mWave = *ptr++;
-    sound->inst.cWave = *ptr++;
-    sound->inst.nConn = *ptr++;
-    sound->inst.voice = *ptr++;
-    sound->inst.mode = *ptr++;
-    sound->inst.unused[0] = *ptr++;
-    sound->inst.unused[1] = *ptr++;
-    sound->inst.unused[2] = *ptr++;
-    sound->block = *ptr++;
-
-    read(ca_audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
-
-    ca_audiosegs[chunk]=(byte *) sound;
-}
-
-//===========================================================================
-
-//
-// CA_LoadAllSounds
-//
-// Purges all sounds, then loads all new ones (mode switch)
-//
-void CA_LoadAllSounds ()
-{
-    unsigned start,i;
-    unsigned char cachein = 0;
-    // IOANCH 20130303: don't use label use variable
-
-    switch (ca_oldsoundmode)
-    {
-        case sdm_Off:
-            cachein = 1;
-            break;
-        case sdm_PC:
-			// IOANCH 20130301: unification
-            start = IMPALE(STARTPCSOUNDS);
-            break;
-        case sdm_AdLib:
-            start = IMPALE((unsigned)STARTADLIBSOUNDS);
-            break;
-    }
-
-	// IOANCH 20130301: unification
-	unsigned int NUMSOUNDS_cur = IMPALE((unsigned int)NUMSOUNDS);
-    
-    if(!cachein)
-        for (i=0;i<NUMSOUNDS_cur;i++,start++)
-            UNCACHEAUDIOCHUNK(start);
-
-    ca_oldsoundmode = SoundMode;
-
-    switch (SoundMode)
-    {
-        case sdm_Off:
-			// IOANCH 20130301: unification
-            start = IMPALE((unsigned)STARTADLIBSOUNDS);
-			// needed for priorities...
-            break;
-        case sdm_PC:
-            start = IMPALE(STARTPCSOUNDS);
-            break;
-        case sdm_AdLib:
-            start = IMPALE((unsigned)STARTADLIBSOUNDS);
-            break;
-    }
-
-	// IOANCH 20130301: unification
-    if(start == IMPALE((unsigned)STARTADLIBSOUNDS))
-    {
-        for (i=0;i<NUMSOUNDS_cur;i++,start++)
-            CAL_CacheAdlibSoundChunk(start);
-    }
-    else
-    {
-        for (i=0;i<NUMSOUNDS_cur;i++,start++)
-            CA_CacheAudioChunk(start);
-    }
-}
-
-//==========================================================================
-
-
-
-//==========================================================================
 
 
 //===========================================================================

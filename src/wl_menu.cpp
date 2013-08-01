@@ -1178,7 +1178,7 @@ CP_Sound (int)
                 {
                     SD_WaitSoundDone ();
                     SD_SetSoundMode (sdm_PC);
-                    CA_LoadAllSounds ();
+                    audioSegs.loadAllSounds(SoundMode);
                     DrawSoundMenu ();
                     ShootSnd ();
                 }
@@ -1188,7 +1188,7 @@ CP_Sound (int)
                 {
                     SD_WaitSoundDone ();
                     SD_SetSoundMode (sdm_AdLib);
-                    CA_LoadAllSounds ();
+                    audioSegs.loadAllSounds(SoundMode);
                     DrawSoundMenu ();
                     ShootSnd ();
                 }
@@ -3021,7 +3021,7 @@ SetupControlPanel ()
         I_ClearScreen(0);
 
     if (!ingame)
-        CA_LoadAllSounds ();
+        audioSegs.loadAllSounds(SoundMode);
     else
         MainMenu[savegame].active = 1;
 
@@ -3700,8 +3700,8 @@ StartCPMusic (int song)
     lastmusic = song;
     lastoffs = SD_MusicOff ();
 	// IOANCH 20130301: unification
-	unsigned int STARTMUSIC_max = IMPALE(STARTMUSIC);
-    UNCACHEAUDIOCHUNK (STARTMUSIC_max + lastmusic);
+	const unsigned int STARTMUSIC_max = IMPALE(STARTMUSIC);
+   audioSegs.uncacheChunk(STARTMUSIC_max + lastmusic);
 
     SD_StartMusic(STARTMUSIC_max + song);
     return lastoffs;
@@ -3710,7 +3710,7 @@ StartCPMusic (int song)
 void
 FreeMusic ()
 {
-    UNCACHEAUDIOCHUNK (IMPALE(STARTMUSIC) + lastmusic);
+   audioSegs.uncacheChunk(IMPALE(STARTMUSIC) + lastmusic);
 }
 
 

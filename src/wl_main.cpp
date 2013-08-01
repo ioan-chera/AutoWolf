@@ -1258,7 +1258,7 @@ void DoJukebox()
         CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
     else
         CacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
-    CA_LoadAllSounds ();
+   audioSegs.loadAllSounds(SoundMode);
     // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
