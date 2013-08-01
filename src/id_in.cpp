@@ -32,8 +32,8 @@
 //				User Mgr (for command line parms)
 //
 //	Globals:
-//		LastScan - The keyboard scan code of the last key pressed
-//		LastASCII - The ASCII value of the last key pressed
+//		in_lastScan - The keyboard scan code of the last key pressed
+//		in_lastASCII - The ASCII value of the last key pressed
 //	DEBUG - there are more globals
 //
 
@@ -59,9 +59,9 @@ Boolean in_mousePresent;
 
 // 	Global variables
 volatile Boolean    in_keyboard[SDLK_LAST];
-volatile Boolean	Paused;
-volatile char		LastASCII;
-volatile ScanCode	LastScan;
+volatile Boolean	in_paused;
+volatile char		in_lastASCII;
+volatile ScanCode	in_lastScan;
 
 //KeyboardDef	KbdDefs = {0x1d,0x38,0x47,0x48,0x49,0x4b,0x4d,0x4f,0x50,0x51};
 static KeyboardDef KbdDefs = {
@@ -82,7 +82,7 @@ int in_joyNumButtons;
 static int in_joyNumHats;
 
 static bool in_grabInput = false;
-static bool NeedRestore = false;
+static bool in_needRestore = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -130,7 +130,7 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 
 static	Boolean		IN_Started;
 
-static	Direction	DirTable[] =		// Quick lookup for total direction
+static	Direction	in_dirTable[] =		// Quick lookup for total direction
 {
     dir_NorthWest,	dir_North,	dir_NorthEast,
     dir_West,		dir_None,	dir_East,
@@ -262,7 +262,7 @@ Boolean IN_JoyPresent()
 //
 // processEvent
 //
-static void processEvent(SDL_Event *event)
+static void INL_processEvent(SDL_Event *event)
 {
     switch (event->type)
     {
@@ -280,50 +280,50 @@ static void processEvent(SDL_Event *event)
                 return;
             }
 
-            LastScan = event->key.keysym.sym;
+            in_lastScan = event->key.keysym.sym;
             SDLMod mod = SDL_GetModState();
             if(in_keyboard[sc_Alt])
             {
-                if(LastScan==SDLK_F4)
+                if(in_lastScan==SDLK_F4)
                     Quit(NULL);
             }
 
-            if(LastScan == SDLK_KP_ENTER) LastScan = SDLK_RETURN;
-            else if(LastScan == SDLK_RSHIFT) LastScan = SDLK_LSHIFT;
-            else if(LastScan == SDLK_RALT) LastScan = SDLK_LALT;
-            else if(LastScan == SDLK_RCTRL) LastScan = SDLK_LCTRL;
+            if(in_lastScan == SDLK_KP_ENTER) in_lastScan = SDLK_RETURN;
+            else if(in_lastScan == SDLK_RSHIFT) in_lastScan = SDLK_LSHIFT;
+            else if(in_lastScan == SDLK_RALT) in_lastScan = SDLK_LALT;
+            else if(in_lastScan == SDLK_RCTRL) in_lastScan = SDLK_LCTRL;
             else
             {
                 if((mod & KMOD_NUM) == 0)
                 {
-                    switch(LastScan)
+                    switch(in_lastScan)
                     {
-                        case SDLK_KP2: LastScan = SDLK_DOWN; break;
-                        case SDLK_KP4: LastScan = SDLK_LEFT; break;
-                        case SDLK_KP6: LastScan = SDLK_RIGHT; break;
-                        case SDLK_KP8: LastScan = SDLK_UP; break;
+                        case SDLK_KP2: in_lastScan = SDLK_DOWN; break;
+                        case SDLK_KP4: in_lastScan = SDLK_LEFT; break;
+                        case SDLK_KP6: in_lastScan = SDLK_RIGHT; break;
+                        case SDLK_KP8: in_lastScan = SDLK_UP; break;
                     }
                 }
             }
 
-            int sym = LastScan;
+            int sym = in_lastScan;
             if(sym >= 'a' && sym <= 'z')
                 sym -= 32;  // convert to uppercase
 
             if(mod & (KMOD_SHIFT | KMOD_CAPS))
             {
                 if(sym < lengthof(ShiftNames) && ShiftNames[sym])
-                    LastASCII = ShiftNames[sym];
+                    in_lastASCII = ShiftNames[sym];
             }
             else
             {
                 if(sym < lengthof(ASCIINames) && ASCIINames[sym])
-                    LastASCII = ASCIINames[sym];
+                    in_lastASCII = ASCIINames[sym];
             }
-            if(LastScan<SDLK_LAST)
-                in_keyboard[LastScan] = 1;
-            if(LastScan == SDLK_PAUSE)
-                Paused = true;
+            if(in_lastScan<SDLK_LAST)
+                in_keyboard[in_lastScan] = 1;
+            if(in_lastScan == SDLK_PAUSE)
+                in_paused = true;
             break;
 		}
 
@@ -359,15 +359,15 @@ static void processEvent(SDL_Event *event)
             {
                 if(event->active.gain)
                 {
-                    if(NeedRestore)
+                    if(in_needRestore)
                     {
                         I_FreeLatchMem();
                         I_LoadLatchMem();
                     }
 
-                    NeedRestore = false;
+                    in_needRestore = false;
                 }
-                else NeedRestore = true;
+                else in_needRestore = true;
             }
         }
 
@@ -392,7 +392,7 @@ void IN_WaitAndProcessEvents()
     if(!SDL_WaitEvent(&event)) return;
     do
     {
-        processEvent(&event);
+        INL_processEvent(&event);
     }
     while(SDL_PollEvent(&event));
 }
@@ -406,7 +406,7 @@ void IN_ProcessEvents()
 
     while (SDL_PollEvent(&event))
     {
-        processEvent(&event);
+        INL_processEvent(&event);
     }
 }
 
@@ -480,8 +480,8 @@ void IN_Shutdown()
 ///////////////////////////////////////////////////////////////////////////
 void IN_ClearKeysDown()
 {
-	LastScan = sc_None;
-	LastASCII = key_None;
+	in_lastScan = sc_None;
+	in_lastASCII = key_None;
 	memset ((void *) in_keyboard,0,sizeof(in_keyboard));
 }
 
@@ -539,12 +539,12 @@ void IN_ReadControl(int player,ControlInfo *info)
 	info->button1 = (buttons & (1 << 1)) != 0;
 	info->button2 = (buttons & (1 << 2)) != 0;
 	info->button3 = (buttons & (1 << 3)) != 0;
-	info->dir = DirTable[((my + 1) * 3) + (mx + 1)];
+	info->dir = in_dirTable[((my + 1) * 3) + (mx + 1)];
 }
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//	IN_WaitForKey() - Waits for a scan code, then clears LastScan and
+//	IN_WaitForKey() - Waits for a scan code, then clears in_lastScan and
 //		returns the scan code
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -552,15 +552,15 @@ ScanCode IN_WaitForKey()
 {
 	ScanCode	result;
 
-	while ((result = LastScan)==0)
+	while ((result = in_lastScan)==0)
 		IN_WaitAndProcessEvents();
-	LastScan = 0;
+	in_lastScan = 0;
 	return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//	IN_WaitForASCII() - Waits for an ASCII char, then clears LastASCII and
+//	IN_WaitForASCII() - Waits for an ASCII char, then clears in_lastASCII and
 //		returns the ASCII value
 //
 ///////////////////////////////////////////////////////////////////////////
@@ -568,9 +568,9 @@ char IN_WaitForASCII()
 {
 	char		result;
 
-	while ((result = LastASCII)==0)
+	while ((result = in_lastASCII)==0)
 		IN_WaitAndProcessEvents();
-	LastASCII = '\0';
+	in_lastASCII = '\0';
 	return(result);
 }
 
@@ -581,7 +581,7 @@ char IN_WaitForASCII()
 //
 ///////////////////////////////////////////////////////////////////////////
 
-Boolean	btnstate[NUMBUTTONS];
+static Boolean	in_btnstate[NUMBUTTONS];
 
 //
 // IN_StartAck
@@ -593,7 +593,7 @@ void IN_StartAck()
 // get initial state of everything
 //
 	IN_ClearKeysDown();
-	memset(btnstate, 0, sizeof(btnstate));
+	memset(in_btnstate, 0, sizeof(in_btnstate));
 
 	int buttons = IN_JoyButtons() << 4;
 
@@ -602,7 +602,7 @@ void IN_StartAck()
 
 	for(int i = 0; i < NUMBUTTONS; i++, buttons >>= 1)
 		if(buttons & 1)
-			btnstate[i] = true;
+			in_btnstate[i] = true;
 }
 
 //
@@ -614,7 +614,7 @@ Boolean IN_CheckAck ()
 //
 // see if something has been pressed
 //
-	if(LastScan)
+	if(in_lastScan)
 		return true;
 
 	int buttons = IN_JoyButtons() << 4;
@@ -626,7 +626,7 @@ Boolean IN_CheckAck ()
 	{
 		if(buttons & 1)
 		{
-			if(!btnstate[i])
+			if(!in_btnstate[i])
             {
                 // Wait until button has been released
                 do
@@ -643,7 +643,7 @@ Boolean IN_CheckAck ()
             }
 		}
 		else
-			btnstate[i] = false;
+			in_btnstate[i] = false;
 	}
 
 	return false;

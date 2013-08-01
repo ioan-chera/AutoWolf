@@ -2129,7 +2129,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         // CHANGE BUTTON VALUE?
         //
         if (((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3)) ||
-            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && LastScan == sc_Enter))
+            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && in_lastScan == sc_Enter))
         {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
@@ -2226,9 +2226,9 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                         break;
 
                     case KEYBOARDBTNS:
-                        if (LastScan && LastScan != sc_Escape)
+                        if (in_lastScan && in_lastScan != sc_Escape)
                         {
-                            buttonscan[order[which]] = LastScan;
+                            buttonscan[order[which]] = in_lastScan;
                             picked = 1;
                             ShootSnd ();
                             IN_ClearKeysDown ();
@@ -2236,9 +2236,9 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                         break;
 
                     case KEYBOARDMOVE:
-                        if (LastScan && LastScan != sc_Escape)
+                        if (in_lastScan && in_lastScan != sc_Escape)
                         {
-                            dirscan[moveorder[which]] = LastScan;
+                            dirscan[moveorder[which]] = in_lastScan;
                             picked = 1;
                             ShootSnd ();
                             IN_ClearKeysDown ();
@@ -3163,7 +3163,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         //
         // SEE IF ANY KEYS ARE PRESSED FOR INITIAL CHAR FINDING
         //
-        key = LastASCII;
+        key = in_lastASCII;
         if (key)
         {
             int ok = 0;
@@ -3742,7 +3742,7 @@ IN_GetScanName (ScanCode scan)
 void
 CheckPause ()
 {
-    if (Paused)
+    if (in_paused)
     {
         switch (SoundStatus)
         {
@@ -3757,7 +3757,7 @@ CheckPause ()
         SoundStatus ^= 1;
         VL_WaitVBL (3);
         IN_ClearKeysDown ();
-        Paused = false;
+        in_paused = false;
     }
 }
 

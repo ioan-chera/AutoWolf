@@ -614,7 +614,7 @@ void CheckKeys (void)
     if (vid_screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
-    scan = LastScan;
+    scan = in_lastScan;
 
 
     if(SPEAR())
@@ -721,14 +721,14 @@ void CheckKeys (void)
 //
 // pause key weirdness can't be checked as a scan code
 //
-    if(buttonstate[bt_pause]) Paused = true;
-    if(Paused)
+    if(buttonstate[bt_pause]) in_paused = true;
+    if(in_paused)
     {
         int lastoffs = StopMusic();
         LatchDrawPic (20 - 4, 80 - 2 * 8, SPEAR.g(PAUSEDPIC));
         I_UpdateScreen();
         IN_Ack ();
-        Paused = false;
+        in_paused = false;
         ContinueMusic(lastoffs);
         if (in_mousePresent && IN_IsInputGrabbed())
             IN_CenterMouse();     // Clear accumulated mouse movement

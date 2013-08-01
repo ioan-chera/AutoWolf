@@ -654,7 +654,7 @@ void ShowArticle (const char *article)
         }
         I_Delay(5);
 
-        LastScan = 0;
+        in_lastScan = 0;
         ReadAnyControl(&ci);
         Direction dir = ci.dir;
         switch(dir)
@@ -665,7 +665,7 @@ void ShowArticle (const char *article)
 
             default:
                 if(ci.button0) dir = dir_South;
-                switch(LastScan)
+                switch(in_lastScan)
                 {
                     case sc_UpArrow:
                     case sc_PgUp:
@@ -709,7 +709,7 @@ void ShowArticle (const char *article)
 			default:
 				;
         }
-    } while (LastScan != sc_Escape && !ci.button1);
+    } while (in_lastScan != sc_Escape && !ci.button1);
 
     IN_ClearKeysDown ();
     fontnumber = oldfontnumber;

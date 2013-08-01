@@ -166,16 +166,16 @@ struct  JoystickDef
 // Global variables
 extern  volatile Boolean    in_keyboard[];
 extern           Boolean    in_mousePresent;
-extern  volatile Boolean    Paused;
-extern  volatile char       LastASCII;
-extern  volatile ScanCode   LastScan;
+extern  volatile Boolean    in_paused;
+extern  volatile char       in_lastASCII;
+extern  volatile ScanCode   in_lastScan;
 extern           int        in_joyNumButtons;
 
 
 // Function prototypes
 #define	IN_KeyDown(code)	(in_keyboard[(code)])
 #define	IN_ClearKey(code)	{in_keyboard[code] = false;\
-							if (code == LastScan) LastScan = sc_None;}
+							if (code == in_lastScan) in_lastScan = sc_None;}
 
 // DEBUG - put names in prototypes
 extern	void		IN_Startup(),IN_Shutdown();

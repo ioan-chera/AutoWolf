@@ -990,7 +990,7 @@ PreloadUpdate (unsigned current, unsigned total)
 
     }
     I_UpdateScreen ();
-//      if (LastScan == sc_Escape)
+//      if (in_lastScan == sc_Escape)
 //      {
 //              IN_ClearKeysDown();
 //              return(true);

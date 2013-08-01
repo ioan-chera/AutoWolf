@@ -499,8 +499,8 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 	cursorvis = done = false;
 	lasttime = lastdirtime = lastdirmovetime = GetTimeCount();
 	lastbuttontime = lasttime + TickBase / 4;	// 250 ms => first button press accepted after 500 ms
-	LastASCII = key_None;
-	LastScan = sc_None;
+	in_lastASCII = key_None;
+	in_lastScan = sc_None;
 
 	while (!done)
 	{
@@ -509,10 +509,10 @@ Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int ma
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		sc = LastScan;
-		LastScan = sc_None;
-		c = LastASCII;
-		LastASCII = key_None;
+		sc = in_lastScan;
+		in_lastScan = sc_None;
+		c = in_lastASCII;
+		in_lastASCII = key_None;
 
 		checkkey = true;
 		curtime = GetTimeCount();

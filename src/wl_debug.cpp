@@ -408,7 +408,7 @@ void ShapeTest ()
         I_UpdateScreen();
 
         IN_Ack();
-        scan = LastScan;
+        scan = in_lastScan;
 
         IN_ClearKey(scan);
         switch (scan)
