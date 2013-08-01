@@ -70,11 +70,11 @@ class RandomGenerator
 public:
    int operator() ()
    {
-      return (int)(state = state * 48271 % INT32_MAX);
+      return (int)(state = state * 48271 % 0x7fffffff);
    }
    void initialize(int inState)
    {
-      state = (uint64_t)inState % INT32_MAX;
+      state = (uint64_t)inState % 0x7fffffff;
    }
    // Sets it to the current day value
    void initializeByDay()
