@@ -331,7 +331,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // Nope. Let's make a lambda function here.
     auto secretVerify = [&](int txofs, int tyofs) -> Boolean
     {
-        if(mapSegs(1, tx + txofs, tx + txofs) == PUSHABLETILE)
+        if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
 		{
             objtype *check;
             check = actorat[tx + txofs][ty + tyofs];
