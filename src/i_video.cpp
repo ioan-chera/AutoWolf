@@ -125,17 +125,7 @@ void I_InitEngine()
    
    atexit(SDL_Quit);
    
-   int numJoysticks = SDL_NumJoysticks();
-   if(cfg_joystickindex && (cfg_joystickindex < -1 ||
-                            cfg_joystickindex >= numJoysticks))
-   {
-      if(!numJoysticks)
-         printf("No joysticks are available to SDL!\n");
-      else
-         printf("The joystick index must be between -1 and %i!\n",
-                numJoysticks - 1);
-      exit(1);
-   }
+   
    
    // Moved from InitGame
 #if defined(GP2X_940)

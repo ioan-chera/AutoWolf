@@ -721,3 +721,22 @@ void IN_CenterMouse()
 {
     SDL_WarpMouse(cfg_screenWidth / 2, cfg_screenHeight / 2);
 }
+
+//
+// IN_InitVerifyJoysticks
+//
+// IOANCH: moved the startup joystick validity check here
+//
+void IN_InitVerifyJoysticks()
+{
+   int numJoysticks = SDL_NumJoysticks();
+   if(cfg_joystickindex && (cfg_joystickindex < -1 ||
+      cfg_joystickindex >= numJoysticks))
+   {
+      if(!numJoysticks)
+         Quit("No joysticks are available to SDL!\n");
+      else
+         Quit((PString("The joystick index must be between -1 and %i!\n") <<
+            (numJoysticks - 1))());
+   }
+}

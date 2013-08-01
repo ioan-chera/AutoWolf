@@ -208,4 +208,6 @@ Boolean IN_CheckAck ();
 bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 
+// IOANCH:
+void IN_InitVerifyJoysticks()
 #endif

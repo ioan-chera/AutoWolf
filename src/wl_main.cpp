@@ -1328,6 +1328,9 @@ static void InitGame()
    // IOANCH 20130726: moved SDL init away
    I_InitEngine();
    
+   // IOANCH: moved joystick check here, out of I_InitEngine
+   IN_InitVerifyJoysticks();
+   
    // IOANCH: set scale factor and pixelangle/wallheights values/arrays
    VL_SetViewportValues();
    
