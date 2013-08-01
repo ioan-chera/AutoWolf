@@ -233,7 +233,7 @@ void ScoreMap::RecursiveLabelRegions(int tx, int ty, Region *region)
         return;
     map[tx][ty].region = region;
     
-    word mapslot = *(mapsegs[1] + (ty << mapshift) + tx);
+    word mapslot = mapSegs(1, tx, ty);
     if(mapslot >= PLAYER_START_NORTH && mapslot <= PLAYER_START_WEST)
         startRegion = region;
         

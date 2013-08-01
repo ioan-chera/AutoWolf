@@ -268,9 +268,9 @@ static void ScanInfoPlane()
 {
     unsigned x,y;
     int      tile;
-    word     *start;
+    const word     *start;
 
-    start = mapsegs[1];
+    start = mapSegs[1];
     for (y=0;y<mapheight;y++)
     {
         for (x=0;x<mapwidth;x++)
@@ -703,8 +703,8 @@ void SetupGameLevel ()
 //
 // load the level
 //
-    CA_CacheMap (gamestate.mapon+10*gamestate.episode);
-    mapon-=gamestate.episode*10;
+   // IOANCH: use C++ construct
+   mapSegs.cacheMap(gamestate.mapon + 10 * gamestate.episode, gamestate.episode);
 
 #ifdef USE_FEATUREFLAGS
     // Temporary definition to make things clearer
@@ -727,7 +727,7 @@ void SetupGameLevel ()
 //
     memset (tilemap,0,sizeof(tilemap));
     memset (actorat,0,sizeof(actorat));
-    map = mapsegs[0];
+    map = mapSegs[0];
     for (y=0;y<mapheight;y++)
     {
         for (x=0;x<mapwidth;x++)
@@ -761,7 +761,7 @@ void SetupGameLevel ()
     InitDoorList ();
     InitStaticList ();
 
-    map = mapsegs[0];
+    map = mapSegs[0];
     for (y=0;y<mapheight;y++)
     {
         for (x=0;x<mapwidth;x++)
@@ -802,7 +802,7 @@ void SetupGameLevel ()
 //
 // take out the ambush markers
 //
-    map = mapsegs[0];
+    map = mapSegs[0];
     for (y=0;y<mapheight;y++)
     {
         for (x=0;x<mapwidth;x++)

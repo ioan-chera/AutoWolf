@@ -492,7 +492,7 @@ void SpawnDoor (int tilex, int tiley, Boolean vertical, int lock)
     // for door sides
     //
     tilemap[tilex][tiley] = doornum | 0x80;
-    map = mapsegs[0] + (tiley<<mapshift) +tilex;
+   map = mapSegs.ptr(0, tilex, tiley);
     if (vertical)
     {
         *map = *(map-1);                        // set area number
@@ -591,8 +591,7 @@ static void _CloseDoor (int door)
     //
     // play door sound if in a connected area
     //
-    area = *(mapsegs[0] + (doorobjlist[door].tiley<<mapshift)
-        +doorobjlist[door].tilex)-AREATILE;
+    area = mapSegs(0, doorobjlist[door].tilex, doorobjlist[door].tiley) - AREATILE;
     if (areabyplayer[area])
     {
         PlaySoundLocTile(CLOSEDOORSND,doorobjlist[door].tilex,doorobjlist[door].tiley); // JAB
@@ -677,7 +676,7 @@ static void _DoorOpen (int door)
 static void _DoorOpening (int door)
 {
     unsigned area1,area2;
-    word *map;
+    const word *map;
     int32_t position;
 
     position = doorposition[door];
@@ -686,8 +685,7 @@ static void _DoorOpening (int door)
         //
         // door is just starting to open, so connect the areas
         //
-        map = mapsegs[0] + (doorobjlist[door].tiley<<mapshift)
-            +doorobjlist[door].tilex;
+        map = mapSegs.cptr(0, doorobjlist[door].tilex, doorobjlist[door].tiley);
 
         if (doorobjlist[door].vertical)
         {
@@ -746,7 +744,7 @@ static void _DoorOpening (int door)
 static void _DoorClosing (int door)
 {
     unsigned area1,area2;
-    word *map;
+    const word *map;
     int32_t position;
     int tilex,tiley;
 
@@ -775,7 +773,7 @@ static void _DoorClosing (int door)
 
         doorobjlist[door].action = dr_closed;
 
-        map = mapsegs[0] + (doorobjlist[door].tiley<<mapshift) + doorobjlist[door].tilex;
+       map = mapSegs.cptr(0, doorobjlist[door].tilex, doorobjlist[door].tiley);
 
         if (doorobjlist[door].vertical)
         {
@@ -894,8 +892,9 @@ void PushWall (int checkx, int checky, int dir)
     pwalltile = tilemap[pwallx][pwally];
     tilemap[pwallx][pwally] = 64;
     tilemap[pwallx+dx][pwally+dy] = 64;
-    *(mapsegs[1]+(pwally<<mapshift)+pwallx) = 0;   // remove P tile info
-    *(mapsegs[0]+(pwally<<mapshift)+pwallx) = *(mapsegs[0]+(player->tiley<<mapshift)+player->tilex); // set correct floorcode (BrotherTank's fix)
+   mapSegs.setAt(1, pwallx, pwally, 0);
+   mapSegs.setAt(0, pwallx, pwally, mapSegs(0, player->tilex, player->tiley));
+   // set correct floorcode (BrotherTank's fix)
 
     // IOANCH 20130601: play at location
     PlaySoundLocTile(PUSHWALLSND, pwallx, pwally);
@@ -932,7 +931,7 @@ void MovePWalls ()
         //
         tilemap[pwallx][pwally] = 0;
         actorat[pwallx][pwally] = 0;
-        *(mapsegs[0]+(pwally<<mapshift)+pwallx) = player->areanumber+AREATILE;
+       mapSegs.setAt(0, pwallx, pwally, player->areanumber + AREATILE);
 
         int dx=_dirs[pwalldir][0], dy=_dirs[pwalldir][1];
         //

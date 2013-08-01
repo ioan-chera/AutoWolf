@@ -603,7 +603,7 @@ byte vgaCeiling_sod[] =
 void VGAClearScreen ()
 {
    // IOANCH 20130302: unification
-   byte ceiling = IMPALE(vgaCeiling)[gamestate.episode * 10 + mapon];
+   byte ceiling = IMPALE(vgaCeiling)[gamestate.episode * 10 + mapSegs.map()];
 
    int y;
    byte *ptr = vbuf;

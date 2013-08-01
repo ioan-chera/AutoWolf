@@ -237,7 +237,7 @@ inline static const uint8_t *unfoldedMapSegs()
     
     for(size_t i = 0; i < MAPPLANES; ++i)
     {
-        memcpy(mapSegsLinear + i * mapSegsUnitLength, mapsegs[i],
+        memcpy(mapSegsLinear + i * mapSegsUnitLength, mapSegs[i],
                mapSegsUnitLength);
     }
     

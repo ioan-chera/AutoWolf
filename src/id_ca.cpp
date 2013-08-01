@@ -52,14 +52,240 @@
 #include "i_video.h"
 #include "PString.h"
 
-#define THREEBYTEGRSTARTS
+MapLoader mapSegs;
+
+//
+// MapLoader::loadFromFile
+//
+// IOANCH: use classes
+// Gets addresses from file to prepare for caching
+//
+void MapLoader::loadFromFile(const char *maphead, const char *gamemaps)
+{
+   int     i;
+   int32_t pos;
+   // IOANCH: moved struct here, only used here
+   
+   int32_t headeroffsets[NUMMAPS];   // IOANCH: used to be 100
+   
+   //
+   // load maphead.ext (offsets and tileinfo for map file)
+   //
+   FILE *header = fopen(maphead, "rb");
+   if(!header)
+      CA_CannotOpen(maphead);
+   
+//   length = NUMMAPS * sizeof(int32_t); // used to be "filelength(handle);"
+   fread(&m_RLEWtag, sizeof(word), 1, header);
+   fread(headeroffsets, sizeof(int32_t), NUMMAPS, header);
+   fclose(header);
+   
+   //
+   // open the data file
+   //
+   // IOANCH 20130301: unification culling
+   
+   m_file = fopen(gamemaps, "rb");
+   if(!m_file)
+      CA_CannotOpen(gamemaps);
+   
+   //
+   // load all map header
+   //
+   for (i = 0; i < NUMMAPS; i++)
+   {
+      pos = headeroffsets[i];
+      if (pos < 0)                          // $FFFFFFFF start is a sparse map
+         continue;
+      
+//      m_mapheaderseg[i] = (maptype *)I_CheckedMalloc(sizeof(maptype));
+      fseek(m_file, pos, SEEK_SET);
+      fread(&m_mapheaderseg[i], sizeof(maptype), 1, m_file);   // IOANCH: not
+   }                                                           // pointer
+   m_mapon = -1;
+}
+
+//
+// CAL_CarmackExpand
+//
+// Length is the length of the EXPANDED data
+//
+#define NEARTAG 0xa7
+#define FARTAG  0xa8
+
+static void CAL_CarmackExpand(byte *source, word *dest, int length)
+{
+   word ch, chhigh, count, offset;
+   byte *inptr;
+   word *copyptr, *outptr;
+   
+   length /= 2;
+   
+   inptr = (byte *)source;
+   outptr = dest;
+   
+   while(length > 0)
+   {
+      ch = READWORD(inptr);
+      chhigh = ch >> 8;
+      if(chhigh == NEARTAG)
+      {
+         count = ch & 0xff;
+         if(!count)
+         {                     // have to insert a word containing the tag byte
+            ch |= *inptr++;
+            *outptr++ = ch;
+            length--;
+         }
+         else
+         {
+            offset = *inptr++;
+            copyptr = outptr - offset;
+            length -= count;
+            if(length < 0)
+					return;
+            
+            while (count--)
+               *outptr++ = *copyptr++;
+         }
+      }
+      else if(chhigh == FARTAG)
+      {
+         count = ch & 0xff;
+         if(!count)
+         {                     // have to insert a word containing the tag byte
+            ch |= *inptr++;
+            *outptr++ = ch;
+            length --;
+         }
+         else
+         {
+            offset = READWORD(inptr);
+            copyptr = dest + offset;
+            length -= count;
+            if(length<0)
+					return;
+            
+            while(count--)
+               *outptr++ = *copyptr++;
+         }
+      }
+      else
+      {
+         *outptr++ = ch;
+         length--;
+      }
+   }
+}
+
+//
+// CAL_RLEWexpand
+//
+// length is EXPANDED length
+//
+static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
+{
+   word value, count, i;
+   word *end = dest + length / 2;
+   
+   //
+   // expand it
+   //
+   do
+   {
+      value = *source++;
+      if (value != rlewtag)
+		{
+         //
+         // uncompressed
+         //
+         *dest++ = value;
+		}
+      else
+      {
+         //
+         // compressed string
+         //
+         count = *source++;
+         value = *source++;
+         for (i = 1; i <= count; i++)
+            *dest++ = value;
+      }
+   } while(dest < end);
+}
+
+
+//
+// MapLoader::cacheMap
+//
+// WOLF: This is specialized for a 64*64 map size
+//
+#define BUFFERSIZE 0x1000
+void MapLoader::cacheMap (int mapnum, short episode)
+{
+   int32_t   pos,compressed;
+   int       plane;
+   word     *dest;
+   memptr    bigbufferseg;
+   unsigned  size;
+   word     *source;
+   // IOANCH 20130301: unification culling
+   word     *buffer2seg;
+   int32_t   expanded;
+   
+   m_mapon = mapnum - 10 * episode;
+   
+   static int32_t bufferseg[BUFFERSIZE/4];
+   
+   //
+   // load the planes into the allready allocated buffers
+   //
+   size = maparea*2;
+   
+   for (plane = 0; plane<MAPPLANES; plane++)
+   {
+      pos = m_mapheaderseg[mapnum].planestart[plane];
+      compressed = m_mapheaderseg[mapnum].planelength[plane];
+      
+      dest = m_mapsegs[plane];
+      
+      fseek(m_file, pos, SEEK_SET);
+      if (compressed <= BUFFERSIZE)
+         source = (word *) bufferseg;
+      else
+      {
+         bigbufferseg = I_CheckedMalloc(compressed);
+         
+         source = (word *) bigbufferseg;
+      }
+      
+      fread(source, compressed, 1, m_file);
+      // IOANCH 20130301: unification culling
+      //
+      // unhuffman, then unRLEW
+      // The huffman'd chunk has a two byte expanded length first
+      // The resulting RLEW chunk also does, even though it's not really
+      // needed
+      //
+      expanded = *source;
+      source++;
+      buffer2seg = (word *) I_CheckedMalloc(expanded);
+      
+      CAL_CarmackExpand((byte *) source, buffer2seg,expanded);
+      CAL_RLEWexpand(buffer2seg+1,dest,size,m_RLEWtag);
+      free(buffer2seg);
+      
+      if (compressed > BUFFERSIZE)
+         free(bigbufferseg);
+   }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 //                             LOCAL CONSTANTS
 //
 ////////////////////////////////////////////////////////////////////////////////
-
+static int32_t ca_bufferseg[BUFFERSIZE/4];
 struct huffnode
 {
     word bit0,bit1;       // 0-255 is a character, > is a pointer to a node
@@ -73,19 +299,13 @@ struct huffnode
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#define BUFFERSIZE 0x1000
-static int32_t ca_bufferseg[BUFFERSIZE/4];
 
-int     mapon;
 
-word    *mapsegs[MAPPLANES];
-static maptype* ca_mapheaderseg[NUMMAPS];
+
 // IOANCH 20130301: unification
 byte    *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 				   NUMSNDCHUNKS_wl6];
 byte    *ca_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
-
-word    ca_RLEWtag;
 
 int     menu_missingep = 0;
 
@@ -113,18 +333,17 @@ static int32_t  ca_grstarts_sod[NUMCHUNKS_sod + 1];
 static int32_t* ca_audiostarts; // array of offsets in audio / AUDIOT
 
 #ifdef GRHEADERLINKED
-huffnode *ca_grhuffman;
+static huffnode *ca_grhuffman;
 #else
-huffnode ca_grhuffman[255];
+static huffnode ca_grhuffman[255];
 #endif
 
-int    ca_grhandle = -1;               // handle to EGAGRAPH
-int    ca_maphandle = -1;              // handle to MAPTEMP / GAMEMAPS
-int    ca_audiohandle = -1;            // handle to AUDIOT / AUDIO
+static int    ca_grhandle = -1;               // handle to EGAGRAPH
+static int    ca_audiohandle = -1;            // handle to AUDIOT / AUDIO
 
-int32_t   ca_chunkcomplen,ca_chunkexplen;
+static int32_t   ca_chunkcomplen,ca_chunkexplen;
 
-SDMode ca_oldsoundmode;
+static SDMode ca_oldsoundmode;
 
 
 //
@@ -263,114 +482,6 @@ static void CAL_HuffExpand(byte *source, byte *dest, int32_t length,
     }
 }
 
-//
-// CAL_CarmackExpand
-//
-// Length is the length of the EXPANDED data
-//
-#define NEARTAG 0xa7
-#define FARTAG  0xa8
-
-static void CAL_CarmackExpand(byte *source, word *dest, int length)
-{
-    word ch, chhigh, count, offset;
-    byte *inptr;
-    word *copyptr, *outptr;
-
-    length /= 2;
-
-    inptr = (byte *)source;
-    outptr = dest;
-
-    while(length > 0)
-    {
-        ch = READWORD(inptr);
-        chhigh = ch >> 8;
-        if(chhigh == NEARTAG)
-        {
-            count = ch & 0xff;
-            if(!count)
-            {                               // have to insert a word containing the tag byte
-                ch |= *inptr++;
-                *outptr++ = ch;
-                length--;
-            }
-            else
-            {
-                offset = *inptr++;
-                copyptr = outptr - offset;
-                length -= count;
-                if(length < 0) 
-					return;
-
-                while (count--)
-                    *outptr++ = *copyptr++;
-            }
-        }
-        else if(chhigh == FARTAG)
-        {
-            count = ch & 0xff;
-            if(!count)
-            {                               // have to insert a word containing the tag byte
-                ch |= *inptr++;
-                *outptr++ = ch;
-                length --;
-            }
-            else
-            {
-                offset = READWORD(inptr);
-                copyptr = dest + offset;
-                length -= count;
-                if(length<0) 
-					return;
-
-                while(count--)
-                    *outptr++ = *copyptr++;
-            }
-        }
-        else
-        {
-            *outptr++ = ch;
-            length--;
-        }
-    }
-}
-
-//
-// CAL_RLEWexpand
-//
-// length is EXPANDED length
-//
-static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
-{
-    word value, count, i;
-    word *end = dest + length / 2;
-
-//
-// expand it
-//
-    do
-    {
-        value = *source++;
-        if (value != rlewtag)
-		{
-            //
-            // uncompressed
-            //
-            *dest++ = value;
-		}
-        else
-        {
-            //
-            // compressed string
-            //
-            count = *source++;
-            value = *source++;
-            for (i = 1; i <= count; i++)
-                *dest++ = value;
-        }
-    } while(dest < end);
-}
 
 
 
@@ -516,73 +627,6 @@ static void CAL_SetupGrFile ()
 
 //==========================================================================
 
-//
-// CAL_SetupMapFile
-//
-static void CAL_SetupMapFile ()
-{
-    int     i;
-    int handle;
-    int32_t length,pos;
-    PString fname;
-   // IOANCH: moved struct here, only used here
-
-   struct mapfiletype
-   {
-      word ca_RLEWtag;
-      int32_t headeroffsets[100];
-   } tinf; // IOANCH: created on stack
-
-//
-// load maphead.ext (offsets and tileinfo for map file)
-//
-   fname = I_ResolveCaseInsensitivePath(".",
-                                        PString(ca_mheadname).
-                                        concat(cfg_extension)());
-
-
-   handle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
-
-    length = NUMMAPS*4+2; // used to be "filelength(handle);"
-   read(handle, &tinf.ca_RLEWtag, sizeof(word));
-   read(handle, tinf.headeroffsets, length - sizeof(word));
-    close(handle);
-
-    ca_RLEWtag = tinf.ca_RLEWtag;
-
-//
-// open the data file
-//
-    // IOANCH 20130301: unification culling
-   fname = I_ResolveCaseInsensitivePath(".",
-                                        PString("GAMEMAPS.").
-                                        concat(cfg_extension)());
-
-
-   ca_maphandle = CAL_SafeOpen(fname(), O_RDONLY | O_BINARY);
-
-//
-// load all map header
-//
-    for (i=0;i<NUMMAPS;i++)
-    {
-        pos = tinf.headeroffsets[i];
-        if (pos<0)                          // $FFFFFFFF start is a sparse map
-            continue;
-
-       ca_mapheaderseg[i] = (maptype *)I_CheckedMalloc(sizeof(maptype));
-        lseek(ca_maphandle,pos,SEEK_SET);
-        read (ca_maphandle,(memptr)ca_mapheaderseg[i],sizeof(maptype));
-    }
-
-//
-// allocate space for 3 64*64 planes
-//
-    for (i=0;i<MAPPLANES;i++)
-    {
-       mapsegs[i] = (word *)I_CheckedMalloc(maparea * 2);
-    }
-}
 
 
 //==========================================================================
@@ -634,11 +678,15 @@ void CA_Startup ()
     profilehandle = open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
 
-    CAL_SetupMapFile ();
+   // IOANCH: use C++ classes
+   mapSegs.loadFromFile(I_ResolveCaseInsensitivePath(".",
+                                                     PString(ca_mheadname).
+                                                     concat(cfg_extension)())(),
+                        I_ResolveCaseInsensitivePath(".",
+                                                     PString("GAMEMAPS.").
+                                                     concat(cfg_extension)())());
     CAL_SetupGrFile ();
     CAL_SetupAudioFile ();
-
-    mapon = -1;
 }
 
 //==========================================================================
@@ -652,8 +700,7 @@ void CA_Shutdown ()
 {
     int i,start;
 
-    if(ca_maphandle != -1)
-        close(ca_maphandle);
+   mapSegs.close();
     if(ca_grhandle != -1)
         close(ca_grhandle);
     if(ca_audiohandle != -1)
@@ -975,68 +1022,6 @@ void CA_CacheScreen (int chunk)
 
 //==========================================================================
 
-//
-// CA_CacheMap
-//
-// WOLF: This is specialized for a 64*64 map size
-//
-void CA_CacheMap (int mapnum)
-{
-    int32_t   pos,compressed;
-    int       plane;
-    word     *dest;
-    memptr    bigbufferseg;
-    unsigned  size;
-    word     *source;
-    // IOANCH 20130301: unification culling
-    word     *buffer2seg;
-    int32_t   expanded;
-
-    mapon = mapnum;
-
-//
-// load the planes into the allready allocated buffers
-//
-    size = maparea*2;
-
-    for (plane = 0; plane<MAPPLANES; plane++)
-    {
-        pos = ca_mapheaderseg[mapnum]->planestart[plane];
-        compressed = ca_mapheaderseg[mapnum]->planelength[plane];
-
-        dest = mapsegs[plane];
-
-        lseek(ca_maphandle,pos,SEEK_SET);
-        if (compressed<=BUFFERSIZE)
-            source = (word *) ca_bufferseg;
-        else
-        {
-            bigbufferseg=I_CheckedMalloc(compressed);
-
-            source = (word *) bigbufferseg;
-        }
-
-        read(ca_maphandle,source,compressed);
-        // IOANCH 20130301: unification culling
-        //
-        // unhuffman, then unRLEW
-        // The huffman'd chunk has a two byte expanded length first
-        // The resulting RLEW chunk also does, even though it's not really
-        // needed
-        //
-        expanded = *source;
-        source++;
-        buffer2seg = (word *) I_CheckedMalloc(expanded);
-
-        CAL_CarmackExpand((byte *) source, buffer2seg,expanded);
-        CAL_RLEWexpand(buffer2seg+1,dest,size,ca_RLEWtag);
-        free(buffer2seg);
-
-
-        if (compressed>BUFFERSIZE)
-            free(bigbufferseg);
-    }
-}
 
 //===========================================================================
 

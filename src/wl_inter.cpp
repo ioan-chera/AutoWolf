@@ -622,7 +622,7 @@ LevelCompleted ()
 // IOANCH 20130301: unification culling
     VWB_DrawPic (0, 16, SPEAR.g(L_GUYPIC));
 
-    if ((!SPEAR() && mapon < 8) || (SPEAR() && mapon != 4 && mapon != 9 && mapon != 15 && mapon < 17))
+    if ((!SPEAR() && mapSegs.map() < 8) || (SPEAR() && mapSegs.map() != 4 && mapSegs.map() != 9 && mapSegs.map() != 15 && mapSegs.map() < 17))
     {
         // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -649,9 +649,9 @@ LevelCompleted ()
 
 
 #ifdef SPANISH
-        Write (30, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
+        Write (30, 12, parTimes[gamestate.episode * 10 + mapSegs.map()].timestr);
 #else
-        Write (26, 12, parTimes[gamestate.episode * 10 + mapon].timestr);
+        Write (26, 12, parTimes[gamestate.episode * 10 + mapSegs.map()].timestr);
 #endif
 
         //
@@ -662,8 +662,8 @@ LevelCompleted ()
         if (sec > 99 * 60)      // 99 minutes max
             sec = 99 * 60;
 
-        if (gamestate.TimeCount < parTimes[gamestate.episode * 10 + mapon].time * 4200)
-            timeleft = (int32_t) ((parTimes[gamestate.episode * 10 + mapon].time * 4200) / 70 - sec);
+        if (gamestate.TimeCount < parTimes[gamestate.episode * 10 + mapSegs.map()].time * 4200)
+            timeleft = (int32_t) ((parTimes[gamestate.episode * 10 + mapSegs.map()].time * 4200) / 70 - sec);
 
         min = sec / 60;
         sec %= 60;
@@ -883,17 +883,17 @@ done:   itoanoreturn (kr, tempstr, 10);
         //
         // SAVE RATIO INFORMATION FOR ENDGAME
         //
-        LevelRatios[mapon].kill = kr;
-        LevelRatios[mapon].secret = sr;
-        LevelRatios[mapon].treasure = tr;
-        LevelRatios[mapon].time = min * 60 + sec;
+        LevelRatios[mapSegs.map()].kill = kr;
+        LevelRatios[mapSegs.map()].secret = sr;
+        LevelRatios[mapSegs.map()].treasure = tr;
+        LevelRatios[mapSegs.map()].time = min * 60 + sec;
     }
     else
     {
 // IOANCH 20130301: unification culling
         if(SPEAR()) 
         {
-            switch (mapon)
+            switch (mapSegs.map())
             {
                 case 4:
                     Write (14, 4, " trans\n" " grosse\n" STR_DEFEATED);

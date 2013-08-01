@@ -86,9 +86,13 @@ void Quit(const char *message);
 #include "id_vl.h"
 #include "id_vh.h"
 #include "id_us.h"
+#define mapshift        6
+#define MAPSIZE         (1<<mapshift)
+#define maparea         MAPSIZE*MAPSIZE
+// IOANCH: moved the defs right above id_ca.h
 #include "id_ca.h"
 
-#define MAPSPOT(x,y,plane) (mapsegs[plane][((y)<<mapshift)+(x)])
+#define MAPSPOT(x,y,plane) mapSegs((plane), (x), (y))
 
 #define SIGN(x)         ((x)>0?1:-1)
 #define ABS(x)          ((int)(x)>0?(x):-(x))
@@ -183,9 +187,7 @@ void Quit(const char *message);
 
 #define MINDIST         (0x5800l)
 
-#define mapshift        6
-#define MAPSIZE         (1<<mapshift)
-#define maparea         MAPSIZE*MAPSIZE
+// IOANCH: moved map size above id_ca
 
 #define mapheight       MAPSIZE
 #define mapwidth        MAPSIZE
@@ -658,9 +660,7 @@ enum exit_t
     ex_secretlevel
 };
 
-
-extern word *mapsegs[MAPPLANES];
-extern int mapon;
+// IOANCH: moved mapsegs and mapon to class
 
 ////////////////////////////////////////////////////////////////////////////////
 //

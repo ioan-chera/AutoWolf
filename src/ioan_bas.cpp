@@ -153,7 +153,7 @@ static objtype *_SpawnStand (classtype which, int tilex, int tiley, int dir)
         if(!loadedgame)
             gamestate.killtotal++;
     
-        map = mapsegs[0]+(tiley<<mapshift)+tilex;
+       map = mapSegs.ptr(0, tilex, tiley);
         tile = *map;
         if (tile == AMBUSHTILE)
         {

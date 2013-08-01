@@ -35,21 +35,87 @@
 #define UNCACHEGRCHUNK(chunk) {if(ca_grsegs[chunk]) {free(ca_grsegs[chunk]); ca_grsegs[chunk]=NULL;}}
 #define UNCACHEAUDIOCHUNK(chunk) {if(ca_audiosegs[chunk]) {free(ca_audiosegs[chunk]); ca_audiosegs[chunk]=NULL;}}
 
-//===========================================================================
+// IOANCH 20130801: use classes
 
-struct maptype
+//
+// MapLoader
+//
+// Loads maps, caching them on demand to a mapsegs array
+//
+class MapLoader
 {
-    int32_t planestart[3];
-    word    planelength[3];
-    word    width,height;
-    char    name[16];
+   struct maptype
+   {
+      int32_t planestart[3];
+      word    planelength[3];
+      word    width,height;
+      char    name[16];
+   };
+   
+   FILE *m_file;    // file handle
+   word m_RLEWtag;  // RLEW compression tag
+   maptype  m_mapheaderseg[NUMMAPS];
+   word     m_mapsegs[MAPPLANES][maparea];
+   int m_mapon;
+   
+public:
+   MapLoader() : m_file(NULL), m_RLEWtag(0), m_mapon(-1)
+   {
+      memset(m_mapheaderseg, 0, sizeof(m_mapheaderseg));
+      memset(m_mapsegs, 0, sizeof(m_mapsegs));
+   }
+   void close()
+   {
+      if(m_file)
+      {
+         fclose(m_file);
+         m_file = NULL;
+      }
+   }
+
+   ~MapLoader()
+   {
+      close();
+   }
+   
+   void loadFromFile(const char *maphead, const char *gamemaps);
+   void cacheMap(int mapnum, short episode = 0);
+   
+   word operator()(int plane, int x, int y) const
+   {
+      return m_mapsegs[plane][(y << mapshift) + x];
+   }
+   word *ptr(int plane, int x, int y)
+   {
+      return &m_mapsegs[plane][(y << mapshift) + x];
+   }
+   const word *cptr(int plane, int x, int y) const
+   {
+      return &m_mapsegs[plane][(y << mapshift) + x];
+   }
+   const word *operator[] (int plane) const
+   {
+      return m_mapsegs[plane];
+   }
+   word *operator[] (int plane)
+   {
+      return m_mapsegs[plane];
+   }
+   void setAt(int plane, int x, int y, word value)
+   {
+      m_mapsegs[plane][(y << mapshift) + x] = value;
+   }
+   int map() const
+   {
+      return m_mapon;
+   }
 };
+extern MapLoader mapSegs;
+//===========================================================================
+
 
 //===========================================================================
 
-extern  int   mapon;
-
-extern  word *mapsegs[MAPPLANES];
 // IOANCH 20130301: unification
 extern  byte *ca_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
 						NUMSNDCHUNKS_wl6];
@@ -76,7 +142,6 @@ int32_t CA_CacheAudioChunk (int chunk);
 void CA_LoadAllSounds ();
 
 void CA_CacheGrChunk (int chunk);
-void CA_CacheMap (int mapnum);
 
 void CA_CacheScreen (int chunk);
 

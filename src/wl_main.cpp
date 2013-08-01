@@ -699,8 +699,8 @@ Boolean LoadTheGame(FILE *file,int x,int y)
 
     if (gamestate.secretcount)      // assign valid floorcodes under moved pushwalls
     {
-        word *map, *obj; word tile, sprite;
-        map = mapsegs[0]; obj = mapsegs[1];
+       word *map, *obj; word tile, sprite;
+        map = mapSegs[0]; obj = mapSegs[1];
         for (y=0;y<mapheight;y++)
             for (x=0;x<mapwidth;x++)
             {

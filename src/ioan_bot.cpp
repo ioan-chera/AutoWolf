@@ -336,7 +336,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // Nope. Let's make a lambda function here.
     auto secretVerify = [&](int txofs, int tyofs) -> Boolean
     {
-        if(*(mapsegs[1] + ((ty + tyofs) << mapshift) + tx + txofs) == PUSHABLETILE)
+        if(mapSegs(1, tx + txofs, tx + txofs) == PUSHABLETILE)
 		{
             objtype *check;
             check = actorat[tx + txofs][ty + tyofs];
@@ -383,12 +383,12 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		// THROW WEST
 		if(tx - 1 >= 0 && tilemap[tx - 1][ty] == ELEVATORTILE) 
 		{
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx-1) != PUSHABLETILE
+			if (mapSegs(1, tx - 1, ty) != PUSHABLETILE
                 || tx - 2 < 0 || !actorat[tx-2][ty])
 			{
 				knownExitX = exitx = tx - 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE
+				if(mapSegs(0, tx, ty) == ALTELEVATORTILE
                    || searchstage >= SSNormalLift
                    || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
@@ -398,12 +398,12 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 		// THROW EAST
 		if(tx + 1 < MAPSIZE && tilemap[tx + 1][ty] == ELEVATORTILE)
 		{
-			if (*(mapsegs[1]+((ty)<<mapshift)+tx+1) != PUSHABLETILE
+			if (mapSegs(1, tx + 1, ty) != PUSHABLETILE
                 || tx + 2 >= MAPSIZE || !actorat[tx+2][ty])
 			{
 				knownExitX = exitx = tx + 1;
 				knownExitY = exity = ty;
-				if(*(mapsegs[0]+(ty<<mapshift)+tx) == ALTELEVATORTILE
+				if(mapSegs(0, tx, ty) == ALTELEVATORTILE
                    || searchstage >= SSNormalLift
                    || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
 					return true;
@@ -412,7 +412,7 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 
 		// exit pad
 		if(searchstage >= SSNormalLift || moodBox() & MoodBox::MOOD_TAKEFIRSTEXIT)
-           if(*(mapsegs[1]+(ty<<mapshift)+tx) == EXITTILE)
+           if(mapSegs(1, tx, ty) == EXITTILE)
 			return true;
 	}
 	return false;
