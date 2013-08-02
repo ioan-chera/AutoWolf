@@ -37,6 +37,7 @@
 		4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FB3B41E1744183100C29DF4 /* Point2D.cpp */; };
 		4FF097C517A6869C00706687 /* i_video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FF097C317A6869C00706687 /* i_video.cpp */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
+		4FFDADD117ABA2480056B657 /* m_buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDADCF17ABA2480056B657 /* m_buffer.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D901F4FE0FC0DBCB0040C290 /* id_pm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D901F4CC0FC0DBCB0040C290 /* id_pm.cpp */; };
@@ -150,6 +151,9 @@
 		4FF097C417A6869C00706687 /* i_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_video.h; path = ../src/i_video.h; sourceTree = "<group>"; };
 		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../src/OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
 		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../src/OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
+		4FFDADCF17ABA2480056B657 /* m_buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = m_buffer.cpp; path = ../src/m_buffer.cpp; sourceTree = "<group>"; };
+		4FFDADD017ABA2480056B657 /* m_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_buffer.h; path = ../src/m_buffer.h; sourceTree = "<group>"; };
+		4FFDADD217ABA2BD0056B657 /* m_swap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_swap.h; path = ../src/m_swap.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* AutoWolf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoWolf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D901F4C70FC0DBCB0040C290 /* id_in.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = id_in.h; path = ../src/id_in.h; sourceTree = SOURCE_ROOT; };
@@ -346,6 +350,9 @@
 		4F1ECC3216EA503800A37742 /* Eternity */ = {
 			isa = PBXGroup;
 			children = (
+				4FFDADD217ABA2BD0056B657 /* m_swap.h */,
+				4FFDADCF17ABA2480056B657 /* m_buffer.cpp */,
+				4FFDADD017ABA2480056B657 /* m_buffer.h */,
 				4F1ECC2F16EA4F5600A37742 /* e_hash.h */,
 				4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */,
 				4F1ECC3116EA4F5600A37742 /* m_dllist.h */,
@@ -687,6 +694,7 @@
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
 				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
 				4FF097C517A6869C00706687 /* i_video.cpp in Sources */,
+				4FFDADD117ABA2480056B657 /* m_buffer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
