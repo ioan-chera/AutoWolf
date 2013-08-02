@@ -42,6 +42,10 @@
 
 #include "wl_def.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_us.h"
+#include "id_vh.h"
+#include "wl_main.h"
 #include "wl_menu.h"
 
 #pragma	hdrstop

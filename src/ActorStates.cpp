@@ -27,6 +27,7 @@
 #include "wl_act2.h"
 
 #include "ActorStates.h"
+#include "SODFlag.h"
 //
 // projectiles
 //

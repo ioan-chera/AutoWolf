@@ -20,6 +20,8 @@
 
 #include "wl_def.h"
 #include "i_system.h"
+#include "id_ca.h"
+#include "id_pm.h"
 #include "m_buffer.h"
 #include "wl_main.h"
 

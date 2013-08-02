@@ -41,6 +41,9 @@
 #include "Config.h"
 #include "i_system.h"
 #include "i_video.h"
+#include "id_in.h"
+#include "id_sd.h"
+#include "PString.h"
 #include "wl_main.h"
 
 ////////////////////////////////////////////////////////////////////////////////

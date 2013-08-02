@@ -28,6 +28,7 @@
 #ifndef __ID_SD__
 #define __ID_SD__
 
+#include "SODFlag.h"
 
 #define alOut(n,b) SD_L_YM3812Write(sd_oplChip, n, b)
 

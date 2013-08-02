@@ -37,6 +37,9 @@
 #pragma hdrstop
 #include "Config.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_us.h"
+#include "id_vh.h"
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
 #endif

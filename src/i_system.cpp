@@ -25,6 +25,7 @@
 #include "Config.h"
 #include "i_system.h"
 #include "macosx/CocoaFun.h"
+#include "SODFlag.h"
 #include "wl_draw.h"
 #include "wl_main.h"
 

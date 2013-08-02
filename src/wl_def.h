@@ -32,17 +32,9 @@
 #define WL_DEF_H
 
 #include <assert.h>
-#include <limits.h>
 #include <math.h>
-#include <ctype.h>
 #include <set>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <utility>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -51,16 +43,13 @@
 #include <Windows.h>
 #else
 #include <dirent.h>
-#include <unistd.h>
 #endif
 
 #if defined(_arch_dreamcast)
 #	include "dc/dc_main.h"
 #  include <unistd.h>
-#elif !defined(_WIN32)
-#	include <stdint.h>
-#	include <stdarg.h>
 #endif
+
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_syswm.h>
@@ -85,20 +74,18 @@ struct Rect
     Point ul,lr;
 };
 
-void Quit(const char *message);
-
-#include "SODFlag.h"
-#include "id_pm.h"
-#include "id_sd.h"
-#include "id_in.h"
-#include "id_vl.h"
-#include "id_vh.h"
-#include "id_us.h"
+//#include "SODFlag.h"
+//#include "id_pm.h"
+//#include "id_sd.h"
+//#include "id_in.h"
+//#include "id_vl.h"
+//#include "id_vh.h"
+//#include "id_us.h"
 #define mapshift        6
 #define MAPSIZE         (1<<mapshift)
 #define maparea         MAPSIZE*MAPSIZE
 // IOANCH: moved the defs right above id_ca.h
-#include "id_ca.h"
+//#include "id_ca.h"
 
 #define MAPSPOT(x,y,plane) mapSegs((plane), (x), (y))
 

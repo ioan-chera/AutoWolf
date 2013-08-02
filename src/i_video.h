@@ -24,6 +24,8 @@
 #ifndef __Wolf4SDL__i_video__
 #define __Wolf4SDL__i_video__
 
+#include "id_vl.h"
+
 extern  unsigned vid_screenPitch, vid_bufferPitch;
 
 void I_InitEngine();

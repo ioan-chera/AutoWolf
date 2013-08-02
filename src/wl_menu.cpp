@@ -37,14 +37,20 @@
 #include "wl_play.h"
 #include "wl_text.h"
 #pragma hdrstop
+#include "Config.h"
 #include "i_system.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_sd.h"
+#include "id_vh.h"
 #include "ioan_bot.h"	// IOANCH 20121217: bot
+#include "MasterDirectoryFile.h"
 #include "PString.h"
-#include "Config.h"
+#include "SODFlag.h"
+
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
-#include "MasterDirectoryFile.h"
+
 
 extern int lastgamemusicoffset;
 // IOANCH: made external

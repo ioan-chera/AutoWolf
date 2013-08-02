@@ -27,6 +27,9 @@
 
 #include "wl_def.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_sd.h"
+#include "id_vh.h"
 #include "version.h"
 #include "wl_game.h"
 #include "wl_main.h"

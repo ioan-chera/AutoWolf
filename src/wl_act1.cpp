@@ -29,10 +29,13 @@
 
 #include "wl_act1.h"
 #include "wl_game.h"
+#include "wl_main.h"
 #include "wl_play.h"
 #pragma hdrstop
+#include "id_ca.h"
 #include "ioan_bas.h"	// IOANCH 29.09.2012
 #include "Config.h"
+#include "SODFlag.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //

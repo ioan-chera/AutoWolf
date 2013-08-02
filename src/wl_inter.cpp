@@ -34,6 +34,8 @@
 #include "wl_text.h"
 #pragma hdrstop
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_vh.h"
 #include "ioan_bot.h"	// IOANCH 27.05.2012
 #include "ioan_bas.h"
 #include "Config.h"

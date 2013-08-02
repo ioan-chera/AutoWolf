@@ -52,6 +52,9 @@
 #include "version.h"
 #include "wl_def.h"
 #include "i_system.h"
+#include "id_ca.h"
+#include "id_pm.h"
+#include "id_sd.h"
 #include "wl_main.h"
 
 #if defined(GP2X_940)
@@ -103,6 +106,7 @@ static byte      *SoundBuffers[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 >
 							   STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
 							   STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
+struct globalsoundpos;
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 
 //      Global variables

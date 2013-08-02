@@ -24,7 +24,9 @@
 
 #include "wl_def.h"
 #include "i_system.h"
+#include "id_ca.h"
 #include "CheckSum.h"
+#include "PString.h"
 
 CheckSum mapsegsChecksum;
 

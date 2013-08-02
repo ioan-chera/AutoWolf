@@ -25,6 +25,10 @@
 #include "wl_def.h"
 #include "Config.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_vh.h"
+#include "PString.h"
+#include "SODFlag.h"
 #include "wl_main.h"
 #include "wl_draw.h"
 

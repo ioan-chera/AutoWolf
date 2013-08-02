@@ -24,6 +24,8 @@
 #ifndef __Wolf4SDL__i_system__
 #define __Wolf4SDL__i_system__
 
+class PString;
+
 void I_Delay(unsigned ms);
 uint32_t I_GetTicks(void);
 

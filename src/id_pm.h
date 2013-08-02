@@ -21,6 +21,10 @@
 #ifndef __ID_PM__
 #define __ID_PM__
 
+#include "PString.h"
+#include "SODFlag.h"
+#include "wl_main.h"
+
 #ifdef USE_HIRES
 #define PMPageSize 16384
 #else

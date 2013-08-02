@@ -41,8 +41,13 @@
 #include "Exception.h"
 #include "Config.h"
 #include "i_video.h"
+#include "i_system.h"
+#include "id_ca.h"
+#include "id_sd.h"
+#include "id_vh.h"
 #include "ioan_bot.h"
 #include "PString.h"
+#include "SODFlag.h"
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
 // IOANCH 17.05.2012

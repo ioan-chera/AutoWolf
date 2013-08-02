@@ -40,6 +40,8 @@
 #include "ActorStates.h"
 #include "Config.h"
 #include "i_video.h"
+#include "id_ca.h"
+#include "id_vh.h"
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// include bot
 #include "List.h"

@@ -36,6 +36,9 @@
 #include "wl_play.h"
 #include "wl_state.h"
 #pragma hdrstop
+#include "id_ca.h"
+#include "id_vh.h"
+#include "id_vl.h"
 #include "ioan_bas.h"
 #include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"

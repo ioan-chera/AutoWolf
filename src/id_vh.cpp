@@ -22,6 +22,10 @@
 #include "Config.h"
 #include "i_system.h"
 #include "i_video.h"   // IOANCH
+#include "id_ca.h"
+#include "id_in.h"
+#include "id_vh.h"
+#include "wl_main.h"
 
 int	    px,py;
 byte	fontcolor,backcolor;

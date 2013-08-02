@@ -22,6 +22,9 @@
 // WL_MENU.H
 //
 // IOANCH 20130302: unification
+
+#include "id_in.h"
+
 #define BORDCOLOR (SPEAR() ? 0x99 : 0x29)
 #define BORD2COLOR (SPEAR() ? 0x93 : 0x23)
 #define DEACTIVE_sod 0x9b

@@ -23,6 +23,8 @@
 
 #include "wl_def.h"
 
+#include "i_system.h"
+#include "id_ca.h"
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"

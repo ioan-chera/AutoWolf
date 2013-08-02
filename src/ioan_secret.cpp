@@ -25,6 +25,7 @@
 
 #include "wl_def.h"
 
+#include "id_ca.h"
 #include "ioan_secret.h"
 #include "ioan_bas.h"
 

@@ -21,6 +21,7 @@
 #define IOAN_BOT_H_
 
 #include "HistoryRatio.h"
+#include "id_us.h"
 #include "List.h"
 #include "PathArray.h"
 #include "MapExploration.h"

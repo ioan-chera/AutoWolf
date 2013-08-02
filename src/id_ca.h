@@ -23,7 +23,9 @@
 
 // IOANCH 20121223: Cleaned up this file
 
+#include "id_sd.h"
 #include "m_buffer.h"
+#include "SODFlag.h"
 
 //===========================================================================
 

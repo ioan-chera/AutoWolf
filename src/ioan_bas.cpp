@@ -23,6 +23,7 @@
 
 #include "wl_def.h"
 
+#include "id_ca.h"
 #include "ioan_bas.h"
 #include "ioan_bot.h"
 #include "obattrib.h"
