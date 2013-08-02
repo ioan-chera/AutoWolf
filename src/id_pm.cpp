@@ -20,6 +20,7 @@
 
 #include "wl_def.h"
 #include "i_system.h"
+#include "m_buffer.h"
 #include "wl_main.h"
 
 VSwapContainer vSwapData;
@@ -81,40 +82,50 @@ bool VSwapContainer::loadFile(const char *filename
    int alignPadding;
    uint32_t offs;
    uint8_t *ptr;
+   word dummy16;
    
-   FILE *file = fopen(filename, "rb");
+   InBuffer vswap;
+   // Use eternity classes
+   if(!vswap.openFile(filename, BufferedFileBase::LENDIAN))
+      CA_CannotOpen(filename);
    
-   if(!file)
-   {
+   
+//   FILE *file = fopen(filename, "rb");
+   
+//   if(!file)
+//   {
 //      if(errmsg)
 //      {
 //         errmsg->copy("Can't open ").concat(filename).concat(": ").
 //         concat(strerror(errno));
 //      }
-      CA_CannotOpen(filename);
-      return false;
-   }
+//      CA_CannotOpen(filename);
+//      return false;
+//   }
+   
+   
    
    // read header
-   n.m_numChunks = 0;
-   fread(&n.m_numChunks, sizeof(word), 1, file);
-   n.m_spriteStart = 0;
-   fread(&n.m_spriteStart, sizeof(word), 1, file);
-   n.m_soundStart = 0;
-   fread(&n.m_soundStart, sizeof(word), 1, file);
+   vswap.readUint16(dummy16);
+   n.m_numChunks = dummy16;
+   vswap.readUint16(dummy16);
+   n.m_spriteStart = dummy16;
+   vswap.readUint16(dummy16);
+   n.m_soundStart = dummy16;
    
    pageOffsets = (uint32_t *) I_CheckedMalloc((n.m_numChunks + 1) *
                                               sizeof(int32_t));
    for (u = 0; u <= (unsigned)n.m_numChunks; ++u)
-      fread(pageOffsets + u, 1, sizeof(uint32_t), file);
+      vswap.readUint32(pageOffsets[u]);
    
    pageLengths = (word *) I_CheckedMalloc(n.m_numChunks * sizeof(word));
    
    for (u = 0; u < (unsigned)n.m_numChunks; ++u)
-      fread(pageLengths + u, 1, sizeof(word), file);
+      vswap.readUint16(pageLengths[u]);
    
-   fseek(file, 0, SEEK_END);
-   fileSize = ftell(file);
+   vswap.seek(0, SEEK_END);
+   
+   fileSize = vswap.Tell();
    unpaddedDataSize = fileSize - pageOffsets[0];
    if(unpaddedDataSize > (size_t) -1)
    {
@@ -124,7 +135,7 @@ bool VSwapContainer::loadFile(const char *filename
 //      }
       free(pageOffsets);
       free(pageLengths);
-      fclose(file);
+      vswap.Close();
       Quit(PString("The page file \"").concat(filename).concat("\" is too large!")());
       return false;
    }
@@ -149,7 +160,7 @@ bool VSwapContainer::loadFile(const char *filename
          Quit(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat(fileSize).concat(")")());
          free(pageOffsets);
          free(pageLengths);
-         fclose(file);
+         vswap.Close();
          return false;
          
       }
@@ -201,8 +212,9 @@ bool VSwapContainer::loadFile(const char *filename
       if(!pageOffsets[u + 1]) size = pageLengths[u];
       else size = pageOffsets[u + 1] - pageOffsets[u];
       
-      fseek(file, pageOffsets[u], SEEK_SET);
-      fread(ptr, 1, size, file);
+      vswap.seek(pageOffsets[u], SEEK_SET);
+      
+      vswap.read(ptr, size);
       ptr += size;
    }
    
@@ -211,7 +223,8 @@ bool VSwapContainer::loadFile(const char *filename
    
    free(pageLengths);
    free(pageOffsets);
-   fclose(file);
+   vswap.Close();
+
    
    // All is good. So get the data
    clear();
