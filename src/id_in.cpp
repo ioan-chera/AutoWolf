@@ -54,12 +54,12 @@
 //
 // configuration variables
 //
-Boolean in_mousePresent;
+Boolean8 in_mousePresent;
 
 
 // 	Global variables
-volatile Boolean    in_keyboard[SDLK_LAST];
-volatile Boolean	in_paused;
+volatile Boolean8    in_keyboard[SDLK_LAST];
+volatile Boolean8	in_paused;
 volatile char		in_lastASCII;
 volatile ScanCode	in_lastScan;
 
@@ -128,7 +128,7 @@ byte SpecialNames[] =	// ASCII for 0xe0 prefixed codes
 };
 
 
-static	Boolean		IN_Started;
+static	Boolean8		IN_Started;
 
 static	Direction	in_dirTable[] =		// Quick lookup for total direction
 {
@@ -254,7 +254,7 @@ int IN_JoyButtons()
 //
 // IN_JoyPresent
 //
-Boolean IN_JoyPresent()
+Boolean8 IN_JoyPresent()
 {
     return in_joystick != NULL;
 }
@@ -583,7 +583,7 @@ char IN_WaitForASCII()
 //
 ///////////////////////////////////////////////////////////////////////////
 
-static Boolean	in_btnstate[NUMBUTTONS];
+static Boolean8	in_btnstate[NUMBUTTONS];
 
 //
 // IN_StartAck
@@ -610,7 +610,7 @@ void IN_StartAck()
 //
 // IN_CheckAck
 //
-Boolean IN_CheckAck ()
+Boolean8 IN_CheckAck ()
 {
     IN_ProcessEvents();
 //
@@ -674,7 +674,7 @@ void IN_Ack ()
 //		button up.
 //
 ///////////////////////////////////////////////////////////////////////////
-Boolean IN_UserInput(longword delay)
+Boolean8 IN_UserInput(longword delay)
 {
 	longword	lasttime;
 

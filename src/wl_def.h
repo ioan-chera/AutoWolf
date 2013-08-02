@@ -56,14 +56,11 @@
 #	define O_BINARY 0
 #endif
 
-// IOANCH 20130307: path length
-#define MAX_PATH_LENGTH 2048
-
 typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
 typedef uint32_t longword;
-typedef int8_t Boolean;
+typedef int8_t Boolean8;
 typedef void * memptr;
 
 struct Point
@@ -442,7 +439,7 @@ typedef void (* statefunc) (void *);
 
 struct statetype
 {
-    Boolean rotate;
+    Boolean8 rotate;
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void    (*think) (void *),(*action) (void *);
@@ -502,7 +499,7 @@ enum doortype
  struct doorobj_t
 {
     byte     tilex,tiley;
-    Boolean  vertical;
+    Boolean8  vertical;
     byte     lock;
     doortype action;
     short    ticcount;
@@ -641,7 +638,7 @@ struct gametype
                 secrettotal,treasuretotal,killtotal;
     int32_t     TimeCount;
     int32_t     killx,killy;
-    Boolean     victoryflag;            // set during victory animations
+    Boolean8     victoryflag;            // set during victory animations
 } ;
 
 enum exit_t

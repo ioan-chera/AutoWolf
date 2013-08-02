@@ -65,7 +65,7 @@
 =============================================================================
 */
 
-Boolean madenoise;              // true when shooting or screaming
+Boolean8 madenoise;              // true when shooting or screaming
 
 exit_t playstate;
 
@@ -76,7 +76,7 @@ static int DebugOk;
 objtype objlist[MAXACTORS];
 objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
-Boolean noclip, ammocheat;
+Boolean8 noclip, ammocheat;
 int godmode, singlestep;
 
 byte tilemap[MAPSIZE][MAPSIZE]; // wall values only
@@ -91,7 +91,7 @@ unsigned tics;
 //
 // control info
 //
-Boolean mouseenabled, joystickenabled;
+Boolean8 mouseenabled, joystickenabled;
 // IOANCH: moved to int32_t so it gets correctly saved in config
 int32_t dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
 int32_t buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
@@ -110,9 +110,9 @@ int32_t buttonjoy[32] = {
 
 int32_t viewsize;
 
-Boolean buttonheld[NUMBUTTONS];
+Boolean8 buttonheld[NUMBUTTONS];
 
-Boolean demorecord, demoplayback;
+Boolean8 demorecord, demoplayback;
 int8_t *demoptr, *lastdemoptr;
 memptr demobuffer;
 
@@ -120,7 +120,7 @@ memptr demobuffer;
 // current user input
 //
 int controlx, controly;         // range from -100 to 100 per tic
-Boolean buttonstate[NUMBUTTONS];
+Boolean8 buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
 
@@ -1023,7 +1023,7 @@ SDL_Color vid_redshifts[NUMREDSHIFTS][256];
 SDL_Color vid_whiteshifts[NUMWHITESHIFTS][256];
 
 int damagecount, bonuscount;
-Boolean palshifted;
+Boolean8 palshifted;
 
 /*
 =====================

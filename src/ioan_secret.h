@@ -85,7 +85,7 @@ class ScoreMap
         {
             int tx, ty;
             PushBlock *block;
-            Boolean operator ==(const PushPosition &other) const {return tx == other.tx && ty == other.ty && block == other.block;}
+            Boolean8 operator ==(const PushPosition &other) const {return tx == other.tx && ty == other.ty && block == other.block;}
         };
         Region *region;
         std::set<PushBlock *> pushBlocks;

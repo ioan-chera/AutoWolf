@@ -90,8 +90,8 @@ void    LatchDrawPic (unsigned x, unsigned y, unsigned picnum);
 void    LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum);
 
 void    VH_Startup();
-Boolean FizzleFade (int x1, int y1,
-    unsigned width, unsigned height, unsigned frames, Boolean abortable);
+Boolean8 FizzleFade (int x1, int y1,
+    unsigned width, unsigned height, unsigned frames, Boolean8 abortable);
 
 
 // IOANCH 20130726: made extern

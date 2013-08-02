@@ -93,7 +93,7 @@ void A_Smoke (objtype *ob)
 
 #define PROJSIZE        0x2000
 
-static Boolean ProjectileTryMove (objtype *ob)
+static Boolean8 ProjectileTryMove (objtype *ob)
 {
     int      xl,yl,xh,yh,x,y;
     objtype *check;
@@ -489,7 +489,7 @@ void T_ProjectileBossChase(objtype *ob)
 {
     int32_t move;
     int     dx,dy,dist;
-    Boolean dodge;
+    Boolean8 dodge;
 	
     dodge = false;
     dx = abs(ob->tilex - player->tilex);
@@ -857,7 +857,7 @@ void T_Chase (objtype *ob)
 {
     int32_t move,target;
     int     dx,dy,dist,chance;
-    Boolean dodge;
+    Boolean8 dodge;
     
     if (gamestate.victoryflag)
         return;
@@ -1436,7 +1436,7 @@ void A_BJDone (objtype *)
  ===============
  */
 
-static Boolean CheckPosition (objtype *ob)
+static Boolean8 CheckPosition (objtype *ob)
 {
     int     x,y,xl,yl,xh,yh;
     objtype *check;

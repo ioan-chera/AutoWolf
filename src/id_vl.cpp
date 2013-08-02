@@ -40,7 +40,7 @@
 #endif
 
 unsigned vid_scaleFactor;
-Boolean	 vid_screenfaded;
+Boolean8	 vid_screenfaded;
 
 SDL_Color palette1[256], palette2[256];
 SDL_Color vid_curpal[256];

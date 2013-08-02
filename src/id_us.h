@@ -105,7 +105,7 @@ struct WindowRec
         px,py;
 } ;	// Record used to save & restore screen windows
 
-extern	Boolean		ingame,		// Set by game code if a game is in progress
+extern	Boolean8		ingame,		// Set by game code if a game is in progress
 					loadedgame;	// Set if the current game was loaded
 extern	word		PrintX,PrintY;	// Current printing location in the window
 extern	word		WindowX,WindowY,// Current location of window
@@ -114,7 +114,7 @@ extern	word		WindowX,WindowY,// Current location of window
 extern	void		(*USL_MeasureString)(const char *,word *,word *);
 extern void			(*USL_DrawString)(const char *);
 
-extern	Boolean		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
+extern	Boolean8		(*USL_SaveGame)(int),(*USL_LoadGame)(int);
 extern	void		(*USL_ResetGame)();
 extern	HighScore	Scores[];
 
@@ -145,8 +145,8 @@ void			US_StartCursor(),
 				US_ShutCursor();
 void			US_CheckHighScore(int32_t score,word other);
 void			US_DisplayHighScores(int which);
-extern	Boolean	US_UpdateCursor();
-Boolean         US_LineInput(int x,int y,char *buf,const char *def,Boolean escok,
+extern	Boolean8	US_UpdateCursor();
+Boolean8         US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok,
                              int maxchars,int maxwidth);
 
 

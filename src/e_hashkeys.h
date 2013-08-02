@@ -56,7 +56,7 @@ unsigned int D_HashTablePKeyCase(const char *str, size_t inLength);
 //   type, or different.
 // * They should define a HashCode method returning an unsigned int.
 // * They should define a Compare method taking two basic_type parameters
-//   and returning Boolean value true if there is a match, and false
+//   and returning Boolean8 value true if there is a match, and false
 //   otherwise.
 //
 // Specializations are provided here for integers, C strings, and case-

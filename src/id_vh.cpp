@@ -328,8 +328,8 @@ void VH_Startup()
 //
 // IOANCH: removed first parameter, SDL_Surface vid_screenBuffer
 //
-Boolean FizzleFade (int x1, int y1, unsigned width,
-                    unsigned height, unsigned frames, Boolean abortable)
+Boolean8 FizzleFade (int x1, int y1, unsigned width,
+                    unsigned height, unsigned frames, Boolean8 abortable)
 {
     unsigned x, y, frame, pixperframe;
     int32_t  rndval, lastrndval;

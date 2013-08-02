@@ -11,7 +11,7 @@
 
 
 
-extern  Boolean  loadedgame;
+extern  Boolean8  loadedgame;
 extern  fixed    focallength;
 extern  int      viewscreenx, viewscreeny;
 extern  int      viewwidth;
@@ -26,7 +26,7 @@ extern  int      mouseadjustment;
 extern  int      shootdelta;
 extern  unsigned screenofs;
 
-extern  Boolean  startgame;
+extern  Boolean8  startgame;
 extern  char     str[80];
 class PString;
 extern  PString  cfg_configname;
@@ -36,9 +36,9 @@ extern PString global_error;
 void            NewGame (int difficulty,int episode);
 void            CalcProjection (int32_t focal);
 void            main_NewViewSize (int width);
-Boolean         SetViewSize (unsigned width, unsigned height);
-Boolean         LoadTheGame(FILE *file,int x,int y);
-Boolean         SaveTheGame(FILE *file,int x,int y);
+Boolean8         SetViewSize (unsigned width, unsigned height);
+Boolean8         LoadTheGame(FILE *file,int x,int y);
+Boolean8         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 void            ShutdownId ();
 

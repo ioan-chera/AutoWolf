@@ -275,7 +275,7 @@ void ShapeTest ()
     extern  byte    *postsource;
     static  char    buf[10];
 
-    Boolean         done;
+    Boolean8         done;
     ScanCode        scan;
     int             i,j,k,x;
     longword        l;
@@ -467,7 +467,7 @@ void ShapeTest ()
 
 int DebugKeys ()
 {
-    Boolean esc;
+    Boolean8 esc;
     int level;
 
     if (in_keyboard[sc_B])             // B = border color
@@ -850,7 +850,7 @@ void OverheadRefresh ()
 
 void ViewMap ()
 {
-    Boolean         button0held;
+    Boolean8         button0held;
 
     viewtype = actoratview;
     //      button0held = false;

@@ -60,7 +60,7 @@ LegacyRandomGenerator wolfRnd;
 //	Internal variables
 #define	ConfigVersion	1
 
-static	Boolean		US_Started;
+static	Boolean8		US_Started;
 
 		void		(*USL_MeasureString)(const char *,word *,word *) = VW_MeasurePropString;
 		void		(*USL_DrawString)(const char *) = VWB_DrawPropString;
@@ -419,7 +419,7 @@ void US_RestoreWindow(WindowRec *win)
 ////////////////////////////////////////////////////////////////////////////////
 static void USL_XORICursor(int x,int y,const char *s,word cursor)
 {
-	static	Boolean	status;		// VGA doesn't XOR...
+	static	Boolean8	status;		// VGA doesn't XOR...
 	char	buf[MaxString];
 	int		temp;
 	word	w,h;
@@ -472,9 +472,9 @@ char USL_RotateChar(char ch, int dir)
 //      returned
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean US_LineInput(int x,int y,char *buf,const char *def,Boolean escok, int maxchars,int maxwidth)
+Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int maxchars,int maxwidth)
 {
-	Boolean		redraw,
+	Boolean8		redraw,
 				cursorvis,cursormoved,
 				done,result, checkkey;
 	ScanCode	sc;

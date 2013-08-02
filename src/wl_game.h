@@ -29,7 +29,7 @@ void    RecordDemo ();
 
 extern  int32_t            spearx,speary;
 extern  unsigned        spearangle;
-extern  Boolean         spearflag;
+extern  Boolean8         spearflag;
 
 // IOANCH: cleared ClearMemory
 // IOANCH 20130621: added constant #defines for player starts

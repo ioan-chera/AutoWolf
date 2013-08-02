@@ -75,7 +75,7 @@ void I_Notify(const char *msg)
 //
 // Makes a directory
 //
-Boolean I_MakeDir(const char *dirname)
+Boolean8 I_MakeDir(const char *dirname)
 {
 #ifdef _WIN32
    return CreateDirectory(dirname, NULL);
@@ -89,7 +89,7 @@ Boolean I_MakeDir(const char *dirname)
 //
 // Sets current dir
 //
-Boolean I_ChangeDir(const char *dirname)
+Boolean8 I_ChangeDir(const char *dirname)
 {
 #ifdef _WIN32
    return SetCurrentDirectory(dirname);

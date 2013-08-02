@@ -86,7 +86,7 @@ int PathArray::addStartNode(int tx, int ty)
 	return addStartNode(tx, ty, tx, ty);
 }
 
-int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean negate)
+int PathArray::addStartNode(int tx, int ty, int destx, int desty, Boolean8 negate)
 {
 	Node node;
     
@@ -269,7 +269,7 @@ void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist)
 }
 
 void PathArray::updateNode(int ichange, int index, int cx, int cy, int dist,
-                           int destx, int desty, Boolean negate)
+                           int destx, int desty, Boolean8 negate)
 {
 	dist += nodes[index].g_score;
 	if(ichange == -1)

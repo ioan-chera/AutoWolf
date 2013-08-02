@@ -20,9 +20,9 @@
 #include "MapExploration.h"
 
 //
-// PropertyFile::_PackBooleanArray
+// PropertyFile::_PackBoolean8Array
 //
-PString MapExploration::PackBooleanArray() const
+PString MapExploration::PackBoolean8Array() const
 {
     size_t pos;
     uint8_t charac = 0;
@@ -31,7 +31,7 @@ PString MapExploration::PackBooleanArray() const
     
     PString dataToWrite(arraySize / 8);
     
-    Boolean *baseaddress = const_cast<Boolean*>(explored[0]);
+    Boolean8 *baseaddress = const_cast<Boolean8*>(explored[0]);
     
     for(pos = 0; pos < arraySize; ++pos)
     {
@@ -47,9 +47,9 @@ PString MapExploration::PackBooleanArray() const
 }
 
 //
-// PropertyFile::_UnpackBooleanArray
+// PropertyFile::_UnpackBoolean8Array
 //
-void MapExploration::UnpackBooleanArray(const PString &source)
+void MapExploration::UnpackBoolean8Array(const PString &source)
 {
     const PString &explorstr = source;
     const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
@@ -63,7 +63,7 @@ void MapExploration::UnpackBooleanArray(const PString &source)
         return;
     }
     
-    Boolean *baseaddress = const_cast<Boolean*>(explored[0]);
+    Boolean8 *baseaddress = const_cast<Boolean8*>(explored[0]);
     
     for(pos = 0; pos < targetSize; pos += 8)
     {

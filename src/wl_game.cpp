@@ -70,14 +70,14 @@
 =============================================================================
 */
 
-Boolean         ingame,fizzlein;
+Boolean8         ingame,fizzlein;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
 // IOANCH 20130302: unification
 int32_t         spearx,speary;
 unsigned        spearangle;
-Boolean         spearflag;
+Boolean8         spearflag;
 
 
 #ifdef USE_FEATUREFLAGS
@@ -1428,7 +1428,7 @@ void Died ()
 
 void GameLoop ()
 {
-    Boolean died;
+    Boolean8 died;
 #ifdef MYPROFILE
     clock_t start,end;
 #endif

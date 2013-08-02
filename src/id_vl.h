@@ -31,7 +31,7 @@
 
 extern  unsigned vid_scaleFactor;
 
-extern	Boolean  vid_screenfaded;
+extern	Boolean8  vid_screenfaded;
 
 // IOANCH 20130202: unification process
 extern SDL_Color vid_palette_sod[256];

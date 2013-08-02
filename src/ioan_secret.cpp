@@ -65,7 +65,7 @@ inline static int GetScore(byte objid)
 //
 // Recursive function for CalcScore
 //
-static int RecursiveCalcScore(int tx, int ty, Boolean start = false)
+static int RecursiveCalcScore(int tx, int ty, Boolean8 start = false)
 {
     static int totalscore = 0;
     

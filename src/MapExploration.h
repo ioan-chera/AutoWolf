@@ -30,9 +30,9 @@
 class MapExploration
 {
 public:
-    Boolean explored[MAPSIZE][MAPSIZE];
-    PString PackBooleanArray() const;
-    void UnpackBooleanArray(const PString &source);
+    Boolean8 explored[MAPSIZE][MAPSIZE];
+    PString PackBoolean8Array() const;
+    void UnpackBoolean8Array(const PString &source);
 
     void Reset()
     {

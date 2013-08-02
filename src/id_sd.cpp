@@ -106,7 +106,7 @@ static byte      *SoundBuffers[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 >
 globalsoundpos channelSoundPos[MIX_CHANNELS];
 
 //      Global variables
-        Boolean         sd_adLibPresent,
+        Boolean8         sd_adLibPresent,
                         sd_soundBlasterPresent,SBProPresent,
                         sd_soundPositioned;
         SDMode          SoundMode;
@@ -124,8 +124,8 @@ int sd_digiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod -
 				STARTMUSIC_sod - STARTDIGISOUNDS_sod];
 
 //      Internal variables
-static  Boolean                 SD_Started;
-static  Boolean                 nextsoundpos;
+static  Boolean8                 SD_Started;
+static  Boolean8                 nextsoundpos;
 // IOANCH 20130301: unification
 static  unsigned int            SoundNumber;
 static  unsigned int            sd_digiNumber;
@@ -136,7 +136,7 @@ static  int                     RightPosition;
 
         word                    sd_numDigi;
 static  digiinfo               *sd_digiList;
-static  Boolean                 sd_digiPlaying;
+static  Boolean8                 sd_digiPlaying;
 
 //      PC Sound variables
 // static  volatile byte           pcLastSample;
@@ -152,7 +152,7 @@ static  longword                sd_alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
-static  volatile Boolean        sqActive;
+static  volatile Boolean8        sqActive;
 static  const word                   *sqHack;
 static  const word                   *sqHackPtr;
 static  int                     sqHackLen;
@@ -391,7 +391,7 @@ void __interrupt SD_L_t0SlowAsmService()
                 outp(0x20,0x20);
 }
 
-void SD_L_IndicatePC(Boolean ind)
+void SD_L_IndicatePC(Boolean8 ind)
 {
         pcindicate=ind;
 }
@@ -488,7 +488,7 @@ void
 #else
 static void
 #endif
-SD_L_PCPlaySample(byte *data,longword len,Boolean inIRQ)
+SD_L_PCPlaySample(byte *data,longword len,Boolean8 inIRQ)
 {
         if(!inIRQ)
         {
@@ -776,7 +776,7 @@ void SD_ChannelFinished(int channel)
 //
 void SD_SetDigiDevice(SDSMode mode)
 {
-    Boolean devicenotpresent;
+    Boolean8 devicenotpresent;
 
     if (mode == sd_digiMode)
         return;
@@ -978,7 +978,7 @@ static void SD_L_StartAL()
 //             
 // Determines if there's an AdLib (or SoundBlaster emulating an AdLib) present
 //
-static Boolean SD_L_DetectAdLib()
+static Boolean8 SD_L_DetectAdLib()
 {
     for (int i = 1; i <= 0xf5; i++)       // Zero all the registers
         alOut(i, 0);
@@ -1050,9 +1050,9 @@ static void SD_L_StartDevice()
 // effects
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean SD_SetSoundMode(SDMode mode)
+Boolean8 SD_SetSoundMode(SDMode mode)
 {
-    Boolean result = false;
+    Boolean8 result = false;
     word    tableoffset;
 
     SD_StopSound();
@@ -1097,9 +1097,9 @@ Boolean SD_SetSoundMode(SDMode mode)
 //      SD_SetMusicMode() - sets the device to use for background music
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean SD_SetMusicMode(SMMode mode)
+Boolean8 SD_SetMusicMode(SMMode mode)
 {
-    Boolean result = false;
+    Boolean8 result = false;
 
     SD_FadeOutMusic();
     while (SD_MusicPlaying())
@@ -1312,9 +1312,9 @@ void SD_PositionSound(int leftvol,int rightvol)
 // hardware
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean SD_PlaySound(soundnames sound_abstract)
+Boolean8 SD_PlaySound(soundnames sound_abstract)
 {
-    Boolean         ispos;
+    Boolean8         ispos;
     SoundCommon     *s;
     int             lp,rp;
 	
@@ -1406,7 +1406,7 @@ Boolean SD_PlaySound(soundnames sound_abstract)
 ////////////////////////////////////////////////////////////////////////////////
 word SD_SoundPlaying()
 {
-    Boolean result = false;
+    Boolean8 result = false;
 
     switch (SoundMode)
     {
@@ -1586,9 +1586,9 @@ void SD_FadeOutMusic()
 //              not
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean SD_MusicPlaying()
+Boolean8 SD_MusicPlaying()
 {
-    Boolean result;
+    Boolean8 result;
 
     switch (sd_musicMode)
     {

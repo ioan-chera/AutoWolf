@@ -108,8 +108,8 @@ fixed    scale;
 int32_t  heightnumerator;
 
 
-Boolean startgame;
-Boolean loadedgame;
+Boolean8 startgame;
+Boolean8 loadedgame;
 int32_t     mouseadjustment;  // IOANCH: int32_t for safely saving
 
 PString cfg_configname("CONFIG.");
@@ -183,9 +183,9 @@ static void main_continueReadOldConfig(FILE *file, SDMode &o_sd, SMMode  &o_sm,
    
    fread(&mouseenabled,sizeof(mouseenabled), 1, file);
    fread(&joystickenabled,sizeof(joystickenabled), 1, file);
-   Boolean dummyJoypadEnabled;
+   Boolean8 dummyJoypadEnabled;
    fread(&dummyJoypadEnabled,sizeof(dummyJoypadEnabled), 1, file);
-   Boolean dummyJoystickProgressive;
+   Boolean8 dummyJoystickProgressive;
    fread(&dummyJoystickProgressive,sizeof(dummyJoystickProgressive), 1, file);
    int32_t dummyJoystickPort = 0;
    fread(&dummyJoystickPort,sizeof(dummyJoystickPort), 1, file);
@@ -276,8 +276,8 @@ if(pfile->hasProperty(#name, Property::Int32)) \
                GET_INT_PROPERTY(sm, SMMode)
                GET_INT_PROPERTY(sds, SDSMode)
                
-               GET_INT_PROPERTY(mouseenabled, Boolean)
-               GET_INT_PROPERTY(joystickenabled, Boolean)
+               GET_INT_PROPERTY(mouseenabled, Boolean8)
+               GET_INT_PROPERTY(joystickenabled, Boolean8)
                
                GET_STR_PROPERTY(dirscan, sizeof(dirscan))
                GET_STR_PROPERTY(buttonscan, sizeof(buttonscan))
@@ -444,7 +444,7 @@ int32_t DoChecksum(byte *source,unsigned size,int32_t checksum)
 extern statetype s_grdstand;
 extern statetype s_player;
 
-Boolean SaveTheGame(FILE *file,int x,int y)
+Boolean8 SaveTheGame(FILE *file,int x,int y)
 {
 //    struct diskfree_t dfree;
 //    int32_t avail,size,checksum;
@@ -598,7 +598,7 @@ Boolean SaveTheGame(FILE *file,int x,int y)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-Boolean LoadTheGame(FILE *file,int x,int y)
+Boolean8 LoadTheGame(FILE *file,int x,int y)
 {
     int32_t checksum,oldchecksum;
     objtype nullobj;
@@ -1321,7 +1321,7 @@ PString global_error;
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
-    Boolean didjukebox=false;
+    Boolean8 didjukebox=false;
 
 
    
@@ -1453,7 +1453,7 @@ static void InitGame()
 // Makes some Pizza
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean SetViewSize (unsigned width, unsigned height)
+Boolean8 SetViewSize (unsigned width, unsigned height)
 {
     viewwidth = width&~15;                  // must be divisable by 16
     viewheight = height&~1;                 // must be even

@@ -137,7 +137,7 @@ typedef	enum		{
 
 struct  CursorInfo
 {
-   Boolean		button0,button1,button2,button3;
+   Boolean8		button0,button1,button2,button3;
    short		x,y;
    Motion		xaxis,yaxis;
    Direction	dir;
@@ -164,9 +164,9 @@ struct  JoystickDef
 };
 
 // Global variables
-extern  volatile Boolean    in_keyboard[];
-extern           Boolean    in_mousePresent;
-extern  volatile Boolean    in_paused;
+extern  volatile Boolean8    in_keyboard[];
+extern           Boolean8    in_mousePresent;
+extern  volatile Boolean8    in_paused;
 extern  volatile char       in_lastASCII;
 extern  volatile ScanCode   in_lastScan;
 extern           int        in_joyNumButtons;
@@ -183,7 +183,7 @@ extern	void		IN_Startup(),IN_Shutdown();
 extern	void		IN_ClearKeysDown();
 extern	void		IN_ReadControl(int,ControlInfo *);
 extern	void		IN_Ack();
-extern	Boolean	IN_UserInput(longword delay);
+extern	Boolean8	IN_UserInput(longword delay);
 extern	char		IN_WaitForASCII();
 extern	ScanCode	IN_WaitForKey();
 extern	const char *IN_GetScanName(ScanCode);
@@ -193,14 +193,14 @@ void    IN_ProcessEvents();
 
 int     IN_MouseButtons ();
 
-Boolean IN_JoyPresent();
+Boolean8 IN_JoyPresent();
 void    IN_SetJoyCurrent(int joyIndex);
 int     IN_JoyButtons ();
 void    IN_GetJoyDelta(int *dx,int *dy);
 void    IN_GetJoyFineDelta(int *dx, int *dy);
 
 void    IN_StartAck();
-Boolean IN_CheckAck ();
+Boolean8 IN_CheckAck ();
 bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 

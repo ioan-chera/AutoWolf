@@ -300,7 +300,7 @@ static void _SpawnGhosts (int which, int tilex, int tiley)
 // Generically spawns a Nazi, which can be a stander, patroller or boss. Applies common changers to them.
 //
 void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir, 
-                       Boolean patrol, enemy_t ghosttype)
+                       Boolean8 patrol, enemy_t ghosttype)
 {
     // IOANCH 20130304: don't account for loaded game
 	if(cfg_nonazis && !loadedgame)
@@ -353,7 +353,7 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
 //
 // Basic::IsEnemy
 //
-Boolean Basic::IsEnemy(classtype cls)
+Boolean8 Basic::IsEnemy(classtype cls)
 {
     return atr::flags[cls] & ATR_ENEMY;
 }
@@ -361,7 +361,7 @@ Boolean Basic::IsEnemy(classtype cls)
 //
 // Basic::IsBoss
 //
-Boolean Basic::IsBoss(classtype cls)
+Boolean8 Basic::IsBoss(classtype cls)
 {
     return atr::flags[cls] & ATR_BOSS;
 }
@@ -371,7 +371,7 @@ Boolean Basic::IsBoss(classtype cls)
 //
 // Check if the Nazi is ready to fire or firing (important for fighting SS and bosses)
 //
-Boolean Basic::IsDamaging(objtype *ret, int dist)
+Boolean8 Basic::IsDamaging(objtype *ret, int dist)
 {
     if((dist <= 2 && atr::flags[ret->obclass] & ATR_NEARBY_THREAT && 
         ret->flags & FL_ATTACKMODE) || 
@@ -390,8 +390,8 @@ Boolean Basic::IsDamaging(objtype *ret, int dist)
 //
 // IOANCH 20130513: compacted it a bit to comply with DRY
 //
-Boolean Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in, 
-                                 Boolean solidActors)
+Boolean8 Basic::GenericCheckLine (int x1_in, int y1_in, int x2_in, int y2_in, 
+                                 Boolean8 solidActors)
 {
     static int  x1, x2, y1, y2; // IOANCH: made them static to be referred by a
     static int  xt1,yt1,xt2,yt2;// static array below

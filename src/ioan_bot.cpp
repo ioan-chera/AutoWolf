@@ -114,7 +114,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
     MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
     
     propertyFile->setStringValue(PROPERTY_KEY_EXPLORED, 
-                                 mapExploration.PackBooleanArray());
+                                 mapExploration.PackBoolean8Array());
     propertyFile->setIntValue(PROPERTY_KEY_EXITPOS, knownExitX +
                               (knownExitY << 8));
 }
@@ -146,7 +146,7 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
     
     if(propertyFile)
     {
-        mapExploration.UnpackBooleanArray(propertyFile->getStringValue(PROPERTY_KEY_EXPLORED));
+        mapExploration.UnpackBoolean8Array(propertyFile->getStringValue(PROPERTY_KEY_EXPLORED));
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop =
@@ -208,7 +208,7 @@ void BotMan::SetMood()
 //
 // Pickable item, secret door, exit switch, exit pad
 //
-Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
+Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
 {
     if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
         return true;
@@ -327,14 +327,14 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
     // {tx, tx, tx + 1, tx - 1}
     
     // Nope. Let's make a lambda function here.
-    auto secretVerify = [&](int txofs, int tyofs) -> Boolean
+    auto secretVerify = [&](int txofs, int tyofs) -> Boolean8
     {
         if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
 		{
             objtype *check;
             check = actorat[tx + txofs][ty + tyofs];
             if(!check || (check && ISPOINTER(check)))
-                return (Boolean)false;
+                return (Boolean8)false;
             int ty2ofs = ty + 2 * tyofs;
             int tx2ofs = tx + 2 * txofs;
             int ty3ofs = ty + 3 * tyofs;
@@ -348,11 +348,11 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 				{
 					exity = ty + tyofs;
 					exitx = tx + txofs;
-					return (Boolean)true;
+					return (Boolean8)true;
 				}
 			}
 		}
-        return (Boolean)false;
+        return (Boolean8)false;
     };
     
 	// secret door
@@ -416,15 +416,15 @@ Boolean BotMan::ObjectOfInterest(int tx, int ty, Boolean knifeinsight)
 //
 // Recursively explores from the given origin
 //
-void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
+void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean8 firstcall)
 {
 	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
 		return;
 	
-	static Boolean explore_visited[MAPSIZE][MAPSIZE];
+	static Boolean8 explore_visited[MAPSIZE][MAPSIZE];
 	if(firstcall)	// origin
 	{
-		memset(explore_visited, 0, maparea*sizeof(Boolean));
+		memset(explore_visited, 0, maparea*sizeof(Boolean8));
 	}
 	
 	if(explore_visited[tx][ty])
@@ -456,7 +456,7 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean firstcall)
 // Mini-function to test if can pass through locked door
 // Warning: door is assumed to already be a door tile
 //
-inline static Boolean canGoThruLockedDoor(byte door)
+inline static Boolean8 canGoThruLockedDoor(byte door)
 {
     byte lock = doorobjlist[door].lock;
     if (lock >= dr_lock1 && lock <= dr_lock4)
@@ -492,8 +492,8 @@ printf("%s: %.16g\n", __FUNCTION__, CLK_passed);
 #define END_CLOCK
 #endif
 
-Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
-                                 byte retreating, Boolean knifeinsight)
+Boolean8 BotMan::FindShortestPath(Boolean8 ignoreproj, Boolean8 mindnazis,
+                                 byte retreating, Boolean8 knifeinsight)
 {
     START_CLOCK
 	int j;
@@ -713,7 +713,7 @@ Boolean BotMan::FindShortestPath(Boolean ignoreproj, Boolean mindnazis,
 //
 // True if can shoot
 //
-objtype *BotMan::EnemyOnTarget(Boolean solidActors) const
+objtype *BotMan::EnemyOnTarget(Boolean8 solidActors) const
 {
 	objtype *closest,*oldclosest;
 	int32_t  viewdist;
@@ -784,7 +784,7 @@ void BotMan::RecordEnemyPosition(objtype *enemy)
 //
 // True if an enemy is in sight
 //
-objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean solidActors)
+objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 {
 	int tx = player->tilex, ty = player->tiley;
 	int i, j, k, distmin;
@@ -885,7 +885,7 @@ objtype *BotMan::DamageThreat(const objtype *targ) const
 // Returns true if there's a crossfire in that spot
 //
 objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
-                           Boolean justexists) const
+                           Boolean8 justexists) const
 {
 	int j, k, dist;
 	objtype *ret;
@@ -913,7 +913,7 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
 //
 // Retreats the bot sliding off walls
 //
-void BotMan::DoRetreat(Boolean forth, objtype *cause) const
+void BotMan::DoRetreat(Boolean8 forth, objtype *cause) const
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
@@ -1120,7 +1120,7 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 	return NULL;
 }
 
-void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, Boolean tryuse) const
+void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, Boolean8 tryuse) const
 {
     int movedir;
     // set up the target angle
@@ -1292,7 +1292,7 @@ void BotMan::MoveByStrafe()
 	}
 	
 	int nx, ny, mx, my;
-	Boolean tryuse = false;	// whether to try using
+	Boolean8 tryuse = false;	// whether to try using
 	
 	mx = player->tilex;
 	my = player->tiley;
@@ -1576,7 +1576,7 @@ void BotMan::DoNonCombatAI()
 		}
 	}
 	
-	static Boolean waitpwall;
+	static Boolean8 waitpwall;
 	if(pwallstate)
 		waitpwall = true;
 	
@@ -1594,7 +1594,7 @@ void BotMan::DoNonCombatAI()
 	}
 	
 	int nx, ny, mx, my;
-	Boolean tryuse = false;	// whether to try using
+	Boolean8 tryuse = false;	// whether to try using
 	
 	
 	mx = player->tilex;

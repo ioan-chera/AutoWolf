@@ -98,7 +98,7 @@ class BotMan
         SSMax
     } searchstage;
 	PathArray path;     // search data structure
-	Boolean panic;	// gun logic switch (use gatling gun to kill quickly)
+	Boolean8 panic;	// gun logic switch (use gatling gun to kill quickly)
 	byte pressuse;	// periodic switch for triggering button-down-only commands
 	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat controllers
 	int exitx, exity;
@@ -110,33 +110,33 @@ class BotMan
     
 
 	void ExploreFill(int tx, int ty, int ox, int oy,
-                            Boolean firstcall = false);
+                            Boolean8 firstcall = false);
 
-	Boolean FindShortestPath(Boolean ignoreproj = false,
-                                    Boolean mindnazis = false,
+	Boolean8 FindShortestPath(Boolean8 ignoreproj = false,
+                                    Boolean8 mindnazis = false,
                                     byte retreating = 0,
-                                    Boolean knifeinsight = false);
+                                    Boolean8 knifeinsight = false);
 
-	void MoveStrafe(short tangle, short dangle, Boolean tryuse,
+	void MoveStrafe(short tangle, short dangle, Boolean8 tryuse,
                            byte pressuse, int nx, int ny);
 
-	Boolean ObjectOfInterest(int dx, int dy,
-                                    Boolean knifeinsight = false);
-	objtype *EnemyOnTarget(Boolean solidActors = false) const;
+	Boolean8 ObjectOfInterest(int dx, int dy,
+                                    Boolean8 knifeinsight = false);
+	objtype *EnemyOnTarget(Boolean8 solidActors = false) const;
 	objtype *EnemyVisible(short *angle, int *distance,
-                                 Boolean solidActors = false);
+                                 Boolean8 solidActors = false);
 	objtype *EnemyEager() const;
 
 	objtype *DamageThreat(const objtype *targ) const;
-	void DoRetreat(Boolean forth = false, objtype *cause = NULL) const;
+	void DoRetreat(Boolean8 forth = false, objtype *cause = NULL) const;
 	objtype *Crossfire(int x, int y, const objtype *objignore = NULL,
-                              Boolean justexists = false) const;
+                              Boolean8 justexists = false) const;
 	objtype *IsProjectile(int tx, int ty, int dist = 1,
                           short *angle = NULL, int *distance = NULL) const;
 	objtype *IsEnemyBlocking(int tx, int ty) const;
 	objtype *IsEnemyNearby(int tx, int ty) const;
     
-    void ExecuteStrafe(int mx, int my, int nx, int ny, Boolean tryuse) const;
+    void ExecuteStrafe(int mx, int my, int nx, int ny, Boolean8 tryuse) const;
 	void MoveByStrafe();
 	void ChooseWeapon() const;
 	void DoCombatAI(int eangle, int edist);

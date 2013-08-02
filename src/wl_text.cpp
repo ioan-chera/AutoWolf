@@ -93,7 +93,7 @@ static int     picx;
 static int     picy;
 static int     picnum;
 static int     picdelay;
-static Boolean layoutdone;
+static Boolean8 layoutdone;
 
 //===========================================================================
 
@@ -443,7 +443,7 @@ void HandleWord ()
 =====================
 */
 
-void PageLayout (Boolean shownumber)
+void PageLayout (Boolean8 shownumber)
 {
     int     i,oldfontcolor;
     char    ch;
@@ -623,7 +623,7 @@ void ShowArticle (const char *article)
     // IOANCH 20130301: unification culling
 
     unsigned    oldfontnumber;
-    Boolean     newpage,firstpage;
+    Boolean8     newpage,firstpage;
     ControlInfo ci;
 
     // IOANCH 20130301: unification culling

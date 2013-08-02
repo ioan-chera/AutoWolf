@@ -41,19 +41,19 @@ namespace Basic
 
 	// Spawns a Nazi (originally they were separate functions; no more)
 	void SpawnEnemy(classtype cl, int tilex, int tiley, int dir = 0, 
-                           Boolean patrol = false, enemy_t ghost = en_blinky);
+                           Boolean8 patrol = false, enemy_t ghost = en_blinky);
 
 	// Checks if it's an enemy
-	Boolean IsEnemy(classtype cls);
+	Boolean8 IsEnemy(classtype cls);
 	// if it's a boss (no pain chance)
-	Boolean IsBoss(classtype cls);
+	Boolean8 IsBoss(classtype cls);
 
 	// Check if it's armed
-	Boolean IsDamaging(objtype *ret, int dist);
+	Boolean8 IsDamaging(objtype *ret, int dist);
 
 	// Generic check line
-	Boolean GenericCheckLine (int x1, int y1, int x2, int y2, 
-                              Boolean solidActors = false);
+	Boolean8 GenericCheckLine (int x1, int y1, int x2, int y2, 
+                              Boolean8 solidActors = false);
     
     // Check if can knife
     objtype *CheckKnifeEnemy();

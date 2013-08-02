@@ -973,7 +973,7 @@ done:   itoanoreturn (kr, tempstr, 10);
 =================
 */
 
-Boolean
+Boolean8
 PreloadUpdate (unsigned current, unsigned total)
 {
     unsigned w = WindowW - vid_scaleFactor * 10;

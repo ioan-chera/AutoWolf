@@ -878,7 +878,7 @@ static huffnode *ca_grhuffman;
 //
 // Writes a file from a memory buffer
 //
-Boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
+Boolean8 CA_WriteFile(const char *filename, void *ptr, int32_t length)
 {
     const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if(handle == -1)
@@ -899,7 +899,7 @@ Boolean CA_WriteFile(const char *filename, void *ptr, int32_t length)
 // Allocate space for and load a file
 // IOANCH: uses fopen now
 //
-Boolean CA_LoadFile(const char *filename, memptr *ptr)
+Boolean8 CA_LoadFile(const char *filename, memptr *ptr)
 {
     int32_t size;
 

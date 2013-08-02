@@ -50,11 +50,11 @@ protected:
 		int f_score, g_score, h_score;  // total, so-far, to-dest heuristics
 		int prev, next;                 // previous and next index on path
 		int diagonal;                   // diagonal direction, if applicable
-		Boolean open;                   // node still open for search?
+		Boolean8 open;                   // node still open for search?
 	} *nodes;                           // array of nodes here
     int numOpenNodes;                   // number of open nodes
 	int numNodes, numNodesAlloc;        // number of nodes, and allocated amount
-	Boolean pathexists;                 // whether the path has been built
+	Boolean8 pathexists;                 // whether the path has been built
 //    std::unordered_map<int, int> pathNodes;  // set of used path nodes for easy
 //                                             // look-up
 //    EHashTable<NodeTableRef, EIntHashKey,
@@ -65,7 +65,7 @@ protected:
 public:
 	int addStartNode(int tx, int ty);
 	int addStartNode(int tx, int ty, int destx, int desty,
-                     Boolean negate = false);
+                     Boolean8 negate = false);
 	int bestScoreIndex() const;
 	void finish(int index);
 	int openCoordsIndex(int cx, int cy) const;
@@ -73,12 +73,12 @@ public:
 	~PathArray();
 	void updateNode(int ichange, int index, int cx, int cy, int dist);
 	void updateNode(int ichange, int index, int cx, int cy, int dist,
-                    int destx, int desty, Boolean negate = false);
+                    int destx, int desty, Boolean8 negate = false);
     
     // Node closing accessor
 	void closeNode(int index) {nodes[index].open = false; --numOpenNodes;}
     // pathexists accessor
-	Boolean exists() const {return pathexists;}
+	Boolean8 exists() const {return pathexists;}
     // node coordinates accessor
 	void getCoords(int index, int *tx, int *ty) const
 	{

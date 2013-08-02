@@ -49,15 +49,15 @@ public:
         y = (T)other.y;
         return *this;
     }
-    Boolean operator != (T value) const
+    Boolean8 operator != (T value) const
     {
         return x != value || y != value;
     }
-    Boolean operator > (T value) const
+    Boolean8 operator > (T value) const
     {
         return this->x > value && this->y > value;
     }
-    Boolean operator >= (T value) const
+    Boolean8 operator >= (T value) const
     {
         return this->x >= value && this->y >= value;
     }
@@ -65,15 +65,15 @@ public:
     {
         return ((size_t)y << shift) + x;
     }
-    Boolean IsEqual(T valx, T valy) const
+    Boolean8 IsEqual(T valx, T valy) const
     {
         return x == valx && y == valy;
     }
-    Boolean IsEqual(const Point2D<T> &o) const
+    Boolean8 IsEqual(const Point2D<T> &o) const
     {
         return IsEqual(o.x, o.y);
     }
-    Boolean operator == (const Point2D<T> &o) const
+    Boolean8 operator == (const Point2D<T> &o) const
     {
         return IsEqual(o);
     }
@@ -96,11 +96,11 @@ public:
         x = y = val;
         return *this;
     }
-    Boolean InRange(T minx, T maxx, T miny, T maxy) const
+    Boolean8 InRange(T minx, T maxx, T miny, T maxy) const
     {
         return x >= minx && x <= maxx && y >= miny && y <= maxy;
     }
-    Boolean InRange(T min, T max) const
+    Boolean8 InRange(T min, T max) const
     {
         return InRange(min, max, min, max);
     }
