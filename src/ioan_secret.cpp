@@ -21,7 +21,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef APPLE_NONCPP11
+
 
 #include "wl_def.h"
 
@@ -558,4 +558,4 @@ int Secret::CalcScore(int tx, int ty)
     return ret;
 }
 
-#endif
+

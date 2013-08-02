@@ -25,9 +25,7 @@
 
 #include "ioan_bot.h"
 #include "ioan_bas.h"
-#ifndef APPLE_NONCPP11
 #include "ioan_secret.h"
-#endif
 #include "obattrib.h"
 #include "HistoryRatio.h"
 #include "PathArray.h"

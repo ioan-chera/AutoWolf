@@ -40,9 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#ifndef APPLE_NONCPP11
 #include <set>
-#endif
 #if defined(_arch_dreamcast)
 #	include <string.h>
 #	include "dc/dc_main.h"

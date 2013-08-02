@@ -44,9 +44,7 @@
 #include "ioan_bot.h"
 #include "i_video.h"
 #include "i_system.h"
-#ifndef APPLE_NONCPP11
 #include "ioan_secret.h"
-#endif
 #include "List.h"
 #include "Config.h"
 
@@ -840,9 +838,9 @@ void SetupGameLevel ()
    audioSegs.loadAllSounds(SoundMode);
 
     // IOANCH: initialize score map here
-#ifndef APPLE_NONCPP11
+
     scoreMap.Build();
-#endif
+
 //    scoreMap.TestPushBlocks();
 }
 
