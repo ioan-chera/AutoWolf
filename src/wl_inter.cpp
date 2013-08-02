@@ -32,7 +32,6 @@
 #include "wl_game.h"
 #include "wl_menu.h"
 #include "wl_text.h"
-#pragma hdrstop
 #include "i_video.h"
 #include "id_ca.h"
 #include "id_vh.h"

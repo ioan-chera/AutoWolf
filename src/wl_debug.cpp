@@ -34,7 +34,6 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #include "wl_play.h"
-#pragma hdrstop
 #include "Config.h"
 #include "i_video.h"
 #include "id_ca.h"

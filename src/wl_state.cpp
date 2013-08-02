@@ -33,7 +33,6 @@
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_play.h"
-#pragma hdrstop
 #include "id_ca.h"
 #include "id_us.h"
 #include "ioan_bas.h"	// IOANCH 29.06.2012

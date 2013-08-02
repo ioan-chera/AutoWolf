@@ -33,7 +33,6 @@
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_play.h"
-#pragma hdrstop
 #include "ActorStates.h"
 #include "Config.h"
 #include "i_video.h"

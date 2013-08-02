@@ -34,7 +34,6 @@
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_menu.h"
-#pragma hdrstop
 
 /*
 =============================================================================

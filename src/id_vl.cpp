@@ -22,7 +22,6 @@
 
 #include "wl_def.h"
 #include "wl_draw.h"
-#pragma hdrstop
 #include "Config.h"
 #include "i_system.h"
 #include "i_video.h"
