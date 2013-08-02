@@ -20,8 +20,6 @@
 #ifndef __Wolf4SDL__PString__
 #define __Wolf4SDL__PString__
 
-#include <stdlib.h>
-
 #define PSTRING_LOCAL_LENGTH 32
 #define STRING_ASSUMED_DEC_NUMBER_LENGTH 80
 

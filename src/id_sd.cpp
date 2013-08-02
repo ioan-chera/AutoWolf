@@ -53,7 +53,7 @@
 #include "wl_def.h"
 #include "i_system.h"
 #include "wl_main.h"
-#include <SDL_mixer.h>
+
 #if defined(GP2X_940)
 #include "gp2x/fmopl.h"
 #else

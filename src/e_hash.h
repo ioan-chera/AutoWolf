@@ -28,9 +28,6 @@
 #ifndef E_HASH_H__
 #define E_HASH_H__
 
-#include <stdlib.h>         // IOANCH 20130308: include this because we're not
-                            // using Eternity's Zone, just standard alloc funcs.
-
 #include "e_hashkeys.h"
 #include "m_dllist.h"
 

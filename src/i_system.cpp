@@ -21,16 +21,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <sys/stat.h>
-#ifdef _WIN32
-#include <Windows.h>
-#include <direct.h>
-#include <Windows.h>
-#include <ShlObj.h>
-#else
-#include <dirent.h>
-#include <unistd.h>
-#endif
 #include "wl_def.h"
 #include "Config.h"
 #include "i_system.h"

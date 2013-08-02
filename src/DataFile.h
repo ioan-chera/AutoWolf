@@ -20,9 +20,6 @@
 #ifndef DATAFILE_H_
 #define DATAFILE_H_
 
-
-#include <stdint.h>
-#include <stdio.h>
 #include "PString.h"
 #include "m_dllist.h"
 

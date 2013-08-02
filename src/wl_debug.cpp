@@ -25,12 +25,6 @@
 
 // WL_DEBUG.C
 
-#ifdef _WIN32
-	#include <io.h>
-#else
-	#include <unistd.h>
-#endif
-
 #include "wl_def.h"
 #include "version.h"
 #include "wl_act1.h"
@@ -167,9 +161,9 @@ void PictureGrabber ()
         fname[7] = i % 10 + '0';
         fname[6] = (i / 10) % 10 + '0';
         fname[5] = i / 100 + '0';
-        int file = open(fname, O_RDONLY | O_BINARY);
-        if(file == -1) break;       // file does not exist, so use that filename
-        close(file);
+        FILE *f = fopen(fname, "rb");
+        if(!f) break;       // file does not exist, so use that filename
+        fclose(f);
     }
 
     // overwrites WSHOT999.BMP if all wshot files exist

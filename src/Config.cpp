@@ -23,15 +23,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifdef _WIN32
-#include <direct.h>
-#include <Windows.h>
-#include <ShlObj.h>
-#else
-#include <unistd.h>
-#endif
 
-#include <sys/stat.h>
 #include "wl_def.h"
 #include "i_system.h"
 #ifdef __APPLE__

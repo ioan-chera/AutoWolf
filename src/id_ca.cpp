@@ -34,16 +34,6 @@
 
 // IOANCH 20121223: Cleaned up this file
 
-#include <sys/types.h>
-#if defined _WIN32
-    #include <io.h>
-#elif defined _arch_dreamcast
-    #include <unistd.h>
-#else
-    #include <sys/uio.h>
-    #include <unistd.h>
-#endif
-
 #include "wl_def.h"
 #include "wl_main.h"
 #pragma hdrstop
@@ -880,16 +870,17 @@ static huffnode *ca_grhuffman;
 //
 Boolean8 CA_WriteFile(const char *filename, void *ptr, int32_t length)
 {
-    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
-    if(handle == -1)
+   FILE *f = fopen(filename, "wb");
+//    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    if(!f)
         return false;
 
-    if(!write(handle, ptr, length))
+    if(fwrite(ptr, 1, length, f) < length)
     {
-        close(handle);
+        fclose(f);
         return false;
     }
-    close(handle);
+    fclose(f);
     return true;
 }
 
@@ -927,21 +918,6 @@ Boolean8 CA_LoadFile(const char *filename, memptr *ptr)
 //                                         CACHE MANAGER ROUTINES
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-//
-// CAL_SafeOpen
-//
-// IOANCH: added a safe opening routine, as it's fairly largely used in this
-// code (20130729)
-//
-static int CAL_SafeOpen(const char *path, int oflag)
-{
-   int ret = open(path, oflag);
-   if(ret == -1)
-      CA_CannotOpen(path);
-   return ret;
-}
-
 
 //==========================================================================
 

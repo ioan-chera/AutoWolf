@@ -28,7 +28,6 @@
 #ifndef E_HASHKEYS_H__
 #define E_HASHKEYS_H__
 
-#include <string.h> // IOANCH 20130308: added that
 #include "PString.h"
 
 unsigned int D_HashTableKey(const char *str);

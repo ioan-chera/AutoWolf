@@ -30,7 +30,6 @@
 #ifndef M_COLLECTION_H__
 #define M_COLLECTION_H__
 
-#include <utility>
 
 //
 // BaseCollection

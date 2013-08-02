@@ -26,15 +26,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <sys/stat.h>
-#include <sys/types.h>
-#ifdef _WIN32
-    #include <io.h>
-    #include <direct.h>
-#else
-    #include <unistd.h>
-#endif
-
 #include "wl_def.h"
 #include "foreign.h"
 #include "wl_agent.h"
@@ -3054,14 +3045,14 @@ void menu_SetupSaveGames()
 #endif
             savepath.copy(cfg_dir).concatSubpath(name);
 
-            const int handle = open(savepath(), O_RDONLY | O_BINARY);
-            if(handle >= 0)
+           FILE *f = fopen(savepath(), "rb");
+            if(f)
             {
                 char temp[32];
 
                 SaveGamesAvail[i] = 1;
-                read(handle, temp, 32);
-                close(handle);
+               fread(temp, sizeof(*temp), lengthof(temp), f);
+                fclose(f);
                 strcpy(&SaveGameNames[i][0], temp);
             }
 #ifdef _arch_dreamcast

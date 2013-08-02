@@ -25,12 +25,6 @@
 
 // WL_MAIN.C
 
-#ifdef _WIN32
-    #include <io.h>
-#else
-    #include <unistd.h>
-#endif
-
 #include "wl_def.h"
 #include "foreign.h"
 #include "version.h"

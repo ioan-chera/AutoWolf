@@ -32,24 +32,37 @@
 #define WL_DEF_H
 
 #include <assert.h>
-#include <errno.h>
-#include <fcntl.h>
 #include <limits.h>
 #include <math.h>
 #include <ctype.h>
+#include <set>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
-#include <set>
+#include <utility>
+
+#ifdef _WIN32
+#include <direct.h>
+#include <io.h>
+#include <ShlObj.h>
+#include <Windows.h>
+#else
+#include <dirent.h>
+#include <unistd.h>
+#endif
+
 #if defined(_arch_dreamcast)
-#	include <string.h>
 #	include "dc/dc_main.h"
+#  include <unistd.h>
 #elif !defined(_WIN32)
 #	include <stdint.h>
-#	include <string.h>
 #	include <stdarg.h>
 #endif
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <SDL_syswm.h>
 
 #if !defined O_BINARY
