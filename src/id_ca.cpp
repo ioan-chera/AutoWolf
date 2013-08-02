@@ -666,9 +666,7 @@ void AudioLoader::loadFromFile (const char *audiohed, const char *audiot)
    //
    // open the data file
    //
-   
-   m_file = fopen(audiot, "rb");
-   if(!m_file)
+   if(!m_filebuf.openFile(audiot, BufferedFileBase::LENDIAN))
       CA_CannotOpen(audiot);
 }
 
@@ -685,8 +683,8 @@ int32_t AudioLoader::cacheChunk (int chunk)
    
    m_audiosegs[chunk]=(byte *) I_CheckedMalloc(size);
    
-   fseek(m_file, pos, SEEK_SET);
-   fread(m_audiosegs[chunk], 1, size, m_file);
+   m_filebuf.seek(pos, SEEK_SET);
+   m_filebuf.read(m_audiosegs[chunk], size);
    
    return size;
 }
@@ -704,8 +702,9 @@ void AudioLoader::cacheAdlibChunk (int chunk)
    
    int32_t bufferseg[BUFFERSIZE/4];
    
-   fseek(m_file, pos, SEEK_SET);
-   fread(bufferseg, 1, ORIG_ADLIBSOUND_SIZE - 1, m_file);
+   m_filebuf.seek(pos, SEEK_SET);
+   m_filebuf.read(bufferseg, ORIG_ADLIBSOUND_SIZE - 1);
+   
    // without data[1]
    
    AdLibSound *sound = (AdLibSound *) I_CheckedMalloc(size +
@@ -733,7 +732,8 @@ void AudioLoader::cacheAdlibChunk (int chunk)
    sound->inst.unused[2] = *ptr++;
    sound->block = *ptr++;
    
-   fread(sound->data, 1, size - ORIG_ADLIBSOUND_SIZE + 1, m_file);  // + 1 because of byte data[1]
+   m_filebuf.read(sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);
+   // + 1 because of byte data[1]
    
    m_audiosegs[chunk]=(byte *) sound;
 }
@@ -807,10 +807,7 @@ void AudioLoader::loadAllSounds (SDMode newMode)
 //
 void AudioLoader::close()
 {
-   if(m_file)
-   {
-      fclose(m_file);
-   }
+   m_filebuf.Close();
    free(m_audiostarts);
    int start = -1;
    switch (m_oldsoundmode)
@@ -906,21 +903,22 @@ Boolean CA_LoadFile(const char *filename, memptr *ptr)
 {
     int32_t size;
 
-   FILE *file = fopen(filename, "rb");
-    if(!file)
+   InBuffer file;
+   
+   //FILE *file = fopen(filename, "rb");
+   if(!file.openFile(filename, BufferedFileBase::LENDIAN))
         return false;
 
-   fseek(file, 0, SEEK_END);
-   size = ftell(file);
-   fseek(file, 0, SEEK_SET);
+   file.seek(0, SEEK_END);
+   size = file.Tell();
+   file.seek(0, SEEK_SET);
    *ptr = I_CheckedMalloc(size);
-    if(fread(*ptr, 1, size, file) < size)
+   if(file.read(*ptr, size) < size)
     {
-        fclose(file);
+       file.Close();
         return false;
     }
-
-    fclose(file);
+   file.Close();
     return true;
 }
 

@@ -211,13 +211,13 @@ extern GraphicLoader graphSegs;
 //
 class AudioLoader
 {
-   FILE *m_file;
+   InBuffer m_filebuf;
+//   FILE *m_file;
    int32_t *m_audiostarts;
    byte *m_audiosegs[NUMSNDCHUNKS_sod > NUMSNDCHUNKS_wl6 ? NUMSNDCHUNKS_sod :
                       NUMSNDCHUNKS_wl6];
    void emptyFields()
    {
-      m_file = NULL;
       m_audiostarts = NULL;
       memset(m_audiosegs, 0, sizeof(m_audiosegs));
       m_oldsoundmode = sdm_Off;
