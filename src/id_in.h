@@ -178,18 +178,14 @@ extern           int        in_joyNumButtons;
 							if (code == in_lastScan) in_lastScan = sc_None;}
 
 // DEBUG - put names in prototypes
+// IOANCH: removed unused prototypes
 extern	void		IN_Startup(),IN_Shutdown();
 extern	void		IN_ClearKeysDown();
 extern	void		IN_ReadControl(int,ControlInfo *);
-extern	void		IN_GetJoyAbs(word joy,word *xp,word *yp);
-extern	void		IN_SetupJoy(word joy,word minx,word maxx,
-								word miny,word maxy);
-extern	void		IN_StopDemo(),IN_FreeDemoBuffer(),
-					IN_Ack();
-extern	Boolean		IN_UserInput(longword delay);
+extern	void		IN_Ack();
+extern	Boolean	IN_UserInput(longword delay);
 extern	char		IN_WaitForASCII();
 extern	ScanCode	IN_WaitForKey();
-extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
 
 void    IN_WaitAndProcessEvents();
@@ -209,5 +205,5 @@ bool    IN_IsInputGrabbed();
 void    IN_CenterMouse();
 
 // IOANCH:
-void IN_InitVerifyJoysticks()
+void IN_InitVerifyJoysticks();
 #endif
