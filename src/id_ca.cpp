@@ -50,11 +50,13 @@
 #include "Config.h"
 #include "i_system.h"
 #include "i_video.h"
+#include "m_swap.h"
 #include "PString.h"
 
 MapLoader mapSegs;
 GraphicLoader graphSegs;
 AudioLoader audioSegs;
+
 
 //
 // MapLoader::loadFromFile
@@ -73,22 +75,21 @@ void MapLoader::loadFromFile(const char *maphead, const char *gamemaps)
    //
    // load maphead.ext (offsets and tileinfo for map file)
    //
-   FILE *header = fopen(maphead, "rb");
-   if(!header)
+   InBuffer header;
+   if(!header.openFile(maphead, BufferedFileBase::LENDIAN))
       CA_CannotOpen(maphead);
    
 //   length = NUMMAPS * sizeof(int32_t); // used to be "filelength(handle);"
-   fread(&m_RLEWtag, sizeof(word), 1, header);
-   fread(headeroffsets, sizeof(int32_t), NUMMAPS, header);
-   fclose(header);
+   header.readUint16(m_RLEWtag);
+   header.readSint32Array(headeroffsets, NUMMAPS);
+   header.Close();
    
    //
    // open the data file
    //
    // IOANCH 20130301: unification culling
    
-   m_file = fopen(gamemaps, "rb");
-   if(!m_file)
+   if(!m_filebuf.openFile(gamemaps, BufferedFileBase::LENDIAN))
       CA_CannotOpen(gamemaps);
    
    //
@@ -100,9 +101,13 @@ void MapLoader::loadFromFile(const char *maphead, const char *gamemaps)
       if (pos < 0)                          // $FFFFFFFF start is a sparse map
          continue;
       
-//      m_mapheaderseg[i] = (maptype *)I_CheckedMalloc(sizeof(maptype));
-      fseek(m_file, pos, SEEK_SET);
-      fread(&m_mapheaderseg[i], sizeof(maptype), 1, m_file);   // IOANCH: not
+      m_filebuf.seek(pos, SEEK_SET);
+      maptype &m = m_mapheaderseg[i];
+      m_filebuf.readSint32Array(m.planestart, lengthof(m.planestart));
+      m_filebuf.readUint16Array(m.planelength, lengthof(m.planelength));
+      m_filebuf.readUint16(m.width);
+      m_filebuf.readUint16(m.height);
+      m_filebuf.read(m.name, lengthof(m.name));
    }                                                           // pointer
    m_mapon = -1;
 }
@@ -184,18 +189,19 @@ static void CAL_CarmackExpand(byte *source, word *dest, int length)
 // CAL_RLEWexpand
 //
 // length is EXPANDED length
+// IOANCH: added endian swapping. source may NOT be processor-endian-correct!
 //
 static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
    word value, count, i;
-   word *end = dest + length / 2;
+   word *end = dest + length / sizeof(word);
    
    //
    // expand it
    //
    do
    {
-      value = *source++;
+      value = SwapUShort(*source++);
       if (value != rlewtag)
 		{
          //
@@ -208,8 +214,8 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
          //
          // compressed string
          //
-         count = *source++;
-         value = *source++;
+         count = SwapUShort(*source++);
+         value = SwapUShort(*source++);
          for (i = 1; i <= count; i++)
             *dest++ = value;
       }
@@ -251,7 +257,7 @@ void MapLoader::cacheMap (int mapnum, short episode)
       
       dest = m_mapsegs[plane];
       
-      fseek(m_file, pos, SEEK_SET);
+      m_filebuf.seek(pos, SEEK_SET);
       if (compressed <= BUFFERSIZE)
          source = (word *) bufferseg;
       else
@@ -261,7 +267,7 @@ void MapLoader::cacheMap (int mapnum, short episode)
          source = (word *) bigbufferseg;
       }
       
-      fread(source, compressed, 1, m_file);
+      m_filebuf.read(source, compressed);
       // IOANCH 20130301: unification culling
       //
       // unhuffman, then unRLEW

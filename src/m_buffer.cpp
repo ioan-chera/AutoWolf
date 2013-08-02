@@ -451,6 +451,21 @@ bool InBuffer::readSint32(int32_t &num)
 }
 
 //
+// InBuffer::readSint32Array
+//
+// Reads an array of int32, adjusting endianness
+//
+bool InBuffer::readSint32Array(int32_t *array, size_t count)
+{
+   for (size_t u = 0; u < count; ++u)
+   {
+      if(!readSint32(array[u]))
+         return false;
+   }
+   return true;
+}
+
+//
 // InBuffer::readUint16
 //
 // Read a uint16 value from the input file.
@@ -464,6 +479,21 @@ bool InBuffer::readUint16(uint16_t &num)
 
    SwapUShort(lNum);
    num = lNum;
+   return true;
+}
+
+//
+// InBuffer::readUint16Array
+//
+// Reads an array of uint16, adjusting endianness
+//
+bool InBuffer::readUint16Array(uint16_t *array, size_t count)
+{
+   for (size_t u = 0; u < count; ++u)
+   {
+      if(!readUint16(array[u]))
+         return false;
+   }
    return true;
 }
 
@@ -494,6 +524,21 @@ bool InBuffer::readUint8(uint8_t &num)
    if(read(&num, sizeof(num)) != sizeof(num))
       return false;
 
+   return true;
+}
+
+//
+// InBuffer::readUint8Array
+//
+// Reads an array of uint8, adjusting endianness
+//
+bool InBuffer::readUint8Array(uint8_t *array, size_t count)
+{
+   for (size_t u = 0; u < count; ++u)
+   {
+      if(!readUint8(array[u]))
+         return false;
+   }
    return true;
 }
 

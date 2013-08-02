@@ -127,6 +127,7 @@ public:
 // InBuffer
 //
 // Buffered binary file input.
+// IOANCH: added array reading support
 //
 class InBuffer : public BufferedFileBase
 {
@@ -142,11 +143,14 @@ public:
    size_t read(void *dest, size_t size);
    int    skip(size_t skipAmt);
    bool   readSint32(int32_t  &num);   // IOANCH: use pointers for flexibility
+   bool   readSint32Array(int32_t *array, size_t count);
    bool   readUint32(uint32_t &num);
    bool   readSint16(int16_t  &num);
    bool   readUint16(uint16_t &num);
+   bool   readUint16Array(uint16_t *array, size_t count);
    bool   readSint8 (int8_t   &num);
    bool   readUint8 (uint8_t  &num);
+   bool   readUint8Array (uint8_t *array, size_t count);
 };
 
 #endif

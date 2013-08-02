@@ -23,6 +23,8 @@
 
 // IOANCH 20121223: Cleaned up this file
 
+#include "m_buffer.h"
+
 //===========================================================================
 
 #define NUMMAPS         60
@@ -33,6 +35,8 @@
 #endif
 
 // IOANCH 20130801: use classes
+
+class InBuffer;
 
 //
 // MapLoader
@@ -49,25 +53,28 @@ class MapLoader
       char    name[16];
    };
    
-   FILE *m_file;    // file handle
+   InBuffer m_filebuf;
    word m_RLEWtag;  // RLEW compression tag
    maptype  m_mapheaderseg[NUMMAPS];
    word     m_mapsegs[MAPPLANES][maparea];
    int m_mapon;
    
+   // Also added from EE
+   
 public:
-   MapLoader() : m_file(NULL), m_RLEWtag(0), m_mapon(-1)
+   MapLoader() : m_RLEWtag(0), m_mapon(-1)
    {
       memset(m_mapheaderseg, 0, sizeof(m_mapheaderseg));
       memset(m_mapsegs, 0, sizeof(m_mapsegs));
    }
    void close()
    {
-      if(m_file)
-      {
-         fclose(m_file);
-         m_file = NULL;
-      }
+      m_filebuf.Close();
+//      if(m_file)
+//      {
+//         fclose(m_file);
+//         m_file = NULL;
+//      }
    }
 
    ~MapLoader()
@@ -247,6 +254,7 @@ public:
    }
 };
 extern AudioLoader audioSegs;
+
 
 //===========================================================================
 
