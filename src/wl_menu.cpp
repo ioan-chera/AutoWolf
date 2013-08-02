@@ -307,6 +307,7 @@ static byte *ExtScanNames[] =   // Names corresponding to ExtScanCodes
                                         };*/
 
 #else
+// IOANCH 20130801: added meta/command/windows/super key to the names
 static const char* const ScanNames[SDLK_LAST] =
     {
         "?","?","?","?","?","?","?","?",                                //   0
@@ -347,7 +348,7 @@ static const char* const ScanNames[SDLK_LAST] =
         "PgUp","PgDn","F1","F2","F3","F4","F5","F6",                    // 280
         "F7","F8","F9","F10","F11","F12","?","?",                       // 288
         "?","?","?","?","NumLk","CapsLk","ScrlLk","RShft",              // 296
-        "Shift","RCtrl","Ctrl","RAlt","Alt","?","?","?",                // 304
+        "Shift","RCtrl","Ctrl","RAlt","Alt","RMeta","Meta","?",         // 304
         "?","?","?","?","PrtSc","?","?","?",                            // 312
         "?","?"                                                         // 320
     };

@@ -287,11 +287,12 @@ static void INL_processEvent(SDL_Event *event)
                 if(in_lastScan==SDLK_F4)
                     Quit(NULL);
             }
-
+// IOANCH 20130801: added meta key mapping
             if(in_lastScan == SDLK_KP_ENTER) in_lastScan = SDLK_RETURN;
             else if(in_lastScan == SDLK_RSHIFT) in_lastScan = SDLK_LSHIFT;
             else if(in_lastScan == SDLK_RALT) in_lastScan = SDLK_LALT;
             else if(in_lastScan == SDLK_RCTRL) in_lastScan = SDLK_LCTRL;
+            else if(in_lastScan == SDLK_RMETA) in_lastScan = SDLK_LMETA;
             else
             {
                 if((mod & KMOD_NUM) == 0)
@@ -334,6 +335,7 @@ static void INL_processEvent(SDL_Event *event)
             else if(key == SDLK_RSHIFT) key = SDLK_LSHIFT;
             else if(key == SDLK_RALT) key = SDLK_LALT;
             else if(key == SDLK_RCTRL) key = SDLK_LCTRL;
+            else if(key == SDLK_RMETA) key = SDLK_LMETA;
             else
             {
                 if((SDL_GetModState() & KMOD_NUM) == 0)
