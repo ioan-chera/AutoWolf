@@ -189,7 +189,8 @@ static void CAL_CarmackExpand(byte *source, word *dest, int length)
 // CAL_RLEWexpand
 //
 // length is EXPANDED length
-// IOANCH: added endian swapping. source may NOT be processor-endian-correct!
+// IOANCH: possibly added endian swapping, but commented out, since it may be
+// the output of Carmack expansion, which already does swapping
 //
 static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewtag)
 {
@@ -201,7 +202,7 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
    //
    do
    {
-      value = SwapUShort(*source++);
+      value = /*SwapUShort(*/*source++/*)*/;
       if (value != rlewtag)
 		{
          //
@@ -214,8 +215,8 @@ static void CAL_RLEWexpand(word *source, word *dest, int32_t length, word rlewta
          //
          // compressed string
          //
-         count = SwapUShort(*source++);
-         value = SwapUShort(*source++);
+         count = /*SwapUShort(*/*source++/*)*/;
+         value = /*SwapUShort(*/*source++/*)*/;
          for (i = 1; i <= count; i++)
             *dest++ = value;
       }
@@ -395,22 +396,26 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    //    fname.copy(ca_gdictname).concat(cfg_graphext);  // IOANCH 20130509: don't
    // withExtension yet
 
-   FILE *dfile = fopen(vgadict, "rb");
-   if(!dfile)
+   InBuffer dfile;
+   if(!dfile.openFile(vgadict, BufferedFileBase::LENDIAN))
       CA_CannotOpen(vgadict);
    
-   fread(m_grhuffman, 1, sizeof(m_grhuffman), dfile);
-   fclose(dfile);
+   for (size_t u = 0; u < lengthof(m_grhuffman); ++u)
+   {
+      dfile.readUint16(m_grhuffman[u].bit0);
+      dfile.readUint16(m_grhuffman[u].bit1);
+   }
+
+   dfile.Close();
    
    // load the data offsets from ???head.ext
    
-   dfile = fopen(vgahead, "rb");
-   if(!dfile)
+   if(!dfile.openFile(vgahead, BufferedFileBase::LENDIAN))
       CA_CannotOpen(vgahead);
    
-   fseek(dfile, 0, SEEK_END);
-   long headersize = ftell(dfile);
-   fseek(dfile, 0, SEEK_SET);
+   dfile.seek(0, SEEK_END);
+   long headersize = dfile.Tell();
+   dfile.seek(0, SEEK_SET);
    
    // IOANCH 20130301: unification culling
    //    int testexp = sizeof(ca_grstarts_wl6);
@@ -431,8 +436,8 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    if(SPEAR())
    {
       byte data[lengthof(m_grstarts_sod) * 3];
-      fread(data, 1, sizeof(data), dfile);
-      fclose(dfile);
+      dfile.read(data, sizeof(data));
+      dfile.Close();
       
       const byte* d = data;
       for (int32_t* i = m_grstarts_sod; i != endof(m_grstarts_sod); ++i)
@@ -445,8 +450,8 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    else
    {
       byte data[lengthof(m_grstarts_wl6) * 3];
-      fread(data, 1, sizeof(data), dfile);
-      fclose(dfile);
+      dfile.read(data, sizeof(data));
+      dfile.Close();
       
       const byte* d = data;
       for (int32_t* i = m_grstarts_wl6; i != endof(m_grstarts_wl6); ++i)
@@ -464,8 +469,7 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    
    //    fname.copy(ca_gfilename).concat(cfg_graphext);
    
-   m_file = fopen(vgagraph, "rb");
-   if(!m_file)
+   if(!m_filebuf.openFile(vgagraph, BufferedFileBase::LENDIAN))
       CA_CannotOpen(vgagraph);
    
    //
@@ -476,12 +480,13 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
 //                                                 sizeof(pictabletype));
    int32_t complen = getChunkLength(SPEAR.g(STRUCTPIC));
    int32_t explen;
-   fseek(m_file, grFilePos(SPEAR.g(STRUCTPIC)), SEEK_SET);
-   fread(&explen, sizeof(explen), 1, m_file);
+   m_filebuf.seek(grFilePos(SPEAR.g(STRUCTPIC)), SEEK_SET);
+   m_filebuf.readSint32(explen);
    compseg = (byte *)I_CheckedMalloc(complen);
-   fread(compseg, complen, 1, m_file);
+   m_filebuf.read(compseg, complen);
    CAL_HuffExpand(compseg, (byte*)m_pictable, SPEAR.g(NUMPICS) *
                   sizeof(pictabletype), m_grhuffman);
+   m_pictableloaded = true;
    free(compseg);
 }
 
@@ -564,18 +569,17 @@ void GraphicLoader::cacheChunk (int chunk)
       next++;
    
    compressed = grFilePos(next)-pos;
-   
-   fseek(m_file, pos, SEEK_SET);
+   m_filebuf.seek(pos, SEEK_SET);
    
    if (compressed<=BUFFERSIZE)
    {
-      fread(bufferseg, 1, compressed, m_file);
+      m_filebuf.read(bufferseg, compressed);
       source = bufferseg;
    }
    else
    {
       source = (int32_t *) I_CheckedMalloc(compressed);
-      fread(source, 1, compressed, m_file);
+      m_filebuf.read(source, compressed);
    }
    
    expandChunk(chunk, source);
@@ -608,11 +612,12 @@ void GraphicLoader::cacheScreen (int chunk)
       next++;
    compressed = grFilePos(next)-pos;
    
-   fseek(m_file, pos, SEEK_SET);
+   m_filebuf.seek(pos, SEEK_SET);
    
    bigbufferseg=I_CheckedMalloc(compressed);
    
-   fread(bigbufferseg, 1, compressed, m_file);
+   m_filebuf.read(bigbufferseg, compressed);
+
    source = (const int32_t *) bigbufferseg;
    
    expanded = *source++;

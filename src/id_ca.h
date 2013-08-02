@@ -135,11 +135,13 @@ public:
    };
 private:
    
-   FILE *m_file;
+   InBuffer m_filebuf;
+//   FILE *m_file;
    huffnode m_grhuffman[255];
    int32_t  m_grstarts_wl6[NUMCHUNKS_wl6 + 1];
    int32_t  m_grstarts_sod[NUMCHUNKS_sod + 1];
    pictabletype m_pictable[NUMPICS_wl6 > NUMPICS_sod ? NUMPICS_wl6 : NUMPICS_sod];
+   bool m_pictableloaded;
    byte *m_grsegs[NUMCHUNKS_sod > NUMCHUNKS_wl6 ? NUMCHUNKS_sod : NUMCHUNKS_wl6];
    
    int32_t grFilePos(size_t idx);
@@ -148,7 +150,7 @@ private:
    
    void emptyFields()
    {
-      m_file = NULL;
+      m_pictableloaded = false;
       memset(m_grhuffman, 0, sizeof(m_grhuffman));
       memset(m_grstarts_sod, 0, sizeof(m_grstarts_sod));
       memset(m_grstarts_wl6, 0, sizeof(m_grstarts_wl6));
@@ -163,8 +165,8 @@ public:
    }
    void close()
    {
-      if(m_file)
-         fclose(m_file);
+      m_filebuf.Close();
+      m_pictableloaded = false;
       for (int i = 0; i < (signed int)SPEAR.g(NUMCHUNKS); ++i)
          uncacheChunk(i);
       emptyFields();
@@ -197,7 +199,7 @@ public:
    }
    bool hasPictable() const
    {
-      return m_file != NULL;
+      return m_pictableloaded;
    }
 };
 extern GraphicLoader graphSegs;
