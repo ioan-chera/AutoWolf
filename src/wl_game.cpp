@@ -1384,11 +1384,11 @@ void Died ()
 
     VL_BarScaledCoord (viewscreenx,viewscreeny,viewwidth,viewheight,4);
 
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
 
     FizzleFade(viewscreenx,viewscreeny,viewwidth,viewheight,70,false);
 
-    IN_UserInput(100);
+    myInput.userInput(100);
     SD_WaitSoundDone ();
     SD_StopDigitized();
 

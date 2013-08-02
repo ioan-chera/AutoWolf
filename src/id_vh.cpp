@@ -342,7 +342,7 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
     lastrndval = 0;
     pixperframe = width * height / frames;
 
-    IN_StartAck ();
+    myInput.startAck ();
 
     frame = GetTimeCount();
     byte *srcptr = I_LockBuffer();
@@ -351,9 +351,9 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
 
     do
     {
-        IN_ProcessEvents();
+        myInput.processEvents();
 
-        if(abortable && IN_CheckAck ())
+        if(abortable && myInput.checkAck ())
         {
             I_UnlockBuffer();
            I_UpdateScreen();

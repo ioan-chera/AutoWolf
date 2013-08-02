@@ -139,10 +139,10 @@ static void main_configHardwareValues(SDMode &sd, SMMode  &sm, SDSMode &sds)
    else
       sds = sds_Off;
    
-   if (in_mousePresent)
+   if (myInput.mousePresent())
       mouseenabled = true;
    
-   if (IN_JoyPresent())
+   if (myInput.joyPresent())
       joystickenabled = true;
    
    viewsize = 19;                          // start with a good size
@@ -306,9 +306,9 @@ if(pfile->hasProperty(#name, Property::Int32)) \
    if(mouseenabled) mouseenabled=true;
    if(joystickenabled) joystickenabled=true;
    
-   if (!in_mousePresent)
+   if (!myInput.mousePresent())
       mouseenabled = false;
-   if (!IN_JoyPresent())
+   if (!myInput.joyPresent())
       joystickenabled = false;
    
    if(mouseadjustment<0) mouseadjustment=0;
@@ -736,8 +736,8 @@ Boolean8 LoadTheGame(FILE *file,int x,int y)
                 STR_SAVECHT3"\n"
                 STR_SAVECHT4);
 
-        IN_ClearKeysDown();
-        IN_Ack();
+        myInput.clearKeysDown();
+        myInput.ack();
 
         gamestate.oldscore = gamestate.score = 0;
         gamestate.lives = 1;
@@ -790,7 +790,7 @@ void ShutdownId ()
     US_Shutdown ();         // This line is completely useless...
     SD_Shutdown ();
    vSwapData.clear();
-    IN_Shutdown ();
+   myInput.close();
     VL_Shutdown ();
     CA_Shutdown ();
 #if defined(GP2X_940)
@@ -975,7 +975,7 @@ void FinishSignon ()
         I_UpdateScreen();
 
         if (!cfg_nowait)
-            IN_Ack ();
+            myInput.ack ();
 
         // IOANCH 20130301: unification culling
 
@@ -1239,7 +1239,7 @@ void DoJukebox()
     CP_iteminfo &MusicItems = IMPALE(MusicItems);
     CP_itemtype *MusicMenu = IMPALE(MusicMenu);
 
-    IN_ClearKeysDown();
+    myInput.clearKeysDown();
     if (!sd_adLibPresent && !sd_soundBlasterPresent)
         return;
 
@@ -1296,7 +1296,7 @@ void DoJukebox()
     } while(which>=0);
 
     MenuFadeOut();
-    IN_ClearKeysDown();
+    myInput.clearKeysDown();
     // IOANCH 20130303: unification
 
     if(SPEAR())
@@ -1343,7 +1343,7 @@ static void InitGame()
     bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
-    IN_Startup ();  // sets up the input devices
+    myInput.initialize();  // sets up the input devices
     // IOANCH 20130510: here I should put the startup menu, before it loads
     // data from game-dependent files. I already have the palette and little
     // else. I need a font, some feedback sounds and some basic graphics. Maybe
@@ -1395,10 +1395,10 @@ static void InitGame()
 //
 // HOLDING DOWN 'M' KEY?
 //
-	IN_ProcessEvents();
+	myInput.processEvents();
 
 // IOANCH 20130301: unification culling
-    if (in_keyboard[sc_M])
+    if (myInput.keyboard(sc_M))
     {
         DoJukebox();
         didjukebox=true;
@@ -1651,7 +1651,7 @@ static void DemoLoop()
                 I_UpdateScreen ();
                 VW_FadeIn();
             }
-            if (IN_UserInput(TickBase*15))
+            if (myInput.userInput(TickBase*15))
                 break;
             VW_FadeOut();
 //
@@ -1660,7 +1660,7 @@ static void DemoLoop()
             graphSegs.cacheScreen (SPEAR.g(CREDITSPIC));
             I_UpdateScreen();
             VW_FadeIn ();
-            if (IN_UserInput(TickBase*10))
+            if (myInput.userInput(TickBase*10))
                 break;
             VW_FadeOut ();
 //
@@ -1670,7 +1670,7 @@ static void DemoLoop()
             I_UpdateScreen ();
             VW_FadeIn ();
 
-            if (IN_UserInput(TickBase*10))
+            if (myInput.userInput(TickBase*10))
                 break;
 #endif
 //
@@ -1694,10 +1694,10 @@ static void DemoLoop()
         VW_FadeOut ();
 
 #ifdef DEBUGKEYS
-        if (in_keyboard[sc_Tab] && cfg_debugmode)
+        if (myInput.keyboard(sc_Tab) && cfg_debugmode)
             RecordDemo ();
         else
-            US_ControlPanel (0);
+            US_ControlPanel (sc_None);
 #else
         US_ControlPanel (0);
 #endif

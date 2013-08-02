@@ -626,7 +626,7 @@ void ShowArticle (const char *article)
 
     unsigned    oldfontnumber;
     Boolean8     newpage,firstpage;
-    ControlInfo ci;
+    CursorInfo ci;
 
     // IOANCH 20130301: unification culling
     text = article;
@@ -656,7 +656,7 @@ void ShowArticle (const char *article)
         }
         I_Delay(5);
 
-        in_lastScan = 0;
+       myInput.setLastScan(sc_None);
         ReadAnyControl(&ci);
         Direction dir = ci.dir;
         switch(dir)
@@ -667,7 +667,7 @@ void ShowArticle (const char *article)
 
             default:
                 if(ci.button0) dir = dir_South;
-                switch(in_lastScan)
+                switch(myInput.lastScan())
                 {
                     case sc_UpArrow:
                     case sc_PgUp:
@@ -681,6 +681,8 @@ void ShowArticle (const char *article)
                     case sc_RightArrow:
                         dir = dir_South;
                         break;
+                      default: ;
+                      ;
                 }
                 break;
         }
@@ -711,9 +713,9 @@ void ShowArticle (const char *article)
 			default:
 				;
         }
-    } while (in_lastScan != sc_Escape && !ci.button1);
+    } while (myInput.lastScan() != sc_Escape && !ci.button1);
 
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
     fontnumber = oldfontnumber;
 }
 
@@ -807,9 +809,9 @@ void EndText ()
 
     VW_FadeOut();
     SETFONTCOLOR(0,15);
-    IN_ClearKeysDown();
-    if (in_mousePresent && IN_IsInputGrabbed())
-        IN_CenterMouse();  // Clear accumulated mouse movement
+    myInput.clearKeysDown();
+    if (myInput.mousePresent() && myInput.inputGrabbed())
+        myInput.centreMouse();  // Clear accumulated mouse movement
 
     FreeMusic ();
 

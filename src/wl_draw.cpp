@@ -1574,7 +1574,7 @@ void    ThreeDRefresh ()
 
    DrawPlayerWeapon ();    // draw player's hands
 
-   if(in_keyboard[sc_Tab] && viewsize == 21 && gamestate.weapon != -1)
+   if(myInput.keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
       ShowActStatus();
 
    I_UnlockBuffer();

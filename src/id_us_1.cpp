@@ -488,7 +488,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 				w,h,
 				temp;
 	longword	curtime, lasttime, lastdirtime, lastbuttontime, lastdirmovetime;
-	ControlInfo ci;
+	CursorInfo ci;
 	Direction   lastdir = dir_None;
 
 	if (def)
@@ -502,8 +502,8 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	cursorvis = done = false;
 	lasttime = lastdirtime = lastdirmovetime = GetTimeCount();
 	lastbuttontime = lasttime + TickBase / 4;	// 250 ms => first button press accepted after 500 ms
-	in_lastASCII = key_None;
-	in_lastScan = sc_None;
+   myInput.setLastASCII(key_None);
+   myInput.setLastScan(sc_None);
 
 	while (!done)
 	{
@@ -512,10 +512,10 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 		if (cursorvis)
 			USL_XORICursor(x,y,s,cursor);
 
-		sc = in_lastScan;
-		in_lastScan = sc_None;
-		c = in_lastASCII;
-		in_lastASCII = key_None;
+      sc = myInput.lastScan();
+      myInput.setLastScan(sc_None);
+		c = myInput.lastASCII();
+      myInput.setLastASCII(key_None);
 
 		checkkey = true;
 		curtime = GetTimeCount();
@@ -678,7 +678,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 					cursormoved = true;
 					break;
 
-				case SDLK_KP5: //0x4c:	// Keypad 5 // TODO: hmmm...
+				case sc_KP5: //0x4c:	// Keypad 5 // TODO: hmmm...
 				case sc_UpArrow:
 				case sc_DownArrow:
 				case sc_PgUp:
@@ -686,6 +686,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 				case sc_Insert:
 					c = key_None;
 					break;
+            default:;
 			}
 
 			if (c)
@@ -751,7 +752,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	}
 	I_UpdateScreen();
 
-	IN_ClearKeysDown();
+	myInput.clearKeysDown();
 	return(result);
 }
 

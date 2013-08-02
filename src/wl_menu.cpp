@@ -412,6 +412,8 @@ US_ControlPanel (ScanCode scancode)
             if(SPEAR()) 
                 UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
             return;
+          default:
+          ;
     }
 
     if(SPEAR())
@@ -431,12 +433,12 @@ US_ControlPanel (ScanCode scancode)
 // IOANCH 20130301: unification culling
         if(SPEAR())
         {
-            IN_ProcessEvents();
+            myInput.processEvents();
 
             //
             // EASTER EGG FOR SPEAR() OF DESTINY!
             //
-            if (in_keyboard[sc_I] && in_keyboard[sc_D])
+            if (myInput.keyboard(sc_I) && myInput.keyboard(sc_D))
             {
                 VW_FadeOut ();
                             // IOANCH 20130301: unification music
@@ -462,10 +464,10 @@ US_ControlPanel (ScanCode scancode)
                 VL_FadeIn (0, 255, pal, 30);
                 graphSegs.uncacheChunk (SPEAR.g(IDGUYSPALETTE));
 
-                while (in_keyboard[sc_I] || in_keyboard[sc_D])
-                    IN_WaitAndProcessEvents();
-                IN_ClearKeysDown ();
-                IN_Ack ();
+                while (myInput.keyboard(sc_I) || myInput.keyboard(sc_D))
+                    myInput.waitAndProcessEvents();
+                myInput.clearKeysDown ();
+                myInput.ack ();
 
                 VW_FadeOut ();
 
@@ -618,8 +620,8 @@ BossKey ()
     puts ("C>");
     SetTextCursor (2, 0);
 //      while (!Keyboard[sc_Escape])
-    IN_Ack ();
-    IN_ClearKeysDown ();
+    myInput.ack ();
+    myInput.clearKeysDown ();
 
     SD_MusicOn ();
     VL_SetVGAPlaneMode ();
@@ -702,7 +704,7 @@ CP_CheckQuick (ScanCode scancode)
                 pickquick = CP_SaveGame (0);
 
                 SETFONTCOLOR (0, 15);
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 VW_FadeOut();
                 if(viewsize != 21)
                     DrawPlayScreen ();
@@ -714,8 +716,8 @@ CP_CheckQuick (ScanCode scancode)
                     playstate = ex_abort;
                 lasttimecount = GetTimeCount ();
 
-                if (in_mousePresent && IN_IsInputGrabbed())
-                    IN_CenterMouse();     // Clear accumulated mouse movement
+                if (myInput.mousePresent() && myInput.inputGrabbed())
+                    myInput.centreMouse();     // Clear accumulated mouse movement
 
                 if(!SPEAR())
                 {
@@ -781,7 +783,7 @@ CP_CheckQuick (ScanCode scancode)
                 pickquick = CP_LoadGame (0);    // loads lastgamemusicoffs
 
                 SETFONTCOLOR (0, 15);
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 VW_FadeOut();
                 if(viewsize != 21)
                     DrawPlayScreen ();
@@ -794,8 +796,8 @@ CP_CheckQuick (ScanCode scancode)
 
                 lasttimecount = GetTimeCount ();
 
-                if (in_mousePresent && IN_IsInputGrabbed())
-                    IN_CenterMouse();     // Clear accumulated mouse movement
+                if (myInput.mousePresent() && myInput.inputGrabbed())
+                    myInput.centreMouse();     // Clear accumulated mouse movement
 
                 // IOANCH 20130302: unification
                 if(!SPEAR())
@@ -843,6 +845,8 @@ CP_CheckQuick (ScanCode scancode)
             WindowH = 200;
             fontnumber = 0;
             return 1;
+          default:
+          ;
     }
 
     return 0;
@@ -907,7 +911,7 @@ CP_ViewScores (int)
     MenuFadeIn ();
     fontnumber = 1;
 
-    IN_Ack ();
+    myInput.ack ();
 
     StartCPMusic (MENUSONG);
     MenuFadeOut ();
@@ -956,8 +960,8 @@ firstpart:
                         Message ("Please select \"Read This!\"\n"
                                  "from the Options menu to\n"
                                  "find out how to order this\n" "episode from Apogee.");
-                        IN_ClearKeysDown ();
-                        IN_Ack ();
+                        myInput.clearKeysDown ();
+                        myInput.ack ();
                         DrawNewEpisode ();
                         which = 0;
                     }
@@ -1744,8 +1748,8 @@ CP_Control (int)
         {
             case CTL_MOUSEENABLE:
                 mouseenabled ^= 1;
-                if(IN_IsInputGrabbed())
-                    IN_CenterMouse();
+                if(myInput.inputGrabbed())
+                    myInput.centreMouse();
                 DrawCtlScreen ();
                 CusItems.curpos = -1;
                 ShootSnd ();
@@ -1834,7 +1838,7 @@ DrawMouseSens ()
 int
 MouseSensitivity (int)
 {
-    ControlInfo ci;
+    CursorInfo ci;
     int exit = 0, oldMA;
 
 
@@ -1879,9 +1883,9 @@ MouseSensitivity (int)
 				;
         }
 
-        if (ci.button0 || in_keyboard[sc_Space] || in_keyboard[sc_Enter])
+        if (ci.button0 || myInput.keyboard(sc_Space) || myInput.keyboard(sc_Enter))
             exit = 1;
-        else if (ci.button1 || in_keyboard[sc_Escape])
+        else if (ci.button1 || myInput.keyboard(sc_Escape))
             exit = 2;
 
     }
@@ -1920,10 +1924,10 @@ DrawCtlScreen ()
     WindowW = 320;
     SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 
-    if (IN_JoyPresent())
+    if (myInput.joyPresent())
         CtlMenu[CTL_JOYENABLE].active = 1;
 
-    if (in_mousePresent)
+    if (myInput.mousePresent())
     {
         CtlMenu[CTL_MOUSESENS].active = CtlMenu[CTL_MOUSEENABLE].active = 1;
     }
@@ -2075,12 +2079,12 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                int type)
 {
     int j, exit, tick, redraw, which, x, picked, lastFlashTime;
-    ControlInfo ci;
+    CursorInfo ci;
 
 
     ShootSnd ();
     PrintY = CST_Y + 13 * index;
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
     exit = 0;
     redraw = 1;
     //
@@ -2118,7 +2122,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         if (type == MOUSE || type == JOYSTICK)
             if (IN_KeyDown (sc_Enter) || IN_KeyDown (sc_Control) || IN_KeyDown (sc_Alt))
             {
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 ci.button0 = ci.button1 = false;
             }
 
@@ -2126,14 +2130,14 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         // CHANGE BUTTON VALUE?
         //
         if (((type != KEYBOARDBTNS && type != KEYBOARDMOVE) && (ci.button0 | ci.button1 | ci.button2 | ci.button3)) ||
-            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && in_lastScan == sc_Enter))
+            ((type == KEYBOARDBTNS || type == KEYBOARDMOVE) && myInput.lastScan() == sc_Enter))
         {
             lastFlashTime = GetTimeCount();
             tick = picked = 0;
             SETFONTCOLOR (0, TEXTCOLOR);
 
             if (type == KEYBOARDBTNS || type == KEYBOARDMOVE)
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
 
             while(1)
             {
@@ -2166,7 +2170,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                 switch (type)
                 {
                     case MOUSE:
-                        button = IN_MouseButtons();
+                        button = myInput.mouseButtons();
                         switch (button)
                         {
                             case 1:
@@ -2223,22 +2227,22 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                         break;
 
                     case KEYBOARDBTNS:
-                        if (in_lastScan && in_lastScan != sc_Escape)
+                        if (myInput.lastScan() && myInput.lastScan() != sc_Escape)
                         {
-                            buttonscan[order[which]] = in_lastScan;
+                            buttonscan[order[which]] = myInput.lastScan();
                             picked = 1;
                             ShootSnd ();
-                            IN_ClearKeysDown ();
+                            myInput.clearKeysDown ();
                         }
                         break;
 
                     case KEYBOARDMOVE:
-                        if (in_lastScan && in_lastScan != sc_Escape)
+                        if (myInput.lastScan() && myInput.lastScan() != sc_Escape)
                         {
-                            dirscan[moveorder[which]] = in_lastScan;
+                            dirscan[moveorder[which]] = myInput.lastScan();
                             picked = 1;
                             ShootSnd ();
-                            IN_ClearKeysDown ();
+                            myInput.clearKeysDown ();
                         }
                         break;
                 }
@@ -2282,7 +2286,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                 redraw = 1;
                 SD_PlaySound (MOVEGUN1SND);
                 while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 break;
 
             case dir_East:
@@ -2296,7 +2300,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                 redraw = 1;
                 SD_PlaySound (MOVEGUN1SND);
                 while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 break;
             case dir_North:
             case dir_South:
@@ -2655,7 +2659,7 @@ void
 PrintCustKeybd (int i)
 {
     PrintX = CST_START + CST_SPC * i;
-    US_Print ((const char *) IN_GetScanName (buttonscan[order[i]]));
+    US_Print ((const char *) ScanNames [buttonscan[order[i]]]);
 }
 
 void
@@ -2678,7 +2682,7 @@ void
 PrintCustKeys (int i)
 {
     PrintX = CST_START + CST_SPC * i;
-    US_Print ((const char *) IN_GetScanName (dirscan[moveorder[i]]));
+    US_Print ((const char *) ScanNames [dirscan[moveorder[i]]]);
 }
 
 void
@@ -2707,7 +2711,7 @@ int
 CP_ChangeView (int)
 {
     int exit = 0, oldview, newview;
-    ControlInfo ci;
+    CursorInfo ci;
 
     WindowX = WindowY = 0;
     WindowW = 320;
@@ -2752,9 +2756,9 @@ CP_ChangeView (int)
 				;
         }
 
-        if (ci.button0 || in_keyboard[sc_Enter])
+        if (ci.button0 || myInput.keyboard(sc_Enter))
             exit = 1;
-        else if (ci.button1 || in_keyboard[sc_Escape])
+        else if (ci.button1 || myInput.keyboard(sc_Escape))
         {
             SD_PlaySound (ESCPRESSEDSND);
             MenuFadeOut ();
@@ -2904,10 +2908,10 @@ menu_IntroScreen ()
     //
     // FILL BOXES
     //
-    if (in_mousePresent)
+    if (myInput.mousePresent())
         VL_Bar (164, 82, 12, 2, FILLCOLOR);
 
-    if (IN_JoyPresent())
+    if (myInput.joyPresent())
         VL_Bar (164, 105, 12, 2, FILLCOLOR);
 
     if (sd_adLibPresent && !sd_soundBlasterPresent)
@@ -3025,8 +3029,8 @@ SetupControlPanel ()
     //
     // CENTER MOUSE
     //
-    if(IN_IsInputGrabbed())
-        IN_CenterMouse();
+    if(myInput.inputGrabbed())
+        myInput.centreMouse();
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3097,7 +3101,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     static int redrawitem = 1, lastitem = -1;
     int i, x, y, basey, exit, which, shape;
     int32_t lastBlinkTime, timer;
-    ControlInfo ci;
+    CursorInfo ci;
 
 
     which = item_i->curpos;
@@ -3126,7 +3130,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     timer = 8;
     exit = 0;
     lastBlinkTime = GetTimeCount ();
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
 
 
     do
@@ -3160,7 +3164,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         //
         // SEE IF ANY KEYS ARE PRESSED FOR INITIAL CHAR FINDING
         //
-        key = in_lastASCII;
+        key = myInput.lastASCII();
         if (key)
         {
             int ok = 0;
@@ -3175,7 +3179,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                     which = i;
                     DrawGun (item_i, items, x, &y, which, basey, routine);
                     ok = 1;
-                    IN_ClearKeysDown ();
+                    myInput.clearKeysDown ();
                     break;
                 }
 
@@ -3190,7 +3194,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                         EraseGun (item_i, items, x, y, which);
                         which = i;
                         DrawGun (item_i, items, x, &y, which, basey, routine);
-                        IN_ClearKeysDown ();
+                        myInput.clearKeysDown ();
                         break;
                     }
             }
@@ -3274,17 +3278,17 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 				;
         }
 
-        if (ci.button0 || in_keyboard[sc_Space] || in_keyboard[sc_Enter])
+        if (ci.button0 || myInput.keyboard(sc_Space) || myInput.keyboard(sc_Enter))
             exit = 1;
 
-        if ((ci.button1 && !in_keyboard[sc_Alt]) || in_keyboard[sc_Escape])
+        if ((ci.button1 && !myInput.keyboard(sc_Alt)) || myInput.keyboard(sc_Escape))
             exit = 2;
 
     }
     while (!exit);
 
 
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
 
     //
     // ERASE EVERYTHING
@@ -3393,7 +3397,7 @@ DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, in
 void
 TicDelay (int count)
 {
-    ControlInfo ci;
+    CursorInfo ci;
 
     int32_t startTime = GetTimeCount ();
     do
@@ -3468,12 +3472,12 @@ SetTextColor (CP_itemtype * items, int hlight)
 void
 WaitKeyUp ()
 {
-    ControlInfo ci;
+    CursorInfo ci;
     while (ReadAnyControl (&ci), ci.button0 |
            ci.button1 |
-           ci.button2 | ci.button3 | in_keyboard[sc_Space] | in_keyboard[sc_Enter] | in_keyboard[sc_Escape])
+           ci.button2 | ci.button3 | myInput.keyboard(sc_Space) | myInput.keyboard(sc_Enter) | myInput.keyboard(sc_Escape))
     {
-        IN_WaitAndProcessEvents();
+        myInput.waitAndProcessEvents();
     }
 }
 
@@ -3484,13 +3488,13 @@ WaitKeyUp ()
 //
 ////////////////////////////////////////////////////////////////////
 void
-ReadAnyControl (ControlInfo * ci)
+ReadAnyControl (CursorInfo * ci)
 {
     int mouseactive = 0;
 
-    IN_ReadControl (0, ci);
+   *ci = myInput.readControl();
 
-    if (mouseenabled && IN_IsInputGrabbed())
+    if (mouseenabled && myInput.inputGrabbed())
     {
         int mousex, mousey, buttons;
         buttons = SDL_GetMouseState(&mousex, &mousey);
@@ -3523,7 +3527,7 @@ ReadAnyControl (ControlInfo * ci)
         }
 
         if(mouseactive)
-            IN_CenterMouse();
+            myInput.centreMouse();
 
         if (buttons)
         {
@@ -3539,7 +3543,7 @@ ReadAnyControl (ControlInfo * ci)
     {
         int jx, jy, jb;
 
-        IN_GetJoyDelta (&jx, &jy);
+        myInput.getJoyDelta (&jx, &jy);
         if (jy < -SENSITIVE)
             ci->dir = dir_North;
         else if (jy > SENSITIVE)
@@ -3550,7 +3554,7 @@ ReadAnyControl (ControlInfo * ci)
         else if (jx > SENSITIVE)
             ci->dir = dir_East;
 
-        jb = IN_JoyButtons ();
+        jb = myInput.joyButtons ();
         if (jb)
         {
             ci->button0 = jb & 1;
@@ -3572,10 +3576,10 @@ Confirm (const char *string)
 {
     int xit = 0, x, y, tick = 0, lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
-    ControlInfo ci;
+    CursorInfo ci;
 
     Message (string);
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
     WaitKeyUp ();
 
     //
@@ -3609,27 +3613,27 @@ Confirm (const char *string)
 
 #ifdef SPANISH
     }
-    while (!in_keyboard[sc_S] && !in_keyboard[sc_N] && !in_keyboard[sc_Escape]);
+    while (!myInput.keyboard(sc_S) && !myInput.keyboard(sc_N) && !myInput.keyboard(sc_Escape));
 #else
     }
-    while (!in_keyboard[sc_Y] && !in_keyboard[sc_N] && !in_keyboard[sc_Escape] && !ci.button0 && !ci.button1);
+    while (!myInput.keyboard(sc_Y) && !myInput.keyboard(sc_N) && !myInput.keyboard(sc_Escape) && !ci.button0 && !ci.button1);
 #endif
 
 #ifdef SPANISH
-    if (in_keyboard[sc_S] || ci.button0)
+    if (myInput.keyboard(sc_S) || ci.button0)
     {
         xit = 1;
         ShootSnd ();
     }
 #else
-    if (in_keyboard[sc_Y] || ci.button0)
+    if (myInput.keyboard(sc_Y) || ci.button0)
     {
         xit = 1;
         ShootSnd ();
     }
 #endif
 
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
     WaitKeyUp ();
 
     SD_PlaySound ((soundnames) whichsnd[xit]);
@@ -3717,18 +3721,7 @@ FreeMusic ()
 //              specified scan code
 //
 ///////////////////////////////////////////////////////////////////////////
-const char *
-IN_GetScanName (ScanCode scan)
-{
-/*    const char **p;
-    ScanCode *s;
 
-    for (s = ExtScanCodes, p = ExtScanNames; *s; p++, s++)
-        if (*s == scan)
-            return (*p);*/
-
-    return (ScanNames[scan]);
-}
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -3739,7 +3732,7 @@ IN_GetScanName (ScanCode scan)
 void
 CheckPause ()
 {
-    if (in_paused)
+    if (myInput.paused())
     {
         switch (SoundStatus)
         {
@@ -3753,8 +3746,8 @@ CheckPause ()
 
         SoundStatus ^= 1;
         VL_WaitVBL (3);
-        IN_ClearKeysDown ();
-        in_paused = false;
+        myInput.clearKeysDown ();
+        myInput.setPaused(false);
     }
 }
 

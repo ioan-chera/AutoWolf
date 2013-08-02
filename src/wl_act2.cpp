@@ -1515,7 +1515,7 @@ void    A_StartDeathCam (objtype *ob)
     I_UpdateScreen ();
     if(cfg_usedoublebuffering) I_UpdateScreen();
     
-    IN_UserInput(300);
+    myInput.userInput(300);
     
     //
     // line angle up exactly

@@ -136,7 +136,7 @@ void ClearMScreen();
 void DrawWindow(int x,int y,int w,int h,int wcolor);
 void DrawOutline(int x,int y,int w,int h,int color1,int color2);
 void WaitKeyUp();
-void ReadAnyControl(ControlInfo *ci);
+void ReadAnyControl(CursorInfo *ci);
 void TicDelay(int count);
 void CacheLump(int lumpstart,int lumpend);
 void UnCacheLump(int lumpstart,int lumpend);

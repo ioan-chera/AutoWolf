@@ -304,7 +304,7 @@ void PollKeyboardButtons (void)
     int i;
 
     for (i = 0; i < NUMBUTTONS; i++)
-        if (in_keyboard[buttonscan[i]])
+        if (myInput.keyboard((ScanCode)buttonscan[i]))
             buttonstate[i] = true;
 }
 
@@ -319,7 +319,7 @@ void PollKeyboardButtons (void)
 
 void PollMouseButtons (void)
 {
-    int buttons = IN_MouseButtons ();
+    int buttons = myInput.mouseButtons ();
 
     if (buttons & 1)
         buttonstate[buttonmouse[0]] = true;
@@ -341,9 +341,9 @@ void PollMouseButtons (void)
 
 void PollJoystickButtons (void)
 {
-    int buttons = IN_JoyButtons();
+    int buttons = myInput.joyButtons();
 
-    for(int i = 0, val = 1; i < in_joyNumButtons; i++, val <<= 1)
+    for(int i = 0, val = 1; i < myInput.joyNumButtons(); i++, val <<= 1)
     {
         if(buttons & val)
             buttonstate[buttonjoy[i]] = true;
@@ -363,13 +363,13 @@ void PollKeyboardMove (void)
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
-    if (in_keyboard[dirscan[di_north]])
+    if (myInput.keyboard((ScanCode)dirscan[di_north]))
         controly -= delta;
-    if (in_keyboard[dirscan[di_south]])
+    if (myInput.keyboard((ScanCode)dirscan[di_south]))
         controly += delta;
-    if (in_keyboard[dirscan[di_west]])
+    if (myInput.keyboard((ScanCode)dirscan[di_west]))
         controlx -= delta;
-    if (in_keyboard[dirscan[di_east]])
+    if (myInput.keyboard((ScanCode)dirscan[di_east]))
         controlx += delta;
 }
 
@@ -387,8 +387,8 @@ void PollMouseMove (void)
     int mousexmove, mouseymove;
 
     SDL_GetMouseState(&mousexmove, &mouseymove);
-    if(IN_IsInputGrabbed())
-        IN_CenterMouse();
+    if(myInput.inputGrabbed())
+        myInput.centreMouse();
 
     mousexmove -= cfg_screenWidth / 2;
     mouseymove -= cfg_screenHeight / 2;
@@ -410,7 +410,7 @@ void PollJoystickMove (void)
 {
     int joyx, joyy;
 
-    IN_GetJoyDelta (&joyx, &joyy);
+    myInput.getJoyDelta (&joyx, &joyy);
 
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
@@ -444,7 +444,7 @@ void PollControls (void)
     int max, min, i;
     byte buttonbits;
 
-    IN_ProcessEvents();
+    myInput.processEvents();
 
 //
 // get timing info for last frame
@@ -501,7 +501,7 @@ void PollControls (void)
 	//
      PollKeyboardButtons ();
 
-     if (mouseenabled && IN_IsInputGrabbed())
+     if (mouseenabled && myInput.inputGrabbed())
           PollMouseButtons ();
 
      if (joystickenabled)
@@ -512,7 +512,7 @@ void PollControls (void)
 	//
      PollKeyboardMove ();
 
-     if (mouseenabled && IN_IsInputGrabbed())
+     if (mouseenabled && myInput.inputGrabbed())
           PollMouseMove ();
 
      if (joystickenabled)
@@ -618,7 +618,7 @@ void CheckKeys (void)
     if (vid_screenfaded || demoplayback)    // don't do anything with a faded screen
         return;
 
-    scan = in_lastScan;
+    scan = myInput.lastScan();
 
 
     if(SPEAR())
@@ -626,7 +626,7 @@ void CheckKeys (void)
         //
         // SECRET CHEAT CODE: TAB-G-F10
         //
-        if (in_keyboard[sc_Tab] && in_keyboard[sc_G] && in_keyboard[sc_F10])
+        if (myInput.keyboard(sc_Tab) && myInput.keyboard(sc_G) && myInput.keyboard(sc_F10))
         {
             WindowH = 160;
             if (godmode)
@@ -640,10 +640,10 @@ void CheckKeys (void)
                 SD_PlaySound (ENDBONUS2SND);
             }
 
-            IN_Ack ();
+            myInput.ack ();
             godmode ^= 1;
             DrawPlayBorderSides ();
-            IN_ClearKeysDown ();
+            myInput.clearKeysDown ();
             return;
         }
     }
@@ -652,7 +652,7 @@ void CheckKeys (void)
     //
     // SECRET CHEAT CODE: 'MLI'
     //
-    if (in_keyboard[sc_M] && in_keyboard[sc_L] && in_keyboard[sc_I])
+    if (myInput.keyboard(sc_M) && myInput.keyboard(sc_L) && myInput.keyboard(sc_I))
     {
         gamestate.health = I_PLAYERHEALTH;	// IOANCH 25.10.2012: named constants
         gamestate.ammo = I_MAXAMMO;	// IOANCH
@@ -674,8 +674,8 @@ void CheckKeys (void)
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
         graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        myInput.clearKeysDown ();
+        myInput.ack ();
 
         if (viewsize < 17)
             DrawPlayBorder ();
@@ -685,7 +685,7 @@ void CheckKeys (void)
     // OPEN UP DEBUG KEYS
     //
 #ifdef DEBUGKEYS
-    if (in_keyboard[sc_BackSpace] && in_keyboard[sc_LShift] && in_keyboard[sc_Alt] && cfg_debugmode)
+    if (myInput.keyboard(sc_BackSpace) && myInput.keyboard(sc_LShift) && myInput.keyboard(sc_Alt) && cfg_debugmode)
     {
         SD_StopDigitized ();
         graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
@@ -693,8 +693,8 @@ void CheckKeys (void)
 
         Message ("Debugging keys are\nnow available!");
         graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        myInput.clearKeysDown ();
+        myInput.ack ();
 
         DrawPlayBorderSides ();
         DebugOk = 1;
@@ -704,7 +704,7 @@ void CheckKeys (void)
     //
     // TRYING THE KEEN CHEAT CODE!
     //
-    if (in_keyboard[sc_B] && in_keyboard[sc_A] && in_keyboard[sc_T])
+    if (myInput.keyboard(sc_B) && myInput.keyboard(sc_A) && myInput.keyboard(sc_T))
     {
         SD_StopDigitized ();
         graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
@@ -715,8 +715,8 @@ void CheckKeys (void)
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
         graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
-        IN_ClearKeysDown ();
-        IN_Ack ();
+        myInput.clearKeysDown ();
+        myInput.ack ();
 
         if (viewsize < 18)
             DrawPlayBorder ();
@@ -725,17 +725,17 @@ void CheckKeys (void)
 //
 // pause key weirdness can't be checked as a scan code
 //
-    if(buttonstate[bt_pause]) in_paused = true;
-    if(in_paused)
+    if(buttonstate[bt_pause]) myInput.setPaused(true);
+    if(myInput.paused())
     {
         int lastoffs = StopMusic();
         LatchDrawPic (20 - 4, 80 - 2 * 8, SPEAR.g(PAUSEDPIC));
         I_UpdateScreen();
-        IN_Ack ();
-        in_paused = false;
+        myInput.ack ();
+        myInput.setPaused(false);
         ContinueMusic(lastoffs);
-        if (in_mousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+        if (myInput.mousePresent() && myInput.inputGrabbed())
+            myInput.centreMouse();     // Clear accumulated mouse movement
         lasttimecount = GetTimeCount();
         return;
     }
@@ -759,7 +759,7 @@ void CheckKeys (void)
         DrawPlayBorderSides ();
 
         SETFONTCOLOR (0, 15);
-        IN_ClearKeysDown ();
+        myInput.clearKeysDown ();
         return;
     }
 
@@ -772,7 +772,7 @@ void CheckKeys (void)
         US_ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);
 
         SETFONTCOLOR (0, 15);
-        IN_ClearKeysDown ();
+        myInput.clearKeysDown ();
         VW_FadeOut();
         if(viewsize != 21)
             DrawPlayScreen ();
@@ -781,8 +781,8 @@ void CheckKeys (void)
         if (loadedgame)
             playstate = ex_abort;
         lasttimecount = GetTimeCount();
-        if (in_mousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+        if (myInput.mousePresent() && myInput.inputGrabbed())
+            myInput.centreMouse();     // Clear accumulated mouse movement
         return;
     }
 
@@ -790,7 +790,7 @@ void CheckKeys (void)
 // TAB-? debug keys
 //
 #ifdef DEBUGKEYS
-    if (in_keyboard[sc_Tab] && DebugOk)
+    if (myInput.keyboard(sc_Tab) && DebugOk)
     {
         graphSegs.cacheChunk (SPEAR.g(STARTFONT));
         fontnumber = 0;
@@ -798,8 +798,8 @@ void CheckKeys (void)
         if (DebugKeys () && viewsize < 20)
             DrawPlayBorder ();       // dont let the blue borders flash
 
-        if (in_mousePresent && IN_IsInputGrabbed())
-            IN_CenterMouse();     // Clear accumulated mouse movement
+        if (myInput.mousePresent() && myInput.inputGrabbed())
+            myInput.centreMouse();     // Clear accumulated mouse movement
 
         lasttimecount = GetTimeCount();
         return;
@@ -1352,11 +1352,11 @@ void PlayLoop (void)
     memset (buttonstate, 0, sizeof (buttonstate));
     ClearPaletteShifts ();
 
-    if (in_mousePresent && IN_IsInputGrabbed())
-        IN_CenterMouse();         // Clear accumulated mouse movement
+    if (myInput.mousePresent() && myInput.inputGrabbed())
+        myInput.centreMouse();         // Clear accumulated mouse movement
 
     if (demoplayback)
-        IN_StartAck ();
+        myInput.startAck ();
 
     do
     {
@@ -1414,9 +1414,9 @@ void PlayLoop (void)
 
         if (demoplayback)
         {
-            if (IN_CheckAck ())
+            if (myInput.checkAck ())
             {
-                IN_ClearKeysDown ();
+                myInput.clearKeysDown ();
                 playstate = ex_abort;
             }
         }

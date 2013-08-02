@@ -141,7 +141,7 @@ void CountObjects ()
     US_PrintUnsigned (active);
 
     I_UpdateScreen();
-    IN_Ack ();
+    myInput.ack ();
 }
 
 
@@ -176,7 +176,7 @@ void PictureGrabber ()
     CenterWindow (18,2);
     US_PrintCentered ("Screenshot taken");
     I_UpdateScreen();
-    IN_Ack();
+    myInput.ack();
 }
 
 
@@ -241,7 +241,7 @@ void BasicOverhead ()
     // resize the border to match
 
     I_UpdateScreen();
-    IN_Ack();
+    myInput.ack();
 
 #ifdef MAPBORDER
     main_NewViewSize(temp);
@@ -403,8 +403,8 @@ void ShapeTest ()
 
         I_UpdateScreen();
 
-        IN_Ack();
-        scan = in_lastScan;
+        myInput.ack();
+        scan = myInput.lastScan();
 
         IN_ClearKey(scan);
         switch (scan)
@@ -466,7 +466,7 @@ int DebugKeys ()
     Boolean8 esc;
     int level;
 
-    if (in_keyboard[sc_B])             // B = border color
+    if (myInput.keyboard(sc_B))             // B = border color
     {
         CenterWindow(20,3);
         PrintY+=6;
@@ -497,12 +497,12 @@ int DebugKeys ()
         }
         return 1;
     }
-    if (in_keyboard[sc_C])             // C = count objects
+    if (myInput.keyboard(sc_C))             // C = count objects
     {
         CountObjects();
         return 1;
     }
-    if (in_keyboard[sc_D])             // D = Darkone's FPS counter
+    if (myInput.keyboard(sc_D))             // D = Darkone's FPS counter
     {
         CenterWindow (22,2);
         if (fpscounter)
@@ -510,14 +510,14 @@ int DebugKeys ()
         else
             US_PrintCentered ("Darkone's FPS Counter ON");
         I_UpdateScreen();
-        IN_Ack();
+        myInput.ack();
         fpscounter ^= 1;
         return 1;
     }
-    if (in_keyboard[sc_E])             // E = quit level
+    if (myInput.keyboard(sc_E))             // E = quit level
         playstate = ex_completed;
 
-    if (in_keyboard[sc_F])             // F = facing spot
+    if (myInput.keyboard(sc_F))             // F = facing spot
     {
         char str[60];
         CenterWindow (14,6);
@@ -538,11 +538,11 @@ int DebugKeys ()
         else
             US_PrintUnsigned (actorat[player->tilex][player->tiley]->flags);
         I_UpdateScreen();
-        IN_Ack();
+        myInput.ack();
         return 1;
     }
 
-    if (in_keyboard[sc_G])             // G = god mode
+    if (myInput.keyboard(sc_G))             // G = god mode
     {
         CenterWindow (12,2);
         if (godmode == 0)
@@ -553,19 +553,19 @@ int DebugKeys ()
             US_PrintCentered ("God mode OFF");
 
         I_UpdateScreen();
-        IN_Ack();
+        myInput.ack();
         if (godmode != 2)
             godmode++;
         else
             godmode = 0;
         return 1;
     }
-    if (in_keyboard[sc_H])             // H = hurt self
+    if (myInput.keyboard(sc_H))             // H = hurt self
     {
-        IN_ClearKeysDown ();
+        myInput.clearKeysDown ();
         TakeDamage (16,NULL);
     }
-    else if (in_keyboard[sc_I])        // I = item cheat
+    else if (myInput.keyboard(sc_I))        // I = item cheat
     {
         CenterWindow (12,3);
         US_PrintCentered ("Free items!");
@@ -578,10 +578,10 @@ int DebugKeys ()
         if (gamestate.ammo > I_MAXAMMO)	// IOANCH
             gamestate.ammo = I_MAXAMMO;
         DrawAmmo ();
-        IN_Ack ();
+        myInput.ack ();
         return 1;
     }
-    else if (in_keyboard[sc_K])        // K = give keys
+    else if (myInput.keyboard(sc_K))        // K = give keys
     {
         CenterWindow(16,3);
         PrintY+=6;
@@ -596,7 +596,7 @@ int DebugKeys ()
         }
         return 1;
     }
-    else if (in_keyboard[sc_L])        // L = level ratios
+    else if (myInput.keyboard(sc_L))        // L = level ratios
     {
         byte x,start,end=LRpack;
 
@@ -629,7 +629,7 @@ again:
             US_Print("%\n");
         }
         I_UpdateScreen();
-        IN_Ack();
+        myInput.ack();
         if (end == 10 && gamestate.mapon > 9)
         {
             start = 10; end = 20;
@@ -639,7 +639,7 @@ again:
 
         return 1;
     }
-    else if (in_keyboard[sc_N])        // N = no clip
+    else if (myInput.keyboard(sc_N))        // N = no clip
     {
         noclip^=1;
         CenterWindow (18,3);
@@ -648,22 +648,22 @@ again:
         else
             US_PrintCentered ("No clipping OFF");
         I_UpdateScreen();
-        IN_Ack ();
+        myInput.ack ();
         return 1;
     }
-    else if (in_keyboard[sc_O])        // O = basic overhead
+    else if (myInput.keyboard(sc_O))        // O = basic overhead
     {
         BasicOverhead();
         return 1;
     }
-    else if(in_keyboard[sc_P])         // P = Ripper's picture grabber
+    else if(myInput.keyboard(sc_P))         // P = Ripper's picture grabber
     {
         PictureGrabber();
         return 1;
     }
-    else if (in_keyboard[sc_Q])        // Q = fast quit
+    else if (myInput.keyboard(sc_Q))        // Q = fast quit
         Quit (NULL);
-    else if (in_keyboard[sc_S])        // S = slow motion
+    else if (myInput.keyboard(sc_S))        // S = slow motion
     {
         CenterWindow(30,3);
         PrintY+=6;
@@ -678,12 +678,12 @@ again:
         }
         return 1;
     }
-    else if (in_keyboard[sc_T])        // T = shape test
+    else if (myInput.keyboard(sc_T))        // T = shape test
     {
         ShapeTest ();
         return 1;
     }
-    else if (in_keyboard[sc_V])        // V = extra VBLs
+    else if (myInput.keyboard(sc_V))        // V = extra VBLs
     {
         CenterWindow(30,3);
         PrintY+=6;
@@ -698,7 +698,7 @@ again:
         }
         return 1;
     }
-    else if (in_keyboard[sc_W])        // W = warp to level
+    else if (myInput.keyboard(sc_W))        // W = warp to level
     {
         CenterWindow(26,3);
         PrintY+=6;
@@ -722,17 +722,17 @@ again:
         }
         return 1;
     }
-    else if (in_keyboard[sc_X])        // X = item cheat
+    else if (myInput.keyboard(sc_X))        // X = item cheat
     {
         CenterWindow (12,3);
         US_PrintCentered ("Extra stuff!");
         I_UpdateScreen();
         // DEBUG: put stuff here
-        IN_Ack ();
+        myInput.ack ();
         return 1;
     }
 #ifdef USE_CLOUDSKY
-    else if(in_keyboard[sc_Z])
+    else if(myInput.keyboard(sc_Z))
     {
         char defstr[15];
 
@@ -767,7 +767,7 @@ again:
             CenterWindow (18,3);
             US_PrintCentered ("Illegal color map!");
             I_UpdateScreen();
-            IN_Ack ();
+            myInput.ack ();
         }
     }
 #endif
@@ -892,9 +892,9 @@ void ViewMap ()
 
         OverheadRefresh ();
 
-    } while (!in_keyboard[sc_Escape]);
+    } while (!myInput.keyboard(sc_Escape));
 
-    IN_ClearKeysDown ();
+    myInput.clearKeysDown ();
 }
 #endif
 #endif

@@ -86,8 +86,8 @@ EndScreen (int palette, int screen)
     VL_ConvertPalette(graphSegs[palette], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
     graphSegs.uncacheChunk (palette);
-    IN_ClearKeysDown ();
-    IN_Ack ();
+    myInput.clearKeysDown ();
+    myInput.ack ();
     VW_FadeOut ();
 }
 
@@ -113,7 +113,7 @@ void EndSpear ()
     US_CPrint (STR_ENDGAME1 "\n");
     US_CPrint (STR_ENDGAME2);
     I_UpdateScreen ();
-    IN_UserInput(700);
+    myInput.userInput(700);
 
     PrintX = 0;
     PrintY = 180;
@@ -121,7 +121,7 @@ void EndSpear ()
     US_CPrint (STR_ENDGAME3 "\n");
     US_CPrint (STR_ENDGAME4);
     I_UpdateScreen ();
-    IN_UserInput(700);
+    myInput.userInput(700);
 
     VW_FadeOut ();
 
@@ -313,7 +313,7 @@ Victory ()
     I_UpdateScreen ();
     VW_FadeIn ();
 
-    IN_Ack ();
+    myInput.ack ();
 
     VW_FadeOut ();
     if(cfg_screenHeight % 200 != 0)
@@ -358,7 +358,7 @@ PG13 ()
     graphSegs.uncacheChunk (SPEAR.g(PG13PIC));
 
     VW_FadeIn ();
-    IN_UserInput (TickBase * 7);
+    myInput.userInput (TickBase * 7);
 
     VW_FadeOut ();
 }
@@ -618,8 +618,8 @@ LevelCompleted ()
 //
 // do the intermission
 //
-    IN_ClearKeysDown ();
-    IN_StartAck ();
+    myInput.clearKeysDown ();
+    myInput.startAck ();
 // IOANCH 20130301: unification culling
     VWB_DrawPic (0, 16, SPEAR.g(L_GUYPIC));
 
@@ -716,7 +716,7 @@ LevelCompleted ()
                 if(!cfg_usedoublebuffering || !(i % (PAR_AMOUNT / 50))) I_UpdateScreen ();
                 while(SD_SoundPlaying ())
                     BJ_Breathe ();
-                if (IN_CheckAck ())
+                if (myInput.checkAck ())
                     goto done;
             }
 
@@ -748,7 +748,7 @@ LevelCompleted ()
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
-            if (IN_CheckAck ())
+            if (myInput.checkAck ())
                 goto done;
         }
         if (ratio >= 100)
@@ -790,7 +790,7 @@ LevelCompleted ()
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
 
-            if (IN_CheckAck ())
+            if (myInput.checkAck ())
                 goto done;
         }
         if (ratio >= 100)
@@ -830,7 +830,7 @@ LevelCompleted ()
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
-            if (IN_CheckAck ())
+            if (myInput.checkAck ())
                 goto done;
         }
         if (ratio >= 100)
@@ -932,11 +932,11 @@ done:   itoanoreturn (kr, tempstr, 10);
     I_UpdateScreen ();
 
     lastBreathTime = GetTimeCount();
-    IN_StartAck ();
+    myInput.startAck ();
 
 	 // IOANCH 27.05.2012: let bots automatically hit after 1 second
 	int botcount = 0;
-    while (!IN_CheckAck ())
+    while (!myInput.checkAck ())
 	{
         BJ_Breathe ();
         if(cfg_botActive)
@@ -991,9 +991,9 @@ PreloadUpdate (unsigned current, unsigned total)
 
     }
     I_UpdateScreen ();
-//      if (in_lastScan == sc_Escape)
+//      if (myInput.lastScan() == sc_Escape)
 //      {
-//              IN_ClearKeysDown();
+//              myInput.clearKeysDown();
 //              return(true);
 //      }
 //      else
@@ -1020,7 +1020,7 @@ PreloadGraphics ()
 
 //      PM_Preload (PreloadUpdate);
     PreloadUpdate (10, 10);
-    IN_UserInput (70);
+    myInput.userInput (70);
     VW_FadeOut ();
 
     DrawPlayBorder ();
@@ -1251,8 +1251,8 @@ CheckHighScore (int32_t score, word other)
 			      US_Print(Scores[n].name);
 			      I_UpdateScreen();
 
-			      IN_ClearKeysDown ();
-			      IN_UserInput (500);
+			      myInput.clearKeysDown ();
+			      myInput.userInput (500);
 		      }
 		      else
 			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 100);
@@ -1273,8 +1273,8 @@ CheckHighScore (int32_t score, word other)
 			      US_Print(Scores[n].name);
 			      I_UpdateScreen();
 
-			      IN_ClearKeysDown ();
-			      IN_UserInput (500);
+			      myInput.clearKeysDown ();
+			      myInput.userInput (500);
 		      }
 		      else
 			    US_LineInput (PrintX, PrintY, Scores[n].name, 0, true, MaxHighName, 130);
@@ -1283,8 +1283,8 @@ CheckHighScore (int32_t score, word other)
     }
     else
     {
-        IN_ClearKeysDown ();
-        IN_UserInput (500);
+        myInput.clearKeysDown ();
+        myInput.userInput (500);
     }
 
 }
@@ -1335,7 +1335,7 @@ NonShareware ()
 
     I_UpdateScreen ();
     VW_FadeIn ();
-    IN_Ack ();
+    myInput.ack ();
 }
 
 

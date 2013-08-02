@@ -150,7 +150,7 @@ void CheckWeaponChange ()
 
 #ifdef _arch_dreamcast
     int joyx, joyy;
-    IN_GetJoyFineDelta (&joyx, &joyy);
+    myInput.getJoyFineDelta (&joyx, &joyy);
     if(joyx < -64)
         buttonstate[bt_prevweapon] = true;
     else if(joyx > 64)
