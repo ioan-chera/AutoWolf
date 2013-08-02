@@ -191,6 +191,9 @@
     <ClCompile Include="..\..\src\i_video.cpp">
       <Filter>Source Files\IOAN\HAL</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\m_buffer.cpp">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\win\resource.h">
@@ -375,6 +378,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\i_video.h">
       <Filter>Source Files\IOAN\HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\m_buffer.h">
+      <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

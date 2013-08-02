@@ -170,6 +170,7 @@
     <ClCompile Include="..\..\src\i_video.cpp" />
     <ClCompile Include="..\..\src\MapExploration.cpp" />
     <ClCompile Include="..\..\src\MasterDirectoryFile.cpp" />
+    <ClCompile Include="..\..\src\m_buffer.cpp" />
     <ClCompile Include="..\..\src\obattrib.cpp" />
     <ClCompile Include="..\..\src\OutOfRangeException.cpp" />
     <ClCompile Include="..\..\src\PathArray.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="..\..\src\List.h" />
     <ClInclude Include="..\..\src\MapExploration.h" />
     <ClInclude Include="..\..\src\MasterDirectoryFile.h" />
+    <ClInclude Include="..\..\src\m_buffer.h" />
     <ClInclude Include="..\..\src\m_dllist.h" />
     <ClInclude Include="..\..\src\obattrib.h" />
     <ClInclude Include="..\..\src\OutOfRangeException.h" />

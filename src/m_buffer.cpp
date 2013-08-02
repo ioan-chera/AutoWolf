@@ -413,7 +413,7 @@ size_t InBuffer::read(void *dest, size_t size)
 //
 int InBuffer::skip(size_t skipAmt)
 {
-   return fseek(f, skipAmt, SEEK_CUR);
+   return fseek(f, (long)skipAmt, SEEK_CUR);
 }
 
 //

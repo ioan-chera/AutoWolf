@@ -40,6 +40,7 @@
 #include <direct.h>
 #include <io.h>
 #include <ShlObj.h>
+#include <time.h>
 #include <Windows.h>
 #else
 #include <dirent.h>
