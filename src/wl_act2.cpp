@@ -144,22 +144,33 @@ void T_Projectile (objtype *ob)
     
     deltax = LABS(ob->x - player->x);
     deltay = LABS(ob->y - player->y);
-    
+   
+   objtype *source = NULL;
+   
     if (!ProjectileTryMove (ob))
     {
 		// IOANCH 30.06.2012: remove link
-		Basic::thrownProjectiles.remove(ob);
+       for (ProjShooter *ps = Basic::thrownProjectiles.firstObject();
+            ps; ps = Basic::thrownProjectiles.nextObject())
+       {
+          if(ps->proj == ob)
+          {
+             source = ps->shooter;
+             Basic::thrownProjectiles.kill(ps);
+             break;
+          }
+       }
 		
         // IOANCH 20130301: unification culling
         
         if (ob->obclass == rocketobj)
         {
-            PlaySoundLocActor(MISSILEHITSND,ob);
+            PlaySoundLocActor(MISSILEHITSND,ob, source);
             ob->state = &s_boom1;
         } // IOANCH 20130202: unification process
         else if (ob->obclass == hrocketobj)
         {
-            PlaySoundLocActor(MISSILEHITSND,ob);
+            PlaySoundLocActor(MISSILEHITSND,ob, source); // IOANCH: set source
             ob->state = &s_hboom1;
         }
         else
@@ -171,7 +182,16 @@ void T_Projectile (objtype *ob)
     if (deltax < PROJECTILESIZE && deltay < PROJECTILESIZE)
     {       // hit the player
 		// IOANCH 30.06.2012: remove link
-		Basic::thrownProjectiles.remove(ob);
+//       for (ProjShooter *ps = Basic::thrownProjectiles.firstObject();
+//            ps; ps = Basic::thrownProjectiles.nextObject())
+//       {
+//          if(ps->proj == ob)
+//          {
+//             source = ps->shooter;
+//             Basic::thrownProjectiles.kill(ps);
+//             break;
+//          }
+//       }
 		
         switch (ob->obclass)
         {
@@ -249,7 +269,7 @@ void A_DeathScream (objtype *ob)
                 DEATHSCREAM2SND,
                 DEATHSCREAM3SND,
                 // IOANCH 20130301: unification culling
-                
+               
                 DEATHSCREAM4SND,
                 DEATHSCREAM5SND,
                 DEATHSCREAM7SND,
@@ -342,15 +362,15 @@ void A_Launch (objtype *ob)
         case deathobj:
             newobj->state = &s_hrocket;
             newobj->obclass = hrocketobj;
-            PlaySoundLocActor (KNIGHTMISSILESND,newobj);
+            PlaySoundLocActor (KNIGHTMISSILESND,newobj,ob);
             break;
         case angelobj:
             newobj->state = &s_spark1;
             newobj->obclass = sparkobj;
-            PlaySoundLocActor (ANGELFIRESND,newobj);
+            PlaySoundLocActor (ANGELFIRESND,newobj,ob);
             break;
         default:
-            PlaySoundLocActor (MISSILEFIRESND,newobj);
+            PlaySoundLocActor (MISSILEFIRESND,newobj,ob);
     }
     
     newobj->dir = nodir;
@@ -360,7 +380,10 @@ void A_Launch (objtype *ob)
     newobj->active = ac_yes;
 	
 	// IOANCH 30.06.2012: link proj
-	Basic::thrownProjectiles.add(newobj);
+   ProjShooter *ps = new ProjShooter;
+   ps->proj = newobj;
+   ps->shooter = ob;
+	Basic::thrownProjectiles.add(ps);
 }
 
 //
@@ -635,11 +658,14 @@ static void _MissileThrow(objtype *ob, statetype *state, classtype cl,
     newobj->active = ac_yes;
 	
 	// IOANCH 30.06.2012: link to projectile list
-	Basic::thrownProjectiles.add(newobj);
+   ProjShooter *ps = new ProjShooter;
+   ps->proj = newobj;
+   ps->shooter = ob;
+	Basic::thrownProjectiles.add(ps);
     
     // IOANCH 20130301: unification culling
     
-    PlaySoundLocActor (snd,newobj);
+    PlaySoundLocActor (snd,newobj,ob);
 }
 
 //
@@ -696,7 +722,7 @@ void A_HitlerMorph (objtype *ob)
 void A_MechaSound (objtype *ob)
 {
     if (areabyplayer[ob->areanumber])
-        PlaySoundLocActor (MECHSTEPSND,ob);
+        PlaySoundLocActor (MECHSTEPSND,ob,ob);
 }
 
 //
@@ -741,9 +767,13 @@ void A_FakeFire (objtype *ob)
     newobj->active = ac_yes;
 	
 	// IOANCH 30.06.2012: link fire
-	Basic::thrownProjectiles.add(newobj);
+   ProjShooter *ps = new ProjShooter;
+   ps->proj = newobj;
+   ps->shooter = ob;
+
+	Basic::thrownProjectiles.add(ps);
     
-    PlaySoundLocActor (FLAMETHROWERSND,newobj);
+    PlaySoundLocActor (FLAMETHROWERSND,newobj,ob);
 }
 
 //
@@ -937,7 +967,21 @@ void T_Chase (objtype *ob)
             //
             OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
+            {
+               if(doorobjlist[-ob->distance - 1].action == dr_closed)
+               {
+                  // IOANCH: also alert the bot
+                  HeardEvent *hevent = new HeardEvent;
+                  hevent->x = doorobjlist[-ob->distance - 1].tilex << TILESHIFT;
+                  hevent->y = doorobjlist[-ob->distance - 1].tiley << TILESHIFT;
+                  hevent->sound = SPEAR.sd(OPENDOORSND);
+                  hevent->time = I_GetTicks();
+                  hevent->cause = ob;
+                  hevent->passed = 0;
+                  bot.heardEvents.add(hevent);
+               }
                 return;
+            }
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             DEMOIF_SDL
             {
@@ -1261,29 +1305,29 @@ void A_Shoot (objtype *ob)
     switch(ob->obclass)
     {
         case ssobj:
-            PlaySoundLocActor(SSFIRESND,ob);
+            PlaySoundLocActor(SSFIRESND,ob,ob);
             break;
             // IOANCH 20130202: unification process
             // IOANCH 20130301: unification culling
             
         case giftobj:
         case fatobj:
-            PlaySoundLocActor(MISSILEFIRESND,ob);
+            PlaySoundLocActor(MISSILEFIRESND,ob,ob);
             break;
             
         case mechahitlerobj:
         case realhitlerobj:
         case bossobj:
-            PlaySoundLocActor(BOSSFIRESND,ob);
+            PlaySoundLocActor(BOSSFIRESND,ob,ob);
             break;
         case schabbobj:
-            PlaySoundLocActor(SCHABBSTHROWSND,ob);
+            PlaySoundLocActor(SCHABBSTHROWSND,ob,ob);
             break;
         case fakeobj:
-            PlaySoundLocActor(FLAMETHROWERSND,ob);
+            PlaySoundLocActor(FLAMETHROWERSND,ob,ob);
             break;
         default:
-            PlaySoundLocActor(NAZIFIRESND,ob);
+            PlaySoundLocActor(NAZIFIRESND,ob,ob);
     }
 }
 
@@ -1299,7 +1343,7 @@ void A_Bite (objtype *ob)
 {
     int32_t    dx,dy;
     
-    PlaySoundLocActor(DOGATTACKSND,ob);     // JAB
+    PlaySoundLocActor(DOGATTACKSND,ob,ob);     // JAB
     
     dx = player->x - ob->x;
     if (dx<0)

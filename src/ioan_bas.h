@@ -23,6 +23,13 @@
 #include "List.h"
 #include "PString.h"
 
+// projectile-shooter correspondence
+struct ProjShooter
+{
+   objtype *proj, *shooter;
+};
+
+
 //
 // Basic
 //
@@ -30,7 +37,8 @@
 //
 namespace Basic
 {
-	extern List<void *> livingNazis, thrownProjectiles;
+	extern List<objtype *> livingNazis;
+   extern List<ProjShooter *> thrownProjectiles;
 	
 	void EmptyItemList();	// empty itemList
 	void AddItemToList(int tx, int ty, byte itemtype);
@@ -117,7 +125,8 @@ namespace Basic
 	// ApproximateDistance
 	int ApproxDist(int dx, int dy);
     
-
+   bool IsGunShotSound(word s);  // returns true if sound is gunshot
+   bool IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty);
 };
 
 #endif

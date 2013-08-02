@@ -80,6 +80,8 @@ void BotMan::MapInit()
 		for(j = 0; j < MAPSIZE; ++j)
 			enemyrecord[i][j].removeAll();
     }
+   
+   heardEvents.killAll();
 }
 
 //
@@ -808,6 +810,21 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 			continue;
 		if(!CheckLine(ret, solidActors))
 			continue;
+      if(!(ret->flags & FL_VISABLE))
+      {
+         bool found = false;
+         for (HeardEvent *he = heardEvents.firstObject(); he;
+              he = heardEvents.nextObject())
+         {
+            if (he->cause == ret)
+            {
+               puts("Heard nazi!");
+               found = true;
+            }
+         }
+         if(!found)
+            continue;
+      }
 		
 		// ret visible here: handle their updated location
 		RecordEnemyPosition(ret);
@@ -842,7 +859,37 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 		*angle = angmin;
 		*distance = distmin;
 	}
-
+   
+   // also look for heard events
+//   for (HeardEvent *he = heardEvents.firstObject(); he;
+//        he = heardEvents.nextObject())
+//   {
+//      if(!(he->cause->flags & FL_VISABLE) && Basic::GenericCheckLine(player->x, player->y, he->x, he->y))
+//      {
+//         k = abs((he->x >> TILESHIFT) - tx);
+//         j = abs((he->y >> TILESHIFT) - ty);
+//         i = j > k ? j : k;
+//         if(i > 16)
+//            continue;
+////         printf("Enemy heard %d!\n", heardEvents.count());
+//         dby = -((double)(he->y) - (double)(player->y));
+//         dbx = (double)(he->x) - (double)(player->x);
+//         distmin = i;
+//         angmin = (short)(180.0/PI*atan2(dby, dbx));
+//         
+//         if(angmin >= 360)
+//            angmin -= 360;
+//         if(angmin < 0)
+//            angmin += 360;
+//
+//         *angle = angmin;
+//         *distance = distmin;
+//
+//         printf("angle=%d, distance=%d\n", *angle - player->angle, *distance);
+//         return he->cause;
+//      }
+//   }
+   
 	return retmin;
 }
 
@@ -869,7 +916,7 @@ objtype *BotMan::EnemyEager() const
 //
 // true if damage is imminent and retreat should be done
 //
-objtype *BotMan::DamageThreat(const objtype *targ) const
+objtype *BotMan::DamageThreat(const objtype *targ) 
 {
 	const objtype *objignore = targ;
 	if(targ && (Basic::IsBoss(targ->obclass) || (targ->obclass == mutantobj && 
@@ -881,21 +928,36 @@ objtype *BotMan::DamageThreat(const objtype *targ) const
 	return Crossfire(player->x, player->y, objignore);
 }
 
+// BotMan::RefreshSound
+// If sound not heard for awhile, kill it
+HeardEvent *BotMan::RefreshSound(HeardEvent *he)
+{
+   if(I_GetTicks() - he->time > 4000 ||
+      (he->cause->flags & FL_VISABLE && !(he->cause->flags & FL_SHOOTABLE)) ||
+      (Basic::IsInFront(player->angle, player->x, player->y, he->x, he->y) && Basic::GenericCheckLine(player->x, player->y, he->x, he->y)))
+   {
+      heardEvents.kill(he);
+      return NULL;
+   }
+   return he;
+}
+
 //
 // BotMan::Crossfire
 //
 // Returns true if there's a crossfire in that spot
 //
 objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
-                           Boolean8 justexists) const
+                           Boolean8 justexists) 
 {
 	int j, k, dist;
 	objtype *ret;
 
-	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret; 
-        ret = (objtype *)Basic::livingNazis.nextObject())
+	for(ret = Basic::livingNazis.firstObject(); ret;
+        ret = Basic::livingNazis.nextObject())
 	{
-		if(!areabyplayer[ret->areanumber] || ret == objignore)
+		if(!areabyplayer[ret->areanumber] || ret == objignore ||
+         !(ret->flags & FL_VISABLE))
 			continue;
 		k = (ret->x - x) >> TILESHIFT;
 		j = (ret->y - y )>> TILESHIFT;
@@ -907,6 +969,25 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
 			return ret;
 		
 	}
+   
+   // also look for heard events
+   for (HeardEvent *he = heardEvents.firstObject(); he;
+        he = heardEvents.nextObject())
+   {
+      if (Basic::IsGunShotSound(he->sound))
+      {
+         if(!(he->cause->flags & FL_VISABLE) && Basic::GenericCheckLine(x, y, he->x, he->y))
+         {
+            k = (he->x - x) >> TILESHIFT;
+            j = (he->y - y )>> TILESHIFT;
+            dist = abs(j) > abs(k) ? abs(j) : abs(k);
+            if(dist > 16)
+               continue;
+            printf("Enemy gunshot heard! %d\n", heardEvents.count());
+            return he->cause;
+         }
+      }
+   }
 	return NULL;
 }
 
@@ -1033,11 +1114,13 @@ solved:
 objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle,
                               int *distance) const
 {
+   ProjShooter *ps;
 	objtype *ret;
 
-	for(ret = (objtype *)Basic::thrownProjectiles.firstObject(); ret;
-		ret = (objtype *)Basic::thrownProjectiles.nextObject())
+	for(ps = Basic::thrownProjectiles.firstObject(); ps;
+		ps = Basic::thrownProjectiles.nextObject())
 	{
+      ret = ps->proj;
 		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
 		{
 			switch(ret->obclass)
@@ -1742,6 +1825,23 @@ void BotMan::DoCommand()
 	++pressuse;	// key press timer
 	static short eangle = -1;
 	static int edist = -2;
+   
+   // remove old events
+   if(pressuse % 10 == 0)
+   {
+    
+
+      for (HeardEvent *he = heardEvents.firstObject(); he;
+           he = heardEvents.nextObject())
+      {
+         he = RefreshSound(he);
+         if(!he)
+         {
+            pressuse = 7; // speed up for the next event
+            break;
+         }
+      }
+   }
 	
 	objtype *check0;
 	

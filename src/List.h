@@ -71,16 +71,17 @@ public:
 		{
 			if(current->obj == what)
 			{
-                // Use Eternity's DLList architecture
-                Link **prev = current->prev;
-                Link  *next = current->next;
-                
-                if(prev && (*prev = next))
-                    next->prev = prev;
-                
-                delete current;
-                --cnt;
-				return;
+             // Use Eternity's DLList architecture
+             Link **prev = current->prev;
+             Link  *next = current->next;
+             
+             if(prev && (*prev = next))
+                 next->prev = prev;
+         
+             delete current;
+            current = next;
+             --cnt;
+            return;
 			}
 		}
 	}
@@ -96,7 +97,30 @@ public:
 		base = current = 0;
         cnt = 0;
 	}
-    
+   
+   // removes both link and object
+   void kill(T what)
+   {
+      for(current = base; current; current = current->next)
+		{
+			if(current->obj == what)
+			{
+            // Use Eternity's DLList architecture
+            Link **prev = current->prev;
+            Link  *next = current->next;
+            
+            if(prev && (*prev = next))
+               next->prev = prev;
+            
+            delete current->obj;
+            delete current;
+            current = next;
+            --cnt;
+				return;
+			}
+		}
+   }
+   
     // Kills all elements (MUST BE POINTERS, of course)
     void killAll()
     {

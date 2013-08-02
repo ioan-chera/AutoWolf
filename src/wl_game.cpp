@@ -230,6 +230,32 @@ void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
     }
 }
 
+//
+// PlaySoundLocTile
+//
+// IOANCH: added PlaySoundLocTile as a function, for added flexibility
+// objtype source is optional and means the actor (usually a Nazi) who was
+// be responsible for that sound
+//
+void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source)
+{
+   // First play the sound
+   PlaySoundLocGlobal(s, ob->x, ob->y);
+   
+   // Then put it in bot's memory
+   if(source)
+   {
+      HeardEvent *hevent = new HeardEvent;
+      hevent->x = ob->x;
+      hevent->y = ob->y;
+      hevent->sound = SPEAR.sd(s);
+      hevent->time = I_GetTicks();
+      hevent->cause = source;
+      hevent->passed = 0;
+      bot.heardEvents.add(hevent);
+   }
+}
+
 void UpdateSoundLoc()
 {
 /*    if (sd_soundPositioned)
@@ -757,7 +783,7 @@ void SetupGameLevel ()
 
 	// IOANCH: reset lists
 	Basic::livingNazis.removeAll();
-	Basic::thrownProjectiles.removeAll();
+	Basic::thrownProjectiles.killAll();
 	Basic::EmptyItemList();
 	
     InitActorList ();                       // start spawning things with a clean slate

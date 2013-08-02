@@ -1195,7 +1195,7 @@ void FirstSighting (objtype *ob)
         if(atr::flags[cls] & ATR_BOSS_SOUNDS)
             SD_PlaySound((soundnames)atr::sounds[cls].sight);
         else
-            PlaySoundLocActor(atr::sounds[cls].sight, ob);
+            PlaySoundLocActor(atr::sounds[cls].sight, ob, ob);
     }
     if(atr::states[cls].chase)
         NewState(ob, atr::states[cls].chase);

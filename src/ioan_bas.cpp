@@ -37,7 +37,8 @@
 #include "ActorStates.h"
 
 // static members definition
-List<void *> Basic::livingNazis, Basic::thrownProjectiles;
+List<objtype *> Basic::livingNazis;
+List<ProjShooter *> Basic::thrownProjectiles;
 static List<byte> _itemList[MAPSIZE][MAPSIZE];
 
 //
@@ -588,4 +589,25 @@ int Basic::ApproxDist(int dx, int dy)
 	return dx + dy - (dy >> 1);
 }
 
+// returns true if sound is gunshot
+bool Basic::IsGunShotSound(word s)
+{
+   if(s == SPEAR.sd(ANGELFIRESND) || s == SPEAR.sd(BOSSFIRESND) ||
+      s == SPEAR.sd(DOGATTACKSND) || s == SPEAR.sd(FLAMETHROWERSND) ||
+      s == SPEAR.sd(KNIGHTMISSILESND) || s == SPEAR.sd(MISSILEFIRESND) ||
+      s == SPEAR.sd(NAZIFIRESND) || s == SPEAR.sd(SCHABBSTHROWSND) ||
+      s == SPEAR.sd(SSFIRESND))
+   {
+      return true;
+   }
+   return false;
+}
 
+// true if in front dir
+bool Basic::IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty)
+{
+   short ang = (atan2(ty - cy, tx - cx) * 180 / M_PI);
+   if(abs(ang - angle) % 360 < 50)
+      return true;
+   return false;
+}

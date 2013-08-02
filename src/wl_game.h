@@ -39,8 +39,10 @@ extern  Boolean8         spearflag;
 #define PLAYER_START_WEST  22
 
 // JAB
+// IOANCH 20130802: made these as functions
 #define PlaySoundLocTile(s,tx,ty)       PlaySoundLocGlobal(s,(((int32_t)(tx) << TILESHIFT) + (1L << (TILESHIFT - 1))),(((int32_t)ty << TILESHIFT) + (1L << (TILESHIFT - 1))))
-#define PlaySoundLocActor(s,ob)         PlaySoundLocGlobal(s,(ob)->x,(ob)->y)
+//#define PlaySoundLocActor(s,ob)         PlaySoundLocGlobal(s,(ob)->x,(ob)->y)
+void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source = NULL);
 void    PlaySoundLocGlobal(word s,fixed gx,fixed gy);
 void UpdateSoundLoc();
 

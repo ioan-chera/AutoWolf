@@ -764,7 +764,7 @@ Boolean8 LoadTheGame(FILE *file,int x,int y)
 				   && obj->state != &s_hboom1 && obj->state != &s_hboom2 && obj->state != &s_hboom3
 				   )
 				{
-					Basic::thrownProjectiles.add(obj);
+				//	Basic::thrownProjectiles.add(obj);
 				}
 				
 			default:
