@@ -63,7 +63,7 @@ void BotMan::MapInit()
 	panic = false;
 	int i, j;
    
-   botRnd.initialize(I_GetTicks());
+   botRnd.initialize((unsigned)time(NULL));  // needs to be truly random
 	
     mapExploration.Reset();
 
@@ -420,9 +420,9 @@ Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
 //
 // Recursively explores from the given origin
 //
-void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean8 firstcall)
+void BotMan::ExploreFill(int tlx, int tly, fixed ox, fixed oy, Boolean8 firstcall)
 {
-	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+	if(tlx < 0 || tlx >= MAPSIZE || tly < 0 || tly >= MAPSIZE)
 		return;
 	
 	static Boolean8 explore_visited[MAPSIZE][MAPSIZE];
@@ -431,26 +431,28 @@ void BotMan::ExploreFill(int tx, int ty, int ox, int oy, Boolean8 firstcall)
 		memset(explore_visited, 0, maparea*sizeof(Boolean8));
 	}
 	
-	if(explore_visited[tx][ty])
+	if(explore_visited[tlx][tly])
 		return;
-	explore_visited[tx][ty] = true;
+	explore_visited[tlx][tly] = true;
 	
-	objtype *check = actorat[tx][ty];
+	objtype *check = actorat[tlx][tly];
 	if(check && !ISPOINTER(check))
 	{
-		if(tilemap[tx][ty] < AREATILE)	// is a wall
+		if(tilemap[tlx][tly] < AREATILE)	// is a wall
 			return;
 	}
 	
-	if(Basic::GenericCheckLine(Basic::Major(ox), Basic::Major(oy),
-                               Basic::Major(tx), Basic::Major(ty)))
+	if(Basic::GenericCheckLine(ox, oy,
+                              Basic::Major(tlx), Basic::Major(tly)) &&
+      (firstcall || Basic::IsInFront(player->angle,
+                       ox, oy, Basic::Major(tlx), Basic::Major(tly))))
 	{
-		mapExploration.explored[tx][ty] = true;
+		mapExploration.explored[tlx][tly] = true;
 		
-		ExploreFill(tx - 1, ty, ox, oy);
-		ExploreFill(tx + 1, ty, ox, oy);
-		ExploreFill(tx, ty - 1, ox, oy);
-		ExploreFill(tx, ty + 1, ox, oy);
+		ExploreFill(tlx - 1, tly, ox, oy);
+		ExploreFill(tlx + 1, tly, ox, oy);
+		ExploreFill(tlx, tly - 1, ox, oy);
+		ExploreFill(tlx, tly + 1, ox, oy);
 	}
 }
 
@@ -509,7 +511,7 @@ Boolean8 BotMan::FindShortestPath(Boolean8 ignoreproj, Boolean8 mindnazis,
 	if(!mapExploration.explored[player->tilex][player->tiley])
     {
 		ExploreFill(player->tilex, player->tiley,
-                    player->tilex, player->tiley, true);
+                    player->x, player->y, true);
     }
 
     // Reset the search path
@@ -1745,7 +1747,7 @@ void BotMan::DoNonCombatAI()
 //#endif
 	}
 
-	if(!tryuse && nexton >= 0 && nexton2 == -1)
+	if(!tryuse && nexton >= 0 && nexton2 == -1 && mapExploration.explored[nx][ny])
     {
         ExecuteStrafe(mx, my, nx, ny, tryuse);
         return;
