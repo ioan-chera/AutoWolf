@@ -336,7 +336,7 @@ if(pfile->hasProperty(#name, Property::Int32)) \
 void main_WriteConfig()
 {
     PString configpath;
-   SDMode sd = SoundMode;
+   SDMode sd = sd_soundMode;
    SMMode sm = sd_musicMode;
    SDSMode sds = sd_digiMode;
 
@@ -1254,7 +1254,7 @@ void DoJukebox()
         CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
     else
         CacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
-   audioSegs.loadAllSounds(SoundMode);
+   audioSegs.loadAllSounds(sd_soundMode);
     // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();

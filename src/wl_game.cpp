@@ -862,7 +862,7 @@ void SetupGameLevel ()
 // have the caching manager load and purge stuff to make sure all marks
 // are in memory
 //
-   audioSegs.loadAllSounds(SoundMode);
+   audioSegs.loadAllSounds(sd_soundMode);
 
     // IOANCH: initialize score map here
 

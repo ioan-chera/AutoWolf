@@ -35,7 +35,7 @@
 //              For User Mgr:
 //                      sd_soundBlasterPresent - SoundBlaster card present?
 //                      AdLibPresent - AdLib card present?
-//                      SoundMode - What device is used for sound effects
+//                      sd_soundMode - What device is used for sound effects
 //                              (Use SM_SetSoundMode() to set)
 //                      sd_musicMode - What device is used for music
 //                              (Use SM_SetMusicMode() to set)
@@ -97,7 +97,7 @@ struct  digiinfo
     uint32_t length;
 };
 // IOANCH 20130301: unification
-static Mix_Chunk *SoundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
+static Mix_Chunk *sd_soundChunks[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > 
 							  STARTMUSIC_sod - STARTDIGISOUNDS_sod ?
 							  STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 :
 							  STARTMUSIC_sod - STARTDIGISOUNDS_sod];
@@ -113,7 +113,7 @@ globalsoundpos channelSoundPos[MIX_CHANNELS];
         Boolean8         sd_adLibPresent,
                         sd_soundBlasterPresent,SBProPresent,
                         sd_soundPositioned;
-        SDMode          SoundMode;
+        SDMode          sd_soundMode;
         SMMode          sd_musicMode;
         SDSMode         sd_digiMode;
 static  const byte          * const*SoundTable;
@@ -129,14 +129,14 @@ int sd_digiChannel[STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6 > STARTMUSIC_sod -
 
 //      Internal variables
 static  Boolean8                 SD_Started;
-static  Boolean8                 nextsoundpos;
+static  Boolean8                 sd_nextSoundPos;
 // IOANCH 20130301: unification
-static  unsigned int            SoundNumber;
+static  unsigned int            sd_soundNumber;
 static  unsigned int            sd_digiNumber;
-static  word                    SoundPriority;
+static  word                    sd_soundPriority;
 static  word                    sd_digiPriority;
-static  int                     LeftPosition;
-static  int                     RightPosition;
+static  int                     sd_leftPosition;
+static  int                     sd_rightPosition;
 
         word                    sd_numDigi;
 static  digiinfo               *sd_digiList;
@@ -149,19 +149,19 @@ static  byte * volatile         pcSound;
 //static  longword                pcLengthLeft;
 
 //      AdLib variables
-static  byte * volatile         alSound;
-static  byte                    alBlock;
-static  longword                alLengthLeft;
+static  byte * volatile         sd_alSound;
+static  byte                    sd_alBlock;
+static  longword                sd_alLengthLeft;
 static  longword                sd_alTimeCount;
 static  Instrument              alZeroInst;
 
 //      Sequencer variables
-static  volatile Boolean8        sqActive;
-static  const word                   *sqHack;
-static  const word                   *sqHackPtr;
-static  int                     sqHackLen;
-static  int                     sqHackSeqLen;
-static  longword                sqHackTime;
+static  volatile Boolean8        sd_sqActive;
+static  const word                   *sd_sqHack;
+static  const word                   *sd_sqHackPtr;
+static  int                     sd_sqHackLen;
+static  int                     sd_sqHackSeqLen;
+static  longword                sd_sqHackTime;
 
 #ifdef USE_GPL
 
@@ -185,9 +185,9 @@ static inline void SD_L_YM3812Write(DBOPL::Chip &which, Bit32u reg, Bit8u val)
 }
 
 //
-// YM3812UpdateOne
+// SD_L_YM3812UpdateOne
 //
-static inline void YM3812UpdateOne(DBOPL::Chip &which, int16_t *stream, int length)
+static inline void SD_L_YM3812UpdateOne(DBOPL::Chip &which, int16_t *stream, int length)
 {
 	Bit32s buffer[512 * 2];
 	int i;
@@ -242,8 +242,8 @@ static const int sd_oplChip = 0;
 static void SD_L_SoundFinished()
 {
     // IOANCH 20130301: unification
-	SoundNumber   = 0;
-	SoundPriority = 0;
+	sd_soundNumber   = 0;
+	sd_soundPriority = 0;
 }
 
 
@@ -298,8 +298,8 @@ void inline SD_L_DoFX()
                 {
                         pcSound=0;
                         // IOANCH 20130301: unification
-                        SoundNumber=0;
-                        SoundPriority=0;
+                        sd_soundNumber=0;
+                        sd_soundPriority=0;
                         SD_L_turnOffPCSpeaker();
                 }
         }
@@ -614,7 +614,7 @@ void SD_StopDigitized()
     sd_digiNumber = 0;
     sd_digiPriority = 0;
     sd_soundPositioned = false;
-    if ((sd_digiMode == sds_PC) && (SoundMode == sdm_PC))
+    if ((sd_digiMode == sds_PC) && (sd_soundMode == sdm_PC))
         SD_L_SoundFinished();
 
     switch (sd_digiMode)
@@ -731,7 +731,7 @@ void SD_PrepareSound(int which)
     }
     SoundBuffers[which] = wavebuffer;
 
-    SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
+    sd_soundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
 }
 
@@ -751,10 +751,10 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
 
     sd_digiPlaying = true;
 
-    Mix_Chunk *sample = SoundChunks[which];
+    Mix_Chunk *sample = sd_soundChunks[which];
     if(sample == NULL)
     {
-        printf("SoundChunks[%i] is NULL!\n", which);
+        printf("sd_soundChunks[%i] is NULL!\n", which);
         return 0;
     }
 
@@ -884,7 +884,7 @@ void SD_L_SetupDigi()
 //              
 static void SD_L_ALStopSound()
 {
-    alSound = 0;
+    sd_alSound = 0;
     alOut(alFreqH + 0, 0);
 }
 
@@ -925,9 +925,9 @@ static void SD_L_ALPlaySound(AdLibSound *sound)
 
     SD_L_ALStopSound();
 
-    alLengthLeft = sound->common.length;
+    sd_alLengthLeft = sound->common.length;
     data = sound->data;
-    alBlock = ((sound->block & 7) << 2) | 0x20;
+    sd_alBlock = ((sound->block & 7) << 2) | 0x20;
     inst = &sound->inst;
 
     if (!(inst->mSus | inst->cSus))
@@ -936,7 +936,7 @@ static void SD_L_ALPlaySound(AdLibSound *sound)
     }
 
     SD_L_AlSetFXInst(inst);
-    alSound = (byte *)data;
+    sd_alSound = (byte *)data;
 }
 
 //
@@ -946,7 +946,7 @@ static void SD_L_ALPlaySound(AdLibSound *sound)
 //
 static void SD_L_ShutAL()
 {
-    alSound = 0;
+    sd_alSound = 0;
     alOut(alEffects,0);
     alOut(alFreqH + 0,0);
     SD_L_AlSetFXInst(&alZeroInst);
@@ -1000,7 +1000,7 @@ static Boolean8 SD_L_DetectAdLib()
 //
 static void SD_L_ShutDevice()
 {
-    switch (SoundMode)
+    switch (sd_soundMode)
     {
         case sdm_PC:
 //            SD_L_ShutPC();
@@ -1011,7 +1011,7 @@ static void SD_L_ShutDevice()
 		default:
 			;
     }
-    SoundMode = sdm_Off;
+    sd_soundMode = sdm_Off;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1021,7 +1021,7 @@ static void SD_L_ShutDevice()
 ////////////////////////////////////////////////////////////////////////////////
 static void SD_L_CleanDevice()
 {
-    if ((SoundMode == sdm_AdLib) || (sd_musicMode == smm_AdLib))
+    if ((sd_soundMode == sdm_AdLib) || (sd_musicMode == smm_AdLib))
         SD_L_CleanAL();
 }
 
@@ -1033,7 +1033,7 @@ static void SD_L_CleanDevice()
 ////////////////////////////////////////////////////////////////////////////////
 static void SD_L_StartDevice()
 {
-    switch (SoundMode)
+    switch (sd_soundMode)
     {
         case sdm_AdLib:
             SD_L_StartAL();
@@ -1042,8 +1042,8 @@ static void SD_L_StartDevice()
 			;
     }
     // IOANCH 20130301: unification
-    SoundNumber = 0;
-    SoundPriority = 0;
+    sd_soundNumber = 0;
+    sd_soundPriority = 0;
 }
 
 //      Public routines
@@ -1086,10 +1086,10 @@ Boolean8 SD_SetSoundMode(SDMode mode)
     }
     SoundTable = audioSegs.ptr(tableoffset);
 
-    if (result && (mode != SoundMode))
+    if (result && (mode != sd_soundMode))
     {
         SD_L_ShutDevice();
-        SoundMode = mode;
+        sd_soundMode = mode;
         SD_L_StartDevice();
     }
 
@@ -1128,11 +1128,11 @@ Boolean8 SD_SetMusicMode(SMMode mode)
     return(result);
 }
 
-int numreadysamples = 0;
-byte *curAlSound = 0;
-byte *curAlSoundPtr = 0;
-longword curAlLengthLeft = 0;
-int soundTimeCounter = 5;
+int sd_numReadySamples = 0;
+byte *sd_curAlSound = 0;
+byte *sd_curAlSoundPtr = 0;
+longword sd_curAlLengthLeft = 0;
+int sd_soundTimeCounter = 5;
 int sd_samplesPerMusicTick;
 
 //
@@ -1146,71 +1146,71 @@ void SD_L_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 
     while(1)
     {
-        if(numreadysamples)
+        if(sd_numReadySamples)
         {
-            if(numreadysamples<sampleslen)
+            if(sd_numReadySamples<sampleslen)
             {
-                YM3812UpdateOne(sd_oplChip, stream16, numreadysamples);
-                stream16 += numreadysamples*2;
-                sampleslen -= numreadysamples;
+                SD_L_YM3812UpdateOne(sd_oplChip, stream16, sd_numReadySamples);
+                stream16 += sd_numReadySamples*2;
+                sampleslen -= sd_numReadySamples;
             }
             else
             {
-                YM3812UpdateOne(sd_oplChip, stream16, sampleslen);
-                numreadysamples -= sampleslen;
+                SD_L_YM3812UpdateOne(sd_oplChip, stream16, sampleslen);
+                sd_numReadySamples -= sampleslen;
                 return;
             }
         }
-        soundTimeCounter--;
-        if(!soundTimeCounter)
+        sd_soundTimeCounter--;
+        if(!sd_soundTimeCounter)
         {
-            soundTimeCounter = 5;
-            if(curAlSound != alSound)
+            sd_soundTimeCounter = 5;
+            if(sd_curAlSound != sd_alSound)
             {
-                curAlSound = curAlSoundPtr = alSound;
-                curAlLengthLeft = alLengthLeft;
+                sd_curAlSound = sd_curAlSoundPtr = sd_alSound;
+                sd_curAlLengthLeft = sd_alLengthLeft;
             }
-            if(curAlSound)
+            if(sd_curAlSound)
             {
-                if(*curAlSoundPtr)
+                if(*sd_curAlSoundPtr)
                 {
-                    alOut(alFreqL, *curAlSoundPtr);
-                    alOut(alFreqH, alBlock);
+                    alOut(alFreqL, *sd_curAlSoundPtr);
+                    alOut(alFreqH, sd_alBlock);
                 }
                 else alOut(alFreqH, 0);
-                curAlSoundPtr++;
-                curAlLengthLeft--;
-                if(!curAlLengthLeft)
+                sd_curAlSoundPtr++;
+                sd_curAlLengthLeft--;
+                if(!sd_curAlLengthLeft)
                 {
-                    curAlSound = alSound = 0;
+                    sd_curAlSound = sd_alSound = 0;
                     // IOANCH 20130301: unification
-                    SoundNumber = 0;
-                    SoundPriority = 0;
+                    sd_soundNumber = 0;
+                    sd_soundPriority = 0;
                     alOut(alFreqH, 0);
                 }
             }
         }
-        if(sqActive)
+        if(sd_sqActive)
         {
             do
             {
-                if(sqHackTime > sd_alTimeCount) break;
-                sqHackTime = sd_alTimeCount + *(sqHackPtr+1);
-                alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1));
-                sqHackPtr += 2;
-                sqHackLen -= 4;
+                if(sd_sqHackTime > sd_alTimeCount) break;
+                sd_sqHackTime = sd_alTimeCount + *(sd_sqHackPtr+1);
+                alOut(*(byte *) sd_sqHackPtr, *(((byte *) sd_sqHackPtr)+1));
+                sd_sqHackPtr += 2;
+                sd_sqHackLen -= 4;
             }
-            while(sqHackLen>0);
+            while(sd_sqHackLen>0);
             sd_alTimeCount++;
-            if(!sqHackLen)
+            if(!sd_sqHackLen)
             {
-                sqHackPtr = sqHack;
-                sqHackLen = sqHackSeqLen;
-                sqHackTime = 0;
+                sd_sqHackPtr = sd_sqHack;
+                sd_sqHackLen = sd_sqHackSeqLen;
+                sd_sqHackTime = 0;
                 sd_alTimeCount = 0;
             }
         }
-        numreadysamples = sd_samplesPerMusicTick;
+        sd_numReadySamples = sd_samplesPerMusicTick;
     }
 }
 
@@ -1288,7 +1288,7 @@ void SD_Shutdown()
     
     for(int i = 0; i < (signed int)lastvalue; i++)
     {
-        if(SoundChunks[i]) Mix_FreeChunk(SoundChunks[i]);
+        if(sd_soundChunks[i]) Mix_FreeChunk(sd_soundChunks[i]);
         if(SoundBuffers[i]) free(SoundBuffers[i]);
     }
 
@@ -1305,9 +1305,9 @@ void SD_Shutdown()
 ////////////////////////////////////////////////////////////////////////////////
 void SD_PositionSound(int leftvol,int rightvol)
 {
-    LeftPosition = leftvol;
-    RightPosition = rightvol;
-    nextsoundpos = true;
+    sd_leftPosition = leftvol;
+    sd_rightPosition = rightvol;
+    sd_nextSoundPos = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1325,36 +1325,36 @@ Boolean8 SD_PlaySound(soundnames sound_abstract)
 	// IOANCH 20130301: abstract sound
 	unsigned int sound = SPEAR.sd(sound_abstract);
 
-    lp = LeftPosition;
-    rp = RightPosition;
-    LeftPosition = 0;
-    RightPosition = 0;
+    lp = sd_leftPosition;
+    rp = sd_rightPosition;
+    sd_leftPosition = 0;
+    sd_rightPosition = 0;
 
-    ispos = nextsoundpos;
-    nextsoundpos = false;
+    ispos = sd_nextSoundPos;
+    sd_nextSoundPos = false;
 
-    if (sound == -1 || (sd_digiMode == sds_Off && SoundMode == sdm_Off))
+    if (sound == -1 || (sd_digiMode == sds_Off && sd_soundMode == sdm_Off))
         return 0;
 
     s = (SoundCommon *) SoundTable[sound];
 
-    if ((SoundMode != sdm_Off) && !s)
+    if ((sd_soundMode != sdm_Off) && !s)
             Quit("SD_PlaySound() - Uncached sound");
 
     if ((sd_digiMode != sds_Off) && (sd_digiMap[sound] != -1))
     {
-        if ((sd_digiMode == sds_PC) && (SoundMode == sdm_PC))
+        if ((sd_digiMode == sds_PC) && (sd_soundMode == sdm_PC))
         {
 #ifdef NOTYET
-            if (s->priority < SoundPriority)
+            if (s->priority < sd_soundPriority)
                 return 0;
 
             SD_L_PCStopSound();
 
             SD_PlayDigitized(sd_digiMap[sound],lp,rp);
             sd_soundPositioned = ispos;
-            SoundNumber = sound;
-            SoundPriority = s->priority;
+            sd_soundNumber = sound;
+            sd_soundPriority = s->priority;
 #else
             return 0;
 #endif
@@ -1376,15 +1376,15 @@ Boolean8 SD_PlaySound(soundnames sound_abstract)
         return(true);
     }
 
-    if (SoundMode == sdm_Off)
+    if (sd_soundMode == sdm_Off)
         return 0;
 
     if (!s->length)
         Quit("SD_PlaySound() - Zero length sound");
-    if (s->priority < SoundPriority)
+    if (s->priority < sd_soundPriority)
         return 0;
 
-    switch (SoundMode)
+    switch (sd_soundMode)
     {
         case sdm_PC:
 //            SD_L_PCPlaySound((PCSound *)s);
@@ -1396,8 +1396,8 @@ Boolean8 SD_PlaySound(soundnames sound_abstract)
 			;
     }
 
-    SoundNumber = sound;
-    SoundPriority = s->priority;
+    sd_soundNumber = sound;
+    sd_soundPriority = s->priority;
 
     return 0;
 }
@@ -1412,20 +1412,20 @@ word SD_SoundPlaying()
 {
     Boolean8 result = false;
 
-    switch (SoundMode)
+    switch (sd_soundMode)
     {
         case sdm_PC:
             result = pcSound? true : false;
             break;
         case sdm_AdLib:
-            result = alSound? true : false;
+            result = sd_alSound? true : false;
             break;
 		default:
 			;
     }
 
     if (result)
-        return(SoundNumber);
+        return(sd_soundNumber);
     else
         return(false);
 }
@@ -1440,7 +1440,7 @@ void SD_StopSound()
     if (sd_digiPlaying)
         SD_StopDigitized();
 
-    switch (SoundMode)
+    switch (sd_soundMode)
     {
         case sdm_PC:
 //            SD_L_PCStopSound();
@@ -1475,7 +1475,7 @@ void SD_WaitSoundDone()
 ////////////////////////////////////////////////////////////////////////////////
 void SD_MusicOn()
 {
-    sqActive = true;
+    sd_sqActive = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1488,7 +1488,7 @@ int SD_MusicOff()
 {
     word    i;
 
-    sqActive = false;
+    sd_sqActive = false;
     switch (sd_musicMode)
     {
         case smm_AdLib:
@@ -1500,7 +1500,7 @@ int SD_MusicOff()
 			;
     }
 
-    return (int) (sqHackPtr-sqHack);
+    return (int) (sd_sqHackPtr-sd_sqHack);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1515,11 +1515,11 @@ void SD_StartMusic(int chunk)
     if (sd_musicMode == smm_AdLib)
     {
         int32_t chunkLen = audioSegs.cacheChunk(chunk);
-        sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
-        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = *sqHack++;
-        sqHackPtr = sqHack;
-        sqHackTime = 0;
+        sd_sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
+        if(*sd_sqHack == 0) sd_sqHackLen = sd_sqHackSeqLen = chunkLen;
+        else sd_sqHackLen = sd_sqHackSeqLen = *sd_sqHack++;
+        sd_sqHackPtr = sd_sqHack;
+        sd_sqHackTime = 0;
         sd_alTimeCount = 0;
         SD_MusicOn();
     }
@@ -1532,12 +1532,12 @@ void SD_ContinueMusic(int chunk, int startoffs)
     if (sd_musicMode == smm_AdLib)
     {
         int32_t chunkLen = audioSegs.cacheChunk(chunk);
-        sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
-        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = *sqHack++;
-        sqHackPtr = sqHack;
+        sd_sqHack = (const word *)(const void *) audioSegs[chunk];     // alignment is correct
+        if(*sd_sqHack == 0) sd_sqHackLen = sd_sqHackSeqLen = chunkLen;
+        else sd_sqHackLen = sd_sqHackSeqLen = *sd_sqHack++;
+        sd_sqHackPtr = sd_sqHack;
 
-        if(startoffs >= sqHackLen)
+        if(startoffs >= sd_sqHackLen)
         {
             Quit("SD_StartMusic: Illegal startoffs provided!");
         }
@@ -1547,16 +1547,16 @@ void SD_ContinueMusic(int chunk, int startoffs)
 
         for(int i = 0; i < startoffs; i += 2)
         {
-            byte reg = *(byte *)sqHackPtr;
-            byte val = *(((byte *)sqHackPtr) + 1);
+            byte reg = *(byte *)sd_sqHackPtr;
+            byte val = *(((byte *)sd_sqHackPtr) + 1);
             if(reg >= 0xb1 && reg <= 0xb8) val &= 0xdf;           // disable play note flag
             else if(reg == 0xbd) val &= 0xe0;                     // disable drum flags
 
             alOut(reg,val);
-            sqHackPtr += 2;
-            sqHackLen -= 4;
+            sd_sqHackPtr += 2;
+            sd_sqHackLen -= 4;
         }
-        sqHackTime = 0;
+        sd_sqHackTime = 0;
         sd_alTimeCount = 0;
 
         SD_MusicOn();
@@ -1597,7 +1597,7 @@ Boolean8 SD_MusicPlaying()
     switch (sd_musicMode)
     {
         case smm_AdLib:
-            result = sqActive;
+            result = sd_sqActive;
             break;
         default:
             result = false;

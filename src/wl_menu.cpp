@@ -1167,7 +1167,7 @@ CP_Sound (int)
                 // SOUND EFFECTS
                 //
             case 0:
-                if (SoundMode != sdm_Off)
+                if (sd_soundMode != sdm_Off)
                 {
                     SD_WaitSoundDone ();
                     SD_SetSoundMode (sdm_Off);
@@ -1175,21 +1175,21 @@ CP_Sound (int)
                 }
                 break;
             case 1:
-                if (SoundMode != sdm_PC)
+                if (sd_soundMode != sdm_PC)
                 {
                     SD_WaitSoundDone ();
                     SD_SetSoundMode (sdm_PC);
-                    audioSegs.loadAllSounds(SoundMode);
+                    audioSegs.loadAllSounds(sd_soundMode);
                     DrawSoundMenu ();
                     ShootSnd ();
                 }
                 break;
             case 2:
-                if (SoundMode != sdm_AdLib)
+                if (sd_soundMode != sdm_AdLib)
                 {
                     SD_WaitSoundDone ();
                     SD_SetSoundMode (sdm_AdLib);
-                    audioSegs.loadAllSounds(SoundMode);
+                    audioSegs.loadAllSounds(sd_soundMode);
                     DrawSoundMenu ();
                     ShootSnd ();
                 }
@@ -1313,15 +1313,15 @@ DrawSoundMenu ()
                     // SOUND EFFECTS
                     //
                 case 0:
-                    if (SoundMode == sdm_Off)
+                    if (sd_soundMode == sdm_Off)
                         on = 1;
                     break;
                 case 1:
-                    if (SoundMode == sdm_PC)
+                    if (sd_soundMode == sdm_PC)
                         on = 1;
                     break;
                 case 2:
-                    if (SoundMode == sdm_AdLib)
+                    if (sd_soundMode == sdm_AdLib)
                         on = 1;
                     break;
 
@@ -3022,7 +3022,7 @@ SetupControlPanel ()
         I_ClearScreen(0);
 
     if (!ingame)
-        audioSegs.loadAllSounds(SoundMode);
+        audioSegs.loadAllSounds(sd_soundMode);
     else
         MainMenu[savegame].active = 1;
 

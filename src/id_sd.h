@@ -135,7 +135,7 @@ extern globalsoundpos channelSoundPos[];
 extern  Boolean8         sd_adLibPresent,
                         sd_soundBlasterPresent,
                         sd_soundPositioned;
-extern  SDMode          SoundMode;
+extern  SDMode          sd_soundMode;
 extern  SDSMode         sd_digiMode;
 extern  SMMode          sd_musicMode;
 extern  int             sd_digiMap[];
