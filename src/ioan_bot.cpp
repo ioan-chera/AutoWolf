@@ -1825,8 +1825,10 @@ void BotMan::DoNonCombatAI()
 void BotMan::DoCommand()
 {
 	++pressuse;	// key press timer
-	static short eangle = -1;
-	static int edist = -2;
+	static short eangle;
+	static int edist;
+   eangle = -1;
+   edist = -2;
    
    // remove old events
    if(pressuse % 10 == 0)
