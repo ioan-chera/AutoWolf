@@ -127,7 +127,7 @@ class BotMan
    RandomGenerator botRnd;
     
 
-	void ExploreFill(int tx, int ty, int ox, int oy,
+	void ExploreFill(int tx, int ty, fixed ox, fixed oy,
                             Boolean8 firstcall = false);
 
 	Boolean8 FindShortestPath(Boolean8 ignoreproj = false,
