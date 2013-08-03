@@ -67,7 +67,7 @@ namespace Basic
     objtype *CheckKnifeEnemy();
 
 	// Get coordinates
-	inline int Major(int t)
+	inline fixed Major(int t)
 	{
 		return (t << TILESHIFT) + (1 << (TILESHIFT - 1));
 	}
