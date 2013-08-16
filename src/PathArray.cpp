@@ -159,7 +159,7 @@ void PathArray::finish(int index)
 // PathArray::openCoordsIndex
 //
 // Returns the index of the cx/cy coordinate, if open. Returns -2 if closed or
-// -1 if non-existent. FIXME: use 2d map for this?
+// -1 if non-existent.
 //
 int PathArray::openCoordsIndex(int cx, int cy) const
 {
