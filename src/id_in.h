@@ -194,7 +194,7 @@ public:
    void getJoyDelta(int *dx, int *dy) const;
    void getJoyFineDelta(int *dx, int *dy) const;
    int joyButtons() const;
-   Boolean8 joyPresent() const
+   bool joyPresent() const
    {
       return m_joystick != NULL;
    }
@@ -207,10 +207,10 @@ public:
    
    void startAck();
    int mouseButtons() const;
-   Boolean8 checkAck();
+   bool checkAck();
    void ack();
    
-   Boolean8 userInput(longword delay);
+   bool userInput(longword delay);
    
    Boolean8 keyboard(ScanCode code) const
    {

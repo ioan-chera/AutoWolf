@@ -558,7 +558,7 @@ int InputManager::mouseButtons () const
 		return 0;
 }
 
-Boolean8 InputManager::checkAck ()
+bool InputManager::checkAck ()
 {
    processEvents();
    //
@@ -609,7 +609,7 @@ void InputManager::ack ()
 	while(!checkAck ());
 }
 
-Boolean8 InputManager::userInput(longword delay)
+bool InputManager::userInput(longword delay)
 {
 	longword	lasttime;
    

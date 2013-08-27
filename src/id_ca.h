@@ -269,8 +269,8 @@ extern  PString  cfg_audioext;
 
 //===========================================================================
 
-Boolean8 CA_LoadFile (const char *filename, memptr *ptr);
-Boolean8 CA_WriteFile (const char *filename, void *ptr, int32_t length);
+bool CA_LoadFile (const char *filename, memptr *ptr);
+bool CA_WriteFile (const char *filename, void *ptr, int32_t length);
 
 // int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
 
