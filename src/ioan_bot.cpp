@@ -207,6 +207,34 @@ void BotMan::SetMood()
 // - Don't look for treasure
 // - Don't actively hunt for Nazis (except boss)
 
+bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
+{
+   if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
+   {
+      objtype *check;
+      check = actorat[tx + txofs][ty + tyofs];
+      if(!check || (check && ISPOINTER(check)))
+         return false;
+      int ty2ofs = ty + 2 * tyofs;
+      int tx2ofs = tx + 2 * txofs;
+      int ty3ofs = ty + 3 * tyofs;
+      int tx3ofs = tx + 3 * txofs;
+      if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0
+         && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
+      {
+         if(searchstage >= SSOnePushWalls ||
+            (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0
+             && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
+         {
+            exity = ty + tyofs;
+            exitx = tx + txofs;
+            return true;
+         }
+      }
+   }
+   return false;
+};
+
 //
 // BotMan::ObjectOfInterest
 //
@@ -330,46 +358,17 @@ Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
     // {ty + 1, ty - 1, ty, ty}
     // {tx, tx, tx + 1, tx - 1}
     
-    // Nope. Let's make a lambda function here.
-    auto secretVerify = [&](int txofs, int tyofs) -> Boolean8
-    {
-        if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
-		{
-            objtype *check;
-            check = actorat[tx + txofs][ty + tyofs];
-            if(!check || (check && ISPOINTER(check)))
-                return (Boolean8)false;
-            int ty2ofs = ty + 2 * tyofs;
-            int tx2ofs = tx + 2 * txofs;
-            int ty3ofs = ty + 3 * tyofs;
-            int tx3ofs = tx + 3 * txofs;
-			if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0
-               && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
-			{
-				if(searchstage >= SSOnePushWalls ||
-                   (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0
-                    && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
-				{
-					exity = ty + tyofs;
-					exitx = tx + txofs;
-					return (Boolean8)true;
-				}
-			}
-		}
-        return (Boolean8)false;
-    };
-    
 	// secret door
 	if(!knifeinsight && (!(moodBox() & MoodBox::MOOD_DONTHUNTSECRETS) || searchstage >= SSMax))	// don't look for secret doors if compromised
 	{
 		// PUSH SOUTH
-        if (secretVerify(0, 1))
+        if (secretVerify(tx, ty, 0, 1))
             return true;
-        if (secretVerify(0, -1))
+        if (secretVerify(tx, ty, 0, -1))
             return true;
-        if (secretVerify(1, 0))
+        if (secretVerify(tx, ty, 1, 0))
             return true;
-        if (secretVerify(-1, 0))
+        if (secretVerify(tx, ty, -1, 0))
             return true;
 	}
 

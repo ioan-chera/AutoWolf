@@ -171,6 +171,8 @@ class ScoreMap
                                 std::set<PushBlock *> &secretSet);
     void RecursiveLabelRegions(int tx, int ty, Region *region);
     void TestPushBlocks();
+   
+   void doConnection(const std::set<PushBlock *> &secretSet, Region *reg1, Region *reg2);
     
 public:
     void Build();

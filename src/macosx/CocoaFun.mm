@@ -58,9 +58,10 @@ void Cocoa_DisplayErrorAlert(const char *msg)
 //
 void Cocoa_Notify(const char *title, const char *msg)
 {
+#ifndef OSX_106
    BOOL notificationCenterIsAvailable =
    (NSClassFromString(@"NSUserNotificationCenter") != nil);
-   
+
    if(notificationCenterIsAvailable)
    {
       NSUserNotification *notification = [[NSUserNotification alloc] init];
@@ -77,4 +78,5 @@ void Cocoa_Notify(const char *title, const char *msg)
       [infoText release];
       [notification release];
    }
+#endif
 }

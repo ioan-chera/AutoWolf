@@ -59,7 +59,9 @@ public:
     PString(const char *cstr, size_t inLength);
     PString(const char *cstr);
     PString(const PString &other);
+#if __cplusplus > 199711L
     PString(PString &&other);   // IOANCH 20130522: move constructor
+#endif
     PString(size_t startSize = 0);
     PString(int number);
     
@@ -82,7 +84,9 @@ public:
     PString &copy(const char *str, size_t inLength);
     PString &copy(const char *str);
     PString &copy(const PString &src);
+#if __cplusplus > 199711L
     PString &copy(PString &&src);
+#endif
     PString &copy(int number);
     PString &create();
     PString &createSize(size_t size);
@@ -150,7 +154,9 @@ public:
     bool     operator != (const PString &other) const;
     bool     operator != (const char    *other) const;
     PString &operator  = (const PString &other);
+#if __cplusplus > 199711L
     PString &operator  = (PString &&other);
+#endif
     PString &operator  = (const char    *other);
     PString &operator  = (int   number);
     PString &operator += (const PString &other);

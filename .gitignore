@@ -266,3 +266,7 @@ src/cv_video.o
 src/i_system.d
 src/i_system.o
 GnomeNotifier.d
+contents.xcworkspacedata
+macosx/Wolf4SDL-osx106.xcodeproj/ioan.pbxuser
+macosx/Wolf4SDL-osx106.xcodeproj/ioan.perspectivev3
+macbook.mode1v3
