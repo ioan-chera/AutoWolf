@@ -298,6 +298,31 @@ void ScoreMap::RecursiveConnectRegion(int tx, int ty,
     }
 }
 
+void ScoreMap::doConnection(const std::set<PushBlock *> &secretSet, Region *reg1, Region *reg2)
+{
+   bool found = false;
+   for (RegionConnection *entry = reg1->neighList.firstObject();
+        entry;
+        entry = reg1->neighList.nextObject())
+   {
+      if (entry->region == reg2)
+      {
+         // Neighbour region already set, just add the blocks
+         entry->pushBlocks.insert(secretSet.begin(), 
+                                  secretSet.end());
+         found = true;
+         break;  // done
+      }
+   }
+   if(!found)
+   {
+      RegionConnection *connection = new RegionConnection;
+      connection->region = reg2;
+      connection->pushBlocks = secretSet;
+      reg1->neighList.add(connection);
+   }
+};
+
 //
 // ScoreMap::ConnectRegions
 //
@@ -338,44 +363,19 @@ void ScoreMap::ConnectRegions()
             continue;
         
         // Auxiliary function to do the connection
-        // FIXME: make it a member function
-        auto doConnection = [&](Region *reg1, Region *reg2)
-        {
-            bool found = false;
-            for (RegionConnection *entry = reg1->neighList.firstObject();
-                 entry;
-                 entry = reg1->neighList.nextObject())
-            {
-                if (entry->region == reg2)
-                {
-                    // Neighbour region already set, just add the blocks
-                    entry->pushBlocks.insert(secretSet.begin(), 
-                                             secretSet.end());
-                    found = true;
-                    break;  // done
-                }
-            }
-            if(!found)
-            {
-                RegionConnection *connection = new RegionConnection;
-                connection->region = reg2;
-                connection->pushBlocks = secretSet;
-                reg1->neighList.add(connection);
-            }
-        };
         
         if (regionSet.size() == 1)
-            doConnection(*regionSet.begin(), *regionSet.begin());
+            doConnection(secretSet, *regionSet.begin(), *regionSet.begin());
         else
         {
-            for (auto it1 = regionSet.begin(); it1 != regionSet.end(); ++it1)
+           for (std::set<Region *>::iterator it1 = regionSet.begin(); it1 != regionSet.end(); ++it1)
             {
-                for (auto it2 = it1; it2 != regionSet.end(); ++it2)
+                for (std::set<Region *>::iterator it2 = it1; it2 != regionSet.end(); ++it2)
                 {
                     if(it2 == it1)
                         continue;
-                    doConnection(*it1, *it2);
-                    doConnection(*it2, *it1);
+                    doConnection(secretSet, *it1, *it2);
+                    doConnection(secretSet, *it2, *it1);
                 }
             }
         }
@@ -488,7 +488,7 @@ void ScoreMap::GetPushPositions()
             neigh;
             neigh = region->neighList.nextObject())
         {
-            for(auto it = neigh->pushBlocks.begin(); 
+           for(std::set<PushBlock *>::iterator it = neigh->pushBlocks.begin(); 
                 it != neigh->pushBlocks.end(); ++it)
             {
                 PushBlock *block = *it;
