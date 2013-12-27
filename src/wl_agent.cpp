@@ -108,16 +108,6 @@ atkinf attackinfo[4][14] =
 
 //===========================================================================
 
-//----------
-
-void Attack ();
-void Use ();
-void Search (objtype *ob);
-void SelectWeapon ();
-void SelectItem ();
-
-//----------
-
 Boolean8 TryMove (objtype *ob);
 void T_Player (objtype *ob);
 

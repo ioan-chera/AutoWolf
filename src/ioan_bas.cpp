@@ -606,7 +606,7 @@ bool Basic::IsGunShotSound(word s)
 // true if in front dir
 bool Basic::IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty)
 {
-   short ang = (atan2(ty - cy, tx - cx) * 180 / M_PI);
+   short ang = (short)(atan2(ty - cy, tx - cx) * 180 / M_PI);
    if(abs(ang - angle) % 360 < 55)
       return true;
    return false;
