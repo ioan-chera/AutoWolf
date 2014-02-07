@@ -242,13 +242,11 @@ static objtype *_SpawnPatrol (classtype which, int tilex, int tiley, int dir)
 static objtype *_SpawnBoss (classtype which, int tilex, int tiley)
 {
 	// IOANCH 29.06.2012: update this for ANY boss
-	statetype *spawnstate = NULL;   // IOANCH 20130202: set value here to something whatever, to prevent undefined behaviour
 
     if(atr::states[which].stand)
     {
         SpawnNewObj (tilex,tiley,atr::states[which].stand);
 
-        spawnstate = atr::states[which].stand;
         atr::actions[which].spawn();
     
         newobj->obclass = which;

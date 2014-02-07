@@ -731,7 +731,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/SDL,
+					/usr/X11/include,
+				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -805,7 +808,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/SDL,
+					/usr/X11/include,
+				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PRODUCT_NAME = "Automatic Wolfenstein";
@@ -831,7 +837,10 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = /opt/local/include/SDL;
+				HEADER_SEARCH_PATHS = (
+					/opt/local/include/SDL,
+					/usr/X11/include,
+				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				LLVM_LTO = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;

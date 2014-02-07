@@ -42,6 +42,6 @@ Boolean8         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 void            ShutdownId ();
 
-void Quit(const char *message);
+void Quit(const char *message) __attribute__((noreturn));
 
 #endif

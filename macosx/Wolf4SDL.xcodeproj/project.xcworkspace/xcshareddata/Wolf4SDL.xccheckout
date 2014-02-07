@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>FA31335F-1DA9-45E0-BC19-768B86821DF8</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Wolf4SDL</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7E00360E-E82A-4786-B272-776B957C41CE</key>
+		<string>https://git.code.sf.net/p/autowolf/code-0</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>macosx/Wolf4SDL.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>7E00360E-E82A-4786-B272-776B957C41CE</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://git.code.sf.net/p/autowolf/code-0</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>7E00360E-E82A-4786-B272-776B957C41CE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7E00360E-E82A-4786-B272-776B957C41CE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>autowolf</string>
+		</dict>
+	</array>
+</dict>
+</plist>

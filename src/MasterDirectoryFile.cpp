@@ -55,7 +55,7 @@ void MasterDirectoryFile::saveToFile(const PString &fpath)
 	FILE *f;
 	
 	f = fopen(fpath.buffer(), "wb");
-	this->MasterDirectoryFile::doWriteToFile(f);
+	this->doWriteToFile(f);
 	fclose(f);
 }
 

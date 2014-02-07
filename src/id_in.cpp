@@ -461,7 +461,6 @@ CursorInfo InputManager::readControl()
    
    CursorInfo ret;
    
-	dx = dy = 0;
 	mx = my = motion_None;
 	buttons = 0;
    

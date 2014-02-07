@@ -194,14 +194,10 @@ void CheckWeaponChange ()
 
 void ControlMovement (objtype *ob)
 {
-    int32_t oldx,oldy;
     int     angle;
     int     angleunits;
 
     thrustspeed = 0;
-
-    oldx = player->x;
-    oldy = player->y;
 
     if(buttonstate[bt_strafeleft])
     {

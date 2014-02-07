@@ -671,18 +671,22 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 //
 Sint16 GetSample(float csample, const byte *samples, int size)
 {
-    float s0=0, s1=0, s2=0;
-    int cursample = (int) csample;
-    float sf = csample - (float) cursample;
+    float s0 = 0, s1 = 0, s2 = 0;
+    int cursample = (int)csample;
+    float sf = csample - (float)cursample;
 
-    if(cursample-1 >= 0) s0 = (float) (samples[cursample-1] - 128);
-    s1 = (float) (samples[cursample] - 128);
-    if(cursample+1 < size) s2 = (float) (samples[cursample+1] - 128);
+    if(cursample - 1 >= 0)
+		s0 = (float) (samples[cursample - 1] - 128);
+    s1 = (float)(samples[cursample] - 128);
+    if(cursample + 1 < size)
+		s2 = (float) (samples[cursample + 1] - 128);
 
-    float val = s0*sf*(sf-1)/2 - s1*(sf*sf-1) + s2*(sf+1)*sf/2;
+    float val = s0 * sf * (sf - 1) / 2 - s1 * (sf * sf - 1) + s2 * (sf + 1) * sf / 2;
     int32_t intval = (int32_t) (val * 256);
-    if(intval < -32768) intval = -32768;
-    else if(intval > 32767) intval = 32767;
+    if(intval < -32768)
+		intval = -32768;
+    else if(intval > 32767)
+		intval = 32767;
     return (Sint16) intval;
 }
 

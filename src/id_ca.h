@@ -279,6 +279,6 @@ bool CA_WriteFile (const char *filename, void *ptr, int32_t length);
 void CA_Startup ();
 void CA_Shutdown ();
 
-void CA_CannotOpen(const char *name);
+void CA_CannotOpen(const char *name) __attribute__((noreturn));
 
 #endif

@@ -1256,8 +1256,6 @@ void A_Shoot (objtype *ob)
     int     dx,dy,dist;
     int     hitchance,damage;
     
-    hitchance = 128;
-    
     if (!areabyplayer[ob->areanumber])
         return;
     
