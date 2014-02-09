@@ -961,14 +961,8 @@ static void SD_L_ShutAL()
 //
 // Totally shuts down the AdLib card
 //
-static void SD_L_CleanAL()
-{
-    int     i;
 
-    alOut(alEffects,0);
-    for (i = 1; i < 0xf5; i++)
-        alOut(i, 0);
-}
+// deleted
 
 //
 // SD_L_StartAL
@@ -981,21 +975,7 @@ static void SD_L_StartAL()
     SD_L_AlSetFXInst(&alZeroInst);
 }
 
-//
-// SD_L_DetectAdLib 
-//             
-// Determines if there's an AdLib (or SoundBlaster emulating an AdLib) present
-//
-static Boolean8 SD_L_DetectAdLib()
-{
-    for (int i = 1; i <= 0xf5; i++)       // Zero all the registers
-        alOut(i, 0);
-
-    alOut(1, 0x20);             // Set WSE=1
-//    alOut(8, 0);                // Set CSM=0 & SEL=0
-
-    return true;
-}
+// Deleted SD_L_DetectAdLib
 
 //
 // SD_L_ShutDevice 
@@ -1023,11 +1003,8 @@ static void SD_L_ShutDevice()
 //      SD_L_CleanDevice() - totally shuts down all sound devices
 //
 ////////////////////////////////////////////////////////////////////////////////
-static void SD_L_CleanDevice()
-{
-    if ((sd_soundMode == sdm_AdLib) || (sd_musicMode == smm_AdLib))
-        SD_L_CleanAL();
-}
+
+// Deleted
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -1018,7 +1018,7 @@ void DrawPlayerWeapon ()
       return;
    }
 
-   if (gamestate.weapon != -1)
+   if ((int)gamestate.weapon != -1)
    {
       shapenum = SPEAR.sp(weaponscale[gamestate.weapon]) + gamestate.weaponframe;
       SimpleScaleShape(viewwidth / 2, shapenum, viewheight + 1);
@@ -1574,7 +1574,7 @@ void    ThreeDRefresh ()
 
    DrawPlayerWeapon ();    // draw player's hands
 
-   if(myInput.keyboard(sc_Tab) && viewsize == 21 && gamestate.weapon != -1)
+   if(myInput.keyboard(sc_Tab) && viewsize == 21 && (int)gamestate.weapon != -1)
       ShowActStatus();
 
    I_UnlockBuffer();

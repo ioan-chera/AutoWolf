@@ -37,7 +37,7 @@ const char masterDirectoryFileName[] = "AutoWolf.data";
 #define MASTERDIR_MAPSDIRECTORY "Maps"
 
 extern PString masterDirectoryFilePath, cfg_dir;
-static void bot_initializeConfigLocation()
+inline static void bot_initializeConfigLocation()
 {
    masterDirectoryFilePath.copy(cfg_dir).concatSubpath(masterDirectoryFileName);
 }

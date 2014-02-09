@@ -1278,7 +1278,7 @@ void Chip::Setup( Bit32u rate ) {
 
 			}
 			Bit32s diff = original - samples;
-			Bit32u lDiff = labs( diff );
+			Bit32u lDiff = (Bit32u)labs( diff );
 			//Init last on first pass
 			if ( lDiff < bestDiff ) {
 				bestDiff = lDiff;

@@ -142,7 +142,7 @@ bool VSwapContainer::loadFile(const char *filename
       return false;
    }
    
-   pageOffsets[n.m_numChunks] = fileSize;
+   pageOffsets[n.m_numChunks] = (uint32_t)fileSize;
    
    dataStart = pageOffsets[0];
    
@@ -159,7 +159,7 @@ bool VSwapContainer::loadFile(const char *filename
 //            concat(pageOffsets[u]).concat(" (filesize: ").
 //            concat(fileSize).concat(")");
 //         }
-         Quit(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat(fileSize).concat(")")());
+         Quit(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat((int)fileSize).concat(")")());
          free(pageOffsets);
          free(pageLengths);
          vswap.Close();

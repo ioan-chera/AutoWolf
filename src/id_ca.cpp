@@ -901,7 +901,7 @@ bool CA_LoadFile(const char *filename, memptr *ptr)
         return false;
 
    file.seek(0, SEEK_END);
-   size = file.Tell();
+   size = (int32_t)file.Tell();
    file.seek(0, SEEK_SET);
    *ptr = I_CheckedMalloc(size);
    if(file.read(*ptr, size) < size)

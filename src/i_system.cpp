@@ -138,13 +138,21 @@ PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
    DIR *dir = opendir(dirname);
    if(dir)
    {
+	   PString ret(dirname);
+	   bool found = false;
       dirent *ent;
       while ((ent = readdir(dir)))
       {
          if(!strcasecmp(ent->d_name, basename))
-            return PString(dirname).concatSubpath(ent->d_name);
+		 {
+            ret.concatSubpath(ent->d_name);
+			 found = true;
+			 break;
+		 }
       }
       closedir(dir);
+	   if(found)
+		   return ret;
    }
 #endif
    // not found or indifferent
