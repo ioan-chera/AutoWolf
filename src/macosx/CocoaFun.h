@@ -20,7 +20,7 @@
 #ifndef Wolf4SDL_CocoaFun_h
 #define Wolf4SDL_CocoaFun_h
 
-const char *Cocoa_ApplicationSupportDirectory();
+char		*Cocoa_CreateApplicationSupportPathString();
 void        Cocoa_DisplayErrorAlert(const char *msg);
 
 void        Cocoa_Notify(const char *title, const char *msg);

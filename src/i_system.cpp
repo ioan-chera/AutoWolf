@@ -97,11 +97,13 @@ Boolean8 I_ChangeDir(const char *dirname)
 PString I_GetSettingsDir()
 {
 #ifdef __APPLE__
-   const char *appsupdir = Cocoa_ApplicationSupportDirectory();
+   char *appsupdir = Cocoa_CreateApplicationSupportPathString();
    if(appsupdir == NULL)
       Quit("Your Application Support directory is not defined. You must "
            "set this before playing.");
-   return appsupdir;
+	PString ret(appsupdir);
+	free(appsupdir);
+   return ret;
 #elif defined(_WIN32)
    TCHAR appdatdir[MAX_PATH];
    if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))

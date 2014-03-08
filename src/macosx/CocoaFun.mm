@@ -27,19 +27,34 @@
 #define APPLICATION_UTI @"com.ichera.autowolf"
 
 //
-// Cocoa_ApplicationSupportDirectory
+// Cocoa_CreateApplicationSupportPathString
 //
 // Returns the directory where to save configs
 // Based on Apple documentation example
 //
-const char *Cocoa_ApplicationSupportDirectory()
+// IMPORTANT: you must free the return string when done with it!
+//
+char *Cocoa_CreateApplicationSupportPathString()
 {
-   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-   if([paths count] <= 0)
-      return ".";
-   
-   NSString *applicationSupportDirectory = [paths objectAtIndex:0];
-   return [[applicationSupportDirectory stringByAppendingPathComponent:APPLICATION_UTI] cStringUsingEncoding:NSUTF8StringEncoding];
+	@autoreleasepool
+	{
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+		if([paths count] <= 0)
+		{
+			char *ret = new char[2];
+			ret[0] = '.';
+			ret[1] = 0;
+			return ret;
+		}
+		
+		NSString *applicationSupportDirectory = [paths objectAtIndex:0];
+		const char* content = [[applicationSupportDirectory stringByAppendingPathComponent:APPLICATION_UTI] cStringUsingEncoding:NSUTF8StringEncoding];
+		
+		size_t len = strlen(content);
+		char *ret = (char*)calloc(len, sizeof(char));
+		memcpy(ret, content, len);
+		return ret;
+	}
 }
 
 //
@@ -47,7 +62,10 @@ const char *Cocoa_ApplicationSupportDirectory()
 //
 void Cocoa_DisplayErrorAlert(const char *msg)
 {
-    [[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+	@autoreleasepool
+	{
+		[[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+	}
 }
 
 //
@@ -59,24 +77,23 @@ void Cocoa_DisplayErrorAlert(const char *msg)
 void Cocoa_Notify(const char *title, const char *msg)
 {
 #ifndef OSX_106
-   BOOL notificationCenterIsAvailable =
-   (NSClassFromString(@"NSUserNotificationCenter") != nil);
-
-   if(notificationCenterIsAvailable)
-   {
-      NSUserNotification *notification = [[NSUserNotification alloc] init];
-      NSString *infoText = [[NSString alloc] initWithUTF8String:msg],
-      *notifTitle = [[NSString alloc] initWithUTF8String:title];
-      
-      notification.title = notifTitle;
-      notification.informativeText = infoText;
-      NSUserNotificationCenter *notifCentre = [NSUserNotificationCenter
-                                               defaultUserNotificationCenter];
-      [notifCentre deliverNotification:notification];
-      
-      [notifTitle release];
-      [infoText release];
-      [notification release];
-   }
+	@autoreleasepool
+	{
+		BOOL notificationCenterIsAvailable =
+		(NSClassFromString(@"NSUserNotificationCenter") != nil);
+		
+		if(notificationCenterIsAvailable)
+		{
+			NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+			NSString *infoText = [[[NSString alloc] initWithUTF8String:msg] autorelease],
+			*notifTitle = [[[NSString alloc] initWithUTF8String:title] autorelease];
+			
+			notification.title = notifTitle;
+			notification.informativeText = infoText;
+			NSUserNotificationCenter *notifCentre = [NSUserNotificationCenter defaultUserNotificationCenter];
+			
+			[notifCentre deliverNotification:notification];
+		}
+	}
 #endif
 }
