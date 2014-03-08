@@ -46,7 +46,7 @@ protected:
     void _unLocalize(size_t pSize);
     
     friend size_t _PStrReplaceInternal(PString *pstr, char repl);
-    
+	
 public:
     static const size_t npos;
     static const size_t basesize;
@@ -81,6 +81,9 @@ public:
     PString &concat(const char *str);
     PString &concat(const PString &src);
     PString &concat(int number);
+	PString &concat(unsigned number);
+    PString &concat(long long number);
+	PString &concat(unsigned long long number);
     PString &copy(const char *str, size_t inLength);
     PString &copy(const char *str);
     PString &copy(const PString &src);
@@ -163,6 +166,8 @@ public:
     PString &operator += (const char    *other);
     PString &operator += (char  ch);
     PString &operator += (int   number);
+    PString &operator += (long long   number);
+	PString &operator += (unsigned long long number);
 //    PString  operator +  (const PString &other) const;
 //    PString  operator +  (const char    *other) const;
 //    PString  operator +  (char  ch) const;

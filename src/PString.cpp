@@ -228,6 +228,33 @@ PString &PString::concat(int number)
     return concat(buf, nchar);
 }
 
+PString &PString::concat(unsigned number)
+{
+    static char buf[STRING_ASSUMED_DEC_NUMBER_LENGTH];
+    int nchar = snprintf(buf, STRING_ASSUMED_DEC_NUMBER_LENGTH, "%u", number);
+    if(nchar >= STRING_ASSUMED_DEC_NUMBER_LENGTH)
+        return *this;
+    return concat(buf, nchar);
+}
+
+PString &PString::concat(long long number)
+{
+	static char buf[STRING_ASSUMED_DEC_NUMBER_LENGTH];
+	int nchar = snprintf(buf, STRING_ASSUMED_DEC_NUMBER_LENGTH, "%lld", number);
+	if(nchar >= STRING_ASSUMED_DEC_NUMBER_LENGTH)
+		return *this;
+	return concat(buf, nchar);
+}
+
+PString &PString::concat(unsigned long long number)
+{
+	static char buf[STRING_ASSUMED_DEC_NUMBER_LENGTH];
+	int nchar = snprintf(buf, STRING_ASSUMED_DEC_NUMBER_LENGTH, "%llu", number);
+	if(nchar >= STRING_ASSUMED_DEC_NUMBER_LENGTH)
+		return *this;
+	return concat(buf, nchar);
+}
+
 //
 // PString::copy
 //
@@ -1326,6 +1353,14 @@ PString &PString::operator += (char ch)
     return Putc(ch);
 }
 PString &PString::operator += (int number)
+{
+    return concat(number);
+}
+PString &PString::operator += (long long number)
+{
+    return concat(number);
+}
+PString &PString::operator += (unsigned long long number)
 {
     return concat(number);
 }

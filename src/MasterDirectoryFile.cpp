@@ -54,9 +54,28 @@ void MasterDirectoryFile::saveToFile(const PString &fpath)
 {
 	FILE *f;
 	
-	f = fopen(fpath.buffer(), "wb");
+	// Only overwrite it when it's over. Till then, write to a temporary file
+	PString transaction(fpath);
+	transaction += (unsigned long long)time(nullptr);
+	
+	f = fopen(transaction.buffer(), "wb");
+	if(!f)
+		return;
 	this->doWriteToFile(f);
 	fclose(f);
+	
+	bool success = false;
+	if(remove(fpath.buffer()) == 0)
+	{
+		// success removing old fpath
+		if(rename(transaction.buffer(), fpath.buffer()) == 0)
+		{
+			// success renaming the temp file to the old file
+			success = true;
+		}
+	}
+	if(!success)
+		remove(transaction.buffer());
 }
 
 //
