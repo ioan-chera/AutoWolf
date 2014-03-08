@@ -93,7 +93,7 @@ void PString::_unLocalize(size_t pSize)
 //
 // As above, but with case sensitivity.
 //
-unsigned int PString::HashCodeCaseStatic(const char *str, size_t inLength)
+unsigned int PString::HashCodeCaseStatic(const TChar *str, size_t inLength)
 {
     return D_HashTablePKeyCase(str ? str : "", inLength);
 }

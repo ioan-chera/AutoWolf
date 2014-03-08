@@ -51,7 +51,7 @@ extern unsigned cfg_screenWidth;
 extern Boolean8  cfg_usedoublebuffering;
     
 
-void     CFG_CheckParameters(int argc, char *argv[]);
+void     CFG_CheckParameters(int argc, TChar *argv[]);
 void     CFG_SetupConfigLocation();
 
 #endif

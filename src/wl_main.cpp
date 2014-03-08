@@ -1847,7 +1847,7 @@ void TestListPerf()
 //
 // Main program start
 //
-int main (int argc, char *argv[])
+int main (int argc, TChar *argv[])
 {
     //TestListPerf();
 #if defined(_arch_dreamcast)

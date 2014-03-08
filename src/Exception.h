@@ -28,14 +28,14 @@
 //
 class Exception
 {
-    static Boolean8 showred;
+    static bool showred;
     PString exctext;
 public:
     Exception();
     Exception(const PString &txt);
-    Exception(const char *filestr, int linestr);
-    Exception(const PString &txt, const char *filestr, int linestr);
-    const char *info() const
+    Exception(const TChar *filestr, int linestr);
+    Exception(const PString &txt, const TChar *filestr, int linestr);
+    const TChar *info() const
     {
         return exctext();
     }

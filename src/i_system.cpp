@@ -80,10 +80,10 @@ Boolean8 I_MakeDir(const char *dirname)
 //
 // Sets current dir
 //
-Boolean8 I_ChangeDir(const char *dirname)
+bool I_ChangeDir(const TChar *dirname)
 {
 #ifdef _WIN32
-   return SetCurrentDirectory(dirname);
+	return SetCurrentDirectory(dirname) ? true : false;
 #else
    return !chdir(dirname);
 #endif

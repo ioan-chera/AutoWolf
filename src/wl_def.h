@@ -42,6 +42,7 @@
 #include <ShlObj.h>
 #include <time.h>
 #include <Windows.h>
+#include <tchar.h>
 #else
 #include <dirent.h>
 #endif
@@ -58,6 +59,37 @@
 #if !defined O_BINARY
 #	define O_BINARY 0
 #endif
+
+///////////////////////////// WINDOWS UNICODE DISAMBIGUATION
+#ifdef _WIN32
+#define SNTPrintF _sntprintf
+#define TCSCmp _tcscmp
+#define TCSLen _tcslen
+#define TCSStr _tcsstr
+#define TGetEnv _tgetenv
+#define ToTUpper _totupper
+#define TToI _ttoi
+
+typedef TCHAR TChar;
+////////////////
+#else
+///////////////
+#define SNTPrintF snprintf
+#define TCSCmp strcmp
+#define TCSLen strlen
+#define TCSStr strstr
+#define TGetEnv getenv
+#define ToTUpper toupper
+#define TToI atoi
+
+typedef char TChar;
+
+#ifdef _T
+#error "_T already defined"
+#endif
+#define _T(a) a
+#endif
+///////////////////////////// END UNICODE DISAMBIGUATION
 
 typedef uint8_t byte;
 typedef uint16_t word;

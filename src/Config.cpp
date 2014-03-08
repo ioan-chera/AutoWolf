@@ -120,12 +120,12 @@ inline static int changeDirectory(const char *locdir)
 //
 static void CFG_checkEnvVars()
 {
-    const char *wolfdir = getenv("AUTOWOLFDIR");
+    const TChar *wolfdir = TGetEnv(_T("AUTOWOLFDIR"));
     if(wolfdir)
     {
         if(!I_ChangeDir(wolfdir))
-            throw Exception(PString("Cannot change directory to ").
-                            concat(wolfdir).concat("\n"));
+            throw Exception(PString(_T("Cannot change directory to ")).
+                            concat(wolfdir).concat(_T("\n")));
     }
 }
 
@@ -134,7 +134,7 @@ static void CFG_checkEnvVars()
 //
 // Do it early.
 //
-void CFG_CheckParameters(int argc, char *argv[])
+void CFG_CheckParameters(int argc, TChar *argv[])
 {
     bool sampleRateGiven = false, audioBufferGiven = false;
     int defaultSampleRate = cfg_samplerate;

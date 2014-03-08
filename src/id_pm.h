@@ -64,7 +64,6 @@ public:
    //
    // Move constructor
    //
-#if __cplusplus > 199711L
    VSwapContainer(VSwapContainer &&other) :
    m_numChunks(other.m_numChunks),
    m_spriteStart(other.m_spriteStart),
@@ -77,7 +76,6 @@ public:
       other.m_pages = NULL;
       other.m_pageData = NULL;
    }
-#endif
    void clear();
    //
    // Destructor

@@ -31,7 +31,7 @@ uint32_t I_GetTicks(void);
 
 void I_Notify(const char *msg);
 Boolean8 I_MakeDir(const char *dirname);
-Boolean8 I_ChangeDir(const char *dirname);
+bool I_ChangeDir(const TChar *dirname);
 PString I_GetSettingsDir();
 PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
 

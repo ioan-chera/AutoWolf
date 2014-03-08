@@ -60,15 +60,15 @@ unsigned int D_HashTableKey(const char *str)
 //
 // IOANCH 20130309: updated for PStrings
 //
-unsigned int D_HashTablePKey(const char *str, size_t inLength)
+unsigned int D_HashTablePKey(const TChar *str, size_t inLength)
 {
-    const char *c = str;
+	const TChar *c = str;
     unsigned int h = 0;
     size_t i;
     
     for(i = 0; i < inLength; ++i)
     {
-        h = 5 * h + toupper(*c);
+        h = 5 * h + ToTUpper(*c);
         ++c;
     }
     
@@ -102,9 +102,9 @@ unsigned int D_HashTableKeyCase(const char *str)
 //
 // IOANCH 20130309: updated for PStrings
 //
-unsigned int D_HashTablePKeyCase(const char *str, size_t inLength)
+unsigned int D_HashTablePKeyCase(const TChar *str, size_t inLength)
 {
-    const char *c = str;
+	const TChar *c = str;
     unsigned int h = 0;
     size_t i;
     

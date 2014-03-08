@@ -19,11 +19,11 @@
 #include "wl_def.h"
 #include "Exception.h"
 
-Boolean8 Exception::showred = false;
+bool Exception::showred = false;
 
 Exception::Exception()
 {
-    exctext = "";
+    exctext = _T("");
     showred = true;
 }
 Exception::Exception(const PString &txt)
@@ -31,13 +31,13 @@ Exception::Exception(const PString &txt)
     exctext = txt;
     showred = true;
 }
-Exception::Exception(const char *filestr, int linestr)
+Exception::Exception(const TChar *filestr, int linestr)
 {
-    exctext.copy("Raised exception at ") << filestr << ":" << linestr;
+    exctext.copy(_T("Raised exception at ")) << filestr << _T(":") << linestr;
     showred = true;
 }
-Exception::Exception(const PString &txt, const char *filestr, int linestr)
+Exception::Exception(const PString &txt, const TChar *filestr, int linestr)
 {
-    exctext.copy(txt) << " at " << filestr << ":" << linestr;
+    exctext.copy(txt) << _T(" at ") << filestr << _T(":") << linestr;
     showred = true;
 }
