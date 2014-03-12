@@ -32,13 +32,15 @@
 #include "wl_main.h"
 #include "wl_draw.h"
 
-SDL_Surface *vid_screen = NULL;
+// used globally
 unsigned vid_screenPitch;
-
-SDL_Surface *vid_screenBuffer = NULL;
 unsigned vid_bufferPitch;
 
-SDL_Surface     *vid_latchpics[NUMLATCHPICS];
+static SDL_Surface *vid_screen = nullptr;
+
+static SDL_Surface *vid_screenBuffer = nullptr;
+
+static SDL_Surface *vid_latchpics[NUMLATCHPICS];
 
 //
 // I_createSurface
@@ -55,58 +57,6 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
    }
    SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
    return ret;
-}
-
-//
-// VL_SetVGAPlaneMode
-//
-// moved from wl_main or related
-// Sets up the graphics surfaces and palettes
-//
-static void I_setVGAPlaneMode ()
-{
-	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
-   // IOANCH 20130202: unification process
-   SDL_WM_SetCaption(SPEAR.FullTitle(), NULL);
-   //    if( SPEAR())
-   //        SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
-   //    else
-   //        SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
-   
-   if(cfg_screenBits == -1)
-   {
-      const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
-      cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
-   }
-   
-   vid_screen = SDL_SetVideoMode(cfg_screenWidth, cfg_screenHeight,
-                                 cfg_screenBits,
-                                 (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
-                                 | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
-                                 | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
-   if(!vid_screen)
-   {
-      printf("Unable to set %ix%ix%i video mode: %s\n", cfg_screenWidth,
-             cfg_screenHeight, cfg_screenBits, SDL_GetError());
-      exit(1);
-   }
-   if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
-      cfg_usedoublebuffering = false;
-   SDL_ShowCursor(SDL_DISABLE);
-   
-   // IOANCH 20130202: unification process
-   SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
-   memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
-   
-   vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth,
-                                      cfg_screenHeight);
-   
-   vid_screenPitch = vid_screen->pitch;
-   vid_bufferPitch = vid_screenBuffer->pitch;
-
-   // IOANCH: removed vid_curSurface, was redundant
-   
-   // IOANCH: moved further calls elsewhere
 }
 
 //
@@ -129,16 +79,52 @@ void I_InitEngine()
    
    atexit(SDL_Quit);
    
-   
-   
    // Moved from InitGame
 #if defined(GP2X_940)
    GP2X_MemoryInit();
 #endif
    
-   
-   // Init the graphics engine
-   I_setVGAPlaneMode();
+	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
+	// IOANCH 20130202: unification process
+	SDL_WM_SetCaption(SPEAR.FullTitle(), NULL);
+	//    if( SPEAR())
+	//        SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
+	//    else
+	//        SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
+	
+	if(cfg_screenBits == -1)
+	{
+		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
+		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
+	}
+	
+	vid_screen = SDL_SetVideoMode(cfg_screenWidth, cfg_screenHeight,
+								  cfg_screenBits,
+								  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
+								  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
+								  | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
+	if(!vid_screen)
+	{
+		printf("Unable to set %ix%ix%i video mode: %s\n", cfg_screenWidth,
+			   cfg_screenHeight, cfg_screenBits, SDL_GetError());
+		exit(1);
+	}
+	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
+		cfg_usedoublebuffering = false;
+	SDL_ShowCursor(SDL_DISABLE);
+	
+	// IOANCH 20130202: unification process
+	SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
+	memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
+	
+	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth, cfg_screenHeight);
+	
+	vid_screenPitch = vid_screen->pitch;
+	vid_bufferPitch = vid_screenBuffer->pitch;
+	
+	// IOANCH: removed vid_curSurface, was redundant
+	
+	// IOANCH: moved further calls elsewhere
 }
 
 //
@@ -271,51 +257,6 @@ void I_SaveBufferBMP(const char *fname)
 ////////////////////////////////////////////////////////////////////////////////
 //
 // =
-// = I_SetColor
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void I_SetColor	(int color, int red, int green, int blue)
-{
-   SDL_Color col = { static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue) };
-   vid_curpal[color] = col;
-   
-   if(cfg_screenBits == 8)
-      SDL_SetPalette(vid_screen, SDL_PHYSPAL, &col, color, 1);
-   else
-   {
-      SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, &col, color, 1);
-      SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-      SDL_Flip(vid_screen);
-   }
-}
-
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = I_GetColor
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void I_GetColor	(int color, int *red, int *green, int *blue)
-{
-   SDL_Color *col = &vid_curpal[color];
-   *red = col->r;
-   *green = col->g;
-   *blue = col->b;
-}
-
-//===========================================================================
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
 // = I_SetPalette
 // =
 //
@@ -373,12 +314,14 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
          int i, j;
          
          src = I_lockSurface(source);
-         if(src == NULL) return;
+         if(src == nullptr)
+			 return;
          
          srcPitch = source->pitch;
          
          dest = I_LockBuffer();
-         if(dest == NULL) return;
+         if(dest == nullptr)
+			 return;
          
          for(j = 0; j < height; j++)
          {
@@ -406,12 +349,14 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
       unsigned m, n;
       
       src = I_lockSurface(source);
-      if(src == NULL) return;
+      if(src == nullptr)
+		  return;
       
       srcPitch = source->pitch;
       
       dest = I_LockBuffer();
-      if(dest == NULL) return;
+      if(dest == nullptr)
+		  return;
       
       for(j = 0, scj = 0; j < height; j++, scj += vid_scaleFactor)
       {
@@ -443,7 +388,7 @@ void I_FreeLatchMem()
    for(i = 0; i < (2 + (signed int)SPEAR.g(LATCHPICS_LUMP_END) - (signed int)SPEAR.g(LATCHPICS_LUMP_START)); i++)
    {
       SDL_FreeSurface(vid_latchpics[i]);
-      vid_latchpics[i] = NULL;
+      vid_latchpics[i] = nullptr;
    }
 }
 
