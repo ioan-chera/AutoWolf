@@ -1206,7 +1206,7 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 	return NULL;
 }
 
-void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, Boolean8 tryuse) const
+void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, bool tryuse) const
 {
     int movedir;
     // set up the target angle
@@ -1378,7 +1378,7 @@ void BotMan::MoveByStrafe()
 	}
 	
 	int nx, ny, mx, my;
-	Boolean8 tryuse = false;	// whether to try using
+	bool tryuse = false;	// whether to try using
 	
 	mx = player->tilex;
 	my = player->tiley;
@@ -1680,7 +1680,7 @@ void BotMan::DoNonCombatAI()
 	}
 	
 	int nx, ny, mx, my;
-	Boolean8 tryuse = false;	// whether to try using
+	bool tryuse = false;	// whether to try using
 	
 	
 	mx = player->tilex;

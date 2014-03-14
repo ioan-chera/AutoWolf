@@ -147,15 +147,15 @@ class BotMan
 	objtype *EnemyEager() const;
 
 	objtype *DamageThreat(const objtype *targ) ;
-	void DoRetreat(Boolean8 forth = false, objtype *cause = NULL) const;
-	objtype *Crossfire(int x, int y, const objtype *objignore = NULL,
+	void DoRetreat(Boolean8 forth = false, objtype *cause = nullptr) const;
+	objtype *Crossfire(int x, int y, const objtype *objignore = nullptr,
                               Boolean8 justexists = false) ;
 	objtype *IsProjectile(int tx, int ty, int dist = 1,
-                          short *angle = NULL, int *distance = NULL) const;
+                          short *angle = nullptr, int *distance = nullptr) const;
 	objtype *IsEnemyBlocking(int tx, int ty) const;
 	objtype *IsEnemyNearby(int tx, int ty) const;
     
-    void ExecuteStrafe(int mx, int my, int nx, int ny, Boolean8 tryuse) const;
+    void ExecuteStrafe(int mx, int my, int nx, int ny, bool tryuse) const;
 	void MoveByStrafe();
 	void ChooseWeapon() const;
 	void DoCombatAI(int eangle, int edist);

@@ -846,7 +846,7 @@ static const char ca_gheadname[] = "VGAHEAD.";
 static const char ca_gfilename[] = "VGAGRAPH.";
 static const char ca_gdictname[] = "VGADICT.";
 static const char ca_mheadname[] = "MAPHEAD.";
-static const char ca_mfilename[] = "maptemp.";
+//static const char ca_mfilename[] = "maptemp.";
 static const char ca_aheadname[] = "AUDIOHED.";
 static const char ca_afilename[] = "AUDIOT.";
 
@@ -896,7 +896,6 @@ bool CA_LoadFile(const char *filename, memptr *ptr)
 
    InBuffer file;
    
-   //FILE *file = fopen(filename, "rb");
    if(!file.openFile(filename, BufferedFileBase::LENDIAN))
         return false;
 

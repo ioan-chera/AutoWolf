@@ -38,10 +38,10 @@
 //
 // Packs the two values into one
 //
-inline static int OnePacked(int cx, int cy)
-{
-    return cx + (cy << sizeof(int) * 4);
-}
+//inline static int OnePacked(int cx, int cy)
+//{
+//    return cx + (cy << sizeof(int) * 4);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

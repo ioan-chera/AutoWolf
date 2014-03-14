@@ -90,23 +90,7 @@ bool VSwapContainer::loadFile(const char *filename
    // Use eternity classes
    if(!vswap.openFile(filename, BufferedFileBase::LENDIAN))
       CA_CannotOpen(filename);
-   
-   
-//   FILE *file = fopen(filename, "rb");
-   
-//   if(!file)
-//   {
-//      if(errmsg)
-//      {
-//         errmsg->copy("Can't open ").concat(filename).concat(": ").
-//         concat(strerror(errno));
-//      }
-//      CA_CannotOpen(filename);
-//      return false;
-//   }
-   
-   
-   
+      
    // read header
    vswap.readUint16(dummy16);
    n.m_numChunks = dummy16;

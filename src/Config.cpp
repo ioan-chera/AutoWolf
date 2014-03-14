@@ -103,15 +103,15 @@ unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 // IOANCH 20130509: arguments are now case insensitive
 #define IFARG(str) if(!strcasecmp(arg, (str)))
 
-inline static int changeDirectory(const char *locdir)
-{
-#if defined(_WIN32)
-    return !::SetCurrentDirectory(locdir);
-#else
-    return chdir(locdir);
-    // FIXME: don't just assume UNIX/Linux/Apple
-#endif
-}
+//inline static int changeDirectory(const char *locdir)
+//{
+//#if defined(_WIN32)
+//    return !::SetCurrentDirectory(locdir);
+//#else
+//    return chdir(locdir);
+//    // FIXME: don't just assume UNIX/Linux/Apple
+//#endif
+//}
 
 //
 // CFG_checkEnvVars
