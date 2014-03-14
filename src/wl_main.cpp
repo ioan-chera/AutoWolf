@@ -1318,9 +1318,7 @@ PString global_error;
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
-    Boolean8 didjukebox=false;
-
-
+    bool didjukebox=false;
    
    // IOANCH 20130726: moved SDL init away
    I_InitEngine();
@@ -1344,43 +1342,14 @@ static void InitGame()
 
     VH_Startup ();  // sets some pseudorandom numbers
     myInput.initialize();  // sets up the input devices
-    // IOANCH 20130510: here I should put the startup menu, before it loads
-    // data from game-dependent files. I already have the palette and little
-    // else. I need a font, some feedback sounds and some basic graphics. Maybe
-    // even some music...
-    // Note that palette already got selected while drawing the signon screen.
-    // In fact, I can postpone its drawing after the startup menu ends
-    // I added notes below what each function reads
-    // Note that menu_IntroScreen also draws to Signon - but it will happen at the
-    // right time anyway.
-    // FUNCTIONS WHICH HAVE ALREADY TESTED FOR SPEAR AND MAY NEED RELOCATION:
-    // SPEAR.Initialize (most definitely; should be set after the menu)
-    // CFG_CheckForEpisodes
-    // VL_SetVGAPlaneMode: sets SDL_WM_SetCaption (harmless)
-    //                     SDL_SetColors and curpal (can be set later, I guess)
-    // SignonScreen will appear later.
-   vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", PString("VSWAP.").
+
+	
+    vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", PString("VSWAP.").
                                                 concat(cfg_extension)())());
 
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
     CA_Startup ();  // The rest of the data.
     US_Startup ();  // Miscellaneous (like random numbers)
-
-    // TODO: Will any memory checking be needed someday??
-#ifdef NOTYET
-    // IOANCH 20130303: unification
-    if (!SPEAR() && mminfo.mainmem < 235000L || SPEAR() && mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
-    {
-        byte *screen;
-
-        graphSegs.cacheChunk (SPEAR.g(ERRORSCREEN));
-        screen = graphSegs[SPEAR.g(ERRORSCREEN)];
-        ShutdownId();
-/*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
-        gotoxy (1,23);*/
-        exit(1);
-    }
-#endif
 
 
 //
@@ -1404,12 +1373,13 @@ static void InitGame()
         didjukebox=true;
     }
     else
-
+	{
 
 //
 // draw intro screen stuff
 //
-    menu_IntroScreen ();
+		menu_IntroScreen ();
+	}
 
 #ifdef _arch_dreamcast
     //TODO: VMU Selection Screen
@@ -1436,10 +1406,6 @@ static void InitGame()
     if(!didjukebox)
         FinishSignon();
 
-#ifdef NOTYET
-    vdisp = (byte *) (0xa0000+PAGE1START);
-    vbuf = (byte *) (0xa0000+PAGE2START);
-#endif
 }
 
 //===========================================================================

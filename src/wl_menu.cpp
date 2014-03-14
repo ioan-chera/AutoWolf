@@ -2120,7 +2120,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
         ReadAnyControl (&ci);
 
         if (type == MOUSE || type == JOYSTICK)
-            if (IN_KeyDown (sc_Enter) || IN_KeyDown (sc_Control) || IN_KeyDown (sc_Alt))
+            if (myInput.keyboard(sc_Enter) || myInput.keyboard(sc_Control) || myInput.keyboard(sc_Alt))
             {
                 myInput.clearKeysDown ();
                 ci.button0 = ci.button1 = false;
@@ -2250,7 +2250,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                 //
                 // EXIT INPUT?
                 //
-                if (IN_KeyDown (sc_Escape) || (type != JOYSTICK && ci.button1))
+                if (myInput.keyboard(sc_Escape) || (type != JOYSTICK && ci.button1))
                 {
                     picked = 1;
                     SD_PlaySound (ESCPRESSEDSND);
@@ -2267,7 +2267,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
             continue;
         }
 
-        if (ci.button1 || IN_KeyDown (sc_Escape))
+        if (ci.button1 || myInput.keyboard(sc_Escape))
             exit = 1;
 
         //

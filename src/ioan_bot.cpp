@@ -115,7 +115,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
     // If it doesn't, create it with the proper name.
     // If file doesn't exist, create it and give it the explored property.
 	
-    MAKE_FILE(PropertyFile, propertyFile, dir, PROPERTY_FILE_NAME)
+	auto propertyFile = dir->makeFile<PropertyFile>(PROPERTY_FILE_NAME);
     
     propertyFile->setStringValue(PROPERTY_KEY_EXPLORED, 
                                  mapExploration.PackBoolean8Array());

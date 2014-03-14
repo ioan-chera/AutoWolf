@@ -26,15 +26,6 @@
 #include "PropertyFile.h"
 #include "e_hash.h"
 
-#define MAKE_FILE(cls, obj, dir, name) \
-cls *obj = (cls *)dir->getFileWithName(name); \
-if(!obj) \
-{ \
-    obj = new cls; \
-    obj->initialize(name); \
-    dir->addFile(obj); \
-}
-
 //
 // DirectoryFile
 //
@@ -82,6 +73,18 @@ public:
    
 	// create folder if not exist
 	DirectoryFile *makeDirectory(const PString &fname);
+	
+	template<typename T> T* makeFile(const char* name)
+	{
+		T* file = dynamic_cast<T*>(getFileWithName(name));
+		if(!file)
+		{
+			file = new T;
+			file->initialize(name);
+			addFile(file);
+		}
+		return file;
+	}
 };
 
 #endif

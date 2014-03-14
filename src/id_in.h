@@ -149,34 +149,26 @@ const char key_None = 0;
 class InputManager
 {
 private:
-   bool m_started;
-   char       m_lastASCII;
-   ScanCode   m_lastScan;
-   Boolean8    m_keyboard[SDLK_LAST]; // IOANCH: removed volatile
-   int        m_joyNumButtons;
-   Boolean8    m_mousePresent;
-   Boolean8    m_paused;
+   bool m_started = false;
+   char       m_lastASCII = key_None;
+   ScanCode   m_lastScan = sc_None;
+	bool    m_keyboard[SDLK_LAST] = {0}; // IOANCH: removed volatile
+   int        m_joyNumButtons = 0;
+   bool    m_mousePresent = false;
+   bool    m_paused = false;
    
-   SDL_Joystick *m_joystick;
-   int m_joyNumHats;
-   bool m_grabInput;
-   bool m_needRestore;
+   SDL_Joystick *m_joystick = nullptr;
+   int m_joyNumHats = 0;
+   bool m_grabInput = false;
+   bool m_needRestore = false;
    static const byte m_ASCIINames[], m_ShiftNames[];
-   Boolean8	m_btnstate[NUMBUTTONS];
+	bool	m_btnstate[NUMBUTTONS] = {0};
    
    int p_getMouseButtons() const;
    void p_processEvent(const SDL_Event *event);
    
    
 public:
-   InputManager() : m_started(false), m_lastASCII(key_None),
-   m_lastScan(sc_None), m_joyNumButtons(0), m_mousePresent(false),
-   m_paused(false), m_joystick(NULL), m_joyNumHats(0), m_grabInput(false),
-   m_needRestore(false)
-   {
-      memset(m_keyboard, 0, sizeof(m_keyboard));
-      memset(m_btnstate, 0, sizeof(m_btnstate));
-   }
    void clearKeysDown();
    void initialize();
    void close();
@@ -212,7 +204,7 @@ public:
    
    bool userInput(longword delay);
    
-   Boolean8 keyboard(ScanCode code) const
+   bool keyboard(ScanCode code) const
    {
       return m_keyboard[code];
    }
@@ -220,11 +212,11 @@ public:
    {
       m_keyboard[code] = value;
    }
-   Boolean8 mousePresent() const
+   bool mousePresent() const
    {
       return m_mousePresent;
    }
-   Boolean8 paused() const
+   bool paused() const
    {
       return m_paused;
    }
@@ -252,13 +244,16 @@ public:
    {
       return m_joyNumButtons;
    }
+	
+	inline void ClearKey(ScanCode code)
+	{
+		m_keyboard[code] = false;
+		if(code == m_lastScan)
+			m_lastScan = sc_None;
+	}
 };
 extern InputManager myInput;
 
-// Function prototypes
-#define	IN_KeyDown(code)	(myInput.keyboard(code))
-#define	IN_ClearKey(code)	{myInput.setKeyboard((code), false);\
-							if ((code) == myInput.lastScan()) myInput.setLastScan(sc_None);}
 
 void IN_InitVerifyJoysticks();
 

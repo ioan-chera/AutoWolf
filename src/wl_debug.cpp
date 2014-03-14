@@ -406,7 +406,7 @@ void ShapeTest ()
         myInput.ack();
         scan = myInput.lastScan();
 
-        IN_ClearKey(scan);
+		myInput.ClearKey(scan);
         switch (scan)
         {
             case sc_LeftArrow:
