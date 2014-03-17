@@ -1813,6 +1813,7 @@ void TestListPerf()
 //
 // Main program start
 //
+#define main SDL_main
 int main (int argc, TChar *argv[])
 {
     //TestListPerf();

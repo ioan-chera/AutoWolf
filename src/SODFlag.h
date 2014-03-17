@@ -36,7 +36,6 @@
 //
 class SODFlag
 {
-    friend int main(int argc, char *argv[]);
     
     Boolean8 flag;
     static const unsigned int gfxvmap[][2];
@@ -44,8 +43,8 @@ class SODFlag
     static const unsigned int soundmap[][2];
     static const char wolftitle[];
     static const char speartitle[];
-    void Initialize(const PString &basePath);
 public:
+    void Initialize(const PString &basePath);
     SODFlag() : flag(false)                  {}
     Boolean8             operator()()   const {return flag;}
     unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}

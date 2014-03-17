@@ -29,6 +29,7 @@
 #define	__ID_IN__
 
 #include "Config.h"
+#include "i_video.h"
 
 #ifdef	__DEBUG__
 #define	__DEBUG_InputMgr__
@@ -93,8 +94,8 @@ enum ScanCode
    sc_F11 =          SDLK_F11,
    sc_F12 =          SDLK_F12,
    
-   sc_ScrollLock =   SDLK_SCROLLOCK,
-   sc_PrintScreen =  SDLK_PRINT,
+   sc_ScrollLock =   SDLK_SCROLLLOCK,
+   sc_PrintScreen =  SDLK_PRINTSCREEN,
    
    sc_1 =            SDLK_1,
    sc_2 =            SDLK_2,
@@ -135,9 +136,9 @@ enum ScanCode
    sc_Z =            SDLK_z,
    
    // IOANCH 20130802: added meta
-   sc_LMeta =        SDLK_LMETA,
-   sc_RMeta =        SDLK_RMETA,
-   sc_KP5 =          SDLK_KP5,
+   sc_LMeta =        SDLK_LGUI,
+   sc_RMeta =        SDLK_RGUI,
+   sc_KP5 =          SDLK_KP_5,
 };
 const char key_None = 0;
 
@@ -152,7 +153,7 @@ private:
    bool m_started = false;
    char       m_lastASCII = key_None;
    ScanCode   m_lastScan = sc_None;
-	bool    m_keyboard[SDLK_LAST] = {0}; // IOANCH: removed volatile
+	std::unordered_set<unsigned> m_keyboard;
    int        m_joyNumButtons = 0;
    bool    m_mousePresent = false;
    bool    m_paused = false;
@@ -175,7 +176,7 @@ public:
    
    void centreMouse() const
    {
-      SDL_WarpMouse(cfg_screenWidth / 2, cfg_screenHeight / 2);
+	   SDL_WarpMouseInWindow(vid_window, cfg_screenWidth / 2, cfg_screenHeight / 2);
    }
    
    bool inputGrabbed() const
@@ -206,11 +207,14 @@ public:
    
    bool keyboard(ScanCode code) const
    {
-      return m_keyboard[code];
+      return m_keyboard.count(code);
    }
    void setKeyboard(ScanCode code, Boolean8 value)
    {
-      m_keyboard[code] = value;
+	   if(value)
+		   m_keyboard.insert(code);
+	   else
+		   m_keyboard.erase(code);
    }
    bool mousePresent() const
    {
@@ -247,7 +251,7 @@ public:
 	
 	inline void ClearKey(ScanCode code)
 	{
-		m_keyboard[code] = false;
+		m_keyboard.erase(code);
 		if(code == m_lastScan)
 			m_lastScan = sc_None;
 	}

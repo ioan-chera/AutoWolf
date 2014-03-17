@@ -26,12 +26,13 @@
 
 #include "id_vl.h"
 
-extern  unsigned vid_screenPitch, vid_bufferPitch;
+extern  unsigned vid_bufferPitch;
+extern SDL_Window* vid_window;
 
 void I_InitEngine();
 void I_InitAfterSignon();
 byte *I_LockBuffer();
-byte *I_LockDirect();
+SDL_Color *I_LockDirect();
 void I_UnlockBuffer();
 void I_UnlockDirect();
 void I_UpdateScreen();
@@ -59,8 +60,6 @@ void    I_FreeLatchMem();
 void    I_LoadLatchMem ();
 void I_MemToLatch              (const byte *source, int width, int height,
                                 SDL_Surface *destSurface, int x, int y);
-
-void I_PutDirectFullColour(int col, byte *destptr, int x, int y);
 
 void I_SaveBufferBMP(const char *fname);
 

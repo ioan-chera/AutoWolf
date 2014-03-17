@@ -92,6 +92,7 @@
 #define CST_START       60
 #define CST_SPC 60
 
+void US_SetScanNames();
 
 //
 // TYPEDEFS

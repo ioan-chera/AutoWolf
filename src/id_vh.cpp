@@ -360,9 +360,9 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
             return true;
         }
 
-        byte *destptr = I_LockDirect();
+        SDL_Color *destptr = I_LockDirect();
 
-        if(destptr != NULL)
+        if(destptr != nullptr)
         {
             rndval = lastrndval;
 
@@ -396,17 +396,8 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
                     //
                     // copy one pixel
                     //
-
-                    if(cfg_screenBits == 8)
-                    {
-                        *(destptr + (y1 + y) * vid_screenPitch + x1 + x)
-                            = *(srcptr + (y1 + y) * vid_bufferPitch + x1 + x);
-                    }
-                    else
-                    {
-                        byte col = *(srcptr + (y1 + y) * vid_bufferPitch + x1 + x);
-                       I_PutDirectFullColour(col, destptr, x1 + x, y1 + y);
-                    }
+					
+					destptr[(y1 + y) * cfg_screenWidth + x1 + x] = vid_curpal[srcptr[(y1 + y) * cfg_screenWidth + x1 + x]];
 
                     if(rndval == 0)		// entire sequence has been completed
                         goto finished;

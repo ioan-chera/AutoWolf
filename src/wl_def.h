@@ -34,6 +34,9 @@
 #include <assert.h>
 #include <math.h>
 #include <set>
+#include <unordered_set>
+#include <unordered_map>
+#include <string>
 #include <sys/stat.h>
 
 #ifdef _WIN32
@@ -45,6 +48,8 @@
 #include <tchar.h>
 #else
 #include <dirent.h>
+#include <unistd.h>
+#include <limits.h>
 #endif
 
 #if defined(_arch_dreamcast)

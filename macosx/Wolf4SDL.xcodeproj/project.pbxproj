@@ -19,22 +19,16 @@
 		4F3435031726973200A10A72 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F3435021726973200A10A72 /* Exception.cpp */; };
 		4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4717BA173A6A610018E82B /* SODFlag.cpp */; };
 		4F471993173BC0310018E82B /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F471992173BC0310018E82B /* Config.cpp */; };
-		4F860DC117421D4B00A1979A /* libSDL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F860DC017421D4B00A1979A /* libSDL.a */; };
 		4F86102B17421ED400A1979A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86102A17421ED400A1979A /* IOKit.framework */; };
 		4F86103117421EE400A1979A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103017421EE400A1979A /* Carbon.framework */; };
 		4F86103817421EF100A1979A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103717421EF100A1979A /* AudioUnit.framework */; };
 		4F86103E17421EFD00A1979A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103D17421EFD00A1979A /* OpenGL.framework */; };
-		4F861081174223AE00A1979A /* libSDL_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F861080174223AE00A1979A /* libSDL_mixer.a */; };
-		4F86110517422B5400A1979A /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F8610FE17422B5400A1979A /* libvorbis.a */; };
-		4F86110D17422B8D00A1979A /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86110C17422B8D00A1979A /* libogg.a */; };
 		4F86111E17422BC800A1979A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86111D17422BC800A1979A /* AudioToolbox.framework */; };
-		4F86113D17422CB000A1979A /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86113C17422CB000A1979A /* libvorbisfile.a */; };
-		4F86114317422CC800A1979A /* libFLAC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114217422CC800A1979A /* libFLAC.a */; };
-		4F86114917422E5100A1979A /* libmikmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114817422E5100A1979A /* libmikmod.a */; };
-		4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86114C17422E6100A1979A /* libsmpeg.a */; };
 		4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD19816EB38BB00321A66 /* PString.cpp */; };
 		4F9E982716E3669F00B632BB /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F9E982616E3669F00B632BB /* CocoaFun.mm */; };
 		4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FB3B41E1744183100C29DF4 /* Point2D.cpp */; };
+		4FDBD49618D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDBD49418D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib */; };
+		4FDBD49718D7B41E007799D0 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */; };
 		4FF097C517A6869C00706687 /* i_video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FF097C317A6869C00706687 /* i_video.cpp */; };
 		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		4FFDADD117ABA2480056B657 /* m_buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDADCF17ABA2480056B657 /* m_buffer.cpp */; };
@@ -121,19 +115,11 @@
 		4F471991173BC0310018E82B /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../src/Config.h; sourceTree = SOURCE_ROOT; };
 		4F471992173BC0310018E82B /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = ../src/Config.cpp; sourceTree = SOURCE_ROOT; };
 		4F74E1921759FCA40066CD25 /* m_collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = m_collection.h; path = ../src/m_collection.h; sourceTree = "<group>"; };
-		4F860DC017421D4B00A1979A /* libSDL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL.a; path = ../lib/osx/universal/libSDL.a; sourceTree = SOURCE_ROOT; };
 		4F86102A17421ED400A1979A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		4F86103017421EE400A1979A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		4F86103717421EF100A1979A /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		4F86103D17421EFD00A1979A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		4F861080174223AE00A1979A /* libSDL_mixer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL_mixer.a; path = ../lib/osx/universal/libSDL_mixer.a; sourceTree = SOURCE_ROOT; };
-		4F8610FE17422B5400A1979A /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = ../lib/osx/universal/libvorbis.a; sourceTree = SOURCE_ROOT; };
-		4F86110C17422B8D00A1979A /* libogg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libogg.a; path = ../lib/osx/universal/libogg.a; sourceTree = SOURCE_ROOT; };
 		4F86111D17422BC800A1979A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		4F86113C17422CB000A1979A /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = ../lib/osx/universal/libvorbisfile.a; sourceTree = SOURCE_ROOT; };
-		4F86114217422CC800A1979A /* libFLAC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFLAC.a; path = ../lib/osx/universal/libFLAC.a; sourceTree = SOURCE_ROOT; };
-		4F86114817422E5100A1979A /* libmikmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmikmod.a; path = ../lib/osx/universal/libmikmod.a; sourceTree = SOURCE_ROOT; };
-		4F86114C17422E6100A1979A /* libsmpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsmpeg.a; path = ../lib/osx/universal/libsmpeg.a; sourceTree = SOURCE_ROOT; };
 		4F9AD19816EB38BB00321A66 /* PString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PString.cpp; path = ../src/PString.cpp; sourceTree = "<group>"; };
 		4F9AD19916EB38BB00321A66 /* PString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PString.h; path = ../src/PString.h; sourceTree = "<group>"; };
 		4F9E981E16E33FC000B632BB /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../src/gfxvabstract.h; sourceTree = "<group>"; };
@@ -147,6 +133,8 @@
 		4FD9E7F016BDAA2D00B43091 /* sodpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = sodpal.inc; path = ../src/sodpal.inc; sourceTree = "<group>"; };
 		4FD9E7F116BDAA2D00B43091 /* wolfpal.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; lineEnding = 0; name = wolfpal.inc; path = ../src/wolfpal.inc; sourceTree = "<group>"; };
 		4FD9E7F516BDC61E00B43091 /* audioabstract.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = audioabstract.h; path = ../src/audioabstract.h; sourceTree = "<group>"; };
+		4FDBD49418D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_mixer-2.0.0.dylib"; path = "../../../../../../opt/local/lib/libSDL2_mixer-2.0.0.dylib"; sourceTree = "<group>"; };
+		4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "../../../../../../opt/local/lib/libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
 		4FF097C317A6869C00706687 /* i_video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = i_video.cpp; path = ../src/i_video.cpp; sourceTree = "<group>"; };
 		4FF097C417A6869C00706687 /* i_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_video.h; path = ../src/i_video.h; sourceTree = "<group>"; };
 		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../src/OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
@@ -230,20 +218,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDBD49618D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
-				4F860DC117421D4B00A1979A /* libSDL.a in Frameworks */,
 				4F86102B17421ED400A1979A /* IOKit.framework in Frameworks */,
 				4F86103117421EE400A1979A /* Carbon.framework in Frameworks */,
+				4FDBD49718D7B41E007799D0 /* libSDL2-2.0.0.dylib in Frameworks */,
 				4F86103817421EF100A1979A /* AudioUnit.framework in Frameworks */,
 				4F86103E17421EFD00A1979A /* OpenGL.framework in Frameworks */,
-				4F861081174223AE00A1979A /* libSDL_mixer.a in Frameworks */,
-				4F86110517422B5400A1979A /* libvorbis.a in Frameworks */,
-				4F86110D17422B8D00A1979A /* libogg.a in Frameworks */,
 				4F86111E17422BC800A1979A /* AudioToolbox.framework in Frameworks */,
-				4F86113D17422CB000A1979A /* libvorbisfile.a in Frameworks */,
-				4F86114317422CC800A1979A /* libFLAC.a in Frameworks */,
-				4F86114917422E5100A1979A /* libmikmod.a in Frameworks */,
-				4F86114D17422E6100A1979A /* libsmpeg.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +311,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4FDBD49418D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib */,
+				4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */,
 				4F86130F174246BF00A1979A /* Static Libraries */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
@@ -394,14 +378,6 @@
 		4F86130F174246BF00A1979A /* Static Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				4F86114C17422E6100A1979A /* libsmpeg.a */,
-				4F86114817422E5100A1979A /* libmikmod.a */,
-				4F86114217422CC800A1979A /* libFLAC.a */,
-				4F86113C17422CB000A1979A /* libvorbisfile.a */,
-				4F86110C17422B8D00A1979A /* libogg.a */,
-				4F8610FE17422B5400A1979A /* libvorbis.a */,
-				4F861080174223AE00A1979A /* libSDL_mixer.a */,
-				4F860DC017421D4B00A1979A /* libSDL.a */,
 			);
 			name = "Static Libraries";
 			sourceTree = "<group>";
@@ -716,7 +692,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -737,11 +713,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/opt/local/include/SDL,
+					/opt/local/include/SDL2,
 					/usr/X11/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx;
 			};
@@ -755,7 +731,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
@@ -771,7 +750,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
@@ -788,7 +770,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
 				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
 				PRODUCT_NAME = AutoWolf;
@@ -800,7 +785,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -818,11 +803,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/opt/local/include/SDL,
+					/opt/local/include/SDL2,
 					/usr/X11/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx;
@@ -833,7 +818,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -853,12 +838,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/opt/local/include/SDL,
+					/opt/local/include/SDL2,
 					/usr/X11/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				LLVM_LTO = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";

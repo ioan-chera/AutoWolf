@@ -36,7 +36,11 @@
 unsigned vid_screenPitch;
 unsigned vid_bufferPitch;
 
-static SDL_Surface *vid_screen = nullptr;
+SDL_Window* vid_window;
+static SDL_Renderer* vid_renderer;
+static SDL_Texture* vid_texture;
+
+static SDL_Color* vid_trueBuffer;
 
 static SDL_Surface *vid_screenBuffer = nullptr;
 
@@ -55,7 +59,7 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
    {
       Quit((PString("Unable to create ")<<width<<"x"<<height<<" buffer surface: "<<SDL_GetError())());
    }
-   SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
+//   SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
    return ret;
 }
 
@@ -83,48 +87,64 @@ void I_InitEngine()
 #if defined(GP2X_940)
    GP2X_MemoryInit();
 #endif
-   
-	// IOANCH 12.06.2012: bumped "Automatic" on the title bars
-	// IOANCH 20130202: unification process
-	SDL_WM_SetCaption(SPEAR.FullTitle(), NULL);
-	//    if( SPEAR())
-	//        SDL_WM_SetCaption("Automatic Spear of Destiny", NULL);
-	//    else
-	//        SDL_WM_SetCaption("Automatic Wolfenstein 3D", NULL);
 	
-	if(cfg_screenBits == -1)
-	{
-		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
-		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
-	}
+	vid_window = SDL_CreateWindow(SPEAR.FullTitle(),
+											 SDL_WINDOWPOS_UNDEFINED,
+											 SDL_WINDOWPOS_UNDEFINED,
+											 0, 0,
+											 SDL_WINDOW_FULLSCREEN_DESKTOP);
+   	
+//	if(cfg_screenBits == -1)
+//	{
+//		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
+//		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
+//	}
 	
-	vid_screen = SDL_SetVideoMode(cfg_screenWidth, cfg_screenHeight,
-								  cfg_screenBits,
-								  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
-								  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
-								  | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
-	if(!vid_screen)
+	if(!vid_window)
 	{
-		printf("Unable to set %ix%ix%i video mode: %s\n", cfg_screenWidth,
-			   cfg_screenHeight, cfg_screenBits, SDL_GetError());
+		printf("Unable to create SDL window: %s\n", SDL_GetError());
 		exit(1);
 	}
-	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
-		cfg_usedoublebuffering = false;
+	
+	vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
+	if(!vid_renderer)
+	{
+		printf("Unable to create SDL renderer: %s\n", SDL_GetError());
+		exit(1);
+	}
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");  // make the scaled rendering look smoother.
+	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_screenWidth, cfg_screenHeight) < 0)
+	{
+		printf("Unable to set SDL renderer logical size: %s\n", SDL_GetError());
+		exit(1);
+	}
+	
+	vid_texture = SDL_CreateTexture(vid_renderer,
+								   SDL_PIXELFORMAT_ABGR8888,
+								   SDL_TEXTUREACCESS_STREAMING,
+								   cfg_screenWidth, cfg_screenHeight);
+	if(!vid_texture)
+	{
+		printf("Unable to create SDL texture: %s\n", SDL_GetError());
+		exit(1);
+	}
+	
+	
+//	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
+//		cfg_usedoublebuffering = false;
 	SDL_ShowCursor(SDL_DISABLE);
 	
 	// IOANCH 20130202: unification process
-	SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
+//	SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
 	memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
 	
 	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth, cfg_screenHeight);
+	vid_trueBuffer = new SDL_Color[cfg_screenWidth * cfg_screenHeight];
 	
-	vid_screenPitch = vid_screen->pitch;
 	vid_bufferPitch = vid_screenBuffer->pitch;
 	
 	// IOANCH: removed vid_curSurface, was redundant
 	
-	// IOANCH: moved further calls elsewhere
 }
 
 //
@@ -189,9 +209,9 @@ byte *I_LockBuffer()
 //
 // Prepares a surface for editing. Returns the pixel byte array
 //
-byte *I_LockDirect()
+SDL_Color *I_LockDirect()
 {
-   return I_lockSurface(vid_screen);
+   return vid_trueBuffer;
 }
 
 //
@@ -217,35 +237,33 @@ void I_UnlockBuffer()
 }
 void I_UnlockDirect()
 {
-   I_unlockSurface(vid_screen);
 }
 
 //
 // I_UpdateScreen
 //
-void I_UpdateScreen()
-{
-	SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
-	SDL_Flip(vid_screen);
-}
 void I_UpdateDirect()
 {
-	SDL_Flip(vid_screen);
+	SDL_UpdateTexture(vid_texture, nullptr, vid_trueBuffer, cfg_screenWidth * sizeof(SDL_Color));
+	SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr);
+	SDL_RenderPresent(vid_renderer);
+}
+
+void I_UpdateScreen()
+{
+	int x, y;
+	for (y = 0; y < cfg_screenHeight; ++y)
+	{
+		for (x = 0; x < cfg_screenWidth; ++x)
+		{
+			vid_trueBuffer[y * cfg_screenWidth + x] = vid_curpal[static_cast<uint8_t*>(vid_screenBuffer->pixels)[y * cfg_screenWidth + x]];
+		}
+	}
+	I_UpdateDirect();
 }
 void I_ClearScreen(int color)
 {
    SDL_FillRect(vid_screenBuffer, NULL, color);
-}
-void I_PutDirectFullColour(int col, byte *destptr, int x, int y)
-{
-   uint32_t fullcol = SDL_MapRGB(vid_screen->format,
-                                 vid_curpal[col].r,
-                                 vid_curpal[col].g,
-                                 vid_curpal[col].b);
-   memcpy(destptr + y * vid_screen->pitch +
-          x * vid_screen->format->BytesPerPixel,
-          &fullcol, vid_screen->format->BytesPerPixel);
-   
 }
 void I_SaveBufferBMP(const char *fname)
 {
@@ -266,15 +284,7 @@ void I_SaveBufferBMP(const char *fname)
 void I_SetPalette (SDL_Color *palette, bool forceupdate)
 {
    memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
-   
-   if(cfg_screenBits == 8)
-      SDL_SetPalette(vid_screen, SDL_PHYSPAL, palette, 0, 256);
-   else
-   {
-      SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, palette, 0, 256);
-      if(forceupdate)
-         I_UpdateScreen();
-   }
+   I_UpdateScreen();
 }
 
 
@@ -413,7 +423,7 @@ void I_LoadLatchMem ()
    // tile 8s
    //
    // IOANCH: use I_ call
-   surf = I_createSurface(SDL_HWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
+   surf = I_createSurface(SDL_SWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
    
 	vid_latchpics[0] = surf;
    graphSegs.cacheChunk(SPEAR.g(STARTTILE8));
@@ -437,7 +447,7 @@ void I_LoadLatchMem ()
 	for (i=start;i<=end;i++)
 	{
 		psize = graphSegs.sizeAt(i-SPEAR.g(STARTPICS));
-      surf = I_createSurface(SDL_HWSURFACE, psize.width, psize.height);
+      surf = I_createSurface(SDL_SWSURFACE, psize.width, psize.height);
       
 		vid_latchpics[2+i-start] = surf;
 		graphSegs.cacheChunk (i);

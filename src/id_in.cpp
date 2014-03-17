@@ -109,17 +109,17 @@ void InputManager::p_processEvent(const SDL_Event *event)
          // check for keypresses
       case SDL_KEYDOWN:
       {
-         if(event->key.keysym.sym == SDLK_SCROLLOCK ||
+         if(event->key.keysym.sym == SDLK_SCROLLLOCK ||
             event->key.keysym.sym == SDLK_F12)
          {
             m_grabInput = !m_grabInput;
-            SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+//            SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
             return;
          }
          
          m_lastScan = (ScanCode)event->key.keysym.sym;
-         SDLMod mod = SDL_GetModState();
-         if(m_keyboard[sc_Alt])
+         SDL_Keymod mod = SDL_GetModState();
+         if(m_keyboard.count(sc_Alt))
          {
             if(m_lastScan == SDLK_F4)
                Quit(NULL);
@@ -129,17 +129,17 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(m_lastScan == SDLK_RSHIFT) m_lastScan = (ScanCode)SDLK_LSHIFT;
          else if(m_lastScan == SDLK_RALT) m_lastScan = (ScanCode)SDLK_LALT;
          else if(m_lastScan == SDLK_RCTRL) m_lastScan = (ScanCode)SDLK_LCTRL;
-         else if(m_lastScan == SDLK_RMETA) m_lastScan = (ScanCode)SDLK_LMETA;
+         else if(m_lastScan == SDLK_RGUI) m_lastScan = (ScanCode)SDLK_LGUI;
          else
          {
             if((mod & KMOD_NUM) == 0)
             {
                switch((int)m_lastScan)
                {
-                  case SDLK_KP2: m_lastScan = (ScanCode)SDLK_DOWN; break;
-                  case SDLK_KP4: m_lastScan = (ScanCode)SDLK_LEFT; break;
-                  case SDLK_KP6: m_lastScan = (ScanCode)SDLK_RIGHT; break;
-                  case SDLK_KP8: m_lastScan = (ScanCode)SDLK_UP; break;
+                  case SDLK_KP_2: m_lastScan = (ScanCode)SDLK_DOWN; break;
+                  case SDLK_KP_4: m_lastScan = (ScanCode)SDLK_LEFT; break;
+                  case SDLK_KP_6: m_lastScan = (ScanCode)SDLK_RIGHT; break;
+                  case SDLK_KP_8: m_lastScan = (ScanCode)SDLK_UP; break;
                }
             }
          }
@@ -158,8 +158,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
             if(sym < lengthof(m_ASCIINames) && m_ASCIINames[sym])
                m_lastASCII = m_ASCIINames[sym];
          }
-         if(m_lastScan<SDLK_LAST)
-            m_keyboard[m_lastScan] = 1;
+		m_keyboard.insert(m_lastScan);
          if(m_lastScan == SDLK_PAUSE)
             m_paused = true;
          break;
@@ -172,43 +171,42 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(key == SDLK_RSHIFT) key = SDLK_LSHIFT;
          else if(key == SDLK_RALT) key = SDLK_LALT;
          else if(key == SDLK_RCTRL) key = SDLK_LCTRL;
-         else if(key == SDLK_RMETA) key = SDLK_LMETA;
+         else if(key == SDLK_RGUI) key = SDLK_LGUI;
          else
          {
             if((SDL_GetModState() & KMOD_NUM) == 0)
             {
                switch(key)
                {
-                  case SDLK_KP2: key = SDLK_DOWN; break;
-                  case SDLK_KP4: key = SDLK_LEFT; break;
-                  case SDLK_KP6: key = SDLK_RIGHT; break;
-                  case SDLK_KP8: key = SDLK_UP; break;
+                  case SDLK_KP_2: key = SDLK_DOWN; break;
+                  case SDLK_KP_4: key = SDLK_LEFT; break;
+                  case SDLK_KP_6: key = SDLK_RIGHT; break;
+                  case SDLK_KP_8: key = SDLK_UP; break;
                }
             }
          }
          
-         if(key<SDLK_LAST)
-            m_keyboard[key] = 0;
+         m_keyboard.erase(key);
          break;
       }
          
-      case SDL_ACTIVEEVENT:
-      {
-         if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)
-         {
-            if(event->active.gain)
-            {
-               if(m_needRestore)
-               {
-                  I_FreeLatchMem();
-                  I_LoadLatchMem();
-               }
-               
-               m_needRestore = false;
-            }
-            else m_needRestore = true;
-         }
-      }
+//      case SDL_ACTIVEEVENT:
+//      {
+//         if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)
+//         {
+//            if(event->active.gain)
+//            {
+//               if(m_needRestore)
+//               {
+//                  I_FreeLatchMem();
+//                  I_LoadLatchMem();
+//               }
+//               
+//               m_needRestore = false;
+//            }
+//            else m_needRestore = true;
+//         }
+//      }
          
 #if defined(GP2X)
       case SDL_JOYBUTTONDOWN:
@@ -231,7 +229,7 @@ void InputManager::clearKeysDown()
 {
    m_lastScan = sc_None;
 	m_lastASCII = key_None;
-	memset (m_keyboard,0,sizeof(m_keyboard));
+	m_keyboard.clear();
 }
 
 //
@@ -265,7 +263,7 @@ void InputManager::initialize()
    if(cfg_fullscreen || cfg_forcegrabmouse)
    {
       m_grabInput = true;
-      SDL_WM_GrabInput(SDL_GRAB_ON);
+//      SDL_WM_GrabInput(SDL_GRAB_ON);
    }
    
    // I didn't find a way to ask libSDL whether a mouse is present, yet...
@@ -466,28 +464,28 @@ CursorInfo InputManager::readControl()
    
 	processEvents();
    
-   if (m_keyboard[KbdDefs.upleft])
+   if (m_keyboard.count(KbdDefs.upleft))
       mx = motion_Left,my = motion_Up;
-   else if (m_keyboard[KbdDefs.upright])
+   else if (m_keyboard.count(KbdDefs.upright))
       mx = motion_Right,my = motion_Up;
-   else if (m_keyboard[KbdDefs.downleft])
+   else if (m_keyboard.count(KbdDefs.downleft))
       mx = motion_Left,my = motion_Down;
-   else if (m_keyboard[KbdDefs.downright])
+   else if (m_keyboard.count(KbdDefs.downright))
       mx = motion_Right,my = motion_Down;
    
-   if (m_keyboard[KbdDefs.up])
+   if (m_keyboard.count(KbdDefs.up))
       my = motion_Up;
-   else if (m_keyboard[KbdDefs.down])
+   else if (m_keyboard.count(KbdDefs.down))
       my = motion_Down;
    
-   if (m_keyboard[KbdDefs.left])
+   if (m_keyboard.count(KbdDefs.left))
       mx = motion_Left;
-   else if (m_keyboard[KbdDefs.right])
+   else if (m_keyboard.count(KbdDefs.right))
       mx = motion_Right;
    
-   if (m_keyboard[KbdDefs.button0])
+   if (m_keyboard.count(KbdDefs.button0))
       buttons += 1 << 0;
-   if (m_keyboard[KbdDefs.button1])
+   if (m_keyboard.count(KbdDefs.button1))
       buttons += 1 << 1;
    
 	dx = mx * 127;

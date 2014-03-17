@@ -972,12 +972,7 @@ void T_Chase (objtype *ob)
                {
                   // IOANCH: also alert the bot
                   HeardEvent *hevent = new HeardEvent;
-                  hevent->x = doorobjlist[-ob->distance - 1].tilex << TILESHIFT;
-                  hevent->y = doorobjlist[-ob->distance - 1].tiley << TILESHIFT;
-                  hevent->sound = SPEAR.sd(OPENDOORSND);
-                  hevent->time = I_GetTicks();
-                  hevent->cause = ob;
-                  hevent->passed = 0;
+				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT, doorobjlist[-ob->distance - 1].tiley << TILESHIFT, SPEAR.sd(OPENDOORSND),  I_GetTicks(), ob, 0);
                   bot.heardEvents.add(hevent);
                }
                 return;

@@ -56,6 +56,16 @@ struct HeardEvent
    objtype *cause;   // the actor who may have produced the sound
    
    longword passed;
+	
+	void set(fixed ix, fixed iy, word isound, longword itime, objtype* icause, longword ipassed)
+	{
+		x = ix;
+		y = iy;
+		sound = isound;
+		time = itime;
+		cause = icause;
+		passed = ipassed;
+	}
 };
 
 //

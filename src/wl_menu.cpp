@@ -247,109 +247,131 @@ PString cfg_savename("SAVEGAM?.");
 //
 ////////////////////////////////////////////////////////////////////
 
-#if 0
-static const char *ScanNames[] =      // Scan code names with single chars
-{
-    "?", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "?", "?",
-    "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "|", "?", "A", "S",
-    "D", "F", "G", "H", "J", "K", "L", ";", "\"", "?", "?", "?", "Z", "X", "C", "V",
-    "B", "N", "M", ",", ".", "/", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?",
-    "?", "?", "?", "?", "?", "?", "?", "?", "\xf", "?", "-", "\x15", "5", "\x11", "+", "?",
-    "\x13", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?",
-    "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?",
-    "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?", "?"
-};                              // DEBUG - consolidate these
-static ScanCode ExtScanCodes[] =        // Scan codes with >1 char names
-{
-    1, 0xe, 0xf, 0x1d, 0x2a, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e,
-    0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x57, 0x59, 0x46, 0x1c, 0x36,
-    0x37, 0x38, 0x47, 0x49, 0x4f, 0x51, 0x52, 0x53, 0x45, 0x48,
-    0x50, 0x4b, 0x4d, 0x00
-};
-static const char *ExtScanNames[] =   // Names corresponding to ExtScanCodes
-{
-    "Esc", "BkSp", "Tab", "Ctrl", "LShft", "Space", "CapsLk", "F1", "F2", "F3", "F4",
-    "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "ScrlLk", "Enter", "RShft",
-    "PrtSc", "Alt", "Home", "PgUp", "End", "PgDn", "Ins", "Del", "NumLk", "Up",
-    "Down", "Left", "Right", ""
-};
-
-/*#pragma warning 737 9
-static byte
-                                        *ScanNames[] =          // Scan code names with single chars
-                                        {
-        "?","?","1","2","3","4","5","6","7","8","9","0","-","+","?","?",
-        "Q","W","E","R","T","Y","U","I","O","P","[","]","|","?","A","S",
-        "D","F","G","H","J","K","L",";","\"","?","?","?","Z","X","C","V",
-        "B","N","M",",",".","/","?","?","?","?","?","?","?","?","?","?",
-        "?","?","?","?","?","?","?","?","\xf","?","-","\x15","5","\x11","+","?",
-        "\x13","?","?","?","?","?","?","?","?","?","?","?","?","?","?","?",
-        "?","?","?","?","?","?","?","?","?","?","?","?","?","?","?","?",
-        "?","?","?","?","?","?","?","?","?","?","?","?","?","?","?","?"
-                                        };      // DEBUG - consolidate these
-static byte ExtScanCodes[] =    // Scan codes with >1 char names
-                                        {
-        1,0xe,0xf,0x1d,0x2a,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,
-        0x3f,0x40,0x41,0x42,0x43,0x44,0x57,0x59,0x46,0x1c,0x36,
-        0x37,0x38,0x47,0x49,0x4f,0x51,0x52,0x53,0x45,0x48,
-        0x50,0x4b,0x4d,0x00
-                                        };
-static byte *ExtScanNames[] =   // Names corresponding to ExtScanCodes
-                                        {
-        "Esc","BkSp","Tab","Ctrl","LShft","Space","CapsLk","F1","F2","F3","F4",
-        "F5","F6","F7","F8","F9","F10","F11","F12","ScrlLk","Enter","RShft",
-        "PrtSc","Alt","Home","PgUp","End","PgDn","Ins","Del","NumLk","Up",
-        "Down","Left","Right",""
-                                        };*/
-
-#else
 // IOANCH 20130801: added meta/command/windows/super key to the names
-static const char* const ScanNames[SDLK_LAST] =
-    {
-        "?","?","?","?","?","?","?","?",                                //   0
-        "BkSp","Tab","?","?","?","Return","?","?",                      //   8
-        "?","?","?","Pause","?","?","?","?",                            //  16
-        "?","?","?","Esc","?","?","?","?",                              //  24
-        "Space","!","\"","#","$","?","&","'",                           //  32
-        "(",")","*","+",",","-",".","/",                                //  40
-        "0","1","2","3","4","5","6","7",                                //  48
-        "8","9",":",";","<","=",">","?",                                //  56
-        "@","A","B","C","D","E","F","G",                                //  64
-        "H","I","J","K","L","M","N","O",                                //  72
-        "P","Q","R","S","T","U","V","W",                                //  80
-        "X","Y","Z","[","\\","]","^","_",                               //  88
-        "`","a","b","c","d","e","f","h",                                //  96
-        "h","i","j","k","l","m","n","o",                                // 104
-        "p","q","r","s","t","u","v","w",                                // 112
-        "x","y","z","{","|","}","~","?",                                // 120
-        "?","?","?","?","?","?","?","?",                                // 128
-        "?","?","?","?","?","?","?","?",                                // 136
-        "?","?","?","?","?","?","?","?",                                // 144
-        "?","?","?","?","?","?","?","?",                                // 152
-        "?","?","?","?","?","?","?","?",                                // 160
-        "?","?","?","?","?","?","?","?",                                // 168
-        "?","?","?","?","?","?","?","?",                                // 176
-        "?","?","?","?","?","?","?","?",                                // 184
-        "?","?","?","?","?","?","?","?",                                // 192
-        "?","?","?","?","?","?","?","?",                                // 200
-        "?","?","?","?","?","?","?","?",                                // 208
-        "?","?","?","?","?","?","?","?",                                // 216
-        "?","?","?","?","?","?","?","?",                                // 224
-        "?","?","?","?","?","?","?","?",                                // 232
-        "?","?","?","?","?","?","?","?",                                // 240
-        "?","?","?","?","?","?","?","?",                                // 248
-        "?","?","?","?","?","?","?","?",                                // 256
-        "?","?","?","?","?","?","?","Enter",                            // 264
-        "?","Up","Down","Right","Left","Ins","Home","End",              // 272
-        "PgUp","PgDn","F1","F2","F3","F4","F5","F6",                    // 280
-        "F7","F8","F9","F10","F11","F12","?","?",                       // 288
-        "?","?","?","?","NumLk","CapsLk","ScrlLk","RShft",              // 296
-        "Shift","RCtrl","Ctrl","RAlt","Alt","RMeta","Meta","?",         // 304
-        "?","?","?","?","PrtSc","?","?","?",                            // 312
-        "?","?"                                                         // 320
-    };
+static std::unordered_map<unsigned, std::string> ScanNames;
 
-#endif
+/*
+ "?","?","?","?","?","?","?","Enter",                            // 264
+ "?","Up","Down","Right","Left","Ins","Home","End",              // 272
+ "PgUp","PgDn","F1","F2","F3","F4","F5","F6",                    // 280
+ "F7","F8","F9","F10","F11","F12","?","?",                       // 288
+ "?","?","?","?","NumLk","CapsLk","ScrlLk","RShft",              // 296
+ "Shift","RCtrl","Ctrl","RAlt","Alt","RMeta","Meta","?",         // 304
+ "?","?","?","?","PrtSc","?","?","?",                            // 312
+ "?","?"                                                         // 320
+
+ */
+
+void US_SetScanNames()
+{
+	ScanNames[sc_Enter] = "Enter";
+	ScanNames[SDLK_UP] = "Up";
+	ScanNames[SDLK_DOWN] = "Down";
+	ScanNames[SDLK_RIGHT] = "Right";
+	ScanNames[SDLK_LEFT] = "Left";
+	ScanNames[SDLK_INSERT] = "Ins";
+	ScanNames[SDLK_HOME] = "Home";
+	ScanNames[SDLK_END] = "End";
+	ScanNames[SDLK_PAGEUP] = "PgUp";
+	ScanNames[SDLK_PAGEDOWN] = "PgDn";
+	ScanNames[SDLK_F1] = "F1";
+	ScanNames[SDLK_F2] = "F2";
+	ScanNames[SDLK_F3] = "F3";
+	ScanNames[SDLK_F4] = "F4";
+	ScanNames[SDLK_F5] = "F5";
+	ScanNames[SDLK_F6] = "F6";
+	ScanNames[SDLK_F7] = "F7";
+	ScanNames[SDLK_F8] = "F8";
+	ScanNames[SDLK_F9] = "F9";
+	ScanNames[SDLK_F10] = "F10";
+	ScanNames[SDLK_F11] = "F11";
+	ScanNames[SDLK_F12] = "F12";
+	ScanNames[SDLK_F13] = "F13";
+	ScanNames[SDLK_F14] = "F14";
+	ScanNames[SDLK_F15] = "F15";
+	ScanNames[SDLK_F16] = "F16";
+	ScanNames[SDLK_F17] = "F17";
+	ScanNames[SDLK_F18] = "F18";
+	ScanNames[SDLK_F19] = "F19";
+	ScanNames[SDLK_NUMLOCKCLEAR] = "NumLk";
+	ScanNames[SDLK_CAPSLOCK] = "CapsLk";
+	ScanNames[SDLK_SCROLLLOCK] = "ScrlLk";
+	ScanNames[SDLK_RSHIFT] = "RShft";
+	ScanNames[SDLK_LSHIFT] = "Shift";
+	ScanNames[SDLK_RCTRL] = "RCtrl";
+	ScanNames[SDLK_LCTRL] = "LCtrl";
+	ScanNames[SDLK_RALT] = "RAlt";
+	ScanNames[SDLK_LALT] = "Alt";
+	ScanNames[SDLK_RGUI] = "RMeta";
+	ScanNames[SDLK_LGUI] = "LMeta";
+	ScanNames[SDLK_PRINTSCREEN] = "PrtSc";
+	ScanNames[sc_BackSpace] = "BkSp";
+	ScanNames[sc_Tab] = "Tab";
+	ScanNames[sc_Return] = "Return";
+	ScanNames[SDLK_PAUSE] = "Pause";
+	ScanNames[sc_Escape] = "Esc";
+	ScanNames[sc_Space] = "Space";
+	ScanNames[SDLK_EXCLAIM] = "!";
+	ScanNames[SDLK_QUOTEDBL] = "\"";
+	ScanNames[SDLK_HASH] = "#";
+	ScanNames[SDLK_DOLLAR] = "$";
+	ScanNames[SDLK_QUESTION] = "?";
+	ScanNames[SDLK_AMPERSAND] = "&";
+	ScanNames[SDLK_QUOTE] = "'";
+	ScanNames[SDLK_LEFTPAREN] = "(";
+	ScanNames[SDLK_RIGHTPAREN] = ")";
+	ScanNames[SDLK_ASTERISK] = "*";
+	ScanNames[SDLK_PLUS] = "+";
+	ScanNames[SDLK_COMMA] = ",";
+	ScanNames[SDLK_MINUS] = "-";
+	ScanNames[SDLK_PERIOD] = ".";
+	ScanNames[SDLK_SLASH] = "/";
+	ScanNames[SDLK_0] = "0";
+	ScanNames[SDLK_1] = "1";
+	ScanNames[SDLK_2] = "2";
+	ScanNames[SDLK_3] = "3";
+	ScanNames[SDLK_4] = "4";
+	ScanNames[SDLK_5] = "5";
+	ScanNames[SDLK_6] = "6";
+	ScanNames[SDLK_7] = "7";
+	ScanNames[SDLK_8] = "8";
+	ScanNames[SDLK_9] = "9";
+	ScanNames[SDLK_COLON] = ":";
+	ScanNames[SDLK_SEMICOLON] = ";";
+	ScanNames[SDLK_LESS] = "<";
+	ScanNames[SDLK_EQUALS] = "=";
+	ScanNames[SDLK_GREATER] = ">";
+	ScanNames[SDLK_AT] = "@";
+	ScanNames[SDLK_a] = "A";
+	ScanNames[SDLK_b] = "B";
+	ScanNames[SDLK_c] = "C";
+	ScanNames[SDLK_d] = "D";
+	ScanNames[SDLK_e] = "E";
+	ScanNames[SDLK_f] = "F";
+	ScanNames[SDLK_g] = "G";
+	ScanNames[SDLK_h] = "H";
+	ScanNames[SDLK_i] = "I";
+	ScanNames[SDLK_j] = "J";
+	ScanNames[SDLK_k] = "K";
+	ScanNames[SDLK_l] = "L";
+	ScanNames[SDLK_m] = "M";
+	ScanNames[SDLK_n] = "N";
+	ScanNames[SDLK_o] = "O";
+	ScanNames[SDLK_p] = "P";
+	ScanNames[SDLK_q] = "Q";
+	ScanNames[SDLK_r] = "R";
+	ScanNames[SDLK_s] = "S";
+	ScanNames[SDLK_t] = "T";
+	ScanNames[SDLK_u] = "U";
+	ScanNames[SDLK_v] = "V";
+	ScanNames[SDLK_w] = "W";
+	ScanNames[SDLK_x] = "X";
+	ScanNames[SDLK_y] = "Y";
+	ScanNames[SDLK_z] = "Z";
+	ScanNames[SDLK_LEFTBRACKET] = "[";
+	ScanNames[SDLK_BACKSLASH] = "\\";
+	ScanNames[SDLK_RIGHTBRACKET] = "]";
+}
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -2659,7 +2681,10 @@ void
 PrintCustKeybd (int i)
 {
     PrintX = CST_START + CST_SPC * i;
-    US_Print ((const char *) ScanNames [buttonscan[order[i]]]);
+	if(ScanNames.count(buttonscan[order[i]]))
+		US_Print (ScanNames[buttonscan[order[i]]].c_str());
+	else
+		US_Print("?");
 }
 
 void
@@ -2682,7 +2707,10 @@ void
 PrintCustKeys (int i)
 {
     PrintX = CST_START + CST_SPC * i;
-    US_Print ((const char *) ScanNames [dirscan[moveorder[i]]]);
+	if(ScanNames.count(buttonscan[order[i]]))
+		US_Print (ScanNames[dirscan[moveorder[i]]].c_str());
+	else
+		US_Print("?");
 }
 
 void

@@ -246,12 +246,7 @@ void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source)
    if(source)
    {
       HeardEvent *hevent = new HeardEvent;
-      hevent->x = ob->x;
-      hevent->y = ob->y;
-      hevent->sound = SPEAR.sd(s);
-      hevent->time = I_GetTicks();
-      hevent->cause = source;
-      hevent->passed = 0;
+	   hevent->set(ob->x, ob->y, SPEAR.sd(s), I_GetTicks(), source, 0);
       bot.heardEvents.add(hevent);
    }
 }

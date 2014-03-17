@@ -92,6 +92,8 @@ void US_Startup()
 {
 	if (US_Started)
 		return;
+	
+	US_SetScanNames();
 
    wolfRnd.initialize(true);
    // Initialize the random number generator
