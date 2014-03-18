@@ -91,8 +91,8 @@ void I_InitEngine()
 	vid_window = SDL_CreateWindow(SPEAR.FullTitle(),
 											 SDL_WINDOWPOS_UNDEFINED,
 											 SDL_WINDOWPOS_UNDEFINED,
-											 0, 0,
-											 SDL_WINDOW_FULLSCREEN_DESKTOP);
+								  cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
+								  cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI : SDL_WINDOW_ALLOW_HIGHDPI);
    	
 //	if(cfg_screenBits == -1)
 //	{

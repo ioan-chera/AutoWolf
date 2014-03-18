@@ -176,7 +176,9 @@ public:
    
    void centreMouse() const
    {
-	   SDL_WarpMouseInWindow(vid_window, cfg_screenWidth / 2, cfg_screenHeight / 2);
+	   int w, h;
+	   SDL_GetWindowSize(vid_window, &w, &h);
+	   SDL_WarpMouseInWindow(vid_window, w / 2, h / 2);
    }
    
    bool inputGrabbed() const

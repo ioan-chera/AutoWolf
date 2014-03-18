@@ -113,6 +113,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
             event->key.keysym.sym == SDLK_F12)
          {
             m_grabInput = !m_grabInput;
+			 SDL_SetRelativeMouseMode(m_grabInput ? SDL_TRUE : SDL_FALSE);
 //            SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
             return;
          }
@@ -263,7 +264,9 @@ void InputManager::initialize()
    if(cfg_fullscreen || cfg_forcegrabmouse)
    {
       m_grabInput = true;
-//      SDL_WM_GrabInput(SDL_GRAB_ON);
+	   SDL_SetRelativeMouseMode(SDL_TRUE);
+
+	   //      SDL_WM_GrabInput(SDL_GRAB_ON);
    }
    
    // I didn't find a way to ask libSDL whether a mouse is present, yet...
