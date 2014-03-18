@@ -28,27 +28,27 @@ class PString;
 //
 // Namespace for configuration variables
 //
-extern Boolean8  cfg_nonazis;	// no enemies spawned
-extern Boolean8  cfg_secretstep3;
-extern Boolean8  cfg_botActive;
+extern bool  cfg_nonazis;	// no enemies spawned
+extern bool  cfg_secretstep3;
+extern bool  cfg_botActive;
 extern PString  cfg_dir;            // IOANCH 20130509: formerly configdir
 extern int      cfg_extravbls;
-extern Boolean8  cfg_forcegrabmouse;
-extern Boolean8  cfg_fullscreen;
+extern bool  cfg_forcegrabmouse;
+extern bool  cfg_fullscreen;
 extern int      cfg_audiobuffer;
 extern int      cfg_samplerate;
-extern Boolean8  cfg_debugmode;
+extern bool  cfg_debugmode;
 extern int      cfg_difficulty;
-extern Boolean8  cfg_ignorenumchunks;
+extern bool  cfg_ignorenumchunks;
 extern int      cfg_joystickhat;
 extern int      cfg_joystickindex;
 extern int      cfg_mission;
-extern Boolean8  cfg_nowait;
+extern bool  cfg_nowait;
 extern int      cfg_tedlevel;
 extern unsigned cfg_screenBits;
 extern unsigned cfg_screenHeight;
 extern unsigned cfg_screenWidth;
-extern Boolean8  cfg_usedoublebuffering;
+extern bool  cfg_usedoublebuffering;
     
 
 void     CFG_CheckParameters(int argc, TChar *argv[]);

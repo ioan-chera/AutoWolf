@@ -43,15 +43,15 @@
 #include "wl_text.h"
 
 
-Boolean8 cfg_nonazis;
-Boolean8 cfg_secretstep3;
-Boolean8 cfg_botActive;
+bool cfg_nonazis;
+bool cfg_secretstep3;
+bool cfg_botActive;
 
 PString cfg_dir;
-int     cfg_extravbls = 0;
+int     cfg_extravbls;
 
-Boolean8 cfg_forcegrabmouse;
-Boolean8 cfg_fullscreen = false;
+bool cfg_forcegrabmouse;
+bool cfg_fullscreen;
 
 #if defined(_arch_dreamcast)
 int     cfg_joystickhat = 0;
@@ -67,24 +67,24 @@ int     cfg_samplerate = 44100;
 int     cfg_audiobuffer = 2048 / (44100 / cfg_samplerate);
 #endif
 
-Boolean8 cfg_debugmode = false;
+bool cfg_debugmode = false;
 int     cfg_difficulty = 1;           // default is "normal"
-Boolean8 cfg_ignorenumchunks = false;
+bool cfg_ignorenumchunks = false;
 int     cfg_joystickindex = 0;
 
 int     cfg_mission = 0;
-Boolean8 cfg_nowait = false;
+bool cfg_nowait = false;
 
 int     cfg_tedlevel = -1;            // default is not to start a level
 
 
 #if defined(_arch_dreamcast)
-Boolean8  cfg_usedoublebuffering = false;
+bool  cfg_usedoublebuffering = false;
 unsigned cfg_screenWidth = 320;
 unsigned cfg_screenHeight = 200;
 unsigned cfg_screenBits = 8;
 #elif defined(GP2X)
-Boolean8  cfg_usedoublebuffering = true;
+bool  cfg_usedoublebuffering = true;
 unsigned cfg_screenWidth = 320;
 unsigned cfg_screenHeight = 240;
 #if defined(GP2X_940)
@@ -93,7 +93,7 @@ unsigned cfg_screenBits = 8;
 unsigned cfg_screenBits = 16;
 #endif
 #else
-Boolean8  cfg_usedoublebuffering = true;
+bool  cfg_usedoublebuffering = true;
 unsigned cfg_screenWidth = 640;
 unsigned cfg_screenHeight = 400;
 unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
