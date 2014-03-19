@@ -899,8 +899,7 @@ static int CP_EndGame (int)
 // VIEW THE HIGH SCORES
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_ViewScores (int)
+int CP_ViewScores (int)
 {
     fontnumber = 0;
 
@@ -2868,89 +2867,6 @@ static int CP_Quit (int)
     DrawMainMenu ();
     return 0;
 }
-
-
-////////////////////////////////////////////////////////////////////
-//
-// HANDLE INTRO SCREEN (SYSTEM CONFIG)
-//
-////////////////////////////////////////////////////////////////////
-void
-menu_IntroScreen ()
-{
-    // IOANCH 20130303: unification
-#define MAINCOLOR (SPEAR() ? 0x4f : 0x6c)
-#define EMSCOLOR (SPEAR() ? 0x4f : 0x6c)
-#define XMSCOLOR (SPEAR() ? 0x4f : 0x6c)
-#define FILLCOLOR       14
-
-//      long memory;
-//      long emshere,xmshere;
-    int i;
-/*      int ems[10]={100,200,300,400,500,600,700,800,900,1000},
-                xms[10]={100,200,300,400,500,600,700,800,900,1000};
-        int main[10]={32,64,96,128,160,192,224,256,288,320};*/
-
-
-    //
-    // DRAW MAIN MEMORY
-    //
-#ifdef ABCAUS
-    memory = (1023l + mminfo.nearheap + mminfo.farheap) / 1024l;
-    for (i = 0; i < 10; i++)
-        if (memory >= main[i])
-            VL_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
-
-    //
-    // DRAW EMS MEMORY
-    //
-    if (EMSPresent)
-    {
-        emshere = 4l * EMSPagesAvail;
-        for (i = 0; i < 10; i++)
-            if (emshere >= ems[i])
-                VL_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
-    }
-
-    //
-    // DRAW XMS MEMORY
-    //
-    if (XMSPresent)
-    {
-        xmshere = 4l * XMSPagesAvail;
-        for (i = 0; i < 10; i++)
-            if (xmshere >= xms[i])
-                VL_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
-    }
-#else
-    for (i = 0; i < 10; i++)
-        VL_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
-    for (i = 0; i < 10; i++)
-        VL_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
-    for (i = 0; i < 10; i++)
-        VL_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
-#endif
-
-
-    //
-    // FILL BOXES
-    //
-    if (myInput.mousePresent())
-        VL_Bar (164, 82, 12, 2, FILLCOLOR);
-
-    if (myInput.joyPresent())
-        VL_Bar (164, 105, 12, 2, FILLCOLOR);
-
-    if (sd_adLibPresent && !sd_soundBlasterPresent)
-        VL_Bar (164, 128, 12, 2, FILLCOLOR);
-
-    if (sd_soundBlasterPresent)
-        VL_Bar (164, 151, 12, 2, FILLCOLOR);
-
-//    if (SoundSourcePresent)
-//        VL_Bar (164, 174, 12, 2, FILLCOLOR);
-}
-
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////

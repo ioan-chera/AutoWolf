@@ -1153,8 +1153,6 @@ void main_InitDigiMap ()
     }
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // InitGame
@@ -1163,6 +1161,8 @@ void main_InitDigiMap ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 PString global_error;
+static void IntroScreen ();
+
 static void InitGame()
 {
 // IOANCH 20130301: unification culling
@@ -1226,7 +1226,7 @@ static void InitGame()
 //
 // draw intro screen stuff
 //
-		menu_IntroScreen ();
+		IntroScreen ();
 	}
 
 #ifdef _arch_dreamcast
@@ -1377,7 +1377,73 @@ void Quit (const char *message)
     exit(0);
 }
 
-//===========================================================================
+////////////////////////////////////////////////////////////////////
+//
+// HANDLE INTRO SCREEN (SYSTEM CONFIG)
+//
+////////////////////////////////////////////////////////////////////
+static void IntroScreen ()
+{
+    // IOANCH 20130303: unification
+#define MAINCOLOR (SPEAR() ? 0x4f : 0x6c)
+#define EMSCOLOR (SPEAR() ? 0x4f : 0x6c)
+#define XMSCOLOR (SPEAR() ? 0x4f : 0x6c)
+#define FILLCOLOR       14
+	
+    int i;
+	
+    //
+    // DRAW MAIN MEMORY
+    //
+	
+    for (i = 0; i < 10; i++)
+        VL_Bar (49, 163 - 8 * i, 6, 5, MAINCOLOR - i);
+    for (i = 0; i < 10; i++)
+        VL_Bar (89, 163 - 8 * i, 6, 5, EMSCOLOR - i);
+    for (i = 0; i < 10; i++)
+        VL_Bar (129, 163 - 8 * i, 6, 5, XMSCOLOR - i);
+	
+    //
+    // FILL BOXES
+    //
+    if (myInput.mousePresent())
+        VL_Bar (164, 82, 12, 2, FILLCOLOR);
+	
+    if (myInput.joyPresent())
+        VL_Bar (164, 105, 12, 2, FILLCOLOR);
+	
+    if (sd_adLibPresent && !sd_soundBlasterPresent)
+        VL_Bar (164, 128, 12, 2, FILLCOLOR);
+	
+    if (sd_soundBlasterPresent)
+        VL_Bar (164, 151, 12, 2, FILLCOLOR);
+	
+}
+
+/*
+ ==================
+ =
+ = PG13
+ =
+ ==================
+ */
+
+static void PG13 ()
+{
+    VW_FadeOut ();
+    VL_Bar (0, 0, 320, 200, 0x82);     // background
+	
+    graphSegs.cacheChunk (SPEAR.g(PG13PIC));
+    VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
+    I_UpdateScreen ();
+	
+    graphSegs.uncacheChunk (SPEAR.g(PG13PIC));
+	
+    VW_FadeIn ();
+    myInput.userInput (TickBase * 7);
+	
+    VW_FadeOut ();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //

@@ -337,31 +337,6 @@ Victory ()
 //==========================================================================
 // IOANCH 20130301: unification culling
 
-/*
-==================
-=
-= PG13
-=
-==================
-*/
-
-void
-PG13 ()
-{
-    VW_FadeOut ();
-    VL_Bar (0, 0, 320, 200, 0x82);     // background
-
-    graphSegs.cacheChunk (SPEAR.g(PG13PIC));
-    VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
-    I_UpdateScreen ();
-
-    graphSegs.uncacheChunk (SPEAR.g(PG13PIC));
-
-    VW_FadeIn ();
-    myInput.userInput (TickBase * 7);
-
-    VW_FadeOut ();
-}
 
 
 
@@ -1038,8 +1013,7 @@ PreloadGraphics ()
 ==================
 */
 
-void
-DrawHighScores ()
+void DrawHighScores ()
 {
     char buffer[16];
 
@@ -1198,8 +1172,7 @@ DrawHighScores ()
 =======================
 */
 
-void
-CheckHighScore (int32_t score, word other)
+void CheckHighScore (int32_t score, word other)
 {
     word i, j;
     int n;
