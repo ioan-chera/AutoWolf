@@ -33,6 +33,7 @@ namespace Menu
 	extern int g_bkgdColor;
 	extern int g_bordColor;
 	
+	void DoJukebox();
 	void SetSpearModuleValues();
 }
 

@@ -3821,3 +3821,156 @@ void Menu::SetSpearModuleValues()
 	s_bord2Color = SPEAR() ? 0x93 : 0x23;
 	s_deactive = SPEAR() ? DEACTIVE_sod : DEACTIVE_wl6;
 }
+
+
+// IOANCH 20130303: unification
+static CP_iteminfo MusicItems_wl6={CTL_X,CTL_Y,6,0,32};
+static CP_itemtype MusicMenu_wl6[]=
+{
+	{1,"Get Them!",0},
+	{1,"Searching",0},
+	{1,"P.O.W.",0},
+	{1,"Suspense",0},
+	{1,"War March",0},
+	{1,"Around The Corner!",0},
+	
+	{1,"Nazi Anthem",0},
+	{1,"Lurking...",0},
+	{1,"Going After Hitler",0},
+	{1,"Pounding Headache",0},
+	{1,"Into the Dungeons",0},
+	{1,"Ultimate Conquest",0},
+	
+	{1,"Kill the S.O.B.",0},
+	{1,"The Nazi Rap",0},
+	{1,"Twelfth Hour",0},
+	{1,"Zero Hour",0},
+	{1,"Ultimate Conquest",0},
+	{1,"Wolfpack",0}
+};
+static CP_iteminfo MusicItems_sod={CTL_X,CTL_Y-20,9,0,32};
+static CP_itemtype MusicMenu_sod[]=
+{
+	{1,"Funky Colonel Bill",0},
+	{1,"Death To The Nazis",0},
+	{1,"Tiptoeing Around",0},
+	{1,"Is This THE END?",0},
+	{1,"Evil Incarnate",0},
+	{1,"Jazzin' Them Nazis",0},
+	{1,"Puttin' It To The Enemy",0},
+	{1,"The SS Gonna Get You",0},
+	{1,"Towering Above",0}
+};
+
+void Menu::DoJukebox()
+// IOANCH 20130301: unification culling
+{
+    int which,lastsong=-1;
+    unsigned start;
+    // IOANCH 20130303: unification
+    unsigned songs_wl6[]=
+    {
+        GETTHEM_MUS_wl6,
+        SEARCHN_MUS_wl6,
+        POW_MUS_wl6,
+        SUSPENSE_MUS_wl6,
+        WARMARCH_MUS_wl6,
+        CORNER_MUS_wl6,
+		
+        NAZI_OMI_MUS_wl6,
+        PREGNANT_MUS_wl6,
+        GOINGAFT_MUS_wl6,
+        HEADACHE_MUS_wl6,
+        DUNGEON_MUS_wl6,
+        ULTIMATE_MUS_wl6,
+		
+        INTROCW3_MUS_wl6,
+        NAZI_RAP_MUS_wl6,
+        TWELFTH_MUS_wl6,
+        ZEROHOUR_MUS_wl6,
+        ULTIMATE_MUS_wl6,
+        PACMAN_MUS_wl6
+    };
+    unsigned songs_sod[]=
+    {
+        XFUNKIE_MUS_sod,             // 0
+        XDEATH_MUS_sod,              // 2
+        XTIPTOE_MUS_sod,             // 4
+        XTHEEND_MUS_sod,             // 7
+        XEVIL_MUS_sod,               // 17
+        XJAZNAZI_MUS_sod,            // 18
+        XPUTIT_MUS_sod,              // 21
+        XGETYOU_MUS_sod,             // 22
+        XTOWER2_MUS_sod              // 23
+    };
+    unsigned *songs = IMPALE(songs);
+    // IOANCH 20130303: unification
+    CP_iteminfo &MusicItems = IMPALE(MusicItems);
+    CP_itemtype *MusicMenu = IMPALE(MusicMenu);
+	
+    myInput.clearKeysDown();
+    if (!sd_adLibPresent && !sd_soundBlasterPresent)
+        return;
+	
+    MenuFadeOut();
+	
+    // IOANCH 20130301: unification culling
+    start = SPEAR() ? 0 : ((I_GetTicks()/10)%3)*6;
+	
+    graphSegs.cacheChunk (SPEAR.g(STARTFONT)+1);
+    
+    if(SPEAR())
+        CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
+    else
+        CacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
+	audioSegs.loadAllSounds(sd_soundMode);
+    // IOANCH 20130302: unification
+    fontnumber=1;
+    ClearMScreen ();
+    VWB_DrawPic(112,184,SPEAR.g(C_MOUSELBACKPIC));
+    DrawStripes (10);
+    SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);
+	
+    if(!SPEAR())
+        DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,Menu::g_bkgdColor);
+    else
+        DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,Menu::g_bkgdColor);
+	
+    DrawMenu (&MusicItems,&MusicMenu[start]);
+	
+    SETFONTCOLOR (READHCOLOR,Menu::g_bkgdColor);
+    PrintY=15;
+    WindowX = 0;
+    WindowY = 320;
+    US_CPrint ("Robert's Jukebox");
+	
+    SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);
+    I_UpdateScreen();
+    MenuFadeIn();
+	
+    do
+    {
+        which = HandleMenu(&MusicItems,&MusicMenu[start],NULL);
+        if (which>=0)
+        {
+            if (lastsong >= 0)
+                MusicMenu[start+lastsong].active = 1;
+			
+            StartCPMusic(songs[start + which]);
+            MusicMenu[start+which].active = 2;
+            DrawMenu (&MusicItems,&MusicMenu[start]);
+            I_UpdateScreen();
+            lastsong = which;
+        }
+    } while(which>=0);
+	
+    MenuFadeOut();
+    myInput.clearKeysDown();
+    // IOANCH 20130303: unification
+	
+    if(SPEAR())
+        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
+    else
+        UnCacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
+	
+}
