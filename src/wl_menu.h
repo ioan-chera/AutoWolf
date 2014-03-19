@@ -109,11 +109,6 @@ struct CP_itemtype
    int (* routine)(int temp1);
 } ;
 
-struct CustomCtrls
-{
-    short allowed[4];
-} ;
-
 extern CP_itemtype MainMenu[];
 extern CP_iteminfo MainItems;
 
@@ -125,87 +120,27 @@ void US_ControlPanel(ScanCode);
 
 void EnableEndGameMenuItem();
 
-void SetupControlPanel();
 void menu_SetupSaveGames();
-void CleanupControlPanel();
 
-void DrawMenu(CP_iteminfo *item_i,CP_itemtype *items);
-int  HandleMenu(CP_iteminfo *item_i,
-                CP_itemtype *items,
-                void (*routine)(int w));
+void DrawMenu(const CP_iteminfo *item_i,const CP_itemtype *items);
+int  HandleMenu(CP_iteminfo *item_i, const CP_itemtype *items, void (*routine)(int w));
 void ClearMScreen();
 void DrawWindow(int x,int y,int w,int h,int wcolor);
-void DrawOutline(int x,int y,int w,int h,int color1,int color2);
-void WaitKeyUp();
 void ReadAnyControl(CursorInfo *ci);
 void TicDelay(int count);
 void CacheLump(int lumpstart,int lumpend);
 void UnCacheLump(int lumpstart,int lumpend);
 int StartCPMusic(int song);
-int  Confirm(const char *string);
-void Message(const char *string);
-void CheckPause();
-void ShootSnd();
-void CheckSecretMissions();
-void BossKey();
 
-void DrawGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
-void DrawHalfStep(int x,int y);
-void EraseGun(CP_iteminfo *item_i,CP_itemtype *items,int x,int y,int which);
-void SetTextColor(CP_itemtype *items,int hlight);
-void DrawMenuGun(CP_iteminfo *iteminfo);
+void Message(const char *string);
+
 void DrawStripes(int y);
 
-void DefineMouseBtns();
-void DefineJoyBtns();
-void DefineKeyBtns();
-void DefineKeyMove();
-void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
-
-void DrawMainMenu();
-void DrawSoundMenu();
-void DrawLoadSaveScreen(int loadsave);
-void DrawNewEpisode();
-void DrawNewGame();
-void DrawChangeView(int view);
-void DrawMouseSens();
-void DrawCtlScreen();
-void DrawCustomScreen();
-void DrawLSAction(int which);
-void DrawCustMouse(int hilight);
-void DrawCustJoy(int hilight);
-void DrawCustKeybd(int hilight);
-void DrawCustKeys(int hilight);
-void PrintCustMouse(int i);
-void PrintCustJoy(int i);
-void PrintCustKeybd(int i);
-void PrintCustKeys(int i);
-
-void PrintLSEntry(int w,int color);
-void TrackWhichGame(int w);
-void DrawNewGameDiff(int w);
-void FixupCustom(int w);
-
-int CP_NewGame(int);
-int CP_Sound(int);
-int  CP_LoadGame(int quick);
-int  CP_SaveGame(int quick);
-int CP_Control(int);
-int CP_ChangeView(int);
-int CP_ExitOptions(int);
-int CP_Quit(int);
 int CP_ViewScores(int);
-int  CP_EndGame(int);
-int  CP_CheckQuick(ScanCode scancode);
-int CustomControls(int);
-int MouseSensitivity(int);
 
 void CFG_CheckForEpisodes();
 
 void FreeMusic();
-
-
-enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
 
 enum menuitems
 {
@@ -234,8 +169,6 @@ struct  LRstruct
 extern LRstruct LevelRatios[];
 
 void Write (int x,int y,const char *string);
-void NonShareware();
-int GetYorN(int x,int y,int pic);
 
 // IOANCH 20130726: made extern
 extern CP_itemtype menu_newep[];

@@ -1291,54 +1291,5 @@ CheckHighScore (int32_t score, word other)
 
 // IOANCH 20130301: unification culling
 
-
-
-////////////////////////////////////////////////////////
-//
-// NON-SHAREWARE NOTICE
-//
-////////////////////////////////////////////////////////
-void
-NonShareware ()
-{
-    VW_FadeOut ();
-
-    ClearMScreen ();
-    DrawStripes (10);
-
-    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
-    fontnumber = 1;
-
-    SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
-    PrintX = 110;
-    PrintY = 15;
-
-#ifdef SPANISH
-    US_Print ("Atencion");
-#else
-    US_Print ("Attention");
-#endif
-
-    SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
-    WindowX = PrintX = 40;
-    PrintY = 60;
-#ifdef SPANISH
-    US_Print ("Este juego NO es gratis y\n");
-    US_Print ("NO es Shareware; favor de\n");
-    US_Print ("no distribuirlo.\n\n");
-#else
-    US_Print ("This game is NOT shareware.\n");
-    US_Print ("Please do not distribute it.\n");
-    US_Print ("Thanks.\n\n");
-#endif
-    US_Print ("        Id Software\n");
-
-    I_UpdateScreen ();
-    VW_FadeIn ();
-    myInput.ack ();
-}
-
-
-
 // IOANCH 20130301: unification culling
 //===========================================================================

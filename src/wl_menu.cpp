@@ -50,14 +50,15 @@
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 
+enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
+
+struct CustomCtrls
+{
+    short allowed[4];
+} ;
 
 extern int lastgamemusicoffset;
 // IOANCH: made external
-
-//
-// PRIVATE PROTOTYPES
-//
-int CP_ReadThis (int);
 
 // IOANCH 20130301: unification culling
 #define STARTITEM       newgame
@@ -85,6 +86,13 @@ char endStrings[18][80] = {
     ENDSTR8SPEAR,
     ENDSTR9SPEAR
 };
+
+static int CP_NewGame(int);
+static int CP_Sound(int);
+static int CP_LoadGame(int quick);
+static int CP_SaveGame(int quick);
+static int CP_Control(int);
+static int CP_ChangeView(int);
 
 CP_itemtype MainMenu[] = {
     // IOANCH 20130301: unification culling
@@ -121,6 +129,9 @@ CP_itemtype SndMenu[] = {
 };
 // IOANCH 20130301: unification culling
 enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
+
+static int CustomControls(int);
+static int MouseSensitivity(int);
 
 CP_itemtype CtlMenu[] = {
     // IOANCH 20130301: unification culling
@@ -234,7 +245,7 @@ int menu_epselect[6] = { 1 };
 
 
 static int SaveGamesAvail[10];
-static int StartGame;
+static int s_StartGame;
 static int SoundStatus = 1;
 static int pickquick;
 static char SaveGameNames[10][32];
@@ -378,8 +389,14 @@ void US_SetScanNames()
 // Wolfenstein Control Panel!  Ta Da!
 //
 ////////////////////////////////////////////////////////////////////
-void
-US_ControlPanel (ScanCode scancode)
+static void CleanupControlPanel ();
+static int CP_CheckQuick (ScanCode scancode);
+static void DrawMainMenu ();
+static void SetupControlPanel ();
+static int CP_Quit(int);
+static int CP_EndGame(int);
+
+void US_ControlPanel (ScanCode scancode)
 {
     int which;
 
@@ -403,9 +420,7 @@ US_ControlPanel (ScanCode scancode)
     switch (scancode)
     {
         case sc_F1:
-
-            // IOANCH 20130301: unification culling
-            BossKey ();
+			// Used to be a boss key here, it never did anything past the DOS days
             goto finishup;
 
         case sc_F2:
@@ -443,7 +458,7 @@ US_ControlPanel (ScanCode scancode)
 
     DrawMainMenu ();
     MenuFadeIn ();
-    StartGame = 0;
+    s_StartGame = 0;
 
     //
     // MAIN MENU LOOP
@@ -507,7 +522,7 @@ US_ControlPanel (ScanCode scancode)
                 if (MainMenu[viewscores].routine == NULL)
                 {
                     if (CP_EndGame (0))
-                        StartGame = 1;
+                        s_StartGame = 1;
                 }
                 else
                 {
@@ -517,7 +532,7 @@ US_ControlPanel (ScanCode scancode)
                 break;
 
             case backtodemo:
-                StartGame = 1;
+                s_StartGame = 1;
                 if (!ingame)
                     StartCPMusic (INTROSONG);
                 VL_FadeOut (0, 255, 0, 0, 0, 10);
@@ -529,7 +544,7 @@ US_ControlPanel (ScanCode scancode)
                 break;
 
             default:
-                if (!StartGame)
+                if (!s_StartGame)
                 {
                     DrawMainMenu ();
                     MenuFadeIn ();
@@ -540,7 +555,7 @@ US_ControlPanel (ScanCode scancode)
         // "EXIT OPTIONS" OR "NEW GAME" EXITS
         //
     }
-    while (!StartGame);
+    while (!s_StartGame);
 
     //
     // DEALLOCATE EVERYTHING
@@ -572,8 +587,7 @@ void EnableEndGameMenuItem()
 //
 // DRAW MAIN MENU SCREEN
 //
-void
-DrawMainMenu ()
+static void DrawMainMenu ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -622,47 +636,14 @@ DrawMainMenu ()
 
 // IOANCH 20130301: unification culling
 
-
-////////////////////////////////////////////////////////////////////
-//
-// BOSS KEY
-//
-////////////////////////////////////////////////////////////////////
-void
-BossKey ()
-{
-#ifdef NOTYET
-    byte palette1[256][3];
-    SD_MusicOff ();
-/*       _AX = 3;
-        geninterrupt(0x10); */
-    _asm
-    {
-    mov eax, 3 int 0x10}
-    puts ("C>");
-    SetTextCursor (2, 0);
-//      while (!Keyboard[sc_Escape])
-    myInput.ack ();
-    myInput.clearKeysDown ();
-
-    SD_MusicOn ();
-    VL_SetVGAPlaneMode ();
-    for (int i = 0; i < 768; i++)
-        palette1[0][i] = 0;
-
-    I_SetPalette (&palette1[0][0]);
-    I_LoadLatchMem ();
-#endif
-}
-
-
 ////////////////////////////////////////////////////////////////////
 //
 // CHECK QUICK-KEYS & QUIT (WHILE IN A GAME)
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_CheckQuick (ScanCode scancode)
+static int Confirm(const char *string);
+
+static int CP_CheckQuick (ScanCode scancode)
 {
     switch (scancode)
     {
@@ -880,8 +861,7 @@ CP_CheckQuick (ScanCode scancode)
 // END THE CURRENT GAME
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_EndGame (int)
+static int CP_EndGame (int)
 {
     int res;
     // IOANCH 20130301: unification culling
@@ -952,8 +932,12 @@ CP_ViewScores (int)
 // START A NEW GAME
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_NewGame (int)
+static void ShootSnd();
+static void DrawNewEpisode();
+static void DrawNewGame();
+static void DrawNewGameDiff(int w);
+
+static int CP_NewGame (int)
 {
     int which, episode;
 
@@ -1052,7 +1036,7 @@ firstpart:
 
     ShootSnd ();
     NewGame (which, episode);
-    StartGame = 1;
+    s_StartGame = 1;
     MenuFadeOut ();
 
     //
@@ -1075,8 +1059,9 @@ firstpart:
 //
 // DRAW NEW EPISODE MENU
 //
-void
-DrawNewEpisode ()
+static void WaitKeyUp();
+
+static void DrawNewEpisode ()
 {
     int i;
 
@@ -1109,8 +1094,7 @@ DrawNewEpisode ()
 //
 // DRAW NEW GAME MENU
 //
-void
-DrawNewGame ()
+static void DrawNewGame ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -1148,8 +1132,7 @@ DrawNewGame ()
 //
 // DRAW NEW GAME GRAPHIC
 //
-void
-DrawNewGameDiff (int w)
+static void DrawNewGameDiff (int w)
 {
     // IOANCH 20130302: unification
     VWB_DrawPic (NM_X + 185, NM_Y + 7, w + SPEAR.g(C_BABYMODEPIC));
@@ -1161,8 +1144,9 @@ DrawNewGameDiff (int w)
 // HANDLE SOUND MENU
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_Sound (int)
+static void DrawSoundMenu();
+
+static int CP_Sound (int)
 {
     int which;
 
@@ -1283,8 +1267,9 @@ CP_Sound (int)
 //
 // DRAW THE SOUND MENU
 //
-void
-DrawSoundMenu ()
+static void DrawMenuGun (const CP_iteminfo * iteminfo);
+
+static void DrawSoundMenu ()
 {
     int i, on;
 
@@ -1390,8 +1375,9 @@ DrawSoundMenu ()
 //
 // DRAW LOAD/SAVE IN PROGRESS
 //
-void
-DrawLSAction (int which)
+static void DrawOutline(int x,int y,int w,int h,int color1,int color2);
+
+static void DrawLSAction (int which)
 {
 #define LSA_X   96
 #define LSA_Y   80
@@ -1422,7 +1408,10 @@ DrawLSAction (int which)
 // LOAD SAVED GAMES
 //
 ////////////////////////////////////////////////////////////////////
-int CP_LoadGame (int quick)
+static void DrawLoadSaveScreen(int loadsave);
+static void TrackWhichGame(int w);
+
+static int CP_LoadGame (int quick)
 {
     FILE *file;
     int which, exit = 0;
@@ -1499,7 +1488,7 @@ int CP_LoadGame (int quick)
             LoadTheGame (file, LSA_X + 8, LSA_Y + 5);
             fclose (file);
 
-            StartGame = 1;
+            s_StartGame = 1;
             ShootSnd ();
             //
             // CHANGE "READ THIS!" TO NORMAL COLOR
@@ -1529,8 +1518,9 @@ int CP_LoadGame (int quick)
 //
 // HIGHLIGHT CURRENT SELECTED ENTRY
 //
-void
-TrackWhichGame (int w)
+static void PrintLSEntry(int w,int color);
+
+static void TrackWhichGame (int w)
 {
     static int lastgameon = 0;
 
@@ -1545,8 +1535,7 @@ TrackWhichGame (int w)
 //
 // DRAW THE LOAD/SAVE SCREEN
 //
-void
-DrawLoadSaveScreen (int loadsave)
+static void DrawLoadSaveScreen (int loadsave)
 {
 #define DISKX   100
 #define DISKY   0
@@ -1579,8 +1568,7 @@ DrawLoadSaveScreen (int loadsave)
 //
 // PRINT LOAD/SAVE GAME ENTRY W/BOX OUTLINE
 //
-void
-PrintLSEntry (int w, int color)
+static void PrintLSEntry (int w, int color)
 {
     SETFONTCOLOR (color, BKGDCOLOR);
     DrawOutline (LSM_X + LSItems.indent, LSM_Y + w * 13, LSM_W - LSItems.indent - 15, 11, color,
@@ -1603,8 +1591,7 @@ PrintLSEntry (int w, int color)
 // SAVE CURRENT GAME
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_SaveGame (int quick)
+static int CP_SaveGame (int quick)
 {
     int which, exit = 0;
     FILE *file;
@@ -1748,8 +1735,9 @@ CP_SaveGame (int quick)
 // DEFINE CONTROLS
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_Control (int)
+static void DrawCtlScreen();
+
+static int CP_Control (int)
 {
     int which;
 
@@ -1809,8 +1797,7 @@ CP_Control (int)
 //
 // DRAW MOUSE SENSITIVITY SCREEN
 //
-void
-DrawMouseSens ()
+static void DrawMouseSens ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
@@ -1857,8 +1844,7 @@ DrawMouseSens ()
 //
 // ADJUST MOUSE SENSITIVITY
 //
-int
-MouseSensitivity (int)
+int MouseSensitivity (int)
 {
     CursorInfo ci;
     int exit = 0, oldMA;
@@ -1932,8 +1918,7 @@ MouseSensitivity (int)
 //
 // DRAW CONTROL MENU SCREEN
 //
-void
-DrawCtlScreen ()
+static void DrawCtlScreen ()
 {
     int i, x, y;
 // IOANCH 20130301: unification culling
@@ -2003,9 +1988,18 @@ enum
 char mbarray[4][3] = { "b0", "b1", "b2", "b3" };
 int8_t order[4] = { RUN, OPEN, FIRE, STRAFE };
 
+static void DefineMouseBtns();
+static void DefineJoyBtns();
+static void DefineKeyBtns();
+static void DefineKeyMove();
+static void DrawCustomScreen();
+static void DrawCustMouse(int hilight);
+static void DrawCustJoy(int hilight);
+static void DrawCustKeybd(int hilight);
+static void DrawCustKeys(int hilight);
+static void FixupCustom(int w);
 
-int
-CustomControls (int)
+static int CustomControls (int)
 {
     int which;
 
@@ -2044,8 +2038,11 @@ CustomControls (int)
 //
 // DEFINE THE MOUSE BUTTONS
 //
-void
-DefineMouseBtns ()
+
+static void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type);
+static void PrintCustMouse(int i);
+
+static void DefineMouseBtns ()
 {
     CustomCtrls mouseallowed = { 0, 1, 1, 1 };
     EnterCtrlData (2, &mouseallowed, DrawCustMouse, PrintCustMouse, MOUSE);
@@ -2056,8 +2053,9 @@ DefineMouseBtns ()
 //
 // DEFINE THE JOYSTICK BUTTONS
 //
-void
-DefineJoyBtns ()
+static void PrintCustJoy(int i);
+
+static void DefineJoyBtns ()
 {
     CustomCtrls joyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (5, &joyallowed, DrawCustJoy, PrintCustJoy, JOYSTICK);
@@ -2068,8 +2066,9 @@ DefineJoyBtns ()
 //
 // DEFINE THE KEYBOARD BUTTONS
 //
-void
-DefineKeyBtns ()
+static void PrintCustKeybd(int i);
+
+static void DefineKeyBtns ()
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (8, &keyallowed, DrawCustKeybd, PrintCustKeybd, KEYBOARDBTNS);
@@ -2080,8 +2079,9 @@ DefineKeyBtns ()
 //
 // DEFINE THE KEYBOARD BUTTONS
 //
-void
-DefineKeyMove ()
+static void PrintCustKeys(int i);
+
+static void DefineKeyMove ()
 {
     CustomCtrls keyallowed = { 1, 1, 1, 1 };
     EnterCtrlData (10, &keyallowed, DrawCustKeys, PrintCustKeys, KEYBOARDMOVE);
@@ -2096,8 +2096,7 @@ enum
 { FWRD, RIGHT, BKWD, LEFT };
 int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD };
 
-void
-EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
+static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
     int j, exit, tick, redraw, which, x, picked, lastFlashTime;
@@ -2343,8 +2342,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
 //
 // FIXUP GUN CURSOR OVERDRAW SHIT
 //
-void
-FixupCustom (int w)
+static void FixupCustom (int w)
 {
     static int lastwhich = -1;
     int y = CST_Y + 26 + w * 13;
@@ -2420,8 +2418,7 @@ FixupCustom (int w)
 //
 // DRAW CUSTOMIZE SCREEN
 //
-void
-DrawCustomScreen ()
+static void DrawCustomScreen ()
 {
     int i;
 
@@ -2601,8 +2598,7 @@ DrawCustomScreen ()
 }
 
 
-void
-PrintCustMouse (int i)
+static void PrintCustMouse (int i)
 {
     int j;
 
@@ -2615,8 +2611,7 @@ PrintCustMouse (int i)
         }
 }
 
-void
-DrawCustMouse (int hilight)
+static void DrawCustMouse (int hilight)
 {
     int i, color;
 
@@ -2639,8 +2634,7 @@ DrawCustMouse (int hilight)
         PrintCustMouse (i);
 }
 
-void
-PrintCustJoy (int i)
+static void PrintCustJoy (int i)
 {
     for (int j = 0; j < 4; j++)
     {
@@ -2653,8 +2647,7 @@ PrintCustJoy (int i)
     }
 }
 
-void
-DrawCustJoy (int hilight)
+static void DrawCustJoy (int hilight)
 {
     int i, color;
 
@@ -2677,8 +2670,7 @@ DrawCustJoy (int hilight)
 }
 
 
-void
-PrintCustKeybd (int i)
+static void PrintCustKeybd (int i)
 {
     PrintX = CST_START + CST_SPC * i;
 	if(ScanNames.count(buttonscan[order[i]]))
@@ -2687,8 +2679,7 @@ PrintCustKeybd (int i)
 		US_Print("?");
 }
 
-void
-DrawCustKeybd (int hilight)
+static void DrawCustKeybd (int hilight)
 {
     int i, color;
 
@@ -2703,8 +2694,7 @@ DrawCustKeybd (int hilight)
         PrintCustKeybd (i);
 }
 
-void
-PrintCustKeys (int i)
+static void PrintCustKeys (int i)
 {
     PrintX = CST_START + CST_SPC * i;
 	if(ScanNames.count(buttonscan[order[i]]))
@@ -2713,8 +2703,7 @@ PrintCustKeys (int i)
 		US_Print("?");
 }
 
-void
-DrawCustKeys (int hilight)
+static void DrawCustKeys (int hilight)
 {
     int i, color;
 
@@ -2735,8 +2724,10 @@ DrawCustKeys (int hilight)
 // CHANGE SCREEN VIEWING SIZE
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_ChangeView (int)
+static void CheckPause();
+static void DrawChangeView(int view);
+
+static int CP_ChangeView (int)
 {
     int exit = 0, oldview, newview;
     CursorInfo ci;
@@ -2817,8 +2808,7 @@ CP_ChangeView (int)
 //
 // DRAW THE CHANGEVIEW SCREEN
 //
-void
-DrawChangeView (int view)
+static void DrawChangeView (int view)
 {
     int rescaledHeight = cfg_screenHeight / vid_scaleFactor;
     if(view != 21) VL_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
@@ -2842,8 +2832,7 @@ DrawChangeView (int view)
 // QUIT THIS INFERNAL GAME!
 //
 ////////////////////////////////////////////////////////////////////
-int
-CP_Quit (int)
+static int CP_Quit (int)
 {
     // IOANCH 20130301: unification culling
 
@@ -2982,8 +2971,7 @@ ClearMScreen ()
 // Un/Cache a LUMP of graphics
 //
 ////////////////////////////////////////////////////////////////////
-void
-CacheLump (int lumpstart, int lumpend)
+void CacheLump (int lumpstart, int lumpend)
 {
     int i;
 
@@ -2992,8 +2980,7 @@ CacheLump (int lumpstart, int lumpend)
 }
 
 
-void
-UnCacheLump (int lumpstart, int lumpend)
+void UnCacheLump (int lumpstart, int lumpend)
 {
     int i;
 
@@ -3016,8 +3003,7 @@ DrawWindow (int x, int y, int w, int h, int wcolor)
 }
 
 
-void
-DrawOutline (int x, int y, int w, int h, int color1, int color2)
+static void DrawOutline (int x, int y, int w, int h, int color1, int color2)
 {
     VWB_Hlin (x, x + w, y, color2);
     VWB_Vlin (y, y + h, x, color2);
@@ -3031,8 +3017,7 @@ DrawOutline (int x, int y, int w, int h, int color1, int color2)
 // Setup Control Panel stuff - graphics, etc.
 //
 ////////////////////////////////////////////////////////////////////
-void
-SetupControlPanel ()
+static void SetupControlPanel ()
 {
     //
     // CACHE GRAPHICS & SOUNDS
@@ -3105,8 +3090,7 @@ void menu_SetupSaveGames()
 // Clean up all the Control Panel stuff
 //
 ////////////////////////////////////////////////////////////////////
-void
-CleanupControlPanel ()
+static void CleanupControlPanel ()
 {
     if(!SPEAR())
         UnCacheLump (SPEAR.g(CONTROLS_LUMP_START), SPEAR.g(CONTROLS_LUMP_END));
@@ -3122,8 +3106,12 @@ CleanupControlPanel ()
 // Handle moving gun around a menu
 //
 ////////////////////////////////////////////////////////////////////
-int
-HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
+static void DrawGun(const CP_iteminfo *item_i, const CP_itemtype *items,int x,int *y,int which,int basey,void (*routine)(int w));
+static void DrawHalfStep(int x,int y);
+static void EraseGun(const CP_iteminfo *item_i, const CP_itemtype *items,int x,int y,int which);
+static void SetTextColor(const CP_itemtype *items,int hlight);
+
+int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine) (int w))
 {
     char key;
     static int redrawitem = 1, lastitem = -1;
@@ -3365,8 +3353,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 //
 // ERASE GUN & DE-HIGHLIGHT STRING
 //
-void
-EraseGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int y, int which)
+void EraseGun (const CP_iteminfo * item_i, const CP_itemtype * items, int x, int y, int which)
 {
     VL_Bar (x - 1, y, 25, 16, BKGDCOLOR);
     SetTextColor (items + which, 0);
@@ -3394,8 +3381,7 @@ DrawHalfStep (int x, int y)
 //
 // DRAW GUN AT NEW POSITION
 //
-void
-DrawGun (CP_iteminfo * item_i, CP_itemtype * items, int x, int *y, int which, int basey,
+static void DrawGun (const CP_iteminfo * item_i, const CP_itemtype * items, int x, int *y, int which, int basey,
          void (*routine) (int w))
 {
     VL_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
@@ -3442,8 +3428,7 @@ TicDelay (int count)
 // Draw a menu
 //
 ////////////////////////////////////////////////////////////////////
-void
-DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
+void DrawMenu (const CP_iteminfo * item_i, const CP_itemtype * items)
 {
     int i, which = item_i->curpos;
 
@@ -3477,8 +3462,7 @@ DrawMenu (CP_iteminfo * item_i, CP_itemtype * items)
 // SET TEXT COLOR (HIGHLIGHT OR NO)
 //
 ////////////////////////////////////////////////////////////////////
-void
-SetTextColor (CP_itemtype * items, int hlight)
+static void SetTextColor (const CP_itemtype * items, int hlight)
 {
     // IOANCH 20130302: unification
     if (hlight)
@@ -3599,8 +3583,7 @@ ReadAnyControl (CursorInfo * ci)
 // DRAW DIALOG AND CONFIRM YES OR NO TO QUESTION
 //
 ////////////////////////////////////////////////////////////////////
-int
-Confirm (const char *string)
+static int Confirm (const char *string)
 {
     int xit = 0, x, y, tick = 0, lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
@@ -3721,8 +3704,7 @@ Message (const char *string)
 ////////////////////////////////////////////////////////////////////
 static int lastmusic;
 
-int
-StartCPMusic (int song)
+int StartCPMusic (int song)
 {
     int lastoffs;
 
@@ -3757,8 +3739,7 @@ FreeMusic ()
 // CHECK FOR PAUSE KEY (FOR MUSIC ONLY)
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-CheckPause ()
+static void CheckPause ()
 {
     if (myInput.paused())
     {
@@ -3785,8 +3766,7 @@ CheckPause ()
 // DRAW GUN CURSOR AT CORRECT POSITION IN MENU
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-DrawMenuGun (CP_iteminfo * iteminfo)
+static void DrawMenuGun (const CP_iteminfo * iteminfo)
 {
     int x, y;
 
@@ -3818,8 +3798,7 @@ DrawStripes (int y)
     }
 }
 
-void
-ShootSnd ()
+static void ShootSnd ()
 {
     SD_PlaySound (SHOOTSND);
 }
