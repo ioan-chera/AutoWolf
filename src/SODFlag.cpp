@@ -24,6 +24,7 @@
 #include "wl_def.h"
 #include "i_system.h"
 #include "SODFlag.h"
+#include "wl_menu.h"
 
 SODFlag SPEAR;
 
@@ -982,4 +983,10 @@ void SODFlag::Initialize(const PString &basePath)
     fclose(f);
 	// One of the ifs failed - fall here and return SPEAR() 1
     this->flag = true;
+}
+
+
+void SODFlag::SetGlobalValues() const
+{
+	Menu::SetSpearModuleValues();
 }

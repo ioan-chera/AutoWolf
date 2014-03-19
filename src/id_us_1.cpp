@@ -439,10 +439,10 @@ static void USL_XORICursor(int x,int y,const char *s,word cursor)
 		USL_DrawString("\x80");
 	else
 	{
-		temp = fontcolor;
-		fontcolor = backcolor;
+		temp = g_fontcolor;
+		g_fontcolor = g_backcolor;
 		USL_DrawString("\x80");
-		fontcolor = temp;
+		g_fontcolor = temp;
 	}
 }
 
@@ -711,10 +711,10 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 		{
 			px = x;
 			py = y;
-			temp = fontcolor;
-			fontcolor = backcolor;
+			temp = g_fontcolor;
+			g_fontcolor = g_backcolor;
 			USL_DrawString(olds);
-			fontcolor = (byte) temp;
+			g_fontcolor = (byte) temp;
 			strcpy(olds,s);
 
 			px = x;

@@ -249,16 +249,16 @@ void HandleCommand ()
         case 'C':               // ^c<hex digit> changes text color
             i = toupper(*++text);
             if (i>='0' && i<='9')
-                fontcolor = i-'0';
+                g_fontcolor = i-'0';
             else if (i>='A' && i<='F')
-                fontcolor = i-'A'+10;
+                g_fontcolor = i-'A'+10;
 
-            fontcolor *= 16;
+            g_fontcolor *= 16;
             i = toupper(*++text);
             if (i>='0' && i<='9')
-                fontcolor += i-'0';
+                g_fontcolor += i-'0';
             else if (i>='A' && i<='F')
-                fontcolor += i-'A'+10;
+                g_fontcolor += i-'A'+10;
             text++;
             break;
 
@@ -450,9 +450,9 @@ void PageLayout (Boolean8 shownumber)
     int     i,oldfontcolor;
     char    ch;
 
-    oldfontcolor = fontcolor;
+    oldfontcolor = g_fontcolor;
 
-    fontcolor = 0;
+    g_fontcolor = 0;
 
     //
     // clear the screen
@@ -522,12 +522,12 @@ void PageLayout (Boolean8 shownumber)
         px = 213;
 #endif
         py = 183;
-        fontcolor = 0x4f;                          //12^BACKCOLOR;
+        g_fontcolor = 0x4f;                          //12^BACKCOLOR;
 
         VWB_DrawPropString (str);
     }
 
-    fontcolor = oldfontcolor;
+    g_fontcolor = oldfontcolor;
 }
 
 //===========================================================================

@@ -105,7 +105,7 @@ void EndSpear ()
     VL_FadeIn (0, 255, pal, 30);
     graphSegs.uncacheChunk (SPEAR.g(END3PALETTE));
     fontnumber = 0;
-    fontcolor = 0xd0;
+    g_fontcolor = 0xd0;
     WindowX = 0;
     WindowW = 320;
     PrintX = 0;
@@ -293,7 +293,7 @@ Victory ()
         {
             VWB_DrawPic (30 * 8, TIMEY * 8, SPEAR.g(C_TIMECODEPIC));
             fontnumber = 0;
-            fontcolor = READHCOLOR;
+            g_fontcolor = READHCOLOR;
             PrintX = 30 * 8 - 3;
             PrintY = TIMEY * 8 + 8;
             PrintX += 4;
@@ -1242,8 +1242,8 @@ CheckHighScore (int32_t score, word other)
         if(!SPEAR())
         {
             PrintX = 4 * 8;
-            backcolor = BORDCOLOR;
-            fontcolor = 15;
+            g_backcolor = Menu::g_bordColor;
+            g_fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
 		      if(cfg_botActive)
 		      {
@@ -1264,8 +1264,8 @@ CheckHighScore (int32_t score, word other)
             fontnumber = 1;
             VL_Bar (PrintX - 2, PrintY - 2, 145, 15, 0x9c);
             I_UpdateScreen ();
-            backcolor = 0x9c;
-            fontcolor = 15;
+            g_backcolor = 0x9c;
+            g_fontcolor = 15;
 		      // IOANCH 27.05.2012: let the bot write his random name
 		      if(cfg_botActive)
 		      {

@@ -51,6 +51,8 @@ public:
     unsigned int sp(unsigned int value)const {return sprmap[value][flag];}
     unsigned int sd(unsigned int value)const {return soundmap[value][flag];}
     const char *FullTitle() const {return flag ? speartitle : wolftitle;}
+	
+	void SetGlobalValues() const;
 };
 extern SODFlag SPEAR;
 

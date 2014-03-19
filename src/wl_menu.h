@@ -23,15 +23,19 @@
 //
 // IOANCH 20130302: unification
 
+#ifndef WL_MENU_H_
+#define WL_MENU_H_
+
 #include "id_in.h"
 
-#define BORDCOLOR (SPEAR() ? 0x99 : 0x29)
-#define BORD2COLOR (SPEAR() ? 0x93 : 0x23)
-#define DEACTIVE_sod 0x9b
-#define DEACTIVE_wl6 0x2b
-#define DEACTIVE IMPALE(DEACTIVE)
-#define BKGDCOLOR (SPEAR() ? 0x9d : 0x2d)
-#define STRIPE 0x2c
+namespace Menu
+{
+	extern int g_bkgdColor;
+	extern int g_bordColor;
+	
+	void SetSpearModuleValues();
+}
+
 #define MenuFadeOut() VL_FadeOut(0, 255, SPEAR() ? 0 : 43, 0, SPEAR() ? 51 : 0, 10)
 
 #define READCOLOR       0x4a
@@ -175,3 +179,5 @@ extern CP_itemtype menu_newep[];
 extern int menu_epselect[6];
 extern int menu_missingep;
 extern PString cfg_savename;
+
+#endif

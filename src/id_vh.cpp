@@ -28,7 +28,7 @@
 #include "wl_main.h"
 
 int	    px,py;
-byte	fontcolor,backcolor;
+byte	g_fontcolor,g_backcolor;
 int	    fontnumber;
 
 //==========================================================================
@@ -64,7 +64,7 @@ void VWB_DrawPropString(const char* string)
 				{
 					for(sy=0; sy<vid_scaleFactor; sy++)
 						for(sx=0; sx<vid_scaleFactor; sx++)
-							dest[(vid_scaleFactor*i+sy)*vid_bufferPitch+sx]=fontcolor;
+							dest[(vid_scaleFactor*i+sy)*vid_bufferPitch+sx]=g_fontcolor;
 				}
 			}
 

@@ -1260,22 +1260,22 @@ void DoJukebox()
     ClearMScreen ();
     VWB_DrawPic(112,184,SPEAR.g(C_MOUSELBACKPIC));
     DrawStripes (10);
-    SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);
 
     if(!SPEAR())
-        DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,BKGDCOLOR);
+        DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,Menu::g_bkgdColor);
     else
-        DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,BKGDCOLOR);
+        DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,Menu::g_bkgdColor);
 
     DrawMenu (&MusicItems,&MusicMenu[start]);
 
-    SETFONTCOLOR (READHCOLOR,BKGDCOLOR);
+    SETFONTCOLOR (READHCOLOR,Menu::g_bkgdColor);
     PrintY=15;
     WindowX = 0;
     WindowY = 320;
     US_CPrint ("Robert's Jukebox");
 
-    SETFONTCOLOR (TEXTCOLOR,BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);
     I_UpdateScreen();
     MenuFadeIn();
 
@@ -1824,6 +1824,7 @@ int main (int argc, TChar *argv[])
 #endif
     // IOANCH: unification: set the SPEAR() global var
     SPEAR.Initialize(".");
+	SPEAR.SetGlobalValues();
     
     // IOANCH: prepare the OSX version for displaying a quit error
    atexit(I_DisplayAlertOnError);

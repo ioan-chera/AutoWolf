@@ -47,6 +47,16 @@
 #include "PString.h"
 #include "SODFlag.h"
 
+int Menu::g_bkgdColor;
+int Menu::g_bordColor;
+
+static const int DEACTIVE_wl6 = 0x2b;
+static const int DEACTIVE_sod = 0x9b;
+static const int STRIPE = 0x2c;
+
+static int s_bord2Color;
+static int s_deactive;
+
 // IOANCH 20130303: Cocoa functions for Apple computers
 #include "macosx/CocoaFun.h"
 
@@ -597,9 +607,9 @@ static void DrawMainMenu ()
     VWB_DrawPic (84, 0, SPEAR.g(C_OPTIONSPIC));
 
 #ifdef SPANISH
-    DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W + 8, MENU_H, BKGDCOLOR);
+    DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W + 8, MENU_H, Menu::g_bkgdColor);
 #else
-    DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W, MENU_H, BKGDCOLOR);
+    DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W, MENU_H, Menu::g_bkgdColor);
 #endif
 
     //
@@ -1069,8 +1079,8 @@ static void DrawNewEpisode ()
     ClearMScreen ();
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
 
-    DrawWindow (NE_X - 4, NE_Y - 4, NE_W + 8, NE_H + 8, BKGDCOLOR);
-    SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
+    DrawWindow (NE_X - 4, NE_Y - 4, NE_W + 8, NE_H + 8, Menu::g_bkgdColor);
+    SETFONTCOLOR (READHCOLOR, Menu::g_bkgdColor);
     PrintY = 2;
     WindowX = 0;
 #ifdef SPANISH
@@ -1079,7 +1089,7 @@ static void DrawNewEpisode ()
     US_CPrint ("Which episode to play?");
 #endif
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
     DrawMenu (&NewEitems, &menu_newep[0]);
     // IOANCH 20130302: unification
     for (i = 0; i < 6; i++)
@@ -1100,7 +1110,7 @@ static void DrawNewGame ()
     ClearMScreen ();
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
 
-    SETFONTCOLOR (READHCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (READHCOLOR, Menu::g_bkgdColor);
     PrintX = NM_X + 20;
     PrintY = NM_Y - 32;
 
@@ -1118,7 +1128,7 @@ static void DrawNewGame ()
         VWB_DrawPic (PrintX, PrintY, SPEAR.g(C_HOWTOUGHPIC));
     }
 
-    DrawWindow (NM_X - 5, NM_Y - 10, NM_W, NM_H, BKGDCOLOR);
+    DrawWindow (NM_X - 5, NM_Y - 10, NM_W, NM_H, Menu::g_bkgdColor);
 
     DrawMenu (&NewItems, &NewMenu[0]);
     DrawNewGameDiff (NewItems.curpos);
@@ -1280,9 +1290,9 @@ static void DrawSoundMenu ()
     ClearMScreen ();
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
 
-    DrawWindow (SM_X - 8, SM_Y1 - 3, SM_W, SM_H1, BKGDCOLOR);
-    DrawWindow (SM_X - 8, SM_Y2 - 3, SM_W, SM_H2, BKGDCOLOR);
-    DrawWindow (SM_X - 8, SM_Y3 - 3, SM_W, SM_H3, BKGDCOLOR);
+    DrawWindow (SM_X - 8, SM_Y1 - 3, SM_W, SM_H1, Menu::g_bkgdColor);
+    DrawWindow (SM_X - 8, SM_Y2 - 3, SM_W, SM_H2, Menu::g_bkgdColor);
+    DrawWindow (SM_X - 8, SM_Y3 - 3, SM_W, SM_H3, Menu::g_bkgdColor);
 
     //
     // IF NO ADLIB, NON-CHOOSENESS!
@@ -1546,7 +1556,7 @@ static void DrawLoadSaveScreen (int loadsave)
     ClearMScreen ();
     fontnumber = 1;
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
-    DrawWindow (LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, BKGDCOLOR);
+    DrawWindow (LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, Menu::g_bkgdColor);
     DrawStripes (10);
     // IOANCH 20130302: unification
     if (!loadsave)
@@ -1570,7 +1580,7 @@ static void DrawLoadSaveScreen (int loadsave)
 //
 static void PrintLSEntry (int w, int color)
 {
-    SETFONTCOLOR (color, BKGDCOLOR);
+    SETFONTCOLOR (color, Menu::g_bkgdColor);
     DrawOutline (LSM_X + LSItems.indent, LSM_Y + w * 13, LSM_W - LSItems.indent - 15, 11, color,
                  color);
     PrintX = LSM_X + LSItems.indent + 2;
@@ -1673,7 +1683,7 @@ static int CP_SaveGame (int quick)
             fontnumber = 0;
             if (!SaveGamesAvail[which])
                 VL_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
-                         LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
+                         LSM_W - LSItems.indent - 16, 10, Menu::g_bkgdColor);
             I_UpdateScreen ();
 
             if (US_LineInput
@@ -1705,7 +1715,7 @@ static int CP_SaveGame (int quick)
             else
             {
                 VL_Bar (LSM_X + LSItems.indent + 1, LSM_Y + which * 13 + 1,
-                         LSM_W - LSItems.indent - 16, 10, BKGDCOLOR);
+                         LSM_W - LSItems.indent - 16, 10, Menu::g_bkgdColor);
                 PrintLSEntry (which, HIGHLIGHT);
                 I_UpdateScreen ();
                 SD_PlaySound (ESCPRESSEDSND);
@@ -1803,18 +1813,18 @@ static void DrawMouseSens ()
     ClearMScreen ();
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
 #ifdef SPANISH
-    DrawWindow (10, 80, 300, 43, BKGDCOLOR);
+    DrawWindow (10, 80, 300, 43, Menu::g_bkgdColor);
 #else
-    DrawWindow (10, 80, 300, 30, BKGDCOLOR);
+    DrawWindow (10, 80, 300, 30, Menu::g_bkgdColor);
 #endif
 
     WindowX = 0;
     WindowW = 320;
     PrintY = 82;
-    SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
     US_CPrint (STR_MOUSEADJ);
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 #ifdef SPANISH
     PrintX = 14;
     PrintY = 95 + 13;
@@ -1926,10 +1936,10 @@ static void DrawCtlScreen ()
     DrawStripes (10);
     VWB_DrawPic (80, 0, SPEAR.g(C_CONTROLPIC));
     VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
-    DrawWindow (CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, BKGDCOLOR);
+    DrawWindow (CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, Menu::g_bkgdColor);
     WindowX = 0;
     WindowW = 320;
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 
     if (myInput.joyPresent())
         CtlMenu[CTL_JOYENABLE].active = 1;
@@ -2123,7 +2133,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
         if (redraw)
         {
             x = CST_START + CST_SPC * which;
-            DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+            DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
 
             DrawRtn (1);
             DrawWindow (x - 2, PrintY, CST_SPC, 11, TEXTCOLOR);
@@ -2131,7 +2141,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
             SETFONTCOLOR (0, TEXTCOLOR);
             PrintRtn (which);
             PrintX = x;
-            SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
             I_UpdateScreen ();
             WaitKeyUp ();
             redraw = 0;
@@ -2282,7 +2292,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 ReadAnyControl (&ci);
             }
 
-            SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
             redraw = 1;
             WaitKeyUp ();
             continue;
@@ -2334,7 +2344,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
 
     SD_PlaySound (ESCPRESSEDSND);
     WaitKeyUp ();
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
 }
 
 
@@ -2348,17 +2358,17 @@ static void FixupCustom (int w)
     int y = CST_Y + 26 + w * 13;
 
 
-    VWB_Hlin (7, 32, y - 1, DEACTIVE);
-    VWB_Hlin (7, 32, y + 12, BORD2COLOR);
+    VWB_Hlin (7, 32, y - 1, s_deactive);
+    VWB_Hlin (7, 32, y + 12, s_bord2Color);
     if(!SPEAR())
     {
-        VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-        VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+        VWB_Hlin (7, 32, y - 2, Menu::g_bordColor);
+        VWB_Hlin (7, 32, y + 13, Menu::g_bordColor);
     }
     else
     {
-        VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-        VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+        VWB_Hlin (7, 32, y - 2, s_bord2Color);
+        VWB_Hlin (7, 32, y + 13, s_bord2Color);
     }
 
     switch (w)
@@ -2380,17 +2390,17 @@ static void FixupCustom (int w)
     if (lastwhich >= 0)
     {
         y = CST_Y + 26 + lastwhich * 13;
-        VWB_Hlin (7, 32, y - 1, DEACTIVE);
-        VWB_Hlin (7, 32, y + 12, BORD2COLOR);
+        VWB_Hlin (7, 32, y - 1, s_deactive);
+        VWB_Hlin (7, 32, y + 12, s_bord2Color);
         if(!SPEAR())
         {
-            VWB_Hlin (7, 32, y - 2, BORDCOLOR);
-            VWB_Hlin (7, 32, y + 13, BORDCOLOR);
+            VWB_Hlin (7, 32, y - 2, Menu::g_bordColor);
+            VWB_Hlin (7, 32, y + 13, Menu::g_bordColor);
         }
         else
         {
-            VWB_Hlin (7, 32, y - 2, BORD2COLOR);
-            VWB_Hlin (7, 32, y + 13, BORD2COLOR);
+            VWB_Hlin (7, 32, y - 2, s_bord2Color);
+            VWB_Hlin (7, 32, y + 13, s_bord2Color);
         }
 
         if (lastwhich != w)
@@ -2433,7 +2443,7 @@ static void DrawCustomScreen ()
     //
     // MOUSE
     //
-    SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
     WindowX = 0;
     WindowW = 320;
 
@@ -2448,7 +2458,7 @@ static void DrawCustomScreen ()
         VWB_DrawPic (128, 48, SPEAR.g(C_MOUSEPIC));
     }
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print (STR_CRUN);
@@ -2469,7 +2479,7 @@ static void DrawCustomScreen ()
     US_Print (STR_CSTRAFE "\n");
 #endif
 
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
     DrawCustMouse (0);
     US_Print ("\n");
 
@@ -2479,7 +2489,7 @@ static void DrawCustomScreen ()
     //
     if(!SPEAR())
     {
-        SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+        SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
         US_CPrint ("Joystick/Gravis GamePad\n");
     }
     else
@@ -2494,7 +2504,7 @@ static void DrawCustomScreen ()
         VWB_DrawPic (112, 120, SPEAR.g(C_KEYBOARDPIC));
     }
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print (STR_CRUN);
@@ -2514,7 +2524,7 @@ static void DrawCustomScreen ()
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
     DrawCustJoy (0);
     US_Print ("\n");
 
@@ -2524,14 +2534,14 @@ static void DrawCustomScreen ()
     //
     if(!SPEAR())
     {
-        SETFONTCOLOR (READCOLOR, BKGDCOLOR);
+        SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
         US_CPrint ("Keyboard\n");
     }
     else
     {
         PrintY += 13;
     }
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 #ifdef SPANISH
     PrintX = CST_START - 16;
     US_Print (STR_CRUN);
@@ -2551,7 +2561,7 @@ static void DrawCustomScreen ()
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_CSTRAFE "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
     DrawCustKeybd (0);
     US_Print ("\n");
 
@@ -2559,7 +2569,7 @@ static void DrawCustomScreen ()
     //
     // KEYBOARD MOVE KEYS
     //
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 #ifdef SPANISH
     PrintX = 4;
     US_Print (STR_LEFT);
@@ -2579,7 +2589,7 @@ static void DrawCustomScreen ()
     PrintX = CST_START + CST_SPC * 3;
     US_Print (STR_BKWD "\n");
 #endif
-    DrawWindow (5, PrintY - 1, 310, 13, BKGDCOLOR);
+    DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
     DrawCustKeys (0);
     //
     // PICK STARTING POINT IN MENU
@@ -2619,11 +2629,11 @@ static void DrawCustMouse (int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR (color, BKGDCOLOR);
+    SETFONTCOLOR (color, Menu::g_bkgdColor);
 
     if (!mouseenabled)
     {
-        SETFONTCOLOR (DEACTIVE, BKGDCOLOR);
+        SETFONTCOLOR (s_deactive, Menu::g_bkgdColor);
         CusMenu[0].active = 0;
     }
     else
@@ -2654,11 +2664,11 @@ static void DrawCustJoy (int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR (color, BKGDCOLOR);
+    SETFONTCOLOR (color, Menu::g_bkgdColor);
 
     if (!joystickenabled)
     {
-        SETFONTCOLOR (DEACTIVE, BKGDCOLOR);
+        SETFONTCOLOR (s_deactive, Menu::g_bkgdColor);
         CusMenu[3].active = 0;
     }
     else
@@ -2687,7 +2697,7 @@ static void DrawCustKeybd (int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR (color, BKGDCOLOR);
+    SETFONTCOLOR (color, Menu::g_bkgdColor);
 
     PrintY = CST_Y + 13 * 8;
     for (i = 0; i < 4; i++)
@@ -2711,7 +2721,7 @@ static void DrawCustKeys (int hilight)
     color = TEXTCOLOR;
     if (hilight)
         color = HIGHLIGHT;
-    SETFONTCOLOR (color, BKGDCOLOR);
+    SETFONTCOLOR (color, Menu::g_bkgdColor);
 
     PrintY = CST_Y + 13 * 10;
     for (i = 0; i < 4; i++)
@@ -2818,7 +2828,7 @@ static void DrawChangeView (int view)
     PrintY = (cfg_screenHeight / vid_scaleFactor) - 39;
     WindowX = 0;
     WindowY = 320;                                  // TODO: Check this!
-    SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
+    SETFONTCOLOR (HIGHLIGHT, Menu::g_bkgdColor);
 
     US_CPrint (STR_SIZE1 "\n");
     US_CPrint (STR_SIZE2 "\n");
@@ -2959,7 +2969,7 @@ void
 ClearMScreen ()
 {
     if(!SPEAR())
-        VL_Bar (0, 0, 320, 200, BORDCOLOR);
+        VL_Bar (0, 0, 320, 200, Menu::g_bordColor);
     else
     // IOANCH 20130302: unification
         VWB_DrawPic (0, 0, SPEAR.g(C_BACKDROPPIC));
@@ -2995,11 +3005,10 @@ void UnCacheLump (int lumpstart, int lumpend)
 // Draw a window for a menu
 //
 ////////////////////////////////////////////////////////////////////
-void
-DrawWindow (int x, int y, int w, int h, int wcolor)
+void DrawWindow (int x, int y, int w, int h, int wcolor)
 {
     VL_Bar (x, y, w, h, wcolor);
-    DrawOutline (x, y, w, h, BORD2COLOR, DEACTIVE);
+    DrawOutline (x, y, w, h, s_bord2Color, s_deactive);
 }
 
 
@@ -3028,7 +3037,7 @@ static void SetupControlPanel ()
     else
         CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+    SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
     fontnumber = 1;
     WindowH = 200;
     if(cfg_screenHeight % 200 != 0)
@@ -3311,7 +3320,7 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
     //
     if (lastitem != which)
     {
-        VL_Bar (x - 1, y, 25, 16, BKGDCOLOR);
+        VL_Bar (x - 1, y, 25, 16, Menu::g_bkgdColor);
         PrintX = item_i->x + item_i->indent;
         PrintY = item_i->y + which * 13;
         US_Print ((items + which)->string);
@@ -3355,7 +3364,7 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
 //
 void EraseGun (const CP_iteminfo * item_i, const CP_itemtype * items, int x, int y, int which)
 {
-    VL_Bar (x - 1, y, 25, 16, BKGDCOLOR);
+    VL_Bar (x - 1, y, 25, 16, Menu::g_bkgdColor);
     SetTextColor (items + which, 0);
 
     PrintX = item_i->x + item_i->indent;
@@ -3384,7 +3393,7 @@ DrawHalfStep (int x, int y)
 static void DrawGun (const CP_iteminfo * item_i, const CP_itemtype * items, int x, int *y, int which, int basey,
          void (*routine) (int w))
 {
-    VL_Bar (x - 1, *y, 25, 16, BKGDCOLOR);
+    VL_Bar (x - 1, *y, 25, 16, Menu::g_bkgdColor);
     *y = basey + which * 13;
     // IOANCH 20130302: unification
     VWB_DrawPic (x, *y, SPEAR.g(C_CURSOR1PIC));
@@ -3447,9 +3456,9 @@ void DrawMenu (const CP_iteminfo * item_i, const CP_itemtype * items)
             US_Print ((items + i)->string);
         else
         {
-            SETFONTCOLOR (DEACTIVE, BKGDCOLOR);
+            SETFONTCOLOR (s_deactive, Menu::g_bkgdColor);
             US_Print ((items + i)->string);
-            SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+            SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
         }
 
         US_Print ("\n");
@@ -3467,11 +3476,11 @@ static void SetTextColor (const CP_itemtype * items, int hlight)
     // IOANCH 20130302: unification
     if (hlight)
     {
-        SETFONTCOLOR (IMPALE(color_hlite)[items->active], BKGDCOLOR);
+        SETFONTCOLOR (IMPALE(color_hlite)[items->active], Menu::g_bkgdColor);
     }
     else
     {
-        SETFONTCOLOR (IMPALE(color_norml)[items->active], BKGDCOLOR);
+        SETFONTCOLOR (IMPALE(color_norml)[items->active], Menu::g_bkgdColor);
     }
 }
 
@@ -3783,8 +3792,7 @@ static void DrawMenuGun (const CP_iteminfo * iteminfo)
 // DRAW SCREEN TITLE STRIPES
 //
 ///////////////////////////////////////////////////////////////////////////
-void
-DrawStripes (int y)
+void DrawStripes (int y)
 {
     if(!SPEAR())
     {
@@ -3804,3 +3812,12 @@ static void ShootSnd ()
 }
 
 // IOANCH 20130726: moved this to CFG_
+
+void Menu::SetSpearModuleValues()
+{
+	g_bkgdColor = SPEAR() ? 0x9d : 0x2d;
+	g_bordColor = SPEAR() ? 0x99 : 0x29;
+	
+	s_bord2Color = SPEAR() ? 0x93 : 0x23;
+	s_deactive = SPEAR() ? DEACTIVE_sod : DEACTIVE_wl6;
+}

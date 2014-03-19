@@ -43,11 +43,11 @@ struct fontstruct
 //===========================================================================
 
 
-extern  byte            fontcolor,backcolor;
+extern  byte            g_fontcolor,g_backcolor;
 extern	int             fontnumber;
 extern	int             px,py;
 
-#define SETFONTCOLOR(f,b) fontcolor=f;backcolor=b;
+#define SETFONTCOLOR(f,b) g_fontcolor=f;g_backcolor=b;
 
 //
 // mode independant routines
