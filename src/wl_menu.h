@@ -130,7 +130,6 @@ void menu_SetupSaveGames();
 void DrawMenu(const CP_iteminfo *item_i,const CP_itemtype *items);
 int  HandleMenu(CP_iteminfo *item_i, const CP_itemtype *items, void (*routine)(int w));
 void ClearMScreen();
-void DrawWindow(int x,int y,int w,int h,int wcolor);
 void ReadAnyControl(CursorInfo *ci);
 void TicDelay(int count);
 void CacheLump(int lumpstart,int lumpend);

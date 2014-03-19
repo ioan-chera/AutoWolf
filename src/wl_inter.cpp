@@ -56,8 +56,7 @@ void Write (int x, int y, const char *string);
 ==================
 */
 
-void
-ClearSplitVWB ()
+void ClearSplitVWB ()
 {
     WindowX = 0;
     WindowY = 0;
@@ -76,8 +75,7 @@ ClearSplitVWB ()
 //
 ////////////////////////////////////////////////////////
 
-void
-EndScreen (int palette, int screen)
+static void EndScreen (int palette, int screen)
 {
     SDL_Color pal[256];
     graphSegs.cacheScreen (screen);
@@ -92,7 +90,7 @@ EndScreen (int palette, int screen)
 }
 
 
-void EndSpear ()
+static void EndSpear ()
 {
     SDL_Color pal[256];
 
@@ -149,8 +147,7 @@ void EndSpear ()
 ==================
 */
 
-void
-Victory ()
+void Victory ()
 {
 // IOANCH 20130301: unification culling
     int32_t sec;
@@ -342,8 +339,7 @@ Victory ()
 
 //==========================================================================
 
-void
-Write (int x, int y, const char *string)
+void Write (int x, int y, const char *string)
 {
     static const unsigned int alpha[] = { SPEAR.g(L_NUM0PIC),
         SPEAR.g(L_NUM1PIC), SPEAR.g(L_NUM2PIC), 
@@ -419,8 +415,7 @@ Write (int x, int y, const char *string)
 //
 // Breathe Mr. BJ!!!
 //
-void
-BJ_Breathe ()
+static void BJ_Breathe ()
 {
     static int which = 0, max = 10;
     int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
@@ -452,8 +447,7 @@ BJ_Breathe ()
 ==================
 */
 
-void
-LevelCompleted ()
+void LevelCompleted ()
 {
 #define VBLWAIT 30
 #define PAR_AMOUNT      500
@@ -949,8 +943,7 @@ done:   itoanoreturn (kr, tempstr, 10);
 =================
 */
 
-Boolean8
-PreloadUpdate (unsigned current, unsigned total)
+static bool PreloadUpdate (unsigned current, unsigned total)
 {
     unsigned w = WindowW - vid_scaleFactor * 10;
 
@@ -975,8 +968,7 @@ PreloadUpdate (unsigned current, unsigned total)
     return (false);
 }
 
-void
-PreloadGraphics ()
+void PreloadGraphics ()
 {
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen

@@ -1303,7 +1303,7 @@ void PlayDemo (int demonumber)
 
 #define DEATHROTATE 2
 
-void Died ()
+static void Died ()
 {
     float   fangle;
     int32_t dx,dy;

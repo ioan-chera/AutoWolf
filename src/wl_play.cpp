@@ -54,16 +54,6 @@
 /*
 =============================================================================
 
-                                                 LOCAL CONSTANTS
-
-=============================================================================
-*/
-
-#define sc_Question     0x35
-
-/*
-=============================================================================
-
                                                  GLOBAL VARIABLES
 
 =============================================================================
@@ -131,16 +121,6 @@ int lastgamemusicoffset = 0;
 
 //===========================================================================
 
-
-void CenterWindow (word w, word h);
-void InitObjList (void);
-void RemoveObj (objtype * gone);
-void PollControls (void);
-int StopMusic (void);
-void StartMusic (void);
-void ContinueMusic (int offs);
-void PlayLoop (void);
-
 /*
 =============================================================================
 
@@ -149,15 +129,12 @@ void PlayLoop (void);
 =============================================================================
 */
 
-
-objtype dummyobj;
-
 //
 // LIST OF SONGS FOR EACH VERSION
 //
 
 // IOANCH 20130301: unification
-int songs_wl6[] = {
+static int songs_wl6[] = {
     //
     // Episode One
     //
@@ -248,7 +225,7 @@ int songs_wl6[] = {
     ULTIMATE_MUS_wl6,               // Boss level
     FUNKYOU_MUS_wl6                 // Secret level
 };
-int songs_sod[] = {
+static int songs_sod[] = {
 
     //////////////////////////////////////////////////////////////
     //
@@ -299,7 +276,7 @@ int songs_sod[] = {
 ===================
 */
 
-void PollKeyboardButtons (void)
+static void PollKeyboardButtons ()
 {
     int i;
 
@@ -317,7 +294,7 @@ void PollKeyboardButtons (void)
 ===================
 */
 
-void PollMouseButtons (void)
+static void PollMouseButtons ()
 {
     int buttons = myInput.mouseButtons ();
 
@@ -339,7 +316,7 @@ void PollMouseButtons (void)
 ===================
 */
 
-void PollJoystickButtons (void)
+static void PollJoystickButtons ()
 {
     int buttons = myInput.joyButtons();
 
@@ -359,7 +336,7 @@ void PollJoystickButtons (void)
 ===================
 */
 
-void PollKeyboardMove (void)
+static void PollKeyboardMove ()
 {
     int delta = buttonstate[bt_run] ? RUNMOVE * tics : BASEMOVE * tics;
 
@@ -382,7 +359,7 @@ void PollKeyboardMove (void)
 ===================
 */
 
-void PollMouseMove (void)
+static void PollMouseMove ()
 {
     int mousexmove, mouseymove;
 
@@ -406,7 +383,7 @@ void PollMouseMove (void)
 ===================
 */
 
-void PollJoystickMove (void)
+static void PollJoystickMove (void)
 {
     int joyx, joyy;
 
@@ -439,7 +416,7 @@ void PollJoystickMove (void)
 ===================
 */
 
-void PollControls (void)
+void PollControls ()
 {
     int max, min, i;
     byte buttonbits;
@@ -610,7 +587,7 @@ void CenterWindow (word w, word h)
 =====================
 */
 
-void CheckKeys (void)
+static void CheckKeys ()
 {
     ScanCode scan;
 
@@ -743,11 +720,7 @@ void CheckKeys (void)
 //
 // F1-F7/ESC to enter control panel
 //
-    if (
-#ifndef DEBCHECK
-           scan == sc_F10 ||
-#endif
-           scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
+    if (scan == sc_F10 || scan == sc_F9 || scan == sc_F7 || scan == sc_F8)     // pop up quit dialog
     {
 		// IOANCH 11.06.2012: commented to made compiler stop complaining
         //short oldmapon = gamestate.mapon;
@@ -845,7 +818,7 @@ next element.
 
 int objcount;
 
-void InitActorList (void)
+void InitActorList ()
 {
     int i;
 
@@ -886,7 +859,7 @@ void InitActorList (void)
 //
 
 
-void GetNewActor (void)
+void GetNewActor ()
 {
     if (!objfreelist)
         Quit ("GetNewActor: No free spots in objlist!");
@@ -918,7 +891,7 @@ void GetNewActor (void)
 =========================
 */
 
-void RemoveObj (objtype * gone)
+static void RemoveObj (objtype * gone)
 {
     if (gone == player)
         Quit ("RemoveObj: Tried to remove the player!");
@@ -963,12 +936,12 @@ void RemoveObj (objtype * gone)
 =
 =================
 */
-int StopMusic (void)
+int StopMusic ()
 {
     int lastoffs = SD_MusicOff ();
 
 	// IOANCH 20130301: unification
-   audioSegs.uncacheChunk(IMPALE(STARTMUSIC) + lastmusicchunk);
+    audioSegs.uncacheChunk(IMPALE(STARTMUSIC) + lastmusicchunk);
 
     return lastoffs;
 }
@@ -1037,7 +1010,7 @@ Boolean8 palshifted;
 =====================
 */
 
-void InitRedShifts (void)
+void InitRedShifts ()
 {
     SDL_Color *workptr, *baseptr;
     int i, j, delta;
@@ -1094,7 +1067,7 @@ void InitRedShifts (void)
 =====================
 */
 
-void ClearPaletteShifts (void)
+static void ClearPaletteShifts ()
 {
     bonuscount = damagecount = 0;
     palshifted = false;
@@ -1109,7 +1082,7 @@ void ClearPaletteShifts (void)
 =====================
 */
 
-void StartBonusFlash (void)
+void StartBonusFlash ()
 {
     bonuscount = NUMWHITESHIFTS * WHITETICS;    // white shift palette
 }
@@ -1137,7 +1110,7 @@ void StartDamageFlash (int damage)
 =====================
 */
 
-void UpdatePaletteShifts (void)
+static void UpdatePaletteShifts ()
 {
     int red, white;
 
@@ -1196,7 +1169,7 @@ void UpdatePaletteShifts (void)
 =====================
 */
 
-void FinishPaletteShifts (void)
+void FinishPaletteShifts ()
 {
     if (palshifted)
     {
@@ -1224,7 +1197,7 @@ void FinishPaletteShifts (void)
 =====================
 */
 
-void DoActor (objtype * ob)
+static void DoActor (objtype * ob)
 {
     void (*think) (objtype *);
 
@@ -1332,7 +1305,7 @@ think:
 int32_t funnyticount;
 
 
-void PlayLoop (void)
+void PlayLoop ()
 {
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
     if(GetFeatureFlags() & FF_CLOUDSKY)

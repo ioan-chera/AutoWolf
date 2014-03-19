@@ -785,12 +785,12 @@ Boolean8 LoadTheGame(FILE *file,int x,int y)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void ShutdownId ()
+static void ShutdownId ()
 {
     US_Shutdown ();         // This line is completely useless...
     SD_Shutdown ();
-   vSwapData.clear();
-   myInput.close();
+    vSwapData.clear();
+    myInput.close();
     VL_Shutdown ();
     CA_Shutdown ();
 #if defined(GP2X_940)
@@ -812,9 +812,9 @@ void ShutdownId ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const float radtoint = (float)(FINEANGLES/2/PI);
+static const float radtoint = (float)(FINEANGLES/2/PI);
 
-void main_BuildTables ()
+static void main_BuildTables ()
 {
     //
     // calculate fine tangents
@@ -860,7 +860,7 @@ void main_BuildTables ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CalcProjection (int32_t focal)
+static void CalcProjection (int32_t focal)
 {
     int     i;
     int    intang;
@@ -912,7 +912,7 @@ void CalcProjection (int32_t focal)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void main_SetupWalls ()
+static void main_SetupWalls ()
 {
     int     i;
 
@@ -935,7 +935,7 @@ void main_SetupWalls ()
 ////////////////////////////////////////////////////////////////////////////////
 
 // IOANCH 20130726: gave prefix
-void VL_SignonScreen ()                        // VGA version
+static void VL_SignonScreen ()                        // VGA version
 {
     // IOANCH 20130510: moved the VGA function upstream right above this one
 
@@ -950,7 +950,7 @@ void VL_SignonScreen ()                        // VGA version
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void FinishSignon ()
+static void FinishSignon ()
 {
     // IOANCH 20130303: unification
     if(!SPEAR())
@@ -1594,128 +1594,6 @@ static void DemoLoop()
     }
 }
 
-
-//===========================================================================
-#if 0   // IOANCH 20130610: just a short test of list/dllist/set speed
-#include "e_hash.h"
-void TestListPerf()
-{
-    struct intboolwrap {
-        int key;
-        DLListItem<intboolwrap> link;
-    };
-    int i, j = 0, N = 10000000;
-    std::unordered_set<int> set;
-    EHashTable<intboolwrap, EIntHashKey, &intboolwrap::key, &intboolwrap::link>
-    eset(10000019);
-    List<int> list;
-    struct intwrap {
-        int val;
-        DLListItem<intwrap> link;
-    };
-    
-    DLList<intwrap, &intwrap::link> dllist;
-    
-    static double CLK_passed = 0.0;
-    static clock_t CLK_begin, CLK_end;
-    
-    dllist.head = NULL;
-    set.reserve(10000019);
-    
-    CLK_begin = clock();
-    for(i = 1; i <= N; ++i)
-        set.insert(3);
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("Set insertion time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for(i = 1; i <= N; ++i)
-    {
-        intboolwrap *ibw = new intboolwrap;
-        ibw->key = 3;
-        eset.addObjectUnique(ibw);
-    }
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("ESet insertion time: %.16g\n", CLK_passed);
-
-    CLK_begin = clock();
-    for (i = 1; i <= N; ++i)
-        list.add(i);
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("List insertion time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (i = 1; i <= N; ++i)
-    {
-        intwrap *iw = new intwrap;
-        iw->val = i;
-        dllist.insert(iw);
-    }
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("DLList insertion time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (auto it = set.cbegin(); it != set.cend(); ++it)
-        j += (*it);
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("Set scanning time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for(intboolwrap *ibw = eset.tableIterator(NULL); ibw;
-        ibw = eset.tableIterator(ibw))
-    {
-        printf("%d ", ibw->key);
-        j += ibw->key;
-    }
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("ESet scanning time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (i = list.firstObject(); i; i = list.nextObject())
-        j += i;
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("List scanning time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (DLListItem<intwrap> *entry = dllist.head; entry; entry = entry->dllNext)
-    {
-        j += entry->dllObject->val;
-    }
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("DLList scanning time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (i = N; i >= 1; --i)
-        set.erase(i);
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("Set deleting time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for(i = N; i >= 1; --i)
-    {
-        eset.removeObjectForKey(i);
-    }
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("ESet deleting time: %.16g\n", CLK_passed);
-    
-    CLK_begin = clock();
-    for (i = N; i >= 1; --i)
-        list.remove(i);
-    CLK_end = clock();
-    CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC;
-    printf("List deleting time: %.16g\n", CLK_passed);
-}
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 //
 // main

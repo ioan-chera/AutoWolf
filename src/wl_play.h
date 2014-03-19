@@ -66,7 +66,6 @@ void    CenterWindow(word w,word h);
 void    InitRedShifts ();
 void    FinishPaletteShifts ();
 
-void    RemoveObj (objtype *gone);
 void    PollControls ();
 int     StopMusic();
 void    StartMusic();

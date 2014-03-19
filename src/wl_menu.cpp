@@ -597,6 +597,8 @@ void EnableEndGameMenuItem()
 //
 // DRAW MAIN MENU SCREEN
 //
+static void DrawWindow(int x,int y,int w,int h,int wcolor);
+
 static void DrawMainMenu ()
 {
     // IOANCH 20130301: unification culling
@@ -2921,7 +2923,7 @@ void UnCacheLump (int lumpstart, int lumpend)
 // Draw a window for a menu
 //
 ////////////////////////////////////////////////////////////////////
-void DrawWindow (int x, int y, int w, int h, int wcolor)
+static void DrawWindow (int x, int y, int w, int h, int wcolor)
 {
     VL_Bar (x, y, w, h, wcolor);
     DrawOutline (x, y, w, h, s_bord2Color, s_deactive);

@@ -34,13 +34,11 @@ extern PString global_error;
 
 
 void            NewGame (int difficulty,int episode);
-void            CalcProjection (int32_t focal);
 void            main_NewViewSize (int width);
 Boolean8         SetViewSize (unsigned width, unsigned height);
 Boolean8         LoadTheGame(FILE *file,int x,int y);
 Boolean8         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
-void            ShutdownId ();
 
 void Quit(const char *message)
 #ifndef _WIN32
