@@ -33,6 +33,7 @@ namespace Menu
 	extern int g_bkgdColor;
 	extern int g_bordColor;
 	
+	void ControlPanel(ScanCode);
 	void DoJukebox();
 	void SetSpearModuleValues();
 }
@@ -121,7 +122,7 @@ extern CP_iteminfo MainItems;
 // FUNCTION PROTOTYPES
 //
 
-void US_ControlPanel(ScanCode);
+
 
 void EnableEndGameMenuItem();
 

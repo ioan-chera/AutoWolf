@@ -1577,9 +1577,9 @@ static void DemoLoop()
         if (myInput.keyboard(sc_Tab) && cfg_debugmode)
             RecordDemo ();
         else
-            US_ControlPanel (sc_None);
+            Menu::ControlPanel (sc_None);
 #else
-        US_ControlPanel (0);
+        Menu::ControlPanel (0);
 #endif
 
         if (startgame || loadedgame)

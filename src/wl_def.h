@@ -605,7 +605,10 @@ struct objtype
       fwrite(&next, sizeof(next), 1, file);
       fwrite(&prev, sizeof(prev), 1, file);
    }
-} ;
+	
+	void NewState(statetype* state);
+	Boolean8 TryWalk();
+};
 
 
 enum

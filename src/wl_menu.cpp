@@ -406,7 +406,7 @@ static void SetupControlPanel ();
 static int CP_Quit(int);
 static int CP_EndGame(int);
 
-void US_ControlPanel (ScanCode scancode)
+void Menu::ControlPanel (ScanCode scancode)
 {
     int which;
 
@@ -492,7 +492,7 @@ void US_ControlPanel (ScanCode scancode)
                 StartCPMusic (XJAZNAZI_MUS_sod);
                 UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
                 UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
 
 
                 graphSegs.cacheChunk (SPEAR.g(IDGUYS1PIC));
@@ -973,7 +973,7 @@ firstpart:
                 default:
                     if (!menu_epselect[which / 2])
                     {
-                        SD_PlaySound (NOWAYSND);
+                        Sound::Play (NOWAYSND);
                         Message ("Please select \"Read This!\"\n"
                                  "from the Options menu to\n"
                                  "find out how to order this\n" "episode from Apogee.");
@@ -1719,7 +1719,7 @@ static int CP_SaveGame (int quick)
                          LSM_W - LSItems.indent - 16, 10, Menu::g_bkgdColor);
                 PrintLSEntry (which, HIGHLIGHT);
                 I_UpdateScreen ();
-                SD_PlaySound (ESCPRESSEDSND);
+                Sound::Play (ESCPRESSEDSND);
                 continue;
             }
 
@@ -1879,7 +1879,7 @@ int MouseSensitivity (int)
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
-                    SD_PlaySound (MOVEGUN1SND);
+                    Sound::Play (MOVEGUN1SND);
                     TicDelay(20);
                 }
                 break;
@@ -1894,7 +1894,7 @@ int MouseSensitivity (int)
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
-                    SD_PlaySound (MOVEGUN1SND);
+                    Sound::Play (MOVEGUN1SND);
                     TicDelay(20);
                 }
                 break;
@@ -1913,10 +1913,10 @@ int MouseSensitivity (int)
     if (exit == 2)
     {
         mouseadjustment = oldMA;
-        SD_PlaySound (ESCPRESSEDSND);
+        Sound::Play (ESCPRESSEDSND);
     }
     else
-        SD_PlaySound (SHOOTSND);
+        Sound::Play (SHOOTSND);
 
     WaitKeyUp ();
     MenuFadeOut ();
@@ -2188,7 +2188,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                         case 1:
                             PrintX = x;
                             US_Print ("?");
-                            SD_PlaySound (HITWALLSND);
+                            Sound::Play (HITWALLSND);
                     }
                     tick ^= 1;
                     lastFlashTime = GetTimeCount();
@@ -2227,7 +2227,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
 
                             buttonmouse[result - 1] = order[which];
                             picked = 1;
-                            SD_PlaySound (SHOOTDOORSND);
+                            Sound::Play (SHOOTDOORSND);
                         }
                         break;
 
@@ -2254,7 +2254,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
 
                             buttonjoy[result - 1] = order[which];
                             picked = 1;
-                            SD_PlaySound (SHOOTDOORSND);
+                            Sound::Play (SHOOTDOORSND);
                         }
                         break;
 
@@ -2285,7 +2285,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 if (myInput.keyboard(sc_Escape) || (type != JOYSTICK && ci.button1))
                 {
                     picked = 1;
-                    SD_PlaySound (ESCPRESSEDSND);
+                    Sound::Play (ESCPRESSEDSND);
                 }
 
                 if(picked) break;
@@ -2316,7 +2316,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 }
                 while (!cust->allowed[which]);
                 redraw = 1;
-                SD_PlaySound (MOVEGUN1SND);
+                Sound::Play (MOVEGUN1SND);
                 while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
                 myInput.clearKeysDown ();
                 break;
@@ -2330,7 +2330,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 }
                 while (!cust->allowed[which]);
                 redraw = 1;
-                SD_PlaySound (MOVEGUN1SND);
+                Sound::Play (MOVEGUN1SND);
                 while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
                 myInput.clearKeysDown ();
                 break;
@@ -2343,7 +2343,7 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
     }
     while (!exit);
 
-    SD_PlaySound (ESCPRESSEDSND);
+    Sound::Play (ESCPRESSEDSND);
     WaitKeyUp ();
     DrawWindow (5, PrintY - 1, 310, 13, Menu::g_bkgdColor);
 }
@@ -2765,7 +2765,7 @@ static int CP_ChangeView (int)
                 if(newview >= 19) DrawChangeView(newview);
                 else ShowViewSize (newview);
                 I_UpdateScreen ();
-                SD_PlaySound (HITWALLSND);
+                Sound::Play (HITWALLSND);
                 TicDelay (10);
                 break;
 
@@ -2779,7 +2779,7 @@ static int CP_ChangeView (int)
                 }
                 else ShowViewSize (newview);
                 I_UpdateScreen ();
-                SD_PlaySound (HITWALLSND);
+                Sound::Play (HITWALLSND);
                 TicDelay (10);
                 break;
 			default:
@@ -2790,7 +2790,7 @@ static int CP_ChangeView (int)
             exit = 1;
         else if (ci.button1 || myInput.keyboard(sc_Escape))
         {
-            SD_PlaySound (ESCPRESSEDSND);
+            Sound::Play (ESCPRESSEDSND);
             MenuFadeOut ();
             if(cfg_screenHeight % 200 != 0)
                 I_ClearScreen(0);
@@ -2801,7 +2801,7 @@ static int CP_ChangeView (int)
 
     if (oldview != newview)
     {
-        SD_PlaySound (SHOOTSND);
+        Sound::Play (SHOOTSND);
         Message (STR_THINK "...");
         main_NewViewSize (newview);
     }
@@ -3269,7 +3269,7 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
             return which;
 
         case 2:
-            SD_PlaySound (ESCPRESSEDSND);
+            Sound::Play (ESCPRESSEDSND);
             return -1;
     }
 
@@ -3300,7 +3300,7 @@ DrawHalfStep (int x, int y)
 {
     VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
     I_UpdateScreen ();
-    SD_PlaySound (MOVEGUN1SND);
+    Sound::Play (MOVEGUN1SND);
     I_Delay (8 * 100 / 7);
 }
 
@@ -3327,7 +3327,7 @@ static void DrawGun (const CP_iteminfo * item_i, const CP_itemtype * items, int 
     if (routine)
         routine (which);
     I_UpdateScreen ();
-    SD_PlaySound (MOVEGUN2SND);
+	Sound::Play (MOVEGUN2SND);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3335,8 +3335,7 @@ static void DrawGun (const CP_iteminfo * item_i, const CP_itemtype * items, int 
 // DELAY FOR AN AMOUNT OF TICS OR UNTIL CONTROLS ARE INACTIVE
 //
 ////////////////////////////////////////////////////////////////////
-void
-TicDelay (int count)
+void TicDelay (int count)
 {
     CursorInfo ci;
 
@@ -3574,7 +3573,7 @@ static int Confirm (const char *string)
     myInput.clearKeysDown ();
     WaitKeyUp ();
 
-    SD_PlaySound ((soundnames) whichsnd[xit]);
+    Sound::Play ((soundnames) whichsnd[xit]);
 
     return xit;
 }
@@ -3726,7 +3725,7 @@ void DrawStripes (int y)
 
 static void ShootSnd ()
 {
-    SD_PlaySound (SHOOTSND);
+    Sound::Play (SHOOTSND);
 }
 
 // IOANCH 20130726: moved this to CFG_

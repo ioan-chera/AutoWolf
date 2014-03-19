@@ -221,7 +221,7 @@ void PlaySoundLocGlobal(word s,fixed gx,fixed gy)
     SetSoundLoc(gx, gy);
     SD_PositionSound(leftchannel, rightchannel);
 
-    int channel = SD_PlaySound((soundnames) s);
+    int channel = Sound::Play((soundnames) s);
     if(channel)
     {
         channelSoundPos[channel - 1].globalsoundx = gx;
@@ -1218,7 +1218,7 @@ void RecordDemo ()
 
     StopMusic ();
     VW_FadeOut ();
-    SD_StopDigitized ();
+    Sound::StopDigitized ();
 
     FinishDemoRecord ();
 }
@@ -1288,7 +1288,7 @@ void PlayDemo (int demonumber)
     demoplayback = false;
 
     StopMusic ();
-    SD_StopDigitized ();
+    Sound::StopDigitized ();
 }
 
 //==========================================================================
@@ -1316,7 +1316,7 @@ static void Died ()
     }
 
     gamestate.weapon = (weapontype) -1;                     // take away weapon
-    SD_PlaySound (PLAYERDEATHSND);
+    Sound::Play (PLAYERDEATHSND);
 
     //
     // swing around to face attacker
@@ -1411,7 +1411,7 @@ static void Died ()
 
     myInput.userInput(100);
     SD_WaitSoundDone ();
-    SD_StopDigitized();
+    Sound::StopDigitized();
 
     gamestate.lives--;
 
@@ -1456,7 +1456,7 @@ void GameLoop ()
 #endif
 
 restartgame:
-    SD_StopDigitized ();
+    Sound::StopDigitized ();
     SETFONTCOLOR(0,15);
     VW_FadeOut();
     DrawPlayScreen ();
@@ -1503,7 +1503,7 @@ startplayloop:
            // IOANCH 20130725: added spear notification
             I_Notify("Got the Spear!");
             SD_StopSound();
-            SD_PlaySound(GETSPEARSND);
+            Sound::Play(GETSPEARSND);
             if (sd_digiMode != sds_Off)
             {
                 Delay(150);
@@ -1511,7 +1511,7 @@ startplayloop:
             else
                 SD_WaitSoundDone();
 
-            SD_StopDigitized ();
+            Sound::StopDigitized ();
             gamestate.oldscore = gamestate.score;
             gamestate.mapon = 20;
             SetupGameLevel ();
@@ -1547,7 +1547,7 @@ startplayloop:
                 DrawKeys ();
                 VW_FadeOut ();
 
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
 
                 LevelCompleted ();              // do the intermission
                 if(viewsize == 21) DrawPlayScreen();
@@ -1633,7 +1633,7 @@ startplayloop:
                 DC_StatusClearLCD();
 #endif
 
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
@@ -1652,11 +1652,11 @@ startplayloop:
                     VW_FadeOut ();
                 else
                     VL_FadeOut (0,255,0,17,17,300);
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
 
                 Victory ();
 
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
 
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
@@ -1668,7 +1668,7 @@ startplayloop:
 
             default:
                 if(viewsize == 21) DrawPlayScreen();
-                SD_StopDigitized ();
+                Sound::StopDigitized ();
                 break;
         }
     } while (1);

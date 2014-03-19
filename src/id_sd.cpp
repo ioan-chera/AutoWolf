@@ -607,7 +607,7 @@ SD_L_ShutPC()
 //
 // SD_StopDigitized
 //
-void SD_StopDigitized()
+void Sound::StopDigitized()
 {
     sd_digiPlaying = false;
     // IOANCH 20130301: unification
@@ -789,7 +789,7 @@ void SD_SetDigiDevice(SDSMode mode)
     if (mode == sd_digiMode)
         return;
 
-    SD_StopDigitized();
+    Sound::StopDigitized();
 
     devicenotpresent = false;
     switch (mode)
@@ -1293,11 +1293,11 @@ void SD_PositionSound(int leftvol,int rightvol)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//      SD_PlaySound() - plays the specified sound on the appropriate 
+//      Sound::Play() - plays the specified sound on the appropriate 
 // hardware
 //
 ////////////////////////////////////////////////////////////////////////////////
-Boolean8 SD_PlaySound(soundnames sound_abstract)
+Boolean8 Sound::Play(soundnames sound_abstract)
 {
     Boolean8         ispos;
     SoundCommon     *s;
@@ -1320,7 +1320,7 @@ Boolean8 SD_PlaySound(soundnames sound_abstract)
     s = (SoundCommon *) SoundTable[sound];
 
     if ((sd_soundMode != sdm_Off) && !s)
-            Quit("SD_PlaySound() - Uncached sound");
+            Quit("Sound::Play() - Uncached sound");
 
     if ((sd_digiMode != sds_Off) && (sd_digiMap[sound] != -1))
     {
@@ -1361,7 +1361,7 @@ Boolean8 SD_PlaySound(soundnames sound_abstract)
         return 0;
 
     if (!s->length)
-        Quit("SD_PlaySound() - Zero length sound");
+        Quit("Sound::Play() - Zero length sound");
     if (s->priority < sd_soundPriority)
         return 0;
 
@@ -1419,7 +1419,7 @@ word SD_SoundPlaying()
 void SD_StopSound()
 {
     if (sd_digiPlaying)
-        SD_StopDigitized();
+        Sound::StopDigitized();
 
     switch (sd_soundMode)
     {

@@ -156,7 +156,7 @@ extern  void    SD_Startup(),
 
 extern  int     SD_GetChannelForDigi(int which);
 extern  void    SD_PositionSound(int leftvol,int rightvol);
-extern  Boolean8 SD_PlaySound(soundnames sound);
+
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
 extern  void    SD_StopSound(),
                 SD_WaitSoundDone();
@@ -175,6 +175,11 @@ extern  word    SD_SoundPlaying();
 extern  void    SD_SetDigiDevice(SDSMode);
 extern  void	SD_PrepareSound(int which);
 extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
-extern  void    SD_StopDigitized();
+
+namespace Sound
+{
+	Boolean8 Play(soundnames sound);
+	void StopDigitized();
+}
 
 #endif

@@ -84,7 +84,7 @@ TEXT FORMATTING COMMANDS
 */
 
 static int pagenum;
-static int numpages;
+static int s_numpages;
 
 static unsigned leftmargin[TEXTROWS];
 static unsigned rightmargin[TEXTROWS];
@@ -515,10 +515,10 @@ void PageLayout (Boolean8 shownumber)
     if (shownumber)
     {
 #ifdef SPANISH
-        sprintf(str, "Hoja %d de %d", pagenum, numpages);
+        sprintf(str, "Hoja %d de %d", pagenum, s_numpages);
         px = 208;
 #else
-        sprintf(str, "pg %d of %d", pagenum, numpages);
+        sprintf(str, "pg %d of %d", pagenum, s_numpages);
         px = 213;
 #endif
         py = 183;
@@ -567,14 +567,14 @@ void BackPage ()
 =
 =====================
 */
-void CacheLayoutGraphics ()
+static void CacheLayoutGraphics ()
 {
     const char    *bombpoint, *textstart;
     char    ch;
 
     textstart = text;
     bombpoint = text+30000;
-    numpages = pagenum = 0;
+    s_numpages = pagenum = 0;
 
     do
     {
@@ -582,7 +582,7 @@ void CacheLayoutGraphics ()
         {
             ch = toupper(*++text);
             if (ch == 'P')          // start of a page
-                numpages++;
+                s_numpages++;
             if (ch == 'E')          // end of file, so load graphics and return
             {
                 graphSegs.cacheChunk(SPEAR.g(H_TOPWINDOWPIC));
@@ -620,7 +620,7 @@ void CacheLayoutGraphics ()
 =====================
 */
 // IOANCH 20130301: unification culling
-void ShowArticle (const char *article)
+static void ShowArticle (const char *article)
 {
     // IOANCH 20130301: unification culling
 
@@ -703,7 +703,7 @@ void ShowArticle (const char *article)
 
             case dir_South:
             case dir_East:
-                if (pagenum<numpages)
+                if (pagenum<s_numpages)
                 {
                     newpage = true;
                     // IOANCH 20130301: unification culling
@@ -781,7 +781,7 @@ void EndText ()
     memptr  layout;
 #endif
 
-    SD_StopDigitized ();
+    Sound::StopDigitized ();
 
     // IOANCH 20130301: unification culling
 

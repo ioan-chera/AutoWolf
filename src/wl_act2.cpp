@@ -286,7 +286,7 @@ void A_DeathScream (objtype *ob)
             if(atr::sounds[ob->obclass].death >= 0)
             {
                 if(atr::flags[ob->obclass] & ATR_BOSS_SOUNDS)
-                    SD_PlaySound((soundnames)atr::sounds[ob->obclass].death);
+                    Sound::Play((soundnames)atr::sounds[ob->obclass].death);
                 else
                     PlaySoundLocActor(atr::sounds[ob->obclass].death, ob);
             }
@@ -391,12 +391,12 @@ void A_Launch (objtype *ob)
 //
 void A_Slurpie (objtype *)
 {
-    SD_PlaySound(SLURPIESND);
+    Sound::Play(SLURPIESND);
 }
 
 void A_Breathing (objtype *)
 {
-    SD_PlaySound(ANGELTIREDSND);
+    Sound::Play(ANGELTIREDSND);
 }
 
 //
@@ -432,13 +432,13 @@ void A_Relaunch (objtype *ob)
 {
     if (++ob->temp1 == 3)
     {
-        NewState (ob,&s_angeltired);
+        ob->NewState (&s_angeltired);
         return;
     }
     
     if (wolfRnd()&1)
     {
-        NewState (ob,&s_angelchase1);
+        ob->NewState (&s_angelchase1);
         return;
     }
 }
@@ -493,7 +493,7 @@ moveok:
     ob->flags &= ~FL_ATTACKMODE;
     ob->flags &= ~FL_NONMARK;      // stuck bugfix 1
     ob->dir = nodir;
-    NewState (ob,&s_spectrewait1);
+    ob->NewState (&s_spectrewait1);
     // IOANCH reregister it
     Basic::livingNazis.add(ob);
 }
@@ -533,22 +533,22 @@ void T_ProjectileBossChase(objtype *ob)
 			{
                     // IOANCH 20130202: unification process
 				case willobj:
-					NewState (ob,&s_willshoot1);
+					ob->NewState (&s_willshoot1);
 					break;
 				case angelobj:
-					NewState (ob,&s_angelshoot1);
+					ob->NewState (&s_angelshoot1);
 					break;
 				case deathobj:
-					NewState (ob,&s_deathshoot1);
+					ob->NewState (&s_deathshoot1);
 					break;
 				case schabbobj:
-					NewState(ob, &s_schabbshoot1);
+					ob->NewState(&s_schabbshoot1);
 					break;
 				case giftobj:
-					NewState(ob, &s_giftshoot1);
+					ob->NewState(&s_giftshoot1);
 					break;
 				case fatobj:
-					NewState(ob, &s_fatshoot1);
+					ob->NewState(&s_fatshoot1);
 					break;
 					
 				default:
@@ -584,7 +584,7 @@ void T_ProjectileBossChase(objtype *ob)
             if (doorobjlist[-ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
-            TryWalk(ob);
+            ob->TryWalk();
         }
 		
         if (move < ob->distance)
@@ -740,7 +740,7 @@ void A_FakeFire (objtype *ob)
     
     if (!objfreelist)       // stop shooting if over MAXACTORS
     {
-        NewState (ob,&s_fakechase1);
+        ob->NewState (&s_fakechase1);
         return;
     }
     
@@ -797,7 +797,7 @@ void T_Fake (objtype *ob)
             //
             // go into attack frame
             //
-            NewState (ob,&s_fakeshoot1);
+            ob->NewState (&s_fakeshoot1);
             return;
         }
     }
@@ -937,7 +937,7 @@ void T_Chase (objtype *ob)
             //
             // IOANCH 20130306: wrap
             if(atr::states[ob->obclass].shoot)
-                NewState(ob, atr::states[ob->obclass].shoot);
+                ob->NewState(atr::states[ob->obclass].shoot);
             
             return;
         }
@@ -980,7 +980,7 @@ void T_Chase (objtype *ob)
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             DEMOIF_SDL
             {
-                TryWalk(ob);
+                ob->TryWalk();
             }
         }
         
@@ -1099,7 +1099,7 @@ void T_DogChase (objtype *ob)
             dy -= move;
             if (dy <= MINACTORDIST)
             {
-                NewState (ob,&s_dogjump1);
+                ob->NewState (&s_dogjump1);
                 return;
             }
         }
@@ -1159,7 +1159,7 @@ static void SelectPathDir (objtype *ob)
     
     ob->distance = TILEGLOBAL;
     
-    if (!TryWalk (ob))
+    if (!ob->TryWalk ())
         ob->dir = nodir;
 }
 
@@ -1200,7 +1200,7 @@ void T_Path (objtype *ob)
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
             DEMOIF_SDL
             {
-                TryWalk(ob);
+                ob->TryWalk();
             }
         }
         
@@ -1416,7 +1416,7 @@ void T_BJRun (objtype *ob)
         
         if ( !(--ob->temp1) )
         {
-            NewState (ob,&s_bjjump1);
+            ob->NewState (&s_bjjump1);
             return;
         }
     }
@@ -1557,7 +1557,7 @@ void    A_StartDeathCam (objtype *ob)
     //
     // line angle up exactly
     //
-    NewState (player,&s_deathcam);
+    player->NewState (&s_deathcam);
     
     player->x = gamestate.killx;
     player->y = gamestate.killy;
@@ -1601,16 +1601,16 @@ void    A_StartDeathCam (objtype *ob)
     {
             // IOANCH 20130202: unification process
         case schabbobj:
-            NewState (ob,&s_schabbdeathcam);
+            ob->NewState (&s_schabbdeathcam);
             break;
         case realhitlerobj:
-            NewState (ob,&s_hitlerdeathcam);
+            ob->NewState (&s_hitlerdeathcam);
             break;
         case giftobj:
-            NewState (ob,&s_giftdeathcam);
+            ob->NewState (&s_giftdeathcam);
             break;
         case fatobj:
-            NewState (ob,&s_fatdeathcam);
+            ob->NewState (&s_fatdeathcam);
             break;
 		default:
 			;

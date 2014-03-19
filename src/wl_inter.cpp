@@ -681,7 +681,7 @@ void LevelCompleted ()
                 x = 36 - (int) strlen(tempstr) * 2;
                 Write (x, 7, tempstr);
                 if (!(i % (PAR_AMOUNT / 10)))
-                    SD_PlaySound (ENDBONUS1SND);
+                    Sound::Play (ENDBONUS1SND);
                 if(!cfg_usedoublebuffering || !(i % (PAR_AMOUNT / 50))) I_UpdateScreen ();
                 while(SD_SoundPlaying ())
                     BJ_Breathe ();
@@ -691,7 +691,7 @@ void LevelCompleted ()
 
             I_UpdateScreen ();
 
-            SD_PlaySound (ENDBONUS2SND);
+            Sound::Play (ENDBONUS2SND);
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
         }
@@ -712,7 +712,7 @@ void LevelCompleted ()
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 14, tempstr);
             if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
+                Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
@@ -729,16 +729,16 @@ void LevelCompleted ()
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             I_UpdateScreen ();
-            SD_PlaySound (PERCENT100SND);
+            Sound::Play (PERCENT100SND);
         }
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
+            Sound::Play (NOBONUSSND);
         }
         else
-            SD_PlaySound (ENDBONUS2SND);
+            Sound::Play (ENDBONUS2SND);
 
         I_UpdateScreen ();
         while (SD_SoundPlaying ())
@@ -754,7 +754,7 @@ void LevelCompleted ()
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 16, tempstr);
             if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
+                Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
@@ -771,16 +771,16 @@ void LevelCompleted ()
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             I_UpdateScreen ();
-            SD_PlaySound (PERCENT100SND);
+            Sound::Play (PERCENT100SND);
         }
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
+            Sound::Play (NOBONUSSND);
         }
         else
-            SD_PlaySound (ENDBONUS2SND);
+            Sound::Play (ENDBONUS2SND);
         I_UpdateScreen ();
         while (SD_SoundPlaying ())
             BJ_Breathe ();
@@ -795,7 +795,7 @@ void LevelCompleted ()
             x = RATIOXX - (int) strlen(tempstr) * 2;
             Write (x, 18, tempstr);
             if (!(i % 10))
-                SD_PlaySound (ENDBONUS1SND);
+                Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
             while (SD_SoundPlaying ())
                 BJ_Breathe ();
@@ -811,16 +811,16 @@ void LevelCompleted ()
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
             Write (x, 7, tempstr);
             I_UpdateScreen ();
-            SD_PlaySound (PERCENT100SND);
+            Sound::Play (PERCENT100SND);
         }
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
             SD_StopSound ();
-            SD_PlaySound (NOBONUSSND);
+            Sound::Play (NOBONUSSND);
         }
         else
-            SD_PlaySound (ENDBONUS2SND);
+            Sound::Play (ENDBONUS2SND);
         I_UpdateScreen ();
         while (SD_SoundPlaying ())
             BJ_Breathe ();

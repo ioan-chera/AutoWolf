@@ -557,7 +557,7 @@ void GiveExtraMan ()
     if (gamestate.lives<9)
         gamestate.lives++;
     DrawLives ();
-    SD_PlaySound (BONUS1UPSND);
+    Sound::Play (BONUS1UPSND);
 }
 
 //===========================================================================
@@ -731,7 +731,7 @@ void GetBonus (statobj_t *check)
             if (gamestate.health == I_PLAYERHEALTH)	// IOANCH 25.10.2012: named constant
                 return;
 
-            SD_PlaySound (HEALTH2SND);
+            Sound::Play (HEALTH2SND);
             HealSelf (I_FIRSTAIDHEALTH);	// IOANCH
             break;
 
@@ -740,7 +740,7 @@ void GetBonus (statobj_t *check)
         case    bo_key3:
         case    bo_key4:
             GiveKey (check->itemnumber - bo_key1);
-            SD_PlaySound (GETKEYSND);
+            Sound::Play (GETKEYSND);
             break;
 
             // IOANCH 20130601: use centralized atr:: attrib
@@ -748,7 +748,7 @@ void GetBonus (statobj_t *check)
         case    bo_chalice:
         case    bo_bible:
         case    bo_crown:
-            SD_PlaySound(atr::treasures[check->itemnumber - bo_cross].
+            Sound::Play(atr::treasures[check->itemnumber - bo_cross].
                          pickupsound);
             GivePoints(atr::treasures[check->itemnumber - bo_cross].points);
             gamestate.treasurecount++;
@@ -758,14 +758,14 @@ void GetBonus (statobj_t *check)
             if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
-            SD_PlaySound (GETAMMOSND);
+            Sound::Play (GETAMMOSND);
             GiveAmmo (I_CLIPAMMO);	// IOANCH
             break;
         case    bo_clip2:
             if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
-            SD_PlaySound (GETAMMOSND);
+            Sound::Play (GETAMMOSND);
             GiveAmmo (I_SEMICLIPAMMO);	// IOANCH
             break;
 
@@ -774,16 +774,16 @@ void GetBonus (statobj_t *check)
             if (gamestate.ammo == I_MAXAMMO)	// IOANCH
                 return;
 
-            SD_PlaySound (GETAMMOBOXSND);
+            Sound::Play (GETAMMOBOXSND);
             GiveAmmo (I_BOXAMMO);	// IOANCH
             break;
 
         case    bo_machinegun:
-            SD_PlaySound (GETMACHINESND);
+            Sound::Play (GETMACHINESND);
             GiveWeapon (wp_machinegun);
             break;
         case    bo_chaingun:
-            SD_PlaySound (GETGATLINGSND);
+            Sound::Play (GETGATLINGSND);
             facetimes = 38;
             GiveWeapon (wp_chaingun);
 
@@ -793,7 +793,7 @@ void GetBonus (statobj_t *check)
             break;
 
         case    bo_fullheal:
-            SD_PlaySound (BONUS1UPSND);
+            Sound::Play (BONUS1UPSND);
             HealSelf (I_PLAYERHEALTH - 1);	// IOANCH
             GiveAmmo (I_BONUSAMMO);	// IOANCH
             GiveExtraMan ();
@@ -804,7 +804,7 @@ void GetBonus (statobj_t *check)
             if (gamestate.health == I_PLAYERHEALTH)	// IOANCH
                 return;
 
-            SD_PlaySound (HEALTH1SND);
+            Sound::Play (HEALTH1SND);
             HealSelf (I_FOODHEALTH);	// IOANCH
             break;
 
@@ -812,7 +812,7 @@ void GetBonus (statobj_t *check)
             if (gamestate.health == I_PLAYERHEALTH)	// IOANCH
                 return;
 
-            SD_PlaySound (HEALTH1SND);
+            Sound::Play (HEALTH1SND);
             HealSelf (I_DOGFOODHEALTH);	// IOANCH
             break;
 
@@ -820,7 +820,7 @@ void GetBonus (statobj_t *check)
             if (gamestate.health > I_BLOODHEALTHTHRESHOLD)	// IOANCH
                 return;
 
-            SD_PlaySound (SLURPIESND);
+            Sound::Play (SLURPIESND);
             HealSelf (1);
             break;
 
@@ -964,7 +964,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 #endif
 
     if (!SD_SoundPlaying())
-        SD_PlaySound (HITWALLSND);
+        Sound::Play (HITWALLSND);
 
     ob->x = basex+xmove;
     ob->y = basey;
@@ -1167,7 +1167,7 @@ void Cmd_Use ()
             playstate = ex_secretlevel;
         else
             playstate = ex_completed;
-        SD_PlaySound (LEVELDONESND);
+        Sound::Play (LEVELDONESND);
         SD_WaitSoundDone();
     }
     else if (!buttonheld[bt_use] && doornum & 0x80)
@@ -1176,7 +1176,7 @@ void Cmd_Use ()
         OperateDoor (doornum & ~0x80);
     }
     else
-        SD_PlaySound (DONOTHINGSND);
+        Sound::Play (DONOTHINGSND);
 }
 
 /*
@@ -1233,7 +1233,7 @@ void    KnifeAttack (objtype *ob)
 {
     objtype *closest;
     
-    SD_PlaySound (ATKKNIFESND);
+    Sound::Play (ATKKNIFESND);
 
     closest = Basic::CheckKnifeEnemy();
     
@@ -1254,13 +1254,13 @@ void    GunAttack (objtype *ob)
     switch (gamestate.weapon)
     {
         case wp_pistol:
-            SD_PlaySound (ATKPISTOLSND);
+            Sound::Play (ATKPISTOLSND);
             break;
         case wp_machinegun:
-            SD_PlaySound (ATKMACHINEGUNSND);
+            Sound::Play (ATKMACHINEGUNSND);
             break;
         case wp_chaingun:
-            SD_PlaySound (ATKGATLINGSND);
+            Sound::Play (ATKGATLINGSND);
             break;
 		default:
 			;

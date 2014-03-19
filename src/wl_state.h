@@ -14,11 +14,8 @@
 #define SPDDOG          1500
 
 
-void    InitHitRect (objtype *ob, unsigned radius);
 void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
-void    NewState (objtype *ob, statetype *state);
 
-Boolean8 TryWalk (objtype *ob);
 void    SelectChaseDir (objtype *ob);
 void    SelectDodgeDir (objtype *ob);
 void    SelectRunDir (objtype *ob);

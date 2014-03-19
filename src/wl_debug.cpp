@@ -445,7 +445,7 @@ void ShapeTest ()
                 break;*/
         }
     }
-    SD_StopDigitized();
+    Sound::StopDigitized();
 #endif
 }
 

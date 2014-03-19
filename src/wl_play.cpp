@@ -609,12 +609,12 @@ static void CheckKeys ()
             if (godmode)
             {
                 Message ("God mode OFF");
-                SD_PlaySound (NOBONUSSND);
+                Sound::Play (NOBONUSSND);
             }
             else
             {
                 Message ("God mode ON");
-                SD_PlaySound (ENDBONUS2SND);
+                Sound::Play (ENDBONUS2SND);
             }
 
             myInput.ack ();
@@ -643,7 +643,7 @@ static void CheckKeys ()
         DrawAmmo ();
         DrawScore ();
 
-        SD_StopDigitized ();
+        Sound::StopDigitized ();
         graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -664,7 +664,7 @@ static void CheckKeys ()
 #ifdef DEBUGKEYS
     if (myInput.keyboard(sc_BackSpace) && myInput.keyboard(sc_LShift) && myInput.keyboard(sc_Alt) && cfg_debugmode)
     {
-        SD_StopDigitized ();
+        Sound::StopDigitized ();
         graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -683,7 +683,7 @@ static void CheckKeys ()
     //
     if (myInput.keyboard(sc_B) && myInput.keyboard(sc_A) && myInput.keyboard(sc_T))
     {
-        SD_StopDigitized ();
+        Sound::StopDigitized ();
         graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
         ClearSplitVWB ();
 
@@ -725,9 +725,9 @@ static void CheckKeys ()
 		// IOANCH 11.06.2012: commented to made compiler stop complaining
         //short oldmapon = gamestate.mapon;
         //short oldepisode = gamestate.episode;
-        SD_StopDigitized ();
+        Sound::StopDigitized ();
         ClearSplitVWB ();
-        US_ControlPanel (scan);
+        Menu::ControlPanel (scan);
 
         DrawPlayBorderSides ();
 
@@ -739,10 +739,10 @@ static void CheckKeys ()
     if ((scan >= sc_F1 && scan <= sc_F9) || scan == sc_Escape || buttonstate[bt_esc])
     {
         int lastoffs = StopMusic ();
-        SD_StopDigitized ();
+        Sound::StopDigitized ();
         VW_FadeOut ();
 
-        US_ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);
+        Menu::ControlPanel (buttonstate[bt_esc] ? sc_Escape : scan);
 
         SETFONTCOLOR (0, 15);
         myInput.clearKeysDown ();

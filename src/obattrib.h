@@ -26,7 +26,7 @@
 
 // NOTE: flags are limited to 64 in amount
 #define ATR_NEARBY_THREAT 1     // is a close-range thread to the bot
-#define ATR_BOSS_SOUNDS   2     // makes loud sounds (SD_PlaySound)
+#define ATR_BOSS_SOUNDS   2     // makes loud sounds (Sound::Play)
 #define ATR_BOSS          4     // is an actual boss
 #define ATR_ENEMY         8     // is an actual enemy
 

@@ -628,7 +628,7 @@ void OperateDoor (int door)
     {
         if ( ! (gamestate.keys & (1 << (lock-dr_lock1) ) ) )
         {
-            SD_PlaySound (NOWAYSND);                // locked
+            Sound::Play (NOWAYSND);                // locked
             return;
         }
     }
@@ -880,7 +880,7 @@ void PushWall (int checkx, int checky, int dir)
 
     if (actorat[checkx+dx][checky+dy])
     {
-        SD_PlaySound (NOWAYSND);
+        Sound::Play (NOWAYSND);
         return;
     }
     actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
@@ -900,7 +900,7 @@ void PushWall (int checkx, int checky, int dir)
 
     // IOANCH 20130601: play at location
     PlaySoundLocTile(PUSHWALLSND, pwallx, pwally);
-//    SD_PlaySound (PUSHWALLSND);
+//    Sound::Play (PUSHWALLSND);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
