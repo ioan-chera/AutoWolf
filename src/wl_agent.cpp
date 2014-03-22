@@ -1239,7 +1239,7 @@ void    KnifeAttack (objtype *ob)
     
     // hit something
     if(closest)
-        DamageActor (closest,wolfRnd() >> 4);
+        closest->DamageActor (wolfRnd() >> 4);
 }
 
 
@@ -1302,7 +1302,7 @@ void    GunAttack (objtype *ob)
         // trace a line from player to enemey
         //
 
-        if (CheckLine(closest))
+        if (closest->CheckLine())
             break;
     }
 
@@ -1328,7 +1328,7 @@ void    GunAttack (objtype *ob)
     }
 	// IOANCH 26.06.2012: efficiency
 	bot.shootRatio.addSuccess();
-    DamageActor (closest,damage);
+    closest->DamageActor (damage);
 }
 
 //===========================================================================

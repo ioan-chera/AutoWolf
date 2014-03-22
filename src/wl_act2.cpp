@@ -520,7 +520,7 @@ void T_ProjectileBossChase(objtype *ob)
     dy = abs(ob->tiley - player->tiley);
     dist = dx>dy ? dx : dy;
 	
-    if (CheckLine(ob))                                              // got a shot at player?
+    if (ob->CheckLine())                                              // got a shot at player?
     {
         ob->hidden = false;
         if ( (unsigned) wolfRnd() < (tics<<3) && objfreelist)
@@ -789,7 +789,7 @@ void T_Fake (objtype *ob)
     int32_t move;
     
     // IOANCH 20.05.2012: modif func
-    if (CheckLine(ob))                      // got a shot at player?
+    if (ob->CheckLine())                      // got a shot at player?
     {
         ob->hidden = false;
         if ( (unsigned) wolfRnd() < (tics<<1) && objfreelist)
@@ -861,7 +861,7 @@ void T_Fake (objtype *ob)
 //
 void T_Stand (objtype *ob)
 {
-    SightPlayer (ob);
+    ob->SightPlayer ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -895,7 +895,7 @@ void T_Chase (objtype *ob)
     
     dodge = false;
     // IOANCH 20.05.2012: modif func
-    if (CheckLine(ob))      // got a shot at player?
+    if (ob->CheckLine())      // got a shot at player?
     {
         ob->hidden = false;
         dx = abs(ob->tilex - player->tilex);
@@ -1175,7 +1175,7 @@ void T_Path (objtype *ob)
 {
     int32_t    move;
     
-    if (SightPlayer (ob))
+    if (ob->SightPlayer ())
         return;
     
     if (ob->dir == nodir)
@@ -1255,7 +1255,7 @@ void A_Shoot (objtype *ob)
         return;
     
     // IOANCH 20130306: restored old behaviour, now shot sound means hit.
-    if (!CheckLine (ob))                    // player is not behind a wall
+    if (!ob->CheckLine ())                    // player is not behind a wall
         return;
     
     dx = abs(ob->tilex - player->tilex);

@@ -605,8 +605,14 @@ struct objtype
       fwrite(&next, sizeof(next), 1, file);
       fwrite(&prev, sizeof(prev), 1, file);
    }
-	
+
+	Boolean8 CheckLine (Boolean8 solidActors = false);
+	Boolean8 CheckSight();
+	void DamageActor(unsigned damage);
+	void KillActor();
+	void FirstSighting();
 	void NewState(statetype* state);
+	Boolean8 SightPlayer();
 	Boolean8 TryWalk();
 };
 

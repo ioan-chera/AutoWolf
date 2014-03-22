@@ -72,12 +72,6 @@ void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 
 void    MoveObj (objtype *ob, int32_t move);
 
-void    KillActor (objtype *ob);
-void    DamageActor (objtype *ob, unsigned damage);
-
-
-void    FirstSighting (objtype *ob);
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 //                                LOCAL VARIABLES
@@ -868,36 +862,34 @@ void DropItem (wl_stat_t itemtype, int tilex, int tiley)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void KillActor (objtype *ob)
+void objtype::KillActor ()
 {
-    int     tilex,tiley;
+    this->tilex = (word)(this->x >> TILESHIFT);         // drop item on center
+    this->tiley = (word)(this->y >> TILESHIFT);
 
-    tilex = ob->tilex = (word)(ob->x >> TILESHIFT);         // drop item on center
-    tiley = ob->tiley = (word)(ob->y >> TILESHIFT);
-
-    switch (ob->obclass)
+    switch (obclass)
     {
         case guardobj:
             GivePoints (I_GUARDSCORE);	// IOANCH 25.10.2012: all constants started with I_
-            ob->NewState (&s_grddie1);
+            NewState (&s_grddie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case officerobj:
             GivePoints (I_OFFICERSCORE);
-            ob->NewState (&s_ofcdie1);
+            NewState (&s_ofcdie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case mutantobj:
             GivePoints (I_MUTANTSCORE);
-            ob->NewState (&s_mutdie1);
+            NewState (&s_mutdie1);
             PlaceItemType (bo_clip2,tilex,tiley);
             break;
 
         case ssobj:
             GivePoints (I_SSSCORE);
-            ob->NewState (&s_ssdie1);
+            NewState (&s_ssdie1);
             if (gamestate.bestweapon < wp_machinegun)
                 PlaceItemType (bo_machinegun,tilex,tiley);
             else
@@ -906,18 +898,18 @@ void KillActor (objtype *ob)
 
         case dogobj:
             GivePoints (I_DOGSCORE);
-            ob->NewState (&s_dogdie1);
+            NewState (&s_dogdie1);
             break;
             // IOANCH 20130303: unification
         case bossobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_bossdie1);
+            NewState (&s_bossdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case gretelobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_greteldie1);
+            NewState (&s_greteldie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
@@ -925,72 +917,72 @@ void KillActor (objtype *ob)
             GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
-            ob->NewState (&s_giftdie1);
+            NewState (&s_giftdie1);
             break;
 
         case fatobj:
             GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
-            ob->NewState (&s_fatdie1);
+            NewState (&s_fatdie1);
             break;
 
         case schabbobj:
             GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
-            ob->NewState (&s_schabbdie1);
+            NewState (&s_schabbdie1);
             break;
         case fakeobj:
             GivePoints (I_FAKEHITLERSCORE);
-            ob->NewState (&s_fakedie1);
+            NewState (&s_fakedie1);
             break;
 
         case mechahitlerobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_mechadie1);
+            NewState (&s_mechadie1);
             break;
         case realhitlerobj:
             GivePoints (I_BOSSSCORE);
             gamestate.killx = player->x;
             gamestate.killy = player->y;
-            ob->NewState (&s_hitlerdie1);
+            NewState (&s_hitlerdie1);
             break;
         case spectreobj:
-            if (ob->flags&FL_BONUS)
+            if (flags&FL_BONUS)
             {
                 GivePoints (I_SPECTRESCORE);       // Get points once for each
-                ob->flags &= ~FL_BONUS;
+                flags &= ~FL_BONUS;
             }
-            ob->NewState (&s_spectredie1);
+            NewState (&s_spectredie1);
             break;
 
         case angelobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_angeldie1);
+            NewState (&s_angeldie1);
             break;
 
         case transobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_transdie0);
+            NewState (&s_transdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case uberobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_uberdie0);
+            NewState (&s_uberdie0);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case willobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_willdie1);
+            NewState (&s_willdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 
         case deathobj:
             GivePoints (I_BOSSSCORE);
-            ob->NewState (&s_deathdie1);
+            NewState (&s_deathdie1);
             PlaceItemType (bo_key1,tilex,tiley);
             break;
 		default:
@@ -999,11 +991,11 @@ void KillActor (objtype *ob)
 
     gamestate.killcount++;
 	// IOANCH 29.06.2012: remove object from living set
-	Basic::livingNazis.remove(ob);
+	Basic::livingNazis.remove(this);
 	
-    ob->flags &= ~FL_SHOOTABLE;
-    actorat[ob->tilex][ob->tiley] = NULL;
-    ob->flags |= FL_NONMARK;
+    flags &= ~FL_SHOOTABLE;
+    actorat[this->tilex][this->tiley] = NULL;
+    flags |= FL_NONMARK;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -1019,33 +1011,33 @@ void KillActor (objtype *ob)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void DamageActor (objtype *ob, unsigned damage)
+void objtype::DamageActor (unsigned damage)
 {
     madenoise = true;
 
     //
     // do double damage if shooting a non attack mode actor
     //
-    if ( !(ob->flags & FL_ATTACKMODE) )
+    if ( !(flags & FL_ATTACKMODE) )
         damage <<= 1;
 
-    ob->hitpoints -= (short)damage;
+    hitpoints -= (short)damage;
 
-    if (ob->hitpoints<=0)
-        KillActor (ob);
+    if (hitpoints<=0)
+        KillActor ();
     else
     {
-        if (! (ob->flags & FL_ATTACKMODE) )
-            FirstSighting (ob);             // put into combat mode
+        if (! (flags & FL_ATTACKMODE) )
+            FirstSighting ();             // put into combat mode
         
         // IOANCH 20130305: wrap them
-        statetype *pain = atr::states[ob->obclass].pain,
-               *altpain = atr::states[ob->obclass].altpain;
+        statetype *pain = atr::states[obclass].pain,
+               *altpain = atr::states[obclass].altpain;
         
-        if(pain && ob->hitpoints & 1)
-            ob->NewState(pain);
+        if(pain && hitpoints & 1)
+            NewState(pain);
         else if(altpain)
-            ob->NewState(altpain);
+            NewState(altpain);
 
     }
 }
@@ -1067,10 +1059,10 @@ void DamageActor (objtype *ob, unsigned damage)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-Boolean8 CheckLine (objtype *ob, Boolean8 solidActors)
+Boolean8 objtype::CheckLine (Boolean8 solidActors)
 {
     // IOANCH 20130305: DRY
-    return Basic::GenericCheckLine(ob->x, ob->y, player->x, player->y, solidActors);
+    return Basic::GenericCheckLine(x, y, player->x, player->y, solidActors);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1090,21 +1082,21 @@ Boolean8 CheckLine (objtype *ob, Boolean8 solidActors)
 
 #define MINSIGHT        0x18000l
 
-Boolean8 CheckSight (objtype *ob)
+Boolean8 objtype::CheckSight ()
 {
     int32_t deltax,deltay;
 
     //
     // don't bother tracing a line if the area isn't connected to the player's
     //
-    if (!areabyplayer[ob->areanumber])
+    if (!areabyplayer[areanumber])
         return false;
 
     //
     // if the player is real close, sight is automatic
     //
-    deltax = player->x - ob->x;
-    deltay = player->y - ob->y;
+    deltax = player->x - x;
+    deltay = player->y - y;
 
     if (deltax > -MINSIGHT && deltax < MINSIGHT
         && deltay > -MINSIGHT && deltay < MINSIGHT)
@@ -1113,7 +1105,7 @@ Boolean8 CheckSight (objtype *ob)
     //
     // see if they are looking in the right direction
     //
-    switch (ob->dir)
+    switch (dir)
     {
         case north:
             if (deltay > 0)
@@ -1164,7 +1156,7 @@ Boolean8 CheckSight (objtype *ob)
     // trace a line to check for blocking tiles (corners)
     //
 
-    return CheckLine (ob);
+    return CheckLine ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1179,30 +1171,30 @@ Boolean8 CheckSight (objtype *ob)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void FirstSighting (objtype *ob)
+void objtype::FirstSighting ()
 {
     //
     // react to the player
     //
     
     // IOANCH 20130305: wrap them to objattribs
-    classtype &cls = ob->obclass;
+    classtype &cls = obclass;
     if(atr::sounds[cls].sight >= 0)
     {
         if(atr::flags[cls] & ATR_BOSS_SOUNDS)
             Sound::Play((soundnames)atr::sounds[cls].sight);
         else
-            PlaySoundLocActor(atr::sounds[cls].sight, ob, ob);
+            PlaySoundLocActor(atr::sounds[cls].sight, this, this);
     }
     if(atr::states[cls].chase)
-        ob->NewState(atr::states[cls].chase);
+        NewState(atr::states[cls].chase);
     if(atr::speeds[cls].chase >= 0)
-        ob->speed = atr::speeds[cls].chase;
+        speed = atr::speeds[cls].chase;
 
-    if (ob->distance < 0)
-        ob->distance = 0;       // ignore the door opening command
+    if (distance < 0)
+        distance = 0;       // ignore the door opening command
 
-    ob->flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
+    flags |= FL_ATTACKMODE|FL_FIRSTATTACK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1220,55 +1212,55 @@ void FirstSighting (objtype *ob)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-Boolean8 SightPlayer (objtype *ob)
+Boolean8 objtype::SightPlayer ()
 {
-    if (ob->flags & FL_ATTACKMODE)
+    if (flags & FL_ATTACKMODE)
         Quit ("An actor in ATTACKMODE called SightPlayer!");
 
-    if (ob->temp2)
+    if (temp2)
     {
         //
         // count down reaction time
         //
-        ob->temp2 -= (short) tics;
-        if (ob->temp2 > 0)
+        temp2 -= (short) tics;
+        if (temp2 > 0)
             return false;
-        ob->temp2 = 0;                                  // time to react
+        temp2 = 0;                                  // time to react
     }
     else
     {
-        if (!areabyplayer[ob->areanumber])
+        if (!areabyplayer[areanumber])
             return false;
 
-        if (ob->flags & FL_AMBUSH)
+        if (flags & FL_AMBUSH)
         {
-            if (!CheckSight (ob))
+            if (!CheckSight ())
                 return false;
-            ob->flags &= ~FL_AMBUSH;
+            flags &= ~FL_AMBUSH;
         }
         else
         {
-            if (!madenoise && !CheckSight (ob))
+            if (!madenoise && !CheckSight ())
                 return false;
         }
 
 
-        switch (ob->obclass)
+        switch (obclass)
         {
             case guardobj:
-                ob->temp2 = 1+wolfRnd()/4;
+                temp2 = 1+wolfRnd()/4;
                 break;
             case officerobj:
-                ob->temp2 = 2;
+                temp2 = 2;
                 break;
             case mutantobj:
-                ob->temp2 = 1+wolfRnd()/6;
+                temp2 = 1+wolfRnd()/6;
                 break;
             case ssobj:
-                ob->temp2 = 1+wolfRnd()/6;
+                temp2 = 1+wolfRnd()/6;
                 break;
             case dogobj:
-                ob->temp2 = 1+wolfRnd()/8;
+                temp2 = 1+wolfRnd()/8;
                 break;
 
             case bossobj:
@@ -1285,7 +1277,7 @@ Boolean8 SightPlayer (objtype *ob)
             case uberobj:
             case willobj:
             case deathobj:
-                ob->temp2 = 1;
+                temp2 = 1;
                 break;
 			default:
 				;
@@ -1293,7 +1285,7 @@ Boolean8 SightPlayer (objtype *ob)
         return false;
     }
 
-    FirstSighting (ob);
+    FirstSighting ();
 
     return true;
 }

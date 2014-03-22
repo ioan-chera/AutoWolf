@@ -30,7 +30,6 @@
 #define s_nakedbody s_static10
 
 // IOANCH 29.06.2012: deleted global ghosts moved to Basic
-void KillActor (objtype *ob);
 
 void SpawnDeadGuard (int tilex, int tiley);
 

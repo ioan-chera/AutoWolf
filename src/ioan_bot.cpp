@@ -756,7 +756,7 @@ objtype *BotMan::EnemyOnTarget(Boolean8 solidActors) const
 		// trace a line from player to enemey
 		//
 
-		if (CheckLine(closest, solidActors))
+		if (closest->CheckLine(solidActors))
 			return closest;
 	}
 	return NULL;
@@ -809,7 +809,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 
 		if(i > 15)
 			continue;
-		if(!CheckLine(ret, solidActors))
+		if(!ret->CheckLine(solidActors))
 			continue;
       if(!(ret->flags & FL_VISABLE))
       {

@@ -20,13 +20,6 @@ void    SelectChaseDir (objtype *ob);
 void    SelectDodgeDir (objtype *ob);
 void    SelectRunDir (objtype *ob);
 void    MoveObj (objtype *ob, int32_t move);
-Boolean8 SightPlayer (objtype *ob);
-
-void    KillActor (objtype *ob);
-void    DamageActor (objtype *ob, unsigned damage);
-
-Boolean8 CheckLine (objtype *ob, Boolean8 solidActors = false);
-Boolean8 CheckSight (objtype *ob);
 
 
 #endif
