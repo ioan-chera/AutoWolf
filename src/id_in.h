@@ -50,7 +50,7 @@ typedef	enum		{
 
 struct  CursorInfo
 {
-   Boolean8		button0,button1,button2,button3;
+   bool		button0,button1,button2,button3;
    short		x,y;
    Motion		xaxis,yaxis;
    Direction	dir;
@@ -163,7 +163,7 @@ private:
    bool m_grabInput = false;
    bool m_needRestore = false;
    static const byte m_ASCIINames[], m_ShiftNames[];
-	bool	m_btnstate[NUMBUTTONS] = {0};
+	bool	m_btnstate[NUMBUTTONS];
    
    int p_getMouseButtons() const;
    void p_processEvent(const SDL_Event *event);
@@ -173,6 +173,11 @@ public:
    void clearKeysDown();
    void initialize();
    void close();
+
+   InputManager()
+   {
+	   memset(m_btnstate, 0, sizeof(m_btnstate));
+   }
    
    void centreMouse() const
    {
@@ -209,7 +214,7 @@ public:
    
    bool keyboard(ScanCode code) const
    {
-      return m_keyboard.count(code);
+      return m_keyboard.count(code) ? true : false;
    }
    void setKeyboard(ScanCode code, Boolean8 value)
    {
@@ -226,7 +231,7 @@ public:
    {
       return m_paused;
    }
-   void setPaused(Boolean8 value)
+   void setPaused(bool value)
    {
       m_paused = value;
    }

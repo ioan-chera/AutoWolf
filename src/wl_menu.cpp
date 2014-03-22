@@ -3469,9 +3469,9 @@ ReadAnyControl (CursorInfo * ci)
 
         if (buttons)
         {
-            ci->button0 = buttons & 1;
-            ci->button1 = buttons & 2;
-            ci->button2 = buttons & 4;
+            ci->button0 = (buttons & 1) ? true : false;
+            ci->button1 = (buttons & 2) ? true : false;
+			ci->button2 = (buttons & 4) ? true : false;
             ci->button3 = false;
             mouseactive = 1;
         }
@@ -3495,10 +3495,10 @@ ReadAnyControl (CursorInfo * ci)
         jb = myInput.joyButtons ();
         if (jb)
         {
-            ci->button0 = jb & 1;
-            ci->button1 = jb & 2;
-            ci->button2 = jb & 4;
-            ci->button3 = jb & 8;
+            ci->button0 = (jb & 1) ? true : false;
+            ci->button1 = (jb & 2) ? true : false;
+            ci->button2 = (jb & 4) ? true : false;
+            ci->button3 = (jb & 8) ? true : false;
         }
     }
 }

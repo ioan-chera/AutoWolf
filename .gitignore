@@ -36,7 +36,6 @@ PropertyFile.d
 PropertyFile.o
 audioabstract.d
 audioabstract.o
-autowolf
 dosbox/dbopl.d
 dosbox/dbopl.o
 e_hashkeys.d

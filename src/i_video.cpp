@@ -73,7 +73,7 @@ void I_InitEngine()
 {
    // initialize SDL
 #if defined _WIN32
-   putenv("SDL_VIDEODRIVER=windib");
+   //putenv("SDL_VIDEODRIVER=windib");
 #endif
    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
    {
@@ -154,7 +154,7 @@ void I_InitEngine()
 //
 void I_InitAfterSignon()
 {
-#if defined _WIN32
+#if defined _WIN32 && 0
    if(!cfg_fullscreen)
    {
       struct SDL_SysWMinfo wmInfo;
@@ -251,7 +251,7 @@ void I_UpdateDirect()
 
 void I_UpdateScreen()
 {
-	int x, y;
+	unsigned x, y;
 	for (y = 0; y < cfg_screenHeight; ++y)
 	{
 		for (x = 0; x < cfg_screenWidth; ++x)
