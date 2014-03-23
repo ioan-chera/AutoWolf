@@ -34,6 +34,7 @@
 #include "PathArray.h"
 #include "CheckSum.h"
 #include "MasterDirectoryFile.h"
+#include "TimeMeasure.h"
 #include "wl_act1.h"
 #include "wl_draw.h"
 #include "wl_game.h"
@@ -490,7 +491,7 @@ CLK_begin = clock();
 #define END_CLOCK \
 CLK_end = clock(); \
 CLK_passed = (double)(CLK_end - CLK_begin) / CLOCKS_PER_SEC; \
-printf("%s: %.16g\n", __FUNCTION__, CLK_passed);
+Logger::Write("%s: %.16g", __FUNCTION__, CLK_passed);
 
 #else
 #define START_CLOCK
@@ -819,7 +820,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
          {
             if (he->cause == ret)
             {
-               Logger::Write("Heard nazi!");
+               //Logger::Write("Heard nazi!");
                found = true;
             }
          }
@@ -966,9 +967,10 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
 		if(dist > atr::threatrange[ret->obclass] || !Basic::GenericCheckLine(ret->recordx, ret->recordy, x, y))
 			continue;
 
-		if(Basic::IsDamaging(ret, dist) || justexists)
+		if (Basic::IsDamaging(ret, dist) || justexists)
+		{
 			return ret;
-		
+		}
 	}
    
    // also look for heard events
@@ -984,11 +986,13 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
             dist = abs(j) > abs(k) ? abs(j) : abs(k);
             if(dist > 16)
                continue;
-            Logger::Write("Enemy gunshot heard! %d", heardEvents.count());
+            //Logger::Write("Enemy gunshot heard! %d", heardEvents.count());
+
             return he->cause;
          }
       }
    }
+
 	return NULL;
 }
 
@@ -1369,7 +1373,7 @@ void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, bool tryuse) const
 //
 void BotMan::MoveByStrafe()
 {
-	
+	//SET_TIME_MEASURE(2);
 	
 	if(!path.length())
 	{
@@ -1536,6 +1540,7 @@ void BotMan::DoMeleeAI(short eangle, int edist)
 //
 void BotMan::DoCombatAI(int eangle, int edist)
 {
+	
 	// Set correct weapon
 	ChooseWeapon();
 	

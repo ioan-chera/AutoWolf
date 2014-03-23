@@ -255,6 +255,7 @@
     <ClInclude Include="..\..\src\spr_sod.h" />
     <ClInclude Include="..\..\src\spr_wl6.h" />
     <ClInclude Include="..\..\src\StdStringExtensions.h" />
+    <ClInclude Include="..\..\src\TimeMeasure.h" />
     <ClInclude Include="..\..\src\version.h" />
     <ClInclude Include="..\..\win\resource.h" />
     <ClInclude Include="..\..\src\wl_act1.h" />

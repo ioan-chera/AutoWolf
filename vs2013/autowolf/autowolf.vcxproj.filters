@@ -412,6 +412,9 @@
     <ClInclude Include="..\..\src\Logger.h">
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\TimeMeasure.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\sodpal.inc">
