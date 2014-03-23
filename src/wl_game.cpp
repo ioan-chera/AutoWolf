@@ -25,6 +25,7 @@
 
 // WL_GAME.C
 
+#include <future>
 #include "wl_def.h"
 #include "Logger.h"
 #include "foreign.h"
@@ -70,8 +71,6 @@ byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame b
 int32_t         spearx,speary;
 unsigned        spearangle;
 Boolean8         spearflag;
-
-unsigned        g_sessionNo;	// session of SetupGameLevel
 
 #ifdef USE_FEATUREFLAGS
 int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
@@ -694,7 +693,8 @@ void SetupGameLevel ()
     word tile;
 
 	// Start a new session
-	g_sessionNo++;
+	StartNewSession();
+
     if (!loadedgame)
     {
         gamestate.TimeCount

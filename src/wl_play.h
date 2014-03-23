@@ -9,6 +9,7 @@
 #ifndef WL_PLAY_H_
 #define WL_PLAY_H_
 
+#include <functional>
 
 #define BASEMOVE                35
 #define RUNMOVE                 70
@@ -81,5 +82,9 @@ extern  objtype     *objfreelist;     // *obj,*player,*lastobj,
 extern  Boolean8     noclip,ammocheat;
 extern  int         singlestep;
 
+extern  unsigned        g_sessionNo;	// the time of the SetupGameLevel.
+void StartNewSession();
+void AddPostCommand(const std::function<void(void)> &cmd);
+void StartBackgroundWork(const std::function<void(unsigned)> &cmd, const std::function<void(void)> &postcmd);
 
 #endif

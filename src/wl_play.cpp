@@ -25,6 +25,9 @@
 
 // WL_PLAY.C
 
+#include <functional>
+#include <future>
+#include <queue>
 #include "wl_def.h"
 
 #include "foreign.h"
@@ -50,6 +53,67 @@
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
 // IOANCH 17.05.2012
+
+
+////////////////////////////////////
+// POST MESSAGE
+/////////////////////////////////////
+
+unsigned        g_sessionNo;	// session of SetupGameLevel
+std::future<void> g_backgroundWorker;
+
+// Command to be executed from an outer thread, in PlayLoop.
+struct PostCommand
+{
+	std::function<void(void)> command;
+	unsigned sessionNo;
+
+	PostCommand(const std::function<void(void)> &cmd, unsigned inSessionNo) : command(cmd), sessionNo(inSessionNo)
+	{
+	}
+};
+
+// List of pending commands
+static std::queue<PostCommand> s_postCommands;
+static std::mutex s_postCommandsMutex;
+
+void AddPostCommand(const std::function<void(void)> &cmd, unsigned inSessionNo)
+{
+	std::lock_guard<std::mutex> lock(s_postCommandsMutex);
+	s_postCommands.emplace(cmd, inSessionNo);
+}
+
+static void ExecutePostCommands()
+{
+	std::lock_guard<std::mutex> lock(s_postCommandsMutex);
+	for (; !s_postCommands.empty(); s_postCommands.pop())
+	{
+		const PostCommand& pc = s_postCommands.front();
+		if (pc.sessionNo != g_sessionNo)
+			continue;
+
+		pc.command();
+	}
+}
+
+void StartNewSession()
+{
+	g_sessionNo++;
+	// Clear commands
+	std::lock_guard<std::mutex> lock(s_postCommandsMutex);
+	while (!s_postCommands.empty())
+		s_postCommands.pop();
+}
+
+void StartBackgroundWork(const std::function<void(unsigned)> &cmd, const std::function<void(void)> &postcmd)
+{
+	unsigned sessionNo = g_sessionNo;
+	std::async(std::launch::async, [sessionNo, cmd, postcmd]{
+		cmd(sessionNo);
+		if (sessionNo == g_sessionNo)	// don't bother if fell out of range
+			AddPostCommand(postcmd, sessionNo);
+	});
+}
 
 /*
 =============================================================================
@@ -1335,6 +1399,8 @@ void PlayLoop ()
     {
         PollControls ();
 
+		// Execute pending thread-resulted commands on main thread.
+		ExecutePostCommands();
 //
 // actor thinking
 //
