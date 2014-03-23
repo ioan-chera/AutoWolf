@@ -1,5 +1,4 @@
-//
-// Copyright (C) 2013  Ioan Chera
+// Copyright (C) 2014  Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,29 +16,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Miscellaneous system operations. Inspired from Doom/Eternity's
+// Shell character set abstraction (Win32 acting old-fashioned here)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __Wolf4SDL__i_system__
-#define __Wolf4SDL__i_system__
+#ifndef SHELLUNICODE_H_
+#define SHELLUNICODE_H_
 
-#include <stdint.h>
+#include <string>
 
-class PString;
+namespace ShellUnicode
+{
+	std::string getenv(const std::string& name);
+}
 
-void I_Delay(unsigned ms);
-uint32_t I_GetTicks(void);
-
-void I_Notify(const char *msg);
-bool I_MakeDir(const char *dirname);
-void I_ChangeDir(const std::string& dirname);
-PString I_GetSettingsDir();
-PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
-
-void *I_CheckedMalloc(size_t sz);
-void *I_CheckedRealloc(void *ptr, size_t sz);
-
-void I_DisplayAlertOnError();
-
-#endif /* defined(__Wolf4SDL__i_system__) */
+#endif

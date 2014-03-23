@@ -50,8 +50,6 @@ extern unsigned cfg_screenHeight;
 extern unsigned cfg_screenWidth;
 extern bool  cfg_usedoublebuffering;
     
-
-void     CFG_CheckParameters(int argc, TChar *argv[]);
 void     CFG_SetupConfigLocation();
 
 #endif

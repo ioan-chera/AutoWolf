@@ -26,6 +26,7 @@
 #include "i_system.h"
 #include "macosx/CocoaFun.h"
 #include "SODFlag.h"
+#include "StdStringExtensions.h"
 #include "wl_draw.h"
 #include "wl_main.h"
 
@@ -66,10 +67,10 @@ void I_Notify(const char *msg)
 //
 // Makes a directory
 //
-Boolean8 I_MakeDir(const char *dirname)
+bool I_MakeDir(const char *dirname)
 {
 #ifdef _WIN32
-   return CreateDirectory(dirname, NULL);
+   return CreateDirectory(dirname, NULL) ? true : false;
 #else
    return !mkdir(dirname, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
 #endif
@@ -80,12 +81,16 @@ Boolean8 I_MakeDir(const char *dirname)
 //
 // Sets current dir
 //
-bool I_ChangeDir(const TChar *dirname)
+void I_ChangeDir(const std::string& dirname)
 {
 #ifdef _WIN32
-	return SetCurrentDirectory(dirname) ? true : false;
+	BOOL result = SetCurrentDirectoryW(UTF8ToWideChar(dirname).c_str());
+	if(!result) 
+		throw std::system_error(std::error_code(GetLastError(), std::system_category()), std::string("Cannot change directory to ") + dirname);
 #else
-   return !chdir(dirname);
+	int result = chdir(dirname);
+	if (result != 0)
+		throw std::system_error(std::error_code(errno, std::system_category()), std::string("Cannot change directory to ") + dirname);
 #endif
 }
 

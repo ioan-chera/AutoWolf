@@ -26,6 +26,7 @@
 // WL_MAIN.C
 
 #include "wl_def.h"
+#include "CommandLine.h"
 #include "foreign.h"
 #include "version.h"
 #include "wl_act1.h"
@@ -1612,7 +1613,9 @@ int main (int argc, TChar *argv[])
 #if defined(_arch_dreamcast)
     DC_Init();
 #else
-    CFG_CheckParameters(argc, argv);
+	// argc and argv are null in windows, which uses WinMain from sdl_winmain.cpp
+	CommandLine::Feed(argc, argv);
+	CommandLine::Parse();
 #endif
     // IOANCH: unification: set the SPEAR() global var
     SPEAR.Initialize(".");

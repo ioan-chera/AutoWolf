@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\ActorStates.cpp" />
     <ClCompile Include="..\..\src\CheckSum.cpp" />
+    <ClCompile Include="..\..\src\CommandLine.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
     <ClCompile Include="..\..\src\DataFile.cpp" />
     <ClCompile Include="..\..\src\DirectoryFile.cpp" />
@@ -177,7 +178,9 @@
     <ClCompile Include="..\..\src\Property.cpp" />
     <ClCompile Include="..\..\src\PropertyFile.cpp" />
     <ClCompile Include="..\..\src\PString.cpp" />
+    <ClCompile Include="..\..\src\ShellUnicode.cpp" />
     <ClCompile Include="..\..\src\SODFlag.cpp" />
+    <ClCompile Include="..\..\src\StdStringExtensions.cpp" />
     <ClCompile Include="..\..\src\win32\sdl_winmain.cpp" />
     <ClCompile Include="..\..\src\signon.cpp" />
     <ClCompile Include="..\..\src\wl_act1.cpp" />
@@ -205,6 +208,7 @@
     <ClInclude Include="..\..\src\audiosod.h" />
     <ClInclude Include="..\..\src\audiowl6.h" />
     <ClInclude Include="..\..\src\CheckSum.h" />
+    <ClInclude Include="..\..\src\CommandLine.h" />
     <ClInclude Include="..\..\src\Config.h" />
     <ClInclude Include="..\..\src\DataFile.h" />
     <ClInclude Include="..\..\src\DirectoryFile.h" />
@@ -241,10 +245,12 @@
     <ClInclude Include="..\..\src\Property.h" />
     <ClInclude Include="..\..\src\PropertyFile.h" />
     <ClInclude Include="..\..\src\PString.h" />
+    <ClInclude Include="..\..\src\ShellUnicode.h" />
     <ClInclude Include="..\..\src\SODFlag.h" />
     <ClInclude Include="..\..\src\sprabstract.h" />
     <ClInclude Include="..\..\src\spr_sod.h" />
     <ClInclude Include="..\..\src\spr_wl6.h" />
+    <ClInclude Include="..\..\src\StdStringExtensions.h" />
     <ClInclude Include="..\..\src\version.h" />
     <ClInclude Include="..\..\win\resource.h" />
     <ClInclude Include="..\..\src\wl_act1.h" />

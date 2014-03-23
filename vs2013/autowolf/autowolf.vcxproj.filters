@@ -194,6 +194,15 @@
     <ClCompile Include="..\..\src\PString.cpp">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\CommandLine.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\StdStringExtensions.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ShellUnicode.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\win\resource.h">
@@ -381,6 +390,15 @@
     </ClInclude>
     <ClInclude Include="..\..\src\PString.h">
       <Filter>Source Files\IOAN\DataStruct</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CommandLine.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\StdStringExtensions.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ShellUnicode.h">
+      <Filter>Source Files\IOAN</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
