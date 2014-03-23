@@ -36,7 +36,7 @@
 
 std::vector<std::string> s_argv;
 
-void CommandLine::FeedFromWindows()
+static void feedFromWindows()
 {
 	int argc;
 	LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -53,10 +53,14 @@ void CommandLine::FeedFromWindows()
 
 void CommandLine::Feed(int argc, const char* const* argv)
 {
+#ifdef _WIN32
+	feedFromWindows();
+#else
 	if (!argc || !argv)
 		return;
 	for (int i = 0; i < argc; ++i)
 		s_argv.push_back(argv[i]);
+#endif
 }
 
 static void checkEnvVars()
@@ -268,7 +272,7 @@ void CommandLine::Parse()
 		help += e.what();
 		help += "\n";
 		help +=
-			"AutoWolf v0.3\n"
+			"AutoWolf v1\n"
 			"By Ioan Chera on Wolf4SDL codebase\n"
 			"Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
 			"Original Wolfenstein 3D by id Software\n\n";

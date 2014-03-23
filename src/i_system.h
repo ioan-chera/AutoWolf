@@ -39,6 +39,4 @@ std::string I_GetSettingsDir();
 void *I_CheckedMalloc(size_t sz);
 void *I_CheckedRealloc(void *ptr, size_t sz);
 
-void I_DisplayAlertOnError();
-
 #endif /* defined(__Wolf4SDL__i_system__) */

@@ -26,7 +26,6 @@
 
 namespace CommandLine
 {
-	void FeedFromWindows();
 	void Feed(int argc, const char* const* argv);
 	void Parse();
 }

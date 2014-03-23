@@ -60,11 +60,11 @@ char *Cocoa_CreateApplicationSupportPathString()
 //
 // Cocoa_DisplayErrorAlert
 //
-void Cocoa_DisplayErrorAlert(const char *msg)
+void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 {
 	@autoreleasepool
 	{
-		[[NSAlert alertWithMessageText:@"Automatic Wolfenstein quit with an error." defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+		[[NSAlert alertWithMessageText:[NSString stringWithFormat@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 	}
 }
 

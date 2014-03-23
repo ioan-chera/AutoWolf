@@ -1603,39 +1603,71 @@ static void DemoLoop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+static void showErrorAlert(const char* message, const char* title)
+{
+#ifdef _WIN32
+	MessageBoxW(nullptr, UTF8ToWideChar(message).c_str(), UTF8ToWideChar(title).c_str(), MB_OK | MB_ICONERROR);
+#elif defined(__APPLE__)
+	Cocoa_DisplayErrorAlert(message, title);
+#else
+#error TODO Linux: native message box
+#endif
+}
+
 //
 // main
 //
 // Main program start
 //
-#if defined(_WIN32) || defined(__APPLE__)
+#if defined(__APPLE__)	// __APPLE__ still has that NSApplicationMain thing.
 #define main SDL_main
 #endif
-int main (int argc, TChar *argv[])
+int main(int argc, TChar *argv[])
 {
-    //TestListPerf();
+	//TestListPerf();
+	try
+	{
 #if defined(_arch_dreamcast)
-    DC_Init();
+		DC_Init();
 #else
-	// argc and argv are null in windows, which uses WinMain from sdl_winmain.cpp
-	CommandLine::Feed(argc, argv);
-	CommandLine::Parse();
+		// argc and argv are null in windows, which uses WinMain from sdl_winmain.cpp
+		CommandLine::Feed(argc, argv);
+		CommandLine::Parse();
 #endif
-    // IOANCH: unification: set the SPEAR::flag global var
-    SPEAR::Initialize(".");
-	SPEAR::SetGlobalValues();
-    
-    // IOANCH: prepare the OSX version for displaying a quit error
-   atexit(I_DisplayAlertOnError);
-    
-    // IOANCH 20130509: this changes config values. Call moved here from CFE.
-    CFG_SetupConfigLocation();
-    CFG_CheckForEpisodes();
+		// IOANCH: unification: set the SPEAR::flag global var
+		SPEAR::Initialize(".");
+		SPEAR::SetGlobalValues();
 
-    InitGame();
+		// IOANCH 20130509: this changes config values. Call moved here from CFE.
+		CFG_SetupConfigLocation();
+		CFG_CheckForEpisodes();
 
-    DemoLoop();
+		InitGame();
 
-    Quit("Demo loop exited???");
-    return 1;
+		DemoLoop();
+
+		Quit("Demo loop exited???");
+		return 1;
+	}
+	catch (const std::system_error& e)
+	{
+		std::string message(e.what());
+		message += "(";
+		message += e.code().value();
+		message += ": ";
+		message += e.code().message();
+		message += ")";
+		showErrorAlert(message.c_str(), "AutoWolf System Error");
+		return 3;
+	}
+	catch (const std::exception& e)
+	{
+		showErrorAlert(e.what(), "AutoWolf Error");
+		return 1;
+	}
+	catch (...)
+	{
+		showErrorAlert("An unknown error occurred! Please contact the author about this!", "AutoWolf Error");
+		return 2;
+	}
 }

@@ -21,7 +21,7 @@
 #define Wolf4SDL_CocoaFun_h
 
 char		*Cocoa_CreateApplicationSupportPathString();
-void        Cocoa_DisplayErrorAlert(const char *msg);
+void        Cocoa_DisplayErrorAlert(const char *msg, const char* title);
 
 void        Cocoa_Notify(const char *title, const char *msg);
 

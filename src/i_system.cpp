@@ -154,19 +154,3 @@ void *I_CheckedRealloc(void *ptr, size_t sz)
       Quit("Out of memory!");
    return ret;
 }
-
-//
-// I_DisplayAlertOnError
-//
-// 
-//
-void I_DisplayAlertOnError()
-{
-   if(global_error.length() <= 0)
-      return;
-#ifdef __APPLE__
-   Cocoa_DisplayErrorAlert(global_error());
-#elif defined(_WIN32)
-   MessageBox(NULL, global_error(), "AutoWolf Error", MB_ICONERROR | MB_OK);
-#endif
-}
