@@ -11,8 +11,9 @@
 
 extern  gametype        gamestate;
 extern  byte            bordercol;
-class PString;
 extern  std::string         cfg_demoname;
+
+extern  unsigned        g_sessionNo;	// the time of the SetupGameLevel.
 
 void    SetupGameLevel ();
 void    GameLoop ();

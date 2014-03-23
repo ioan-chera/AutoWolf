@@ -26,6 +26,7 @@
 // WL_GAME.C
 
 #include "wl_def.h"
+#include "Logger.h"
 #include "foreign.h"
 #include "version.h"
 #include "wl_act1.h"
@@ -53,16 +54,6 @@
 #include <TIME.H>
 #endif
 
-
-/*
-=============================================================================
-
-                             LOCAL CONSTANTS
-
-=============================================================================
-*/
-
-
 /*
 =============================================================================
 
@@ -80,6 +71,7 @@ int32_t         spearx,speary;
 unsigned        spearangle;
 Boolean8         spearflag;
 
+unsigned        g_sessionNo;	// session of SetupGameLevel
 
 #ifdef USE_FEATUREFLAGS
 int ffDataTopLeft, ffDataTopRight, ffDataBottomLeft, ffDataBottomRight;
@@ -701,6 +693,8 @@ void SetupGameLevel ()
     word *map;
     word tile;
 
+	// Start a new session
+	g_sessionNo++;
     if (!loadedgame)
     {
         gamestate.TimeCount
