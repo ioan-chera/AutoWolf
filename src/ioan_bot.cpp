@@ -28,6 +28,7 @@
 #include "ioan_bot.h"
 #include "ioan_bas.h"
 #include "ioan_secret.h"
+#include "Logger.h"
 #include "obattrib.h"
 #include "HistoryRatio.h"
 #include "PathArray.h"
@@ -818,7 +819,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
          {
             if (he->cause == ret)
             {
-               puts("Heard nazi!");
+               Logger::Write("Heard nazi!");
                found = true;
             }
          }
@@ -983,7 +984,7 @@ objtype *BotMan::Crossfire(int x, int y, const objtype *objignore,
             dist = abs(j) > abs(k) ? abs(j) : abs(k);
             if(dist > 16)
                continue;
-            printf("Enemy gunshot heard! %d\n", heardEvents.count());
+            Logger::Write("Enemy gunshot heard! %d", heardEvents.count());
             return he->cause;
          }
       }

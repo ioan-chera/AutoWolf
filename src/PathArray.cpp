@@ -129,7 +129,6 @@ int PathArray::bestScoreIndex() const
             }
             if(!j)
             {
-                //            puts("!!!");
                 break;
             }
         }

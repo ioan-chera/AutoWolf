@@ -28,6 +28,7 @@
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "ioan_bas.h"
+#include "Logger.h"
 
 #include "wl_act1.h"
 #include "wl_game.h"
@@ -439,24 +440,24 @@ void ScoreMap::OutputRegionGraphTGF(FILE *f)
 //
 void ScoreMap::TestPushBlocks()
 {
-    puts("Testing push blocks...");
-    printf("Start region: %llu\n", (unsigned long long)startRegion);
+    Logger::Write("Testing push blocks...");
+    Logger::Write("Start region: %llu\n", (unsigned long long)startRegion);
 
     for (PushBlock *entry = pushBlocks.firstObject();
          entry;
          entry = pushBlocks.nextObject())
     {
-        printf("tx=%d ty=%d us=%d\n", entry->tilex,
+        Logger::Write("tx=%d ty=%d us=%d\n", entry->tilex,
                entry->tiley,
                entry->usable);
     }
     OutputRegionGraphTGF(stdout);
-    printf("THEN\n");
+    Logger::Write("THEN\n");
     for(Region *region = regions.firstObject();
         region;
         region = regions.nextObject())
     {
-        printf("%llu has: ", (unsigned long long)region);
+        Logger::Write("%llu has: ", (unsigned long long)region);
         for(RegionConnection *connection = region->neighList.firstObject();
             connection; connection = region->neighList.nextObject())
         {
@@ -464,11 +465,11 @@ void ScoreMap::TestPushBlocks()
                 connection->pushPositions.firstObject(); 
                 a; a = connection->pushPositions.nextObject())
             {
-                printf("(%d %d)-(%d %d) ", a->tx, a->ty, a->block->tilex, 
+                Logger::Write("(%d %d)-(%d %d) ", a->tx, a->ty, a->block->tilex, 
                        a->block->tiley);
             }
         }
-        printf("\n");
+        Logger::Write("\n");
     }
 }
 

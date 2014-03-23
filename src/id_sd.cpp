@@ -55,6 +55,7 @@
 #include "id_ca.h"
 #include "id_pm.h"
 #include "id_sd.h"
+#include "Logger.h"
 #include "wl_main.h"
 
 #if defined(GP2X_940)
@@ -758,13 +759,13 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
     Mix_Chunk *sample = sd_soundChunks[which];
     if(sample == NULL)
     {
-        printf("sd_soundChunks[%i] is NULL!\n", which);
+        Logger::Write("sd_soundChunks[%i] is NULL!", which);
         return 0;
     }
 
     if(Mix_PlayChannel(channel, sample, 0) == -1)
     {
-        printf("Unable to play sound: %s\n", Mix_GetError());
+        Logger::Write("Unable to play sound: %s", Mix_GetError());
         return 0;
     }
 
@@ -1210,7 +1211,7 @@ void SD_Startup()
 
     if(Mix_OpenAudio(cfg_samplerate, AUDIO_S16, 2, cfg_audiobuffer))
     {
-        printf("Unable to open audio: %s\n", Mix_GetError());
+        Logger::Write("Unable to open audio: %s", Mix_GetError());
         return;
     }
 
@@ -1224,7 +1225,7 @@ void SD_Startup()
 
     if(SD_L_YM3812Init(1,3579545,cfg_samplerate))
     {
-        printf("Unable to create virtual OPL!!\n");
+        Logger::Write("Unable to create virtual OPL!!");
     }
 
     for(i=1;i<0xf6;i++)

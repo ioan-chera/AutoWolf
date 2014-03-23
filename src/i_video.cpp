@@ -77,8 +77,7 @@ void I_InitEngine()
 #endif
    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
    {
-      printf("Unable to init SDL: %s\n", SDL_GetError());
-      exit(1);
+	   throw std::exception((std::string("Unable to init SDL: ") + SDL_GetError()).c_str());
    }
    
    atexit(SDL_Quit);
@@ -102,21 +101,18 @@ void I_InitEngine()
 	
 	if(!vid_window)
 	{
-		printf("Unable to create SDL window: %s\n", SDL_GetError());
-		exit(1);
+		throw std::exception((std::string("Unable to create SDL window: ") + SDL_GetError()).c_str());
 	}
 	
 	vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
 	if(!vid_renderer)
 	{
-		printf("Unable to create SDL renderer: %s\n", SDL_GetError());
-		exit(1);
+		throw std::exception((std::string("Unable to create SDL renderer: ") + SDL_GetError()).c_str());
 	}
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");  // make the scaled rendering look smoother.
 	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_screenWidth, cfg_screenHeight) < 0)
 	{
-		printf("Unable to set SDL renderer logical size: %s\n", SDL_GetError());
-		exit(1);
+		throw std::exception((std::string("Unable to set SDL renderer logical size: ") + SDL_GetError()).c_str());
 	}
 	
 	vid_texture = SDL_CreateTexture(vid_renderer,
@@ -125,8 +121,7 @@ void I_InitEngine()
 								   cfg_screenWidth, cfg_screenHeight);
 	if(!vid_texture)
 	{
-		printf("Unable to create SDL texture: %s\n", SDL_GetError());
-		exit(1);
+		throw std::exception((std::string("Unable to create SDL texture: ") + SDL_GetError()).c_str());
 	}
 	
 	

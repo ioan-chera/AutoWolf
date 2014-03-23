@@ -27,6 +27,7 @@
 
 #include "wl_def.h"
 #include "FileSystem.h"
+#include "Logger.h"
 #include "CommandLine.h"
 #include "foreign.h"
 #include "StdStringExtensions.h"
@@ -1605,6 +1606,7 @@ static void DemoLoop()
 
 static void showErrorAlert(const char* message, const char* title)
 {
+	Logger::Write("%s: %s", title, message);
 #ifdef _WIN32
 	MessageBoxW(nullptr, UTF8ToWideChar(message).c_str(), UTF8ToWideChar(title).c_str(), MB_OK | MB_ICONERROR);
 #elif defined(__APPLE__)
@@ -1646,8 +1648,7 @@ int main(int argc, TChar *argv[])
 
 		DemoLoop();
 
-		Quit("Demo loop exited???");
-		return 1;
+		throw std::exception("Demo loop exited???");
 	}
 	catch (const std::system_error& e)
 	{
@@ -1670,4 +1671,6 @@ int main(int argc, TChar *argv[])
 		showErrorAlert("An unknown error occurred! Please contact the author about this!", "AutoWolf Error");
 		return 2;
 	}
+
+	return 0;
 }
