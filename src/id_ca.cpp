@@ -839,9 +839,9 @@ void AudioLoader::close()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-PString cfg_extension; // Need a string, not constant to change cache files
-PString cfg_graphext;
-PString cfg_audioext;
+std::string cfg_extension; // Need a string, not constant to change cache files
+std::string cfg_graphext;
+std::string cfg_audioext;
 static const char ca_gheadname[] = "VGAHEAD.";
 static const char ca_gfilename[] = "VGAGRAPH.";
 static const char ca_gdictname[] = "VGADICT.";
@@ -868,9 +868,9 @@ static huffnode *ca_grhuffman;
 //
 // Writes a file from a memory buffer
 //
-bool CA_WriteFile(const char *filename, void *ptr, int32_t length)
+bool CA_WriteFile(const std::string &filename, void *ptr, int32_t length)
 {
-   FILE *f = fopen(filename, "wb");
+   FILE *f = fopen(filename.c_str(), "wb");
 //    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if(!f)
         return false;
@@ -933,29 +933,15 @@ void CA_Startup ()
 #endif
 
    // IOANCH: use C++ classes
-   mapSegs.loadFromFile(I_ResolveCaseInsensitivePath(".",
-                                                     PString(ca_mheadname).
-                                                     concat(cfg_extension)())(),
-                        I_ResolveCaseInsensitivePath(".",
-                                                     PString("GAMEMAPS.").
-                                                     concat(cfg_extension)())());
+   mapSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_mheadname) + cfg_extension).c_str(),
+						I_ResolveCaseInsensitivePath(".", std::string("GAMEMAPS.") + cfg_extension).c_str());
    
-   graphSegs.loadFromFile(I_ResolveCaseInsensitivePath(".",
-                                                      PString(ca_gdictname).
-                                                      concat(cfg_graphext)())(),
-                          I_ResolveCaseInsensitivePath(".",
-                                                      PString(ca_gheadname).
-                                                       concat(cfg_graphext)())(),
-                          I_ResolveCaseInsensitivePath(".",
-                                                       PString(ca_gfilename).
-                                                       concat(cfg_graphext)())());
+   graphSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_gdictname) + cfg_graphext).c_str(),
+                          I_ResolveCaseInsensitivePath(".", std::string(ca_gheadname) + cfg_graphext).c_str(),
+                          I_ResolveCaseInsensitivePath(".", std::string(ca_gfilename) + cfg_graphext).c_str());
 
-   audioSegs.loadFromFile(I_ResolveCaseInsensitivePath(".",
-                                                       PString(ca_aheadname).
-                                                       concat(cfg_audioext)())(),
-                          I_ResolveCaseInsensitivePath(".",
-                                                       PString(ca_afilename).
-                                                       concat(cfg_audioext)())());
+   audioSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_aheadname) + cfg_audioext).c_str(),
+                          I_ResolveCaseInsensitivePath(".", std::string(ca_afilename) + cfg_audioext).c_str());
 }
 
 //==========================================================================

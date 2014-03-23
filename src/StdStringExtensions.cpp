@@ -41,6 +41,14 @@ std::string& operator+= (std::string& first, unsigned n)
 	return first;
 }
 
+std::string& operator+= (std::string& first, unsigned long long n)
+{
+	char buf[33];
+	_snprintf(buf, sizeof(buf), "%llu", n);
+	first += buf;
+	return first;
+}
+
 std::string WideCharToUTF8(const std::wstring& source)
 {
 	int length = WideCharToMultiByte(CP_UTF8, 0, source.c_str(), -1, nullptr, 0, nullptr, nullptr);
@@ -59,4 +67,60 @@ std::wstring UTF8ToWideChar(const std::string& source)
 	std::wstring str(destination);
 	delete[] destination;
 	return std::move(str);
+}
+
+static void normalizeSlashes(std::string& str)
+{
+	char useSlash = '/'; // The slash type to use for normalization.
+	char replaceSlash = '\\'; // The kind of slash to replace.
+	bool isUNC = false;
+
+#ifdef _WIN32
+
+	// This is an UNC path; it should use backslashes.
+	// NB: We check for both in the event one was changed earlier by mistake.
+	if (str.length() > 2 &&
+		((str[0] == '\\' || str[0] == '/') && str[0] == str[1]))
+	{
+		useSlash = '\\';
+		replaceSlash = '/';
+		isUNC = true;
+	}
+
+#endif
+
+	// Convert all replaceSlashes to useSlashes
+	size_t i;
+	for (i = 0; i < str.length(); ++i)
+	{
+		if (str[i] == replaceSlash)
+			str[i] = useSlash;
+	}
+
+	// Remove trailing slashes
+	while (str.length() > 1 && str.back() == useSlash)
+		str.pop_back();
+
+	std::string doubleSlash;
+	doubleSlash += useSlash;
+	doubleSlash += useSlash;
+
+	size_t position, oposition;
+	while ((position = str.find(doubleSlash, isUNC ? 2 : 0)) != std::string::npos)
+	{
+		oposition = str.find_first_not_of(useSlash, position);
+		if (oposition == std::string::npos)
+			str.erase(position);
+		else
+			str.erase(position + 1, oposition - position - 1);
+	}
+}
+
+std::string& ConcatSubpath(std::string& source, const std::string& added)
+{
+	if (source.length() > 0)
+		source += "/";
+	source += added;
+	normalizeSlashes(source);
+	return source;
 }

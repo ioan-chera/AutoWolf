@@ -12,7 +12,7 @@
 extern  gametype        gamestate;
 extern  byte            bordercol;
 class PString;
-extern  PString         cfg_demoname;
+extern  std::string         cfg_demoname;
 
 void    SetupGameLevel ();
 void    GameLoop ();

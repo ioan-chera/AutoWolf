@@ -30,7 +30,7 @@
 
 extern  char    helpfilename[];
 class PString;
-extern PString cfg_endfilename;
+extern std::string cfg_endfilename;
 
 extern  void    HelpScreens();
 extern  void    EndText();

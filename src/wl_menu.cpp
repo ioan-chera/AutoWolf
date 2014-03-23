@@ -259,7 +259,7 @@ static int s_StartGame;
 static int SoundStatus = 1;
 static int pickquick;
 static char SaveGameNames[10][32];
-PString cfg_savename("SAVEGAM?.");
+std::string cfg_savename("SAVEGAM?.");
 
 
 ////////////////////////////////////////////////////////////////////
@@ -1426,8 +1426,8 @@ static int CP_LoadGame (int quick)
 {
     FILE *file;
     int which, exit = 0;
-    PString name;
-    PString loadpath;   // IOANCH 20130509: use PString for paths
+    std::string name;
+    std::string loadpath;   // IOANCH 20130509: use PString for paths
 
     name = cfg_savename;
 
@@ -1445,10 +1445,10 @@ static int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
+			loadpath = cfg_dir;
+			ConcatSubpath(loadpath, name);
 
-            loadpath.copy(cfg_dir).concatSubpath(name);
-
-            file = fopen (loadpath(), "rb");
+            file = fopen (loadpath.c_str(), "rb");
             fseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
@@ -1488,9 +1488,10 @@ static int CP_LoadGame (int quick)
 #ifdef _arch_dreamcast
             DC_LoadFromVMU(name.buffer());
 #endif
-            loadpath.copy(cfg_dir).concatSubpath(name);
+			loadpath = cfg_dir;
+			ConcatSubpath(loadpath, name);
 
-            file = fopen (loadpath(), "rb");
+            file = fopen (loadpath.c_str(), "rb");
             fseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
@@ -1606,8 +1607,8 @@ static int CP_SaveGame (int quick)
 {
     int which, exit = 0;
     FILE *file;
-    PString name;
-    PString savepath;   // IOANCH 20130509: use PString for paths
+    std::string name;
+    std::string savepath;   // IOANCH 20130509: use PString for paths
     char input[32];
 
     name = cfg_savename;
@@ -1623,10 +1624,11 @@ static int CP_SaveGame (int quick)
         {
             name[7] = which + '0';
 
-            savepath.copy(cfg_dir).concatSubpath(name);
+			savepath = cfg_dir;
+			ConcatSubpath(savepath, name);
 
-            unlink (savepath());
-            file = fopen (savepath(), "wb");
+            unlink (savepath.c_str());
+            file = fopen (savepath.c_str(), "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
 
@@ -1694,10 +1696,11 @@ static int CP_SaveGame (int quick)
                 SaveGamesAvail[which] = 1;
                 strcpy (&SaveGameNames[which][0], input);
 
-                savepath.copy(cfg_dir).concatSubpath(name);
+				savepath = cfg_dir;
+				ConcatSubpath(savepath, name);
 
-                unlink (savepath());
-                file = fopen (savepath(), "wb");
+                unlink (savepath.c_str());
+                file = fopen (savepath.c_str(), "wb");
                 fwrite (input, 32, 1, file);
                 fseek (file, 32, SEEK_SET);
 
@@ -2980,8 +2983,8 @@ static void SetupControlPanel ()
 ////////////////////////////////////////////////////////////////////
 void menu_SetupSaveGames()
 {
-    PString name;
-    PString savepath;
+    std::string name;
+    std::string savepath;
 
     name = cfg_savename;
     for(int i = 0; i < 10; i++)
@@ -2992,9 +2995,10 @@ void menu_SetupSaveGames()
         if(DC_LoadFromVMU(name.buffer()))
         {
 #endif
-            savepath.copy(cfg_dir).concatSubpath(name);
+			savepath = cfg_dir;
+			ConcatSubpath(savepath, name);
 
-           FILE *f = fopen(savepath(), "rb");
+           FILE *f = fopen(savepath.c_str(), "rb");
             if(f)
             {
                 char temp[32];

@@ -1081,7 +1081,7 @@ void ShowActStatus()
 ==================
 */
 
-PString    cfg_demoname("DEMO?.");
+std::string    cfg_demoname("DEMO?.");
 
 #ifndef REMDEBUG
 #define MAXDEMOSIZE     8192
@@ -1132,8 +1132,8 @@ void FinishDemoRecord ()
         level = atoi (str);
         if (level>=0 && level<=9)
         {
-            cfg_demoname[4] = (char)('0'+level);
-            CA_WriteFile (cfg_demoname.buffer(),demobuffer,length);
+            cfg_demoname[4] = static_cast<char>('0'+level);
+            CA_WriteFile (cfg_demoname, demobuffer, length);
         }
     }
 

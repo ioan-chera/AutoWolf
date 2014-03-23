@@ -69,10 +69,10 @@ public:
 	bool addFile(DataFile *file);
 	
 	// access file with name
-	DataFile *getFileWithName(const PString &fname, const char *header = NULL);
+	DataFile *getFileWithName(const std::string &fname, const char *header = NULL);
    
 	// create folder if not exist
-	DirectoryFile *makeDirectory(const PString &fname);
+	DirectoryFile *makeDirectory(const std::string &fname);
 	
 	template<typename T> T* makeFile(const char* name)
 	{

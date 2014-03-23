@@ -41,7 +41,7 @@
 #include "wl_state.h"
 
 BotMan bot;
-PString masterDirectoryFilePath;
+std::string masterDirectoryFilePath;
 
 // static class member definition
 // protected ones
@@ -103,8 +103,7 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
     // see if folder exists in AutoWolf/Maps
 	
 	// now to write the file
-	DirectoryFile *dir = masterDir.makeDirectory(MASTERDIR_MAPSDIRECTORY)
-    ->makeDirectory(PString((const char *)digeststring, 16));
+	DirectoryFile *dir = masterDir.makeDirectory(MASTERDIR_MAPSDIRECTORY)->makeDirectory(std::string(reinterpret_cast<const char *>(digeststring), 16));
 	
     // the hash-named directory
     
@@ -135,7 +134,7 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
 	DirectoryFile *dir;
 	
 	dir = masterDir.makeDirectory(MASTERDIR_MAPSDIRECTORY);	// the Maps directory
-	dir = dir->makeDirectory(PString((const char *)digeststring, 16));
+	dir = dir->makeDirectory(std::string(reinterpret_cast<const char *>(digeststring), 16));
     // the hash-named directory
     
     // Looking for files...

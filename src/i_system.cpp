@@ -67,10 +67,12 @@ void I_Notify(const char *msg)
 //
 // Makes a directory
 //
-bool I_MakeDir(const char *dirname)
+void I_MakeDir(const std::string& dirname)
 {
 #ifdef _WIN32
-   return CreateDirectory(dirname, NULL) ? true : false;
+   BOOL result = CreateDirectoryW(UTF8ToWideChar(dirname).c_str(), nullptr);
+   if(!result)
+	   throw std::system_error(std::error_code(GetLastError(), std::system_category()), std::string("Cannot create directory ") + dirname);
 #else
    return !mkdir(dirname, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
 #endif
@@ -99,7 +101,7 @@ void I_ChangeDir(const std::string& dirname)
 //
 // Gets the settings directory
 //
-PString I_GetSettingsDir()
+std::string I_GetSettingsDir()
 {
 #ifdef __APPLE__
    char *appsupdir = Cocoa_CreateApplicationSupportPathString();
@@ -110,11 +112,11 @@ PString I_GetSettingsDir()
 	free(appsupdir);
    return ret;
 #elif defined(_WIN32)
-   TCHAR appdatdir[MAX_PATH];
-   if(!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, appdatdir)))
-      Quit("Your Application Data directory is not defined. You must "
-           "set this before playing.");
-   return PString(appdatdir).concatSubpath("AutoWolf");
+   wchar_t appdatdir[MAX_PATH];
+   HRESULT result = SHGetFolderPathW(nullptr, CSIDL_APPDATA, nullptr, 0, appdatdir);
+   if(!SUCCEEDED(result))
+	   throw std::system_error(std::error_code(result & 0xffff, std::system_category()), "Your Application Data directory is not defined. You must set this before playing.");
+   return ConcatSubpath(WideCharToUTF8(appdatdir), "AutoWolf");
 #else
    const char *homeenv = getenv("HOME");
    if(homeenv == NULL)
@@ -138,7 +140,7 @@ PString I_GetSettingsDir()
 // If directory can't be accessed or anything like that, just return what's
 // given - this function doesn't do more than that.
 //
-PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
+std::string I_ResolveCaseInsensitivePath(const std::string& dirname, const std::string& basename)
 {
 #ifndef _WIN32
    // POSIX
@@ -163,7 +165,7 @@ PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename)
    }
 #endif
    // not found or indifferent
-   return PString(dirname).concatSubpath(basename);
+   return ConcatSubpath(std::string(dirname), basename);
 
 }
 

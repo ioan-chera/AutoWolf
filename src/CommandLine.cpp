@@ -233,8 +233,7 @@ void CommandLine::Parse()
 					"argument!");
 				else
 				{
-					// IOANCH 20130307: expand tilde
-					cfg_dir.copy(arg.c_str());
+					cfg_dir = arg;
 				}
 			}
 			else if (!strcasecmp(arg, "--ignorenumchunks"))

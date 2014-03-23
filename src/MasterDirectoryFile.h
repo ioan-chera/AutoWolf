@@ -35,9 +35,9 @@ class MasterDirectoryFile : public DirectoryFile
 public:
 	MasterDirectoryFile();
 	// save it to file
-	void saveToFile(const PString &fpath);
+	void saveToFile(const std::string &fpath);
 	// load it from file
-	bool loadFromFile(const PString &fpath);
+	bool loadFromFile(const std::string &fpath);
 };
 
 extern MasterDirectoryFile masterDir;

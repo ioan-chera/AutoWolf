@@ -28,6 +28,7 @@
 #include "wl_def.h"
 #include "CommandLine.h"
 #include "foreign.h"
+#include "StdStringExtensions.h"
 #include "version.h"
 #include "wl_act1.h"
 #include "wl_agent.h"
@@ -110,7 +111,7 @@ Boolean8 startgame;
 Boolean8 loadedgame;
 int32_t     mouseadjustment;  // IOANCH: int32_t for safely saving
 
-PString cfg_configname("CONFIG.");
+std::string cfg_configname("CONFIG.");
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -216,17 +217,18 @@ void main_ReadConfig()
    SMMode  sm;
    SDSMode sds;
 
-   PString configpath;
+   std::string configpath;
 
 #ifdef _arch_dreamcast
    DC_LoadFromVMU(cfg_configname.buffer());
 #endif
 
-   configpath.copy(cfg_dir).concatSubpath(cfg_configname);
-   
+   configpath = cfg_dir;
+   ConcatSubpath(configpath, cfg_configname);
+
    main_configHardwareValues(sd, sm, sds);
 
-   FILE *file = fopen(configpath(), "rb");
+   FILE *file = fopen(configpath.c_str(), "rb");
    if (file)
    {
       //
@@ -249,8 +251,7 @@ void main_ReadConfig()
          cfgFile.initialize(cfg_configname);
          if(cfgFile.loadFromFile(configpath))
          {
-            PropertyFile *pfile = (PropertyFile *)cfgFile.getFileWithName("Config",
-                                                         PROPERTY_FILE_HEADER);
+            PropertyFile *pfile = (PropertyFile *)cfgFile.getFileWithName("Config", PROPERTY_FILE_HEADER);
             if(pfile)
             {
              
@@ -336,7 +337,7 @@ if(pfile->hasProperty(#name, Property::Int32)) \
 // IOANCH: same changes as with write
 void main_WriteConfig()
 {
-    PString configpath;
+    std::string configpath;
    SDMode sd = sd_soundMode;
    SMMode sm = sd_musicMode;
    SDSMode sds = sd_digiMode;
@@ -345,7 +346,8 @@ void main_WriteConfig()
     fs_unlink(cfg_configname.buffer());
 #endif
 
-    configpath.copy(cfg_dir).concatSubpath(cfg_configname);
+	configpath = cfg_dir;
+	ConcatSubpath(configpath, cfg_configname);
    
    MasterDirectoryFile cfgFile;
    cfgFile.initialize(cfg_configname);
@@ -1193,8 +1195,7 @@ static void InitGame()
     myInput.initialize();  // sets up the input devices
 
 	
-    vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", PString("VSWAP.").
-                                                concat(cfg_extension)())());
+    vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", std::string("VSWAP.") + cfg_extension).c_str());
 
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
     CA_Startup ();  // The rest of the data.
@@ -1606,7 +1607,9 @@ static void DemoLoop()
 //
 // Main program start
 //
+#if defined(_WIN32) || defined(__APPLE__)
 #define main SDL_main
+#endif
 int main (int argc, TChar *argv[])
 {
     //TestListPerf();

@@ -958,20 +958,20 @@ const unsigned int SODFlag::soundmap[][2] =
 // Initializes the SOD flag depending on some key file names.
 //
 
-void SODFlag::Initialize(const PString &basePath)
+void SODFlag::Initialize(const std::string &basePath)
 {
     FILE *f;
    
-    f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD3")(), "rb");
+    f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD3").c_str(), "rb");
     if(!f)
     {
-        f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD2")(), "rb");
+        f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD2").c_str(), "rb");
         if(!f)
         {
-            f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SD1")(), "rb");
+            f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD1").c_str(), "rb");
             if(!f)
             {
-                f = fopen(I_ResolveCaseInsensitivePath(basePath(), "VSWAP.SOD")(), "rb");
+                f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SOD").c_str(), "rb");
                 if(!f)
                 {
                     this->flag = false;

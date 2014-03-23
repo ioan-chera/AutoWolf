@@ -17,6 +17,7 @@
 //
 
 #include "wl_def.h"
+#include "StdStringExtensions.h"
 #include "wl_main.h"
 #include "MasterDirectoryFile.h"
 #include "Config.h"
@@ -50,32 +51,32 @@ MasterDirectoryFile::MasterDirectoryFile()
 //
 // save it to file
 //
-void MasterDirectoryFile::saveToFile(const PString &fpath)
+void MasterDirectoryFile::saveToFile(const std::string &fpath)
 {
 	FILE *f;
 	
 	// Only overwrite it when it's over. Till then, write to a temporary file
-	PString transaction(fpath);
+	std::string transaction(fpath);
 	transaction += (unsigned long long)time(nullptr);
 	
-	f = fopen(transaction.buffer(), "wb");
+	f = fopen(transaction.c_str(), "wb");
 	if(!f)
 		return;
 	this->doWriteToFile(f);
 	fclose(f);
 	
 	bool success = false;
-	if(remove(fpath.buffer()) == 0)
+	if(remove(fpath.c_str()) == 0)
 	{
 		// success removing old fpath
-		if(rename(transaction.buffer(), fpath.buffer()) == 0)
+		if(rename(transaction.c_str(), fpath.c_str()) == 0)
 		{
 			// success renaming the temp file to the old file
 			success = true;
 		}
 	}
 	if(!success)
-		remove(transaction.buffer());
+		remove(transaction.c_str());
 }
 
 //
@@ -90,11 +91,11 @@ void MasterDirectoryFile::saveToFile(const PString &fpath)
 // Read each eight-character header, and depending on it, create a new object of each type
 // and call that one's reader. When that is finished, go to the next address (remmeber the previous)
 //
-bool MasterDirectoryFile::loadFromFile(const PString &fpath)
+bool MasterDirectoryFile::loadFromFile(const std::string &fpath)
 {
 	FILE *f;
 	
-	f = fopen(fpath.buffer(), "rb");
+	f = fopen(fpath.c_str(), "rb");
 	if(!f)
 		return false;	// no file, no worry
 

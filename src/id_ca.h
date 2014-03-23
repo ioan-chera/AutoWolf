@@ -263,14 +263,14 @@ extern AudioLoader audioSegs;
 //===========================================================================
 
 class PString;
-extern  PString  cfg_extension;
-extern  PString  cfg_graphext;
-extern  PString  cfg_audioext;
+extern  std::string  cfg_extension;
+extern  std::string  cfg_graphext;
+extern  std::string  cfg_audioext;
 
 //===========================================================================
 
 bool CA_LoadFile (const char *filename, memptr *ptr);
-bool CA_WriteFile (const char *filename, void *ptr, int32_t length);
+bool CA_WriteFile (const std::string &filename, void *ptr, int32_t length);
 
 // int32_t CA_RLEWCompress (word *source, int32_t length, word *dest, word rlewtag);
 

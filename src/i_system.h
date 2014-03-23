@@ -32,10 +32,10 @@ void I_Delay(unsigned ms);
 uint32_t I_GetTicks(void);
 
 void I_Notify(const char *msg);
-bool I_MakeDir(const char *dirname);
+void I_MakeDir(const std::string& dirname);
 void I_ChangeDir(const std::string& dirname);
-PString I_GetSettingsDir();
-PString I_ResolveCaseInsensitivePath(const char *dirname, const char *basename);
+std::string I_GetSettingsDir();
+std::string I_ResolveCaseInsensitivePath(const std::string& dirname, const std::string& basename);
 
 void *I_CheckedMalloc(size_t sz);
 void *I_CheckedRealloc(void *ptr, size_t sz);

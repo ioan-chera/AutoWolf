@@ -29,7 +29,7 @@ extern  unsigned screenofs;
 extern  Boolean8  startgame;
 extern  char     str[80];
 class PString;
-extern  PString  cfg_configname;
+extern  std::string  cfg_configname;
 extern PString global_error;
 
 

@@ -24,6 +24,7 @@
 #include "id_us.h"
 #include "List.h"
 #include "PathArray.h"
+#include "StdStringExtensions.h"
 #include "MapExploration.h"
 
 
@@ -36,10 +37,12 @@
 const char masterDirectoryFileName[] = "AutoWolf.data";
 #define MASTERDIR_MAPSDIRECTORY "Maps"
 
-extern PString masterDirectoryFilePath, cfg_dir;
+extern std::string masterDirectoryFilePath;
+extern std::string cfg_dir;
 inline static void bot_initializeConfigLocation()
 {
-   masterDirectoryFilePath.copy(cfg_dir).concatSubpath(masterDirectoryFileName);
+	masterDirectoryFilePath = cfg_dir;
+	ConcatSubpath(masterDirectoryFilePath, masterDirectoryFileName);
 }
 
 //

@@ -33,7 +33,7 @@ DataFile::DataFile() : _initialized(false), _containerFile(NULL)
 //
 // Initialize with the Director name
 //
-void DataFile::initialize(const PString &fname)
+void DataFile::initialize(const std::string &fname)
 {
 	doInitializeEmpty(fname);
 }
@@ -43,9 +43,9 @@ void DataFile::initialize(const PString &fname)
 //
 // Creates a new structure
 //
-void DataFile::doInitializeEmpty(const PString &fname)
+void DataFile::doInitializeEmpty(const std::string &fname)
 {
-    _filename = fname;
+    _filename = fname.c_str();
 	_initialized = true;
 }
 

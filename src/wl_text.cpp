@@ -727,7 +727,7 @@ int     endextern = T_ENDART1;
 int     helpextern = T_HELPART;
 #endif
 char helpfilename[13] = "HELPART.";
-PString cfg_endfilename("ENDART1.");
+std::string cfg_endfilename("ENDART1.");
 
 /*
 =================

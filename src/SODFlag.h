@@ -44,7 +44,7 @@ class SODFlag
     static const char wolftitle[];
     static const char speartitle[];
 public:
-    void Initialize(const PString &basePath);
+    void Initialize(const std::string &basePath);
     SODFlag() : flag(false)                  {}
     Boolean8             operator()()   const {return flag;}
     unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}

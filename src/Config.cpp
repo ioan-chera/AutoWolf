@@ -47,7 +47,7 @@ bool cfg_nonazis;
 bool cfg_secretstep3;
 bool cfg_botActive;
 
-PString cfg_dir;
+std::string cfg_dir;
 int     cfg_extravbls;
 
 bool cfg_forcegrabmouse;
@@ -122,7 +122,7 @@ void CFG_SetupConfigLocation()
     
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_arch_dreamcast)
-    if(cfg_dir.length() == 0)
+    if(cfg_dir.empty())
     {
         // Set config location to home directory for multi-user support
         // IOANCH 20130303: do it correctly
@@ -131,15 +131,12 @@ void CFG_SetupConfigLocation()
        cfg_dir = I_GetSettingsDir();
     }
 #endif
-    if(cfg_dir.length() > 0)
+    if(!cfg_dir.empty())
     {
         // Ensure config directory exists and create if necessary
-        if(stat(cfg_dir(), &statbuf) != 0)
+        if(stat(cfg_dir.c_str(), &statbuf) != 0)
         {
-            if(!I_MakeDir(cfg_dir()))
-            {
-                Quit((PString("The configuration directory \"") << cfg_dir << "\" could not be created.")());
-            }
+			I_MakeDir(cfg_dir);
         }
     }
     
@@ -160,7 +157,7 @@ void CFG_CheckForEpisodes ()
    // IOANCH 20130301: unification culling
    if(!SPEAR())
    {
-      if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL6")(), &statbuf))
+      if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL6").c_str(), &statbuf))
       {
          cfg_extension = "WL6";
          menu_newep[2].active =
@@ -174,8 +171,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[4] =
          menu_epselect[5] = 1;
       }
-      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL3")(), 
-	&statbuf))
+      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL3").c_str(), &statbuf))
       {
          cfg_extension = "WL3";
          menu_missingep = 3;
@@ -184,8 +180,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[1] =
          menu_epselect[2] = 1;
       }
-      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL1")(), 
-	&statbuf))
+      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL1").c_str(), &statbuf))
       {
          cfg_extension = "WL1";
          menu_missingep = 5;
@@ -203,25 +198,25 @@ void CFG_CheckForEpisodes ()
       switch (cfg_mission)
       {
          case 0:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD")(), &statbuf))
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD").c_str(), &statbuf))
                cfg_extension = "SOD";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 1:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1")(), &statbuf))
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1").c_str(), &statbuf))
                cfg_extension = "SD1";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 2:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2")(), &statbuf))
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2").c_str(), &statbuf))
                cfg_extension = "SD2";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 3:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3")(), &statbuf))
+            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3").c_str(), &statbuf))
                cfg_extension = "SD3";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");

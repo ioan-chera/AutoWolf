@@ -53,7 +53,7 @@ protected:
     DataFile *_containerFile;
 	
 	// creates a new empty file
-	void doInitializeEmpty(const PString &fname);
+	void doInitializeEmpty(const std::string &fname);
 	// Execute writing to file
 	virtual void doWriteToFile(FILE *f) = 0;
 	// Execute reading from file
@@ -80,7 +80,7 @@ public:
 	}
 	
 	// do that other thing
-	void initialize(const PString &fname);
+	void initialize(const std::string &fname);
 	
 	// get file size
 	virtual uint64_t size()

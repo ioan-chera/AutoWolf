@@ -28,6 +28,7 @@
 
 std::string& operator+= (std::string& first, int n);
 std::string& operator+= (std::string& first, unsigned n);
+std::string& operator+= (std::string& first, unsigned long long n);
 
 std::string WideCharToUTF8(const std::wstring& source);
 std::wstring UTF8ToWideChar(const std::string& source);
@@ -51,5 +52,7 @@ inline static std::wstring _wgetenv(const std::wstring& varname)
 {
 	return SafeCString(_wgetenv(varname.c_str()));
 }
+
+std::string& ConcatSubpath(std::string& source, const std::string& added);
 
 #endif

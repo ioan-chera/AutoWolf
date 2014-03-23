@@ -68,7 +68,7 @@ bool DirectoryFile::addFile(DataFile *file)
 //
 // create folder if not exist
 //
-DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
+DirectoryFile *DirectoryFile::makeDirectory(const std::string &fname)
 {
 	DataFile *findDir = getFileWithName(fname);
 	if(!findDir || (findDir && strcmp(findDir->header(), DIRECTORY_HEADER)))
@@ -90,11 +90,10 @@ DirectoryFile *DirectoryFile::makeDirectory(const PString &fname)
 //
 // access file with name
 //
-DataFile *DirectoryFile::getFileWithName(const PString &fname,
-                                         const char *header)
+DataFile *DirectoryFile::getFileWithName(const std::string &fname, const char *header)
 {
 	// FIXME: Implement faster, proven searching methods than this
-    DataFile *ret =  fileHash.objectForKey(fname);
+    DataFile *ret =  fileHash.objectForKey(fname.c_str());
    if(ret)
    {
       if (header && strcmp(ret->header(), header))
@@ -227,7 +226,7 @@ bool DirectoryFile::doReadFromFile(FILE *f)
 			continue;
 		}
 		
-		newFile->initialize(PString(fname, namelen));
+		newFile->initialize(std::string(fname, namelen));
 		
 		newFile->doReadFromFile(f);
 		

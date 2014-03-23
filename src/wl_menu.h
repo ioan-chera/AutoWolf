@@ -179,6 +179,6 @@ void Write (int x,int y,const char *string);
 extern CP_itemtype menu_newep[];
 extern int menu_epselect[6];
 extern int menu_missingep;
-extern PString cfg_savename;
+extern std::string cfg_savename;
 
 #endif
