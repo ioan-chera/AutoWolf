@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\src\dosbox\dbopl.cpp" />
     <ClCompile Include="..\..\src\Exception.cpp" />
     <ClCompile Include="..\..\src\e_hashkeys.cpp" />
+    <ClCompile Include="..\..\src\FileSystem.cpp" />
     <ClCompile Include="..\..\src\HistoryRatio.cpp" />
     <ClCompile Include="..\..\src\id_ca.cpp" />
     <ClCompile Include="..\..\src\id_in.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\src\Exception.h" />
     <ClInclude Include="..\..\src\e_hash.h" />
     <ClInclude Include="..\..\src\e_hashkeys.h" />
+    <ClInclude Include="..\..\src\FileSystem.h" />
     <ClInclude Include="..\..\src\foreign.h" />
     <ClInclude Include="..\..\src\f_spear.h" />
     <ClInclude Include="..\..\src\gfxvabstract.h" />

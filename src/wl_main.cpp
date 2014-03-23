@@ -26,6 +26,7 @@
 // WL_MAIN.C
 
 #include "wl_def.h"
+#include "FileSystem.h"
 #include "CommandLine.h"
 #include "foreign.h"
 #include "StdStringExtensions.h"
@@ -1195,7 +1196,7 @@ static void InitGame()
     myInput.initialize();  // sets up the input devices
 
 	
-    vSwapData.loadFile(I_ResolveCaseInsensitivePath(".", std::string("VSWAP.") + cfg_extension).c_str());
+	vSwapData.loadFile(FileSystem::FindCaseInsensitive(".", std::string("VSWAP.") + cfg_extension).c_str());
 
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
     CA_Startup ();  // The rest of the data.

@@ -203,6 +203,9 @@
     <ClCompile Include="..\..\src\ShellUnicode.cpp">
       <Filter>Source Files\IOAN</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\FileSystem.cpp">
+      <Filter>Source Files\IOAN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\win\resource.h">
@@ -398,6 +401,9 @@
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ShellUnicode.h">
+      <Filter>Source Files\IOAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\FileSystem.h">
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
   </ItemGroup>

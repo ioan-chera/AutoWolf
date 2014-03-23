@@ -22,6 +22,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "wl_def.h"
+#include "FileSystem.h"
 #include "i_system.h"
 #include "SODFlag.h"
 #include "wl_menu.h"
@@ -962,16 +963,16 @@ void SODFlag::Initialize(const std::string &basePath)
 {
     FILE *f;
    
-    f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD3").c_str(), "rb");
+	f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD3").c_str(), "rb");
     if(!f)
     {
-        f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD2").c_str(), "rb");
+		f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD2").c_str(), "rb");
         if(!f)
         {
-            f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SD1").c_str(), "rb");
+			f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD1").c_str(), "rb");
             if(!f)
             {
-                f = fopen(I_ResolveCaseInsensitivePath(basePath, "VSWAP.SOD").c_str(), "rb");
+				f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SOD").c_str(), "rb");
                 if(!f)
                 {
                     this->flag = false;

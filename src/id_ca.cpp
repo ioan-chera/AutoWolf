@@ -35,6 +35,7 @@
 // IOANCH 20121223: Cleaned up this file
 
 #include "wl_def.h"
+#include "FileSystem.h"
 #include "wl_main.h"
 #include "Config.h"
 #include "i_system.h"
@@ -933,15 +934,15 @@ void CA_Startup ()
 #endif
 
    // IOANCH: use C++ classes
-   mapSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_mheadname) + cfg_extension).c_str(),
-						I_ResolveCaseInsensitivePath(".", std::string("GAMEMAPS.") + cfg_extension).c_str());
+	mapSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_mheadname) + cfg_extension).c_str(),
+		FileSystem::FindCaseInsensitive(".", std::string("GAMEMAPS.") + cfg_extension).c_str());
    
-   graphSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_gdictname) + cfg_graphext).c_str(),
-                          I_ResolveCaseInsensitivePath(".", std::string(ca_gheadname) + cfg_graphext).c_str(),
-                          I_ResolveCaseInsensitivePath(".", std::string(ca_gfilename) + cfg_graphext).c_str());
+	graphSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_gdictname) + cfg_graphext).c_str(),
+		FileSystem::FindCaseInsensitive(".", std::string(ca_gheadname) + cfg_graphext).c_str(),
+		FileSystem::FindCaseInsensitive(".", std::string(ca_gfilename) + cfg_graphext).c_str());
 
-   audioSegs.loadFromFile(I_ResolveCaseInsensitivePath(".", std::string(ca_aheadname) + cfg_audioext).c_str(),
-                          I_ResolveCaseInsensitivePath(".", std::string(ca_afilename) + cfg_audioext).c_str());
+	audioSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_aheadname) + cfg_audioext).c_str(),
+		FileSystem::FindCaseInsensitive(".", std::string(ca_afilename) + cfg_audioext).c_str());
 }
 
 //==========================================================================

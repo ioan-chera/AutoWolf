@@ -1,5 +1,4 @@
-//
-// Copyright (C) 2013  Ioan Chera
+// Copyright (C) 2014  Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,28 +16,37 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Miscellaneous system operations. Inspired from Doom/Eternity's
+// File system routines
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef __Wolf4SDL__i_system__
-#define __Wolf4SDL__i_system__
+#include "FileSystem.h"
+#include "StdStringExtensions.h"
 
-#include <stdint.h>
-
-class PString;
-
-void I_Delay(unsigned ms);
-uint32_t I_GetTicks(void);
-
-void I_Notify(const char *msg);
-void I_MakeDir(const std::string& dirname);
-void I_ChangeDir(const std::string& dirname);
-std::string I_GetSettingsDir();
-
-void *I_CheckedMalloc(size_t sz);
-void *I_CheckedRealloc(void *ptr, size_t sz);
-
-void I_DisplayAlertOnError();
-
-#endif /* defined(__Wolf4SDL__i_system__) */
+std::string FileSystem::FindCaseInsensitive(const std::string& dirname, const std::string& basename)
+{
+#ifndef _WIN32
+	// POSIX
+	DIR *dir = opendir(dirname);
+	if (dir)
+	{
+		PString ret(dirname);
+		bool found = false;
+		dirent *ent;
+		while ((ent = readdir(dir)))
+		{
+			if (!strcasecmp(ent->d_name, basename))
+			{
+				ret.concatSubpath(ent->d_name);
+				found = true;
+				break;
+			}
+		}
+		closedir(dir);
+		if (found)
+			return ret;
+	}
+#endif
+	// not found or indifferent
+	return ConcatSubpath(std::string(dirname), basename);
+}

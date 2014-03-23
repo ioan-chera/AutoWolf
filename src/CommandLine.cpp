@@ -1,4 +1,3 @@
-
 // Copyright (C) 2014  Ioan Chera
 //
 // This program is free software; you can redistribute it and/or modify

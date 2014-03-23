@@ -25,6 +25,7 @@
 
 
 #include "wl_def.h"
+#include "FileSystem.h"
 #include "i_system.h"
 #ifdef __APPLE__
 #include "macosx/CocoaFun.h"
@@ -157,7 +158,7 @@ void CFG_CheckForEpisodes ()
    // IOANCH 20130301: unification culling
    if(!SPEAR())
    {
-      if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL6").c_str(), &statbuf))
+      if(!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL6").c_str(), &statbuf))
       {
          cfg_extension = "WL6";
          menu_newep[2].active =
@@ -171,7 +172,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[4] =
          menu_epselect[5] = 1;
       }
-      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL3").c_str(), &statbuf))
+	  else if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL3").c_str(), &statbuf))
       {
          cfg_extension = "WL3";
          menu_missingep = 3;
@@ -180,7 +181,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[1] =
          menu_epselect[2] = 1;
       }
-      else if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.WL1").c_str(), &statbuf))
+	  else if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL1").c_str(), &statbuf))
       {
          cfg_extension = "WL1";
          menu_missingep = 5;
@@ -198,25 +199,25 @@ void CFG_CheckForEpisodes ()
       switch (cfg_mission)
       {
          case 0:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SOD").c_str(), &statbuf))
+			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SOD").c_str(), &statbuf))
                cfg_extension = "SOD";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 1:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD1").c_str(), &statbuf))
+			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD1").c_str(), &statbuf))
                cfg_extension = "SD1";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 2:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD2").c_str(), &statbuf))
+			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD2").c_str(), &statbuf))
                cfg_extension = "SD2";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 3:
-            if(!stat(I_ResolveCaseInsensitivePath(".", "VSWAP.SD3").c_str(), &statbuf))
+			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD3").c_str(), &statbuf))
                cfg_extension = "SD3";
             else
                Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");

@@ -128,48 +128,6 @@ std::string I_GetSettingsDir()
 }
 
 //
-// I_ResolveCaseInsensitivePath
-//
-// Returns the first file in a case insensitive file system at path
-// Designed to be used for finding files which weren't named with case sensiti-
-// vity in mind.
-//
-// If there are several files with the same letters (different cases), the
-// return value depends on readdir
-//
-// If directory can't be accessed or anything like that, just return what's
-// given - this function doesn't do more than that.
-//
-std::string I_ResolveCaseInsensitivePath(const std::string& dirname, const std::string& basename)
-{
-#ifndef _WIN32
-   // POSIX
-   DIR *dir = opendir(dirname);
-   if(dir)
-   {
-	   PString ret(dirname);
-	   bool found = false;
-      dirent *ent;
-      while ((ent = readdir(dir)))
-      {
-         if(!strcasecmp(ent->d_name, basename))
-		 {
-            ret.concatSubpath(ent->d_name);
-			 found = true;
-			 break;
-		 }
-      }
-      closedir(dir);
-	   if(found)
-		   return ret;
-   }
-#endif
-   // not found or indifferent
-   return ConcatSubpath(std::string(dirname), basename);
-
-}
-
-//
 // I_CheckedMalloc
 //
 // Does malloc and quits if null. Replaced all CHECKMALLOCRESULT occurences with
