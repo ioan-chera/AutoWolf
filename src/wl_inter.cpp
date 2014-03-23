@@ -94,14 +94,14 @@ static void EndSpear ()
 {
     SDL_Color pal[256];
 
-    EndScreen (SPEAR.g(END1PALETTE), SPEAR.g(ENDSCREEN11PIC));
+    EndScreen (SPEAR::g(END1PALETTE), SPEAR::g(ENDSCREEN11PIC));
 
-    graphSegs.cacheScreen (SPEAR.g(ENDSCREEN3PIC));
+    graphSegs.cacheScreen (SPEAR::g(ENDSCREEN3PIC));
     I_UpdateScreen ();
-    graphSegs.cacheChunk (SPEAR.g(END3PALETTE));
-    VL_ConvertPalette(graphSegs[SPEAR.g(END3PALETTE)], pal, 256);
+    graphSegs.cacheChunk (SPEAR::g(END3PALETTE));
+    VL_ConvertPalette(graphSegs[SPEAR::g(END3PALETTE)], pal, 256);
     VL_FadeIn (0, 255, pal, 30);
-    graphSegs.uncacheChunk (SPEAR.g(END3PALETTE));
+    graphSegs.uncacheChunk (SPEAR::g(END3PALETTE));
     fontnumber = 0;
     g_fontcolor = 0xd0;
     WindowX = 0;
@@ -123,14 +123,14 @@ static void EndSpear ()
 
     VW_FadeOut ();
 
-    EndScreen (SPEAR.g(END4PALETTE), SPEAR.g(ENDSCREEN4PIC));
-    EndScreen (SPEAR.g(END5PALETTE), SPEAR.g(ENDSCREEN5PIC));
-    EndScreen (SPEAR.g(END6PALETTE), SPEAR.g(ENDSCREEN6PIC));
-    EndScreen (SPEAR.g(END7PALETTE), SPEAR.g(ENDSCREEN7PIC));
-    EndScreen (SPEAR.g(END8PALETTE), SPEAR.g(ENDSCREEN8PIC));
-    EndScreen (SPEAR.g(END9PALETTE), SPEAR.g(ENDSCREEN9PIC));
+    EndScreen (SPEAR::g(END4PALETTE), SPEAR::g(ENDSCREEN4PIC));
+    EndScreen (SPEAR::g(END5PALETTE), SPEAR::g(ENDSCREEN5PIC));
+    EndScreen (SPEAR::g(END6PALETTE), SPEAR::g(ENDSCREEN6PIC));
+    EndScreen (SPEAR::g(END7PALETTE), SPEAR::g(ENDSCREEN7PIC));
+    EndScreen (SPEAR::g(END8PALETTE), SPEAR::g(ENDSCREEN8PIC));
+    EndScreen (SPEAR::g(END9PALETTE), SPEAR::g(ENDSCREEN9PIC));
 
-    EndScreen (SPEAR.g(END2PALETTE), SPEAR.g(ENDSCREEN12PIC));
+    EndScreen (SPEAR::g(END2PALETTE), SPEAR::g(ENDSCREEN12PIC));
 
     MainMenu[savegame].active = 0;
 }
@@ -160,46 +160,46 @@ void Victory ()
 #define TIMEY   8
 
     // IOANCH 20130302: unification
-    if(SPEAR())
+    if(SPEAR::flag)
     {
         // IOANCH 20130301: unification music
         StartCPMusic (XTHEEND_MUS_sod);
 
         // IOANCH 20130302: unification
-        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE1PIC));
-        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE2PIC));
-        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE3PIC));
-        graphSegs.cacheChunk (SPEAR.g(BJCOLLAPSE4PIC));
+        graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE1PIC));
+        graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE2PIC));
+        graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE3PIC));
+        graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE4PIC));
 
         VL_Bar (0, 0, 320, 200, VIEWCOLOR);
-        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE1PIC));
+        VWB_DrawPic (124, 44, SPEAR::g(BJCOLLAPSE1PIC));
         I_UpdateScreen ();
         VW_FadeIn ();
         VL_WaitVBL (2 * 70);
-        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE2PIC));
+        VWB_DrawPic (124, 44, SPEAR::g(BJCOLLAPSE2PIC));
         I_UpdateScreen ();
         VL_WaitVBL (105);
-        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE3PIC));
+        VWB_DrawPic (124, 44, SPEAR::g(BJCOLLAPSE3PIC));
         I_UpdateScreen ();
         VL_WaitVBL (105);
-        VWB_DrawPic (124, 44, SPEAR.g(BJCOLLAPSE4PIC));
+        VWB_DrawPic (124, 44, SPEAR::g(BJCOLLAPSE4PIC));
         I_UpdateScreen ();
         VL_WaitVBL (3 * 70);
 
-        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE1PIC));
-        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE2PIC));
-        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE3PIC));
-        graphSegs.uncacheChunk (SPEAR.g(BJCOLLAPSE4PIC));
+        graphSegs.uncacheChunk (SPEAR::g(BJCOLLAPSE1PIC));
+        graphSegs.uncacheChunk (SPEAR::g(BJCOLLAPSE2PIC));
+        graphSegs.uncacheChunk (SPEAR::g(BJCOLLAPSE3PIC));
+        graphSegs.uncacheChunk (SPEAR::g(BJCOLLAPSE4PIC));
         VL_FadeOut (0, 255, 0, 17, 17, 5);
     }
             // IOANCH 20130301: unification music
     StartCPMusic (IMPALE((int)URAHERO_MUS));
     ClearSplitVWB ();
-    CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
-    graphSegs.cacheChunk (SPEAR.g(STARTFONT));
+    CacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
+    graphSegs.cacheChunk (SPEAR::g(STARTFONT));
 
-    if(!SPEAR())
-        graphSegs.cacheChunk (SPEAR.g(C_TIMECODEPIC));
+    if(!SPEAR::flag)
+        graphSegs.cacheChunk (SPEAR::g(C_TIMECODEPIC));
 
     VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
@@ -223,7 +223,7 @@ void Victory ()
 
 
 
-    VWB_DrawPic (8, 4, SPEAR.g(L_BJWINSPIC));
+    VWB_DrawPic (8, 4, SPEAR::g(L_BJWINSPIC));
 
 
     for (kr = sr = tr = sec = i = 0; i < LRpack; i++)
@@ -234,7 +234,7 @@ void Victory ()
         tr += LevelRatios[i].treasure;
     }
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         kr /= LRpack;
         sr /= LRpack;
@@ -254,15 +254,15 @@ void Victory ()
         min = sec = 99;
 
     i = TIMEX * 8 + 1;
-    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (min / 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR::g(L_NUM0PIC) + (min / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (min % 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR::g(L_NUM0PIC) + (min % 10));
     i += 2 * 8;
     Write (i / 8, TIMEY, ":");
     i += 1 * 8;
-    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec / 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR::g(L_NUM0PIC) + (sec / 10));
     i += 2 * 8;
-    VWB_DrawPic (i, TIMEY * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
+    VWB_DrawPic (i, TIMEY * 8, SPEAR::g(L_NUM0PIC) + (sec % 10));
     I_UpdateScreen ();
 
     itoanoreturn (kr, tempstr, 10);
@@ -281,14 +281,14 @@ void Victory ()
     // IOANCH 20130301: unification culling
 
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         //
         // TOTAL TIME VERIFICATION CODE
         //
         if (gamestate.difficulty >= gd_medium)
         {
-            VWB_DrawPic (30 * 8, TIMEY * 8, SPEAR.g(C_TIMECODEPIC));
+            VWB_DrawPic (30 * 8, TIMEY * 8, SPEAR::g(C_TIMECODEPIC));
             fontnumber = 0;
             g_fontcolor = READHCOLOR;
             PrintX = 30 * 8 - 3;
@@ -316,12 +316,12 @@ void Victory ()
     if(cfg_screenHeight % 200 != 0)
         I_ClearScreen(0);
 
-    if(!SPEAR())
-        graphSegs.uncacheChunk (SPEAR.g(C_TIMECODEPIC));
-    UnCacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
+    if(!SPEAR::flag)
+        graphSegs.uncacheChunk (SPEAR::g(C_TIMECODEPIC));
+    UnCacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
 
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
         EndText ();
     else
         EndSpear ();
@@ -341,21 +341,21 @@ void Victory ()
 
 void Write (int x, int y, const char *string)
 {
-    static const unsigned int alpha[] = { SPEAR.g(L_NUM0PIC),
-        SPEAR.g(L_NUM1PIC), SPEAR.g(L_NUM2PIC), 
-        SPEAR.g(L_NUM3PIC), SPEAR.g(L_NUM4PIC), 
-        SPEAR.g(L_NUM5PIC), SPEAR.g(L_NUM6PIC), 
-        SPEAR.g(L_NUM7PIC), SPEAR.g(L_NUM8PIC), 
-        SPEAR.g(L_NUM9PIC), SPEAR.g(L_COLONPIC), 0, 0, 0, 0, 0, 0, 
-        SPEAR.g(L_APIC), SPEAR.g(L_BPIC), SPEAR.g(L_CPIC), 
-        SPEAR.g(L_DPIC), SPEAR.g(L_EPIC), SPEAR.g(L_FPIC), 
-        SPEAR.g(L_GPIC), SPEAR.g(L_HPIC), SPEAR.g(L_IPIC),
-        SPEAR.g(L_JPIC), SPEAR.g(L_KPIC), SPEAR.g(L_LPIC), 
-        SPEAR.g(L_MPIC), SPEAR.g(L_NPIC), SPEAR.g(L_OPIC), 
-        SPEAR.g(L_PPIC), SPEAR.g(L_QPIC), SPEAR.g(L_RPIC), 
-        SPEAR.g(L_SPIC), SPEAR.g(L_TPIC), SPEAR.g(L_UPIC), 
-        SPEAR.g(L_VPIC), SPEAR.g(L_WPIC), SPEAR.g(L_XPIC), 
-        SPEAR.g(L_YPIC), SPEAR.g(L_ZPIC)
+    static const unsigned int alpha[] = { SPEAR::g(L_NUM0PIC),
+        SPEAR::g(L_NUM1PIC), SPEAR::g(L_NUM2PIC), 
+        SPEAR::g(L_NUM3PIC), SPEAR::g(L_NUM4PIC), 
+        SPEAR::g(L_NUM5PIC), SPEAR::g(L_NUM6PIC), 
+        SPEAR::g(L_NUM7PIC), SPEAR::g(L_NUM8PIC), 
+        SPEAR::g(L_NUM9PIC), SPEAR::g(L_COLONPIC), 0, 0, 0, 0, 0, 0, 
+        SPEAR::g(L_APIC), SPEAR::g(L_BPIC), SPEAR::g(L_CPIC), 
+        SPEAR::g(L_DPIC), SPEAR::g(L_EPIC), SPEAR::g(L_FPIC), 
+        SPEAR::g(L_GPIC), SPEAR::g(L_HPIC), SPEAR::g(L_IPIC),
+        SPEAR::g(L_JPIC), SPEAR::g(L_KPIC), SPEAR::g(L_LPIC), 
+        SPEAR::g(L_MPIC), SPEAR::g(L_NPIC), SPEAR::g(L_OPIC), 
+        SPEAR::g(L_PPIC), SPEAR::g(L_QPIC), SPEAR::g(L_RPIC), 
+        SPEAR::g(L_SPIC), SPEAR::g(L_TPIC), SPEAR::g(L_UPIC), 
+        SPEAR::g(L_VPIC), SPEAR::g(L_WPIC), SPEAR::g(L_XPIC), 
+        SPEAR::g(L_YPIC), SPEAR::g(L_ZPIC)
     };
 
     int i, ox, nx, ny, len = (int) strlen(string);
@@ -380,13 +380,13 @@ void Write (int x, int y, const char *string)
             switch (string[i])
             {
                 case '!':
-                    VWB_DrawPic (nx, ny, SPEAR.g(L_EXPOINTPIC));
+                    VWB_DrawPic (nx, ny, SPEAR::g(L_EXPOINTPIC));
                     nx += 8;
                     continue;
 // IOANCH 20130301: unification culling
 
                 case '\'':
-                    VWB_DrawPic (nx, ny, SPEAR.g(L_APOSTROPHEPIC));
+                    VWB_DrawPic (nx, ny, SPEAR::g(L_APOSTROPHEPIC));
                     nx += 8;
                     continue;
 
@@ -395,12 +395,12 @@ void Write (int x, int y, const char *string)
                     break;
 
                 case 0x3a:     // ':'
-                    VWB_DrawPic (nx, ny, SPEAR.g(L_COLONPIC));
+                    VWB_DrawPic (nx, ny, SPEAR::g(L_COLONPIC));
                     nx += 8;
                     continue;
 
                 case '%':
-                    VWB_DrawPic (nx, ny, SPEAR.g(L_PERCENTPIC));
+                    VWB_DrawPic (nx, ny, SPEAR::g(L_PERCENTPIC));
                     break;
 
                 default:
@@ -418,7 +418,7 @@ void Write (int x, int y, const char *string)
 static void BJ_Breathe ()
 {
     static int which = 0, max = 10;
-    int pics[2] = { static_cast<int>(SPEAR.g(L_GUYPIC)), static_cast<int>(SPEAR.g(L_GUY2PIC)) };
+    int pics[2] = { static_cast<int>(SPEAR::g(L_GUYPIC)), static_cast<int>(SPEAR::g(L_GUY2PIC)) };
 
     I_Delay(5);
 
@@ -550,7 +550,7 @@ void LevelCompleted ()
     times parTimes_sod[] = {
 
         //
-        // SPEAR() OF DESTINY TIMES
+        // SPEAR::flag OF DESTINY TIMES
         //
         {1.5, "01:30"},
         {3.5, "03:30"},
@@ -575,7 +575,7 @@ void LevelCompleted ()
     };
     times *parTimes = IMPALE(parTimes);
 
-    CacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
+    CacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
     VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
@@ -590,9 +590,9 @@ void LevelCompleted ()
     myInput.clearKeysDown ();
     myInput.startAck ();
 // IOANCH 20130301: unification culling
-    VWB_DrawPic (0, 16, SPEAR.g(L_GUYPIC));
+    VWB_DrawPic (0, 16, SPEAR::g(L_GUYPIC));
 
-    if ((!SPEAR() && mapSegs.map() < 8) || (SPEAR() && mapSegs.map() != 4 && mapSegs.map() != 9 && mapSegs.map() != 15 && mapSegs.map() < 17))
+    if ((!SPEAR::flag && mapSegs.map() < 8) || (SPEAR::flag && mapSegs.map() != 4 && mapSegs.map() != 9 && mapSegs.map() != 15 && mapSegs.map() < 17))
     {
         // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -643,15 +643,15 @@ void LevelCompleted ()
 #else
         i = 26 * 8;
 #endif
-        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (min / 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR::g(L_NUM0PIC) + (min / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (min % 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR::g(L_NUM0PIC) + (min % 10));
         i += 2 * 8;
         Write (i / 8, 10, ":");
         i += 1 * 8;
-        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (sec / 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR::g(L_NUM0PIC) + (sec / 10));
         i += 2 * 8;
-        VWB_DrawPic (i, 10 * 8, SPEAR.g(L_NUM0PIC) + (sec % 10));
+        VWB_DrawPic (i, 10 * 8, SPEAR::g(L_NUM0PIC) + (sec % 10));
 
         I_UpdateScreen ();
         VW_FadeIn ();
@@ -861,7 +861,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     else
     {
 // IOANCH 20130301: unification culling
-        if(SPEAR()) 
+        if(SPEAR::flag) 
         {
             switch (mapSegs.map())
             {
@@ -925,7 +925,7 @@ done:   itoanoreturn (kr, tempstr, 10);
     VW_FadeOut ();
     DrawPlayBorder();
 
-    UnCacheLump (SPEAR.g(LEVELEND_LUMP_START), SPEAR.g(LEVELEND_LUMP_END));
+    UnCacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
 }
 
 
@@ -975,7 +975,7 @@ void PreloadGraphics ()
 
     VL_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
     LatchDrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*224)/16,
-        (cfg_screenHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR.g(GETPSYCHEDPIC));
+        (cfg_screenHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR::g(GETPSYCHEDPIC));
 
     WindowX = (cfg_screenWidth - vid_scaleFactor*224)/2;
     WindowY = (cfg_screenHeight - vid_scaleFactor*(STATUSLINES+48))/2;
@@ -1018,15 +1018,15 @@ void DrawHighScores ()
     word i, w, h;
     HighScore *s;
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
-        graphSegs.cacheChunk (SPEAR.g(HIGHSCORESPIC));
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT));
+        graphSegs.cacheChunk (SPEAR::g(HIGHSCORESPIC));
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT));
         // IOANCH 20130301: unification culling
 
-        graphSegs.cacheChunk (SPEAR.g(C_LEVELPIC));
-        graphSegs.cacheChunk (SPEAR.g(C_SCOREPIC));
-        graphSegs.cacheChunk (SPEAR.g(C_NAMEPIC));
+        graphSegs.cacheChunk (SPEAR::g(C_LEVELPIC));
+        graphSegs.cacheChunk (SPEAR::g(C_SCOREPIC));
+        graphSegs.cacheChunk (SPEAR::g(C_NAMEPIC));
 
 
 
@@ -1034,14 +1034,14 @@ void DrawHighScores ()
         ClearMScreen ();
         DrawStripes (10);
 
-        VWB_DrawPic (48, 0, SPEAR.g(HIGHSCORESPIC));
-        graphSegs.uncacheChunk (SPEAR.g(HIGHSCORESPIC));
+        VWB_DrawPic (48, 0, SPEAR::g(HIGHSCORESPIC));
+        graphSegs.uncacheChunk (SPEAR::g(HIGHSCORESPIC));
 
         // IOANCH 20130301: unification culling
 
-        VWB_DrawPic (4 * 8, 68, SPEAR.g(C_NAMEPIC));
-        VWB_DrawPic (20 * 8, 68, SPEAR.g(C_LEVELPIC));
-        VWB_DrawPic (28 * 8, 68, SPEAR.g(C_SCOREPIC));
+        VWB_DrawPic (4 * 8, 68, SPEAR::g(C_NAMEPIC));
+        VWB_DrawPic (20 * 8, 68, SPEAR::g(C_LEVELPIC));
+        VWB_DrawPic (28 * 8, 68, SPEAR::g(C_SCOREPIC));
 
 
 
@@ -1049,19 +1049,19 @@ void DrawHighScores ()
     }
     else
     {
-        CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+        CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
         ClearMScreen ();
         DrawStripes (10);
-        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+        UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
 
-        CacheLump (SPEAR.g(HIGHSCORES_LUMP_START), SPEAR.g(HIGHSCORES_LUMP_END));
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
-        VWB_DrawPic (0, 0, SPEAR.g(HIGHSCORESPIC));
+        CacheLump (SPEAR::g(HIGHSCORES_LUMP_START), SPEAR::g(HIGHSCORES_LUMP_END));
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
+        VWB_DrawPic (0, 0, SPEAR::g(HIGHSCORESPIC));
 
         fontnumber = 1;
     }
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         SETFONTCOLOR (15, 0x29);
     }
@@ -1077,7 +1077,7 @@ void DrawHighScores ()
         //
         // name
         //
-        if(!SPEAR())
+        if(!SPEAR::flag)
             PrintX = 4 * 8;
         else
             PrintX = 16;
@@ -1089,7 +1089,7 @@ void DrawHighScores ()
         //
         itoanoreturn (s->completed, buffer, 10);
         // IOANCH 20130303
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             for (str = buffer; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1103,7 +1103,7 @@ void DrawHighScores ()
         }
 // IOANCH 20130301: unification culling
 
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             PrintX -= 6;
             itoanoreturn (s->episode + 1, buffer1, 10);
@@ -1112,10 +1112,10 @@ void DrawHighScores ()
             US_Print ("/L");
         }
 
-        if(SPEAR())
+        if(SPEAR::flag)
         {
             if (s->completed == 21)
-                VWB_DrawPic (PrintX + 8, PrintY - 1, SPEAR.g(C_WONSPEARPIC));
+                VWB_DrawPic (PrintX + 8, PrintY - 1, SPEAR::g(C_WONSPEARPIC));
             else
                 US_Print (buffer);
         }
@@ -1126,7 +1126,7 @@ void DrawHighScores ()
         // score
         //
         itoanoreturn (s->score, buffer, 10);
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             for (str = buffer; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
@@ -1146,9 +1146,9 @@ void DrawHighScores ()
 
     I_UpdateScreen ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(HIGHSCORES_LUMP_START), SPEAR.g(HIGHSCORES_LUMP_END));
+        UnCacheLump (SPEAR::g(HIGHSCORES_LUMP_START), SPEAR::g(HIGHSCORES_LUMP_END));
         fontnumber = 0;
     }
 }
@@ -1188,7 +1188,7 @@ void CheckHighScore (int32_t score, word other)
         }
     }
             // IOANCH 20130301: unification music
-    if (SPEAR())
+    if (SPEAR::flag)
         StartCPMusic (XAWARD_MUS_sod);
     else
         StartCPMusic (ROSTER_MUS_wl6);
@@ -1204,7 +1204,7 @@ void CheckHighScore (int32_t score, word other)
         //
         PrintY = 76 + (16 * n);
 
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             PrintX = 4 * 8;
             g_backcolor = Menu::g_bordColor;

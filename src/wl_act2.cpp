@@ -240,8 +240,8 @@ void A_DeathScream (objtype *ob)
     // IOANCH 20130301: unification culling
     
     // IOANCH 20130202: unification process
-    if (!wolfRnd() && ((!SPEAR() && mapSegs.map()==9) ||
-                       (SPEAR() && (mapSegs.map() == 18 || mapSegs.map() == 19))))
+    if (!wolfRnd() && ((!SPEAR::flag && mapSegs.map()==9) ||
+                       (SPEAR::flag && (mapSegs.map() == 18 || mapSegs.map() == 19))))
     {
         switch(ob->obclass)
         {
@@ -296,7 +296,7 @@ void A_DeathScream (objtype *ob)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// SPEAR() ACTORS
+// SPEAR::flag ACTORS
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -972,7 +972,7 @@ void T_Chase (objtype *ob)
                {
                   // IOANCH: also alert the bot
                   HeardEvent *hevent = new HeardEvent;
-				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT, doorobjlist[-ob->distance - 1].tiley << TILESHIFT, SPEAR.sd(OPENDOORSND),  I_GetTicks(), ob, 0);
+				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT, doorobjlist[-ob->distance - 1].tiley << TILESHIFT, SPEAR::sd(OPENDOORSND),  I_GetTicks(), ob, 0);
                   bot.heardEvents.add(hevent);
                }
                 return;
@@ -1535,16 +1535,16 @@ void    A_StartDeathCam (objtype *ob)
     
     if (bordercol != VIEWCOLOR)
     {
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT)+1);
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT)+1);
         fontnumber = 1;
         SETFONTCOLOR(15,bordercol);
         PrintX = 68; PrintY = 45;
         US_Print (STR_SEEAGAIN);
-        graphSegs.uncacheChunk(SPEAR.g(STARTFONT)+1);
+        graphSegs.uncacheChunk(SPEAR::g(STARTFONT)+1);
     }
     else
     {
-        CacheLump(SPEAR.g(LEVELEND_LUMP_START),SPEAR.g(LEVELEND_LUMP_END));
+        CacheLump(SPEAR::g(LEVELEND_LUMP_START),SPEAR::g(LEVELEND_LUMP_END));
         // IOANCH 20130301: unification culling
         Write(0,7,STR_SEEAGAIN);
     }

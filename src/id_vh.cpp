@@ -48,7 +48,7 @@ void VWB_DrawPropString(const char* string)
 	byte *vbuf = I_LockBuffer();
 	if(vbuf == NULL) return;
 
-	font = (const fontstruct *) graphSegs[SPEAR.g(STARTFONT)+fontnumber];
+	font = (const fontstruct *) graphSegs[SPEAR::g(STARTFONT)+fontnumber];
 	height = font->height;
 	dest = vbuf + vid_scaleFactor * (py * vid_bufferPitch + px);
 
@@ -135,7 +135,7 @@ void VWL_MeasureString (const char *string, word *width, word *height, const fon
 //
 void VW_MeasurePropString (const char *string, word *width, word *height)
 {
-	VWL_MeasureString(string,width,height,(const fontstruct *)graphSegs[SPEAR.g(STARTFONT)+fontnumber]);
+	VWL_MeasureString(string,width,height,(const fontstruct *)graphSegs[SPEAR::g(STARTFONT)+fontnumber]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +159,7 @@ void VWB_DrawTile8 (int x, int y, int tile)
 //
 void VWB_DrawTile8M (int x, int y, int tile)
 {
-	VL_MemToScreen ((const byte *)graphSegs[SPEAR.g(STARTTILE8M)] + tile * 64, 8,
+	VL_MemToScreen ((const byte *)graphSegs[SPEAR::g(STARTTILE8M)] + tile * 64, 8,
                    8, x, y);
 }
 
@@ -168,7 +168,7 @@ void VWB_DrawTile8M (int x, int y, int tile)
 //
 void VWB_DrawPic (int x, int y, int chunknum)
 {
-	int	picnum = chunknum - SPEAR.g(STARTPICS);
+	int	picnum = chunknum - SPEAR::g(STARTPICS);
    GraphicLoader::pictabletype psize;
 
 	x &= ~7;
@@ -183,7 +183,7 @@ void VWB_DrawPic (int x, int y, int chunknum)
 //
 void VWB_DrawPicScaledCoord (int scx, int scy, int chunknum)
 {
-	int	picnum = chunknum - SPEAR.g(STARTPICS);
+	int	picnum = chunknum - SPEAR::g(STARTPICS);
 
    GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
 
@@ -245,7 +245,7 @@ void VWB_Vlin (int y1, int y2, int x, int color)
 
 void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-	I_LatchToScreen (2+picnum-SPEAR.g(LATCHPICS_LUMP_START), x*8, y);
+	I_LatchToScreen (2+picnum-SPEAR::g(LATCHPICS_LUMP_START), x*8, y);
 }
 
 //
@@ -253,7 +253,7 @@ void LatchDrawPic (unsigned x, unsigned y, unsigned picnum)
 //
 void LatchDrawPicScaledCoord (unsigned scx, unsigned scy, unsigned picnum)
 {
-	I_LatchToScreenScaledCoord (2+picnum-SPEAR.g(LATCHPICS_LUMP_START), scx*8, scy);
+	I_LatchToScreenScaledCoord (2+picnum-SPEAR::g(LATCHPICS_LUMP_START), scx*8, scy);
 }
 
 //==========================================================================

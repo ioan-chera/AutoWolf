@@ -1264,7 +1264,7 @@ void SD_Shutdown()
     SD_MusicOff();
     SD_StopSound();
 
-	unsigned int lastvalue = SPEAR() ? STARTMUSIC_sod - STARTDIGISOUNDS_sod :
+	unsigned int lastvalue = SPEAR::flag ? STARTMUSIC_sod - STARTDIGISOUNDS_sod :
     STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6;
     
     for(int i = 0; i < (signed int)lastvalue; i++)
@@ -1304,7 +1304,7 @@ Boolean8 Sound::Play(soundnames sound_abstract)
     int             lp,rp;
 	
 	// IOANCH 20130301: abstract sound
-	unsigned int sound = SPEAR.sd(sound_abstract);
+	unsigned int sound = SPEAR::sd(sound_abstract);
 
     lp = sd_leftPosition;
     rp = sd_rightPosition;

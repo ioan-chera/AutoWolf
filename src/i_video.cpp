@@ -88,7 +88,7 @@ void I_InitEngine()
    GP2X_MemoryInit();
 #endif
 	
-	vid_window = SDL_CreateWindow(SPEAR.FullTitle(),
+	vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
 											 SDL_WINDOWPOS_UNDEFINED,
 											 SDL_WINDOWPOS_UNDEFINED,
 								  cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
@@ -395,7 +395,7 @@ void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
 void I_FreeLatchMem()
 {
    int i;
-   for(i = 0; i < (2 + (signed int)SPEAR.g(LATCHPICS_LUMP_END) - (signed int)SPEAR.g(LATCHPICS_LUMP_START)); i++)
+   for(i = 0; i < (2 + (signed int)SPEAR::g(LATCHPICS_LUMP_END) - (signed int)SPEAR::g(LATCHPICS_LUMP_START)); i++)
    {
       SDL_FreeSurface(vid_latchpics[i]);
       vid_latchpics[i] = nullptr;
@@ -423,30 +423,30 @@ void I_LoadLatchMem ()
    // tile 8s
    //
    // IOANCH: use I_ call
-   surf = I_createSurface(SDL_SWSURFACE, 8 * 8, (SPEAR.g(NUMTILE8) + 7) / 8 * 8);
+   surf = I_createSurface(SDL_SWSURFACE, 8 * 8, (SPEAR::g(NUMTILE8) + 7) / 8 * 8);
    
 	vid_latchpics[0] = surf;
-   graphSegs.cacheChunk(SPEAR.g(STARTTILE8));
-	src = graphSegs[SPEAR.g(STARTTILE8)];
+   graphSegs.cacheChunk(SPEAR::g(STARTTILE8));
+	src = graphSegs[SPEAR::g(STARTTILE8)];
    
-	for (i=0;i<(signed int)SPEAR.g(NUMTILE8);i++)
+	for (i=0;i<(signed int)SPEAR::g(NUMTILE8);i++)
 	{
 		I_MemToLatch (src, 8, 8, surf, (i & 7) * 8, (i >> 3) * 8);
 		src += 64;
 	}
-	graphSegs.uncacheChunk (SPEAR.g(STARTTILE8));
+	graphSegs.uncacheChunk (SPEAR::g(STARTTILE8));
    
 	vid_latchpics[1] = NULL;  // not used
    
    //
    // pics
    //
-	start = SPEAR.g(LATCHPICS_LUMP_START);
-	end = SPEAR.g(LATCHPICS_LUMP_END);
+	start = SPEAR::g(LATCHPICS_LUMP_START);
+	end = SPEAR::g(LATCHPICS_LUMP_END);
    
 	for (i=start;i<=end;i++)
 	{
-		psize = graphSegs.sizeAt(i-SPEAR.g(STARTPICS));
+		psize = graphSegs.sizeAt(i-SPEAR::g(STARTPICS));
       surf = I_createSurface(SDL_SWSURFACE, psize.width, psize.height);
       
 		vid_latchpics[2+i-start] = surf;

@@ -246,7 +246,7 @@ void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source)
    if(source)
    {
       HeardEvent *hevent = new HeardEvent;
-	   hevent->set(ob->x, ob->y, SPEAR.sd(s), I_GetTicks(), source, 0);
+	   hevent->set(ob->x, ob->y, SPEAR::sd(s), I_GetTicks(), source, 0);
       bot.heardEvents.add(hevent);
    }
 }
@@ -368,7 +368,7 @@ static void ScanInfoPlane()
                     break;
                 case 73:
                 case 74:
-                    if(SPEAR())
+                    if(SPEAR::flag)
                         SpawnStatic(x,y,tile-23);
                     break;
 
@@ -574,44 +574,44 @@ static void ScanInfoPlane()
                     // IOANCH 20130302: unification
 
                 case 214:	// IOANCH 17.05.2012: use centralized function
-				    if(!SPEAR()) Basic::SpawnEnemy(bossobj, x, y);
+				    if(!SPEAR::flag) Basic::SpawnEnemy(bossobj, x, y);
                     break;
                 case 197:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(gretelobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(gretelobj, x, y);
                     break;
                 case 215:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(giftobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(giftobj, x, y);
                     break;
                 case 179:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(fatobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(fatobj, x, y);
                     break;
                 case 196:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(schabbobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(schabbobj, x, y);
                     break;
                 case 160:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(fakeobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(fakeobj, x, y);
                     break;
                 case 178:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(mechahitlerobj, x, y);
+					if(!SPEAR::flag) Basic::SpawnEnemy(mechahitlerobj, x, y);
                     break;
 
                 case 106:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(spectreobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(spectreobj, x, y);
                     break;
                 case 107:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(angelobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(angelobj, x, y);
                     break;
                 case 125:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(transobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(transobj, x, y);
                     break;
                 case 142:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(uberobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(uberobj, x, y);
                     break;
                 case 143:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(willobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(willobj, x, y);
                     break;
                 case 161:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR()) Basic::SpawnEnemy(deathobj, x, y);
+					if(SPEAR::flag) Basic::SpawnEnemy(deathobj, x, y);
                     break;
 
 
@@ -667,19 +667,19 @@ static void ScanInfoPlane()
                     // IOANCH 20130302: unification
 
                 case 224:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+					if(!SPEAR::flag) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_blinky);
                     break;
                 case 225:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
+					if(!SPEAR::flag) Basic::SpawnEnemy(ghostobj, x, y, 0, false, 
                                                  en_clyde);
                     break;
                 case 226:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+					if(!SPEAR::flag) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_pinky);
                     break;
                 case 227:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR()) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
+					if(!SPEAR::flag) Basic::SpawnEnemy(ghostobj, x, y, 0, false,
                                                  en_inky);
                     break;
             }
@@ -1007,7 +1007,7 @@ void DrawPlayBorder ()
 
 void DrawPlayScreen ()
 {
-    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*320)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR.g(STATUSBARPIC));
+    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*320)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR::g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1032,7 +1032,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        LatchDrawPic (x,y,SPEAR.g(N_BLANKPIC));
+        LatchDrawPic (x,y,SPEAR::g(N_BLANKPIC));
         x++;
         width--;
     }
@@ -1041,7 +1041,7 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        LatchDrawPic (x,y,str[c]-'0'+ SPEAR.g(N_0PIC));
+        LatchDrawPic (x,y,str[c]-'0'+ SPEAR::g(N_0PIC));
         x++;
         c++;
     }
@@ -1050,8 +1050,8 @@ void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
 void ShowActStatus()
 {
     // Draw status bar without borders
-    const byte *source = graphSegs[SPEAR.g(STATUSBARPIC)];
-    int	picnum = SPEAR.g(STATUSBARPIC) - SPEAR.g(STARTPICS);
+    const byte *source = graphSegs[SPEAR::g(STATUSBARPIC)];
+    int	picnum = SPEAR::g(STATUSBARPIC) - SPEAR::g(STARTPICS);
    GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
     int destx = (cfg_screenWidth-vid_scaleFactor*320)/2 + 9 * vid_scaleFactor;
     int desty = cfg_screenHeight - (psize.height - 4) * vid_scaleFactor;
@@ -1158,10 +1158,10 @@ void RecordDemo ()
 
     CenterWindow(26,3);
     PrintY+=6;
-    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR::g(STARTFONT));
     fontnumber=0;
     SETFONTCOLOR(0,15);
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
     // IOANCH 20130301: unification culling
         US_Print("  Demo which level(1-60): ");
@@ -1187,7 +1187,7 @@ void RecordDemo ()
 
     VW_FadeOut ();
     // IOANCH 20130302: unification
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         NewGame (gd_hard,level/10);
         gamestate.mapon = level%10;
@@ -1247,7 +1247,7 @@ void PlayDemo (int demonumber)
 #ifdef DEMOSEXTERN
 // debug: load chunk
     // IOANCH 20130301: unification culling
-    int dems[4]={static_cast<int>(SPEAR.g(T_DEMO0)),static_cast<int>(SPEAR.g(T_DEMO1)),static_cast<int>(SPEAR.g(T_DEMO2)),static_cast<int>(SPEAR.g(T_DEMO3))};
+    int dems[4]={static_cast<int>(SPEAR::g(T_DEMO0)),static_cast<int>(SPEAR::g(T_DEMO1)),static_cast<int>(SPEAR::g(T_DEMO2)),static_cast<int>(SPEAR::g(T_DEMO3))};
 
     graphSegs.cacheChunk(dems[demonumber]);
     demoptr = (int8_t *) graphSegs[dems[demonumber]];
@@ -1471,7 +1471,7 @@ restartgame:
         if (!loadedgame)
             SetupGameLevel ();
         // IOANCH 20130302: unification
-        if (SPEAR() && gamestate.mapon == 20)      // give them the key allways
+        if (SPEAR::flag && gamestate.mapon == 20)      // give them the key allways
         {
             gamestate.keys |= 1;
             DrawKeys ();
@@ -1498,7 +1498,7 @@ restartgame:
 startplayloop:
         PlayLoop ();
 
-        if (SPEAR() && spearflag)
+        if (SPEAR::flag && spearflag)
         {
            // IOANCH 20130725: added spear notification
             I_Notify("Got the Spear!");
@@ -1557,7 +1557,7 @@ startplayloop:
 
                 gamestate.oldscore = gamestate.score;
                 // IOANCH 20130302: unification
-                if(!SPEAR())
+                if(!SPEAR::flag)
                 {
                     if (gamestate.mapon == 9)
                         gamestate.mapon = ElevatorBackTo[gamestate.episode];    // back from secret
@@ -1648,7 +1648,7 @@ startplayloop:
 
                 if(viewsize == 21) DrawPlayScreen();
                 // IOANCH 20130302: unification
-                if(!SPEAR())
+                if(!SPEAR::flag)
                     VW_FadeOut ();
                 else
                     VL_FadeOut (0,255,0,17,17,300);

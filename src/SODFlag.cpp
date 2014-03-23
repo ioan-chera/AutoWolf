@@ -27,10 +27,9 @@
 #include "SODFlag.h"
 #include "wl_menu.h"
 
-SODFlag SPEAR;
-
-const char SODFlag::wolftitle[] = "Automatic Wolfenstein 3D";
-const char SODFlag::speartitle[] = "Automatic Spear of Destiny";
+const char SPEAR::wolftitle[] = "Automatic Wolfenstein 3D";
+const char SPEAR::speartitle[] = "Automatic Spear of Destiny";
+Boolean8 SPEAR::flag;
 
 //
 // SODFlag::gfxvmap
@@ -38,7 +37,7 @@ const char SODFlag::speartitle[] = "Automatic Spear of Destiny";
 // Map for interface graphics
 //
 
-const unsigned int SODFlag::gfxvmap[][2] =
+const unsigned int SPEAR::gfxvmap[][2] =
 {
     {3,                     BJCOLLAPSE1PIC_sod},
     {3,                     BJCOLLAPSE2PIC_sod},
@@ -302,7 +301,7 @@ const unsigned int SODFlag::gfxvmap[][2] =
 // Map for sprites
 //
 
-const unsigned int SODFlag::sprmap[][2] =
+const unsigned int SPEAR::sprmap[][2] =
 {
     {MACHINEGUNATK3_wl6, MACHINEGUNATK3_sod},
     {0, SPR_ANGEL_DEAD_sod},
@@ -846,7 +845,7 @@ const unsigned int SODFlag::sprmap[][2] =
 // Map for sounds
 //
 
-const unsigned int SODFlag::soundmap[][2] =
+const unsigned int SPEAR::soundmap[][2] =
 {
     {AHHHGSND_wl6,          AHHHGSND_sod},
 	{0,                     ANGELDEATHSND_sod},
@@ -959,7 +958,7 @@ const unsigned int SODFlag::soundmap[][2] =
 // Initializes the SOD flag depending on some key file names.
 //
 
-void SODFlag::Initialize(const std::string &basePath)
+void SPEAR::Initialize(const std::string &basePath)
 {
     FILE *f;
    
@@ -975,19 +974,19 @@ void SODFlag::Initialize(const std::string &basePath)
 				f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SOD").c_str(), "rb");
                 if(!f)
                 {
-                    this->flag = false;
+                    flag = false;
                    return;	// none found: assume Wolf3D
                 }
             }
         }
     }
     fclose(f);
-	// One of the ifs failed - fall here and return SPEAR() 1
-    this->flag = true;
+	// One of the ifs failed - fall here and return SPEAR::flag 1
+    flag = true;
 }
 
 
-void SODFlag::SetGlobalValues() const
+void SPEAR::SetGlobalValues()
 {
 	Menu::SetSpearModuleValues();
 }

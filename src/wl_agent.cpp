@@ -325,23 +325,23 @@ void StatusDrawFace(unsigned picnum)
 void DrawFace ()
 {
     if(viewsize == 21 && ingame) return;
-    if (SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
-        StatusDrawFace(SPEAR.g(GOTGATLINGPIC));
+    if (SD_SoundPlaying() == SPEAR::sd(GETGATLINGSND))
+        StatusDrawFace(SPEAR::g(GOTGATLINGPIC));
     else if (gamestate.health)
     {
         // IOANCH 20130202: unification process
-        if (SPEAR() && godmode)
-            StatusDrawFace(SPEAR.g(GODMODEFACE1PIC)+gamestate.faceframe);
+        if (SPEAR::flag && godmode)
+            StatusDrawFace(SPEAR::g(GODMODEFACE1PIC)+gamestate.faceframe);
         else
-            StatusDrawFace(SPEAR.g(FACE1APIC)+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
+            StatusDrawFace(SPEAR::g(FACE1APIC)+3*((I_PLAYERHEALTH-gamestate.health)/16)+gamestate.faceframe);
     }	// IOANCH 25.10.2012: named constant
     else
     {
         // IOANCH 20130202: unification process
         if (LastAttacker && LastAttacker->obclass == needleobj)
-            StatusDrawFace(SPEAR.g(MUTANTBJPIC));
+            StatusDrawFace(SPEAR::g(MUTANTBJPIC));
         else
-            StatusDrawFace(SPEAR.g(FACE8APIC));
+            StatusDrawFace(SPEAR::g(FACE8APIC));
     }
 }
 
@@ -369,7 +369,7 @@ void UpdateFace ()
             return;
         }
     }
-    else if(SD_SoundPlaying() == SPEAR.sd(GETGATLINGSND))
+    else if(SD_SoundPlaying() == SPEAR::sd(GETGATLINGSND))
         return;
 
     facecount += tics;
@@ -407,7 +407,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (length<width)
     {
-        StatusDrawPic (x,y,SPEAR.g(N_BLANKPIC));
+        StatusDrawPic (x,y,SPEAR::g(N_BLANKPIC));
         x++;
         width--;
     }
@@ -416,7 +416,7 @@ static void LatchNumber (int x, int y, unsigned width, int32_t number)
 
     while (c<length)
     {
-        StatusDrawPic (x,y,str[c]-'0'+ SPEAR.g(N_0PIC));
+        StatusDrawPic (x,y,str[c]-'0'+ SPEAR::g(N_0PIC));
         x++;
         c++;
     }
@@ -478,10 +478,10 @@ void TakeDamage (int points,objtype *attacker)
     // MAKE BJ'S EYES BUG IF MAJOR DAMAGE!
     //
     // IOANCH 20130202: unification process
-    if (SPEAR() && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
+    if (SPEAR::flag && points > 30 && gamestate.health!=0 && !godmode && viewsize != 21)
     {
         // IOANCH 20130302: unification
-        StatusDrawFace(SPEAR.g(BJOUCHPIC));
+        StatusDrawFace(SPEAR::g(BJOUCHPIC));
         facecount = 0;
     }
 }
@@ -520,7 +520,7 @@ void DrawLevel ()
 {
     if(viewsize == 21 && ingame) return;
     // IOANCH 20130202: unification process
-    if (SPEAR() && gamestate.mapon == 20)
+    if (SPEAR::flag && gamestate.mapon == 20)
         LatchNumber (2,16,2,18);
     else
         LatchNumber (2,16,2,gamestate.mapon+1);
@@ -608,7 +608,7 @@ void GivePoints (int32_t points)
 void DrawWeapon ()
 {
     if(viewsize == 21 && ingame) return;
-    StatusDrawPic (32,8,SPEAR.g(KNIFEPIC)+gamestate.weapon);
+    StatusDrawPic (32,8,SPEAR::g(KNIFEPIC)+gamestate.weapon);
 }
 
 
@@ -624,14 +624,14 @@ void DrawKeys ()
 {
     if(viewsize == 21 && ingame) return;
     if (gamestate.keys & 1)
-        StatusDrawPic (30,4,SPEAR.g(GOLDKEYPIC));
+        StatusDrawPic (30,4,SPEAR::g(GOLDKEYPIC));
     else
-        StatusDrawPic (30,4,SPEAR.g(NOKEYPIC));
+        StatusDrawPic (30,4,SPEAR::g(NOKEYPIC));
 
     if (gamestate.keys & 2)
-        StatusDrawPic (30,20,SPEAR.g(SILVERKEYPIC));
+        StatusDrawPic (30,20,SPEAR::g(SILVERKEYPIC));
     else
-        StatusDrawPic (30,20,SPEAR.g(NOKEYPIC));
+        StatusDrawPic (30,20,SPEAR::g(NOKEYPIC));
 }
 
 /*
@@ -788,7 +788,7 @@ void GetBonus (statobj_t *check)
             GiveWeapon (wp_chaingun);
 
             if(viewsize != 21)
-                StatusDrawFace (SPEAR.g(GOTGATLINGPIC));
+                StatusDrawFace (SPEAR::g(GOTGATLINGPIC));
             facecount = 0;
             break;
 
@@ -993,7 +993,7 @@ void ClipMove (objtype *ob, int32_t xmove, int32_t ymove)
 void VictoryTile ()
 {
     // IOANCH 20130202: unification process
-    if(!SPEAR())
+    if(!SPEAR::flag)
         SpawnBJVictory ();
 
     gamestate.victoryflag = true;
@@ -1036,7 +1036,7 @@ void Thrust (int angle, int32_t speed)
     // ZERO FUNNY COUNTER IF MOVED!
     //
     // IOANCH 20130202: unification process
-    if (SPEAR() && speed)
+    if (SPEAR::flag && speed)
         funnyticount = 0;
 
     thrustspeed += speed;

@@ -171,7 +171,7 @@ public:
    const t_compshape *getSprite(int shapenum, bool remap = true) const
    {
       if(remap)
-         shapenum = SPEAR.sp(shapenum);
+         shapenum = SPEAR::sp(shapenum);
       return (const t_compshape *) (const void *)
       getPage(m_spriteStart + shapenum);
    }

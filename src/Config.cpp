@@ -156,7 +156,7 @@ void CFG_CheckForEpisodes ()
    struct stat statbuf;
    
    // IOANCH 20130301: unification culling
-   if(!SPEAR())
+   if(!SPEAR::flag)
    {
       if(!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL6").c_str(), &statbuf))
       {

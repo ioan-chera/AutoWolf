@@ -56,7 +56,7 @@ std::string WideCharToUTF8(const std::wstring& source)
 	WideCharToMultiByte(CP_UTF8, 0, source.c_str(), -1, destination, length, nullptr, nullptr);
 	std::string str(destination);
 	delete[] destination;
-	return std::move(str);
+	return str;
 }
 
 std::wstring UTF8ToWideChar(const std::string& source)
@@ -66,7 +66,7 @@ std::wstring UTF8ToWideChar(const std::string& source)
 	MultiByteToWideChar(CP_UTF8, 0, source.c_str(), -1, destination, length);
 	std::wstring str(destination);
 	delete[] destination;
-	return std::move(str);
+	return str;
 }
 
 static void normalizeSlashes(std::string& str)

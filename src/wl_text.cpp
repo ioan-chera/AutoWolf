@@ -57,8 +57,8 @@ TEXT FORMATTING COMMANDS
 =============================================================================
 */
 
-// IOANCH 20130303: SPEAR() unification
-// #ifndef SPEAR()
+// IOANCH 20130303: SPEAR::flag unification
+// #ifndef SPEAR::flag
 
 #define BACKCOLOR       0x11
 
@@ -283,8 +283,8 @@ void HandleCommand ()
         case 'G':               // ^Gyyy,xxx,ppp draws graphic
             ParsePicCommand ();
             VWB_DrawPic (picx&~7,picy,picnum);
-            picwidth = graphSegs.sizeAt(picnum-SPEAR.g(STARTPICS)).width;
-            picheight = graphSegs.sizeAt(picnum-SPEAR.g(STARTPICS)).height;
+            picwidth = graphSegs.sizeAt(picnum-SPEAR::g(STARTPICS)).width;
+            picheight = graphSegs.sizeAt(picnum-SPEAR::g(STARTPICS)).height;
             //
             // adjust margins
             //
@@ -458,10 +458,10 @@ void PageLayout (Boolean8 shownumber)
     // clear the screen
     //
     VL_Bar (0,0,320,200,BACKCOLOR);
-    VWB_DrawPic (0,0,SPEAR.g(H_TOPWINDOWPIC));
-    VWB_DrawPic (0,8,SPEAR.g(H_LEFTWINDOWPIC));
-    VWB_DrawPic (312,8,SPEAR.g(H_RIGHTWINDOWPIC));
-    VWB_DrawPic (8,176,SPEAR.g(H_BOTTOMINFOPIC));
+    VWB_DrawPic (0,0,SPEAR::g(H_TOPWINDOWPIC));
+    VWB_DrawPic (0,8,SPEAR::g(H_LEFTWINDOWPIC));
+    VWB_DrawPic (312,8,SPEAR::g(H_RIGHTWINDOWPIC));
+    VWB_DrawPic (8,176,SPEAR::g(H_BOTTOMINFOPIC));
 
 
     for (i=0; i<TEXTROWS; i++)
@@ -585,10 +585,10 @@ static void CacheLayoutGraphics ()
                 s_numpages++;
             if (ch == 'E')          // end of file, so load graphics and return
             {
-                graphSegs.cacheChunk(SPEAR.g(H_TOPWINDOWPIC));
-                graphSegs.cacheChunk(SPEAR.g(H_LEFTWINDOWPIC));
-                graphSegs.cacheChunk(SPEAR.g(H_RIGHTWINDOWPIC));
-                graphSegs.cacheChunk(SPEAR.g(H_BOTTOMINFOPIC));
+                graphSegs.cacheChunk(SPEAR::g(H_TOPWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR::g(H_LEFTWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR::g(H_RIGHTWINDOWPIC));
+                graphSegs.cacheChunk(SPEAR::g(H_BOTTOMINFOPIC));
                 //                              CA_CacheMarks ();
                 text = textstart;
                 return;
@@ -632,7 +632,7 @@ static void ShowArticle (const char *article)
     text = article;
     oldfontnumber = fontnumber;
     fontnumber = 0;
-    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR::g(STARTFONT));
     VL_Bar (0,0,320,200,BACKCOLOR);
     CacheLayoutGraphics ();
 
@@ -748,7 +748,7 @@ void HelpScreens ()
 
 #ifdef ARTSEXTERN
     // IOANCH 20130302: helpextern used to be here
-    artnum = SPEAR.g(T_HELPART);
+    artnum = SPEAR::g(T_HELPART);
     graphSegs.cacheChunk (artnum);
     text = (const char *)graphSegs[artnum];
 #else
@@ -788,8 +788,8 @@ void EndText ()
 
 
 #ifdef ARTSEXTERN
-    // IOANCH 20130302: unification: map it here. (endextern used to be SPEAR.g(T_ENDART1)
-    artnum = SPEAR.g(T_ENDART1)+gamestate.episode;
+    // IOANCH 20130302: unification: map it here. (endextern used to be SPEAR::g(T_ENDART1)
+    artnum = SPEAR::g(T_ENDART1)+gamestate.episode;
     graphSegs.cacheChunk (artnum);
     text = (const char *)graphSegs[artnum];
 #else

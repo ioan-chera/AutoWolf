@@ -342,7 +342,7 @@ static void CAL_HuffExpand(const byte *source, byte *dest, int32_t length,
 //
 int32_t GraphicLoader::grFilePos( size_t idx)
 {
-   if(SPEAR())
+   if(SPEAR::flag)
       assert(idx < lengthof(m_grstarts_sod));
    else
       assert(idx < lengthof(m_grstarts_wl6));
@@ -373,7 +373,7 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
 #ifdef GRHEADERLINKED
    
    ca_grhuffman = (huffnode *)&EGAdict;
-   if(SPEAR())
+   if(SPEAR::flag)
       ca_grstarts_sod = (int32_t _seg *)FP_SEG(&EGAhead);
    else
       ca_grstarts_wl6 = (int32_t _seg *)FP_SEG(&EGAhead);
@@ -412,7 +412,7 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    //    int testexp = sizeof(ca_grstarts_wl6);
 	int expectedsize;
    
-   if(SPEAR())
+   if(SPEAR::flag)
       expectedsize = lengthof(m_grstarts_sod) - menu_missingep;
    else
       expectedsize = lengthof(m_grstarts_wl6) - menu_missingep;
@@ -424,7 +424,7 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
             "Please check whether you are using the right executable!\n"
             "(For mod developers: perhaps you forgot to update NUMCHUNKS?)")());
    
-   if(SPEAR())
+   if(SPEAR::flag)
    {
       byte data[lengthof(m_grstarts_sod) * 3];
       dfile.read(data, sizeof(data));
@@ -467,15 +467,15 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
    // load the pic and sprite headers into the arrays in the data segment
    //
    
-//   m_pictable = (pictabletype *)I_CheckedMalloc(SPEAR.g(NUMPICS)*
+//   m_pictable = (pictabletype *)I_CheckedMalloc(SPEAR::g(NUMPICS)*
 //                                                 sizeof(pictabletype));
-   int32_t complen = getChunkLength(SPEAR.g(STRUCTPIC));
+   int32_t complen = getChunkLength(SPEAR::g(STRUCTPIC));
    int32_t explen;
-   m_filebuf.seek(grFilePos(SPEAR.g(STRUCTPIC)), SEEK_SET);
+   m_filebuf.seek(grFilePos(SPEAR::g(STRUCTPIC)), SEEK_SET);
    m_filebuf.readSint32(explen);
    compseg = (byte *)I_CheckedMalloc(complen);
    m_filebuf.read(compseg, complen);
-   CAL_HuffExpand(compseg, (byte*)m_pictable, SPEAR.g(NUMPICS) *
+   CAL_HuffExpand(compseg, (byte*)m_pictable, SPEAR::g(NUMPICS) *
                   sizeof(pictabletype), m_grhuffman);
    m_pictableloaded = true;
    free(compseg);
@@ -490,8 +490,8 @@ void GraphicLoader::expandChunk (int chunk, const int32_t *source)
 {
    int32_t    expanded;
    
-   if (chunk >= (signed int)SPEAR.g(STARTTILE8) &&
-       chunk < (signed int)SPEAR.g(STARTEXTERNS))
+   if (chunk >= (signed int)SPEAR::g(STARTTILE8) &&
+       chunk < (signed int)SPEAR::g(STARTEXTERNS))
    {
       //
       // expanded sizes of tile8/16/32 are implicit
@@ -500,15 +500,15 @@ void GraphicLoader::expandChunk (int chunk, const int32_t *source)
 #define BLOCK           64
 #define MASKBLOCK       128
       
-      if (chunk<(signed int)SPEAR.g(STARTTILE8M)) // tile 8s are all in one chunk!
-         expanded = BLOCK*SPEAR.g(NUMTILE8);
-      else if (chunk<(signed int)SPEAR.g(STARTTILE16))
-         expanded = MASKBLOCK*SPEAR.g(NUMTILE8M);
-      else if (chunk<(signed int)SPEAR.g(STARTTILE16M))// all other tiles are one/chunk
+      if (chunk<(signed int)SPEAR::g(STARTTILE8M)) // tile 8s are all in one chunk!
+         expanded = BLOCK*SPEAR::g(NUMTILE8);
+      else if (chunk<(signed int)SPEAR::g(STARTTILE16))
+         expanded = MASKBLOCK*SPEAR::g(NUMTILE8M);
+      else if (chunk<(signed int)SPEAR::g(STARTTILE16M))// all other tiles are one/chunk
          expanded = BLOCK*4;
-      else if (chunk<(signed int)SPEAR.g(STARTTILE32))
+      else if (chunk<(signed int)SPEAR::g(STARTTILE32))
          expanded = MASKBLOCK*4;
-      else if (chunk<(signed int)SPEAR.g(STARTTILE32M))
+      else if (chunk<(signed int)SPEAR::g(STARTTILE32M))
          expanded = BLOCK*16;
       else
          expanded = MASKBLOCK*16;

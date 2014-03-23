@@ -17,8 +17,6 @@
 //
 
 
-#include "PString.h"
-
 // IOANCH 20130301: unification culling
 #include "gfxvabstract.h"
 // IOANCH: added sprite header
@@ -34,26 +32,21 @@
 //
 // Class for Spear master flag
 //
-class SODFlag
+namespace SPEAR
 {
-    
-    Boolean8 flag;
-    static const unsigned int gfxvmap[][2];
-    static const unsigned int sprmap[][2];
-    static const unsigned int soundmap[][2];
-    static const char wolftitle[];
-    static const char speartitle[];
-public:
+	extern Boolean8 flag;
+	extern const unsigned int gfxvmap[][2];
+	extern const unsigned int sprmap[][2];
+	extern const unsigned int soundmap[][2];
+	extern const char speartitle[], wolftitle[];
+
     void Initialize(const std::string &basePath);
-    SODFlag() : flag(false)                  {}
-    Boolean8             operator()()   const {return flag;}
-    unsigned int g(unsigned int value) const {return gfxvmap[value][flag];}
-    unsigned int sp(unsigned int value)const {return sprmap[value][flag];}
-    unsigned int sd(unsigned int value)const {return soundmap[value][flag];}
-    const char *FullTitle() const {return flag ? speartitle : wolftitle;}
+    inline static unsigned int g(unsigned int value)  {return gfxvmap[value][flag];}
+	inline static unsigned int sp(unsigned int value) { return sprmap[value][flag]; }
+	inline static unsigned int sd(unsigned int value) { return soundmap[value][flag]; }
+	inline static const char *FullTitle() { return flag ? speartitle : wolftitle; }
 	
-	void SetGlobalValues() const;
+	void SetGlobalValues();
 };
-extern SODFlag SPEAR;
 
 #endif

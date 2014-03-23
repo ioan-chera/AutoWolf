@@ -456,15 +456,15 @@ void Menu::ControlPanel (ScanCode scancode)
         finishup:
             CleanupControlPanel ();
             // IOANCH 20130303: unification
-            if(SPEAR()) 
-                UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+            if(SPEAR::flag) 
+                UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
             return;
           default:
           ;
     }
 
-    if(SPEAR())
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+    if(SPEAR::flag)
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
 
     DrawMainMenu ();
     MenuFadeIn ();
@@ -478,38 +478,38 @@ void Menu::ControlPanel (ScanCode scancode)
         which = HandleMenu (&MainItems, &MainMenu[0], NULL);
 
 // IOANCH 20130301: unification culling
-        if(SPEAR())
+        if(SPEAR::flag)
         {
             myInput.processEvents();
 
             //
-            // EASTER EGG FOR SPEAR() OF DESTINY!
+            // EASTER EGG FOR SPEAR::flag OF DESTINY!
             //
             if (myInput.keyboard(sc_I) && myInput.keyboard(sc_D))
             {
                 VW_FadeOut ();
                             // IOANCH 20130301: unification music
                 StartCPMusic (XJAZNAZI_MUS_sod);
-                UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
-                UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+                UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+                UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
                 Sound::StopDigitized ();
 
 
-                graphSegs.cacheChunk (SPEAR.g(IDGUYS1PIC));
-                VWB_DrawPic (0, 0, SPEAR.g(IDGUYS1PIC));
-                graphSegs.uncacheChunk (SPEAR.g(IDGUYS1PIC));
+                graphSegs.cacheChunk (SPEAR::g(IDGUYS1PIC));
+                VWB_DrawPic (0, 0, SPEAR::g(IDGUYS1PIC));
+                graphSegs.uncacheChunk (SPEAR::g(IDGUYS1PIC));
 
-                graphSegs.cacheChunk (SPEAR.g(IDGUYS2PIC));
-                VWB_DrawPic (0, 80, SPEAR.g(IDGUYS2PIC));
-                graphSegs.uncacheChunk (SPEAR.g(IDGUYS2PIC));
+                graphSegs.cacheChunk (SPEAR::g(IDGUYS2PIC));
+                VWB_DrawPic (0, 80, SPEAR::g(IDGUYS2PIC));
+                graphSegs.uncacheChunk (SPEAR::g(IDGUYS2PIC));
 
                 I_UpdateScreen ();
 
                 SDL_Color pal[256];
-                graphSegs.cacheChunk (SPEAR.g(IDGUYSPALETTE));
-                VL_ConvertPalette(graphSegs[SPEAR.g(IDGUYSPALETTE)], pal, 256);
+                graphSegs.cacheChunk (SPEAR::g(IDGUYSPALETTE));
+                VL_ConvertPalette(graphSegs[SPEAR::g(IDGUYSPALETTE)], pal, 256);
                 VL_FadeIn (0, 255, pal, 30);
-                graphSegs.uncacheChunk (SPEAR.g(IDGUYSPALETTE));
+                graphSegs.uncacheChunk (SPEAR::g(IDGUYSPALETTE));
 
                 while (myInput.keyboard(sc_I) || myInput.keyboard(sc_D))
                     myInput.waitAndProcessEvents();
@@ -518,8 +518,8 @@ void Menu::ControlPanel (ScanCode scancode)
 
                 VW_FadeOut ();
 
-                CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
-                CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+                CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
+                CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
                 DrawMainMenu ();
                 StartCPMusic (MENUSONG);
                 MenuFadeIn ();
@@ -580,8 +580,8 @@ void Menu::ControlPanel (ScanCode scancode)
 
     // RETURN/START GAME EXECUTION
 
-    if(SPEAR())
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+    if(SPEAR::flag)
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
 }
 
 void EnableEndGameMenuItem()
@@ -604,9 +604,9 @@ static void DrawMainMenu ()
     // IOANCH 20130301: unification culling
     ClearMScreen ();
 
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawStripes (10);
-    VWB_DrawPic (84, 0, SPEAR.g(C_OPTIONSPIC));
+    VWB_DrawPic (84, 0, SPEAR::g(C_OPTIONSPIC));
 
 #ifdef SPANISH
     DrawWindow (MENU_X - 8, MENU_Y - 3, MENU_W + 8, MENU_H, Menu::g_bkgdColor);
@@ -663,7 +663,7 @@ static int CP_CheckQuick (ScanCode scancode)
         // END GAME
         //
         case sc_F7:
-            graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+            graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
 
             WindowH = 160;
             // IOANCH 20130301: unification culling
@@ -685,7 +685,7 @@ static int CP_CheckQuick (ScanCode scancode)
         case sc_F8:
             if (SaveGamesAvail[LSItems.curpos] && pickquick)
             {
-                graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+                graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
                 fontnumber = 1;
                 Message (STR_SAVING "...");
                 CP_SaveGame (1);
@@ -695,20 +695,20 @@ static int CP_CheckQuick (ScanCode scancode)
             {
 
                 // IOANCH 20130302: unification
-                if(!SPEAR())
+                if(!SPEAR::flag)
                 {
-                    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR2PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_SAVEGAMEPIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR2PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_DISKLOADING1PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_DISKLOADING2PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_SAVEGAMEPIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_MOUSELBACKPIC));
                 }
                 else
                 {
-                    CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
+                    CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR1PIC));
                 }
 
                 VW_FadeOut ();
@@ -734,19 +734,19 @@ static int CP_CheckQuick (ScanCode scancode)
                 if (myInput.mousePresent() && myInput.inputGrabbed())
                     myInput.centreMouse();     // Clear accumulated mouse movement
 
-                if(!SPEAR())
+                if(!SPEAR::flag)
                 {
                     // IOANCH 20130302: unification
-                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR1PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR2PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_SAVEGAMEPIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_CURSOR1PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_CURSOR2PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_DISKLOADING1PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_DISKLOADING2PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_SAVEGAMEPIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_MOUSELBACKPIC));
                 }
                 else
                 {
-                    UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+                    UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
                 }
             }
             return 1;
@@ -760,7 +760,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 char string[100] = STR_LGC;
 
 
-                graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+                graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
                 fontnumber = 1;
 
                 strcat (string, SaveGameNames[LSItems.curpos]);
@@ -773,21 +773,21 @@ static int CP_CheckQuick (ScanCode scancode)
             }
             else
             {
-                if(!SPEAR())
+                if(!SPEAR::flag)
                 {
-                    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+                    graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
                     // IOANCH 20130302: unification
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR2PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_LOADGAMEPIC));
-                    graphSegs.cacheChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR1PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR2PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_DISKLOADING1PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_DISKLOADING2PIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_LOADGAMEPIC));
+                    graphSegs.cacheChunk (SPEAR::g(C_MOUSELBACKPIC));
                 }
                 else
                 {
-                    graphSegs.cacheChunk (SPEAR.g(C_CURSOR1PIC));
-                    CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+                    graphSegs.cacheChunk (SPEAR::g(C_CURSOR1PIC));
+                    CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
                 }
 
                 VW_FadeOut ();
@@ -815,18 +815,18 @@ static int CP_CheckQuick (ScanCode scancode)
                     myInput.centreMouse();     // Clear accumulated mouse movement
 
                 // IOANCH 20130302: unification
-                if(!SPEAR())
+                if(!SPEAR::flag)
                 {
-                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR1PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_CURSOR2PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING1PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_DISKLOADING2PIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_LOADGAMEPIC));
-                    graphSegs.uncacheChunk (SPEAR.g(C_MOUSELBACKPIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_CURSOR1PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_CURSOR2PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_DISKLOADING1PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_DISKLOADING2PIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_LOADGAMEPIC));
+                    graphSegs.uncacheChunk (SPEAR::g(C_MOUSELBACKPIC));
                 }
                 else
                 {
-                    UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+                    UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
                 }
             }
             return 1;
@@ -835,7 +835,7 @@ static int CP_CheckQuick (ScanCode scancode)
         // QUIT
         //
         case sc_F10:
-            graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+            graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
 
             WindowX = WindowY = 0;
             WindowW = 320;
@@ -845,7 +845,7 @@ static int CP_CheckQuick (ScanCode scancode)
             if (Confirm (ENDGAMESTR))
 #else
             // IOANCH 20130202: unification process
-            if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR() ? 9 : 0)]))
+            if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
 #endif
             {
                 I_UpdateScreen ();
@@ -906,9 +906,9 @@ int CP_ViewScores (int)
     fontnumber = 0;
 
     // IOANCH 20130303: unification
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
                     // IOANCH 20130301: unification music
         StartCPMusic (XAWARD_MUS_sod);
     }
@@ -929,10 +929,10 @@ int CP_ViewScores (int)
     StartCPMusic (MENUSONG);
     MenuFadeOut ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
     return 0;
 }
@@ -952,11 +952,11 @@ static int CP_NewGame (int)
 {
     int which, episode;
 
-    if(SPEAR())
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+    if(SPEAR::flag)
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
 
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
 firstpart:
 
@@ -1018,14 +1018,14 @@ firstpart:
         //
         // ALREADY IN A GAME?
         //
-        CacheLump (SPEAR.g(NEWGAME_LUMP_START), SPEAR.g(NEWGAME_LUMP_END));
+        CacheLump (SPEAR::g(NEWGAME_LUMP_START), SPEAR::g(NEWGAME_LUMP_END));
         DrawNewGame ();
         if (ingame)
             if (!Confirm (CURGAME))
             {
                 MenuFadeOut ();
-                UnCacheLump (SPEAR.g(NEWGAME_LUMP_START), SPEAR.g(NEWGAME_LUMP_END));
-                CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+                UnCacheLump (SPEAR::g(NEWGAME_LUMP_START), SPEAR::g(NEWGAME_LUMP_END));
+                CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
                 return 0;
             }
     }
@@ -1035,12 +1035,12 @@ firstpart:
     if (which < 0)
     {
         MenuFadeOut ();
-        if(!SPEAR())
+        if(!SPEAR::flag)
             goto firstpart;
         else
         {
-            UnCacheLump (SPEAR.g(NEWGAME_LUMP_START), SPEAR.g(NEWGAME_LUMP_END));
-            CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+            UnCacheLump (SPEAR::g(NEWGAME_LUMP_START), SPEAR::g(NEWGAME_LUMP_END));
+            CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
             return 0;
         }
     }
@@ -1056,10 +1056,10 @@ firstpart:
 
     pickquick = 0;
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(NEWGAME_LUMP_START), SPEAR.g(NEWGAME_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(NEWGAME_LUMP_START), SPEAR::g(NEWGAME_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
 
     return 0;
@@ -1078,7 +1078,7 @@ static void DrawNewEpisode ()
 
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
 
     DrawWindow (NE_X - 4, NE_Y - 4, NE_W + 8, NE_H + 8, Menu::g_bkgdColor);
     SETFONTCOLOR (READHCOLOR, Menu::g_bkgdColor);
@@ -1094,7 +1094,7 @@ static void DrawNewEpisode ()
     DrawMenu (&NewEitems, &menu_newep[0]);
     // IOANCH 20130302: unification
     for (i = 0; i < 6; i++)
-        VWB_DrawPic (NE_X + 32, NE_Y + i * 26, SPEAR.g(C_EPISODE1PIC) + i);
+        VWB_DrawPic (NE_X + 32, NE_Y + i * 26, SPEAR::g(C_EPISODE1PIC) + i);
 
     I_UpdateScreen ();
     MenuFadeIn ();
@@ -1109,13 +1109,13 @@ static void DrawNewGame ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
 
     SETFONTCOLOR (READHCOLOR, Menu::g_bkgdColor);
     PrintX = NM_X + 20;
     PrintY = NM_Y - 32;
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
 #ifdef SPANISH
         US_Print ("Eres macho?");
@@ -1126,7 +1126,7 @@ static void DrawNewGame ()
     else
     {
         // IOANCH 20130302: unification
-        VWB_DrawPic (PrintX, PrintY, SPEAR.g(C_HOWTOUGHPIC));
+        VWB_DrawPic (PrintX, PrintY, SPEAR::g(C_HOWTOUGHPIC));
     }
 
     DrawWindow (NM_X - 5, NM_Y - 10, NM_W, NM_H, Menu::g_bkgdColor);
@@ -1146,7 +1146,7 @@ static void DrawNewGame ()
 static void DrawNewGameDiff (int w)
 {
     // IOANCH 20130302: unification
-    VWB_DrawPic (NM_X + 185, NM_Y + 7, w + SPEAR.g(C_BABYMODEPIC));
+    VWB_DrawPic (NM_X + 185, NM_Y + 7, w + SPEAR::g(C_BABYMODEPIC));
 }
 
 
@@ -1162,10 +1162,10 @@ static int CP_Sound (int)
     int which;
 
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
-        CacheLump (SPEAR.g(SOUND_LUMP_START), SPEAR.g(SOUND_LUMP_END));
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+        CacheLump (SPEAR::g(SOUND_LUMP_START), SPEAR::g(SOUND_LUMP_END));
     }
 
     DrawSoundMenu ();
@@ -1265,10 +1265,10 @@ static int CP_Sound (int)
 
     MenuFadeOut ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(SOUND_LUMP_START), SPEAR.g(SOUND_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(SOUND_LUMP_START), SPEAR::g(SOUND_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
     return 0;
 }
@@ -1289,7 +1289,7 @@ static void DrawSoundMenu ()
     // DRAW SOUND MENU
     //
     ClearMScreen ();
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
 
     DrawWindow (SM_X - 8, SM_Y1 - 3, SM_W, SM_H1, Menu::g_bkgdColor);
     DrawWindow (SM_X - 8, SM_Y2 - 3, SM_W, SM_H2, Menu::g_bkgdColor);
@@ -1312,9 +1312,9 @@ static void DrawSoundMenu ()
     DrawMenu (&SndItems, &SndMenu[0]);
     // IOANCH 20130301: unification culling
 
-    VWB_DrawPic (100, SM_Y1 - 20, SPEAR.g(C_FXTITLEPIC));
-    VWB_DrawPic (100, SM_Y2 - 20, SPEAR.g(C_DIGITITLEPIC));
-    VWB_DrawPic (100, SM_Y3 - 20, SPEAR.g(C_MUSICTITLEPIC));
+    VWB_DrawPic (100, SM_Y1 - 20, SPEAR::g(C_FXTITLEPIC));
+    VWB_DrawPic (100, SM_Y2 - 20, SPEAR::g(C_DIGITITLEPIC));
+    VWB_DrawPic (100, SM_Y3 - 20, SPEAR::g(C_MUSICTITLEPIC));
 
 
     for (i = 0; i < SndItems.amount; i++)
@@ -1373,9 +1373,9 @@ static void DrawSoundMenu ()
             }
 
             if (on)
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, SPEAR.g(C_SELECTEDPIC));
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, SPEAR::g(C_SELECTEDPIC));
             else
-                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, SPEAR.g(C_NOTSELECTEDPIC));
+                VWB_DrawPic (SM_X + 24, SM_Y1 + i * 13 + 2, SPEAR::g(C_NOTSELECTEDPIC));
         }
 
     DrawMenuGun (&SndItems);
@@ -1398,7 +1398,7 @@ static void DrawLSAction (int which)
     DrawWindow (LSA_X, LSA_Y, LSA_W, LSA_H, TEXTCOLOR);
     DrawOutline (LSA_X, LSA_Y, LSA_W, LSA_H, 0, HIGHLIGHT);
     // IOANCH 20130302: unification
-    VWB_DrawPic (LSA_X + 8, LSA_Y + 5, SPEAR.g(C_DISKLOADING1PIC));
+    VWB_DrawPic (LSA_X + 8, LSA_Y + 5, SPEAR::g(C_DISKLOADING1PIC));
 
     fontnumber = 1;
     SETFONTCOLOR (0, TEXTCOLOR);
@@ -1469,10 +1469,10 @@ static int CP_LoadGame (int quick)
     }
 
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
-        CacheLump (SPEAR.g(LOADSAVE_LUMP_START), SPEAR.g(LOADSAVE_LUMP_END));
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+        CacheLump (SPEAR::g(LOADSAVE_LUMP_START), SPEAR::g(LOADSAVE_LUMP_END));
     }
 
     DrawLoadSaveScreen (0);
@@ -1516,10 +1516,10 @@ static int CP_LoadGame (int quick)
 
     MenuFadeOut ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(LOADSAVE_LUMP_START), SPEAR.g(LOADSAVE_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(LOADSAVE_LUMP_START), SPEAR::g(LOADSAVE_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
 
     return exit;
@@ -1557,14 +1557,14 @@ static void DrawLoadSaveScreen (int loadsave)
 
     ClearMScreen ();
     fontnumber = 1;
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawWindow (LSM_X - 10, LSM_Y - 5, LSM_W, LSM_H, Menu::g_bkgdColor);
     DrawStripes (10);
     // IOANCH 20130302: unification
     if (!loadsave)
-        VWB_DrawPic (60, 0, SPEAR.g(C_LOADGAMEPIC));
+        VWB_DrawPic (60, 0, SPEAR::g(C_LOADGAMEPIC));
     else
-        VWB_DrawPic (60, 0, SPEAR.g(C_SAVEGAMEPIC));
+        VWB_DrawPic (60, 0, SPEAR::g(C_SAVEGAMEPIC));
 
     for (i = 0; i < 10; i++)
         PrintLSEntry (i, TEXTCOLOR);
@@ -1646,10 +1646,10 @@ static int CP_SaveGame (int quick)
     }
 
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
-        CacheLump (SPEAR.g(LOADSAVE_LUMP_START), SPEAR.g(LOADSAVE_LUMP_END));
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+        CacheLump (SPEAR::g(LOADSAVE_LUMP_START), SPEAR::g(LOADSAVE_LUMP_END));
     }
 
     DrawLoadSaveScreen (1);
@@ -1735,10 +1735,10 @@ static int CP_SaveGame (int quick)
 
     MenuFadeOut ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(LOADSAVE_LUMP_START), SPEAR.g(LOADSAVE_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(LOADSAVE_LUMP_START), SPEAR::g(LOADSAVE_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
 
     return exit;
@@ -1755,10 +1755,10 @@ static int CP_Control (int)
 {
     int which;
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
-        CacheLump (SPEAR.g(CONTROL_LUMP_START), SPEAR.g(CONTROL_LUMP_END));
+        UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+        CacheLump (SPEAR::g(CONTROL_LUMP_START), SPEAR::g(CONTROL_LUMP_END));
     }
 
     DrawCtlScreen ();
@@ -1798,10 +1798,10 @@ static int CP_Control (int)
 
     MenuFadeOut ();
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        UnCacheLump (SPEAR.g(CONTROL_LUMP_START), SPEAR.g(CONTROL_LUMP_END));
-        CacheLump (SPEAR.g(OPTIONS_LUMP_START), SPEAR.g(OPTIONS_LUMP_END));
+        UnCacheLump (SPEAR::g(CONTROL_LUMP_START), SPEAR::g(CONTROL_LUMP_END));
+        CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
     }
     return 0;
 }
@@ -1815,7 +1815,7 @@ static void DrawMouseSens ()
 {
     // IOANCH 20130301: unification culling
     ClearMScreen ();
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
 #ifdef SPANISH
     DrawWindow (10, 80, 300, 43, Menu::g_bkgdColor);
 #else
@@ -1938,8 +1938,8 @@ static void DrawCtlScreen ()
 // IOANCH 20130301: unification culling
     ClearMScreen ();
     DrawStripes (10);
-    VWB_DrawPic (80, 0, SPEAR.g(C_CONTROLPIC));
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (80, 0, SPEAR::g(C_CONTROLPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawWindow (CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, Menu::g_bkgdColor);
     WindowX = 0;
     WindowW = 320;
@@ -1962,15 +1962,15 @@ static void DrawCtlScreen ()
     x = CTL_X + CtlItems.indent - 24;
     y = CTL_Y + 3;
     if (mouseenabled)
-        VWB_DrawPic (x, y, SPEAR.g(C_SELECTEDPIC));
+        VWB_DrawPic (x, y, SPEAR::g(C_SELECTEDPIC));
     else
-        VWB_DrawPic (x, y, SPEAR.g(C_NOTSELECTEDPIC));
+        VWB_DrawPic (x, y, SPEAR::g(C_NOTSELECTEDPIC));
 
     y = CTL_Y + 29;
     if (joystickenabled)
-        VWB_DrawPic (x, y, SPEAR.g(C_SELECTEDPIC));
+        VWB_DrawPic (x, y, SPEAR::g(C_SELECTEDPIC));
     else
-        VWB_DrawPic (x, y, SPEAR.g(C_NOTSELECTEDPIC));
+        VWB_DrawPic (x, y, SPEAR::g(C_NOTSELECTEDPIC));
 
     //
     // PICK FIRST AVAILABLE SPOT
@@ -2364,7 +2364,7 @@ static void FixupCustom (int w)
 
     VWB_Hlin (7, 32, y - 1, s_deactive);
     VWB_Hlin (7, 32, y + 12, s_bord2Color);
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         VWB_Hlin (7, 32, y - 2, Menu::g_bordColor);
         VWB_Hlin (7, 32, y + 13, Menu::g_bordColor);
@@ -2396,7 +2396,7 @@ static void FixupCustom (int w)
         y = CST_Y + 26 + lastwhich * 13;
         VWB_Hlin (7, 32, y - 1, s_deactive);
         VWB_Hlin (7, 32, y + 12, s_bord2Color);
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             VWB_Hlin (7, 32, y - 2, Menu::g_bordColor);
             VWB_Hlin (7, 32, y + 13, Menu::g_bordColor);
@@ -2440,9 +2440,9 @@ static void DrawCustomScreen ()
     ClearMScreen ();
     WindowX = 0;
     WindowW = 320;
-    VWB_DrawPic (112, 184, SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawStripes (10);
-    VWB_DrawPic (80, 0, SPEAR.g(C_CUSTOMIZEPIC));
+    VWB_DrawPic (80, 0, SPEAR::g(C_CUSTOMIZEPIC));
 
     //
     // MOUSE
@@ -2451,7 +2451,7 @@ static void DrawCustomScreen ()
     WindowX = 0;
     WindowW = 320;
 
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         PrintY = CST_Y;
         US_CPrint ("Mouse\n");
@@ -2459,7 +2459,7 @@ static void DrawCustomScreen ()
     else
     {
         PrintY = CST_Y + 13;
-        VWB_DrawPic (128, 48, SPEAR.g(C_MOUSEPIC));
+        VWB_DrawPic (128, 48, SPEAR::g(C_MOUSEPIC));
     }
 
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
@@ -2491,7 +2491,7 @@ static void DrawCustomScreen ()
     //
     // JOYSTICK/PAD
     //
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
         US_CPrint ("Joystick/Gravis GamePad\n");
@@ -2500,12 +2500,12 @@ static void DrawCustomScreen ()
     {
         PrintY += 13;
         // IOANCH 20130302: unification
-        VWB_DrawPic (40, 88, SPEAR.g(C_JOYSTICKPIC));
+        VWB_DrawPic (40, 88, SPEAR::g(C_JOYSTICKPIC));
     }
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
-        VWB_DrawPic (112, 120, SPEAR.g(C_KEYBOARDPIC));
+        VWB_DrawPic (112, 120, SPEAR::g(C_KEYBOARDPIC));
     }
 
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
@@ -2536,7 +2536,7 @@ static void DrawCustomScreen ()
     //
     // KEYBOARD
     //
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
         US_CPrint ("Keyboard\n");
@@ -2854,7 +2854,7 @@ static int CP_Quit (int)
     if (Confirm (ENDGAMESTR))
 #else
     // IOANCH 20130202: unification process
-    if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR() ? 9 : 0)]))
+    if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
 #endif
 
     {
@@ -2889,11 +2889,11 @@ static int CP_Quit (int)
 void
 ClearMScreen ()
 {
-    if(!SPEAR())
+    if(!SPEAR::flag)
         VL_Bar (0, 0, 320, 200, Menu::g_bordColor);
     else
     // IOANCH 20130302: unification
-        VWB_DrawPic (0, 0, SPEAR.g(C_BACKDROPPIC));
+        VWB_DrawPic (0, 0, SPEAR::g(C_BACKDROPPIC));
 }
 
 
@@ -2952,11 +2952,11 @@ static void SetupControlPanel ()
     //
     // CACHE GRAPHICS & SOUNDS
     //
-    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
-    if(!SPEAR())
-        CacheLump (SPEAR.g(CONTROLS_LUMP_START), SPEAR.g(CONTROLS_LUMP_END));
+    graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
+    if(!SPEAR::flag)
+        CacheLump (SPEAR::g(CONTROLS_LUMP_START), SPEAR::g(CONTROLS_LUMP_END));
     else
-        CacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+        CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
 
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
     fontnumber = 1;
@@ -3023,10 +3023,10 @@ void menu_SetupSaveGames()
 ////////////////////////////////////////////////////////////////////
 static void CleanupControlPanel ()
 {
-    if(!SPEAR())
-        UnCacheLump (SPEAR.g(CONTROLS_LUMP_START), SPEAR.g(CONTROLS_LUMP_END));
+    if(!SPEAR::flag)
+        UnCacheLump (SPEAR::g(CONTROLS_LUMP_START), SPEAR::g(CONTROLS_LUMP_END));
     else
-        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START), SPEAR.g(BACKDROP_LUMP_END));
+        UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
 
     fontnumber = 0;
 }
@@ -3057,7 +3057,7 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
     y = basey + which * 13;
 
     // IOANCH 20130302: unification
-    VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
+    VWB_DrawPic (x, y, SPEAR::g(C_CURSOR1PIC));
     SetTextColor (items + which, 1);
     if (redrawitem)
     {
@@ -3073,7 +3073,7 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
     I_UpdateScreen ();
 
     // IOANCH 20130302: unification
-    shape = SPEAR.g(C_CURSOR1PIC);
+    shape = SPEAR::g(C_CURSOR1PIC);
     timer = 8;
     exit = 0;
     lastBlinkTime = GetTimeCount ();
@@ -3089,14 +3089,14 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
         {
             lastBlinkTime = GetTimeCount ();
             // IOANCH 20130302: unification
-            if (shape == SPEAR.g(C_CURSOR1PIC))
+            if (shape == SPEAR::g(C_CURSOR1PIC))
             {
-                shape = SPEAR.g(C_CURSOR2PIC);
+                shape = SPEAR::g(C_CURSOR2PIC);
                 timer = 8;
             }
             else
             {
-                shape = SPEAR.g(C_CURSOR1PIC);
+                shape = SPEAR::g(C_CURSOR1PIC);
                 timer = 70;
             }
             VWB_DrawPic (x, y, shape);
@@ -3302,7 +3302,7 @@ void EraseGun (const CP_iteminfo * item_i, const CP_itemtype * items, int x, int
 void
 DrawHalfStep (int x, int y)
 {
-    VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
+    VWB_DrawPic (x, y, SPEAR::g(C_CURSOR1PIC));
     I_UpdateScreen ();
     Sound::Play (MOVEGUN1SND);
     I_Delay (8 * 100 / 7);
@@ -3318,7 +3318,7 @@ static void DrawGun (const CP_iteminfo * item_i, const CP_itemtype * items, int 
     VL_Bar (x - 1, *y, 25, 16, Menu::g_bkgdColor);
     *y = basey + which * 13;
     // IOANCH 20130302: unification
-    VWB_DrawPic (x, *y, SPEAR.g(C_CURSOR1PIC));
+    VWB_DrawPic (x, *y, SPEAR::g(C_CURSOR1PIC));
     SetTextColor (items + which, 1);
 
     PrintX = item_i->x + item_i->indent;
@@ -3597,9 +3597,9 @@ Message (const char *string)
     fontstruct *font;
 
 
-    graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+    graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
     fontnumber = 1;
-    font = (fontstruct *) graphSegs[SPEAR.g(STARTFONT) + fontnumber];
+    font = (fontstruct *) graphSegs[SPEAR::g(STARTFONT) + fontnumber];
     h = font->height;
     for (i = 0; i < len; i++)
     {
@@ -3704,7 +3704,7 @@ static void DrawMenuGun (const CP_iteminfo * iteminfo)
     x = iteminfo->x;
     y = iteminfo->y + iteminfo->curpos * 13 - 2;
     // IOANCH 20130302: unification
-    VWB_DrawPic (x, y, SPEAR.g(C_CURSOR1PIC));
+    VWB_DrawPic (x, y, SPEAR::g(C_CURSOR1PIC));
 }
 
 
@@ -3715,7 +3715,7 @@ static void DrawMenuGun (const CP_iteminfo * iteminfo)
 ///////////////////////////////////////////////////////////////////////////
 void DrawStripes (int y)
 {
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         VL_Bar (0, y, 320, 24, 0);
         VWB_Hlin (0, 319, y + 22, STRIPE);
@@ -3736,11 +3736,11 @@ static void ShootSnd ()
 
 void Menu::SetSpearModuleValues()
 {
-	g_bkgdColor = SPEAR() ? 0x9d : 0x2d;
-	g_bordColor = SPEAR() ? 0x99 : 0x29;
+	g_bkgdColor = SPEAR::flag ? 0x9d : 0x2d;
+	g_bordColor = SPEAR::flag ? 0x99 : 0x29;
 	
-	s_bord2Color = SPEAR() ? 0x93 : 0x23;
-	s_deactive = SPEAR() ? DEACTIVE_sod : DEACTIVE_wl6;
+	s_bord2Color = SPEAR::flag ? 0x93 : 0x23;
+	s_deactive = SPEAR::flag ? DEACTIVE_sod : DEACTIVE_wl6;
 }
 
 
@@ -3836,23 +3836,23 @@ void Menu::DoJukebox()
     MenuFadeOut();
 	
     // IOANCH 20130301: unification culling
-    start = SPEAR() ? 0 : ((I_GetTicks()/10)%3)*6;
+    start = SPEAR::flag ? 0 : ((I_GetTicks()/10)%3)*6;
 	
-    graphSegs.cacheChunk (SPEAR.g(STARTFONT)+1);
+    graphSegs.cacheChunk (SPEAR::g(STARTFONT)+1);
     
-    if(SPEAR())
-        CacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
+    if(SPEAR::flag)
+        CacheLump (SPEAR::g(BACKDROP_LUMP_START),SPEAR::g(BACKDROP_LUMP_END));
     else
-        CacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
+        CacheLump (SPEAR::g(CONTROLS_LUMP_START),SPEAR::g(CONTROLS_LUMP_END));
 	audioSegs.loadAllSounds(sd_soundMode);
     // IOANCH 20130302: unification
     fontnumber=1;
     ClearMScreen ();
-    VWB_DrawPic(112,184,SPEAR.g(C_MOUSELBACKPIC));
+    VWB_DrawPic(112,184,SPEAR::g(C_MOUSELBACKPIC));
     DrawStripes (10);
     SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);
 	
-    if(!SPEAR())
+    if(!SPEAR::flag)
         DrawWindow (CTL_X-2,CTL_Y-6,280,13*7,Menu::g_bkgdColor);
     else
         DrawWindow (CTL_X-2,CTL_Y-26,280,13*10,Menu::g_bkgdColor);
@@ -3889,9 +3889,9 @@ void Menu::DoJukebox()
     myInput.clearKeysDown();
     // IOANCH 20130303: unification
 	
-    if(SPEAR())
-        UnCacheLump (SPEAR.g(BACKDROP_LUMP_START),SPEAR.g(BACKDROP_LUMP_END));
+    if(SPEAR::flag)
+        UnCacheLump (SPEAR::g(BACKDROP_LUMP_START),SPEAR::g(BACKDROP_LUMP_END));
     else
-        UnCacheLump (SPEAR.g(CONTROLS_LUMP_START),SPEAR.g(CONTROLS_LUMP_END));
+        UnCacheLump (SPEAR::g(CONTROLS_LUMP_START),SPEAR::g(CONTROLS_LUMP_END));
 	
 }

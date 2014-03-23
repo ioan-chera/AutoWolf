@@ -229,7 +229,7 @@ static int songs_sod[] = {
 
     //////////////////////////////////////////////////////////////
     //
-    // SPEAR() OF DESTINY TRACKS
+    // SPEAR::flag OF DESTINY TRACKS
     //
     //////////////////////////////////////////////////////////////
     XTIPTOE_MUS_sod,
@@ -598,7 +598,7 @@ static void CheckKeys ()
     scan = myInput.lastScan();
 
 
-    if(SPEAR())
+    if(SPEAR::flag)
     {
         //
         // SECRET CHEAT CODE: TAB-G-F10
@@ -644,13 +644,13 @@ static void CheckKeys ()
         DrawScore ();
 
         Sound::StopDigitized ();
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message (STR_CHEATER1 "\n"
                  STR_CHEATER2 "\n\n" STR_CHEATER3 "\n" STR_CHEATER4 "\n" STR_CHEATER5);
 
-        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR::g(STARTFONT) + 1);
         myInput.clearKeysDown ();
         myInput.ack ();
 
@@ -665,11 +665,11 @@ static void CheckKeys ()
     if (myInput.keyboard(sc_BackSpace) && myInput.keyboard(sc_LShift) && myInput.keyboard(sc_Alt) && cfg_debugmode)
     {
         Sound::StopDigitized ();
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message ("Debugging keys are\nnow available!");
-        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR::g(STARTFONT) + 1);
         myInput.clearKeysDown ();
         myInput.ack ();
 
@@ -684,14 +684,14 @@ static void CheckKeys ()
     if (myInput.keyboard(sc_B) && myInput.keyboard(sc_A) && myInput.keyboard(sc_T))
     {
         Sound::StopDigitized ();
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
         ClearSplitVWB ();
 
         Message ("Commander Keen is also\n"
                  "available from Apogee, but\n"
                  "then, you already know\n" "that - right, Cheatmeister?!");
 
-        graphSegs.uncacheChunk (SPEAR.g(STARTFONT) + 1);
+        graphSegs.uncacheChunk (SPEAR::g(STARTFONT) + 1);
         myInput.clearKeysDown ();
         myInput.ack ();
 
@@ -706,7 +706,7 @@ static void CheckKeys ()
     if(myInput.paused())
     {
         int lastoffs = StopMusic();
-        LatchDrawPic (20 - 4, 80 - 2 * 8, SPEAR.g(PAUSEDPIC));
+        LatchDrawPic (20 - 4, 80 - 2 * 8, SPEAR::g(PAUSEDPIC));
         I_UpdateScreen();
         myInput.ack ();
         myInput.setPaused(false);
@@ -765,7 +765,7 @@ static void CheckKeys ()
 #ifdef DEBUGKEYS
     if (myInput.keyboard(sc_Tab) && DebugOk)
     {
-        graphSegs.cacheChunk (SPEAR.g(STARTFONT));
+        graphSegs.cacheChunk (SPEAR::g(STARTFONT));
         fontnumber = 0;
         SETFONTCOLOR (0, 15);
         if (DebugKeys () && viewsize < 20)
@@ -1353,7 +1353,7 @@ void PlayLoop ()
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE
         //
-        if(SPEAR())
+        if(SPEAR::flag)
         {
             funnyticount += tics;
             if (funnyticount > 30l * 70)
@@ -1361,7 +1361,7 @@ void PlayLoop ()
                 funnyticount = 0;
                 // IOANCH 20130302: unification
                 if(viewsize != 21)
-                    StatusDrawFace(SPEAR.g(BJWAITING1PIC) + (wolfRnd () & 1));
+                    StatusDrawFace(SPEAR::g(BJWAITING1PIC) + (wolfRnd () & 1));
                 facecount = 0;
             }
         }

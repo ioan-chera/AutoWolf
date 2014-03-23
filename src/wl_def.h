@@ -141,8 +141,8 @@ struct Rect
 =============================================================================
 */
 
-// IOANCH 20130303: SPEAR() variable
-#define IMPALE(a) (SPEAR() ? a##_sod : a##_wl6)
+// IOANCH 20130303: SPEAR::flag variable
+#define IMPALE(a) (SPEAR::flag ? a##_sod : a##_wl6)
 
 
 #define MAXTICS 10

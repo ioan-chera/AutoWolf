@@ -590,11 +590,11 @@ int Basic::ApproxDist(int dx, int dy)
 // returns true if sound is gunshot
 bool Basic::IsGunShotSound(word s)
 {
-   if(s == SPEAR.sd(ANGELFIRESND) || s == SPEAR.sd(BOSSFIRESND) ||
-      s == SPEAR.sd(DOGATTACKSND) || s == SPEAR.sd(FLAMETHROWERSND) ||
-      s == SPEAR.sd(KNIGHTMISSILESND) || s == SPEAR.sd(MISSILEFIRESND) ||
-      s == SPEAR.sd(NAZIFIRESND) || s == SPEAR.sd(SCHABBSTHROWSND) ||
-      s == SPEAR.sd(SSFIRESND))
+   if(s == SPEAR::sd(ANGELFIRESND) || s == SPEAR::sd(BOSSFIRESND) ||
+      s == SPEAR::sd(DOGATTACKSND) || s == SPEAR::sd(FLAMETHROWERSND) ||
+      s == SPEAR::sd(KNIGHTMISSILESND) || s == SPEAR::sd(MISSILEFIRESND) ||
+      s == SPEAR::sd(NAZIFIRESND) || s == SPEAR::sd(SCHABBSTHROWSND) ||
+      s == SPEAR::sd(SSFIRESND))
    {
       return true;
    }

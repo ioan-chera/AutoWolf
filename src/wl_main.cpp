@@ -419,7 +419,7 @@ void DiskFlopAnim(int x,int y)
     if (!x && !y)
         return;
     // IOANCH 20130302: unification
-    VWB_DrawPic(x,y,SPEAR.g(C_DISKLOADING1PIC)+which);
+    VWB_DrawPic(x,y,SPEAR::g(C_DISKLOADING1PIC)+which);
     I_UpdateScreen();
     which^=1;
 }
@@ -957,7 +957,7 @@ static void VL_SignonScreen ()                        // VGA version
 static void FinishSignon ()
 {
     // IOANCH 20130303: unification
-    if(!SPEAR())
+    if(!SPEAR::flag)
     {
         VL_Bar (0,189,300,11,VL_GetPixel(0,0));
         WindowX = 0;
@@ -1022,7 +1022,7 @@ static void FinishSignon ()
 //   0: player weapons
 //   1: boss weapons
 
-// IOANCH 20130301: SPEAR() unification
+// IOANCH 20130301: SPEAR::flag unification
 static int wolfdigimap_wl6[] =
 {
 	// These first sounds are in the upload version
@@ -1092,7 +1092,7 @@ static int wolfdigimap_sod[] =
 	// These first sounds are in the upload version
 
 	//
-	// SPEAR() OF DESTINY DIGISOUNDS
+	// SPEAR::flag OF DESTINY DIGISOUNDS
 	//
 	HALTSND_sod,                0,  -1,
 	CLOSEDOORSND_sod,           2,  -1,
@@ -1240,8 +1240,8 @@ static void InitGame()
 // load in and lock down some basic chunks
 //
 
-    graphSegs.cacheChunk(SPEAR.g(STARTFONT));
-    graphSegs.cacheChunk(SPEAR.g(STATUSBARPIC));
+    graphSegs.cacheChunk(SPEAR::g(STARTFONT));
+    graphSegs.cacheChunk(SPEAR::g(STATUSBARPIC));
 
     I_LoadLatchMem ();
     main_BuildTables ();          // trig tables
@@ -1388,9 +1388,9 @@ void Quit (const char *message)
 static void IntroScreen ()
 {
     // IOANCH 20130303: unification
-#define MAINCOLOR (SPEAR() ? 0x4f : 0x6c)
-#define EMSCOLOR (SPEAR() ? 0x4f : 0x6c)
-#define XMSCOLOR (SPEAR() ? 0x4f : 0x6c)
+#define MAINCOLOR (SPEAR::flag ? 0x4f : 0x6c)
+#define EMSCOLOR (SPEAR::flag ? 0x4f : 0x6c)
+#define XMSCOLOR (SPEAR::flag ? 0x4f : 0x6c)
 #define FILLCOLOR       14
 	
     int i;
@@ -1436,11 +1436,11 @@ static void PG13 ()
     VW_FadeOut ();
     VL_Bar (0, 0, 320, 200, 0x82);     // background
 	
-    graphSegs.cacheChunk (SPEAR.g(PG13PIC));
-    VWB_DrawPic (216, 110, SPEAR.g(PG13PIC));
+    graphSegs.cacheChunk (SPEAR::g(PG13PIC));
+    VWB_DrawPic (216, 110, SPEAR::g(PG13PIC));
     I_UpdateScreen ();
 	
-    graphSegs.uncacheChunk (SPEAR.g(PG13PIC));
+    graphSegs.uncacheChunk (SPEAR::g(PG13PIC));
 	
     VW_FadeIn ();
     myInput.userInput (TickBase * 7);
@@ -1468,7 +1468,7 @@ static void DemoLoop()
         NewGame(cfg_difficulty,0);
 
         // IOANCH 20130303: unification
-        if(!SPEAR())
+        if(!SPEAR::flag)
         {
             gamestate.episode = cfg_tedlevel/10;
             gamestate.mapon = cfg_tedlevel%10;
@@ -1510,27 +1510,27 @@ static void DemoLoop()
 #ifndef DEMOTEST
 
             // IOANCH 20130303: unification
-            if(SPEAR())
+            if(SPEAR::flag)
             {
                 SDL_Color pal[256];
-                graphSegs.cacheChunk (SPEAR.g(TITLEPALETTE));
-                VL_ConvertPalette(graphSegs[SPEAR.g(TITLEPALETTE)], pal, 256);
+                graphSegs.cacheChunk (SPEAR::g(TITLEPALETTE));
+                VL_ConvertPalette(graphSegs[SPEAR::g(TITLEPALETTE)], pal, 256);
 
-                graphSegs.cacheChunk (SPEAR.g(TITLE1PIC));
-                VWB_DrawPic (0,0,SPEAR.g(TITLE1PIC));
-                graphSegs.uncacheChunk (SPEAR.g(TITLE1PIC));
+                graphSegs.cacheChunk (SPEAR::g(TITLE1PIC));
+                VWB_DrawPic (0,0,SPEAR::g(TITLE1PIC));
+                graphSegs.uncacheChunk (SPEAR::g(TITLE1PIC));
 
-                graphSegs.cacheChunk (SPEAR.g(TITLE2PIC));
-                VWB_DrawPic (0,80,SPEAR.g(TITLE2PIC));
-                graphSegs.uncacheChunk (SPEAR.g(TITLE2PIC));
+                graphSegs.cacheChunk (SPEAR::g(TITLE2PIC));
+                VWB_DrawPic (0,80,SPEAR::g(TITLE2PIC));
+                graphSegs.uncacheChunk (SPEAR::g(TITLE2PIC));
                 I_UpdateScreen ();
                 VL_FadeIn(0,255,pal,30);
 
-                graphSegs.uncacheChunk (SPEAR.g(TITLEPALETTE));
+                graphSegs.uncacheChunk (SPEAR::g(TITLEPALETTE));
             }
             else
             {
-                graphSegs.cacheScreen (SPEAR.g(TITLEPIC));
+                graphSegs.cacheScreen (SPEAR::g(TITLEPIC));
                 I_UpdateScreen ();
                 VW_FadeIn();
             }
@@ -1540,7 +1540,7 @@ static void DemoLoop()
 //
 // credits page
 //
-            graphSegs.cacheScreen (SPEAR.g(CREDITSPIC));
+            graphSegs.cacheScreen (SPEAR::g(CREDITSPIC));
             I_UpdateScreen();
             VW_FadeIn ();
             if (myInput.userInput(TickBase*10))
@@ -1621,9 +1621,9 @@ int main (int argc, TChar *argv[])
 	CommandLine::Feed(argc, argv);
 	CommandLine::Parse();
 #endif
-    // IOANCH: unification: set the SPEAR() global var
-    SPEAR.Initialize(".");
-	SPEAR.SetGlobalValues();
+    // IOANCH: unification: set the SPEAR::flag global var
+    SPEAR::Initialize(".");
+	SPEAR::SetGlobalValues();
     
     // IOANCH: prepare the OSX version for displaying a quit error
    atexit(I_DisplayAlertOnError);

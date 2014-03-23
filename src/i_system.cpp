@@ -24,6 +24,7 @@
 #include "wl_def.h"
 #include "Config.h"
 #include "i_system.h"
+#include "PString.h"
 #include "macosx/CocoaFun.h"
 #include "SODFlag.h"
 #include "StdStringExtensions.h"

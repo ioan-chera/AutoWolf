@@ -169,7 +169,7 @@ public:
    {
       m_filebuf.Close();
       m_pictableloaded = false;
-      for (int i = 0; i < (signed int)SPEAR.g(NUMCHUNKS); ++i)
+      for (unsigned i = 0; i < SPEAR::g(NUMCHUNKS); ++i)
          uncacheChunk(i);
       emptyFields();
    }

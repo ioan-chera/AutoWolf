@@ -38,7 +38,7 @@ namespace Menu
 	void SetSpearModuleValues();
 }
 
-#define MenuFadeOut() VL_FadeOut(0, 255, SPEAR() ? 0 : 43, 0, SPEAR() ? 51 : 0, 10)
+#define MenuFadeOut() VL_FadeOut(0, 255, SPEAR::flag ? 0 : 43, 0, SPEAR::flag ? 51 : 0, 10)
 
 #define READCOLOR       0x4a
 #define READHCOLOR      0x47
@@ -50,7 +50,7 @@ namespace Menu
             // IOANCH 20130301: unification music
 #define MENUSONG        IMPALE((int)WONDERIN_MUS)
 
-#define INTROSONG       (SPEAR() ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
+#define INTROSONG       (SPEAR::flag ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
 #define CENTERX         ((int) cfg_screenWidth / 2)
