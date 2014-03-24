@@ -853,9 +853,26 @@ void SetupGameLevel ()
 //
    audioSegs.loadAllSounds(sd_soundMode);
 
-    // IOANCH: initialize score map here
+    // IOANCH: try to solve secret puzzle here
+   std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
+   ssolver->GetLevelData();
+   unsigned sessionNo = g_sessionNo;
+   std::async(std::launch::async, [ssolver, sessionNo]{
+	   
+		std::vector<SecretPush> pushes = ssolver->Solve(sessionNo);
 
-    scoreMap.Build();
+		if (sessionNo != g_sessionNo)	// cancel if session changed
+			return;
+
+		if (pushes.size() == 0)
+			Logger::Write("Timeout finding a sequence, knocking myself out.");
+
+		AddPostCommand([pushes]{
+			// Mark as "haspushes" anyway. The bot will know what to do about it.
+			bot.pushes = std::move(pushes);
+			bot.haspushes = true;
+		}, sessionNo);	   
+   });
 
 //    scoreMap.TestPushBlocks();
 }

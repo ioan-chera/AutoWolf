@@ -21,543 +21,695 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-#include "wl_def.h"
-
+#include <queue>
 #include "id_ca.h"
 #include "ioan_secret.h"
-#include "ioan_bas.h"
-#include "Logger.h"
-
-#include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_play.h"
-#include "obattrib.h"
+#include "Logger.h"
 
-// The score map singleton
-ScoreMap scoreMap;
+static const unsigned SecretClass = 98;
+static const unsigned timelimit = 10000;
 
-// static block used by score calculators
-static byte visited[MAPSIZE][MAPSIZE];
-
-//
-// GetScore
-//
-// Gets score of specified stat obj
-//
-inline static int GetScore(byte objid)
+// Key inventory stuff
+enum KeyFlags
 {
-    switch(objid)
-    {
-        case bo_cross:
-        case bo_chalice:
-        case bo_bible:
-        case bo_crown:
-            return atr::treasures[objid - bo_cross].points;
-        case bo_fullheal:
-            return I_CROWNSCORE << 1;
-        default:
-            return 0;
-    }
-}
-
-//
-// RecursiveCalcScore
-//
-// Recursive function for CalcScore
-//
-static int RecursiveCalcScore(int tx, int ty, Boolean8 start = false)
-{
-    static int totalscore = 0;
-    
-    if(tx <= 0 || ty <= 0 || tx >= MAPSIZE - 1 || ty >= MAPSIZE - 1)
-        return totalscore;
-
-    objtype *check = actorat[tx][ty];
-    byte door = tilemap[tx][ty];
-
-    if(visited[tx][ty])
-        return totalscore;
-
-    if(door & 0x80)    // on door
-    {
-        // abort if it's locked, closed and I don't have key for it
-        door = door & ~0x80;
-        byte lock = doorobjlist[door].lock;
-        if (lock >= dr_lock1 && lock <= dr_lock4)
-            if (doorobjlist[door].action != dr_open &&
-                doorobjlist[door].action != dr_opening &&
-                !(gamestate.keys & (1 << (lock-dr_lock1))))
-            {
-                return totalscore;
-            }
-    }
-    else if(check && !ISPOINTER(check))
-        return totalscore;    // solid, impassable
-
-    if(start)
-    {
-        totalscore = 0;
-        // reset visited-map
-        memset(visited, 0, MAPSIZE*MAPSIZE*sizeof(byte));
-    }
-    int score = 0;
-
-    visited[tx][ty] = 1;
-
-    byte objid;
-    for(objid = Basic::FirstObjectAt(tx, ty); objid;
-        objid = Basic::NextObjectAt(tx, ty))
-    {
-        score += GetScore(objid);
-    }
-    // Possible error: multiple actors sharing same spot, only one is counted
-    // (maybe even a corpse?)
-    if(check && ISPOINTER(check) && check->hitpoints > 0)
-        score += atr::points[check->obclass];
-
-    // now add the score to the total recursive score
-    totalscore += score;
-
-    RecursiveCalcScore(tx + 1, ty);
-    RecursiveCalcScore(tx - 1, ty);
-    RecursiveCalcScore(tx, ty + 1);
-    RecursiveCalcScore(tx, ty - 1);
-
-    return totalscore;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// ScoreMap private functions
-//
-////////////////////////////////////////////////////////////////////////////////
-
-//
-// ScoreMap::ClearData
-//
-// Clears the entire data, either for destruction or rewriting upon level start
-//
-void ScoreMap::ClearData()
-{
-    for(unsigned i = 0; i < MAPSIZE; ++i)
-        for(unsigned j = 0; j < MAPSIZE; ++j)
-            map[i][j].Reset();
-    pushBlocks.killAll();
-    regions.killAll();
-    regionCount = 0;
-}
-
-//
-// ScoreMap::InitFromLevelMap
-//
-// Initializes the map from the mapsegs
-// Startup only for now
-//
-void ScoreMap::InitFromLevelMap()
-{
-    // Reset from previous setup
-    ClearData();
-    
-    // Scan for actorat or tilemap
-    for(unsigned i = 0; i < MAPSIZE; ++i)
-    {
-        for(unsigned j = 0; j < MAPSIZE; ++j)
-        {
-            // Scan for either solid blocks (for solidity) or enemies (for score)
-            objtype *check = actorat[i][j];
-            bool solidblock = false;
-            if (check)
-            {
-                if(!ISPOINTER(check))   // is a wall or static blocking object
-                {
-                    // Scan for doors and set solidity
-                    byte door = tilemap[i][j];
-                    if (door & 0x80)
-                    {
-                        map[i][j].solidity = UnlockedDoor;
-                        byte doorlock = doorobjlist[door & ~0x80].lock;
-                        if (doorlock >= dr_lock1 && doorlock <= dr_lock4)
-                        {
-                            map[i][j].solidity = (Solidity)(doorlock
-                                                    + (byte)UnlockedDoor);
-                        }
-                    }
-                    else
-                    {
-                        // solid block
-                        map[i][j].solidity = Solid;
-                    }
-                    solidblock = true;
-                }
-                else
-                {
-                    // is an actor
-                    map[i][j].points = (unsigned)atr::points[check->obclass];
-                }
-            }
-            
-            // Scan for secrets
-            if (MAPSPOT(i, j, 1) == PUSHABLETILE)
-            {
-                PushBlock *pushBlock = new PushBlock(i, j, solidblock);
-                map[i][j].secret = pushBlock;
-                pushBlocks.add(pushBlock);
-            }
-        }
-    }
-    
-    // Scan for items
-    for (statobj_t *statptr = &statobjlist[0]; statptr != laststatobj; statptr++)
-    {
-        if(!(statptr->flags & FL_BONUS))
-            continue;
-        map[statptr->tilex][statptr->tiley].points
-        = GetScore(statptr->itemnumber);
-    }
-    
-    // How to map each region: have an array of map indices
-}
-
-//
-// ScoreMap::RecursiveLabelRegions
-//
-// Recursively floodfills the tiles to do region colouring
-//
-void ScoreMap::RecursiveLabelRegions(int tx, int ty, Region *region)
-{
-    if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
-        return;
-    if(map[tx][ty].solidity == Solid)
-        return;
-    if(map[tx][ty].region)
-        return;
-    map[tx][ty].region = region;
-    
-    word mapslot = mapSegs(1, tx, ty);
-    if(mapslot >= PLAYER_START_NORTH && mapslot <= PLAYER_START_WEST)
-        startRegion = region;
-        
-    RecursiveLabelRegions(tx - 1, ty, region);
-    RecursiveLabelRegions(tx + 1, ty, region);
-    RecursiveLabelRegions(tx, ty - 1, region);
-    RecursiveLabelRegions(tx, ty + 1, region);
-}
-
-//
-// ScoreMap::LabelRegions()
-//
-// Colours the regions as delimited by solid walls (but not doors)
-// Needed for secret solving
-//
-void ScoreMap::LabelRegions()
-{
-    for(unsigned i = 0; i < MAPSIZE; ++i)
-        for(unsigned j = 0; j < MAPSIZE; ++j)
-            if(map[i][j].solidity != Solid && !map[i][j].region)
-            {
-                ++regionCount;
-                Region *region = new Region;
-                RecursiveLabelRegions(i, j, region);
-                regions.add(region);
-            }
-}
-
-//
-// ScoreMap::RecursiveConnectRegion
-//
-// Scans all adjacent tiles, going through pushwalls, until encountering a
-// region.
-// Then it adds that region to a set, which will connect all regions with edges
-//
-void ScoreMap::RecursiveConnectRegion(int tx, int ty,
-                                      std::set<Region *> &regionSet,
-                                      std::set<PushBlock *> &secretSet)
-{
-    if(tx < 0 || ty < 0 || tx >= MAPSIZE || ty >= MAPSIZE)
-        return;
-    
-    PushBlock *sec = map[tx][ty].secret;
-    if(sec && !sec->visited)
-    {    // Is a secret. What do? Move around
-        sec->visited = true;
-        secretSet.insert(sec);
-        
-        RecursiveConnectRegion(tx - 1, ty, regionSet, secretSet);
-        RecursiveConnectRegion(tx + 1, ty, regionSet, secretSet);
-        RecursiveConnectRegion(tx, ty - 1, regionSet, secretSet);
-        RecursiveConnectRegion(tx, ty + 1, regionSet, secretSet);
-    }
-    if (map[tx][ty].region)
-    {
-        // Add this region to the set of connected
-        
-        regionSet.insert(map[tx][ty].region);
-        
-        return;
-    }
-}
-
-void ScoreMap::doConnection(const std::set<PushBlock *> &secretSet, Region *reg1, Region *reg2)
-{
-   bool found = false;
-   for (RegionConnection *entry = reg1->neighList.firstObject();
-        entry;
-        entry = reg1->neighList.nextObject())
-   {
-      if (entry->region == reg2)
-      {
-         // Neighbour region already set, just add the blocks
-         entry->pushBlocks.insert(secretSet.begin(), 
-                                  secretSet.end());
-         found = true;
-         break;  // done
-      }
-   }
-   if(!found)
-   {
-      RegionConnection *connection = new RegionConnection;
-      connection->region = reg2;
-      connection->pushBlocks = secretSet;
-      reg1->neighList.add(connection);
-   }
+	KEY_1 = 1,
+	KEY_2 = 2,
+	KEY_3 = 4,
+	KEY_4 = 8,
 };
 
-//
-// ScoreMap::ConnectRegions
-//
-// Connect the regions based on secret blocks
-//
-void ScoreMap::ConnectRegions()
+inline static unsigned GetX(unsigned what)
 {
-    for(PushBlock *entry = pushBlocks.firstObject(); entry; 
-        entry = pushBlocks.nextObject())
-    {        
-        // Initialize the data
-        std::set<Region *> regionSet;
-        std::set<PushBlock *> secretSet;
-        
-        // Do the recursive work
-        RecursiveConnectRegion(entry->tilex, entry->tiley, regionSet, secretSet);
-        
-        // What should the final result be:
-        // An array of regions. Each region will be associated with some neigh-
-        // bour regions. Each such neighbour will be associated with a set of
-        // pushwalls. It will also be either considerable or trivial
-        // It's trivial if it only has one pushwall, and it can only be pushed
-        // from one direction.
-        
-        // What I get from the beginning: a set of blocks and a set of regions,
-        // from the static space. I have to take every combination of such re-
-        // gions and edit the graph to have them neighbours with the other,
-        // adding those pushwalls there
-        
-        // How to add them: I already have regionNeighList created from the la-
-        // belling stage. For each region entry, I
-        // scan the List for the second combination, and if it's not there, I
-        // add it with the obtained secret set. If it's already there, I just
-        // merge the secretSet there.
-        
-        // no sets obtained of either type, move on
-        if(secretSet.size() < 1 || regionSet.size() < 1)
-            continue;
-        
-        // Auxiliary function to do the connection
-        
-        if (regionSet.size() == 1)
-            doConnection(secretSet, *regionSet.begin(), *regionSet.begin());
-        else
-        {
-           for (std::set<Region *>::iterator it1 = regionSet.begin(); it1 != regionSet.end(); ++it1)
-            {
-                for (std::set<Region *>::iterator it2 = it1; it2 != regionSet.end(); ++it2)
-                {
-                    if(it2 == it1)
-                        continue;
-                    doConnection(secretSet, *it1, *it2);
-                    doConnection(secretSet, *it2, *it1);
-                }
-            }
-        }
-    }
+	return what % MAPSIZE;
 }
 
-//
-// ScoreMap::OutputRegionGraphTGF
-//
-// Writes the contents of the regionNeighList to a Trivial Graph Format text
-// file, which can be read by utilities such as yWorks yEd (free of charge)
-//
-// Format is very simple:
-// - list of node indices and their names, one for each line
-// - a line with a hash character ('#') as separator
-// - list of edges, represented by pairs of node indices, optionally with label
-//
-void ScoreMap::OutputRegionGraphTGF(FILE *f) 
+inline static unsigned GetY(unsigned what)
 {
-    // Write regions
-    for(Region *region = regions.firstObject();
-        region;
-        region = regions.nextObject())
-    {
-        // print each node and its label (same label as the index) per line
-        fprintf(f, "%llu %llu\n", (unsigned long long)region,
-                (unsigned long long)region);
-    }
-    fprintf(f, "#\n");
-    for(Region *reg1 = regions.firstObject();
-        reg1;
-        reg1 = regions.nextObject())
-    {
-        for (RegionConnection *obj = reg1->neighList.firstObject();
-             obj;
-             obj = reg1->neighList.nextObject())
-        {
-            Region *reg2 = obj->region;
-            // First, print the pair
-            if((unsigned long long)reg2 >= (unsigned long long)reg1)
-            {
-                fprintf(f, "%llu %llu", (unsigned long long)reg1,
-                        (unsigned long long)reg2);
-                unsigned blockCount = (unsigned)obj->pushBlocks.size();
-                unsigned posCount = obj->pushPositions.count();
-                // Print the number of walls, if larger than 0
-                if (blockCount + posCount > 0)
-                {
-                    fprintf(f, " %u+%u", blockCount, posCount);
-                }
-                fprintf(f, "\n");
-            }
-        }
-    }
+	return what / MAPSIZE;
 }
 
-//
-// ScoreMap::TestPushBlocks
-//
-// Function used for testing blocks
-//
-void ScoreMap::TestPushBlocks()
+inline static bool IsPlayerStart(unsigned kind)
 {
-    Logger::Write("Testing push blocks...");
-    Logger::Write("Start region: %llu\n", (unsigned long long)startRegion);
-
-    for (PushBlock *entry = pushBlocks.firstObject();
-         entry;
-         entry = pushBlocks.nextObject())
-    {
-        Logger::Write("tx=%d ty=%d us=%d\n", entry->tilex,
-               entry->tiley,
-               entry->usable);
-    }
-    OutputRegionGraphTGF(stdout);
-    Logger::Write("THEN\n");
-    for(Region *region = regions.firstObject();
-        region;
-        region = regions.nextObject())
-    {
-        Logger::Write("%llu has: ", (unsigned long long)region);
-        for(RegionConnection *connection = region->neighList.firstObject();
-            connection; connection = region->neighList.nextObject())
-        {
-            for(RegionConnection::PushPosition *a =
-                connection->pushPositions.firstObject(); 
-                a; a = connection->pushPositions.nextObject())
-            {
-                Logger::Write("(%d %d)-(%d %d) ", a->tx, a->ty, a->block->tilex, 
-                       a->block->tiley);
-            }
-        }
-        Logger::Write("\n");
-    }
+	return kind >= 19 && kind <= 22;
 }
 
-//
-// ScoreMap::GetPushPositions
-//
-// For each region and its neighbours, it looks for actually pushable blocks
-//
-static struct {char tx, ty;} rel[] = 
-{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-void ScoreMap::GetPushPositions()
+bool SecretSolver::IsSoftWall(unsigned kind) const
 {
-    for(Region *region = regions.firstObject(); region; 
-        region = regions.nextObject())
-    {
-        for(RegionConnection *neigh = region->neighList.firstObject();
-            neigh;
-            neigh = region->neighList.nextObject())
-        {
-           for(std::set<PushBlock *>::iterator it = neigh->pushBlocks.begin(); 
-                it != neigh->pushBlocks.end(); ++it)
-            {
-                PushBlock *block = *it;
-                if(!block->usable)
-                    continue;
-                for(char j = 0; j < 4; ++j)
-                {
-                    int reltx = block->tilex + rel[j].tx, 
-                        relty = block->tiley + rel[j].ty;
-                    if(map[reltx][relty].region == region)
-                    {
-                        // Got one of mine. See the other side now.
-                        if (!actorat[block->tilex - rel[j].tx]
-                                    [block->tiley - rel[j].ty]) 
-                        {
-                            // Free spot. So it's pushable
-                            RegionConnection::PushPosition *pp 
-                            = new RegionConnection::PushPosition;
-                            pp->tx = reltx;
-                            pp->ty = relty;
-                            pp->block = block;
-                            neigh->pushPositions.add(pp);
-                        }
-                    }
-                }
-            }
-        }
-    }
+	switch (actorbuf->at(kind))
+	{
+	case 24:
+	case 25:
+	case 26:
+	case 28:
+	case 30:
+	case 31:
+	case 33:
+	case 34:
+	case 35:
+	case 36:
+		return true;
+	case 38:
+		if (SPEAR::flag)
+			return true;
+		break;
+	case 39:
+	case 40:
+	case 41:
+	case 45:
+	case 58:
+	case 59:
+	case 60:
+	case 62:
+	case 63:
+		if (!SPEAR::flag)
+			return true;
+		break;
+	case 67:
+		if (SPEAR::flag)
+			return true;
+		break;
+	case 68:
+	case 69:
+		return true;
+	case 71:
+	case 73:
+		if (SPEAR::flag)
+			return true;
+		break;
+	}
+	return false;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// ScoreMap public functions
-//
-////////////////////////////////////////////////////////////////////////////////
-
-//
-// ScoreMap::Build
-//
-// Does the entire score-map reset and build process, called from SetupGameLevel
-//
-void ScoreMap::Build()
+bool SecretSolver::IsWall(unsigned kind) const
 {
-    InitFromLevelMap();
-    LabelRegions();
-    ConnectRegions();
-    GetPushPositions();
-//    TestPushBlocks();
+	if (wallbuf->at(kind) && wallbuf->at(kind) < 90)
+		return true;
+	return IsSoftWall(kind);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Secret functions
-//
-////////////////////////////////////////////////////////////////////////////////
-
-//
-// Secret::CalcScore
-//
-// calculate the available score from this current position
-//
-int Secret::CalcScore(int tx, int ty)
+static unsigned PointsFor(unsigned kind)
 {
-    int ret = 0;
-    
-    ret = RecursiveCalcScore(tx, ty, true);
-    
-    return ret;
+	switch (kind)
+	{
+	case 52:
+		return 100;
+	case 53:
+		return 500;
+	case 54:
+		return 1000;
+	case 55:
+		return 5000;
+		// guard
+	case 180:
+	case 181:
+	case 182:
+	case 183:
+	case 144:
+	case 145:
+	case 146:
+	case 147:
+	case 108:
+	case 109:
+	case 110:
+	case 111:
+	case 184:
+	case 185:
+	case 186:
+	case 187:
+	case 148:
+	case 149:
+	case 150:
+	case 151:
+	case 112:
+	case 113:
+	case 114:
+	case 115:
+		return 100;
+	case 188:
+	case 189:
+	case 190:
+	case 191:
+	case 152:
+	case 153:
+	case 154:
+	case 155:
+	case 116:
+	case 117:
+	case 118:
+	case 119:
+	case 192:
+	case 193:
+	case 194:
+	case 195:
+	case 156:
+	case 157:
+	case 158:
+	case 159:
+	case 120:
+	case 121:
+	case 122:
+	case 123:
+		return 400;
+	case 198:
+	case 199:
+	case 200:
+	case 201:
+	case 162:
+	case 163:
+	case 164:
+	case 165:
+	case 126:
+	case 127:
+	case 128:
+	case 129:
+	case 202:
+	case 203:
+	case 204:
+	case 205:
+	case 166:
+	case 167:
+	case 168:
+	case 169:
+	case 130:
+	case 131:
+	case 132:
+	case 133:
+		return 500;
+	case 206:
+	case 207:
+	case 208:
+	case 209:
+	case 170:
+	case 171:
+	case 172:
+	case 173:
+	case 134:
+	case 135:
+	case 136:
+	case 137:
+	case 210:
+	case 211:
+	case 212:
+	case 213:
+	case 174:
+	case 175:
+	case 176:
+	case 177:
+	case 138:
+	case 139:
+	case 140:
+	case 141:
+		return 200;
+	case 214:
+	case 197:
+	case 215:
+	case 179:
+	case 196:
+		return 5000;
+	case 160:
+		return 2000;
+	case 178:
+		return 10000;
+	case 106:
+	case 107:
+	case 125:
+	case 142:
+	case 143:
+	case 161:
+		return 5000;
+	case 252:
+	case 253:
+	case 254:
+	case 255:
+	case 234:
+	case 235:
+	case 236:
+	case 237:
+	case 216:
+	case 217:
+	case 218:
+	case 219:
+	case 256:
+	case 257:
+	case 258:
+	case 259:
+	case 238:
+	case 239:
+	case 240:
+	case 241:
+	case 220:
+	case 221:
+	case 222:
+	case 223:
+		return 700;
+	}
+	return 0;
 }
 
+bool SecretSolver::IsSecretFree(unsigned pos) const
+{
+	if (IsWall(pos))
+		return false;
+	if (PointsFor(actorbuf->at(pos)) && (actorbuf->at(pos) < 52 || actorbuf->at(pos) >= 56))
+		return false;
+	if (actorbuf->at(pos) == 124)
+		return false;
+	return true;
+}
 
+bool SecretSolver::IsSecret(unsigned targetpos, unsigned sourcepos) const
+{
+	if (actorbuf->at(targetpos) != SecretClass)	// secret spot
+		return false;
+	if (!wallbuf->at(targetpos) || wallbuf->at(targetpos) >= 106)	// not a wall
+		return false;
+	if (IsSecretFree(targetpos + targetpos - sourcepos))	// can push
+		return true;
+	return false;
+}
+
+bool SecretSolver::OperateWall(unsigned targetpos, unsigned sourcepos, unsigned index)
+{
+	if (!IsSecret(targetpos, sourcepos))
+		return false;
+
+	//printf("Pushing %s from %s\n", Coords(targetpos).c_str(), Coords(sourcepos).c_str());
+
+	pushstates.push(std::array<uint16_t, maparea>());
+	actorstates.push(std::array<uint16_t, maparea>());
+	posstates.push(sourcepos);
+	scorestates.push(scorestates.top());
+	choicestates.push(index);
+
+	memcpy(pushstates.top().data(), wallbuf->data(), pushstates.top().size() * sizeof(uint16_t));
+	memcpy(actorstates.top().data(), actorbuf->data(), actorstates.top().size() * sizeof(uint16_t));
+
+	// Push the wall and update current state
+	wallbuf = &pushstates.top();
+	actorbuf = &actorstates.top();
+	playerpos = posstates.top();
+
+	uint16_t walltype = wallbuf->at(targetpos);
+	// We already determined that the next spot is empty. See if the second next is.
+	if (IsSecretFree(targetpos + (targetpos - sourcepos) * 2))
+		wallbuf->at(targetpos + (targetpos - sourcepos) * 2) = walltype;
+	else
+		wallbuf->at(targetpos + (targetpos - sourcepos)) = walltype;
+	wallbuf->at(targetpos) = wallbuf->at(sourcepos);
+	actorbuf->at(targetpos) = 0;	// consume secret trigger
+	return true;
+}
+
+bool SecretSolver::OperateWall(SecretPush pair, unsigned index)
+{
+	return OperateWall(pair.targetpos, pair.sourcepos, index);
+}
+
+unsigned SecretSolver::UndoSecret()
+{
+	if (pushstates.size() <= 1)
+		return (unsigned)-1;
+
+	pushstates.pop();
+	wallbuf = &pushstates.top();
+
+	actorstates.pop();
+	actorbuf = &actorstates.top();
+
+	posstates.pop();
+	playerpos = posstates.top();
+
+	scorestates.pop();
+
+	unsigned index = choicestates.top();
+	choicestates.pop();
+	return index + 1;
+}
+
+#include <sstream>
+static std::string Coords(unsigned what)
+{
+	std::ostringstream oss;
+	oss << "(" << (what % MAPSIZE) << ", " << (what / MAPSIZE) << ")";
+	return oss.str();
+}
+
+// THIS WILL BE CALLED FROM A BACKGROUND THREAD
+std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
+{
+	Uint32 ticks = SDL_GetTicks();
+
+	try
+	{
+		if (!GetX(playerpos) || !GetY(playerpos) || GetX(playerpos) >= MAPSIZE - 1 || GetY(playerpos) >= MAPSIZE - 1)
+			return std::vector<SecretPush>();
+
+		std::queue<unsigned> tiles;
+		std::array<std::stack<unsigned>, 4> lockedtiles;
+
+		secretliststates.push(std::vector<SecretPush>());
+		std::vector<SecretPush> *secrets = &secretliststates.top();
+
+		tiles.push(playerpos);
+
+		std::array<uint8_t, maparea> visited;
+		visited.fill(0);
+		visited.at(playerpos) = 2;
+
+		unsigned needed, neededindex;
+		unsigned secretindex = 0;
+		unsigned pos;
+		unsigned exitcount = 0;
+
+		bool consumeactor;
+		do
+		{
+			if (SDL_GetTicks() - ticks >= timelimit || sessionNo != g_sessionNo)
+				return std::vector<SecretPush>();
+
+			if (secretindex < secrets->size())
+			{
+				SecretPush pair = secrets->at(secretindex);
+
+				//puts("push");
+				OperateWall(pair, secretindex);
+
+				if (totalsecrets && MapHasTally() && choicestates.size() == totalsecrets)
+					scorestates.top().maxsecrets = 1;
+
+				secretindex = 0;
+				secretliststates.push(std::vector<SecretPush>());
+				secrets = &secretliststates.top();
+
+				// Empty door lists
+				for (auto stck : lockedtiles)
+				while (!stck.empty())
+					stck.pop();
+				exitcount = 0;
+				while (!tiles.empty())
+					tiles.pop();
+				tiles.push(playerpos);
+				visited.fill(0);
+				visited.at(playerpos) = 2;
+			}
+			while (!tiles.empty())
+			{
+
+				pos = tiles.front();
+				tiles.pop();
+
+				needed = 0;
+				if (visited.at(pos) == 2)
+					switch (wallbuf->at(pos))
+					{
+					case 92:
+					case 93:
+						//printf("Found door %u\n", KEY_1);
+						needed = KEY_1;
+						neededindex = 0;
+						break;
+					case 94:
+					case 95:
+						//printf("Found door %u\n", KEY_2);
+						needed = KEY_2;
+						neededindex = 1;
+						break;
+					case 96:
+					case 97:
+						needed = KEY_3;
+						neededindex = 2;
+						break;
+					case 98:
+					case 99:
+						needed = KEY_4;
+						neededindex = 3;
+						break;
+					}
+
+				if (needed && !(needed & scorestates.top().keys))
+				{
+					//printf("No key available\n");
+					// no key available here
+					lockedtiles.at(neededindex).push(pos);
+					continue;
+				}
+
+				consumeactor = false;
+				if (PointsFor(actorbuf->at(pos)))
+				{
+					if (actorbuf->at(pos) >= 52 && actorbuf->at(pos) < 56)
+					{
+						if (visited.at(pos) == 2)
+						{
+							scorestates.top().treasurecount++;
+							scorestates.top().score += PointsFor(actorbuf->at(pos));
+							consumeactor = true;
+						}
+					}
+					else
+					{
+						scorestates.top().enemycount++;
+						scorestates.top().score += PointsFor(actorbuf->at(pos));
+						consumeactor = true;
+					}
+				}
+
+				if (visited.at(pos) == 2 && actorbuf->at(pos) == 56 && MapHasTally())
+				{
+					scorestates.top().treasurecount++;
+					actorbuf->at(pos) = 0;
+				}
+
+				neededindex = (unsigned)-1;
+				if (visited.at(pos) == 2)
+					switch (actorbuf->at(pos))
+					{
+					case 43:
+					case 214:
+					case 197:
+					case 125:
+					case 142:
+					case 143:
+					case 161:
+						//printf("Found key %u\n", KEY_1);
+						scorestates.top().keys |= KEY_1;
+						neededindex = 0;
+						break;
+					case 44:
+						//printf("Found key %u\n", KEY_2);
+						scorestates.top().keys |= KEY_2;
+						neededindex = 1;
+						break;
+					case 45:
+						scorestates.top().keys |= KEY_3;
+						neededindex = 2;
+						break;
+					case 46:
+						scorestates.top().keys |= KEY_4;
+						neededindex = 3;
+						break;
+					}
+
+				if (neededindex < 4 || consumeactor)
+					actorbuf->at(pos) = 0;	// consume it.
+
+				if (neededindex < 4)
+				{
+					//printf("Emptying stack %u\n", neededindex);
+					while (!lockedtiles.at(neededindex).empty())
+					{
+						//printf("Popping pos (%u %u)\n", lockedtiles.at(neededindex).top() % WOLF3D_MAPSIZE, lockedtiles.at(neededindex).top() / WOLF3D_MAPSIZE);
+						tiles.push(lockedtiles.at(neededindex).top());
+						lockedtiles.at(neededindex).pop();
+					}
+				}
+
+				if (pos % MAPSIZE > 1)
+				{
+					if (!IsWall(pos - 1) && visited.at(pos - 1) < visited.at(pos))
+					{
+						tiles.push(pos - 1);
+						visited.at(pos - 1) = visited.at(pos);
+					}
+					else if (IsSoftWall(pos - 1) && visited.at(pos - 1) < 1)
+					{
+						tiles.push(pos - 1);
+						visited.at(pos - 1) = 1;
+					}
+					else if (visited.at(pos) == 2 && IsSecret(pos - 1, pos))
+					{
+						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - 1) % WOLF3D_MAPSIZE, (pos - 1) / WOLF3D_MAPSIZE);
+						secrets->push_back(SecretPush(pos - 1, pos));
+					}
+					else if (visited.at(pos) == 2 && IsExit(pos - 1))
+						exitcount++;
+				}
+
+				if (pos % MAPSIZE < MAPSIZE - 2)
+				{
+					if (!IsWall(pos + 1) && visited.at(pos + 1) < visited.at(pos))	// maximum legal is 62 = mapsize - 2
+					{
+						tiles.push(pos + 1);
+						visited.at(pos + 1) = visited.at(pos);
+					}
+					else if (IsSoftWall(pos + 1) && visited.at(pos + 1) < 1)
+					{
+						tiles.push(pos + 1);
+						visited.at(pos + 1) = 1;
+					}
+					else if (visited.at(pos) == 2 && IsSecret(pos + 1, pos))
+					{
+						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + 1) % WOLF3D_MAPSIZE, (pos + 1) / WOLF3D_MAPSIZE);
+						secrets->push_back(SecretPush(pos + 1, pos));
+					}
+					else if (visited.at(pos) == 2 && IsExit(pos + 1))
+						exitcount++;
+				}
+
+				if (pos / MAPSIZE > 1)
+				{
+					if (!IsWall(pos - MAPSIZE) && visited.at(pos - MAPSIZE) < visited.at(pos))
+					{
+						tiles.push(pos - MAPSIZE);
+						visited.at(pos - MAPSIZE) = visited.at(pos);
+					}
+					else if (IsSoftWall(pos - MAPSIZE) && visited.at(pos - MAPSIZE) < 1)
+					{
+						tiles.push(pos - MAPSIZE);
+						visited.at(pos - MAPSIZE) = 1;
+					}
+					else if (visited.at(pos) == 2 && IsSecret(pos - MAPSIZE, pos))
+					{
+						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
+						secrets->push_back(SecretPush(pos - MAPSIZE, pos));
+					}
+				}
+
+				if (pos / MAPSIZE < MAPSIZE - 2)
+				{
+					if (!IsWall(pos + MAPSIZE) && visited.at(pos + MAPSIZE) < visited.at(pos))
+					{
+						tiles.push(pos + MAPSIZE);
+						visited.at(pos + MAPSIZE) = visited.at(pos);
+					}
+					else if (IsSoftWall(pos + MAPSIZE) && visited.at(pos + MAPSIZE) < 1)
+					{
+						tiles.push(pos + MAPSIZE);
+						visited.at(pos + MAPSIZE) = 1;
+					}
+					else if (visited.at(pos) == 2 && IsSecret(pos + MAPSIZE, pos))
+					{
+						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
+						secrets->push_back(SecretPush(pos + MAPSIZE, pos));
+					}
+				}
+			}
+
+			if (totalenemies && MapHasTally() && scorestates.top().enemycount == totalenemies)
+				scorestates.top().maxenemies = 1;
+			if (totaltreasure && MapHasTally() && scorestates.top().treasurecount == totaltreasure)
+				scorestates.top().maxtreasures = 1;
+
+			if (scorestates.top().totalscore() == totalscore && exitcount)
+			{
+				//("Found maximum score for pushes!");
+				//WritePushes();
+				std::vector<SecretPush> finality;
+				secretliststates.pop();
+				while (!choicestates.empty() && !secretliststates.empty())
+				{
+					SecretPush push = secretliststates.top().at(choicestates.top());
+					finality.push_back(push);
+
+					//Logger::Write("%s from %s\n", Coords(push.targetpos).c_str(), Coords(push.sourcepos).c_str());
+
+					choicestates.pop();
+					secretliststates.pop();
+				}
+				return finality;
+			}
+
+			// We now got the secret walls
+			if (secrets->empty())
+			{
+				do
+				{
+					//puts("pop");
+					secretindex = UndoSecret();
+
+					if (secretindex != (unsigned)-1)
+					{
+						secretliststates.pop();
+						secrets = &secretliststates.top();
+					}
+
+				} while (secretindex != (unsigned)-1 && secretindex >= secrets->size());
+			}
+		} while (secretindex != (unsigned)-1);
+	}
+	catch (const std::exception &e)
+	{
+		// Can't abort from here!
+		Logger::Write("ERROR during %s: %s", __FUNCTION__, e.what());
+		return std::vector<SecretPush>();
+	}
+	return std::vector<SecretPush>();
+}
+
+void SecretSolver::GetLevelData()
+{
+	// Init data
+	// Exceptions will be caught by game's quit handler
+	mapnum = gamestate.mapon;
+
+	pushstates.push(std::array<uint16_t, maparea>());
+	actorstates.push(std::array<uint16_t, maparea>());
+	wallbuf = &pushstates.top();
+	actorbuf = &actorstates.top();
+
+	memcpy(wallbuf->data(), mapSegs[0], sizeof(*wallbuf));
+	memcpy(actorbuf->data(), mapSegs[1], sizeof(*actorbuf));
+
+	totalscore = totalsecrets = totalenemies = totaltreasure = 0;
+	unsigned ppos = 0;
+	for (int y = 0; y < MAPSIZE; ++y)
+		for (int x = 0; x < MAPSIZE; ++x)
+		{
+			unsigned kind = actorbuf->at(y * MAPSIZE + x);
+			if (PointsFor(kind))
+			{
+				if (kind >= 52 && kind < 56)
+					totaltreasure++;
+				else
+					totalenemies++;
+				totalscore += PointsFor(kind);
+			}
+			else if (kind == 56 && MapHasTally())
+				totaltreasure++;
+			if (kind == SecretClass)
+				totalsecrets++;
+			if (IsPlayerStart(kind))
+			{
+				ppos = y * MAPSIZE + x;
+			}
+		}
+
+	if (MapHasTally())
+	{
+		if (totaltreasure)
+			totalscore += 10000;
+		if (totalenemies)
+			totalscore += 10000;
+		if (totalsecrets)
+			totalscore += 10000;
+	}
+	else if (MapHasAutobonus())
+		totalscore += 15000;
+
+	posstates.push(ppos);
+	playerpos = ppos;
+
+	scorestates.push(Inventory(this));
+}

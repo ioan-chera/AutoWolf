@@ -84,7 +84,7 @@ extern  int         singlestep;
 
 extern  unsigned        g_sessionNo;	// the time of the SetupGameLevel.
 void StartNewSession();
-void AddPostCommand(const std::function<void(void)> &cmd);
+void AddPostCommand(const std::function<void(void)> &cmd, unsigned inSessionNo);
 void StartBackgroundWork(const std::function<void(unsigned)> &cmd, const std::function<void(void)> &postcmd);
 
 #endif

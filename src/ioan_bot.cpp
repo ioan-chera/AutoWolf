@@ -84,6 +84,9 @@ void BotMan::MapInit()
     }
    
    heardEvents.killAll();
+
+   haspushes = false;
+   pushes.clear();
 }
 
 //
@@ -210,6 +213,10 @@ void BotMan::SetMood()
 
 bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 {
+	if (!haspushes || (searchstage < SSMax && pushes.size() &&
+		(pushes.back().sourcepos != tx + MAPSIZE * ty ||
+		pushes.back().targetpos != (tx + txofs) + MAPSIZE * (ty + tyofs))))
+		return false;
    if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
    {
       objtype *check;
@@ -1801,7 +1808,10 @@ void BotMan::DoNonCombatAI()
 			// So move
 			controly = -RUNMOVE * tics;
 			// Press if there's an obstacle ahead
-			if(tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
+
+			int checkx, checky;
+			Basic::GetFacingAngle(checkx, checky);
+			if(checkx == nx && checky == ny && tryuse && (actorat[nx][ny] && !ISPOINTER(actorat[nx][ny])) && pressuse % 4 == 0)
 				buttonstate[bt_use] = true;
 			else	
 				buttonstate[bt_use] = false;

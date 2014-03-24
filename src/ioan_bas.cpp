@@ -609,3 +609,30 @@ bool Basic::IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty)
       return true;
    return false;
 }
+
+void Basic::GetFacingAngle(int& checkx, int& checky)
+{
+	//
+	// find which cardinal direction the player is facing
+	//
+	if (player->angle < ANGLES / 8 || player->angle > 7 * ANGLES / 8)
+	{
+		checkx = player->tilex + 1;
+		checky = player->tiley;
+	}
+	else if (player->angle < 3 * ANGLES / 8)
+	{
+		checkx = player->tilex;
+		checky = player->tiley - 1;
+	}
+	else if (player->angle < 5 * ANGLES / 8)
+	{
+		checkx = player->tilex - 1;
+		checky = player->tiley;
+	}
+	else
+	{
+		checkx = player->tilex;
+		checky = player->tiley + 1;
+	}
+}

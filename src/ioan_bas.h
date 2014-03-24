@@ -127,6 +127,8 @@ namespace Basic
     
    bool IsGunShotSound(word s);  // returns true if sound is gunshot
    bool IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty);
+
+   void GetFacingAngle(int &checkx, int &checky);
 };
 
 #endif

@@ -20,189 +20,120 @@
 #ifndef IOAN_SECRET_H_
 #define IOAN_SECRET_H_
 
-#include "List.h"
-#include "m_dllist.h"
+#include <array>
+#include <stack>
+#include <vector>
+#include "SODFlag.h"
+#include "wl_def.h"
 
-//
-// ScoreMap
-//
-// Class for the game strategy map
-// Only set on map initialization
-//
-class ScoreMap
+// Secret push action: contains coordinates of wall and player that pushes it
+class SecretPush
 {
-    //
-    // Solidity
-    //
-    // Solid block, or door (various kinds)
-    //
-    enum Solidity
-    {
-        Free,
-        Solid,
-        UnlockedDoor,
-        LockedDoor1,
-        LockedDoor2,
-        LockedDoor3,
-        LockedDoor4
-    };
-    
-    //
-    // PushBlock
-    //
-    // Secret wall/block
-    //
-    class PushBlock
-    {
-        friend class ScoreMap;
-        
-        // Block coordinates
-        int tilex, tiley;
-        // Usable (can be pushed)
-        bool usable;
-        // Visited by various graph search schemes
-        bool visited;
-    public:
-        //
-        // Constructor
-        //
-        PushBlock(int tx, int ty, bool us) : tilex(tx), tiley(ty), usable(us),
-        visited(false)
-        {
-        }
-    };
-    
-    //
-    // RegionConnection
-    //
-    // Simple structure that consists of a region index and a list of pushwalls
-    //
-    class Region;
-    class RegionConnection
-    {
-    public:
-        struct PushPosition 
-        {
-            int tx, ty;
-            PushBlock *block;
-            Boolean8 operator ==(const PushPosition &other) const {return tx == other.tx && ty == other.ty && block == other.block;}
-        };
-        Region *region;
-        std::set<PushBlock *> pushBlocks;
-        List<PushPosition *> pushPositions;
-        ~RegionConnection()
-        {
-            pushPositions.killAll();
-        }
-    };
-    
-    class ScoreBlock;
-    typedef std::pair<int, int> IntPair;
-    //
-    // Region
-    //
-    // Map cell connected to other regions by pushwalls
-    //
-    class Region
-    {
-    public:
-        // Each region will have its list of pairs of 'map' indices
-        List<IntPair *> map;
-        // Region graph. Connects each region with the others, with the number of
-        // pushblocks as parameter
-        List<RegionConnection *> neighList;
-    };
-    
-    //
-    // ScoreBlock
-    //
-    // Class for various calculation
-    //
-    class ScoreBlock
-    {
-        friend class ScoreMap;
-
-        // Score given by this point
-        unsigned points;
-        // Region colour
-        Region *region;
-        // Possible pushwall here
-        PushBlock *secret;
-        // Solidity kind
-        Solidity solidity;
-    public:
-        //
-        // Constructor
-        //
-        ScoreBlock() : points(0), region(NULL), secret(NULL), solidity(Free)
-        {
-        }
-        
-        // Reset the block
-        void Reset()
-        {
-            points = 0;
-            region = NULL;
-            secret = NULL;
-            solidity = Free;
-        }
-    };
-    
-    // map of the blocks
-    ScoreBlock map[MAPSIZE][MAPSIZE];
-    // list of pushwalls
-    List<PushBlock *> pushBlocks;
-    // Number of regions
-    int regionCount;
-    // Region list
-    List<Region *> regions;
-    // Player start region
-    Region *startRegion;
-
-    void ClearData();
-    void ConnectRegions();
-    void DeleteRegionNeighList();
-    void GetPushPositions();
-    void InitFromLevelMap();
-    void LabelRegions();
-    void OutputRegionGraphTGF(FILE *f = stdout);
-    void RecursiveConnectRegion(int tx, int ty,
-                                std::set<Region *> &regionSet,
-                                std::set<PushBlock *> &secretSet);
-    void RecursiveLabelRegions(int tx, int ty, Region *region);
-    void TestPushBlocks();
-   
-   void doConnection(const std::set<PushBlock *> &secretSet, Region *reg1, Region *reg2);
-    
 public:
-    void Build();
-    
-    //
-    // Constructor
-    //
-    ScoreMap() : regionCount(0)
-    {
-    }
-    
-    //
-    // Destructor
-    //
-    ~ScoreMap()
-    {
-        ClearData();
-    }
+	unsigned targetpos, sourcepos;
+	SecretPush() : targetpos(0), sourcepos(0)
+	{
+	}
+	SecretPush(unsigned a, unsigned b) : targetpos(a), sourcepos(b)
+	{
+	}
 };
-extern ScoreMap scoreMap;
 
-//
-// Secret
-//
-// Module for solving pushwall mazes
-//
-namespace Secret
+// Big class that solves secret puzzles. Needs to be class because it's run from threads and we don't want race conditions on shared resources
+class SecretSolver
 {
-    // calculate the available score from this current position
-    int CalcScore(int tx, int ty);
+	// Total score one can achieve in the level
+	unsigned totalscore = 0;
+
+	// Number of such objects
+	unsigned totalsecrets = 0;
+	unsigned totalenemies = 0;
+	unsigned totaltreasure = 0;
+
+	// Current map
+	unsigned mapnum = 0;
+
+	// Current operational items
+	std::array<uint16_t, maparea> *wallbuf = nullptr;
+	std::array<uint16_t, maparea> *actorbuf = nullptr;
+
+	// Map state stacks
+	std::stack<std::array<uint16_t, maparea>> pushstates;
+	std::stack<std::array<uint16_t, maparea>> actorstates;
+
+	// Player position states
+	std::stack<unsigned> posstates;
+
+	// Helper stuff
+	struct Inventory
+	{
+		unsigned score = 0;							// score
+		unsigned keys = 0;							// key inventory (uses flags in impl)
+		unsigned treasurecount = 0, enemycount = 0;	// amount of gathered items or killed nazis
+		uint8_t maxsecrets = 0, maxenemies = 0, maxtreasures = 0;	// THESE ARE FLAGS (0/1). They mean whether maximum was reached
+
+		const SecretSolver* o = nullptr;	// reference to owning object
+
+		Inventory(const SecretSolver* ss) : o(ss)
+		{
+		}
+
+		unsigned totalscore() const
+		{
+			return score + (o->MapHasTally() ? 10000 * (maxsecrets + maxenemies + maxtreasures) : o->MapHasAutobonus() ? 15000 : 0);
+		}
+	};
+
+	// Item pickup states
+	std::stack<Inventory> scorestates;
+
+	// Secret push index states
+	std::stack<unsigned> choicestates;
+
+	// Secret push list states
+	std::stack<std::vector<SecretPush>> secretliststates;
+
+	// Current player position
+	unsigned playerpos = 0;
+
+	// 30000 score max.
+	bool MapHasTally() const
+	{
+		unsigned n = mapnum;
+		if (!SPEAR::flag)
+			return n <= 7;
+		else
+			return n <= 3 || n >= 5 && n <= 8 || n >= 10 && n <= 14 || n == 16;
+	}
+
+	// 15000 score
+	bool MapHasAutobonus() const
+	{
+		return !SPEAR::flag ? mapnum == 9 : mapnum == 4 || mapnum == 9 || mapnum == 15 || mapnum == 18 || mapnum == 19;
+	}
+
+	// 0 score
+	bool MapHasCutscene() const
+	{
+		return !SPEAR::flag ? mapnum == 8 : mapnum == 17 || mapnum == 20;
+	}
+
+	bool IsWall(unsigned kind) const;
+	bool IsSoftWall(unsigned kind) const;
+	bool IsSecretFree(unsigned pos) const;
+	bool IsSecret(unsigned targetpos, unsigned sourcepos) const;
+	bool IsExit(unsigned targetpos) const
+	{
+		return wallbuf->at(targetpos) == 21;
+	}
+	bool OperateWall(unsigned targetpos, unsigned sourcepos, unsigned index);
+	bool OperateWall(SecretPush pair, unsigned index);
+	unsigned UndoSecret();
+
+public:
+
+	void GetLevelData();
+	std::vector<SecretPush> Solve(unsigned sessionNo);
 };
 
 #endif

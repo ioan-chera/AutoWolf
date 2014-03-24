@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-
+#include "wl_def.h"
 // IOANCH 20130301: unification culling
 #include "gfxvabstract.h"
 // IOANCH: added sprite header

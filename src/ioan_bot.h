@@ -26,7 +26,7 @@
 #include "PathArray.h"
 #include "StdStringExtensions.h"
 #include "MapExploration.h"
-
+#include "ioan_secret.h"
 
 // Changing static to dynamic:
 // static keyword disappears WHERE IT APPLIES TO EACH INDIVIDUAL
@@ -182,6 +182,9 @@ class BotMan
    HeardEvent *RefreshSound(HeardEvent *he);
 public:
    
+	std::vector<SecretPush> pushes;
+	bool haspushes = false;
+
    List <HeardEvent *> heardEvents;                // list of recent sounds
    
     //
