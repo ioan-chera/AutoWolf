@@ -20,15 +20,18 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 #include <Windows.h>
 #include <Stringapiset.h>
+#endif
 
 #include "StdStringExtensions.h"
+#include "wl_def.h"
 
 std::string& operator+= (std::string& first, int n)
 {
 	char buf[33];
-	_snprintf(buf, sizeof(buf), "%d", n);
+	snprintf(buf, sizeof(buf), "%d", n);
 	first += buf;
 	return first;
 }
@@ -36,7 +39,7 @@ std::string& operator+= (std::string& first, int n)
 std::string& operator+= (std::string& first, unsigned n)
 {
 	char buf[33];
-	_snprintf(buf, sizeof(buf), "%u", n);
+	snprintf(buf, sizeof(buf), "%u", n);
 	first += buf;
 	return first;
 }
@@ -44,29 +47,37 @@ std::string& operator+= (std::string& first, unsigned n)
 std::string& operator+= (std::string& first, unsigned long long n)
 {
 	char buf[33];
-	_snprintf(buf, sizeof(buf), "%llu", n);
+	snprintf(buf, sizeof(buf), "%llu", n);
 	first += buf;
 	return first;
 }
 
 std::string WideCharToUTF8(const std::wstring& source)
 {
+#ifdef _WIN32
 	int length = WideCharToMultiByte(CP_UTF8, 0, source.c_str(), -1, nullptr, 0, nullptr, nullptr);
 	char *destination = new char[length];
 	WideCharToMultiByte(CP_UTF8, 0, source.c_str(), -1, destination, length, nullptr, nullptr);
 	std::string str(destination);
 	delete[] destination;
 	return str;
+#else
+	return "";
+#endif
 }
 
 std::wstring UTF8ToWideChar(const std::string& source)
 {
+#ifdef _WIN32
 	int length = MultiByteToWideChar(CP_UTF8, 0, source.c_str(), -1, nullptr, 0);
 	wchar_t* destination = new wchar_t[length];
 	MultiByteToWideChar(CP_UTF8, 0, source.c_str(), -1, destination, length);
 	std::wstring str(destination);
 	delete[] destination;
 	return str;
+#else
+	return L"";
+#endif
 }
 
 static void normalizeSlashes(std::string& str)

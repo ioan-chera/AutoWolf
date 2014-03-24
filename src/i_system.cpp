@@ -21,6 +21,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <system_error>
 #include "wl_def.h"
 #include "Config.h"
 #include "i_system.h"
@@ -59,7 +60,7 @@ uint32_t I_GetTicks(void)
 void I_Notify(const char *msg)
 {
 #ifdef __APPLE__
-   Cocoa_Notify(SPEAR.FullTitle(), msg);
+	Cocoa_Notify(SPEAR::FullTitle(), msg);
 #endif
 }
 
@@ -75,7 +76,9 @@ void I_MakeDir(const std::string& dirname)
    if(!result)
 	   throw std::system_error(std::error_code(GetLastError(), std::system_category()), std::string("Cannot create directory ") + dirname);
 #else
-   return !mkdir(dirname, S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
+	int result = mkdir(dirname.c_str(), S_IRWXU|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH);
+	if(result != 0)
+		throw std::system_error(std::error_code(errno, std::system_category()), std::string("Cannot create directory ") + dirname);
 #endif
 }
 
@@ -91,7 +94,7 @@ void I_ChangeDir(const std::string& dirname)
 	if(!result) 
 		throw std::system_error(std::error_code(GetLastError(), std::system_category()), std::string("Cannot change directory to ") + dirname);
 #else
-	int result = chdir(dirname);
+	int result = chdir(dirname.c_str());
 	if (result != 0)
 		throw std::system_error(std::error_code(errno, std::system_category()), std::string("Cannot change directory to ") + dirname);
 #endif
@@ -109,7 +112,7 @@ std::string I_GetSettingsDir()
    if(appsupdir == NULL)
       Quit("Your Application Support directory is not defined. You must "
            "set this before playing.");
-	PString ret(appsupdir);
+	std::string ret(appsupdir);
 	free(appsupdir);
    return ret;
 #elif defined(_WIN32)

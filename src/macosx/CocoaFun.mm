@@ -64,7 +64,7 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 {
 	@autoreleasepool
 	{
-		[[NSAlert alertWithMessageText:[NSString stringWithFormat@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+		[[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 	}
 }
 

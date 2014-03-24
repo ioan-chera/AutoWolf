@@ -16,28 +16,3 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
-#include "wl_def.h"
-#include "Exception.h"
-
-bool Exception::showred = false;
-
-Exception::Exception()
-{
-    exctext = _T("");
-    showred = true;
-}
-Exception::Exception(const PString &txt)
-{
-    exctext = txt;
-    showred = true;
-}
-Exception::Exception(const TChar *filestr, int linestr)
-{
-    exctext.copy(_T("Raised exception at ")) << filestr << _T(":") << linestr;
-    showred = true;
-}
-Exception::Exception(const PString &txt, const TChar *filestr, int linestr)
-{
-    exctext.copy(txt) << _T(" at ") << filestr << _T(":") << linestr;
-    showred = true;
-}

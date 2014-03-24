@@ -20,14 +20,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
 #include <Windows.h>
 #include <shellapi.h>
+#endif
 
 #include <system_error>
 #include <vector>
 
 #include "CommandLine.h"
 #include "Config.h"
+#include "Exception.h"
 #include "i_system.h"
 #include "ShellUnicode.h"
 #include "StdStringExtensions.h"
@@ -38,6 +41,7 @@ std::vector<std::string> s_argv;
 
 static void feedFromWindows()
 {
+#ifdef _WIN32
 	int argc;
 	LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
 	if (!argvW)
@@ -49,6 +53,7 @@ static void feedFromWindows()
 	{
 		s_argv.push_back(WideCharToUTF8(argvW[i]));
 	}
+#endif
 }
 
 void CommandLine::Feed(int argc, const char* const* argv)
@@ -242,7 +247,7 @@ void CommandLine::Parse()
 			else if (!strcasecmp(arg, "--ignorenumchunks"))
 				cfg_ignorenumchunks = true;
 			else if (!strcasecmp(arg, "--help"))
-				throw std::exception("Showing help");
+				throw Exception("Showing help");
 				// IOANCH 17.05.2012: added --nobot parameter
 			else if (!strcasecmp(arg, "--nobot"))
 				cfg_botActive = false;
@@ -263,7 +268,7 @@ void CommandLine::Parse()
 				}
 			}
 			else
-				throw std::exception((std::string("Unknown argument: ") + arg + "\n").c_str());
+				throw Exception((std::string("Unknown argument: ") + arg + "\n").c_str());
 		}
 	}
 	catch (const std::exception &e)
@@ -325,7 +330,7 @@ void CommandLine::Parse()
 		help +=
 			" --mission <mission>    Mission number to play (0-3)\n"
 			"                        (default: 0 -> .SOD, 1-3 -> .SD*)\n";
-		throw std::exception(help.c_str());
+		throw Exception(help.c_str());
 	}
 
 	if (sampleRateGiven && !audioBufferGiven)

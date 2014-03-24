@@ -21,19 +21,26 @@
 #include "Logger.h"
 #include "wl_def.h"
 
+#ifdef __APPLE__
+#include <asl.h>
+#endif
+
 void Logger::Write(const char* format, ...)
 {
+	va_list argptr;
+	va_start(argptr, format);
+
 #ifdef _WIN32
 	char buffer[1024];
 	buffer[lengthof(buffer) - 1] = 0;
-	va_list argptr;
-	va_start(argptr, format);
 	vsnprintf(buffer, lengthof(buffer), format, argptr);
-	va_end(argptr);
 
 	OutputDebugStringA(buffer);
 	OutputDebugStringA("\n");
+#elif defined __APPLE__
+	asl_vlog(nullptr, nullptr, ASL_LEVEL_INFO, format, argptr);
 #else
-#error TODO: Logger::Write
+#error TODO Linux or others
 #endif
+	va_end(argptr);
 }

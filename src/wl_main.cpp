@@ -25,6 +25,7 @@
 
 // WL_MAIN.C
 
+#include <system_error>
 #include "wl_def.h"
 #include "FileSystem.h"
 #include "Logger.h"
@@ -40,6 +41,7 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #include "wl_play.h"
+#include "Exception.h"
 
 // IOANCH 17.05.2012
 #include "Config.h"
@@ -1648,7 +1650,7 @@ int main(int argc, TChar *argv[])
 
 		DemoLoop();
 
-		throw std::exception("Demo loop exited???");
+		throw Exception("Demo loop exited???");
 	}
 	catch (const std::system_error& e)
 	{

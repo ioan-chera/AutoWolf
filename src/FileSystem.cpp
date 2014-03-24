@@ -27,17 +27,17 @@ std::string FileSystem::FindCaseInsensitive(const std::string& dirname, const st
 {
 #ifndef _WIN32
 	// POSIX
-	DIR *dir = opendir(dirname);
+	DIR *dir = opendir(dirname.c_str());
 	if (dir)
 	{
-		PString ret(dirname);
+		std::string ret(dirname);
 		bool found = false;
 		dirent *ent;
 		while ((ent = readdir(dir)))
 		{
-			if (!strcasecmp(ent->d_name, basename))
+			if (!strcasecmp(ent->d_name, basename.c_str()))
 			{
-				ret.concatSubpath(ent->d_name);
+				ConcatSubpath(ret, ent->d_name);
 				found = true;
 				break;
 			}
@@ -48,5 +48,6 @@ std::string FileSystem::FindCaseInsensitive(const std::string& dirname, const st
 	}
 #endif
 	// not found or indifferent
-	return ConcatSubpath(std::string(dirname), basename);
+	std::string ret(dirname);
+	return ConcatSubpath(ret, basename);
 }

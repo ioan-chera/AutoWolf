@@ -562,15 +562,7 @@ void PollControls ()
      if(cfg_botActive)	// bot active: operate
 	 {
 		 // Find A* path
-         try
-         {
-             bot.DoCommand();
-         }
-         catch (const Exception &exc)
-         {
-             PString errormsg(exc.info());
-             Quit(errormsg.buffer());
-         }
+		 bot.DoCommand();
 	 }
 
 //

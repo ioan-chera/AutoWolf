@@ -26,20 +26,25 @@
 //
 // Throwable entity for AutoWolf
 //
-class Exception
+class Exception : public std::exception
 {
-    static bool showred;
-    PString exctext;
+	char* msg;
 public:
-    Exception();
-    Exception(const PString &txt);
-    Exception(const TChar *filestr, int linestr);
-    Exception(const PString &txt, const TChar *filestr, int linestr);
-    const TChar *info() const
-    {
-        return exctext();
-    }
-    friend void DrawPlayBorder();
+    Exception(const char* message)
+	{
+		size_t sz = strlen(message) + 1;
+		msg = new char[strlen(message) + 1];
+		memset(msg, 0, sz);
+		strcpy(msg, message);
+	}
+	~Exception()
+	{
+		delete[] msg;
+	}
+	const char* what() const throw()
+	{
+		return msg;
+	}
 };
 
 #endif

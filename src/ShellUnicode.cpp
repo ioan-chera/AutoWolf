@@ -29,7 +29,10 @@ std::string ShellUnicode::getenv(const std::string& name)
 #ifdef _WIN32
 	return WideCharToUTF8(::_wgetenv(UTF8ToWideChar(name)));
 #else
-	return ::getenv(name);
+	char* env = ::getenv(name.c_str());
+	if(!env)
+		return "";
+	return env;
 #endif
 }
 

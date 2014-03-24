@@ -24,6 +24,7 @@
 #define STDSTRINGEXTENSIONS_H_
 
 #include <string>
+#include "StdStringExtensions.h"
 #include "wl_def.h"
 
 std::string& operator+= (std::string& first, int n);
@@ -50,7 +51,11 @@ inline static int strcasecmp(const std::string& str1, const char* str2)
 
 inline static std::wstring _wgetenv(const std::wstring& varname)
 {
+#ifdef _WIN32
 	return SafeCString(_wgetenv(varname.c_str()));
+#else
+	return L"";
+#endif
 }
 
 std::string& ConcatSubpath(std::string& source, const std::string& added);

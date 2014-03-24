@@ -19,6 +19,11 @@
 		4F3435031726973200A10A72 /* Exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F3435021726973200A10A72 /* Exception.cpp */; };
 		4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4717BA173A6A610018E82B /* SODFlag.cpp */; };
 		4F471993173BC0310018E82B /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F471992173BC0310018E82B /* Config.cpp */; };
+		4F6DCA2918E00FA300F05373 /* CommandLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6DCA1E18E00FA300F05373 /* CommandLine.cpp */; };
+		4F6DCA2A18E00FA300F05373 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6DCA2018E00FA300F05373 /* FileSystem.cpp */; };
+		4F6DCA2B18E00FA300F05373 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6DCA2218E00FA300F05373 /* Logger.cpp */; };
+		4F6DCA2C18E00FA300F05373 /* ShellUnicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6DCA2418E00FA300F05373 /* ShellUnicode.cpp */; };
+		4F6DCA2D18E00FA300F05373 /* StdStringExtensions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F6DCA2618E00FA300F05373 /* StdStringExtensions.cpp */; };
 		4F86102B17421ED400A1979A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86102A17421ED400A1979A /* IOKit.framework */; };
 		4F86103117421EE400A1979A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103017421EE400A1979A /* Carbon.framework */; };
 		4F86103817421EF100A1979A /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F86103717421EF100A1979A /* AudioUnit.framework */; };
@@ -114,6 +119,17 @@
 		4F4717BB173A6A610018E82B /* SODFlag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SODFlag.h; path = ../src/SODFlag.h; sourceTree = SOURCE_ROOT; };
 		4F471991173BC0310018E82B /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../src/Config.h; sourceTree = SOURCE_ROOT; };
 		4F471992173BC0310018E82B /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = ../src/Config.cpp; sourceTree = SOURCE_ROOT; };
+		4F6DCA1E18E00FA300F05373 /* CommandLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLine.cpp; path = ../src/CommandLine.cpp; sourceTree = "<group>"; };
+		4F6DCA1F18E00FA300F05373 /* CommandLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandLine.h; path = ../src/CommandLine.h; sourceTree = "<group>"; };
+		4F6DCA2018E00FA300F05373 /* FileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileSystem.cpp; path = ../src/FileSystem.cpp; sourceTree = "<group>"; };
+		4F6DCA2118E00FA300F05373 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileSystem.h; path = ../src/FileSystem.h; sourceTree = "<group>"; };
+		4F6DCA2218E00FA300F05373 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = ../src/Logger.cpp; sourceTree = "<group>"; };
+		4F6DCA2318E00FA300F05373 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logger.h; path = ../src/Logger.h; sourceTree = "<group>"; };
+		4F6DCA2418E00FA300F05373 /* ShellUnicode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShellUnicode.cpp; path = ../src/ShellUnicode.cpp; sourceTree = "<group>"; };
+		4F6DCA2518E00FA300F05373 /* ShellUnicode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShellUnicode.h; path = ../src/ShellUnicode.h; sourceTree = "<group>"; };
+		4F6DCA2618E00FA300F05373 /* StdStringExtensions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StdStringExtensions.cpp; path = ../src/StdStringExtensions.cpp; sourceTree = "<group>"; };
+		4F6DCA2718E00FA300F05373 /* StdStringExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdStringExtensions.h; path = ../src/StdStringExtensions.h; sourceTree = "<group>"; };
+		4F6DCA2818E00FA300F05373 /* TimeMeasure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeMeasure.h; path = ../src/TimeMeasure.h; sourceTree = "<group>"; };
 		4F74E1921759FCA40066CD25 /* m_collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = m_collection.h; path = ../src/m_collection.h; sourceTree = "<group>"; };
 		4F86102A17421ED400A1979A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		4F86103017421EE400A1979A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -401,6 +417,17 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
+				4F6DCA1E18E00FA300F05373 /* CommandLine.cpp */,
+				4F6DCA1F18E00FA300F05373 /* CommandLine.h */,
+				4F6DCA2018E00FA300F05373 /* FileSystem.cpp */,
+				4F6DCA2118E00FA300F05373 /* FileSystem.h */,
+				4F6DCA2218E00FA300F05373 /* Logger.cpp */,
+				4F6DCA2318E00FA300F05373 /* Logger.h */,
+				4F6DCA2418E00FA300F05373 /* ShellUnicode.cpp */,
+				4F6DCA2518E00FA300F05373 /* ShellUnicode.h */,
+				4F6DCA2618E00FA300F05373 /* StdStringExtensions.cpp */,
+				4F6DCA2718E00FA300F05373 /* StdStringExtensions.h */,
+				4F6DCA2818E00FA300F05373 /* TimeMeasure.h */,
 				4F00B0E71796D97C0091B7BD /* HAL */,
 				4F4717BA173A6A610018E82B /* SODFlag.cpp */,
 				4F4717BB173A6A610018E82B /* SODFlag.h */,
@@ -629,6 +656,7 @@
 				D901F5060FC0DBCB0040C290 /* wl_cloudsky.cpp in Sources */,
 				D901F5070FC0DBCB0040C290 /* wl_atmos.cpp in Sources */,
 				D901F5080FC0DBCB0040C290 /* wl_agent.cpp in Sources */,
+				4F6DCA2C18E00FA300F05373 /* ShellUnicode.cpp in Sources */,
 				D901F5090FC0DBCB0040C290 /* wl_act2.cpp in Sources */,
 				D901F50A0FC0DBCB0040C290 /* wl_act1.cpp in Sources */,
 				D901F50B0FC0DBCB0040C290 /* signon.cpp in Sources */,
@@ -661,13 +689,17 @@
 				4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */,
 				4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */,
 				4F9AD19A16EB38BB00321A66 /* PString.cpp in Sources */,
+				4F6DCA2B18E00FA300F05373 /* Logger.cpp in Sources */,
 				4F3435031726973200A10A72 /* Exception.cpp in Sources */,
+				4F6DCA2D18E00FA300F05373 /* StdStringExtensions.cpp in Sources */,
 				4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */,
+				4F6DCA2918E00FA300F05373 /* CommandLine.cpp in Sources */,
 				4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */,
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
 				4FB3B4201744183200C29DF4 /* Point2D.cpp in Sources */,
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
+				4F6DCA2A18E00FA300F05373 /* FileSystem.cpp in Sources */,
 				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
 				4FF097C517A6869C00706687 /* i_video.cpp in Sources */,
 				4FFDADD117ABA2480056B657 /* m_buffer.cpp in Sources */,
