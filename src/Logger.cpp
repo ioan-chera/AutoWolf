@@ -31,12 +31,22 @@ void Logger::Write(const char* format, ...)
 	va_start(argptr, format);
 
 #ifdef _WIN32
-	char buffer[1024];
+	static bool consoleExists;
+	static HANDLE handle;
+	DWORD crap;
+	char buffer[512];
 	buffer[lengthof(buffer) - 1] = 0;
-	vsnprintf(buffer, lengthof(buffer), format, argptr);
+	int sz = vsnprintf(buffer, lengthof(buffer), format, argptr);
 
-	OutputDebugStringA(buffer);
-	OutputDebugStringA("\n");
+	if (!consoleExists)
+	{
+		consoleExists = true;
+		AllocConsole();
+		handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	}
+	WriteConsole(handle, buffer, sz < (lengthof(buffer) - 1) ? sz : lengthof(buffer) - 1, &crap, nullptr);
+	WriteConsole(handle, "\n", 1, &crap, nullptr);
+
 #elif defined __APPLE__
 	asl_vlog(nullptr, nullptr, ASL_LEVEL_INFO, format, argptr);
 #else
