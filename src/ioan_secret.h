@@ -103,7 +103,7 @@ class SecretSolver
 		if (!SPEAR::flag)
 			return n <= 7;
 		else
-			return n <= 3 || n >= 5 && n <= 8 || n >= 10 && n <= 14 || n == 16;
+			return n <= 3 || (n >= 5 && n <= 8) || (n >= 10 && n <= 14) || n == 16;
 	}
 
 	// 15000 score

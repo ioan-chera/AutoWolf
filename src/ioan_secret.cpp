@@ -348,13 +348,12 @@ unsigned SecretSolver::UndoSecret()
 	return index + 1;
 }
 
-#include <sstream>
-static std::string Coords(unsigned what)
-{
-	std::ostringstream oss;
-	oss << "(" << (what % MAPSIZE) << ", " << (what / MAPSIZE) << ")";
-	return oss.str();
-}
+//static std::string Coords(unsigned what)
+//{
+//	std::ostringstream oss;
+//	oss << "(" << (what % MAPSIZE) << ", " << (what / MAPSIZE) << ")";
+//	return oss.str();
+//}
 
 // THIS WILL BE CALLED FROM A BACKGROUND THREAD
 std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)

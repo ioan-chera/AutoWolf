@@ -25,7 +25,7 @@
 
 // WL_GAME.C
 
-#include <future>
+#include <thread>
 #include "wl_def.h"
 #include "Logger.h"
 #include "foreign.h"
@@ -857,22 +857,23 @@ void SetupGameLevel ()
    std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
    ssolver->GetLevelData();
    unsigned sessionNo = g_sessionNo;
-   std::async(std::launch::async, [ssolver, sessionNo]{
-	   
+	std::thread thread([ssolver, sessionNo]{
+		
 		std::vector<SecretPush> pushes = ssolver->Solve(sessionNo);
-
+		
 		if (sessionNo != g_sessionNo)	// cancel if session changed
 			return;
-
+		
 		if (pushes.size() == 0)
 			Logger::Write("Timeout finding a sequence, knocking myself out.");
-
+		
 		AddPostCommand([pushes]{
 			// Mark as "haspushes" anyway. The bot will know what to do about it.
 			bot.pushes = std::move(pushes);
 			bot.haspushes = true;
-		}, sessionNo);	   
-   });
+		}, sessionNo);
+	});
+	thread.detach();
 
 //    scoreMap.TestPushBlocks();
 }

@@ -21,10 +21,6 @@
 #include "Logger.h"
 #include "wl_def.h"
 
-#ifdef __APPLE__
-#include <asl.h>
-#endif
-
 void Logger::Write(const char* format, ...)
 {
 	va_list argptr;
@@ -47,10 +43,8 @@ void Logger::Write(const char* format, ...)
 	WriteConsole(handle, buffer, sz < (lengthof(buffer) - 1) ? sz : lengthof(buffer) - 1, &crap, nullptr);
 	WriteConsole(handle, "\n", 1, &crap, nullptr);
 
-#elif defined __APPLE__
-	asl_vlog(nullptr, nullptr, ASL_LEVEL_INFO, format, argptr);
 #else
-#error TODO Linux or others
+	vprintf(format, argptr);
 #endif
 	va_end(argptr);
 }
