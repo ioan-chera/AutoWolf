@@ -39,9 +39,9 @@
 
 std::vector<std::string> s_argv;
 
+#ifdef _WIN32
 static void feedFromWindows()
 {
-#ifdef _WIN32
 	int argc;
 	LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
 	if (!argvW)
@@ -53,8 +53,8 @@ static void feedFromWindows()
 	{
 		s_argv.push_back(WideCharToUTF8(argvW[i]));
 	}
-#endif
 }
+#endif
 
 void CommandLine::Feed(int argc, const char* const* argv)
 {
