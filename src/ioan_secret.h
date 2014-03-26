@@ -135,6 +135,8 @@ public:
 
 	void GetLevelData();
 	std::vector<SecretPush> Solve(unsigned sessionNo);
+	
+	static void SetSpearModuleValues();
 };
 
 #endif

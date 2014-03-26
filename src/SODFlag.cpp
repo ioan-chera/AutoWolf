@@ -26,6 +26,7 @@
 #include "i_system.h"
 #include "SODFlag.h"
 #include "wl_menu.h"
+#include "ioan_secret.h"
 
 const char SPEAR::wolftitle[] = "Automatic Wolfenstein 3D";
 const char SPEAR::speartitle[] = "Automatic Spear of Destiny";
@@ -989,4 +990,6 @@ void SPEAR::Initialize(const std::string &basePath)
 void SPEAR::SetGlobalValues()
 {
 	Menu::SetSpearModuleValues();
+	
+	SecretSolver::SetSpearModuleValues();
 }

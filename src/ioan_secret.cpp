@@ -55,51 +55,58 @@ inline static bool IsPlayerStart(unsigned kind)
 	return kind >= 19 && kind <= 22;
 }
 
-bool SecretSolver::IsSoftWall(unsigned kind) const
+// Chosen to be 512 items long
+
+static const unsigned pointsFor[] = {
+//	  0    1    2    3     4     5    6    7    8    9    10    11    12    13    14   15    16    17   18   19   20   21    22    23    24    25   26   27   28    29
+
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0,	//   0
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,  100,  500, 1000, 5000,   0,   0,   0,    0,	//  30
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0,	//  60
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0, 5000, 5000, 100, 100, 100, 100,  100,  100,  100,  100, 400, 400, 400,  400,	//  90
+	400, 400, 400, 400,    0, 5000, 500, 500, 500, 500,  500,  500,  500,  500,  200, 200,  200,  200, 200, 200, 200, 200, 5000, 5000,  100,  100, 100, 100, 100,  100,	// 120
+	100, 100, 400, 400,  400,  400, 400, 400, 400, 400, 2000, 5000,  500,  500,  500, 500,  500,  500, 500, 500, 200, 200,  200,  200,  200,  200, 200, 200,   0, 5000,	// 150
+	100, 100, 100, 100,  100,  100, 100, 100, 400, 400,  400,  400,  400,  400,  400, 400, 5000, 5000, 500, 500, 500, 500,  500,  500,  500,  500, 200, 200, 200,  200,	// 180
+	200, 200, 200, 200, 5000, 5000, 700, 700, 700, 700,  700,  700,  700,  700,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,  700,  700, 700, 700, 700,  700,	// 210
+	700, 700,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,  700,  700,  700, 700,  700,  700, 700, 700,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0,	// 240
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 270
+  	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 300
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 330
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 360
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 390
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 420
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 450
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 480
+	  0,   0,                                                                                                                                                           // 510
+
+};
+
+// This part is extremely delicate
+// Can't be const, can't be static, or performance will go down
+
+uint8_t isSoftWall_wl6[] = {
+ // 0  1  2  3  4   5  6  7  8  9  10 11 12 13 14  15 16 17 18 19  20 21 22 23 24  25 26 27 28 29
+    0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  1, 1, 0, 1, 0,	//  0
+    1, 1, 0, 1, 1,  1, 1, 0, 0, 1,  1, 1, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,	// 30
+    1, 0, 1, 1, 0,  0, 0, 0, 1, 1,  0, 0, 0, 0, // 60
+																									// 90
+};
+
+uint8_t isSoftWall_sod[] = {
+ // 0  1  2  3  4   5  6  7  8  9  10 11 12 13 14  15 16 17 18 19  20 21 22 23 24  25 26 27 28 29
+	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  1, 1, 0, 1, 0,	//  0
+	1, 1, 0, 1, 1,  1, 1, 0, 1, 1,  1, 1, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,	// 30
+	1, 0, 1, 0, 0,  0, 0, 1, 1, 1,  0, 1, 0, 1, // 60
+																									// 90
+};
+
+const uint8_t *isSoftWall;
+
+// Doesn't matter whether i choose macro or small/inline stuff here
+
+bool SecretSolver::IsSoftWall(unsigned pos) const
 {
-	switch ((*actorbuf)[kind])
-	{
-	case 24:
-	case 25:
-	case 26:
-	case 28:
-	case 30:
-	case 31:
-	case 33:
-	case 34:
-	case 35:
-	case 36:
-		return true;
-	case 38:
-		if (SPEAR::flag)
-			return true;
-		break;
-	case 39:
-	case 40:
-	case 41:
-	case 45:
-	case 58:
-	case 59:
-	case 60:
-	case 62:
-	case 63:
-		if (!SPEAR::flag)
-			return true;
-		break;
-	case 67:
-		if (SPEAR::flag)
-			return true;
-		break;
-	case 68:
-	case 69:
-		return true;
-	case 71:
-	case 73:
-		if (SPEAR::flag)
-			return true;
-		break;
-	}
-	return false;
+	return isSoftWall[(*actorbuf)[pos % lengthof(isSoftWall_wl6)]] != 0;
 }
 
 bool SecretSolver::IsWall(unsigned kind) const
@@ -109,163 +116,9 @@ bool SecretSolver::IsWall(unsigned kind) const
 	return IsSoftWall(kind);
 }
 
-static unsigned PointsFor(unsigned kind)
+inline static unsigned PointsFor(unsigned kind)
 {
-	switch (kind)
-	{
-	case 52:
-		return 100;
-	case 53:
-		return 500;
-	case 54:
-		return 1000;
-	case 55:
-		return 5000;
-		// guard
-	case 180:
-	case 181:
-	case 182:
-	case 183:
-	case 144:
-	case 145:
-	case 146:
-	case 147:
-	case 108:
-	case 109:
-	case 110:
-	case 111:
-	case 184:
-	case 185:
-	case 186:
-	case 187:
-	case 148:
-	case 149:
-	case 150:
-	case 151:
-	case 112:
-	case 113:
-	case 114:
-	case 115:
-		return 100;
-	case 188:
-	case 189:
-	case 190:
-	case 191:
-	case 152:
-	case 153:
-	case 154:
-	case 155:
-	case 116:
-	case 117:
-	case 118:
-	case 119:
-	case 192:
-	case 193:
-	case 194:
-	case 195:
-	case 156:
-	case 157:
-	case 158:
-	case 159:
-	case 120:
-	case 121:
-	case 122:
-	case 123:
-		return 400;
-	case 198:
-	case 199:
-	case 200:
-	case 201:
-	case 162:
-	case 163:
-	case 164:
-	case 165:
-	case 126:
-	case 127:
-	case 128:
-	case 129:
-	case 202:
-	case 203:
-	case 204:
-	case 205:
-	case 166:
-	case 167:
-	case 168:
-	case 169:
-	case 130:
-	case 131:
-	case 132:
-	case 133:
-		return 500;
-	case 206:
-	case 207:
-	case 208:
-	case 209:
-	case 170:
-	case 171:
-	case 172:
-	case 173:
-	case 134:
-	case 135:
-	case 136:
-	case 137:
-	case 210:
-	case 211:
-	case 212:
-	case 213:
-	case 174:
-	case 175:
-	case 176:
-	case 177:
-	case 138:
-	case 139:
-	case 140:
-	case 141:
-		return 200;
-	case 214:
-	case 197:
-	case 215:
-	case 179:
-	case 196:
-		return 5000;
-	case 160:
-		return 2000;
-	case 178:
-		return 10000;
-	case 106:
-	case 107:
-	case 125:
-	case 142:
-	case 143:
-	case 161:
-		return 5000;
-	case 252:
-	case 253:
-	case 254:
-	case 255:
-	case 234:
-	case 235:
-	case 236:
-	case 237:
-	case 216:
-	case 217:
-	case 218:
-	case 219:
-	case 256:
-	case 257:
-	case 258:
-	case 259:
-	case 238:
-	case 239:
-	case 240:
-	case 241:
-	case 220:
-	case 221:
-	case 222:
-	case 223:
-		return 700;
-	}
-	return 0;
+	return pointsFor[kind % lengthof(pointsFor)];
 }
 
 bool SecretSolver::IsSecretFree(unsigned pos) const
@@ -663,20 +516,13 @@ void SecretSolver::GetLevelData()
 	// Exceptions will be caught by game's quit handler
 	mapnum = gamestate.mapon;
 
-	pushstates.push(std::array<uint16_t, maparea>());
-	actorstates.push(std::array<uint16_t, maparea>());
-	wallbuf = &pushstates.top();
-	actorbuf = &actorstates.top();
-
-	memcpy(wallbuf->data(), mapSegs[0], sizeof(*wallbuf));
-	memcpy(actorbuf->data(), mapSegs[1], sizeof(*actorbuf));
 
 	totalscore = totalsecrets = totalenemies = totaltreasure = 0;
 	unsigned ppos = 0;
 	for (int y = 0; y < MAPSIZE; ++y)
 		for (int x = 0; x < MAPSIZE; ++x)
 		{
-			unsigned kind = (*actorbuf)[y * MAPSIZE + x];
+			unsigned kind = mapSegs[1][y * MAPSIZE + x];
 			if (PointsFor(kind))
 			{
 				if (kind >= 52 && kind < 56)
@@ -694,6 +540,15 @@ void SecretSolver::GetLevelData()
 				ppos = y * MAPSIZE + x;
 			}
 		}
+		
+	pushstates.push(std::array<uint16_t, maparea>());
+	actorstates.push(std::array<uint16_t, maparea>());
+	wallbuf = &pushstates.top();
+	actorbuf = &actorstates.top();
+	
+	memcpy(wallbuf->data(), mapSegs[0], sizeof(*wallbuf));
+	memcpy(actorbuf->data(), mapSegs[1], sizeof(*actorbuf));
+
 
 	if (MapHasTally())
 	{
@@ -711,4 +566,9 @@ void SecretSolver::GetLevelData()
 	playerpos = ppos;
 
 	scorestates.push(Inventory(this));
+}
+
+void SecretSolver::SetSpearModuleValues()
+{
+	isSoftWall = SPEAR::flag ? isSoftWall_sod : isSoftWall_wl6;
 }
