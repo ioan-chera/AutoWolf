@@ -348,14 +348,8 @@ unsigned SecretSolver::UndoSecret()
 	return index + 1;
 }
 
-//static std::string Coords(unsigned what)
-//{
-//	std::ostringstream oss;
-//	oss << "(" << (what % MAPSIZE) << ", " << (what / MAPSIZE) << ")";
-//	return oss.str();
-//}
-
 // THIS WILL BE CALLED FROM A BACKGROUND THREAD
+// Optim note: use unchecked array accessors ([]) instead of at(). Speed gets doubled.
 std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 {
 	Uint32 ticks = SDL_GetTicks();

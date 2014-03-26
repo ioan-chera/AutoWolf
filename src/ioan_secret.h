@@ -58,8 +58,9 @@ class SecretSolver
 	std::array<uint16_t, maparea> *actorbuf = nullptr;
 
 	// Map state stacks
-	std::stack<std::array<uint16_t, maparea>> pushstates;
-	std::stack<std::array<uint16_t, maparea>> actorstates;
+	// Optim note: the underlying structure should be vector
+	std::stack<std::array<uint16_t, maparea>, std::vector<std::array<uint16_t, maparea>>> pushstates;
+	std::stack<std::array<uint16_t, maparea>, std::vector<std::array<uint16_t, maparea>>> actorstates;
 
 	// Player position states
 	std::stack<unsigned> posstates;
@@ -124,7 +125,7 @@ class SecretSolver
 	bool IsSecret(unsigned targetpos, unsigned sourcepos) const;
 	bool IsExit(unsigned targetpos) const
 	{
-		return wallbuf->at(targetpos) == 21;
+		return (*wallbuf)[targetpos] == 21;
 	}
 	bool OperateWall(unsigned targetpos, unsigned sourcepos, unsigned index);
 	bool OperateWall(SecretPush pair, unsigned index);
