@@ -214,7 +214,8 @@ void BotMan::SetMood()
 bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 {
 	if (!haspushes || (searchstage < SSMax && pushes.size() &&
-		(pushes.back().sourcepos != tx + MAPSIZE * ty ||
+		(pushes.back().prerequisite ||
+		pushes.back().sourcepos != tx + MAPSIZE * ty ||
 		pushes.back().targetpos != (tx + txofs) + MAPSIZE * (ty + tyofs))))
 		return false;
    if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
@@ -258,6 +259,12 @@ Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
 	// unexplored tile that's unoccupied by a solid block
 	if(!mapExploration.explored[tx][ty] && (!check || ISPOINTER(check)))
 	{
+		return true;
+	}
+
+	if (haspushes && pushes.size() && pushes.back().prerequisite == tx + MAPSIZE * ty)
+	{
+		pushes.back().prerequisite = 0;
 		return true;
 	}
 	

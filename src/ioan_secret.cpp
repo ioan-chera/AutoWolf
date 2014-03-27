@@ -106,7 +106,7 @@ const uint8_t *isSoftWall;
 
 bool SecretSolver::IsSoftWall(unsigned pos) const
 {
-	return isSoftWall[(*actorbuf)[pos % lengthof(isSoftWall_wl6)]] != 0;
+	return (*actorbuf)[pos] < lengthof(isSoftWall_wl6) ? isSoftWall[(*actorbuf)[pos]] != 0 : false;
 }
 
 bool SecretSolver::IsWall(unsigned kind) const
@@ -118,7 +118,7 @@ bool SecretSolver::IsWall(unsigned kind) const
 
 inline static unsigned PointsFor(unsigned kind)
 {
-	return pointsFor[kind % lengthof(pointsFor)];
+	return kind < lengthof(pointsFor) ? pointsFor[kind] : 0;
 }
 
 bool SecretSolver::IsSecretFree(unsigned pos) const
@@ -229,18 +229,20 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 		unsigned pos;
 		unsigned exitcount = 0;
 
+		unsigned prerequisite = 0;
+
 		bool consumeactor;
 //		unsigned count = 0;
 		do
 		{
 			if (SDL_GetTicks() - ticks >= timelimit || sessionNo != g_sessionNo)
 			{
-//				printf("Count: %u\n", count);
+				//				printf("Count: %u\n", count);
 				return std::vector<SecretPush>();
 			}
 
-//			++count;
-			
+			//			++count;
+
 			if (secretindex < secrets->size())
 			{
 				SecretPush pair = (*secrets)[secretindex];
@@ -266,6 +268,8 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 				visited.fill(0);
 				visited[playerpos] = 2;
 			}
+
+			prerequisite = 0;
 			while (!tiles.empty())
 			{
 
@@ -275,7 +279,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 				needed = 0;
 				if (visited[pos] == 2)
 					switch ((*wallbuf)[pos])
-					{
+				{
 					case 92:
 					case 93:
 						//printf("Found door %u\n", KEY_1);
@@ -298,7 +302,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 						needed = KEY_4;
 						neededindex = 3;
 						break;
-					}
+				}
 
 				if (needed && !(needed & scorestates.top().keys))
 				{
@@ -318,6 +322,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 							scorestates.top().treasurecount++;
 							scorestates.top().score += PointsFor((*actorbuf)[pos]);
 							consumeactor = true;
+							prerequisite = pos;
 						}
 					}
 					else
@@ -332,12 +337,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 				{
 					scorestates.top().treasurecount++;
 					(*actorbuf)[pos] = 0;
+					prerequisite = pos;
 				}
 
 				neededindex = (unsigned)-1;
 				if (visited[pos] == 2)
 					switch ((*actorbuf)[pos])
-					{
+				{
 					case 43:
 					case 214:
 					case 197:
@@ -362,10 +368,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 						scorestates.top().keys |= KEY_4;
 						neededindex = 3;
 						break;
-					}
+				}
 
 				if (neededindex < 4 || consumeactor)
+				{
 					(*actorbuf)[pos] = 0;	// consume it.
+					prerequisite = pos;
+				}
 
 				if (neededindex < 4)
 				{
@@ -393,7 +402,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - 1) % WOLF3D_MAPSIZE, (pos - 1) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos - 1, pos));
+						secrets->push_back(SecretPush(pos - 1, pos, 0));
 					}
 					else if (visited[pos] == 2 && IsExit(pos - 1))
 						exitcount++;
@@ -414,7 +423,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + 1) % WOLF3D_MAPSIZE, (pos + 1) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos + 1, pos));
+						secrets->push_back(SecretPush(pos + 1, pos, 0));
 					}
 					else if (visited[pos] == 2 && IsExit(pos + 1))
 						exitcount++;
@@ -435,7 +444,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos - MAPSIZE, pos));
+						secrets->push_back(SecretPush(pos - MAPSIZE, pos, 0));
 					}
 				}
 
@@ -454,10 +463,18 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos + MAPSIZE, pos));
+						secrets->push_back(SecretPush(pos + MAPSIZE, pos, 0));
 					}
 				}
 			}
+
+			//std::random_shuffle(secrets->begin(), secrets->end(), [this](int n){
+			//	return rnd() % n;
+			//});
+
+			if (secretliststates.size() > 1 && prerequisite)
+				for (SecretPush& push : *secrets)
+					push.prerequisite = prerequisite;
 
 			if (totalenemies && MapHasTally() && scorestates.top().enemycount == totalenemies)
 				scorestates.top().maxenemies = 1;
@@ -475,7 +492,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					SecretPush push = secretliststates.top()[choicestates.top()];
 					finality.push_back(push);
 
-					//Logger::Write("%s from %s\n", Coords(push.targetpos).c_str(), Coords(push.sourcepos).c_str());
+					//Logger::Write("%d", push.prerequisite);
 
 					choicestates.pop();
 					secretliststates.pop();

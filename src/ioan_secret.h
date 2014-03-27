@@ -25,16 +25,17 @@
 #include <vector>
 #include "SODFlag.h"
 #include "wl_def.h"
+#include "id_us.h"
 
 // Secret push action: contains coordinates of wall and player that pushes it
 class SecretPush
 {
 public:
-	unsigned targetpos, sourcepos;
+	unsigned targetpos, sourcepos, prerequisite;
 	SecretPush() : targetpos(0), sourcepos(0)
 	{
 	}
-	SecretPush(unsigned a, unsigned b) : targetpos(a), sourcepos(b)
+	SecretPush(unsigned a, unsigned b, unsigned c) : targetpos(a), sourcepos(b), prerequisite(c)
 	{
 	}
 };
@@ -94,6 +95,8 @@ class SecretSolver
 	// Secret push list states
 	std::stack<std::vector<SecretPush>> secretliststates;
 
+	RandomGenerator rnd;
+
 	// Current player position
 	unsigned playerpos = 0;
 
@@ -132,6 +135,11 @@ class SecretSolver
 	unsigned UndoSecret();
 
 public:
+
+	SecretSolver()
+	{
+		rnd.initialize(static_cast<int>(time(nullptr)));
+	}
 
 	void GetLevelData();
 	std::vector<SecretPush> Solve(unsigned sessionNo);

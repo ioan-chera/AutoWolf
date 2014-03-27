@@ -25,6 +25,7 @@
 
 // WL_GAME.C
 
+#include <memory>
 #include <thread>
 #include "wl_def.h"
 #include "Logger.h"
