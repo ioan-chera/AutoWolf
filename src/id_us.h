@@ -28,6 +28,8 @@
 #ifndef	__ID_US__
 #define	__ID_US__
 
+#include <time.h>
+
 #ifdef	__DEBUG__
 #define	__DEBUG_UserMgr__
 #endif

@@ -37,7 +37,7 @@ public:
 		memset(msg, 0, sz);
 		strcpy(msg, message);
 	}
-	~Exception()
+	~Exception() throw()
 	{
 		delete[] msg;
 	}

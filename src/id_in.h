@@ -150,18 +150,18 @@ const char key_None = 0;
 class InputManager
 {
 private:
-   bool m_started = false;
-   char       m_lastASCII = key_None;
-   ScanCode   m_lastScan = sc_None;
+   bool m_started;
+   char       m_lastASCII;
+   ScanCode   m_lastScan;
 	std::unordered_set<unsigned> m_keyboard;
-   int        m_joyNumButtons = 0;
-   bool    m_mousePresent = false;
-   bool    m_paused = false;
+   int        m_joyNumButtons;
+   bool    m_mousePresent;
+   bool    m_paused;
    
-   SDL_Joystick *m_joystick = nullptr;
-   int m_joyNumHats = 0;
-   bool m_grabInput = false;
-   bool m_needRestore = false;
+   SDL_Joystick *m_joystick;
+   int m_joyNumHats;
+   bool m_grabInput;
+   bool m_needRestore;
    static const byte m_ASCIINames[], m_ShiftNames[];
 	bool	m_btnstate[NUMBUTTONS];
    
@@ -174,7 +174,17 @@ public:
    void initialize();
    void close();
 
-   InputManager()
+	InputManager() :
+	m_started(false),
+	m_lastASCII(key_None),
+	m_lastScan(sc_None),
+	m_joyNumButtons(0),
+	m_mousePresent(false),
+	m_paused(false),
+	m_joystick(nullptr),
+	m_joyNumHats(0),
+	m_grabInput(false),
+	m_needRestore(false)
    {
 	   memset(m_btnstate, 0, sizeof(m_btnstate));
    }

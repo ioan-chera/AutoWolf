@@ -183,7 +183,7 @@ class BotMan
 public:
    
 	std::vector<SecretPush> pushes;
-	bool haspushes = false;
+	bool haspushes;
 
    List <HeardEvent *> heardEvents;                // list of recent sounds
    
@@ -205,7 +205,8 @@ public:
     knownExitY(0),
     threater(NULL),
     moodBox(),
-    mapExploration()
+    mapExploration(),
+	haspushes(false)
     {
 
     }

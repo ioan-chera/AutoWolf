@@ -122,15 +122,15 @@ void InputManager::p_processEvent(const SDL_Event *event)
          SDL_Keymod mod = SDL_GetModState();
          if(m_keyboard.count(sc_Alt))
          {
-            if(m_lastScan == SDLK_F4)
+            if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
                Quit(NULL);
          }
          // IOANCH 20130801: added meta key mapping
-         if(m_lastScan == SDLK_KP_ENTER) m_lastScan = (ScanCode)SDLK_RETURN;
-         else if(m_lastScan == SDLK_RSHIFT) m_lastScan = (ScanCode)SDLK_LSHIFT;
-         else if(m_lastScan == SDLK_RALT) m_lastScan = (ScanCode)SDLK_LALT;
-         else if(m_lastScan == SDLK_RCTRL) m_lastScan = (ScanCode)SDLK_LCTRL;
-         else if(m_lastScan == SDLK_RGUI) m_lastScan = (ScanCode)SDLK_LGUI;
+         if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_KP_ENTER)) m_lastScan = (ScanCode)SDLK_RETURN;
+         else if(m_lastScan == static_cast<ScanCode>(SDLK_RSHIFT)) m_lastScan = (ScanCode)SDLK_LSHIFT;
+         else if(m_lastScan == static_cast<ScanCode>(SDLK_RALT)) m_lastScan = (ScanCode)SDLK_LALT;
+         else if(m_lastScan == static_cast<ScanCode>(SDLK_RCTRL)) m_lastScan = (ScanCode)SDLK_LCTRL;
+         else if(m_lastScan == static_cast<ScanCode>(SDLK_RGUI)) m_lastScan = (ScanCode)SDLK_LGUI;
          else
          {
             if((mod & KMOD_NUM) == 0)
@@ -160,7 +160,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
                m_lastASCII = m_ASCIINames[sym];
          }
 		m_keyboard.insert(m_lastScan);
-         if(m_lastScan == SDLK_PAUSE)
+         if(m_lastScan == static_cast<ScanCode>(SDLK_PAUSE))
             m_paused = true;
          break;
 		}

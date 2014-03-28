@@ -1613,6 +1613,8 @@ static void showErrorAlert(const char* message, const char* title)
 	MessageBoxW(nullptr, UTF8ToWideChar(message).c_str(), UTF8ToWideChar(title).c_str(), MB_OK | MB_ICONERROR);
 #elif defined(__APPLE__)
 	Cocoa_DisplayErrorAlert(message, title);
+#elif defined(__ANDROID__)
+	SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s: %s", title, message);
 #else
 #error TODO Linux: native message box
 #endif
@@ -1623,7 +1625,7 @@ static void showErrorAlert(const char* message, const char* title)
 //
 // Main program start
 //
-#if defined(__APPLE__)	// __APPLE__ still has that NSApplicationMain thing.
+#if defined(__APPLE__) || defined(__ANDROID__)	// OS X (but not iOS) still uses that NSApplicationMain thing. Android has to put up with JNI.
 #define main SDL_main
 #endif
 int main(int argc, TChar *argv[])

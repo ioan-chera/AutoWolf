@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include <time.h>
 #include "wl_def.h"
 #include "StdStringExtensions.h"
 #include "wl_main.h"

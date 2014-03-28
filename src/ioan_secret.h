@@ -44,19 +44,22 @@ public:
 class SecretSolver
 {
 	// Total score one can achieve in the level
-	unsigned totalscore = 0;
+	unsigned totalscore;
 
 	// Number of such objects
-	unsigned totalsecrets = 0;
-	unsigned totalenemies = 0;
-	unsigned totaltreasure = 0;
+	unsigned totalsecrets;
+	unsigned totalenemies;
+	unsigned totaltreasure;
 
 	// Current map
-	unsigned mapnum = 0;
+	unsigned mapnum;
+	
+	// Current player position
+	unsigned playerpos;
 
 	// Current operational items
-	std::array<uint16_t, maparea> *wallbuf = nullptr;
-	std::array<uint16_t, maparea> *actorbuf = nullptr;
+	std::array<uint16_t, maparea> *wallbuf;
+	std::array<uint16_t, maparea> *actorbuf;
 
 	// Map state stacks
 	// Optim note: the underlying structure should be vector
@@ -69,14 +72,19 @@ class SecretSolver
 	// Helper stuff
 	struct Inventory
 	{
-		unsigned score = 0;							// score
-		unsigned keys = 0;							// key inventory (uses flags in impl)
-		unsigned treasurecount = 0, enemycount = 0;	// amount of gathered items or killed nazis
-		uint8_t maxsecrets = 0, maxenemies = 0, maxtreasures = 0;	// THESE ARE FLAGS (0/1). They mean whether maximum was reached
+		unsigned score;							// score
+		unsigned keys;							// key inventory (uses flags in impl)
+		unsigned treasurecount, enemycount;		// amount of gathered items or killed nazis
+		uint8_t maxsecrets, maxenemies, maxtreasures;	// THESE ARE FLAGS (0/1). They mean whether maximum was reached
 
-		const SecretSolver* o = nullptr;	// reference to owning object
+		const SecretSolver* o;					// reference to owning object
 
-		Inventory(const SecretSolver* ss) : o(ss)
+		Inventory(const SecretSolver* ss) :
+		score(0),
+		keys(0),
+		treasurecount(0), enemycount(0),
+		maxsecrets(0), maxenemies(0), maxtreasures(0),
+		o(ss)
 		{
 		}
 
@@ -96,9 +104,6 @@ class SecretSolver
 	std::stack<std::vector<SecretPush>> secretliststates;
 
 	RandomGenerator rnd;
-
-	// Current player position
-	unsigned playerpos = 0;
 
 	// 30000 score max.
 	bool MapHasTally() const
@@ -135,8 +140,16 @@ class SecretSolver
 	unsigned UndoSecret();
 
 public:
-
-	SecretSolver()
+	
+	SecretSolver() :
+	totalscore(0),
+	totalsecrets(0),
+	totalenemies(0),
+	totaltreasure(0),
+	mapnum(0),
+	playerpos(0),
+	wallbuf(nullptr),
+	actorbuf(nullptr)
 	{
 		rnd.initialize(static_cast<int>(time(nullptr)));
 	}

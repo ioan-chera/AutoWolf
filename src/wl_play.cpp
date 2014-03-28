@@ -107,12 +107,12 @@ void StartNewSession()
 
 void StartBackgroundWork(const std::function<void(unsigned)> &cmd, const std::function<void(void)> &postcmd)
 {
-	unsigned sessionNo = g_sessionNo;
-	std::async(std::launch::async, [sessionNo, cmd, postcmd]{
-		cmd(sessionNo);
-		if (sessionNo == g_sessionNo)	// don't bother if fell out of range
-			AddPostCommand(postcmd, sessionNo);
-	});
+//	unsigned sessionNo = g_sessionNo;
+//	std::async(std::launch::async, [sessionNo, cmd, postcmd]{
+//		cmd(sessionNo);
+//		if (sessionNo == g_sessionNo)	// don't bother if fell out of range
+//			AddPostCommand(postcmd, sessionNo);
+//	});
 }
 
 /*
