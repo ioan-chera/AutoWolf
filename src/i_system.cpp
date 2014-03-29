@@ -22,6 +22,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <system_error>
+#ifdef __ANDROID__
+#include <SDL_system.h>
+#endif
 #include "wl_def.h"
 #include "Config.h"
 #include "i_system.h"
@@ -109,12 +112,10 @@ void I_ChangeDir(const std::string& dirname)
 std::string I_GetSettingsDir()
 {
 #ifdef __APPLE__
-   char *appsupdir = Cocoa_CreateApplicationSupportPathString();
-   if(appsupdir == NULL)
-      throw Exception("Your Application Support directory is not defined. You must "
-           "set this before playing.");
-	std::string ret(appsupdir);
-	free(appsupdir);
+	std::unique_ptr<char[]> appsupdir(Cocoa_CreateApplicationSupportPathString());
+   if(appsupdir.get() == NULL)
+      throw Exception("Your Application Support directory is not defined. You must set this before playing.");
+	std::string ret(appsupdir.get());
    return ret;
 #elif defined(_WIN32)
    wchar_t appdatdir[MAX_PATH];
@@ -122,6 +123,10 @@ std::string I_GetSettingsDir()
    if(!SUCCEEDED(result))
 	   throw std::system_error(std::error_code(result & 0xffff, std::system_category()), "Your Application Data directory is not defined. You must set this before playing.");
    return ConcatSubpath(WideCharToUTF8(appdatdir), "AutoWolf");
+#elif defined(__ANDROID__)
+	std::string external = SDL_AndroidGetExternalStoragePath();
+	ConcatSubpath(external, "com.ichera.autowolf");
+	return external;
 #else
    const char *homeenv = getenv("HOME");
    if(homeenv == NULL)
@@ -129,7 +134,6 @@ std::string I_GetSettingsDir()
            "playing.");
    return PString(homeenv).concatSubpath(".autowolf");
 #endif
-
 }
 
 //

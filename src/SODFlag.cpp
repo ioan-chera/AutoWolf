@@ -961,19 +961,19 @@ const unsigned int SPEAR::soundmap[][2] =
 
 void SPEAR::Initialize(const std::string &basePath)
 {
-    FILE *f;
+    bool exists;;
    
-	f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD3").c_str(), "rb");
-    if(!f)
+	exists = FileSystem::FileExists(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD3").c_str());
+    if(!exists)
     {
-		f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD2").c_str(), "rb");
-        if(!f)
+		exists = FileSystem::FileExists(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD2").c_str());
+        if(!exists)
         {
-			f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD1").c_str(), "rb");
-            if(!f)
+			exists = FileSystem::FileExists(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SD1").c_str());
+            if(!exists)
             {
-				f = fopen(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SOD").c_str(), "rb");
-                if(!f)
+				exists = FileSystem::FileExists(FileSystem::FindCaseInsensitive(basePath, "VSWAP.SOD").c_str());
+                if(!exists)
                 {
                     flag = false;
                    return;	// none found: assume Wolf3D
@@ -981,7 +981,6 @@ void SPEAR::Initialize(const std::string &basePath)
             }
         }
     }
-    fclose(f);
 	// One of the ifs failed - fall here and return SPEAR::flag 1
     flag = true;
 }

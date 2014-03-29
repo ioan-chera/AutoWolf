@@ -46,6 +46,7 @@
 #include "MasterDirectoryFile.h"
 #include "PString.h"
 #include "SODFlag.h"
+#include "ShellUnicode.h"
 
 int Menu::g_bkgdColor;
 int Menu::g_bordColor;
@@ -1448,7 +1449,9 @@ static int CP_LoadGame (int quick)
 			loadpath = cfg_dir;
 			ConcatSubpath(loadpath, name);
 
-            file = fopen (loadpath.c_str(), "rb");
+			file = ShellUnicode::fopen(loadpath.c_str(), "rb");
+			if(!file)
+				return 0;	// god help you here. But DON'T crash.
             fseek (file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
@@ -1491,7 +1494,12 @@ static int CP_LoadGame (int quick)
 			loadpath = cfg_dir;
 			ConcatSubpath(loadpath, name);
 
-            file = fopen (loadpath.c_str(), "rb");
+			file = ShellUnicode::fopen(loadpath.c_str(), "rb");
+			if(!file)
+			{
+				exit = 0;
+				break;
+			}
             fseek (file, 32, SEEK_SET);
 
             DrawLSAction (0);
@@ -1627,8 +1635,10 @@ static int CP_SaveGame (int quick)
 			savepath = cfg_dir;
 			ConcatSubpath(savepath, name);
 
-            unlink (savepath.c_str());
-            file = fopen (savepath.c_str(), "wb");
+			ShellUnicode::unlink(savepath.c_str());
+			file = ShellUnicode::fopen(savepath.c_str(), "wb");
+			if(!file)
+				return 0;
 
             strcpy (input, &SaveGameNames[which][0]);
 
@@ -1699,8 +1709,9 @@ static int CP_SaveGame (int quick)
 				savepath = cfg_dir;
 				ConcatSubpath(savepath, name);
 
-                unlink (savepath.c_str());
-                file = fopen (savepath.c_str(), "wb");
+				ShellUnicode::unlink(savepath.c_str());
+				file = ShellUnicode::fopen(savepath.c_str(), "wb");
+				
                 fwrite (input, 32, 1, file);
                 fseek (file, 32, SEEK_SET);
 
@@ -2998,7 +3009,8 @@ void menu_SetupSaveGames()
 			savepath = cfg_dir;
 			ConcatSubpath(savepath, name);
 
-           FILE *f = fopen(savepath.c_str(), "rb");
+			FILE* f = ShellUnicode::fopen(savepath.c_str(), "rb");
+
             if(f)
             {
                 char temp[32];

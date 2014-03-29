@@ -29,6 +29,7 @@
 #include "wl_def.h"
 #include "m_buffer.h"
 #include "m_swap.h"
+#include "ShellUnicode.h"
 
 //=============================================================================
 //
@@ -182,7 +183,7 @@ void BufferedFileBase::SwapShort(int16_t &x)
 //
 bool OutBuffer::CreateFile(const char *filename, size_t pLen, int pEndian)
 {
-   if(!(f = fopen(filename, "wb")))
+   if(!(f = ShellUnicode::fopen(filename, "wb")))
       return false;
 
    InitBuffer(pLen, pEndian);
@@ -243,7 +244,7 @@ void OutBuffer::Close()
 //
 bool OutBuffer::Write(const void *data, size_t size)
 {
-   const byte *lSrc = (const byte *)data;
+   auto lSrc = static_cast<const byte *>(data);
    size_t lWriteAmt;
    size_t lBytesToWrite = size;
 
@@ -360,7 +361,7 @@ bool OutBuffer::WriteSint8(int8_t num)
 //
 bool InBuffer::openFile(const char *filename, int pEndian)
 {
-   if(!(f = fopen(filename, "rb")))
+	if(!(f = ShellUnicode::fopen(filename, "rb")))
       return false;
 
    endian  = pEndian;

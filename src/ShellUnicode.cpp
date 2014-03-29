@@ -36,3 +36,38 @@ std::string ShellUnicode::getenv(const std::string& name)
 #endif
 }
 
+FILE* ShellUnicode::fopen(const char* fname, const char* finfo)
+{
+#ifdef _WIN32
+	return _wfopen(UTF8ToWideChar(fname), UTF8ToWideChar(finfo));
+#else
+	return ::fopen(fname, finfo);
+#endif
+}
+
+int ShellUnicode::remove(const char *fname)
+{
+#ifdef _WIN32
+	return _wremove(UTF8ToWideChar(fname));
+#else
+	return ::remove(fname);
+#endif
+}
+
+int ShellUnicode::rename(const char *a, const char *b)
+{
+#ifdef _WIN32
+	return _wrename(UTF8ToWideChar(a), UTF8ToWideChar(b));
+#else
+	return ::rename(a, b);
+#endif
+}
+
+int ShellUnicode::unlink(const char *a)
+{
+#ifdef _WIN32
+	return _wunlink(UTF8ToWideChar(a));
+#else
+	return ::unlink(a);
+#endif
+}

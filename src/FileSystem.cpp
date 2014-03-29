@@ -20,6 +20,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <sys/stat.h>
 #include "FileSystem.h"
 #include "StdStringExtensions.h"
 
@@ -50,4 +51,16 @@ std::string FileSystem::FindCaseInsensitive(const std::string& dirname, const st
 	// not found or indifferent
 	std::string ret(dirname);
 	return ConcatSubpath(ret, basename);
+}
+
+bool FileSystem::FileExists(const char* path)
+{
+#ifndef _WIN32
+	struct stat st;
+	if(stat(path, &st))
+		return false;
+	return true;
+#else
+#error TODO: FileExists on Windows
+#endif
 }

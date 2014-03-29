@@ -22,6 +22,7 @@
 #include "wl_main.h"
 #include "MasterDirectoryFile.h"
 #include "Config.h"
+#include "ShellUnicode.h"
 
 //PString masterDirectoryFilePath;
 
@@ -60,24 +61,24 @@ void MasterDirectoryFile::saveToFile(const std::string &fpath)
 	std::string transaction(fpath);
 	transaction += (unsigned long long)time(nullptr);
 	
-	f = fopen(transaction.c_str(), "wb");
+	f = ShellUnicode::fopen(transaction.c_str(), "wb");
 	if(!f)
 		return;
 	this->doWriteToFile(f);
 	fclose(f);
 	
 	bool success = false;
-	if(remove(fpath.c_str()) == 0)
+	if(ShellUnicode::remove(fpath.c_str()) == 0)
 	{
 		// success removing old fpath
-		if(rename(transaction.c_str(), fpath.c_str()) == 0)
+		if(ShellUnicode::rename(transaction.c_str(), fpath.c_str()) == 0)
 		{
 			// success renaming the temp file to the old file
 			success = true;
 		}
 	}
 	if(!success)
-		remove(transaction.c_str());
+		ShellUnicode::remove(transaction.c_str());
 }
 
 //
@@ -96,7 +97,7 @@ bool MasterDirectoryFile::loadFromFile(const std::string &fpath)
 {
 	FILE *f;
 	
-	f = fopen(fpath.c_str(), "rb");
+	f = ShellUnicode::fopen(fpath.c_str(), "rb");
 	if(!f)
 		return false;	// no file, no worry
 

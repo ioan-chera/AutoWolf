@@ -28,6 +28,7 @@
 namespace FileSystem
 {
 	std::string FindCaseInsensitive(const std::string& dirname, const std::string& basename);
+	bool FileExists(const char* path);
 }
 
 #endif

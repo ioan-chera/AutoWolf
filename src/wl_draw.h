@@ -20,9 +20,6 @@ extern  fixed *costable;
 extern  int *vid_wallheight;
 extern  word horizwall[],vertwall[];
 extern  int32_t    lasttimecount;
-extern  int32_t    frameon;
-
-extern  unsigned screenloc[3];
 
 extern  Boolean8 fizzlein, fpscounter;
 

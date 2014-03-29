@@ -28,6 +28,10 @@
 namespace ShellUnicode
 {
 	std::string getenv(const std::string& name);
+	FILE* fopen(const char*, const char*);
+	int remove(const char*);
+	int rename(const char*, const char*);
+	int unlink(const char*);
 }
 
 #endif

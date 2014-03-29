@@ -42,6 +42,7 @@ std::vector<std::string> s_argv;
 #ifdef _WIN32
 static void feedFromWindows()
 {
+#error TODO Windows: memory management of argvW
 	int argc;
 	LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
 	if (!argvW)
@@ -73,7 +74,7 @@ static void checkEnvVars()
 	std::string wolfdir = ShellUnicode::getenv("AUTOWOLFDIR");
 	if (!wolfdir.empty())
 	{
-		I_ChangeDir(wolfdir);
+		cfg_wolfdir = wolfdir;
 	}
 }
 
@@ -264,7 +265,7 @@ void CommandLine::Parse()
 					throw std::range_error("The wolfdir option is missing the dir argument!");
 				else
 				{
-					I_ChangeDir(it->c_str());
+					cfg_wolfdir = *it;
 				}
 			}
 			else

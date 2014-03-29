@@ -1033,33 +1033,6 @@ void DrawPlayScreen ()
     DrawScore ();
 }
 
-// Uses LatchDrawPic instead of StatusDrawPic
-void LatchNumberHERE (int x, int y, unsigned width, int32_t number)
-{
-    unsigned length,c;
-    char str[20];
-
-    ltoanoreturn ((long int)number,str,10);
-
-    length = (unsigned) strlen (str);
-
-    while (length<width)
-    {
-        LatchDrawPic (x,y,SPEAR::g(N_BLANKPIC));
-        x++;
-        width--;
-    }
-
-    c = length <= width ? 0 : length-width;
-
-    while (c<length)
-    {
-        LatchDrawPic (x,y,str[c]-'0'+ SPEAR::g(N_0PIC));
-        x++;
-        c++;
-    }
-}
-
 void ShowActStatus()
 {
     // Draw status bar without borders
@@ -1139,6 +1112,8 @@ void FinishDemoRecord ()
     SETFONTCOLOR(0,15);
     US_Print(" Demo number (0-9): ");
     I_UpdateScreen();
+	
+	std::string path;
 
     if (US_LineInput (px,py,str,NULL,true,1,0))
     {
@@ -1146,7 +1121,9 @@ void FinishDemoRecord ()
         if (level>=0 && level<=9)
         {
             cfg_demoname[4] = static_cast<char>('0'+level);
-            CA_WriteFile (cfg_demoname, demobuffer, length);
+			path = cfg_dir;
+			ConcatSubpath(path, cfg_demoname);
+            CA_WriteFile (path, demobuffer, length);
         }
     }
 

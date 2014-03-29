@@ -70,7 +70,6 @@ static byte *vbuf = NULL;
 unsigned vbufPitch = 0;
 
 int32_t    lasttimecount;
-int32_t    frameon;
 Boolean8 fpscounter;
 
 int fps_frames = 0, fps_time = 0, fps = 0;

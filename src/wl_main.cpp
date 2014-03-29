@@ -42,6 +42,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include "Exception.h"
+#include "ShellUnicode.h"
 
 // IOANCH 17.05.2012
 #include "Config.h"
@@ -231,8 +232,8 @@ void main_ReadConfig()
    ConcatSubpath(configpath, cfg_configname);
 
    main_configHardwareValues(sd, sm, sds);
-
-   FILE *file = fopen(configpath.c_str(), "rb");
+	FILE* file = ShellUnicode::fopen(configpath.c_str(), "rb");
+	
    if (file)
    {
       //
@@ -255,7 +256,7 @@ void main_ReadConfig()
          cfgFile.initialize(cfg_configname);
          if(cfgFile.loadFromFile(configpath))
          {
-            PropertyFile *pfile = (PropertyFile *)cfgFile.getFileWithName("Config", PROPERTY_FILE_HEADER);
+            auto pfile = dynamic_cast<PropertyFile *>(cfgFile.getFileWithName("Config", PROPERTY_FILE_HEADER));
             if(pfile)
             {
              
@@ -271,7 +272,7 @@ if(pfile->hasProperty(#name, Property::PStringVal)) \
 
 #define GET_INT_PROPERTY(name, spectype) \
 if(pfile->hasProperty(#name, Property::Int32)) \
-   (name) = (spectype)pfile->getIntValue(#name);
+   (name) = static_cast<spectype>(pfile->getIntValue(#name));
 
                GET_STR_PROPERTY(Scores, sizeof(HighScore) * MaxScores)
                
@@ -355,12 +356,14 @@ void main_WriteConfig()
    
    MasterDirectoryFile cfgFile;
    cfgFile.initialize(cfg_configname);
+	
    PropertyFile *pFile = new PropertyFile;
    pFile->initialize("Config");
+	
 #define PUT_STR_PROPERTY(name, sz) \
-pFile->setStringValue(#name, PString((const char *)(name), (sz)));
+pFile->setStringValue(#name, PString(reinterpret_cast<const char *>(name), (sz)));
 #define PUT_INT_PROPERTY(name) \
-pFile->setIntValue(#name, (int)(name));
+pFile->setIntValue(#name, static_cast<int>(name));
    PUT_STR_PROPERTY(Scores, sizeof(HighScore) * MaxScores)
    
    PUT_INT_PROPERTY(sd)
@@ -1199,7 +1202,7 @@ static void InitGame()
     myInput.initialize();  // sets up the input devices
 
 	
-	vSwapData.loadFile(FileSystem::FindCaseInsensitive(".", std::string("VSWAP.") + cfg_extension).c_str());
+	vSwapData.loadFile(FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string("VSWAP.") + cfg_extension).c_str());
 
     SD_Startup ();  // Sound engine initialization (e.g. SDL_mixer)
     CA_Startup ();  // The rest of the data.
@@ -1619,7 +1622,7 @@ int main(int argc, TChar *argv[])
 		CommandLine::Parse();
 #endif
 		// IOANCH: unification: set the SPEAR::flag global var
-		SPEAR::Initialize(".");
+		SPEAR::Initialize(cfg_wolfdir);
 		SPEAR::SetGlobalValues();
 
 		// IOANCH 20130509: this changes config values. Call moved here from CFE.

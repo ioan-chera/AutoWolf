@@ -45,6 +45,9 @@
 #include "PString.h"
 #include "Exception.h"
 
+#include "StdStringExtensions.h"
+#include "ShellUnicode.h"
+
 MapLoader mapSegs;
 GraphicLoader graphSegs;
 AudioLoader audioSegs;
@@ -872,7 +875,7 @@ static huffnode *ca_grhuffman;
 //
 bool CA_WriteFile(const std::string &filename, void *ptr, int32_t length)
 {
-   FILE *f = fopen(filename.c_str(), "wb");
+	FILE* f = ShellUnicode::fopen(filename.c_str(), "wb");
 //    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if(!f)
         return false;
@@ -935,15 +938,15 @@ void CA_Startup ()
 #endif
 
    // IOANCH: use C++ classes
-	mapSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_mheadname) + cfg_extension).c_str(),
-		FileSystem::FindCaseInsensitive(".", std::string("GAMEMAPS.") + cfg_extension).c_str());
+	mapSegs.loadFromFile(FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_mheadname) + cfg_extension).c_str(),
+		FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string("GAMEMAPS.") + cfg_extension).c_str());
    
-	graphSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_gdictname) + cfg_graphext).c_str(),
-		FileSystem::FindCaseInsensitive(".", std::string(ca_gheadname) + cfg_graphext).c_str(),
-		FileSystem::FindCaseInsensitive(".", std::string(ca_gfilename) + cfg_graphext).c_str());
+	graphSegs.loadFromFile(FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_gdictname) + cfg_graphext).c_str(),
+		FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_gheadname) + cfg_graphext).c_str(),
+		FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_gfilename) + cfg_graphext).c_str());
 
-	audioSegs.loadFromFile(FileSystem::FindCaseInsensitive(".", std::string(ca_aheadname) + cfg_audioext).c_str(),
-		FileSystem::FindCaseInsensitive(".", std::string(ca_afilename) + cfg_audioext).c_str());
+	audioSegs.loadFromFile(FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_aheadname) + cfg_audioext).c_str(),
+		FileSystem::FindCaseInsensitive(cfg_wolfdir, std::string(ca_afilename) + cfg_audioext).c_str());
 }
 
 //==========================================================================

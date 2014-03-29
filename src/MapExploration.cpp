@@ -52,7 +52,7 @@ PString MapExploration::PackBoolean8Array() const
 void MapExploration::UnpackBoolean8Array(const PString &source)
 {
     const PString &explorstr = source;
-    const uint8_t *explorbuf = (uint8_t *)explorstr.buffer();
+    auto explorbuf = reinterpret_cast<const uint8_t *>(explorstr.buffer());
     
     int j;
     size_t pos, targetSize = maparea;

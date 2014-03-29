@@ -49,6 +49,8 @@ bool cfg_secretstep3;
 bool cfg_botActive;
 
 std::string cfg_dir;
+std::string cfg_wolfdir;
+
 int     cfg_extravbls;
 
 bool cfg_forcegrabmouse;
@@ -119,8 +121,6 @@ unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 //
 void CFG_SetupConfigLocation()
 {
-    struct stat statbuf;
-    
     // On Linux like systems, the configdir defaults to $HOME/.wolf4sdl
 #if !defined(_arch_dreamcast)
     if(cfg_dir.empty())
@@ -135,7 +135,7 @@ void CFG_SetupConfigLocation()
     if(!cfg_dir.empty())
     {
         // Ensure config directory exists and create if necessary
-        if(stat(cfg_dir.c_str(), &statbuf) != 0)
+        if(FileSystem::FileExists(cfg_dir.c_str()) == false)
         {
 			I_MakeDir(cfg_dir);
         }
@@ -153,12 +153,10 @@ void CFG_SetupConfigLocation()
 ///////////////////////////////////////////////////////////////////////////
 void CFG_CheckForEpisodes ()
 {
-   struct stat statbuf;
-   
    // IOANCH 20130301: unification culling
    if(!SPEAR::flag)
    {
-      if(!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL6").c_str(), &statbuf))
+      if(FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.WL6").c_str()))
       {
          cfg_extension = "WL6";
          menu_newep[2].active =
@@ -172,7 +170,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[4] =
          menu_epselect[5] = 1;
       }
-	  else if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL3").c_str(), &statbuf))
+	  else if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.WL3").c_str()))
       {
          cfg_extension = "WL3";
          menu_missingep = 3;
@@ -181,7 +179,7 @@ void CFG_CheckForEpisodes ()
          menu_epselect[1] =
          menu_epselect[2] = 1;
       }
-	  else if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.WL1").c_str(), &statbuf))
+	  else if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.WL1").c_str()))
       {
          cfg_extension = "WL1";
          menu_missingep = 5;
@@ -199,25 +197,25 @@ void CFG_CheckForEpisodes ()
       switch (cfg_mission)
       {
          case 0:
-			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SOD").c_str(), &statbuf))
+			 if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.SOD").c_str()))
                cfg_extension = "SOD";
             else
                throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 1:
-			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD1").c_str(), &statbuf))
+			 if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.SD1").c_str()))
                cfg_extension = "SD1";
             else
                throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 2:
-			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD2").c_str(), &statbuf))
+			 if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.SD2").c_str()))
                cfg_extension = "SD2";
             else
                throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 3:
-			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD3").c_str(), &statbuf))
+			 if (FileSystem::FileExists(FileSystem::FindCaseInsensitive(cfg_wolfdir, "VSWAP.SD3").c_str()))
                cfg_extension = "SD3";
             else
                throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");

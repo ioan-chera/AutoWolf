@@ -60,7 +60,6 @@
 /////////////////////////////////////
 
 unsigned        g_sessionNo;	// session of SetupGameLevel
-std::future<void> g_backgroundWorker;
 
 // Command to be executed from an outer thread, in PlayLoop.
 struct PostCommand
@@ -1374,7 +1373,6 @@ void PlayLoop ()
 
     playstate = ex_stillplaying;
     lasttimecount = GetTimeCount();
-    frameon = 0;
     anglefrac = 0;
     facecount = 0;
     funnyticount = 0;

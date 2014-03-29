@@ -32,6 +32,7 @@ extern bool  cfg_nonazis;	// no enemies spawned
 extern bool  cfg_secretstep3;
 extern bool  cfg_botActive;
 extern std::string  cfg_dir;            // IOANCH 20130509: formerly configdir
+extern std::string  cfg_wolfdir;
 extern int      cfg_extravbls;
 extern bool  cfg_forcegrabmouse;
 extern bool  cfg_fullscreen;
