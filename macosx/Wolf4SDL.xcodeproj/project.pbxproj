@@ -35,7 +35,6 @@
 		4FDBD49618D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDBD49418D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib */; };
 		4FDBD49718D7B41E007799D0 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */; };
 		4FF097C517A6869C00706687 /* i_video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FF097C317A6869C00706687 /* i_video.cpp */; };
-		4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFAA4651729579F005A328F /* OutOfRangeException.cpp */; };
 		4FFDADD117ABA2480056B657 /* m_buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FFDADCF17ABA2480056B657 /* m_buffer.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -130,7 +129,6 @@
 		4F6DCA2618E00FA300F05373 /* StdStringExtensions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StdStringExtensions.cpp; path = ../src/StdStringExtensions.cpp; sourceTree = "<group>"; };
 		4F6DCA2718E00FA300F05373 /* StdStringExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdStringExtensions.h; path = ../src/StdStringExtensions.h; sourceTree = "<group>"; };
 		4F6DCA2818E00FA300F05373 /* TimeMeasure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeMeasure.h; path = ../src/TimeMeasure.h; sourceTree = "<group>"; };
-		4F74E1921759FCA40066CD25 /* m_collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = m_collection.h; path = ../src/m_collection.h; sourceTree = "<group>"; };
 		4F86102A17421ED400A1979A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		4F86103017421EE400A1979A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		4F86103717421EF100A1979A /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
@@ -153,8 +151,6 @@
 		4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "../../../../../../opt/local/lib/libSDL2-2.0.0.dylib"; sourceTree = "<group>"; };
 		4FF097C317A6869C00706687 /* i_video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = i_video.cpp; path = ../src/i_video.cpp; sourceTree = "<group>"; };
 		4FF097C417A6869C00706687 /* i_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_video.h; path = ../src/i_video.h; sourceTree = "<group>"; };
-		4FFAA4641729579F005A328F /* OutOfRangeException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutOfRangeException.h; path = ../src/OutOfRangeException.h; sourceTree = SOURCE_ROOT; };
-		4FFAA4651729579F005A328F /* OutOfRangeException.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutOfRangeException.cpp; path = ../src/OutOfRangeException.cpp; sourceTree = SOURCE_ROOT; };
 		4FFDADCF17ABA2480056B657 /* m_buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = m_buffer.cpp; path = ../src/m_buffer.cpp; sourceTree = "<group>"; };
 		4FFDADD017ABA2480056B657 /* m_buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_buffer.h; path = ../src/m_buffer.h; sourceTree = "<group>"; };
 		4FFDADD217ABA2BD0056B657 /* m_swap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = m_swap.h; path = ../src/m_swap.h; sourceTree = "<group>"; };
@@ -357,7 +353,6 @@
 				4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */,
 				4F1ECC3116EA4F5600A37742 /* m_dllist.h */,
 				4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */,
-				4F74E1921759FCA40066CD25 /* m_collection.h */,
 			);
 			name = Eternity;
 			sourceTree = "<group>";
@@ -367,8 +362,6 @@
 			children = (
 				4F3435011726973200A10A72 /* Exception.h */,
 				4F3435021726973200A10A72 /* Exception.cpp */,
-				4FFAA4641729579F005A328F /* OutOfRangeException.h */,
-				4FFAA4651729579F005A328F /* OutOfRangeException.cpp */,
 			);
 			name = Exception;
 			sourceTree = "<group>";
@@ -692,7 +685,6 @@
 				4F6DCA2B18E00FA300F05373 /* Logger.cpp in Sources */,
 				4F3435031726973200A10A72 /* Exception.cpp in Sources */,
 				4F6DCA2D18E00FA300F05373 /* StdStringExtensions.cpp in Sources */,
-				4FFAA4661729579F005A328F /* OutOfRangeException.cpp in Sources */,
 				4F6DCA2918E00FA300F05373 /* CommandLine.cpp in Sources */,
 				4F4717BC173A6A610018E82B /* SODFlag.cpp in Sources */,
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
