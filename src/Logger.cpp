@@ -45,6 +45,7 @@ void Logger::Write(const char* format, ...)
 
 #else
 	vprintf(format, argptr);
+	puts("");
 #endif
 	va_end(argptr);
 }
