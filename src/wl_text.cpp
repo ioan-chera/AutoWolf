@@ -34,6 +34,7 @@
 #include "wl_game.h"
 #include "wl_main.h"
 #include "wl_menu.h"
+#include "Exception.h"
 
 /*
 =============================================================================
@@ -401,7 +402,7 @@ void HandleWord ()
     {
         wword[wordindex] = *text++;
         if (++wordindex == WORDLIMIT)
-            Quit ("PageLayout: Word limit exceeded");
+            throw Exception ("PageLayout: Word limit exceeded");
     }
     wword[wordindex] = 0;            // stick a null at end for C
 
@@ -482,7 +483,7 @@ void PageLayout (Boolean8 shownumber)
         text++;
 
     if (*text != '^' || toupper(*++text) != 'P')
-        Quit ("PageLayout: Text not headed with ^P");
+        throw Exception ("PageLayout: Text not headed with ^P");
 
     while (*text++ != '\n')
         ;
@@ -609,7 +610,7 @@ static void CacheLayoutGraphics ()
 
     } while (text<bombpoint);
 
-    Quit ("CacheLayoutGraphics: No ^E to terminate file!");
+    throw Exception ("CacheLayoutGraphics: No ^E to terminate file!");
 }
 
 /*

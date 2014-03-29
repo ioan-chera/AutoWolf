@@ -853,7 +853,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 SD_StopSound ();
                 MenuFadeOut ();
 
-                Quit (NULL);
+                Quit ();
             }
 
             DrawPlayBorder ();
@@ -2866,7 +2866,7 @@ static int CP_Quit (int)
         SD_MusicOff ();
         SD_StopSound ();
         MenuFadeOut ();
-        Quit (NULL);
+        Quit ();
     }
 
     DrawMainMenu ();

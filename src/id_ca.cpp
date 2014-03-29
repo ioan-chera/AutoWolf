@@ -43,6 +43,7 @@
 #include "id_ca.h"
 #include "m_swap.h"
 #include "PString.h"
+#include "Exception.h"
 
 MapLoader mapSegs;
 GraphicLoader graphSegs;
@@ -295,7 +296,7 @@ static void CAL_HuffExpand(const byte *source, byte *dest, int32_t length,
    
    if(!length || !dest)
    {
-      Quit("length or dest is null!");
+      throw Exception("length or dest is null!");
       return;
    }
    
@@ -418,7 +419,7 @@ void GraphicLoader::loadFromFile(const char *vgadict, const char *vgahead,
       expectedsize = lengthof(m_grstarts_wl6) - menu_missingep;
    
    if(!cfg_ignorenumchunks && headersize / 3 != (long) expectedsize)	// IOANCH 20130116: changed name
-      Quit((PString("AutoWolf was not compiled for these data files:\n")<<vgahead<<
+      throw Exception((PString("AutoWolf was not compiled for these data files:\n")<<vgahead<<
             " contains a wrong number of offsets ("<<int(headersize/3)<<
             " instead of "<<expectedsize<<")!\n\n"
             "Please check whether you are using the right executable!\n"
@@ -968,5 +969,5 @@ void CA_Shutdown ()
 void CA_CannotOpen(const char *string)
 {
     // IOANCH 20130510: don't use a statically allocated char array.
-    Quit ((PString("Can't open ") << string << "!\n")());
+    throw Exception ((PString("Can't open ") << string << "!\n")());
 }

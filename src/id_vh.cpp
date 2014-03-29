@@ -26,6 +26,7 @@
 #include "id_in.h"
 #include "id_vh.h"
 #include "wl_main.h"
+#include "Exception.h"
 
 int	    px,py;
 byte	g_fontcolor,g_backcolor;
@@ -91,7 +92,7 @@ void VL_MungePic (byte *source, unsigned width, unsigned height)
 	size = width*height;
 
 	if (width&3)
-		Quit ("VL_MungePic: Not divisable by 4!");
+		throw Exception ("VL_MungePic: Not divisable by 4!");
 
 //
 // copy the pic to a temp buffer

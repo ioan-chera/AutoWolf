@@ -156,7 +156,7 @@ void InitSky()
 {
     unsigned cloudskyid = GetCloudSkyDefID();
     if(cloudskyid >= lengthof(cloudSkys))
-        Quit(PString("Illegal cloud sky id: ").concat(cloudskyid)());
+        throw Exception(PString("Illegal cloud sky id: ").concat(cloudskyid)());
     curSky = &cloudSkys[cloudskyid];
 
     memset(skyc, 0, sizeof(skyc));
@@ -196,7 +196,7 @@ void InitSky()
     //     skyc[i] = skyc[i + 256] = skyc[i + 512] = i;
 
     if(curSky->colorMapIndex >= lengthof(colorMaps))
-        Quit("Illegal colorMapIndex for cloud sky def %u: %u", cloudskyid, curSky->colorMapIndex);
+        throw Exception("Illegal colorMapIndex for cloud sky def %u: %u", cloudskyid, curSky->colorMapIndex);
 
     colormap_t *curMap = &colorMaps[curSky->colorMapIndex];
     int numColors = curMap->numColors;

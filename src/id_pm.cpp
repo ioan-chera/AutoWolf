@@ -24,6 +24,7 @@
 #include "id_pm.h"
 #include "m_buffer.h"
 #include "wl_main.h"
+#include "Exception.h"
 
 VSwapContainer vSwapData;
 
@@ -122,7 +123,7 @@ bool VSwapContainer::loadFile(const char *filename
       free(pageOffsets);
       free(pageLengths);
       vswap.Close();
-      Quit(PString("The page file \"").concat(filename).concat("\" is too large!")());
+      throw Exception(PString("The page file \"").concat(filename).concat("\" is too large!")());
       return false;
    }
    
@@ -143,7 +144,7 @@ bool VSwapContainer::loadFile(const char *filename
 //            concat(pageOffsets[u]).concat(" (filesize: ").
 //            concat(fileSize).concat(")");
 //         }
-         Quit(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat((int)fileSize).concat(")")());
+         throw Exception(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat((int)fileSize).concat(")")());
          free(pageOffsets);
          free(pageLengths);
          vswap.Close();

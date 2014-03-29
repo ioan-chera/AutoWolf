@@ -22,6 +22,7 @@
 
 // IOANCH 20130308: this is an excerpt from an Eternity module. It has been mo-
 //                  dified to use Wolfenstein functions.
+#include "Exception.h"
 #include "wl_def.h"
 #include "wl_main.h"
 
@@ -43,7 +44,7 @@ unsigned int D_HashTableKey(const char *str)
     unsigned int h = 0;
     
     if(!str)
-        Quit("D_HashTableKey: cannot hash NULL string!\n");
+        throw Exception("D_HashTableKey: cannot hash NULL string!\n");
     
     // note: this needs to be case insensitive for EDF mnemonics
     while(*c)
@@ -86,7 +87,7 @@ unsigned int D_HashTableKeyCase(const char *str)
     unsigned int h = 0;
     
     if(!str)
-        Quit("D_HashTableKeyCase: cannot hash NULL string!\n");
+        throw Exception("D_HashTableKeyCase: cannot hash NULL string!\n");
     
     while(*c)
     {

@@ -918,7 +918,7 @@ void InitActorList ()
 void GetNewActor ()
 {
     if (!objfreelist)
-        Quit ("GetNewActor: No free spots in objlist!");
+        throw Exception ("GetNewActor: No free spots in objlist!");
 
     newobj = objfreelist;
     objfreelist = newobj->prev;
@@ -950,7 +950,7 @@ void GetNewActor ()
 static void RemoveObj (objtype * gone)
 {
     if (gone == player)
-        Quit ("RemoveObj: Tried to remove the player!");
+        throw Exception ("RemoveObj: Tried to remove the player!");
 
     gone->state = NULL;
 

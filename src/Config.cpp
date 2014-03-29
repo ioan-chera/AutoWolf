@@ -187,7 +187,7 @@ void CFG_CheckForEpisodes ()
          menu_missingep = 5;
       }
       else
-         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
+         throw Exception ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
       
       cfg_graphext = cfg_extension;
       cfg_audioext = cfg_extension;
@@ -202,28 +202,28 @@ void CFG_CheckForEpisodes ()
 			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SOD").c_str(), &statbuf))
                cfg_extension = "SOD";
             else
-               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+               throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 1:
 			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD1").c_str(), &statbuf))
                cfg_extension = "SD1";
             else
-               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+               throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 2:
 			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD2").c_str(), &statbuf))
                cfg_extension = "SD2";
             else
-               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+               throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          case 3:
 			 if (!stat(FileSystem::FindCaseInsensitive(".", "VSWAP.SD3").c_str(), &statbuf))
                cfg_extension = "SD3";
             else
-               Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+               throw Exception ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
             break;
          default:
-            Quit ("UNSUPPORTED MISSION!");
+            throw Exception ("UNSUPPORTED MISSION!");
             break;
       }
       

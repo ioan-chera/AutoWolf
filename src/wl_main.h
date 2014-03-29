@@ -30,7 +30,6 @@ extern  Boolean8  startgame;
 extern  char     str[80];
 class PString;
 extern  std::string  cfg_configname;
-extern PString global_error;
 
 
 void            NewGame (int difficulty,int episode);
@@ -40,7 +39,7 @@ Boolean8         LoadTheGame(FILE *file,int x,int y);
 Boolean8         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 
-void Quit(const char *message)
+void Quit()
 #ifndef _WIN32
 __attribute__((noreturn))
 #endif

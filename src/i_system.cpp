@@ -31,6 +31,7 @@
 #include "StdStringExtensions.h"
 #include "wl_draw.h"
 #include "wl_main.h"
+#include "Exception.h"
 
 //
 // I_Delay
@@ -110,7 +111,7 @@ std::string I_GetSettingsDir()
 #ifdef __APPLE__
    char *appsupdir = Cocoa_CreateApplicationSupportPathString();
    if(appsupdir == NULL)
-      Quit("Your Application Support directory is not defined. You must "
+      throw Exception("Your Application Support directory is not defined. You must "
            "set this before playing.");
 	std::string ret(appsupdir);
 	free(appsupdir);
@@ -124,7 +125,7 @@ std::string I_GetSettingsDir()
 #else
    const char *homeenv = getenv("HOME");
    if(homeenv == NULL)
-      Quit("Your $HOME directory is not defined. You must set this before "
+      throw Exception("Your $HOME directory is not defined. You must set this before "
            "playing.");
    return PString(homeenv).concatSubpath(".autowolf");
 #endif
@@ -141,7 +142,7 @@ void *I_CheckedMalloc(size_t sz)
 {
    void *ret = malloc(sz);
    if(!ret)
-      Quit("Out of memory!");
+	   throw std::bad_alloc();
    return ret;
 }
 
@@ -154,6 +155,6 @@ void *I_CheckedRealloc(void *ptr, size_t sz)
 {
    void *ret = realloc(ptr, sz);
    if(!ret)
-      Quit("Out of memory!");
+	   throw std::bad_alloc();
    return ret;
 }

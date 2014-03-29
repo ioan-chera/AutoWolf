@@ -662,7 +662,7 @@ again:
         return 1;
     }
     else if (myInput.keyboard(sc_Q))        // Q = fast quit
-        Quit (NULL);
+        Quit ();
     else if (myInput.keyboard(sc_S))        // S = slow motion
     {
         CenterWindow(30,3);

@@ -45,6 +45,7 @@
 #include "id_sd.h"
 #include "PString.h"
 #include "wl_main.h"
+#include "Exception.h"
 
 InputManager myInput;
 
@@ -104,7 +105,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
    {
          // exit if the window is closed
       case SDL_QUIT:
-         Quit(NULL);
+         Quit();
          
          // check for keypresses
       case SDL_KEYDOWN:
@@ -123,7 +124,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
          if(m_keyboard.count(sc_Alt))
          {
             if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
-               Quit(NULL);
+               Quit();
          }
          // IOANCH 20130801: added meta key mapping
          if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_KP_ENTER)) m_lastScan = (ScanCode)SDLK_RETURN;
@@ -255,7 +256,7 @@ void InputManager::initialize()
             m_joyNumButtons = 32;      // only up to 32 buttons are supported
          m_joyNumHats = SDL_JoystickNumHats(m_joystick);
          if(cfg_joystickhat < -1 || cfg_joystickhat >= m_joyNumHats)
-            Quit(PString("The joystickhat param must be between 0 and ").concat(m_joyNumHats - 1).concat("!")());
+            throw Exception(PString("The joystickhat param must be between 0 and ").concat(m_joyNumHats - 1).concat("!")());
       }
    }
    
@@ -637,9 +638,9 @@ void IN_InitVerifyJoysticks()
       cfg_joystickindex >= numJoysticks))
    {
       if(!numJoysticks)
-         Quit("No joysticks are available to SDL!\n");
+         throw Exception("No joysticks are available to SDL!\n");
       else
-         Quit((PString("The joystick index must be between -1 and %i!\n") <<
+         throw Exception((PString("The joystick index must be between -1 and %i!\n") <<
             (numJoysticks - 1))());
    }
 }

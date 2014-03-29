@@ -47,6 +47,7 @@
 #include "id_vh.h"
 #include "wl_main.h"
 #include "wl_menu.h"
+#include "Exception.h"
 
 
 #if _MSC_VER == 1200            // Visual C++ 6
@@ -246,7 +247,7 @@ void US_CPrintLine(const char *s)
 	USL_MeasureString(s,&w,&h);
 
 	if (w > WindowW)
-		Quit("US_CPrintLine() - String exceeds width");
+		throw Exception("US_CPrintLine() - String exceeds width");
 	px = WindowX + ((WindowW - w) / 2);
 	py = PrintY;
 	USL_DrawString(s);

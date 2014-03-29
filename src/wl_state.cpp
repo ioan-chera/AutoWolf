@@ -39,6 +39,7 @@
 #include "List.h"
 #include "obattrib.h"
 #include "ActorStates.h"
+#include "Exception.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -356,7 +357,7 @@ Boolean8 objtype::TryWalk ()
                 return false;
 
             default:
-                Quit ("Walk: Bad dir");
+                throw Exception ("Walk: Bad dir");
         }
     }
 
@@ -739,7 +740,7 @@ void MoveObj (objtype *ob, int32_t move)
             return;
 
         default:
-            Quit ("MoveObj: bad dir!");
+            throw Exception ("MoveObj: bad dir!");
     }
 
     //
@@ -1215,7 +1216,7 @@ void objtype::FirstSighting ()
 Boolean8 objtype::SightPlayer ()
 {
     if (flags & FL_ATTACKMODE)
-        Quit ("An actor in ATTACKMODE called SightPlayer!");
+        throw Exception ("An actor in ATTACKMODE called SightPlayer!");
 
     if (temp2)
     {

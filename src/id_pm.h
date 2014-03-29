@@ -24,6 +24,7 @@
 #include "PString.h"
 #include "SODFlag.h"
 #include "wl_main.h"
+#include "Exception.h"
 
 #ifdef USE_HIRES
 #define PMPageSize 16384
@@ -107,7 +108,7 @@ public:
    {
       // Just use Quit for now,
       if(page < 0 || page >= m_numChunks)
-         Quit((PString("PM_GetPageSize: Tried to access illegal page: ") << page)());
+         throw Exception((PString("PM_GetPageSize: Tried to access illegal page: ") << page)());
       return (uint32_t) (m_pages[page + 1] - m_pages[page]);
    }
    
@@ -119,7 +120,7 @@ public:
    const uint8_t *getPage(int page) const
    {
       if(page < 0 || page >= m_numChunks)
-         Quit(PString("PM_GetPage: Tried to access illegal page: ").concat(page)());
+         throw Exception(PString("PM_GetPage: Tried to access illegal page: ").concat(page)());
       return m_pages[page];
    }
    

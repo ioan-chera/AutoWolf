@@ -45,6 +45,7 @@
 #include "ioan_bot.h"	// include bot
 #include "List.h"
 #include "obattrib.h"   // IOANCH 20130306
+#include "Exception.h"
 
 //
 // IOANCH 20130311: corrected T_ names to A_ names when used as one-shot
@@ -1214,7 +1215,7 @@ void T_Path (objtype *ob)
         {
             sprintf (str, "T_Path hit a wall at %u,%u, dir %u",
                      ob->tilex,ob->tiley,ob->dir);
-            Quit (str);
+            throw Exception (str);
         }
         
         ob->x = ((int32_t)ob->tilex<<TILESHIFT)+TILEGLOBAL/2;

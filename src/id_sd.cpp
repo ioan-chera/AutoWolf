@@ -653,7 +653,7 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
 {
     if((leftpos < 0) || (leftpos > 15) || (rightpos < 0) || (rightpos > 15)
             || ((leftpos == 15) && (rightpos == 15)))
-        Quit("SD_SetPosition: Illegal position");
+        throw Exception("SD_SetPosition: Illegal position");
 
     switch (sd_digiMode)
     {
@@ -697,14 +697,14 @@ Sint16 GetSample(float csample, const byte *samples, int size)
 void SD_PrepareSound(int which)
 {
     if(sd_digiList == NULL)
-        Quit((PString("SD_PrepareSound(")<<which<<"): sd_digiList not initialized!")());
+        throw Exception((PString("SD_PrepareSound(")<<which<<"): sd_digiList not initialized!")());
 
     int page = sd_digiList[which].startpage;
     int size = sd_digiList[which].length;
 
     const byte *origsamples = (const byte *)vSwapData.getSound(page);
     if(origsamples + size >= vSwapData.getEnd())
-        Quit((PString("SD_PrepareSound(")<<which<<"): Sound reaches out of page file!\n")());
+        throw Exception((PString("SD_PrepareSound(")<<which<<"): Sound reaches out of page file!\n")());
 
     int destsamples = (int) ((float) size * (float) cfg_samplerate
         / (float) ORIGSAMPLERATE);
@@ -749,7 +749,7 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
         return 0;
 
     if (which >= sd_numDigi)
-        Quit((PString("SD_PlayDigitized: bad sound number ")<<which)());
+        throw Exception((PString("SD_PlayDigitized: bad sound number ")<<which)());
 
     int channel = SD_GetChannelForDigi(which);
     SD_SetPosition(channel, leftpos,rightpos);
@@ -937,7 +937,7 @@ static void SD_L_ALPlaySound(AdLibSound *sound)
 
     if (!(inst->mSus | inst->cSus))
     {
-        Quit("SD_L_ALPlaySound() - Bad instrument");
+        throw Exception("SD_L_ALPlaySound() - Bad instrument");
     }
 
     SD_L_AlSetFXInst(inst);
@@ -1063,7 +1063,7 @@ Boolean8 SD_SetSoundMode(SDMode mode)
                 result = true;
             break;
         default:
-            Quit(PString("SD_SetSoundMode: Invalid sound mode ").concat(mode)());
+            throw Exception(PString("SD_SetSoundMode: Invalid sound mode ").concat(mode)());
             return false;
     }
     SoundTable = audioSegs.ptr(tableoffset);
@@ -1321,7 +1321,7 @@ Boolean8 Sound::Play(soundnames sound_abstract)
     s = (SoundCommon *) SoundTable[sound];
 
     if ((sd_soundMode != sdm_Off) && !s)
-            Quit("Sound::Play() - Uncached sound");
+            throw Exception("Sound::Play() - Uncached sound");
 
     if ((sd_digiMode != sds_Off) && (sd_digiMap[sound] != -1))
     {
@@ -1362,7 +1362,7 @@ Boolean8 Sound::Play(soundnames sound_abstract)
         return 0;
 
     if (!s->length)
-        Quit("Sound::Play() - Zero length sound");
+        throw Exception("Sound::Play() - Zero length sound");
     if (s->priority < sd_soundPriority)
         return 0;
 
@@ -1521,7 +1521,7 @@ void SD_ContinueMusic(int chunk, int startoffs)
 
         if(startoffs >= sd_sqHackLen)
         {
-            Quit("SD_StartMusic: Illegal startoffs provided!");
+            throw Exception("SD_StartMusic: Illegal startoffs provided!");
         }
 
         // fast forward to correct position

@@ -36,6 +36,7 @@
 #include "Config.h"
 #include "SODFlag.h"
 #include "ioan_bot.h"
+#include "Exception.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -301,7 +302,7 @@ void SpawnStatic (int tilex, int tiley, int type)
     laststatobj++;
 
     if (laststatobj == &statobjlist[MAXSTATS])
-        Quit ("Too many static objects!\n");
+        throw Exception ("Too many static objects!\n");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -332,7 +333,7 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     for (type=0; ; type++)
     {
         if (statinfo[type].picnum == -1)                    // end of list
-            Quit ("PlaceItemType: couldn't find type!");
+            throw Exception ("PlaceItemType: couldn't find type!");
         if (statinfo[type].type == itemtype)
             break;
     }
@@ -479,7 +480,7 @@ void SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock)
     word *map;
 
     if (doornum==MAXDOORS)
-        Quit ("64+ doors on level!");
+        throw Exception ("64+ doors on level!");
 
     doorposition[doornum] = 0;              // doors start out fully closed
     lastdoorobj->tilex = tilex;

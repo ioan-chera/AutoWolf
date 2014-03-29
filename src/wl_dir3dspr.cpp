@@ -164,7 +164,7 @@ void Scale3DShape(byte *vbuf, unsigned vbufPitch, statobj_t *ob)
         case FL_DIR_POS_BW: diradd=-0x7ff0+0x8000; break;
         case FL_DIR_POS_MID: diradd=0x8000; break;
         default:
-            Quit("Unknown directional 3d sprite position (shapenum = %i)", ob->shapenum);
+            throw Exception("Unknown directional 3d sprite position (shapenum = %i)", ob->shapenum);
     }
 
     if(ob->flags & FL_DIR_VERT_FLAG)     // vertical dir 3d sprite

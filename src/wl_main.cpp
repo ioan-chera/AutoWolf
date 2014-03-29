@@ -458,7 +458,7 @@ Boolean8 SaveTheGame(FILE *file,int x,int y)
     statobj_t nullstat;
 
 /*    if (_dos_getdiskfree(0,&dfree))
-        Quit("Error in _dos_getdiskfree call");
+        throw Exception("Error in _dos_getdiskfree call");
 
     avail = (int32_t)dfree.avail_clusters *
                   dfree.bytes_per_sector *
@@ -1167,7 +1167,7 @@ void main_InitDigiMap ()
 // Load a few things right away
 //
 ////////////////////////////////////////////////////////////////////////////////
-PString global_error;
+
 static void IntroScreen ();
 
 static void InitGame()
@@ -1346,40 +1346,18 @@ void main_NewViewSize (int width)
 //
 ////////////////////////////////////////////////////////////////////////////////
 // IOANCH 20130509: now the error is stored globally, so it can be gathered
-void Quit (const char *message)
+void Quit ()
 {
-   bool has_error = false;
-    if(message && *message)
-    {
-       global_error = message;
-       has_error = true;
-    }
-
     if (!graphSegs.hasPictable())  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (has_error)
-        {
-            puts(global_error());
-            VL_WaitVBL(100);
-        }
         exit(1);
     }
 
-    if (!has_error)
-    {
-        main_WriteConfig ();
-    }
+    main_WriteConfig ();
 
     ShutdownId ();
 
-    if (has_error)
-    {
-        puts(global_error());
-        VL_WaitVBL(200);
-        exit(1);
-    }
-    
     exit(0);
 }
 
@@ -1482,7 +1460,7 @@ static void DemoLoop()
             gamestate.mapon = cfg_tedlevel;
         }
         GameLoop();
-        Quit (NULL);
+        Quit ();
     }
 
 
@@ -1656,6 +1634,8 @@ int main(int argc, TChar *argv[])
 	}
 	catch (const std::system_error& e)
 	{
+		ShutdownId();
+		
 		std::string message(e.what());
 		message += "(";
 		message += e.code().value();
@@ -1667,11 +1647,15 @@ int main(int argc, TChar *argv[])
 	}
 	catch (const std::exception& e)
 	{
+		ShutdownId();
+		
 		showErrorAlert(e.what(), "AutoWolf Error");
 		return 1;
 	}
 	catch (...)
 	{
+		ShutdownId();
+		
 		showErrorAlert("An unknown error occurred! Please contact the author about this!", "AutoWolf Error");
 		return 2;
 	}
