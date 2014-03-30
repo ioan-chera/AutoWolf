@@ -22,7 +22,7 @@
 #define __ID_CA__
 
 // IOANCH 20121223: Cleaned up this file
-
+#include <array>
 #include "id_sd.h"
 #include "m_buffer.h"
 #include "SODFlag.h"
@@ -49,16 +49,16 @@ class MapLoader
 {
    struct maptype
    {
-      int32_t planestart[3];
-      word    planelength[3];
+	   std::array<int32_t, 3> planestart;
+	   std::array<word, 3> planelength;
       word    width,height;
       char    name[16];
    };
    
    InBuffer m_filebuf;
    word m_RLEWtag;  // RLEW compression tag
-   maptype  m_mapheaderseg[NUMMAPS];
-   word     m_mapsegs[MAPPLANES][maparea];
+	std::array<maptype, NUMMAPS>  m_mapheaderseg;
+	std::array<std::array<word, maparea>, MAPPLANES> m_mapsegs;
    int m_mapon;
    
    // Also added from EE
@@ -66,17 +66,12 @@ class MapLoader
 public:
    MapLoader() : m_RLEWtag(0), m_mapon(-1)
    {
-      memset(m_mapheaderseg, 0, sizeof(m_mapheaderseg));
-      memset(m_mapsegs, 0, sizeof(m_mapsegs));
+      memset(m_mapheaderseg.data(), 0, sizeof(m_mapheaderseg));
+      memset(m_mapsegs.data(), 0, sizeof(m_mapsegs));
    }
    void close()
    {
       m_filebuf.Close();
-//      if(m_file)
-//      {
-//         fclose(m_file);
-//         m_file = NULL;
-//      }
    }
 
    ~MapLoader()
@@ -101,11 +96,11 @@ public:
    }
    const word *operator[] (int plane) const
    {
-      return m_mapsegs[plane];
+      return m_mapsegs[plane].data();
    }
    word *operator[] (int plane)
    {
-      return m_mapsegs[plane];
+      return m_mapsegs[plane].data();
    }
    void setAt(int plane, int x, int y, word value)
    {

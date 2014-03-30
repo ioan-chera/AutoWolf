@@ -3441,8 +3441,7 @@ WaitKeyUp ()
 // READ KEYBOARD, JOYSTICK AND MOUSE FOR INPUT
 //
 ////////////////////////////////////////////////////////////////////
-void
-ReadAnyControl (CursorInfo * ci)
+void ReadAnyControl (CursorInfo * ci)
 {
     int mouseactive = 0;
 

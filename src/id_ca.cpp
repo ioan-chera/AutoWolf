@@ -97,9 +97,9 @@ void MapLoader::loadFromFile(const char *maphead, const char *gamemaps)
          continue;
       
       m_filebuf.seek(pos, SEEK_SET);
-      maptype &m = m_mapheaderseg[i];
-      m_filebuf.readSint32Array(m.planestart, lengthof(m.planestart));
-      m_filebuf.readUint16Array(m.planelength, lengthof(m.planelength));
+      maptype &m = m_mapheaderseg.at(i);
+      m_filebuf.readSint32Array(m.planestart.data(), m.planestart.size());
+      m_filebuf.readUint16Array(m.planelength.data(), m.planelength.size());
       m_filebuf.readUint16(m.width);
       m_filebuf.readUint16(m.height);
       m_filebuf.read(m.name, lengthof(m.name));
@@ -248,10 +248,10 @@ void MapLoader::cacheMap (int mapnum, short episode)
    
    for (plane = 0; plane<MAPPLANES; plane++)
    {
-      pos = m_mapheaderseg[mapnum].planestart[plane];
-      compressed = m_mapheaderseg[mapnum].planelength[plane];
+      pos = m_mapheaderseg.at(mapnum).planestart.at(plane);
+      compressed = m_mapheaderseg.at(mapnum).planelength.at(plane);
       
-      dest = m_mapsegs[plane];
+      dest = m_mapsegs.at(plane).data();
       
       m_filebuf.seek(pos, SEEK_SET);
       if (compressed <= BUFFERSIZE)
