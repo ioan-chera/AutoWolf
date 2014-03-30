@@ -274,3 +274,9 @@ lib/osx/universal
 vs2013/autowolf/autowolf.opensdf
 vs2013/autowolf/autowolf.sdf
 *.psess
+AutoWolf-Android/bin
+AutoWolf-Android/gen
+AutoWolf-Android/libs
+AutoWolf-Android/obj
+DOS/wolfsrc/WOLF3D.DSK
+DOS/wolfsrc/WOLF3D.SYM

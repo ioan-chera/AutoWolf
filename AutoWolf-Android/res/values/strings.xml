@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Automatic Wolfenstein</string>
+    <string name="choose_wolfdir_label">Current Wolfenstein Folder:</string>
+    <string name="not_chosen_label">None Chosen</string>
+    <string name="choose_wolfdir_button">Pick&#8230;</string>
+    <string name="warp_label">Warp to Level:</string>
+    <string name="warp_field_hint">0-based number</string>
+    <string name="skill_label">Difficulty:</string>
+    <string name="baby_button">Can I play, daddy?</string>
+    <string name="easy_button">Don\'t hurt me</string>
+    <string name="medium_button">Bring \'em on</string>
+    <string name="hard_button">I am death incarnate!</string>
+    <string name="start_button">Start!</string>
+    
+    <string name="open_activity">Pick Wolfenstein Directory</string>
+</resources>
