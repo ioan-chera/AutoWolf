@@ -25,6 +25,10 @@
 #include <shellapi.h>
 #endif
 
+#ifdef __ANDROID__
+#include <SDL_system.h>
+#endif
+
 #include <system_error>
 #include <vector>
 
@@ -57,10 +61,57 @@ static void feedFromWindows()
 }
 #endif
 
+#ifdef __ANDROID__
+static void feedFromAndroid(const char* arg0)
+{
+	class Opener
+	{
+		FILE *f;
+	public:
+		Opener(const char* fname) : f(nullptr)
+		{
+			f = ShellUnicode::fopen(fname, "rt");
+			if(!f)
+				throw std::system_error(std::error_code(errno, std::system_category()), "Couldn't open Android command line list");
+		}
+		~Opener()
+		{
+			if(f)
+				fclose(f);
+		}
+		FILE* get()
+		{
+			return f;
+		}
+	};
+	
+	std::string path = SDL_AndroidGetInternalStoragePath();
+	ConcatSubpath(path, "AndroidParams.txt");
+	
+//	Opener op(path.c_str());
+//	char line[1024];
+	s_argv.push_back(arg0);
+	s_argv.push_back("--wolfdir");
+	s_argv.push_back("/sdcard/dos/wolf3d");
+	s_argv.push_back("--tedlevel");
+	s_argv.push_back("31");
+	s_argv.push_back("--hard");
+//	while(!feof(op.get()))
+//	{
+//		if(!fgets(line, lengthof(line), op.get()))
+//			continue;
+//		if(strlen(line) > 0)
+//			s_argv.push_back(line);
+//	}
+}
+#endif
+
 void CommandLine::Feed(int argc, const char* const* argv)
 {
 #ifdef _WIN32
 	feedFromWindows();
+#elif defined(__ANDROID__)
+	feedFromAndroid("AutoWolf");
 #else
 	if (!argc || !argv)
 		return;

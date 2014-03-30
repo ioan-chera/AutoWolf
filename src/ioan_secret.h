@@ -63,8 +63,8 @@ class SecretSolver
 
 	// Map state stacks
 	// Optim note: the underlying structure should be vector
-	std::stack<std::array<uint16_t, maparea>, std::vector<std::array<uint16_t, maparea>>> pushstates;
-	std::stack<std::array<uint16_t, maparea>, std::vector<std::array<uint16_t, maparea>>> actorstates;
+	std::stack<std::array<uint16_t, maparea>> pushstates;
+	std::stack<std::array<uint16_t, maparea>> actorstates;
 
 	// Player position states
 	std::stack<unsigned> posstates;
