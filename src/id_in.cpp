@@ -45,6 +45,7 @@
 #include "id_sd.h"
 #include "PString.h"
 #include "wl_main.h"
+#include "wl_play.h"
 #include "Exception.h"
 
 InputManager myInput;
@@ -101,6 +102,8 @@ int InputManager::p_getMouseButtons() const
 //
 void InputManager::p_processEvent(const SDL_Event *event)
 {
+	static int lastOffset;
+	
    switch (event->type)
    {
          // exit if the window is closed
@@ -192,6 +195,18 @@ void InputManager::p_processEvent(const SDL_Event *event)
          break;
       }
          
+		   //
+		   // For Android and possibly iOS
+		   //
+	   case SDL_APP_WILLENTERBACKGROUND:
+		   lastOffset = StopMusic();
+		   break;
+	   case SDL_APP_DIDENTERFOREGROUND:
+		   if(lastOffset)
+			   ContinueMusic(lastOffset);
+		   else
+			   StartMusic();
+		   break;
 //      case SDL_ACTIVEEVENT:
 //      {
 //         if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)

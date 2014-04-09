@@ -1,15 +1,10 @@
 package com.ichera.autowolf;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.libsdl.app.SDLActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -32,12 +28,14 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private static final String PREF_WOLFDIR = "wolfdir";
 	private static final String PREF_TEDLEVEL = "tedlevel";
 	private static final String PREF_SKILL = "skill";
+	private static final String PREF_SECRETSTEP3 = "secretstep3";
 	
 	private static final int REQUEST_OPEN_FOLDER = 1;
 	
 	private String mWolfdir;
 	private int mTedlevel;
 	private int mSkillLevel;
+	private boolean mSecretStep3;
 	
 	private Button mChooseButton;
 	private EditText mWarpField;
@@ -46,6 +44,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private RadioButton mEasyButton;
 	private RadioButton mMediumButton;
 	private RadioButton mHardButton;
+	
+	private CheckBox mSecretStep3Box;
 	
 	private Button mStartButton;
 	
@@ -65,6 +65,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mMediumButton = (RadioButton)findViewById(R.id.medium_button);
 		mHardButton = (RadioButton)findViewById(R.id.hard_button);
 		
+		mSecretStep3Box = (CheckBox)findViewById(R.id.check_secretstep3);
+		
 		mStartButton = (Button)findViewById(R.id.start_button);
 		
 		mChooseButton.setOnClickListener(this);
@@ -74,6 +76,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mEasyButton.setOnCheckedChangeListener(this);
 		mMediumButton.setOnCheckedChangeListener(this);
 		mHardButton.setOnCheckedChangeListener(this);
+		
+		mSecretStep3Box.setOnCheckedChangeListener(this);
 		
 		mStartButton.setOnClickListener(this);
 		
@@ -87,6 +91,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mWolfdir = settings.getString(PREF_WOLFDIR, "");
 		mTedlevel = settings.getInt(PREF_TEDLEVEL, 0);
 		mSkillLevel = settings.getInt(PREF_SKILL, 3);
+		mSecretStep3 = settings.getBoolean(PREF_SECRETSTEP3, false);
 		
 		updateUi();
 	}
@@ -99,6 +104,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 			editor.putString(PREF_WOLFDIR, mWolfdir);
 		editor.putInt(PREF_TEDLEVEL, mTedlevel);
 		editor.putInt(PREF_SKILL, mSkillLevel);
+		editor.putBoolean(PREF_SECRETSTEP3, mSecretStep3);
 		
 		editor.commit();
 	}
@@ -136,6 +142,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 			((RadioButton)findViewById(R.id.hard_button)).setChecked(true);
 			break;	
 		}
+		mSecretStep3Box.setChecked(mSecretStep3);
 	}
 
 	@Override
@@ -203,6 +210,13 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
 	{
+		if(buttonView == mSecretStep3Box)
+		{
+			mSecretStep3 = mSecretStep3Box.isChecked();
+			updateUi();
+			putData();
+			return;
+		}
 		if(isChecked)
 		{
 			if(buttonView == mBabyButton)
@@ -211,11 +225,11 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 				mSkillLevel = 1;
 			else if(buttonView == mMediumButton)
 				mSkillLevel = 2;
-			else
+			else if(buttonView == mHardButton)
 				mSkillLevel = 3;
 			updateUi();
 			putData();
-		}
+		}		
 	}
 	
 	private void writeArguments()
@@ -249,5 +263,11 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 			break;
 		}
 		
+		if(mSecretStep3)
+			mArgs.add("--secretstep3");
+		
+		// Disable joystick (it's the silly accelerometer)
+		mArgs.add("--joystick");
+		mArgs.add("-1");
 	}
 }

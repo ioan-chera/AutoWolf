@@ -76,6 +76,14 @@
 	            android:layout_height="48dp"
 	            android:text="@string/hard_button"/>
 	    </RadioGroup>
+	    <View android:id="@+id/separator4"
+	        android:layout_width="match_parent"
+	        android:layout_height="1px"
+	        android:background="@android:color/darker_gray"/>
+	    <CheckBox android:id="@+id/check_secretstep3"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/secretstep3"/>
 	    <Button android:id="@+id/start_button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="48dp"
