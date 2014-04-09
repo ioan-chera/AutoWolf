@@ -1,5 +1,6 @@
 package com.ichera.autowolf;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.libsdl.app.SDLActivity;
@@ -8,8 +9,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -269,5 +272,37 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		// Disable joystick (it's the silly accelerometer)
 		mArgs.add("--joystick");
 		mArgs.add("-1");
+		
+		if(isExternalStorageReadable() && isExternalStorageWritable())
+		{
+			File homeDir = Environment.getExternalStorageDirectory();
+			File settingsDir = new File(homeDir, "com.ichera.autowolf");
+			settingsDir.mkdirs();
+			if(settingsDir.isDirectory())
+			{
+				mArgs.add("--configdir");
+				mArgs.add(settingsDir.getAbsolutePath());
+				//Log.i("What", settingsDir.getAbsolutePath());
+			}
+		}
+	}
+	
+	/* Checks if external storage is available for read and write */
+	private static boolean isExternalStorageWritable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+
+	/* Checks if external storage is available to at least read */
+	private static boolean isExternalStorageReadable() {
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state) ||
+	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	        return true;
+	    }
+	    return false;
 	}
 }

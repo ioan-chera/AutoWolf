@@ -293,7 +293,7 @@ void CommandLine::Parse()
 					"argument!");
 				else
 				{
-					cfg_dir = arg;
+					cfg_dir = *it;
 				}
 			}
 			else if (!strcasecmp(arg, "--ignorenumchunks"))
