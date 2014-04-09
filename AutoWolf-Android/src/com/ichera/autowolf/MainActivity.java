@@ -3,6 +3,7 @@ package com.ichera.autowolf;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.libsdl.app.SDLActivity;
 
@@ -47,6 +48,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private RadioButton mHardButton;
 	
 	private Button mStartButton;
+	
+	private ArrayList<String> mArgs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -149,6 +152,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		{
 			writeArguments();
 			Intent intent = new Intent(getApplicationContext(), SDLActivity.class);
+			intent.putStringArrayListExtra(SDLActivity.EXTRA_ARGS, mArgs);
 			startActivity(intent);
 		}
 	}
@@ -216,56 +220,34 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	
 	private void writeArguments()
 	{
-		FileOutputStream fos = null;
-		try
+		if(mArgs == null)
+			mArgs = new ArrayList<String>();
+		else
+			mArgs.clear();
+		
+		if(mWolfdir != null)
 		{
-			fos = openFileOutput("AndroidParams.txt", Context.MODE_PRIVATE);
-			
-			if(mWolfdir != null)
-			{
-				fos.write("--wolfdir\n".getBytes());
-				fos.write((mWolfdir + "\n").getBytes());
-			}
-			
-			fos.write("--tedlevel\n".getBytes());
-			fos.write((String.valueOf(mTedlevel) + "\n").getBytes());
-			
-			switch(mSkillLevel)
-			{
-			case 0:
-				fos.write("--baby\n".getBytes());
-				break;
-			case 1:
-				fos.write("--easy\n".getBytes());
-				break;
-			case 2:
-				fos.write("--medium\n".getBytes());
-				break;
-			case 3:
-				fos.write("--hard\n".getBytes());
-				break;
-			}
-			
-			fos.close();
+			mArgs.add("--wolfdir");
+			mArgs.add(mWolfdir);
 		}
-		catch(IOException e)
+		mArgs.add("--tedlevel");
+		mArgs.add(String.valueOf(mTedlevel));
+		
+		switch(mSkillLevel)
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("An error occurred, sorry");
-			builder.show();
+		case 0:
+			mArgs.add("--baby");
+			break;
+		case 1:
+			mArgs.add("--easy");
+			break;
+		case 2:
+			mArgs.add("--medium");
+			break;
+		case 3:
+			mArgs.add("--hard");
+			break;
 		}
-		finally
-		{
-			if(fos != null)
-			{
-				try
-				{
-					fos.close();
-				}
-				catch(IOException e)
-				{
-				}
-			}
-		}
+		
 	}
 }

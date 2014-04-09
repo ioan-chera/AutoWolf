@@ -43,6 +43,10 @@ public class SDLActivity extends Activity {
     
     // Audio
     protected static AudioTrack mAudioTrack;
+    
+    // ARGS
+    public static final String EXTRA_ARGS = "args";
+    static ArrayList<String> sArgs;
 
     // Load the .so
     static {
@@ -76,6 +80,9 @@ public class SDLActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.v("SDL", "onCreate():" + mSingleton);
         super.onCreate(savedInstanceState);
+        
+        Intent intent = getIntent();
+        sArgs = intent.getStringArrayListExtra(EXTRA_ARGS);
         
         SDLActivity.initialize();
         // So we can call stuff from static callbacks
@@ -292,7 +299,7 @@ public class SDLActivity extends Activity {
     }
 
     // C functions we call
-    public static native void nativeInit();
+    public static native void nativeInit(String[] args);
     public static native void nativeLowMemory();
     public static native void nativeQuit();
     public static native void nativePause();
@@ -527,7 +534,8 @@ class SDLMain implements Runnable {
     @Override
     public void run() {
         // Runs SDL_main()
-        SDLActivity.nativeInit();
+    	String[] arr = SDLActivity.sArgs.toArray(new String[SDLActivity.sArgs.size()]);
+        SDLActivity.nativeInit(arr);
 
         //Log.v("SDL", "SDL thread terminated");
     }

@@ -110,8 +110,8 @@ void CommandLine::Feed(int argc, const char* const* argv)
 {
 #ifdef _WIN32
 	feedFromWindows();
-#elif defined(__ANDROID__)
-	feedFromAndroid("AutoWolf");
+//#elif defined(__ANDROID__)
+//	feedFromAndroid("AutoWolf");
 #else
 	if (!argc || !argv)
 		return;
