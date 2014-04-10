@@ -135,6 +135,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RALT)) m_lastScan = (ScanCode)SDLK_LALT;
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RCTRL)) m_lastScan = (ScanCode)SDLK_LCTRL;
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RGUI)) m_lastScan = (ScanCode)SDLK_LGUI;
+		 else if(m_lastScan == static_cast<ScanCode>(SDLK_AC_BACK)) m_lastScan = (ScanCode)SDLK_ESCAPE;
          else
          {
             if((mod & KMOD_NUM) == 0)
@@ -177,6 +178,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(key == SDLK_RALT) key = SDLK_LALT;
          else if(key == SDLK_RCTRL) key = SDLK_LCTRL;
          else if(key == SDLK_RGUI) key = SDLK_LGUI;
+		 else if(key == SDLK_AC_BACK) key = SDLK_ESCAPE;
          else
          {
             if((SDL_GetModState() & KMOD_NUM) == 0)
