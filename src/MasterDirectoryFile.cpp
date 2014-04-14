@@ -64,8 +64,6 @@ void MasterDirectoryFile::saveToFile(const std::string &fpath)
 	std::string transaction(fpath);
 	transaction += (unsigned long long)time(nullptr);
 	
-	Logger::Write("%s: fpath = %s, transaction = %s", __FUNCTION__, fpath.c_str(), transaction.c_str());
-	
 	f = ShellUnicode::fopen(transaction.c_str(), "wb");
 	if(!f)
 	{
