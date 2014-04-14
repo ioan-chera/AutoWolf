@@ -723,7 +723,7 @@ void LevelCompleted ()
         if (ratio >= 100)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
@@ -734,7 +734,7 @@ void LevelCompleted ()
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             Sound::Play (NOBONUSSND);
         }
         else
@@ -765,7 +765,7 @@ void LevelCompleted ()
         if (ratio >= 100)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
@@ -776,7 +776,7 @@ void LevelCompleted ()
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             Sound::Play (NOBONUSSND);
         }
         else
@@ -805,7 +805,7 @@ void LevelCompleted ()
         if (ratio >= 100)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             bonus += PERCENT100AMT;
             ltoanoreturn ((long int)bonus, tempstr, 10);
             x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
@@ -816,7 +816,7 @@ void LevelCompleted ()
         else if (!ratio)
         {
             VL_WaitVBL (VBLWAIT);
-            SD_StopSound ();
+			Sound::Stop();
             Sound::Play (NOBONUSSND);
         }
         else

@@ -201,13 +201,11 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   // For Android and possibly iOS
 		   //
 	   case SDL_APP_WILLENTERBACKGROUND:
-		   lastOffset = StopMusic();
+		   Sound::Stop();
+		   Sound::MusicOff();
 		   break;
 	   case SDL_APP_DIDENTERFOREGROUND:
-		   if(lastOffset)
-			   ContinueMusic(lastOffset);
-		   else
-			   StartMusic();
+		   Sound::MusicOn();
 		   break;
 //      case SDL_ACTIVEEVENT:
 //      {

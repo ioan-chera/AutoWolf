@@ -158,14 +158,11 @@ extern  int     SD_GetChannelForDigi(int which);
 extern  void    SD_PositionSound(int leftvol,int rightvol);
 
 extern  void    SD_SetPosition(int channel, int leftvol,int rightvol);
-extern  void    SD_StopSound(),
-                SD_WaitSoundDone();
+extern  void	SD_WaitSoundDone();
 
 extern  void    SD_StartMusic(int chunk);
 extern  void    SD_ContinueMusic(int chunk, int startoffs);
-extern  void    SD_MusicOn(),
-                SD_FadeOutMusic();
-extern  int     SD_MusicOff();
+extern  void	SD_FadeOutMusic();
 
 extern  Boolean8 SD_MusicPlaying();
 extern  Boolean8 SD_SetSoundMode(SDMode mode);
@@ -178,8 +175,11 @@ extern  int     SD_PlayDigitized(word which,int leftpos,int rightpos);
 
 namespace Sound
 {
-	Boolean8 Play(soundnames sound);
-	void StopDigitized();
+	int			MusicOff();
+	void		MusicOn();
+	Boolean8	Play(soundnames sound);
+	void		Stop();
+	void		StopDigitized();
 }
 
 #endif

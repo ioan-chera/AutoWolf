@@ -849,9 +849,12 @@ static int CP_CheckQuick (ScanCode scancode)
             if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
 #endif
             {
+				if(ingame)
+					bot.SaveData();
+
                 I_UpdateScreen ();
-                SD_MusicOff ();
-                SD_StopSound ();
+                Sound::MusicOff ();
+				Sound::Stop();
                 MenuFadeOut ();
 
                 Quit ();
@@ -2874,8 +2877,8 @@ static int CP_Quit (int)
 			bot.SaveData();
 		
         I_UpdateScreen ();
-        SD_MusicOff ();
-        SD_StopSound ();
+        Sound::MusicOff ();
+		Sound::Stop();
         MenuFadeOut ();
         Quit ();
     }
@@ -3650,7 +3653,7 @@ int StartCPMusic (int song)
     int lastoffs;
 
     lastmusic = song;
-    lastoffs = SD_MusicOff ();
+    lastoffs = Sound::MusicOff();
 	// IOANCH 20130301: unification
 	const unsigned int STARTMUSIC_max = IMPALE(STARTMUSIC);
    audioSegs.uncacheChunk(STARTMUSIC_max + lastmusic);
@@ -3687,10 +3690,10 @@ static void CheckPause ()
         switch (SoundStatus)
         {
             case 0:
-                SD_MusicOn ();
+                Sound::MusicOn ();
                 break;
             case 1:
-                SD_MusicOff ();
+				Sound::MusicOff();
                 break;
         }
 

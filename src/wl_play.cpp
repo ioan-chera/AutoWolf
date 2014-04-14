@@ -993,7 +993,7 @@ static void RemoveObj (objtype * gone)
 */
 int StopMusic ()
 {
-    int lastoffs = SD_MusicOff ();
+    int lastoffs = Sound::MusicOff ();
 
 	// IOANCH 20130301: unification
     audioSegs.uncacheChunk(IMPALE(STARTMUSIC) + lastmusicchunk);
@@ -1014,7 +1014,7 @@ int StopMusic ()
 
 void StartMusic ()
 {
-    SD_MusicOff ();
+    Sound::MusicOff ();
 	// IOANCH 20130301: unification
 	int *songs = IMPALE(songs);
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];
@@ -1025,7 +1025,7 @@ void StartMusic ()
 
 void ContinueMusic (int offs)
 {
-    SD_MusicOff ();
+    Sound::MusicOff ();
 	// IOANCH 20130301: unification
 	int *songs = IMPALE(songs);
     lastmusicchunk = songs[gamestate.mapon + gamestate.episode * 10];

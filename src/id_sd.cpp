@@ -683,7 +683,7 @@ Boolean8 SD_SetSoundMode(SDMode mode)
     Boolean8 result = false;
     word    tableoffset;
 
-    SD_StopSound();
+	Sound::Stop();
 
     if ((mode == sdm_AdLib) && !sd_adLibPresent)
         mode = sdm_PC;
@@ -904,8 +904,8 @@ void SD_Shutdown()
     if (!SD_Started)
         return;
 
-    SD_MusicOff();
-    SD_StopSound();
+	Sound::MusicOff();
+	Sound::Stop();
 
 	unsigned int lastvalue = SPEAR::flag ? STARTMUSIC_sod - STARTDIGISOUNDS_sod :
     STARTMUSIC_wl6 - STARTDIGISOUNDS_wl6;
@@ -1059,7 +1059,7 @@ word SD_SoundPlaying()
 //      SD_StopSound() - if a sound is playing, stops it
 //
 ////////////////////////////////////////////////////////////////////////////////
-void SD_StopSound()
+void Sound::Stop()
 {
     if (sd_digiPlaying)
         Sound::StopDigitized();
@@ -1097,7 +1097,7 @@ void SD_WaitSoundDone()
 //      SD_MusicOn() - turns on the sequencer
 //
 ////////////////////////////////////////////////////////////////////////////////
-void SD_MusicOn()
+void Sound::MusicOn()
 {
     sd_sqActive = true;
 }
@@ -1108,7 +1108,7 @@ void SD_MusicOn()
 //      returns the last music offset for music continue
 //
 ////////////////////////////////////////////////////////////////////////////////
-int SD_MusicOff()
+int Sound::MusicOff()
 {
     word    i;
 
@@ -1134,7 +1134,7 @@ int SD_MusicOff()
 ////////////////////////////////////////////////////////////////////////////////
 void SD_StartMusic(int chunk)
 {
-    SD_MusicOff();
+    Sound::MusicOff();
 
     if (sd_musicMode == smm_AdLib)
     {
@@ -1145,13 +1145,13 @@ void SD_StartMusic(int chunk)
         sd_sqHackPtr = sd_sqHack;
         sd_sqHackTime = 0;
         sd_alTimeCount = 0;
-        SD_MusicOn();
+        Sound::MusicOn();
     }
 }
 
 void SD_ContinueMusic(int chunk, int startoffs)
 {
-    SD_MusicOff();
+    Sound::MusicOff();
 
     if (sd_musicMode == smm_AdLib)
     {
@@ -1183,7 +1183,7 @@ void SD_ContinueMusic(int chunk, int startoffs)
         sd_sqHackTime = 0;
         sd_alTimeCount = 0;
 
-        SD_MusicOn();
+        Sound::MusicOn();
     }
 }
 
@@ -1200,7 +1200,7 @@ void SD_FadeOutMusic()
     {
         case smm_AdLib:
             // DEBUG - quick hack to turn the music off
-            SD_MusicOff();
+            Sound::MusicOff();
             break;
 		default:
 			;

@@ -1492,7 +1492,7 @@ startplayloop:
         {
            // IOANCH 20130725: added spear notification
             I_Notify("Got the Spear!");
-            SD_StopSound();
+			Sound::Stop();
             Sound::Play(GETSPEARSND);
             if (sd_digiMode != sds_Off)
             {
