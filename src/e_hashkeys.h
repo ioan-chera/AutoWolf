@@ -29,6 +29,7 @@
 #define E_HASHKEYS_H__
 
 #include "PString.h"
+#include "wl_def.h"
 
 unsigned int D_HashTableKey(const char *str);
 unsigned int D_HashTableKeyCase(const char *str);

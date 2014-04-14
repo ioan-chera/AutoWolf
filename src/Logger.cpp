@@ -18,6 +18,9 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
 #include "Logger.h"
 #include "wl_def.h"
 
@@ -42,7 +45,8 @@ void Logger::Write(const char* format, ...)
 	}
 	WriteConsole(handle, buffer, sz < (lengthof(buffer) - 1) ? sz : lengthof(buffer) - 1, &crap, nullptr);
 	WriteConsole(handle, "\n", 1, &crap, nullptr);
-
+#elif defined(__ANDROID__)
+	__android_log_vprint(ANDROID_LOG_INFO, "AutoWolfNDK", format, argptr);
 #else
 	vprintf(format, argptr);
 	puts("");

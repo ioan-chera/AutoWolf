@@ -16,13 +16,16 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 
+#include <errno.h>
 #include <time.h>
-#include "wl_def.h"
-#include "StdStringExtensions.h"
-#include "wl_main.h"
-#include "MasterDirectoryFile.h"
 #include "Config.h"
+#include "Logger.h"
+#include "FileSystem.h"
+#include "MasterDirectoryFile.h"
 #include "ShellUnicode.h"
+#include "StdStringExtensions.h"
+#include "wl_def.h"
+#include "wl_main.h"
 
 //PString masterDirectoryFilePath;
 
@@ -61,22 +64,34 @@ void MasterDirectoryFile::saveToFile(const std::string &fpath)
 	std::string transaction(fpath);
 	transaction += (unsigned long long)time(nullptr);
 	
+	Logger::Write("%s: fpath = %s, transaction = %s", __FUNCTION__, fpath.c_str(), transaction.c_str());
+	
 	f = ShellUnicode::fopen(transaction.c_str(), "wb");
 	if(!f)
+	{
+		Logger::Write("%s: Failed to open transaction: %s", __FUNCTION__, strerror(errno));
 		return;
+	}
 	this->doWriteToFile(f);
 	fclose(f);
 	
 	bool success = false;
-	if(ShellUnicode::remove(fpath.c_str()) == 0)
+	
+	if (FileSystem::FileExists(fpath.c_str()))
 	{
-		// success removing old fpath
-		if(ShellUnicode::rename(transaction.c_str(), fpath.c_str()) == 0)
-		{
-			// success renaming the temp file to the old file
-			success = true;
-		}
+		if(ShellUnicode::remove(fpath.c_str()) != 0)
+			Logger::Write("%s: Failed to remove fpath: %s", __FUNCTION__, strerror(errno));
 	}
+	
+	// success removing old fpath
+	if(ShellUnicode::rename(transaction.c_str(), fpath.c_str()) == 0)
+	{
+		// success renaming the temp file to the old file
+		success = true;
+	}
+	else
+		Logger::Write("%s: Failed to rename transaction into fpath: %s", __FUNCTION__, strerror(errno));
+	
 	if(!success)
 		ShellUnicode::remove(transaction.c_str());
 }

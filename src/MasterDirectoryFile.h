@@ -20,6 +20,7 @@
 #ifndef MASTERDIRECTORYFILE_H_
 #define MASTERDIRECTORYFILE_H_
 
+#include <string>
 #include "DirectoryFile.h"
 
 #define MASTERDIR_HEADER "AutoWolf"
