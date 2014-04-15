@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -200,11 +199,15 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	{
 		try
 		{
-			mTedlevel = Integer.valueOf(mWarpField.getText().toString());
+			String text = mWarpField.getText().toString();
+			if(text != null && text.length() > 0)
+				mTedlevel = Integer.valueOf(text);
+			else
+				mTedlevel = -1;
 		}
 		catch(NumberFormatException e)
 		{
-			mTedlevel = 0;
+			mTedlevel = -1;
 		}
 		updateUi(true);
 		putData();
@@ -247,23 +250,26 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 			mArgs.add("--wolfdir");
 			mArgs.add(mWolfdir);
 		}
-		mArgs.add("--tedlevel");
-		mArgs.add(String.valueOf(mTedlevel));
-		
-		switch(mSkillLevel)
+		if(mTedlevel >= 0)
 		{
-		case 0:
-			mArgs.add("--baby");
-			break;
-		case 1:
-			mArgs.add("--easy");
-			break;
-		case 2:
-			mArgs.add("--medium");
-			break;
-		case 3:
-			mArgs.add("--hard");
-			break;
+			mArgs.add("--tedlevel");
+			mArgs.add(String.valueOf(mTedlevel));
+			
+			switch(mSkillLevel)
+			{
+			case 0:
+				mArgs.add("--baby");
+				break;
+			case 1:
+				mArgs.add("--easy");
+				break;
+			case 2:
+				mArgs.add("--medium");
+				break;
+			case 3:
+				mArgs.add("--hard");
+				break;
+			}
 		}
 		
 		if(mSecretStep3)

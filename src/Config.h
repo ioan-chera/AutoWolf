@@ -49,6 +49,7 @@ extern int      cfg_tedlevel;
 extern unsigned cfg_screenBits;
 extern unsigned cfg_screenHeight;
 extern unsigned cfg_screenWidth;
+extern float	cfg_aspectRatio;
 extern bool  cfg_usedoublebuffering;
     
 void     CFG_SetupConfigLocation();

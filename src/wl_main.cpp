@@ -967,7 +967,7 @@ static void FinishSignon ()
     {
         VL_Bar (0,189,300,11,VL_GetPixel(0,0));
         WindowX = 0;
-        WindowW = 320;
+        WindowW = LOGIC_WIDTH;
         PrintY = 190;
 
         // IOANCH 20130301: unification culling
@@ -1318,8 +1318,8 @@ void ShowViewSize (int width)
     }
     else
     {
-        viewwidth = width*16*cfg_screenWidth/320;
-        viewheight = (int) (width*16*HEIGHTRATIO*cfg_screenHeight/200);
+        viewwidth = width*16*cfg_screenWidth/LOGIC_WIDTH;
+        viewheight = (int) (width*16*HEIGHTRATIO*cfg_screenHeight/LOGIC_HEIGHT);
         DrawPlayBorder ();
     }
 
@@ -1336,7 +1336,7 @@ void main_NewViewSize (int width)
     else if(viewsize == 20)
         SetViewSize(cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * STATUSLINES);
     else
-        SetViewSize(width*16*cfg_screenWidth/320, (unsigned) (width*16*HEIGHTRATIO*cfg_screenHeight/200));
+        SetViewSize(width*16*cfg_screenWidth/LOGIC_WIDTH, (unsigned) (width*16*HEIGHTRATIO*cfg_screenHeight/LOGIC_HEIGHT));
 }
 
 
@@ -1418,7 +1418,7 @@ static void IntroScreen ()
 static void PG13 ()
 {
     VW_FadeOut ();
-    VL_Bar (0, 0, 320, 200, 0x82);     // background
+    VL_Bar (0, 0, LOGIC_WIDTH, LOGIC_HEIGHT, 0x82);     // background
 	
     graphSegs.cacheChunk (SPEAR::g(PG13PIC));
     VWB_DrawPic (216, 110, SPEAR::g(PG13PIC));
@@ -1553,7 +1553,7 @@ static void DemoLoop()
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
-            if(cfg_screenHeight % 200 != 0)
+            if(cfg_screenHeight % LOGIC_HEIGHT != 0)
                 I_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }

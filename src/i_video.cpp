@@ -140,6 +140,9 @@ void I_InitEngine()
 	vid_bufferPitch = vid_screenBuffer->pitch;
 	
 	// IOANCH: removed vid_curSurface, was redundant
+//#ifdef __ANDROID__
+//	SDL_SetWindowSize(vid_window, cfg_screenWidth, cfg_screenHeight);
+//#endif
 	
 }
 

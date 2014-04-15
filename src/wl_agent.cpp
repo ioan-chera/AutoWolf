@@ -300,7 +300,7 @@ void ControlMovement (objtype *ob)
 
 void StatusDrawPic (unsigned x, unsigned y, unsigned picnum)
 {
-    LatchDrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*320)/16 + vid_scaleFactor*x,
+    LatchDrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/16 + vid_scaleFactor*x,
                              cfg_screenHeight-vid_scaleFactor*(STATUSLINES-y),picnum);
 }
 

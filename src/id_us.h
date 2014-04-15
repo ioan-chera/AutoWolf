@@ -36,8 +36,8 @@
 
 //#define	HELPTEXTLINKED
 
-#define	MaxX	320
-#define	MaxY	200
+#define	MaxX	LOGIC_WIDTH
+#define	MaxY	LOGIC_HEIGHT
 
 #define	MaxHelpLines	500
 
@@ -112,6 +112,7 @@ extern	Boolean8		ingame,		// Set by game code if a game is in progress
 extern	word		PrintX,PrintY;	// Current printing location in the window
 extern	word		WindowX,WindowY,// Current location of window
 					WindowW,WindowH;// Current size of window
+extern	word		g_messageX, g_messageY, g_messageW, g_messageH;
 
 extern	void		(*USL_MeasureString)(const char *,word *,word *);
 extern void			(*USL_DrawString)(const char *);

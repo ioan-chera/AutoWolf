@@ -628,11 +628,11 @@ void GraphicLoader::cacheScreen (int chunk)
    vbuf = I_LockBuffer();
    if(vbuf != NULL)
    {
-      for(y = 0, scy = 0; y < 200; y++, scy += vid_scaleFactor)
+      for(y = 0, scy = 0; y < LOGIC_HEIGHT; y++, scy += vid_scaleFactor)
       {
-         for(x = 0, scx = 0; x < 320; x++, scx += vid_scaleFactor)
+         for(x = 0, scx = 0; x < LOGIC_WIDTH; x++, scx += vid_scaleFactor)
          {
-            byte col = pic[(y * 80 + (x >> 2)) + (x & 3) * 80 * 200];
+            byte col = pic[(y * 80 + (x >> 2)) + (x & 3) * 80 * LOGIC_HEIGHT];
             for(i = 0; i < vid_scaleFactor; i++)
                for(j = 0; j < vid_scaleFactor; j++)
                   vbuf[(scy + i) * vid_bufferPitch + scx + j] = col;

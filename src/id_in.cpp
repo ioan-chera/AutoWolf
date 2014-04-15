@@ -37,16 +37,17 @@
 //	DEBUG - there are more globals
 //
 
-#include "wl_def.h"
 #include "Config.h"
+#include "Exception.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "id_in.h"
 #include "id_sd.h"
+#include "Logger.h"
 #include "PString.h"
+#include "wl_def.h"
 #include "wl_main.h"
 #include "wl_play.h"
-#include "Exception.h"
 
 InputManager myInput;
 
@@ -102,7 +103,7 @@ int InputManager::p_getMouseButtons() const
 //
 void InputManager::p_processEvent(const SDL_Event *event)
 {
-	static int lastOffset;
+//	static int lastOffset;
 	
    switch (event->type)
    {
@@ -151,9 +152,10 @@ void InputManager::p_processEvent(const SDL_Event *event)
          }
          
          int sym = m_lastScan;
+		
          if(sym >= 'a' && sym <= 'z')
             sym -= 32;  // convert to uppercase
-         
+		  
          if(mod & (KMOD_SHIFT | KMOD_CAPS))
          {
             if(sym < lengthof(m_ShiftNames) && m_ShiftNames[sym])
@@ -206,6 +208,46 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   break;
 	   case SDL_APP_DIDENTERFOREGROUND:
 		   Sound::MusicOn();
+		   break;
+	   case SDL_FINGERDOWN:
+	   case SDL_FINGERMOTION:
+	   case SDL_FINGERUP:
+	   {
+		   m_fingerdown = event->type != SDL_FINGERUP;
+		   int windowWidth, windowHeight;
+		   SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
+		   // WARNING: it's assumed that the window is in the middle. Who's to
+		   // know for sure?
+		   
+		   if(128*windowWidth / windowHeight >
+			  128*cfg_screenWidth / cfg_screenHeight)
+		   {
+			   // Greater aspect ratio of window: pillar box. Height is correct
+			   
+			   // 0... a... 1 - a... 1
+			   // w / W
+			   // w = H / sh * sw
+			   // a = 1 / 2 - ca
+			   // ca = 1 / 2 * w / W
+			   // a = 1 / 2 - 1 / 2 * w / W
+			   // a = 1 / 2 * (1 - w / W)
+			   // a = 1 / 2 * (1 - H / sh * sw / W)
+			   float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio / windowWidth);
+			   m_touchx = (event->tfinger.x - a) / (1 - 2 * a) * cfg_screenWidth;
+			   m_touchy = event->tfinger.y * cfg_screenHeight;
+			   
+		   }
+		   else
+		   {
+			   float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio / windowHeight);
+			   m_touchx = event->tfinger.x * cfg_screenWidth;
+			   m_touchy = (event->tfinger.y - a) / (1 - 2 * a) * cfg_screenHeight;
+		   }
+	   }
+		   break;
+	   case SDL_TEXTINPUT:
+		   if(event->text.text[0] && !event->text.text[1])
+			   m_lastASCII = event->text.text[0];
 		   break;
 //      case SDL_ACTIVEEVENT:
 //      {
@@ -514,6 +556,7 @@ CursorInfo InputManager::readControl()
 	ret.xaxis = mx;
 	ret.y = dy;
 	ret.yaxis = my;
+	ret.touch = touch_None;
 	ret.button0 = (buttons & (1 << 0)) != 0;
 	ret.button1 = (buttons & (1 << 1)) != 0;
 	ret.button2 = (buttons & (1 << 2)) != 0;

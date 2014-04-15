@@ -507,9 +507,9 @@ void VL_MemToScreenScaledCoord (const byte *source, int origwidth, int origheigh
 //
 void VL_SetViewportValues()
 {
-   vid_scaleFactor = cfg_screenWidth/320;
-   if(cfg_screenHeight/200 < vid_scaleFactor)
-      vid_scaleFactor = cfg_screenHeight/200;
+   vid_scaleFactor = cfg_screenWidth/LOGIC_WIDTH;
+   if(cfg_screenHeight/LOGIC_HEIGHT < vid_scaleFactor)
+      vid_scaleFactor = cfg_screenHeight/LOGIC_HEIGHT;
    
    vid_pixelangle = (short *) I_CheckedMalloc(cfg_screenWidth * sizeof(short));
 

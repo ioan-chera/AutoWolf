@@ -48,10 +48,18 @@ typedef	enum		{
    dir_None
 } Direction;
 
+enum TouchState
+{
+	touch_None,		// nothing occurred
+	touch_Hold,		// user is holding finger on screen
+	touch_Release,	// user just released finger (useful for clicks)
+};
+
 struct  CursorInfo
 {
    bool		button0,button1,button2,button3;
-   short		x,y;
+	TouchState	touch;
+   short		x,y;	// not used anywhere except touch!
    Motion		xaxis,yaxis;
    Direction	dir;
 };
@@ -173,6 +181,9 @@ public:
    void clearKeysDown();
    void initialize();
    void close();
+	
+	bool m_fingerdown;
+	int m_touchx, m_touchy;
 
 	InputManager() :
 	m_started(false),
@@ -184,7 +195,10 @@ public:
 	m_joystick(nullptr),
 	m_joyNumHats(0),
 	m_grabInput(false),
-	m_needRestore(false)
+	m_needRestore(false),
+	m_fingerdown(false),
+	m_touchx(0),
+	m_touchy(0)
    {
 	   memset(m_btnstate, 0, sizeof(m_btnstate));
    }

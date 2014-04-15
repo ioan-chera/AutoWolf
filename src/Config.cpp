@@ -83,12 +83,12 @@ int     cfg_tedlevel = -1;            // default is not to start a level
 
 #if defined(_arch_dreamcast)
 bool  cfg_usedoublebuffering = false;
-unsigned cfg_screenWidth = 320;
-unsigned cfg_screenHeight = 200;
+unsigned cfg_screenWidth = LOGIC_WIDTH;
+unsigned cfg_screenHeight = LOGIC_HEIGHT;
 unsigned cfg_screenBits = 8;
 #elif defined(GP2X)
 bool  cfg_usedoublebuffering = true;
-unsigned cfg_screenWidth = 320;
+unsigned cfg_screenWidth = LOGIC_WIDTH;
 unsigned cfg_screenHeight = 240;
 #if defined(GP2X_940)
 unsigned cfg_screenBits = 8;
@@ -101,6 +101,7 @@ unsigned cfg_screenWidth = 640;
 unsigned cfg_screenHeight = 400;
 unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 #endif
+float cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
 
 
 // IOANCH 20130509: arguments are now case insensitive

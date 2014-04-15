@@ -60,7 +60,7 @@ void ClearSplitVWB ()
 {
     WindowX = 0;
     WindowY = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
     WindowH = 160;
 }
 
@@ -105,7 +105,7 @@ static void EndSpear ()
     fontnumber = 0;
     g_fontcolor = 0xd0;
     WindowX = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
     PrintX = 0;
     PrintY = 180;
     US_CPrint (STR_ENDGAME1 "\n");
@@ -115,7 +115,7 @@ static void EndSpear ()
 
     PrintX = 0;
     PrintY = 180;
-    VL_Bar (0, 180, 320, 20, 0);
+    VL_Bar (0, 180, LOGIC_WIDTH, 20, 0);
     US_CPrint (STR_ENDGAME3 "\n");
     US_CPrint (STR_ENDGAME4);
     I_UpdateScreen ();
@@ -171,7 +171,7 @@ void Victory ()
         graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE3PIC));
         graphSegs.cacheChunk (SPEAR::g(BJCOLLAPSE4PIC));
 
-        VL_Bar (0, 0, 320, 200, VIEWCOLOR);
+        VL_Bar (0, 0, LOGIC_WIDTH, LOGIC_HEIGHT, VIEWCOLOR);
         VWB_DrawPic (124, 44, SPEAR::g(BJCOLLAPSE1PIC));
         I_UpdateScreen ();
         VW_FadeIn ();
@@ -201,7 +201,7 @@ void Victory ()
     if(!SPEAR::flag)
         graphSegs.cacheChunk (SPEAR::g(C_TIMECODEPIC));
 
-    VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, LOGIC_WIDTH, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -313,7 +313,7 @@ void Victory ()
     myInput.ack ();
 
     VW_FadeOut ();
-    if(cfg_screenHeight % 200 != 0)
+    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     if(!SPEAR::flag)
@@ -577,7 +577,7 @@ void LevelCompleted ()
 
     CacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VL_Bar (0, 0, 320, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, LOGIC_WIDTH, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);

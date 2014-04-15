@@ -90,8 +90,8 @@ namespace Menu
 
 #define NE_X    10
 #define NE_Y    23
-#define NE_W    320-NE_X*2
-#define NE_H    200-NE_Y*2
+#define NE_W    LOGIC_WIDTH-NE_X*2
+#define NE_H    LOGIC_HEIGHT-NE_Y*2
 
 #define CST_X           20
 #define CST_Y           48
@@ -129,7 +129,6 @@ void EnableEndGameMenuItem();
 void menu_SetupSaveGames();
 
 void DrawMenu(const CP_iteminfo *item_i,const CP_itemtype *items);
-int  HandleMenu(CP_iteminfo *item_i, const CP_itemtype *items, void (*routine)(int w));
 void ClearMScreen();
 void ReadAnyControl(CursorInfo *ci);
 void TicDelay(int count);

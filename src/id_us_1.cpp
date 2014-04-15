@@ -57,6 +57,7 @@
 //	Global variables
 		word		PrintX,PrintY;
 		word		WindowX,WindowY,WindowW,WindowH;
+		word		g_messageX, g_messageY, g_messageW, g_messageH;
 
 // IOANCH: random generator
 LegacyRandomGenerator wolfRnd;
@@ -508,6 +509,36 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
    myInput.setLastASCII(key_None);
    myInput.setLastScan(sc_None);
 
+	// TOUCHSCREEN KEYBOARD
+	int windowWidth, windowHeight;
+	SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
+	SDL_Rect rect;
+	if(128*windowWidth / windowHeight >
+	   128*cfg_screenWidth / cfg_screenHeight)
+	{
+		float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio /
+						  windowWidth);
+		
+		rect.x = windowWidth * (a + (float)x / LOGIC_WIDTH * (1 - 2 * a));
+		rect.y = windowHeight * ((float)y / LOGIC_HEIGHT);
+	}
+	else
+	{
+		float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio /
+						  windowHeight);
+		rect.x = windowWidth * ((float)x / LOGIC_WIDTH);
+		rect.y = windowHeight * (a + (float)y / LOGIC_HEIGHT * (1 - 2 * a));
+	}
+	
+	word dummyWidth, characterHeight;
+	USL_MeasureString("pA",&dummyWidth,&characterHeight);
+	rect.h = ((float)characterHeight / LOGIC_HEIGHT) * windowHeight;
+	rect.w = windowWidth - rect.x;
+	
+	SDL_SetTextInputRect(&rect);
+	SDL_StartTextInput();
+	
+	
 	while (!done)
 	{
 		ReadAnyControl(&ci);
@@ -745,6 +776,8 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 		I_UpdateScreen();
 	}
 
+	SDL_StopTextInput();
+	
 	if (cursorvis)
 		USL_XORICursor(x,y,s,cursor);
 	if (!result)

@@ -24,7 +24,8 @@ import android.hardware.*;
 /**
     SDL Activity
 */
-public class SDLActivity extends Activity {
+public class SDLActivity extends Activity 
+{
     private static final String TAG = "SDL";
 
     // Keep track of the paused state
@@ -49,7 +50,8 @@ public class SDLActivity extends Activity {
     static ArrayList<String> sArgs;
 
     // Load the .so
-    static {
+    static 
+    {
         System.loadLibrary("SDL2");
         //System.loadLibrary("SDL2_image");
         System.loadLibrary("SDL2_mixer");
@@ -59,9 +61,12 @@ public class SDLActivity extends Activity {
     }
     
     
-    public static void initialize() {
-        // The static nature of the singleton and Android quirkyness force us to initialize everything here
-        // Otherwise, when exiting the app and returning to it, these variables *keep* their pre exit values
+    public static void initialize() 
+    {
+        // The static nature of the singleton and Android quirkyness force us to
+    	// initialize everything here
+        // Otherwise, when exiting the app and returning to it, these variables 
+    	// *keep* their pre exit values
         mSingleton = null;
         mSurface = null;
         mTextEdit = null;
@@ -77,7 +82,8 @@ public class SDLActivity extends Activity {
 
     // Setup
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) 
+    {
         Log.v("SDL", "onCreate():" + mSingleton);
         super.onCreate(savedInstanceState);
         

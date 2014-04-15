@@ -623,7 +623,7 @@ void PollControls ()
 //              middle of the screen
 //
 ///////////////////////////////////////////////////////////////////////////
-#define MAXX    320
+#define MAXX    LOGIC_WIDTH
 #define MAXY    160
 
 void CenterWindow (word w, word h)

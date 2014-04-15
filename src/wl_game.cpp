@@ -940,7 +940,7 @@ void DrawPlayBorderSides()
 
 void DrawStatusBorder (byte color)
 {
-    int statusborderw = (cfg_screenWidth-vid_scaleFactor*320)/2;
+    int statusborderw = (cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2;
 
     VL_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),color);
     VL_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
@@ -978,7 +978,7 @@ void DrawPlayBorder ()
         DrawStatusBorder(bordercol);
     else
     {
-        const int statusborderw = (cfg_screenWidth-px*320)/2;
+        const int statusborderw = (cfg_screenWidth-px*LOGIC_WIDTH)/2;
         VL_BarScaledCoord (0, cfg_screenHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
         VL_BarScaledCoord (cfg_screenWidth-statusborderw-px*8, cfg_screenHeight-px*STATUSLINES,
@@ -1020,7 +1020,7 @@ void DrawPlayBorder ()
 
 void DrawPlayScreen ()
 {
-    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*320)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR::g(STATUSBARPIC));
+    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR::g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1039,7 +1039,7 @@ void ShowActStatus()
     const byte *source = graphSegs[SPEAR::g(STATUSBARPIC)];
     int	picnum = SPEAR::g(STATUSBARPIC) - SPEAR::g(STARTPICS);
    GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
-    int destx = (cfg_screenWidth-vid_scaleFactor*320)/2 + 9 * vid_scaleFactor;
+    int destx = (cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2 + 9 * vid_scaleFactor;
     int desty = cfg_screenHeight - (psize.height - 4) * vid_scaleFactor;
     VL_MemToScreenScaledCoord(source, psize.width, psize.height, 9, 4, destx,
                               desty, psize.width - 18, psize.height - 7);
@@ -1616,7 +1616,7 @@ startplayloop:
                     break;                          // more lives left
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % 200 != 0)
+                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
 #ifdef _arch_dreamcast

@@ -144,6 +144,11 @@ struct Rect
 // IOANCH 20130303: SPEAR::flag variable
 #define IMPALE(a) (SPEAR::flag ? a##_sod : a##_wl6)
 
+enum
+{
+	LOGIC_WIDTH = 320,
+	LOGIC_HEIGHT = 200,
+};
 
 #define MAXTICS 10
 #define DEMOTICS        4

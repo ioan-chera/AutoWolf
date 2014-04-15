@@ -26,9 +26,21 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "wl_def.h"
+#include "Config.h"
+#include "Logger.h"
+#include "MasterDirectoryFile.h"
+#include "PString.h"
+#include "SODFlag.h"
+#include "ShellUnicode.h"
 #include "foreign.h"
+#include "i_system.h"
+#include "i_video.h"
+#include "id_ca.h"
+#include "id_sd.h"
+#include "id_vh.h"
+#include "ioan_bot.h"	// IOANCH 20121217: bot
 #include "wl_agent.h"
+#include "wl_def.h"
 #include "wl_draw.h"
 #include "wl_game.h"
 #include "wl_inter.h"
@@ -36,17 +48,6 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include "wl_text.h"
-#include "Config.h"
-#include "i_system.h"
-#include "i_video.h"
-#include "id_ca.h"
-#include "id_sd.h"
-#include "id_vh.h"
-#include "ioan_bot.h"	// IOANCH 20121217: bot
-#include "MasterDirectoryFile.h"
-#include "PString.h"
-#include "SODFlag.h"
-#include "ShellUnicode.h"
 
 int Menu::g_bkgdColor;
 int Menu::g_bordColor;
@@ -406,6 +407,8 @@ static void DrawMainMenu ();
 static void SetupControlPanel ();
 static int CP_Quit(int);
 static int CP_EndGame(int);
+static int HandleMenu(CP_iteminfo *item_i, const CP_itemtype *items, void (*routine)(int w));
+
 
 void Menu::ControlPanel (ScanCode scancode)
 {
@@ -675,7 +678,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 pickquick = gamestate.lives = 0;
             }
 
-            WindowH = 200;
+            WindowH = LOGIC_HEIGHT;
             fontnumber = 0;
             MainMenu[savegame].active = 0;
             return 1;
@@ -713,7 +716,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % 200 != 0)
+                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -792,7 +795,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % 200 != 0)
+                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -839,7 +842,7 @@ static int CP_CheckQuick (ScanCode scancode)
             graphSegs.cacheChunk (SPEAR::g(STARTFONT) + 1);
 
             WindowX = WindowY = 0;
-            WindowW = 320;
+            WindowW = LOGIC_WIDTH;
             WindowH = 160;
             // IOANCH 20130301: unification culling
 #ifdef SPANISH
@@ -861,7 +864,7 @@ static int CP_CheckQuick (ScanCode scancode)
             }
 
             DrawPlayBorder ();
-            WindowH = 200;
+            WindowH = LOGIC_HEIGHT;
             fontnumber = 0;
             return 1;
           default:
@@ -1837,7 +1840,7 @@ static void DrawMouseSens ()
 #endif
 
     WindowX = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
     PrintY = 82;
     SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
     US_CPrint (STR_MOUSEADJ);
@@ -1858,8 +1861,8 @@ static void DrawMouseSens ()
 #endif
 
 
-    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
-    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
+    VL_Bar (60, 97, LOGIC_HEIGHT, 10, TEXTCOLOR);
+    DrawOutline (60, 97, LOGIC_HEIGHT, 10, 0, HIGHLIGHT);
     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
     VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
 
@@ -1891,8 +1894,8 @@ int MouseSensitivity (int)
                 if (mouseadjustment)
                 {
                     mouseadjustment--;
-                    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
-                    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
+                    VL_Bar (60, 97, LOGIC_HEIGHT, 10, TEXTCOLOR);
+                    DrawOutline (60, 97, LOGIC_HEIGHT, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
@@ -1906,8 +1909,8 @@ int MouseSensitivity (int)
                 if (mouseadjustment < 9)
                 {
                     mouseadjustment++;
-                    VL_Bar (60, 97, 200, 10, TEXTCOLOR);
-                    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
+                    VL_Bar (60, 97, LOGIC_HEIGHT, 10, TEXTCOLOR);
+                    DrawOutline (60, 97, LOGIC_HEIGHT, 10, 0, HIGHLIGHT);
                     DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
                     VL_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
                     I_UpdateScreen ();
@@ -1956,7 +1959,7 @@ static void DrawCtlScreen ()
     VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawWindow (CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, Menu::g_bkgdColor);
     WindowX = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
 
     if (myInput.joyPresent())
@@ -2453,7 +2456,7 @@ static void DrawCustomScreen ()
 // IOANCH 20130301: unification culling
     ClearMScreen ();
     WindowX = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
     VWB_DrawPic (112, 184, SPEAR::g(C_MOUSELBACKPIC));
     DrawStripes (10);
     VWB_DrawPic (80, 0, SPEAR::g(C_CUSTOMIZEPIC));
@@ -2463,7 +2466,7 @@ static void DrawCustomScreen ()
     //
     SETFONTCOLOR (READCOLOR, Menu::g_bkgdColor);
     WindowX = 0;
-    WindowW = 320;
+    WindowW = LOGIC_WIDTH;
 
     if(!SPEAR::flag)
     {
@@ -2761,8 +2764,8 @@ static int CP_ChangeView (int)
     CursorInfo ci;
 
     WindowX = WindowY = 0;
-    WindowW = 320;
-    WindowH = 200;
+    WindowW = LOGIC_WIDTH;
+    WindowH = LOGIC_HEIGHT;
     newview = oldview = viewsize;
     DrawChangeView (oldview);
     MenuFadeIn ();
@@ -2809,7 +2812,7 @@ static int CP_ChangeView (int)
         {
             Sound::Play (ESCPRESSEDSND);
             MenuFadeOut ();
-            if(cfg_screenHeight % 200 != 0)
+            if(cfg_screenHeight % LOGIC_HEIGHT != 0)
                 I_ClearScreen(0);
             return 0;
         }
@@ -2825,7 +2828,7 @@ static int CP_ChangeView (int)
 
     ShootSnd ();
     MenuFadeOut ();
-    if(cfg_screenHeight % 200 != 0)
+    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     return 0;
@@ -2839,13 +2842,13 @@ static int CP_ChangeView (int)
 static void DrawChangeView (int view)
 {
     int rescaledHeight = cfg_screenHeight / vid_scaleFactor;
-    if(view != 21) VL_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
+    if(view != 21) VL_Bar (0, rescaledHeight - 40, LOGIC_WIDTH, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
     PrintY = (cfg_screenHeight / vid_scaleFactor) - 39;
     WindowX = 0;
-    WindowY = 320;                                  // TODO: Check this!
+    WindowY = LOGIC_WIDTH;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, Menu::g_bkgdColor);
 
     US_CPrint (STR_SIZE1 "\n");
@@ -2904,7 +2907,7 @@ void
 ClearMScreen ()
 {
     if(!SPEAR::flag)
-        VL_Bar (0, 0, 320, 200, Menu::g_bordColor);
+        VL_Bar (0, 0, LOGIC_WIDTH, LOGIC_HEIGHT, Menu::g_bordColor);
     else
     // IOANCH 20130302: unification
         VWB_DrawPic (0, 0, SPEAR::g(C_BACKDROPPIC));
@@ -2974,8 +2977,8 @@ static void SetupControlPanel ()
 
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
     fontnumber = 1;
-    WindowH = 200;
-    if(cfg_screenHeight % 200 != 0)
+    WindowH = LOGIC_HEIGHT;
+    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     if (!ingame)
@@ -3057,7 +3060,7 @@ static void DrawHalfStep(int x,int y);
 static void EraseGun(const CP_iteminfo *item_i, const CP_itemtype *items,int x,int y,int which);
 static void SetTextColor(const CP_itemtype *items,int hlight);
 
-int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine) (int w))
+static int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine) (int w))
 {
     char key;
     static int redrawitem = 1, lastitem = -1;
@@ -3239,6 +3242,49 @@ int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*routine)
 			default:
 				;
         }
+		
+		if((ci.touch == touch_Hold || ci.touch == touch_Release) && vid_scaleFactor)
+		{
+			int touchx, touchy, newwhich;
+			touchx = ci.x / vid_scaleFactor;
+			touchy = ci.y / vid_scaleFactor;
+			if(touchx >= x && touchx <= 320 - x &&
+			   touchy >= basey && touchy <= basey + item_i->amount * 13)
+			{
+				if(ci.touch == touch_Hold)
+				{
+					newwhich = (touchy - basey) / 13;
+					if(newwhich != which && newwhich < item_i->amount
+					   && newwhich >= 0)
+					{
+						if((items + newwhich)->active)
+						{
+							EraseGun (item_i, items, x, y, which);
+							which = newwhich;
+							DrawGun (item_i, items, x, &y, which, basey, routine);
+						}
+						else if(items == &menu_newep[0] && newwhich > 0
+								&& (items + newwhich - 1)->active
+								&& which != newwhich - 1)
+						{
+							// HACK: menu_newep has apparently wider items,
+							// which actually are one enabled one disabled.
+							// But the user doesn't know that and thinks they're
+							// big touchable items instead! So just for this
+							// menu let's select previous entry if that's
+							// enabled.
+							EraseGun (item_i, items, x, y, which);
+							which = newwhich - 1;
+							DrawGun (item_i, items, x, &y, which, basey, routine);
+						}
+					}
+				}
+				else
+				{
+					exit = 1;
+				}
+			}
+		}
 
         if (ci.button0 || myInput.keyboard(sc_Space) || myInput.keyboard(sc_Enter))
             exit = 1;
@@ -3380,8 +3426,8 @@ void DrawMenu (const CP_iteminfo * item_i, const CP_itemtype * items)
 
     WindowX = PrintX = item_i->x + item_i->indent;
     WindowY = PrintY = item_i->y;
-    WindowW = 320;
-    WindowH = 200;
+    WindowW = LOGIC_WIDTH;
+    WindowH = LOGIC_HEIGHT;
 
     for (i = 0; i < item_i->amount; i++)
     {
@@ -3448,6 +3494,7 @@ void ReadAnyControl (CursorInfo * ci)
 {
     int mouseactive = 0;
 
+	bool oldTouchDown = myInput.m_fingerdown;
    *ci = myInput.readControl();
 
     if (mouseenabled && myInput.inputGrabbed())
@@ -3519,6 +3566,11 @@ void ReadAnyControl (CursorInfo * ci)
             ci->button3 = (jb & 8) ? true : false;
         }
     }
+	
+	// Touchscreen support
+	ci->touch = myInput.m_fingerdown ? touch_Hold : oldTouchDown && !myInput.m_fingerdown ? touch_Release : touch_None;
+	ci->x = (short)myInput.m_touchx;
+	ci->y = (short)myInput.m_touchy;
 }
 
 
@@ -3571,17 +3623,21 @@ static int Confirm (const char *string)
     while (!myInput.keyboard(sc_S) && !myInput.keyboard(sc_N) && !myInput.keyboard(sc_Escape));
 #else
     }
-    while (!myInput.keyboard(sc_Y) && !myInput.keyboard(sc_N) && !myInput.keyboard(sc_Escape) && !ci.button0 && !ci.button1);
+    while (!myInput.keyboard(sc_Y) && !myInput.keyboard(sc_N) && !myInput.keyboard(sc_Escape) && !ci.button0 && !ci.button1 && ci.touch != touch_Release);
 #endif
 
 #ifdef SPANISH
-    if (myInput.keyboard(sc_S) || ci.button0)
+    if (myInput.keyboard(sc_S) || ci.button0 || ci.touch == touch_Release)
     {
         xit = 1;
         ShootSnd ();
     }
 #else
-    if (myInput.keyboard(sc_Y) || ci.button0)
+    if (myInput.keyboard(sc_Y) || ci.button0 ||
+		(ci.touch == touch_Release && ci.x >= g_messageX * vid_scaleFactor &&
+		 ci.x <= (g_messageX + g_messageW) * vid_scaleFactor &&
+		 ci.y >= g_messageY * vid_scaleFactor &&
+		 ci.y <= (g_messageY + g_messageH) * vid_scaleFactor))
     {
         xit = 1;
         ShootSnd ();
@@ -3635,7 +3691,8 @@ Message (const char *string)
     PrintX = WindowX = 160 - mw / 2;
 
     DrawWindow (WindowX - 5, PrintY - 5, mw + 10, h + 10, TEXTCOLOR);
-    DrawOutline (WindowX - 5, PrintY - 5, mw + 10, h + 10, 0, HIGHLIGHT);
+    DrawOutline (g_messageX = WindowX - 5, g_messageY = PrintY - 5,
+				 g_messageW = mw + 10, g_messageH = h + 10, 0, HIGHLIGHT);
     SETFONTCOLOR (0, TEXTCOLOR);
     US_Print (string);
     I_UpdateScreen ();
@@ -3731,12 +3788,12 @@ void DrawStripes (int y)
 {
     if(!SPEAR::flag)
     {
-        VL_Bar (0, y, 320, 24, 0);
+        VL_Bar (0, y, LOGIC_WIDTH, 24, 0);
         VWB_Hlin (0, 319, y + 22, STRIPE);
     }
     else
     {
-        VL_Bar (0, y, 320, 22, 0);
+        VL_Bar (0, y, LOGIC_WIDTH, 22, 0);
         VWB_Hlin (0, 319, y + 23, 0);
     }
 }
@@ -3876,7 +3933,7 @@ void Menu::DoJukebox()
     SETFONTCOLOR (READHCOLOR,Menu::g_bkgdColor);
     PrintY=15;
     WindowX = 0;
-    WindowY = 320;
+    WindowY = LOGIC_WIDTH;
     US_CPrint ("Robert's Jukebox");
 	
     SETFONTCOLOR (TEXTCOLOR,Menu::g_bkgdColor);

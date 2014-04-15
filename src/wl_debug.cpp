@@ -202,7 +202,7 @@ void BasicOverhead ()
     int x, y, z, offx, offy;
 
     z = 128/MAPSIZE; // zoom scale
-    offx = 320/2;
+    offx = LOGIC_WIDTH/2;
     offy = (160-MAPSIZE*z)/2;
 
 #ifdef MAPBORDER

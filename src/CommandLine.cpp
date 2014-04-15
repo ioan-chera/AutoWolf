@@ -182,9 +182,10 @@ void CommandLine::Parse()
 				{
 					cfg_screenWidth = atoi((++it)->c_str());
 					cfg_screenHeight = atoi((++it)->c_str());
-					unsigned factor = cfg_screenWidth / 320;
-					if (cfg_screenWidth % 320 ||
-						(cfg_screenHeight != 200 * factor &&
+					cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
+					unsigned factor = cfg_screenWidth / LOGIC_WIDTH;
+					if (cfg_screenWidth % LOGIC_WIDTH ||
+						(cfg_screenHeight != LOGIC_HEIGHT * factor &&
 						cfg_screenHeight != 240 * factor))
 					{
 						throw std::range_error("Screen size must be a multiple of 320x200 or 320x240!");
@@ -199,9 +200,10 @@ void CommandLine::Parse()
 				{
 					cfg_screenWidth = atoi((++it)->c_str());
 					cfg_screenHeight = atoi((++it)->c_str());
-					if (cfg_screenWidth < 320)
+					cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
+					if (cfg_screenWidth < LOGIC_WIDTH)
 						throw std::range_error("Screen width must be at least 320!");
-					if (cfg_screenHeight < 200)
+					if (cfg_screenHeight < LOGIC_HEIGHT)
 						throw std::range_error("Screen height must be at least 200!");
 				}
 			}
