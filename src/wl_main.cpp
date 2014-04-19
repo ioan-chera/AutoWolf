@@ -1349,14 +1349,14 @@ void Quit ()
     if (!graphSegs.hasPictable())  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        exit(1);
+        throw ExitThrowable(1);
     }
 
     main_WriteConfig ();
 
     ShutdownId ();
 
-    exit(0);
+	throw ExitThrowable(0);
 }
 
 ////////////////////////////////////////////////////////////////////

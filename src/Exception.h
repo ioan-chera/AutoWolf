@@ -47,4 +47,11 @@ public:
 	}
 };
 
+class ExitThrowable
+{
+public:
+	int code;
+	ExitThrowable(int c) : code(c){}
+};
+
 #endif
