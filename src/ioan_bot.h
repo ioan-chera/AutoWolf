@@ -184,6 +184,7 @@ public:
    
 	std::vector<SecretPush> pushes;
 	bool haspushes;
+	void PopPushedSecrets();
 
    List <HeardEvent *> heardEvents;                // list of recent sounds
    

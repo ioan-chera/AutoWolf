@@ -3634,10 +3634,10 @@ static int Confirm (const char *string)
     }
 #else
     if (myInput.keyboard(sc_Y) || ci.button0 ||
-		(ci.touch == touch_Release && ci.x >= g_messageX * vid_scaleFactor &&
-		 ci.x <= (g_messageX + g_messageW) * vid_scaleFactor &&
-		 ci.y >= g_messageY * vid_scaleFactor &&
-		 ci.y <= (g_messageY + g_messageH) * vid_scaleFactor))
+		(ci.touch == touch_Release && ci.x >= static_cast<short>(g_messageX * vid_scaleFactor) &&
+		 ci.x <= static_cast<short>((g_messageX + g_messageW) * vid_scaleFactor) &&
+		 ci.y >= static_cast<short>(g_messageY * vid_scaleFactor) &&
+		 ci.y <= static_cast<short>((g_messageY + g_messageH) * vid_scaleFactor)))
     {
         xit = 1;
         ShootSnd ();

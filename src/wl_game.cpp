@@ -872,6 +872,7 @@ void SetupGameLevel ()
 			// Mark as "haspushes" anyway. The bot will know what to do about it.
 			bot.pushes = std::move(pushes);
 			bot.haspushes = true;
+			bot.PopPushedSecrets();
 		}, sessionNo);
 	});
 	thread.detach();

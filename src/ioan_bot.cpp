@@ -244,6 +244,24 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
    return false;
 };
 
+void BotMan::PopPushedSecrets()
+{
+	if (!haspushes || pushes.size() == 0)
+		return;
+	objtype *check;
+	while (pushes.size())
+	{
+		check = actorat[pushes.back().targetpos % MAPSIZE][pushes.back().targetpos / MAPSIZE];
+		if (!check || (check && ISPOINTER(check)))
+		{
+			Logger::Write("Popping %u %u", pushes.back().targetpos % MAPSIZE, pushes.back().targetpos / MAPSIZE);
+			pushes.pop_back();
+		}
+		else
+			break;
+	}	
+}
+
 //
 // BotMan::ObjectOfInterest
 //
