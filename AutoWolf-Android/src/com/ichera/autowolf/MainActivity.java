@@ -291,6 +291,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 				//Log.i("What", settingsDir.getAbsolutePath());
 			}
 		}
+		
+		SDLActivity.sDemandNorestore = true;
 	}
 	
 	/* Checks if external storage is available for read and write */

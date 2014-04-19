@@ -266,6 +266,8 @@ void CommandLine::Parse()
 				// IOANCH 29.09.2012: added --secretstep3
 			else if (!strcasecmp(arg, "--secretstep3"))
 				cfg_secretstep3 = true;
+			else if (!strcasecmp(arg, "--norestore"))
+				cfg_norestore = true;
 			else if (!strcasecmp(arg, "--wolfdir"))
 			{
 				// IOANCH 20130304: added --wolfdir
@@ -327,7 +329,9 @@ void CommandLine::Parse()
 			"                        (given in bytes, default: 2048 / (44100 / samplerate))\n"
 			" --ignorenumchunks      Ignores the number of chunks in VGAHEAD.*\n"
 			"                        (may be useful for some broken mods)\n"
-			" --configdir <dir>      Directory where config file and save games are stored\n";
+			" --configdir <dir>      Directory where config file and save games are stored\n"
+			" --norestore            Do not attempt to restart from previous state"
+		    "                        (mobile app only, and normally applied internally there)";
 #if defined(_arch_dreamcast) || defined(_WIN32)
 		help += "                        (default: current directory)\n";
 #elif !defined(__APPLE__)

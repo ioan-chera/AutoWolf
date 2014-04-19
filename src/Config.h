@@ -51,6 +51,7 @@ extern unsigned cfg_screenHeight;
 extern unsigned cfg_screenWidth;
 extern float	cfg_aspectRatio;
 extern bool  cfg_usedoublebuffering;
+extern bool cfg_norestore;
     
 void     CFG_SetupConfigLocation();
 

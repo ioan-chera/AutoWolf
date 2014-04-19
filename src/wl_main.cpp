@@ -102,6 +102,8 @@ static const char g_instanceSaveName[] = "instance.awo";
 static const char g_fullInstanceSaveTag[] = "full";
 static const char g_partialInstanceSaveTag[] = "part";
 
+bool g_appForcedToQuit;
+
 //
 // proejection variables
 //
@@ -1441,13 +1443,18 @@ static bool RestoreInstanceState(const char* path);
 static void DemoLoop()
 {
     int LastDemo = 0;
-
 	bool restoreInstance = false;
 	std::string savepath = cfg_dir;
 	ConcatSubpath(savepath, g_instanceSaveName);
-	if (FileSystem::FileExists(savepath.c_str()))
+	
+	if(cfg_norestore)
+		DestroySavedInstance();
+	else
 	{
-		restoreInstance = true;
+		if (FileSystem::FileExists(savepath.c_str()))
+		{
+			restoreInstance = true;
+		}
 	}
 
 //
@@ -1578,6 +1585,7 @@ static void DemoLoop()
 			Menu::ControlPanel(0);
 #endif
 		}
+		restoreInstance = false;
         if (startgame || loadedgame)
         {
             GameLoop ();
@@ -1737,6 +1745,8 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 	else if (event->type == SDL_APP_TERMINATING)
 	{
 		Logger::Write("SDL_APP_TERMINATING");
+		g_appForcedToQuit = true;
+		exit(0);
 	}
 	else if (event->type == SDL_APP_DIDENTERFOREGROUND)
 	{

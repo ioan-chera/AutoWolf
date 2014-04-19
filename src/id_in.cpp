@@ -112,10 +112,21 @@ void InputManager::p_processEvent(const SDL_Event *event)
          // exit if the window is closed
       case SDL_QUIT:
 		  Logger::Write("SDL_QUIT processed");
-		  DestroySavedInstance();
-		  if (ingame)
-			  bot.SaveData();
-         Quit();
+		   if(!g_appForcedToQuit)
+		   {
+			   Logger::Write("...not forced");
+			   DestroySavedInstance();
+			  if (ingame)
+				  bot.SaveData();
+			 Quit();
+		   }
+		   else
+		   {
+			   Logger::Write("...forced");
+
+			   exit(0);
+		   }
+		   
          
          // check for keypresses
       case SDL_KEYDOWN:

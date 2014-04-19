@@ -48,6 +48,8 @@ public class SDLActivity extends Activity
     // ARGS
     public static final String EXTRA_ARGS = "args";
     static ArrayList<String> sArgs;
+    
+    public static boolean sDemandNorestore;
 
     // Load the .so
     static 
@@ -89,6 +91,11 @@ public class SDLActivity extends Activity
         
         Intent intent = getIntent();
         sArgs = intent.getStringArrayListExtra(EXTRA_ARGS);
+        if(sDemandNorestore)
+        {
+        	sDemandNorestore = false;
+        	sArgs.add("--norestore");
+        }
         
         SDLActivity.initialize();
         // So we can call stuff from static callbacks

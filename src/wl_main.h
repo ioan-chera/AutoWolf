@@ -43,6 +43,8 @@ void SaveFullInstanceState();
 void SavePartialInstanceState();	// only save gamestate and level ratios
 void DestroySavedInstance();
 
+extern bool g_appForcedToQuit;
+
 void Quit()
 #ifndef _WIN32
 __attribute__((noreturn))

@@ -103,6 +103,8 @@ unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 #endif
 float cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
 
+bool cfg_norestore;
+
 
 // IOANCH 20130509: arguments are now case insensitive
 #define IFARG(str) if(!strcasecmp(arg, (str)))
