@@ -39,6 +39,10 @@ Boolean8         LoadTheGame(FILE *file,int x,int y);
 Boolean8         SaveTheGame(FILE *file,int x,int y);
 void            ShowViewSize (int width);
 
+void SaveFullInstanceState();
+void SavePartialInstanceState();	// only save gamestate and level ratios
+void DestroySavedInstance();
+
 void Quit()
 #ifndef _WIN32
 __attribute__((noreturn))

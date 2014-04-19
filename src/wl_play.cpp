@@ -60,6 +60,7 @@
 /////////////////////////////////////
 
 unsigned        g_sessionNo;	// session of SetupGameLevel
+std::mutex g_playloopMutex;
 
 // Command to be executed from an outer thread, in PlayLoop.
 struct PostCommand
@@ -1387,6 +1388,7 @@ void PlayLoop ()
 
     do
     {
+		std::lock_guard<std::mutex> lock(g_playloopMutex);
         PollControls ();
 
 		// Execute pending thread-resulted commands on main thread.

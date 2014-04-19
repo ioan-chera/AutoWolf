@@ -25,6 +25,7 @@
 
 // WL_MAIN.C
 
+#include <mutex>
 #include <system_error>
 #include "wl_def.h"
 #include "FileSystem.h"
@@ -81,7 +82,6 @@ extern byte signon_sod[];
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #define FOCALLENGTH     (0x5700l)               // in global coordinates
 #define VIEWGLOBAL      0x10000                 // globals visable flush to wall
 
@@ -97,6 +97,10 @@ extern byte signon_sod[];
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
+
+static const char g_instanceSaveName[] = "instance.awo";
+static const char g_fullInstanceSaveTag[] = "full";
+static const char g_partialInstanceSaveTag[] = "part";
 
 //
 // proejection variables
@@ -1433,14 +1437,23 @@ static void PG13 ()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+static bool RestoreInstanceState(const char* path);
 static void DemoLoop()
 {
     int LastDemo = 0;
 
+	bool restoreInstance = false;
+	std::string savepath = cfg_dir;
+	ConcatSubpath(savepath, g_instanceSaveName);
+	if (FileSystem::FileExists(savepath.c_str()))
+	{
+		restoreInstance = true;
+	}
+
 //
 // check for launch from ted
 //
-    if (cfg_tedlevel != -1)
+    if (!restoreInstance && cfg_tedlevel != -1)
     {
        cfg_nowait = true;
         EnableEndGameMenuItem();
@@ -1461,7 +1474,6 @@ static void DemoLoop()
         Quit ();
     }
 
-
 //
 // main game cycle
 //
@@ -1469,11 +1481,11 @@ static void DemoLoop()
 #ifndef DEMOTEST
 // IOANCH 20130301: unification culling
 
-
-    StartCPMusic(INTROSONG);
+	if (!restoreInstance)
+		StartCPMusic(INTROSONG);
 // IOANCH 20130301: unification culling
 
-    if (!cfg_nowait)
+    if (!cfg_nowait && !restoreInstance)
         PG13 ();
 
 
@@ -1481,7 +1493,7 @@ static void DemoLoop()
 
     while (1)
     {
-        while (!cfg_nowait)
+        while (!cfg_nowait && !restoreInstance)
         {
 //
 // title page
@@ -1555,15 +1567,17 @@ static void DemoLoop()
 
         VW_FadeOut ();
 
+		if (!restoreInstance || !RestoreInstanceState(savepath.c_str()))
+		{
 #ifdef DEBUGKEYS
-        if (myInput.keyboard(sc_Tab) && cfg_debugmode)
-            RecordDemo ();
-        else
-            Menu::ControlPanel (sc_None);
+			if (myInput.keyboard(sc_Tab) && cfg_debugmode)
+				RecordDemo ();
+			else
+				Menu::ControlPanel(sc_None);
 #else
-        Menu::ControlPanel (0);
+			Menu::ControlPanel(0);
 #endif
-
+		}
         if (startgame || loadedgame)
         {
             GameLoop ();
@@ -1596,6 +1610,142 @@ static void showErrorAlert(const char* message, const char* title)
 #endif
 }
 
+static bool RestoreInstanceState(const char* path)
+{
+	Logger::Write("Restoring instance state...");
+	FILE * file = ShellUnicode::fopen(path, "rb");
+	if (!file)
+	{
+		Logger::Write("...file not found");
+		return false;
+	}
+
+	char vam[5];
+	vam[4] = 0;
+	fread(vam, 1, 4, file);
+	bool isPartial = false;
+	if (!strcmp(vam, g_fullInstanceSaveTag))
+		;
+	else if (!strcmp(vam, g_partialInstanceSaveTag))
+		isPartial = true;
+	else
+	{
+		Logger::Write("...bad header");
+		fclose(file);
+		return false;
+	}
+
+	loadedgame = true;
+	if (!isPartial)
+	{
+		LoadTheGame(file, 0, 0);
+	}
+	else
+	{
+		fread(&gamestate, sizeof(gamestate), 1, file);
+		fread(&LevelRatios[0], sizeof(LRstruct)*LRpack, 1, file);
+		SetupGameLevel();
+	}
+
+	Logger::Write("...success");
+	fclose(file);
+	return true;
+}
+
+void SaveFullInstanceState()
+{
+	Logger::Write("Saving instance state");
+	std::string savepath = cfg_dir;
+	ConcatSubpath(savepath, g_instanceSaveName);
+
+	ShellUnicode::unlink(savepath.c_str());
+	FILE * file = ShellUnicode::fopen(savepath.c_str(), "wb");
+	if (!file)
+		return;
+
+	fwrite(g_fullInstanceSaveTag, 1, 4, file);
+	SaveTheGame(file, 0, 0);
+	fclose(file);
+}
+
+// Called on death
+void SavePartialInstanceState()
+{
+	Logger::Write("Saving death state");
+	std::string savepath = cfg_dir;
+	ConcatSubpath(savepath, g_instanceSaveName);
+
+	ShellUnicode::unlink(savepath.c_str());
+	FILE * file = ShellUnicode::fopen(savepath.c_str(), "wb");
+	if (!file)
+		return;
+
+	fwrite(g_partialInstanceSaveTag, 1, 4, file);
+	
+	gametype stockgame = gamestate;
+	stockgame.score = stockgame.oldscore;
+	stockgame.lives = gamestate.lives - 1;
+	stockgame.health = I_PLAYERHEALTH;
+	stockgame.weapon = stockgame.bestweapon
+		= stockgame.chosenweapon = wp_pistol;
+	stockgame.ammo = STARTAMMO;
+	stockgame.keys = 0;
+	stockgame.attackframe = stockgame.attackcount =
+		stockgame.weaponframe = 0;
+
+	stockgame.TimeCount
+		= stockgame.secrettotal
+		= stockgame.killtotal
+		= stockgame.treasuretotal = 0;
+
+	fwrite(&stockgame, sizeof(stockgame), 1, file);
+	fwrite(&LevelRatios[0], sizeof(LRstruct)*LRpack, 1, file);
+
+	fclose(file);
+}
+
+void DestroySavedInstance()
+{
+	Logger::Write("Destroying saved instance");
+	std::string savepath = cfg_dir;
+	ConcatSubpath(savepath, g_instanceSaveName);
+	ShellUnicode::remove(savepath.c_str());
+}
+
+//
+// SDL HANDLE MOBILE APP EVENTS QUICKLY
+//
+static int handleMobileAppEvent(void* userdata, SDL_Event* event)
+{
+	if (event->type == SDL_APP_WILLENTERBACKGROUND)
+	{
+		Sound::Stop();
+		Sound::MusicOff();
+		if (g_inGameLoop)
+		{
+			if (ingame)
+			{
+				
+				std::lock_guard<std::mutex> lock(g_playloopMutex);
+
+				SaveFullInstanceState();
+			}
+			// else: either dead or in elevator at this point. The instance save is handled elsewhere then
+		}
+		return 0;
+	}
+	else if (event->type == SDL_APP_TERMINATING)
+	{
+		Logger::Write("SDL_APP_TERMINATING");
+	}
+	else if (event->type == SDL_APP_DIDENTERFOREGROUND)
+	{
+		Sound::MusicOn();
+		return 0;
+	}
+	return 1;
+}
+
 //
 // main
 //
@@ -1626,9 +1776,15 @@ int main(int argc, TChar *argv[])
 
 		InitGame();
 
+		SDL_SetEventFilter(handleMobileAppEvent, nullptr);
+
 		DemoLoop();
 
 		throw Exception("Demo loop exited???");
+	}
+	catch (const ExitThrowable& e)
+	{
+		return e.code;
 	}
 	catch (const std::system_error& e)
 	{

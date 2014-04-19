@@ -464,6 +464,10 @@ void TakeDamage (int points,objtype *attacker)
     if (gamestate.health<=0)
     {
         gamestate.health = 0;
+		if (gamestate.lives <= 0)
+			DestroySavedInstance();
+		else
+			SavePartialInstanceState();
         playstate = ex_died;
         killerobj = attacker;
     }
@@ -826,10 +830,12 @@ void GetBonus (statobj_t *check)
 
             // IOANCH 20130202: unification process
         case    bo_spear:
+			SaveFullInstanceState();
             spearflag = true;
             spearx = player->x;
             speary = player->y;
             spearangle = player->angle;
+			
             playstate = ex_completed;
     }
 
@@ -1157,6 +1163,7 @@ void Cmd_Use ()
     }
     if (!buttonheld[bt_use] && doornum == ELEVATORTILE && elevatorok)
     {
+		SaveFullInstanceState();
         //
         // use elevator
         //

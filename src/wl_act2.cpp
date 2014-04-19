@@ -405,6 +405,7 @@ void A_Breathing (objtype *)
 //
 void A_Victory (objtype *)
 {
+	DestroySavedInstance();
     playstate = ex_victorious;
 }
 
@@ -1462,6 +1463,7 @@ void A_BJYell (objtype *ob)
 
 void A_BJDone (objtype *)
 {
+	DestroySavedInstance();
     playstate = ex_victorious;                              // exit castle tile
 }
 
@@ -1523,6 +1525,7 @@ void    A_StartDeathCam (objtype *ob)
     
     if (gamestate.victoryflag)
     {
+		DestroySavedInstance();
         playstate = ex_victorious;                              // exit castle tile
         return;
     }

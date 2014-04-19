@@ -39,6 +39,7 @@
 #include "id_ca.h"
 #include "id_us.h"
 #include "id_vh.h"
+#include "ioan_bot.h"
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
 #endif
@@ -338,8 +339,11 @@ int DebugKeys ()
         fpscounter ^= 1;
         return 1;
     }
-    if (myInput.keyboard(sc_E))             // E = quit level
-        playstate = ex_completed;
+	if (myInput.keyboard(sc_E))             // E = quit level
+	{
+		SaveFullInstanceState();
+		playstate = ex_completed;
+	}
 
     if (myInput.keyboard(sc_F))             // F = facing spot
     {
@@ -486,7 +490,12 @@ again:
         return 1;
     }
     else if (myInput.keyboard(sc_Q))        // Q = fast quit
+	{ 
+		if (ingame)
+			bot.SaveData();
+		DestroySavedInstance();
         Quit ();
+	}
     else if (myInput.keyboard(sc_S))        // S = slow motion
     {
         CenterWindow(30,3);

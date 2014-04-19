@@ -26,6 +26,7 @@
 // WL_GAME.C
 
 #include <memory>
+#include <mutex>
 #include <thread>
 #include "wl_def.h"
 #include "Logger.h"
@@ -65,6 +66,7 @@
 */
 
 Boolean8         ingame,fizzlein;
+bool			g_inGameLoop;
 gametype        gamestate;
 byte            bordercol=VIEWCOLOR;        // color of the Change View/Ingame border
 
@@ -1454,6 +1456,8 @@ restartgame:
     died = false;
     do
     {
+		g_inGameLoop = true;
+
         if (!loadedgame)
             gamestate.score = gamestate.oldscore;
         if(!died || viewsize != 21) DrawScore();
@@ -1492,6 +1496,7 @@ startplayloop:
         if (SPEAR::flag && spearflag)
         {
            // IOANCH 20130725: added spear notification
+			std::lock_guard<std::mutex> lock(g_playloopMutex);
             I_Notify("Got the Spear!");
 			Sound::Stop();
             Sound::Play(GETSPEARSND);
@@ -1613,8 +1618,13 @@ startplayloop:
                 Died ();
                 died = true;                    // don't "get psyched!"
 
-                if (gamestate.lives > -1)
-                    break;                          // more lives left
+				if (gamestate.lives > -1)
+				{
+					break;                          // more lives left
+				}
+
+				DestroySavedInstance();
+				g_inGameLoop = false;
 
                 VW_FadeOut ();
                 if(cfg_screenHeight % LOGIC_HEIGHT != 0)
@@ -1632,9 +1642,13 @@ startplayloop:
                 strcpy(MainMenu[viewscores].string,STR_VS);
 
                 MainMenu[viewscores].routine = CP_ViewScores;
+
                 return;
 
             case ex_victorious:
+				DestroySavedInstance();
+				g_inGameLoop = false;
+
                 I_Notify("Victory!");
 
                 if(viewsize == 21) DrawPlayScreen();
@@ -1663,4 +1677,7 @@ startplayloop:
                 break;
         }
     } while (1);
+
+	DestroySavedInstance();
+	g_inGameLoop = false;
 }

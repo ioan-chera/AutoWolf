@@ -254,7 +254,6 @@ void BotMan::PopPushedSecrets()
 		check = actorat[pushes.back().targetpos % MAPSIZE][pushes.back().targetpos / MAPSIZE];
 		if (!check || (check && ISPOINTER(check)))
 		{
-			Logger::Write("Popping %u %u", pushes.back().targetpos % MAPSIZE, pushes.back().targetpos / MAPSIZE);
 			pushes.pop_back();
 		}
 		else

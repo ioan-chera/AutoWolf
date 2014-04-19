@@ -43,6 +43,8 @@
 #include "i_video.h"
 #include "id_in.h"
 #include "id_sd.h"
+#include "id_us.h"
+#include "ioan_bot.h"
 #include "Logger.h"
 #include "PString.h"
 #include "wl_def.h"
@@ -109,6 +111,10 @@ void InputManager::p_processEvent(const SDL_Event *event)
    {
          // exit if the window is closed
       case SDL_QUIT:
+		  Logger::Write("SDL_QUIT processed");
+		  DestroySavedInstance();
+		  if (ingame)
+			  bot.SaveData();
          Quit();
          
          // check for keypresses
@@ -128,7 +134,12 @@ void InputManager::p_processEvent(const SDL_Event *event)
          if(m_keyboard.count(sc_Alt))
          {
             if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
+			{
+				DestroySavedInstance();
+				if (ingame)
+					bot.SaveData();
                Quit();
+			}
          }
          // IOANCH 20130801: added meta key mapping
          if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_KP_ENTER)) m_lastScan = (ScanCode)SDLK_RETURN;

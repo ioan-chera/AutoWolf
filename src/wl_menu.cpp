@@ -673,6 +673,7 @@ static int CP_CheckQuick (ScanCode scancode)
             // IOANCH 20130301: unification culling
             if (Confirm (ENDGAMESTR))
             {
+				DestroySavedInstance();
                 playstate = ex_died;
                 killerobj = NULL;
                 pickquick = gamestate.lives = 0;
@@ -852,6 +853,7 @@ static int CP_CheckQuick (ScanCode scancode)
             if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
 #endif
             {
+				DestroySavedInstance();
 				if(ingame)
 					bot.SaveData();
 
@@ -890,6 +892,7 @@ static int CP_EndGame (int)
     if(!res) return 0;
 
     pickquick = gamestate.lives = 0;
+	DestroySavedInstance();
     playstate = ex_died;
     killerobj = NULL;
 
@@ -2876,6 +2879,7 @@ static int CP_Quit (int)
 
     {
 		// IOANCH 20121217: save data
+		DestroySavedInstance();
 		if(ingame)
 			bot.SaveData();
 		
