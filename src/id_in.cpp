@@ -220,7 +220,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   // know for sure?
 		   
 		   if(128*windowWidth / windowHeight >
-			  128*cfg_screenWidth / cfg_screenHeight)
+			  static_cast<int>(128*cfg_screenWidth / cfg_screenHeight))
 		   {
 			   // Greater aspect ratio of window: pillar box. Height is correct
 			   
@@ -233,15 +233,15 @@ void InputManager::p_processEvent(const SDL_Event *event)
 			   // a = 1 / 2 * (1 - w / W)
 			   // a = 1 / 2 * (1 - H / sh * sw / W)
 			   float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio / windowWidth);
-			   m_touchx = (event->tfinger.x - a) / (1 - 2 * a) * cfg_screenWidth;
-			   m_touchy = event->tfinger.y * cfg_screenHeight;
+			   m_touchx = static_cast<int>((event->tfinger.x - a) / (1 - 2 * a) * cfg_screenWidth);
+			   m_touchy = static_cast<int>(event->tfinger.y * cfg_screenHeight);
 			   
 		   }
 		   else
 		   {
 			   float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio / windowHeight);
-			   m_touchx = event->tfinger.x * cfg_screenWidth;
-			   m_touchy = (event->tfinger.y - a) / (1 - 2 * a) * cfg_screenHeight;
+			   m_touchx = static_cast<int>(event->tfinger.x * cfg_screenWidth);
+			   m_touchy = static_cast<int>((event->tfinger.y - a) / (1 - 2 * a) * cfg_screenHeight);
 		   }
 	   }
 		   break;

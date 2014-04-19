@@ -175,7 +175,6 @@
     <ClCompile Include="..\..\src\MasterDirectoryFile.cpp" />
     <ClCompile Include="..\..\src\m_buffer.cpp" />
     <ClCompile Include="..\..\src\obattrib.cpp" />
-    <ClCompile Include="..\..\src\OutOfRangeException.cpp" />
     <ClCompile Include="..\..\src\PathArray.cpp" />
     <ClCompile Include="..\..\src\Property.cpp" />
     <ClCompile Include="..\..\src\PropertyFile.cpp" />
@@ -244,7 +243,6 @@
     <ClInclude Include="..\..\src\m_buffer.h" />
     <ClInclude Include="..\..\src\m_dllist.h" />
     <ClInclude Include="..\..\src\obattrib.h" />
-    <ClInclude Include="..\..\src\OutOfRangeException.h" />
     <ClInclude Include="..\..\src\PathArray.h" />
     <ClInclude Include="..\..\src\Property.h" />
     <ClInclude Include="..\..\src\PropertyFile.h" />

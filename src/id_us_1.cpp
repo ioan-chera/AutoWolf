@@ -514,25 +514,25 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
 	SDL_Rect rect;
 	if(128*windowWidth / windowHeight >
-	   128*cfg_screenWidth / cfg_screenHeight)
+	   static_cast<int>(128*cfg_screenWidth / cfg_screenHeight))
 	{
 		float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio /
 						  windowWidth);
 		
-		rect.x = windowWidth * (a + (float)x / LOGIC_WIDTH * (1 - 2 * a));
-		rect.y = windowHeight * ((float)y / LOGIC_HEIGHT);
+		rect.x = static_cast<int>(windowWidth * (a + (float)x / LOGIC_WIDTH * (1 - 2 * a)));
+		rect.y = static_cast<int>(windowHeight * ((float)y / LOGIC_HEIGHT));
 	}
 	else
 	{
 		float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio /
 						  windowHeight);
-		rect.x = windowWidth * ((float)x / LOGIC_WIDTH);
-		rect.y = windowHeight * (a + (float)y / LOGIC_HEIGHT * (1 - 2 * a));
+		rect.x = static_cast<int>(windowWidth * ((float)x / LOGIC_WIDTH));
+		rect.y = static_cast<int>(windowHeight * (a + (float)y / LOGIC_HEIGHT * (1 - 2 * a)));
 	}
 	
 	word dummyWidth, characterHeight;
 	USL_MeasureString("pA",&dummyWidth,&characterHeight);
-	rect.h = ((float)characterHeight / LOGIC_HEIGHT) * windowHeight;
+	rect.h = static_cast<int>(((float)characterHeight / LOGIC_HEIGHT) * windowHeight);
 	rect.w = windowWidth - rect.x;
 	
 	SDL_SetTextInputRect(&rect);

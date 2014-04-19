@@ -61,6 +61,9 @@ bool FileSystem::FileExists(const char* path)
 		return false;
 	return true;
 #else
-#error TODO: FileExists on Windows
+	struct _stat st;
+	if (_wstat(UTF8ToWideChar(path).c_str(), &st))
+		return false;
+	return true;
 #endif
 }

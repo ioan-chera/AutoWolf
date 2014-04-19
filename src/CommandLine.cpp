@@ -46,7 +46,6 @@ std::vector<std::string> s_argv;
 #ifdef _WIN32
 static void feedFromWindows()
 {
-#error TODO Windows: memory management of argvW
 	int argc;
 	LPWSTR* argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
 	if (!argvW)
@@ -58,51 +57,7 @@ static void feedFromWindows()
 	{
 		s_argv.push_back(WideCharToUTF8(argvW[i]));
 	}
-}
-#endif
-
-#ifdef __ANDROID__
-static void feedFromAndroid(const char* arg0)
-{
-	class Opener
-	{
-		FILE *f;
-	public:
-		Opener(const char* fname) : f(nullptr)
-		{
-			f = ShellUnicode::fopen(fname, "rt");
-			if(!f)
-				throw std::system_error(std::error_code(errno, std::system_category()), "Couldn't open Android command line list");
-		}
-		~Opener()
-		{
-			if(f)
-				fclose(f);
-		}
-		FILE* get()
-		{
-			return f;
-		}
-	};
-	
-	std::string path = SDL_AndroidGetInternalStoragePath();
-	ConcatSubpath(path, "AndroidParams.txt");
-	
-//	Opener op(path.c_str());
-//	char line[1024];
-	s_argv.push_back(arg0);
-	s_argv.push_back("--wolfdir");
-	s_argv.push_back("/sdcard/dos/wolf3d");
-	s_argv.push_back("--tedlevel");
-	s_argv.push_back("31");
-	s_argv.push_back("--hard");
-//	while(!feof(op.get()))
-//	{
-//		if(!fgets(line, lengthof(line), op.get()))
-//			continue;
-//		if(strlen(line) > 0)
-//			s_argv.push_back(line);
-//	}
+	LocalFree(argvW);
 }
 #endif
 
