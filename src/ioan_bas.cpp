@@ -605,7 +605,7 @@ bool Basic::IsGunShotSound(word s)
 bool Basic::IsInFront(short angle, fixed cx, fixed cy, fixed tx, fixed ty)
 {
    short ang = (short)(atan2(ty - cy, tx - cx) * 180 / M_PI);
-   if(abs(ang - angle) % 360 < 55)
+   if(abs(ang - angle) % 360 < 75)
       return true;
    return false;
 }
