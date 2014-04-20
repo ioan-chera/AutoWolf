@@ -71,8 +71,6 @@ static const dirtype diagonal[9][9] =
 
 void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 
-void    MoveObj (objtype *ob, int32_t move);
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 //                                LOCAL VARIABLES
@@ -188,14 +186,14 @@ void objtype::NewState (statetype *state)
             else                                        \
             {                                           \
                 doornum = (int) temp & 127;             \
-                OpenDoor(doornum);                      \
+                Act1::OpenDoor(doornum);                      \
                 distance = -doornum - 1;                \
                 return true;                            \
             }
 #else
     #define DOORCHECK                                   \
             doornum = (int) temp & 127;                 \
-            OpenDoor(doornum);                          \
+            Act1::OpenDoor(doornum);                          \
             distance = -doornum - 1;                    \
             return true;
 #endif
@@ -364,7 +362,7 @@ Boolean8 objtype::TryWalk ()
 #ifdef PLAYDEMOLIKEORIGINAL
     if (DEMOCOND_ORIG && doornum != -1)
     {
-        OpenDoor(doornum);
+        Act1::OpenDoor(doornum);
         distance = -doornum-1;
         return true;
     }
@@ -401,27 +399,27 @@ Boolean8 objtype::TryWalk ()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SelectDodgeDir (objtype *ob)
+void objtype::SelectDodgeDir ()
 {
     int         deltax,deltay,i;
     unsigned    absdx,absdy;
     dirtype     dirtry[5];
     dirtype     turnaround,tdir;
 
-    if (ob->flags & FL_FIRSTATTACK)
+    if (flags & FL_FIRSTATTACK)
     {
         //
         // turning around is only ok the very first time after noticing the
         // player
         //
         turnaround = nodir;
-        ob->flags &= ~FL_FIRSTATTACK;
+        flags &= ~FL_FIRSTATTACK;
     }
     else
-        turnaround=opposite[ob->dir];
+        turnaround=opposite[dir];
 
-    deltax = player->tilex - ob->tilex;
-    deltay = player->tiley - ob->tiley;
+    deltax = player->tilex - tilex;
+    deltay = player->tiley - tiley;
 
     //
     // arange 5 direction choices in order of preference
@@ -487,8 +485,8 @@ void SelectDodgeDir (objtype *ob)
         if ( dirtry[i] == nodir || dirtry[i] == turnaround)
             continue;
 
-        ob->dir = dirtry[i];
-        if (ob->TryWalk())
+        dir = dirtry[i];
+        if (TryWalk())
             return;
     }
 
@@ -497,13 +495,13 @@ void SelectDodgeDir (objtype *ob)
     //
     if (turnaround != nodir)
     {
-        ob->dir = turnaround;
+        dir = turnaround;
 
-        if (ob->TryWalk())
+        if (TryWalk())
             return;
     }
 
-    ob->dir = nodir;
+    dir = nodir;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -517,18 +515,18 @@ void SelectDodgeDir (objtype *ob)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SelectChaseDir (objtype *ob)
+void objtype::SelectChaseDir ()
 {
     int     deltax,deltay;
     dirtype d[3];
     dirtype tdir, olddir, turnaround;
 
 
-    olddir=ob->dir;
+    olddir=dir;
     turnaround=opposite[olddir];
 
-    deltax=player->tilex - ob->tilex;
-    deltay=player->tiley - ob->tiley;
+    deltax=player->tilex - tilex;
+    deltay=player->tiley - tiley;
 
     d[1]=nodir;
     d[2]=nodir;
@@ -557,15 +555,15 @@ void SelectChaseDir (objtype *ob)
 
     if (d[1]!=nodir)
     {
-        ob->dir=d[1];
-        if (ob->TryWalk())
+        dir=d[1];
+        if (TryWalk())
             return;     /*either moved forward or attacked*/
     }
 
     if (d[2]!=nodir)
     {
-        ob->dir=d[2];
-        if (ob->TryWalk())
+        dir=d[2];
+        if (TryWalk())
             return;
     }
 
@@ -573,8 +571,8 @@ void SelectChaseDir (objtype *ob)
 
     if (olddir!=nodir)
     {
-        ob->dir=olddir;
-        if (ob->TryWalk())
+        dir=olddir;
+        if (TryWalk())
             return;
     }
 
@@ -584,8 +582,8 @@ void SelectChaseDir (objtype *ob)
         {
             if (tdir!=turnaround)
             {
-                ob->dir=tdir;
-                if ( ob->TryWalk() )
+                dir=tdir;
+                if ( TryWalk() )
                     return;
             }
         }
@@ -596,8 +594,8 @@ void SelectChaseDir (objtype *ob)
         {
             if (tdir!=turnaround)
             {
-                ob->dir=tdir;
-                if ( ob->TryWalk() )
+                dir=tdir;
+                if ( TryWalk() )
                     return;
             }
         }
@@ -605,15 +603,15 @@ void SelectChaseDir (objtype *ob)
 
     if (turnaround !=  nodir)
     {
-        ob->dir=turnaround;
-        if (ob->dir != nodir)
+        dir=turnaround;
+        if (dir != nodir)
         {
-            if ( ob->TryWalk() )
+            if ( TryWalk() )
                 return;
         }
     }
 
-    ob->dir = nodir;                // can't move
+    dir = nodir;                // can't move
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -701,39 +699,39 @@ void SelectRunDir (objtype *ob)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void MoveObj (objtype *ob, int32_t move)
+void objtype::MoveObj (int32_t move)
 {
     int32_t    deltax,deltay;
 
-    switch (ob->dir)
+    switch (dir)
     {
         case north:
-            ob->y -= move;
+            y -= move;
             break;
         case northeast:
-            ob->x += move;
-            ob->y -= move;
+            x += move;
+            y -= move;
             break;
         case east:
-            ob->x += move;
+            x += move;
             break;
         case southeast:
-            ob->x += move;
-            ob->y += move;
+            x += move;
+            y += move;
             break;
         case south:
-            ob->y += move;
+            y += move;
             break;
         case southwest:
-            ob->x -= move;
-            ob->y += move;
+            x -= move;
+            y += move;
             break;
         case west:
-            ob->x -= move;
+            x -= move;
             break;
         case northwest:
-            ob->x -= move;
-            ob->y -= move;
+            x -= move;
+            y -= move;
             break;
 
         case nodir:
@@ -746,53 +744,53 @@ void MoveObj (objtype *ob, int32_t move)
     //
     // check to make sure it's not on top of player
     //
-    if (areabyplayer[ob->areanumber])
+    if (areabyplayer[areanumber])
     {
-        deltax = ob->x - player->x;
+        deltax = x - player->x;
         if (deltax < -MINACTORDIST || deltax > MINACTORDIST)
             goto moveok;
-        deltay = ob->y - player->y;
+        deltay = y - player->y;
         if (deltay < -MINACTORDIST || deltay > MINACTORDIST)
             goto moveok;
 
-        if (ob->hidden)          // move closer until he meets CheckLine
+        if (hidden)          // move closer until he meets CheckLine
             goto moveok;
 
-        if (ob->obclass == ghostobj || ob->obclass == spectreobj)
-            TakeDamage (tics*2,ob);
+        if (obclass == ghostobj || obclass == spectreobj)
+            TakeDamage (tics*2,this);
 
         //
         // back up
         //
-        switch (ob->dir)
+        switch (dir)
         {
             case north:
-                ob->y += move;
+                y += move;
                 break;
             case northeast:
-                ob->x -= move;
-                ob->y += move;
+                x -= move;
+                y += move;
                 break;
             case east:
-                ob->x -= move;
+                x -= move;
                 break;
             case southeast:
-                ob->x -= move;
-                ob->y -= move;
+                x -= move;
+                y -= move;
                 break;
             case south:
-                ob->y -= move;
+                y -= move;
                 break;
             case southwest:
-                ob->x += move;
-                ob->y -= move;
+                x += move;
+                y -= move;
                 break;
             case west:
-                ob->x += move;
+                x += move;
                 break;
             case northwest:
-                ob->x += move;
-                ob->y += move;
+                x += move;
+                y += move;
                 break;
 
             case nodir:
@@ -801,7 +799,7 @@ void MoveObj (objtype *ob, int32_t move)
         return;
     }
 moveok:
-    ob->distance -=move;
+    distance -=move;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

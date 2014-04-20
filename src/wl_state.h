@@ -16,10 +16,7 @@
 
 void    SpawnNewObj (unsigned tilex, unsigned tiley, statetype *state);
 
-void    SelectChaseDir (objtype *ob);
-void    SelectDodgeDir (objtype *ob);
 void    SelectRunDir (objtype *ob);
-void    MoveObj (objtype *ob, int32_t move);
 
 
 #endif

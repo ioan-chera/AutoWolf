@@ -619,6 +619,9 @@ struct objtype
 	void NewState(statetype* state);
 	Boolean8 SightPlayer();
 	Boolean8 TryWalk();
+	void SelectDodgeDir();
+	void SelectChaseDir();
+	void MoveObj(int32_t move);
 };
 
 

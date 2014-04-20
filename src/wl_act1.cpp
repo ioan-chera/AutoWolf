@@ -523,7 +523,7 @@ void SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock)
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void OpenDoor (int door)
+void Act1::OpenDoor (int door)
 {
     if (doorobjlist[door].action == dr_open)
         doorobjlist[door].ticcount = 0;         // reset open time
@@ -639,7 +639,7 @@ void OperateDoor (int door)
     {
         case dr_closed:
         case dr_closing:
-            OpenDoor (door);
+            Act1::OpenDoor (door);
             break;
         case dr_open:
         case dr_opening:
@@ -758,7 +758,7 @@ static void _DoorClosing (int door)
     if ( ((int)(uintptr_t)actorat[tilex][tiley] != (door | 0x80))
         || (player->tilex == tilex && player->tiley == tiley) )
     {                       // something got inside the door
-        OpenDoor (door);
+        Act1::OpenDoor (door);
         return;
     };
 

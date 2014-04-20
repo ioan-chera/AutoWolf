@@ -566,9 +566,9 @@ void T_ProjectileBossChase(objtype *ob)
     if (ob->dir == nodir)
     {
         if (dodge)
-            SelectDodgeDir (ob);
+            ob->SelectDodgeDir ();
         else
-            SelectChaseDir (ob);
+            ob->SelectChaseDir ();
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
     }
@@ -582,7 +582,7 @@ void T_ProjectileBossChase(objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
+            Act1::OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
@@ -591,7 +591,7 @@ void T_ProjectileBossChase(objtype *ob)
 		
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
 		
@@ -610,9 +610,9 @@ void T_ProjectileBossChase(objtype *ob)
         if (dist <4)
             SelectRunDir (ob);
         else if (dodge)
-            SelectDodgeDir (ob);
+            ob->SelectDodgeDir ();
         else
-            SelectChaseDir (ob);
+            ob->SelectChaseDir ();
 		
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
@@ -808,7 +808,7 @@ void T_Fake (objtype *ob)
     
     if (ob->dir == nodir)
     {
-        SelectDodgeDir (ob);
+        ob->SelectDodgeDir ();
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
     }
@@ -819,7 +819,7 @@ void T_Fake (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -835,7 +835,7 @@ void T_Fake (objtype *ob)
         
         move -= ob->distance;
         
-        SelectDodgeDir (ob);
+        ob->SelectDodgeDir ();
         
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
@@ -890,7 +890,7 @@ void T_Chase (objtype *ob)
 {
     int32_t move,target;
     int     dx,dy,dist,chance;
-    Boolean8 dodge;
+    bool	dodge;
     
     if (gamestate.victoryflag)
         return;
@@ -951,9 +951,9 @@ void T_Chase (objtype *ob)
     if (ob->dir == nodir)
     {
         if (dodge)
-            SelectDodgeDir (ob);
+            ob->SelectDodgeDir ();
         else
-            SelectChaseDir (ob);
+            ob->SelectChaseDir ();
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
     }
@@ -967,14 +967,19 @@ void T_Chase (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
+            Act1::OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
             {
                if(doorobjlist[-ob->distance - 1].action == dr_closed)
                {
                   // IOANCH: also alert the bot
                   HeardEvent *hevent = new HeardEvent;
-				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT, doorobjlist[-ob->distance - 1].tiley << TILESHIFT, SPEAR::sd(OPENDOORSND),  I_GetTicks(), ob, 0);
+				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT,
+							   doorobjlist[-ob->distance - 1].tiley << TILESHIFT,
+							   SPEAR::sd(OPENDOORSND),
+							   I_GetTicks(),
+							   ob,
+							   0);
                   bot.heardEvents.add(hevent);
                }
                 return;
@@ -988,7 +993,7 @@ void T_Chase (objtype *ob)
         
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -1005,9 +1010,9 @@ void T_Chase (objtype *ob)
         move -= ob->distance;
         
         if (dodge)
-            SelectDodgeDir (ob);
+            ob->SelectDodgeDir ();
         else
-            SelectChaseDir (ob);
+            ob->SelectChaseDir ();
         
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
@@ -1028,7 +1033,7 @@ void T_Ghosts (objtype *ob)
     
     if (ob->dir == nodir)
     {
-        SelectChaseDir (ob);
+        ob->SelectChaseDir ();
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
     }
@@ -1039,7 +1044,7 @@ void T_Ghosts (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -1055,7 +1060,7 @@ void T_Ghosts (objtype *ob)
         
         move -= ob->distance;
         
-        SelectChaseDir (ob);
+        ob->SelectChaseDir ();
         
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
@@ -1077,7 +1082,7 @@ void T_DogChase (objtype *ob)
     
     if (ob->dir == nodir)
     {
-        SelectDodgeDir (ob);
+        ob->SelectDodgeDir ();
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
     }
@@ -1108,7 +1113,7 @@ void T_DogChase (objtype *ob)
         
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -1124,7 +1129,7 @@ void T_DogChase (objtype *ob)
         
         move -= ob->distance;
         
-        SelectDodgeDir (ob);
+        ob->SelectDodgeDir ();
         
         if (ob->dir == nodir)
             return;                                                 // object is blocked in
@@ -1196,7 +1201,7 @@ void T_Path (objtype *ob)
             //
             // waiting for a door to open
             //
-            OpenDoor (-ob->distance-1);
+            Act1::OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
                 return;
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
@@ -1208,7 +1213,7 @@ void T_Path (objtype *ob)
         
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -1406,7 +1411,7 @@ void T_BJRun (objtype *ob)
     {
         if (move < ob->distance)
         {
-            MoveObj (ob,move);
+            ob->MoveObj (move);
             break;
         }
         
@@ -1437,7 +1442,7 @@ void T_BJJump (objtype *ob)
     int32_t    move;
     
     move = BJJUMPSPEED*tics;
-    MoveObj (ob,move);
+    ob->MoveObj (move);
 }
 
 /*
