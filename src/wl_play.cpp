@@ -1385,10 +1385,10 @@ void PlayLoop ()
 
     if (demoplayback)
         myInput.startAck ();
-
+	
     do
     {
-		std::lock_guard<std::mutex> lock(g_playloopMutex);
+		
         PollControls ();
 
 		// Execute pending thread-resulted commands on main thread.
@@ -1396,17 +1396,20 @@ void PlayLoop ()
 //
 // actor thinking
 //
-        madenoise = false;
+		{
+			std::lock_guard<std::mutex> lock(g_playloopMutex);
+			madenoise = false;
 
-        MoveDoors ();
-        MovePWalls ();
+			MoveDoors ();
+			MovePWalls ();
 
-        for (obj = player; obj; obj = obj->next)
-            DoActor (obj);
+			for (obj = player; obj; obj = obj->next)
+				DoActor (obj);
 
-        UpdatePaletteShifts ();
+			UpdatePaletteShifts ();
 
-        ThreeDRefresh ();
+			ThreeDRefresh ();
+		}
 
         //
         // MAKE FUNNY FACE IF BJ DOESN'T MOVE FOR AWHILE

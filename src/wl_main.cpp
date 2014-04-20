@@ -1350,19 +1350,24 @@ void main_NewViewSize (int width)
 //
 ////////////////////////////////////////////////////////////////////////////////
 // IOANCH 20130509: now the error is stored globally, so it can be gathered
+#ifndef __ANDROID__
+#define EXIT(a) throw ExitThrowable(a)
+#else
+#define EXIT(a) exit(a)
+#endif
 void Quit ()
 {
     if (!graphSegs.hasPictable())  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        throw ExitThrowable(1);
+		EXIT(1);
     }
 
     main_WriteConfig ();
 
     ShutdownId ();
 
-	throw ExitThrowable(0);
+	EXIT(0);
 }
 
 ////////////////////////////////////////////////////////////////////
