@@ -1735,7 +1735,7 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 			{
 				
 				std::lock_guard<std::mutex> lock(g_playloopMutex);
-
+				bot.SaveData();
 				SaveFullInstanceState();
 			}
 			// else: either dead or in elevator at this point. The instance save is handled elsewhere then
