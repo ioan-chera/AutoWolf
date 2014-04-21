@@ -369,7 +369,7 @@ static void ScanInfoPlane()
 //
 // P wall
 //
-                case 98:
+                case PUSHABLETILE:
                     if (!loadedgame)
                         gamestate.secrettotal++;
                     break;
@@ -788,26 +788,26 @@ void SetupGameLevel ()
         for (x=0;x<mapwidth;x++)
         {
             tile = *map++;
-            if (tile >= 90 && tile <= 101)
+            if (tile >= DOOR_VERTICAL_1 && tile <= DOOR_HORIZONTAL_6)
             {
                 // door
                 switch (tile)
                 {
-                    case 90:
-                    case 92:
-                    case 94:
-                    case 96:
-                    case 98:
-                    case 100:
-                        SpawnDoor (x,y,1,(tile-90)/2);
+                    case DOOR_VERTICAL_1:
+                    case DOOR_VERTICAL_2:
+                    case DOOR_VERTICAL_3:
+                    case DOOR_VERTICAL_4:
+                    case DOOR_VERTICAL_5:
+                    case DOOR_VERTICAL_6:
+						Act1::SpawnDoor (x,y,1,(tile-DOOR_VERTICAL_1)/2);
                         break;
-                    case 91:
-                    case 93:
-                    case 95:
-                    case 97:
-                    case 99:
-                    case 101:
-                        SpawnDoor (x,y,0,(tile-91)/2);
+                    case DOOR_HORIZONTAL_1:
+                    case DOOR_HORIZONTAL_2:
+                    case DOOR_HORIZONTAL_3:
+                    case DOOR_HORIZONTAL_4:
+                    case DOOR_HORIZONTAL_5:
+                    case DOOR_HORIZONTAL_6:
+                        Act1::SpawnDoor (x,y,0,(tile-DOOR_HORIZONTAL_1)/2);
                         break;
                 }
             }

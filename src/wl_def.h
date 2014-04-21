@@ -491,6 +491,24 @@ struct statetype
     uint64_t flags;
 } ;
 
+enum
+{
+	DOOR_VERTICAL_1 = 90,
+	DOOR_HORIZONTAL_1 = 91,
+	// locked
+	DOOR_VERTICAL_2 = 92,	// gold
+	DOOR_HORIZONTAL_2 = 93,
+	DOOR_VERTICAL_3 = 94,	// silver
+	DOOR_HORIZONTAL_3 = 95,
+	DOOR_VERTICAL_4 = 96,	// other
+	DOOR_HORIZONTAL_4 = 97,
+	DOOR_VERTICAL_5 = 98,	// other
+	DOOR_HORIZONTAL_5 = 99,
+	// lift
+	DOOR_VERTICAL_6 = 100,
+	DOOR_HORIZONTAL_6 = 101,
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

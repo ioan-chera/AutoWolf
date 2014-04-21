@@ -280,25 +280,25 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 				if (visited[pos] == 2)
 					switch ((*wallbuf)[pos])
 				{
-					case 92:
-					case 93:
+					case DOOR_VERTICAL_2:
+					case DOOR_HORIZONTAL_2:
 						//printf("Found door %u\n", KEY_1);
 						needed = KEY_1;
 						neededindex = 0;
 						break;
-					case 94:
-					case 95:
+					case DOOR_VERTICAL_3:
+					case DOOR_HORIZONTAL_3:
 						//printf("Found door %u\n", KEY_2);
 						needed = KEY_2;
 						neededindex = 1;
 						break;
-					case 96:
-					case 97:
+					case DOOR_VERTICAL_4:
+					case DOOR_HORIZONTAL_4:
 						needed = KEY_3;
 						neededindex = 2;
 						break;
-					case 98:
-					case 99:
+					case DOOR_VERTICAL_5:
+					case DOOR_HORIZONTAL_5:
 						needed = KEY_4;
 						neededindex = 3;
 						break;

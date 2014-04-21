@@ -475,7 +475,7 @@ void InitDoorList ()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-void SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock)
+void Act1::SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock)
 {
     word *map;
 
