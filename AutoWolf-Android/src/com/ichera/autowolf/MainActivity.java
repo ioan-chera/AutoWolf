@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -57,6 +58,20 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		if (!isTaskRoot()) 
+        {
+            final Intent intent = getIntent();
+            final String intentAction = intent.getAction();
+            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) 
+            		&& intentAction != null 
+            		&& intentAction.equals(Intent.ACTION_MAIN)) 
+            {
+                Log.i("MainActivity", "Finishing extra main activity");
+                finish();
+                return;
+            }
+        }
+		
 		setContentView(R.layout.main);
 		
 		mChooseButton = (Button)findViewById(R.id.choose_wolfdir_button); 
