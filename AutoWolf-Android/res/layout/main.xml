@@ -84,6 +84,10 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@string/secretstep3"/>
+	    <CheckBox android:id="@+id/check_lowres"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/lowres"/>
 	    <Button android:id="@+id/start_button"
 	        android:layout_width="wrap_content"
 	        android:layout_height="48dp"

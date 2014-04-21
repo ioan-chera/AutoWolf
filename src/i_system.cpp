@@ -124,9 +124,8 @@ std::string I_GetSettingsDir()
 	   throw std::system_error(std::error_code(result & 0xffff, std::system_category()), "Your Application Data directory is not defined. You must set this before playing.");
    return ConcatSubpath(WideCharToUTF8(appdatdir), "AutoWolf");
 #elif defined(__ANDROID__)
-	std::string external = SDL_AndroidGetExternalStoragePath();
-	ConcatSubpath(external, "com.ichera.autowolf");
-	return external;
+	std::string internal = SDL_AndroidGetInternalStoragePath();
+	return internal;
 #else
    const char *homeenv = getenv("HOME");
    if(homeenv == NULL)

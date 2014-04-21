@@ -32,6 +32,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private static final String PREF_TEDLEVEL = "tedlevel";
 	private static final String PREF_SKILL = "skill";
 	private static final String PREF_SECRETSTEP3 = "secretstep3";
+	private static final String PREF_LOWRES = "lowres";
 	
 	private static final int REQUEST_OPEN_FOLDER = 1;
 	
@@ -39,6 +40,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private int mTedlevel;
 	private int mSkillLevel;
 	private boolean mSecretStep3;
+	private boolean mLowRes;
 	
 	private Button mChooseButton;
 	private EditText mWarpField;
@@ -49,6 +51,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private RadioButton mHardButton;
 	
 	private CheckBox mSecretStep3Box;
+	private CheckBox mLowResBox;
 	
 	private Button mStartButton;
 	
@@ -83,6 +86,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mHardButton = (RadioButton)findViewById(R.id.hard_button);
 		
 		mSecretStep3Box = (CheckBox)findViewById(R.id.check_secretstep3);
+		mLowResBox = (CheckBox)findViewById(R.id.check_lowres);
 		
 		mStartButton = (Button)findViewById(R.id.start_button);
 		
@@ -95,6 +99,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mHardButton.setOnCheckedChangeListener(this);
 		
 		mSecretStep3Box.setOnCheckedChangeListener(this);
+		mLowResBox.setOnCheckedChangeListener(this);
 		
 		mStartButton.setOnClickListener(this);
 		
@@ -109,6 +114,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mTedlevel = settings.getInt(PREF_TEDLEVEL, 0);
 		mSkillLevel = settings.getInt(PREF_SKILL, 3);
 		mSecretStep3 = settings.getBoolean(PREF_SECRETSTEP3, false);
+		mLowRes = settings.getBoolean(PREF_LOWRES, false);
 		
 		updateUi();
 	}
@@ -122,6 +128,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		editor.putInt(PREF_TEDLEVEL, mTedlevel);
 		editor.putInt(PREF_SKILL, mSkillLevel);
 		editor.putBoolean(PREF_SECRETSTEP3, mSecretStep3);
+		editor.putBoolean(PREF_LOWRES, mLowRes);
 		
 		editor.commit();
 	}
@@ -160,6 +167,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 			break;	
 		}
 		mSecretStep3Box.setChecked(mSecretStep3);
+		mLowResBox.setChecked(mLowRes);
 	}
 
 	@Override
@@ -231,9 +239,12 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) 
 	{
-		if(buttonView == mSecretStep3Box)
+		if(buttonView instanceof CheckBox)
 		{
-			mSecretStep3 = mSecretStep3Box.isChecked();
+			if(buttonView == mSecretStep3Box)
+				mSecretStep3 = mSecretStep3Box.isChecked();
+			else if(buttonView == mLowResBox)
+				mLowRes = mLowResBox.isChecked();
 			updateUi();
 			putData();
 			return;
@@ -294,18 +305,25 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mArgs.add("--joystick");
 		mArgs.add("-1");
 		
-		if(isExternalStorageReadable() && isExternalStorageWritable())
+		if(mLowRes)
 		{
-			File homeDir = Environment.getExternalStorageDirectory();
-			File settingsDir = new File(homeDir, "com.ichera.autowolf");
-			settingsDir.mkdirs();
-			if(settingsDir.isDirectory())
-			{
-				mArgs.add("--configdir");
-				mArgs.add(settingsDir.getAbsolutePath());
-				//Log.i("What", settingsDir.getAbsolutePath());
-			}
+			mArgs.add("--res");
+			mArgs.add("320");
+			mArgs.add("200");
 		}
+		
+//		if(isExternalStorageReadable() && isExternalStorageWritable())
+//		{
+//			File homeDir = Environment.getExternalStorageDirectory();
+//			File settingsDir = new File(homeDir, "com.ichera.autowolf");
+//			settingsDir.mkdirs();
+//			if(settingsDir.isDirectory())
+//			{
+//				mArgs.add("--configdir");
+//				mArgs.add(settingsDir.getAbsolutePath());
+//				//Log.i("What", settingsDir.getAbsolutePath());
+//			}
+//		}
 		
 		SDLActivity.sDemandNorestore = true;
 	}
