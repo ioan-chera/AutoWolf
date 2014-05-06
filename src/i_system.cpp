@@ -131,7 +131,9 @@ std::string I_GetSettingsDir()
    if(homeenv == NULL)
       throw Exception("Your $HOME directory is not defined. You must set this before "
            "playing.");
-   return PString(homeenv).concatSubpath(".autowolf");
+	std::string settingsDir(homeenv);
+	ConcatSubpath(settingsDir, ".config/autowolf");
+   return settingsDir;
 #endif
 }
 
