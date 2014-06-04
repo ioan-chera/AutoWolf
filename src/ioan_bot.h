@@ -134,6 +134,8 @@ class BotMan
 	int exitx, exity;
 	objtype *threater;
 	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
+	
+	bool m_chokemap[MAPSIZE][MAPSIZE];	// map of choke points
 
    MapExploration mapExploration;	// map of explored areas
     int knownExitX, knownExitY;
@@ -180,6 +182,8 @@ class BotMan
     void GetExploredData(const uint8_t *digeststring);
    
    HeardEvent *RefreshSound(HeardEvent *he);
+	
+	void getChokeData();
 public:
    
 	std::vector<SecretPush> pushes;

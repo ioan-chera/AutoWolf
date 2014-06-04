@@ -87,6 +87,8 @@ void BotMan::MapInit()
 
    haspushes = false;
    pushes.clear();
+	
+	memset(m_chokemap, 0, sizeof(m_chokemap));
 }
 
 //
@@ -128,6 +130,16 @@ void BotMan::StoreAcquiredData(const uint8_t *digeststring) const
 }
 
 //
+// BotMan::getChokeData
+//
+// Gets chokepoint data from explored information
+//
+void BotMan::getChokeData()
+{
+	
+}
+
+//
 // BotMan::GetExploredData
 //
 void BotMan::GetExploredData(const uint8_t *digeststring)
@@ -155,6 +167,7 @@ void BotMan::GetExploredData(const uint8_t *digeststring)
     if(propertyFile)
     {
         mapExploration.UnpackBoolean8Array(propertyFile->getStringValue(PROPERTY_KEY_EXPLORED));
+		getChokeData();
         if (propertyFile->hasProperty(PROPERTY_KEY_EXITPOS))
         {
             unsigned prop =
