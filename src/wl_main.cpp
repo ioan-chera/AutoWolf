@@ -26,6 +26,7 @@
 // WL_MAIN.C
 
 #include <mutex>
+#include <sstream>
 #include <system_error>
 #include "wl_def.h"
 #include "FileSystem.h"
@@ -1609,6 +1610,22 @@ static void DemoLoop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+std::string stringByReplacing(const char* text, const char* what, const char* towhat)
+{
+	std::string str(text);
+	
+	size_t whatlen = strlen(what);
+	size_t towhatlen = strlen(towhat);
+	
+	size_t pos = (size_t)-towhatlen;
+	while((pos = str.find(what, pos + towhatlen)) != std::string::npos)
+	{
+		str.replace(pos, whatlen, towhat);
+	}
+	
+	return str;
+}
+
 static void showErrorAlert(const char* message, const char* title)
 {
 	Logger::Write("%s: %s", title, message);
@@ -1619,7 +1636,11 @@ static void showErrorAlert(const char* message, const char* title)
 #elif defined(__ANDROID__)
 	SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s: %s", title, message);
 #else
-#error TODO Linux: native message box
+	std::stringstream ss;
+	ss << "zenity --error --title='" << stringByReplacing(title, "'", "\\'") << "' --text='" << 
+			stringByReplacing(message, "'", "\\'") << "'";
+		
+	system(ss.str().c_str());
 #endif
 }
 

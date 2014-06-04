@@ -13,7 +13,7 @@ INSTALL_MAN     ?= $(INSTALL) -m 444
 INSTALL_DATA    ?= $(INSTALL) -m 444
 
 
-SDL_CONFIG  ?= sdl-config
+SDL_CONFIG  ?= sdl2-config
 CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
@@ -51,12 +51,14 @@ endif
 SRCS :=
 SRCS += src/ActorStates.cpp
 SRCS += src/CheckSum.cpp
+SRCS += src/CommandLine.cpp
 SRCS += src/Config.cpp
 SRCS += src/DataFile.cpp
 SRCS += src/DirectoryFile.cpp
 SRCS += src/Exception.cpp
 SRCS += src/dosbox/dbopl.cpp
 SRCS += src/e_hashkeys.cpp
+SRCS += src/FileSystem.cpp
 SRCS += src/HistoryRatio.cpp
 SRCS += src/i_system.cpp
 SRCS += src/i_video.cpp
@@ -70,18 +72,20 @@ SRCS += src/id_vl.cpp
 SRCS += src/ioan_bas.cpp
 SRCS += src/ioan_bot.cpp
 SRCS += src/ioan_secret.cpp
+SRCS += src/Logger.cpp
 SRCS += src/m_buffer.cpp
 SRCS += src/MapExploration.cpp
 SRCS += src/MasterDirectoryFile.cpp
 SRCS += src/obattrib.cpp
 SRCS += src/PathArray.cpp
-SRCS += src/Point2D.cpp
 SRCS += src/Property.cpp
 SRCS += src/PropertyFile.cpp
 SRCS += src/PString.cpp
 SRCS += src/win32/sdl_winmain.cpp
+SRCS += src/ShellUnicode.cpp
 SRCS += src/signon.cpp
 SRCS += src/SODFlag.cpp
+SRCS += src/StdStringExtensions.cpp
 SRCS += src/wl_act1.cpp
 SRCS += src/wl_act2.cpp
 SRCS += src/wl_agent.cpp
