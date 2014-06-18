@@ -67,15 +67,17 @@
 */
 
 static byte *vbuf = NULL;
-unsigned vbufPitch = 0;
+static unsigned vbufPitch = 0;
 
 int32_t    lasttimecount;
 Boolean8 fpscounter;
 
-int fps_frames = 0, fps_time = 0, fps = 0;
+static int fps_frames = 0;
+static int fps_time = 0;
+static int fps = 0;
 
 int *vid_wallheight;
-int min_wallheight;
+static int min_wallheight;
 
 //
 // math tables
@@ -89,13 +91,12 @@ fixed *costable = sintable + (ANGLES / 4);
 // refresh variables
 //
 fixed   viewx, viewy;                   // the focal point
-short   viewangle;
+static short   viewangle;
 fixed   viewsin, viewcos;
 
-void    TransformActor (objtype *ob);
-void    ClearScreen ();
-int     CalcRotate (objtype *ob);
-void    DrawScaleds ();
+static void    TransformActor (objtype *ob);
+static int     CalcRotate (const objtype *ob);
+static void    DrawScaleds ();
 void    CalcTics ();
 void    ThreeDRefresh ();
 
@@ -104,28 +105,27 @@ void    ThreeDRefresh ();
 //
 // wall optimization variables
 //
-int     lastside;               // true for vertical
-int32_t    lastintercept;
-int     lasttilehit;
-int     lasttexture;
+static int     lastside;               // true for vertical
+static int32_t    lastintercept;
+static int     lasttilehit;
+static int     lasttexture;
 
 //
 // ray tracing variables
 //
-short    focaltx, focalty, viewtx, viewty;
-longword xpartialup, xpartialdown, ypartialup, ypartialdown;
+static short    focaltx, focalty, viewtx, viewty;
+static longword xpartialup, xpartialdown, ypartialup, ypartialdown;
 
-short   midangle, angle;
+static short   midangle;
 
-word    tilehit;
-int     pixx;
+static word    tilehit;
+static int     pixx;
 
-short   xtile, ytile;
-short   xtilestep, ytilestep;
-int32_t    xintercept, yintercept;
-word    xstep, ystep;
-word    xspot, yspot;
-int     texdelta;
+static short   xtile, ytile;
+static short   xtilestep, ytilestep;
+static int32_t    xintercept, yintercept;
+static word    xspot, yspot;
+static int     texdelta;
 
 word horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 
@@ -161,7 +161,7 @@ word horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 //
 // transform actor
 //
-void TransformActor (objtype *ob)
+static void TransformActor (objtype *ob)
 {
    fixed gx, gy, gxt, gyt, nx, ny;
 
@@ -228,7 +228,7 @@ void TransformActor (objtype *ob)
 //
 //
 
-Boolean8 TransformTile (int tx, int ty, short *dispx, short *dispheight)
+static bool TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
    fixed gx, gy, gxt, gyt, nx, ny;
 
@@ -285,7 +285,7 @@ Boolean8 TransformTile (int tx, int ty, short *dispx, short *dispheight)
 ====================
 */
 
-int CalcHeight()
+static int CalcHeight()
 {
    fixed z = FixedMul(xintercept - viewx, viewcos)
              - FixedMul(yintercept - viewy, viewsin);
@@ -305,11 +305,11 @@ int CalcHeight()
 ===================
 */
 
-const byte *postsource;
-int postx;
-int postwidth;
+static const byte *postsource;
+static int postx;
+static int postwidth;
 
-void ScalePost()
+static void ScalePost()
 {
    int ywcount, yoffs, yw, yd, yendoffs;
    byte col;
@@ -369,13 +369,6 @@ void ScalePost()
    }
 }
 
-void GlobalScalePost(byte *vidbuf, unsigned pitch)
-{
-   vbuf = vidbuf;
-   vbufPitch = pitch;
-   ScalePost();
-}
-
 /*
 ====================
 =
@@ -398,7 +391,7 @@ enum hitwall_t
    hw_horiz
 };
 
-void HitWall (hitwall_t orient)
+static void HitWall (hitwall_t orient)
 {
    int32_t interceptvar;
    int lastsidevar;
@@ -508,7 +501,7 @@ void HitWall (hitwall_t orient)
  ====================
  */
 
-void HitDoor (hitwall_t orient)
+static void HitDoor (hitwall_t orient)
 {
    int doorpage;
    int doornum;
@@ -577,7 +570,7 @@ void HitDoor (hitwall_t orient)
 
 //==========================================================================
 // IOANCH 20130302: unification
-byte vgaCeiling_wl6[] =
+static const byte vgaCeiling_wl6[] =
 {
    0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0xbf,
    0x4e, 0x4e, 0x4e, 0x1d, 0x8d, 0x4e, 0x1d, 0x2d, 0x1d, 0x8d,
@@ -587,7 +580,7 @@ byte vgaCeiling_wl6[] =
    0x7d, 0x1d, 0x2d, 0x2d, 0xdd, 0xd7, 0x1d, 0x1d, 0x1d, 0x2d,
    0x1d, 0x1d, 0x1d, 0x1d, 0xdd, 0xdd, 0x7d, 0xdd, 0xdd, 0xdd
 };
-byte vgaCeiling_sod[] =
+static const byte vgaCeiling_sod[] =
 {
    0x6f, 0x4f, 0x1d, 0xde, 0xdf, 0x2e, 0x7f, 0x9e, 0xae, 0x7f,
    0x1d, 0xde, 0xdf, 0xde, 0xdf, 0xde, 0xe1, 0xdc, 0x2e, 0x1d, 0xdc
@@ -602,7 +595,7 @@ byte vgaCeiling_sod[] =
 =====================
 */
 
-void VGAClearScreen ()
+static void VGAClearScreen ()
 {
    // IOANCH 20130302: unification
    byte ceiling = IMPALE(vgaCeiling)[gamestate.episode * 10 + mapSegs.map()];
@@ -633,7 +626,7 @@ void VGAClearScreen ()
 =====================
 */
 
-int CalcRotate (objtype *ob)
+static int CalcRotate (const objtype *ob)
 {
    int angle, viewangle;
 
@@ -659,7 +652,7 @@ int CalcRotate (objtype *ob)
    return angle / (ANGLES / 8);
 }
 
-void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
+static void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 {
    const t_compshape *shape;
    unsigned scale, pixheight;
@@ -750,7 +743,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
    }
 }
 
-void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
+static void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
 {
    const t_compshape   *shape;
    unsigned scale, pixheight;
@@ -849,13 +842,13 @@ struct visobj_t
 #endif
 };
 
-visobj_t vislist[MAXVISABLE];
-visobj_t *visptr, *visstep, *farthest;
+static visobj_t vislist[MAXVISABLE];
+static visobj_t *visptr, *visstep, *farthest;
 
-void DrawScaleds ()
+static void DrawScaleds ()
 {
    int      i, least, numvisable, height;
-   byte     *tilespot, *visspot;
+   const byte     *tilespot, *visspot;
    unsigned spotloc;
 
    statobj_t *statptr;
@@ -996,11 +989,11 @@ void DrawScaleds ()
 ////////////////////////////////////////////////////////////////////////////////
 
 
-int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
+static const int weaponscale[NUMWEAPONS] = {SPR_KNIFEREADY, SPR_PISTOLREADY,
                                SPR_MACHINEGUNREADY, SPR_CHAINREADY
                               };
 
-void DrawPlayerWeapon ()
+static void DrawPlayerWeapon ()
 {
    int shapenum;
 
@@ -1064,7 +1057,7 @@ void CalcTics ()
 
 //==========================================================================
 
-void AsmRefresh()
+static void AsmRefresh()
 {
    int32_t xstep, ystep;
    longword xpartial, ypartial;
@@ -1477,7 +1470,7 @@ passhoriz:
 ====================
 */
 
-void WallRefresh ()
+static void WallRefresh ()
 {
    xpartialdown = viewx & (TILEGLOBAL - 1);
    xpartialup = TILEGLOBAL - xpartialdown;
@@ -1490,7 +1483,7 @@ void WallRefresh ()
    ScalePost ();                   // no more optimization on last post
 }
 
-void CalcViewVariables()
+static void CalcViewVariables()
 {
    viewangle = player->angle;
    midangle = viewangle * (FINEANGLES / ANGLES);
