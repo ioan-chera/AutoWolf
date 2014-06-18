@@ -870,7 +870,7 @@ static void DrawScaleds ()
       if (TransformTile (statptr->tilex, statptr->tiley,
                          &visptr->viewx, &visptr->viewheight) && statptr->flags & FL_BONUS)
       {
-         GetBonus (statptr);
+          Agent::GetBonus (statptr);
          if(statptr->shapenum == -1)
             continue;                                           // object has been taken
       }

@@ -727,7 +727,7 @@ void GiveKey (int key)
 // =
 //
 
-void GetBonus (statobj_t *check)
+void Agent::GetBonus (statobj_t *check)
 {
     switch (check->itemnumber)
     {

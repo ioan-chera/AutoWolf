@@ -32,11 +32,15 @@ extern  int           facecount, facetimes;
 extern  int32_t       thrustspeed;
 extern  objtype      *LastAttacker;
 
+namespace Agent
+{
+    void    GetBonus (statobj_t *check);
+}
+
 void    Thrust (int angle, int32_t speed);
 void    SpawnPlayer (int tilex, int tiley, int dir);
 void    TakeDamage (int points,objtype *attacker);
 void    GivePoints (int32_t points);
-void    GetBonus (statobj_t *check);
 void    GiveWeapon (int weapon);
 void    GiveAmmo (int ammo);
 void    GiveKey (int key);
