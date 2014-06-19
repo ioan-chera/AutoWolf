@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		002F3A2E09D0888800EBEB88 /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 002F3A2C09D0888800EBEB88 /* SDLMain.m */; };
 		4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F00B0E81796DA5E0091B7BD /* i_system.cpp */; };
+		4F11868B1952AACD00F5C9D4 /* libopencv_core.2.4.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F1186891952AACD00F5C9D4 /* libopencv_core.2.4.9.dylib */; };
+		4F11868C1952AACD00F5C9D4 /* libopencv_highgui.2.4.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F11868A1952AACD00F5C9D4 /* libopencv_highgui.2.4.9.dylib */; };
+		4F11868F1952ABAB00F5C9D4 /* cvstuff.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F11868D1952ABAB00F5C9D4 /* cvstuff.cpp */; };
 		4F14DD2016E9E18A00606BD4 /* PropertyFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */; };
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
@@ -95,6 +98,10 @@
 		4F00E0F116F06A90006F3D16 /* wl_play.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_play.h; path = ../src/wl_play.h; sourceTree = SOURCE_ROOT; };
 		4F00E0F216F06A90006F3D16 /* wl_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_state.h; path = ../src/wl_state.h; sourceTree = SOURCE_ROOT; };
 		4F00E0F316F06A90006F3D16 /* wl_text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wl_text.h; path = ../src/wl_text.h; sourceTree = SOURCE_ROOT; };
+		4F1186891952AACD00F5C9D4 /* libopencv_core.2.4.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.2.4.9.dylib; path = ../../../../../../opt/local/lib/libopencv_core.2.4.9.dylib; sourceTree = "<group>"; };
+		4F11868A1952AACD00F5C9D4 /* libopencv_highgui.2.4.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_highgui.2.4.9.dylib; path = ../../../../../../opt/local/lib/libopencv_highgui.2.4.9.dylib; sourceTree = "<group>"; };
+		4F11868D1952ABAB00F5C9D4 /* cvstuff.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cvstuff.cpp; path = ../src/cvstuff.cpp; sourceTree = "<group>"; };
+		4F11868E1952ABAB00F5C9D4 /* cvstuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cvstuff.h; path = ../src/cvstuff.h; sourceTree = "<group>"; };
 		4F14DD1E16E9E18A00606BD4 /* PropertyFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertyFile.h; path = ../src/PropertyFile.h; sourceTree = SOURCE_ROOT; };
 		4F14DD1F16E9E18A00606BD4 /* PropertyFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PropertyFile.cpp; path = ../src/PropertyFile.cpp; sourceTree = SOURCE_ROOT; };
 		4F1ECC2016E6579400A37742 /* obattrib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = obattrib.cpp; path = ../src/obattrib.cpp; sourceTree = "<group>"; };
@@ -227,6 +234,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F11868B1952AACD00F5C9D4 /* libopencv_core.2.4.9.dylib in Frameworks */,
+				4F11868C1952AACD00F5C9D4 /* libopencv_highgui.2.4.9.dylib in Frameworks */,
 				4FDBD49618D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				4F86102B17421ED400A1979A /* IOKit.framework in Frameworks */,
@@ -320,6 +329,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4F1186891952AACD00F5C9D4 /* libopencv_core.2.4.9.dylib */,
+				4F11868A1952AACD00F5C9D4 /* libopencv_highgui.2.4.9.dylib */,
 				4FDBD49418D7B41E007799D0 /* libSDL2_mixer-2.0.0.dylib */,
 				4FDBD49518D7B41E007799D0 /* libSDL2-2.0.0.dylib */,
 				4F86130F174246BF00A1979A /* Static Libraries */,
@@ -434,6 +445,8 @@
 				FAC97A481679D14E00949336 /* CheckSum.cpp */,
 				4F267FCB174B87E500C00DBF /* MapExploration.h */,
 				4F267FCC174B87E500C00DBF /* MapExploration.cpp */,
+				4F11868D1952ABAB00F5C9D4 /* cvstuff.cpp */,
+				4F11868E1952ABAB00F5C9D4 /* cvstuff.h */,
 			);
 			name = IOAN;
 			sourceTree = "<group>";
@@ -655,6 +668,7 @@
 				D901F5110FC0DBCB0040C290 /* wl_shade.cpp in Sources */,
 				D901F5120FC0DBCB0040C290 /* wl_play.cpp in Sources */,
 				D901F5130FC0DBCB0040C290 /* wl_parallax.cpp in Sources */,
+				4F11868F1952ABAB00F5C9D4 /* cvstuff.cpp in Sources */,
 				D901F5140FC0DBCB0040C290 /* wl_menu.cpp in Sources */,
 				D901F5150FC0DBCB0040C290 /* wl_main.cpp in Sources */,
 				D901F5160FC0DBCB0040C290 /* id_in.cpp in Sources */,
@@ -733,6 +747,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include/SDL2,
 					/usr/X11/include,
+					/opt/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -823,6 +838,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include/SDL2,
 					/usr/X11/include,
+					/opt/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
@@ -858,6 +874,7 @@
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include/SDL2,
 					/usr/X11/include,
+					/opt/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				LLVM_LTO = NO;

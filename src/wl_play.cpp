@@ -52,6 +52,7 @@
 #include "SODFlag.h"
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
+#include "cvstuff.h"
 // IOANCH 17.05.2012
 
 
@@ -1461,6 +1462,8 @@ void PlayLoop ()
 	// Now is a time to save explored map data
 	if(ingame)
 		bot.SaveData();
+    
+    SaveSessionVideo();
 
     if (playstate != ex_died)
         FinishPaletteShifts ();

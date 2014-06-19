@@ -44,6 +44,7 @@
 #include "wl_atmos.h"
 #include "wl_cloudsky.h"
 #include "wl_shade.h"
+#include "cvstuff.h"
 
 /*
 =============================================================================
@@ -128,6 +129,8 @@ static word    xspot, yspot;
 static int     texdelta;
 
 word horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
+
+static byte*    g_cvmat;
 
 
 /*
@@ -349,6 +352,7 @@ static void ScalePost()
    while(yoffs <= yendoffs)
    {
       vbuf[yendoffs] = col;
+       g_cvmat[yendoffs] = 0;
       ywcount -= TEXTURESIZE / 2;
       if(ywcount <= 0)
       {
@@ -602,6 +606,7 @@ static void VGAClearScreen ()
 
    int y;
    byte *ptr = vbuf;
+    byte* ptr2 = g_cvmat;
 #ifdef USE_SHADING
    for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
       memset(ptr, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
@@ -609,10 +614,16 @@ static void VGAClearScreen ()
       memset(ptr, shadetable[GetShade((y - viewheight / 2) << 3)][FLOOR_COLOUR],
              viewwidth);
 #else
-   for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
+   for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch, ptr2 += vbufPitch)
+   {
       memset(ptr, ceiling, viewwidth);
-   for(; y < viewheight; y++, ptr += vbufPitch)
+       memset(ptr2, 0xff, viewwidth);
+   }
+   for(; y < viewheight; y++, ptr += vbufPitch, ptr2 += vbufPitch)
+   {
       memset(ptr, FLOOR_COLOUR, viewwidth);
+       memset(ptr2, 0xff, viewwidth);
+   }
 #endif
 }
 
@@ -1518,10 +1529,12 @@ void    ThreeDRefresh ()
    spotvis[player->tilex][player->tiley] = 1;
    // Detect all sprites over player fix
 
+    g_cvmat = GetMat();
    vbuf = I_LockBuffer();
    if(vbuf == NULL) return;
 
    vbuf += screenofs;
+    g_cvmat += screenofs;
    vbufPitch = vid_bufferPitch;
 
    CalcViewVariables();
@@ -1575,6 +1588,8 @@ void    ThreeDRefresh ()
 // show screen and time last cycle
 //
 
+    WriteMat();
+    
    if (fizzlein)
    {
       FizzleFade(0, 0, cfg_screenWidth, cfg_screenHeight, 20, false);

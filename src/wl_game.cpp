@@ -52,6 +52,8 @@
 #include "ioan_secret.h"
 #include "List.h"
 #include "Config.h"
+#include "cvstuff.h"
+#include "Exception.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -697,6 +699,8 @@ void SetupGameLevel ()
 
 	// Start a new session
 	StartNewSession();
+    if(!InitSessionVideo())
+        throw Exception("Could not start session video!");
 
     if (!loadedgame)
     {
