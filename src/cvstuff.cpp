@@ -34,11 +34,11 @@ bool InitSessionVideo()
     ConcatSubpath(g_moviepath, name);
     g_moviepath += ".avi";
     
-    g_writer.open(g_moviepath, CV_FOURCC('P', 'I', 'M', '1'), 70, cv::Size(cfg_screenWidth, cfg_screenHeight), false);
+    g_writer.open(g_moviepath, CV_FOURCC('P', 'I', 'M', '1'), 70, cv::Size(cfg_screenWidth, cfg_screenHeight), true);
     if(!g_writer.isOpened())
         return false;
     
-    g_frame = cv::Mat(cfg_screenHeight, cfg_screenWidth, CV_8UC1);
+    g_frame = cv::Mat(cfg_screenHeight, cfg_screenWidth, CV_8UC3);
     
     return true;
 }

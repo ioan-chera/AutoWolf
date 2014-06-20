@@ -352,7 +352,6 @@ static void ScalePost()
    while(yoffs <= yendoffs)
    {
       vbuf[yendoffs] = col;
-       g_cvmat[yendoffs] = 0;
       ywcount -= TEXTURESIZE / 2;
       if(ywcount <= 0)
       {
@@ -606,7 +605,6 @@ static void VGAClearScreen ()
 
    int y;
    byte *ptr = vbuf;
-    byte* ptr2 = g_cvmat;
 #ifdef USE_SHADING
    for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
       memset(ptr, shadetable[GetShade((viewheight / 2 - y) << 3)][ceiling], viewwidth);
@@ -614,15 +612,13 @@ static void VGAClearScreen ()
       memset(ptr, shadetable[GetShade((y - viewheight / 2) << 3)][FLOOR_COLOUR],
              viewwidth);
 #else
-   for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch, ptr2 += vbufPitch)
+   for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
    {
       memset(ptr, ceiling, viewwidth);
-       memset(ptr2, 0xff, viewwidth);
    }
-   for(; y < viewheight; y++, ptr += vbufPitch, ptr2 += vbufPitch)
+   for(; y < viewheight; y++, ptr += vbufPitch)
    {
       memset(ptr, FLOOR_COLOUR, viewwidth);
-       memset(ptr2, 0xff, viewwidth);
    }
 #endif
 }
@@ -1530,11 +1526,12 @@ void    ThreeDRefresh ()
    // Detect all sprites over player fix
 
     g_cvmat = GetMat();
+    const byte* orgbuf;
    vbuf = I_LockBuffer();
+    orgbuf = vbuf;
    if(vbuf == NULL) return;
 
    vbuf += screenofs;
-    g_cvmat += screenofs;
    vbufPitch = vid_bufferPitch;
 
    CalcViewVariables();
@@ -1588,6 +1585,16 @@ void    ThreeDRefresh ()
 // show screen and time last cycle
 //
 
+    int pt = cfg_screenWidth * cfg_screenHeight;
+    SDL_Color clr;
+    // OPTIMIZATION NOTE: embarassing parallel
+    for (int i = 0; i < pt; ++i)
+    {
+        clr = vid_curpal[orgbuf[i]];
+        g_cvmat[3 * i] = clr.b;
+        g_cvmat[3 * i + 1] = clr.g;
+        g_cvmat[3 * i + 2] = clr.r;
+    }
     WriteMat();
     
    if (fizzlein)
