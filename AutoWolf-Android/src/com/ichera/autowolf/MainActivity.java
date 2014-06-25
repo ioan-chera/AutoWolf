@@ -1,10 +1,12 @@
 package com.ichera.autowolf;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.libsdl.app.SDLActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,6 +57,18 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private Button mStartButton;
 	
 	private ArrayList<String> mArgs;
+	
+	private static final String[] WOLF_FILES = new String[]
+			{
+				"gamemaps",
+				"maphead",
+				"vswap",
+				"vgagraph",
+				"audiohed",
+				"audiot",
+				"vgadict",
+				"vgahead"
+			};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -181,10 +195,15 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		}
 		else if(v == mStartButton)
 		{
-			writeArguments();
-			Intent intent = new Intent(getApplicationContext(), SDLActivity.class);
-			intent.putStringArrayListExtra(SDLActivity.EXTRA_ARGS, mArgs);
-			startActivity(intent);
+			if(dirIsValid(mWolfdir))
+			{
+				writeArguments();
+				Intent intent = new Intent(getApplicationContext(), SDLActivity.class);
+				intent.putStringArrayListExtra(SDLActivity.EXTRA_ARGS, mArgs);
+				startActivity(intent);
+			}
+			else
+				invalidFolderError();
 		}
 	}
 	
@@ -195,11 +214,59 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
     	super.onActivityResult(requestCode, resultCode, data);
     	if(requestCode == REQUEST_OPEN_FOLDER && resultCode == RESULT_OK)
     	{
-    		mWolfdir = data.getStringExtra(OpenActivity.EXTRA_CURRENT_PATH);
-    		updateUi();
-    		putData();
+    		String dir = data.getStringExtra(OpenActivity.EXTRA_CURRENT_PATH);
+    		if(dirIsValid(dir))
+    		{
+	    		mWolfdir = data.getStringExtra(OpenActivity.EXTRA_CURRENT_PATH);
+	    		updateUi();
+	    		putData();
+    		}
+    		else
+    		{
+    			invalidFolderError();
+    		}
     	}
     }
+	
+	private void invalidFolderError()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.error)
+		.setMessage(R.string.invalid_folder)
+		.setNeutralButton(R.string.ok, null).show();
+	}
+	
+	private boolean dirIsValid(String dir)
+	{
+		if(dir == null || dir.length() == 0)
+			return false;
+		File f = new File(dir);
+		if(!f.isDirectory())
+			return false;
+		File[] fs = f.listFiles();
+		if(fs == null || fs.length < 8)
+			return false;
+		int eqcount = 0;
+		for(File g : fs)
+		{
+			String t = g.getName();
+			for(String s : WOLF_FILES)
+			{
+				if(t.length() < s.length())
+					continue;
+				if(t.substring(0, s.length()).equalsIgnoreCase(s))
+				{
+					eqcount++;
+					break;
+				}
+			}
+		}
+		
+		if(eqcount >= WOLF_FILES.length)
+			return true;
+		
+		return false;
+	}
 
 	@Override
 	public void afterTextChanged(Editable arg0) 
