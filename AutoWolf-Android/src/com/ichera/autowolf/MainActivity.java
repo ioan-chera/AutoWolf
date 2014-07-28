@@ -1,6 +1,5 @@
 package com.ichera.autowolf;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.libsdl.app.SDLActivity;
@@ -10,7 +9,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,8 +19,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
-import com.ichera.lib.filemanager.OpenActivity;
 
 public class MainActivity extends Activity implements View.OnClickListener,
 TextWatcher, CompoundButton.OnCheckedChangeListener
@@ -58,17 +54,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	
 	private ArrayList<String> mArgs;
 	
-	private static final String[] WOLF_FILES = new String[]
-			{
-				"gamemaps",
-				"maphead",
-				"vswap",
-				"vgagraph",
-				"audiohed",
-				"audiot",
-				"vgadict",
-				"vgahead"
-			};
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -188,14 +174,12 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	{
 		if(v == mChooseButton)
 		{
-			Intent intent = new Intent(getApplicationContext(), OpenActivity.class);
-			if(mWolfdir != null && mWolfdir.length() > 0)
-				intent.putExtra(OpenActivity.EXTRA_CURRENT_PATH, mWolfdir);
+			Intent intent = new Intent(getApplicationContext(), FinderActivity.class);
 			startActivityForResult(intent, REQUEST_OPEN_FOLDER);
 		}
 		else if(v == mStartButton)
 		{
-			if(dirIsValid(mWolfdir))
+			if(Util.dirIsValid(mWolfdir))
 			{
 				writeArguments();
 				Intent intent = new Intent(getApplicationContext(), SDLActivity.class);
@@ -214,10 +198,10 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
     	super.onActivityResult(requestCode, resultCode, data);
     	if(requestCode == REQUEST_OPEN_FOLDER && resultCode == RESULT_OK)
     	{
-    		String dir = data.getStringExtra(OpenActivity.EXTRA_CURRENT_PATH);
-    		if(dirIsValid(dir))
+    		String dir = data.getStringExtra(FinderActivity.PATH);
+    		if(Util.dirIsValid(dir))
     		{
-	    		mWolfdir = data.getStringExtra(OpenActivity.EXTRA_CURRENT_PATH);
+	    		mWolfdir = data.getStringExtra(FinderActivity.PATH);
 	    		updateUi();
 	    		putData();
     		}
@@ -236,37 +220,7 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		.setNeutralButton(R.string.ok, null).show();
 	}
 	
-	private boolean dirIsValid(String dir)
-	{
-		if(dir == null || dir.length() == 0)
-			return false;
-		File f = new File(dir);
-		if(!f.isDirectory())
-			return false;
-		File[] fs = f.listFiles();
-		if(fs == null || fs.length < 8)
-			return false;
-		int eqcount = 0;
-		for(File g : fs)
-		{
-			String t = g.getName();
-			for(String s : WOLF_FILES)
-			{
-				if(t.length() < s.length())
-					continue;
-				if(t.substring(0, s.length()).equalsIgnoreCase(s))
-				{
-					eqcount++;
-					break;
-				}
-			}
-		}
-		
-		if(eqcount >= WOLF_FILES.length)
-			return true;
-		
-		return false;
-	}
+	
 
 	@Override
 	public void afterTextChanged(Editable arg0) 
@@ -395,21 +349,21 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	}
 	
 	/* Checks if external storage is available for read and write */
-	private static boolean isExternalStorageWritable() {
-	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state)) {
-	        return true;
-	    }
-	    return false;
-	}
-
-	/* Checks if external storage is available to at least read */
-	private static boolean isExternalStorageReadable() {
-	    String state = Environment.getExternalStorageState();
-	    if (Environment.MEDIA_MOUNTED.equals(state) ||
-	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-	        return true;
-	    }
-	    return false;
-	}
+//	private static boolean isExternalStorageWritable() {
+//	    String state = Environment.getExternalStorageState();
+//	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+//	        return true;
+//	    }
+//	    return false;
+//	}
+//
+//	/* Checks if external storage is available to at least read */
+//	private static boolean isExternalStorageReadable() {
+//	    String state = Environment.getExternalStorageState();
+//	    if (Environment.MEDIA_MOUNTED.equals(state) ||
+//	        Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+//	        return true;
+//	    }
+//	    return false;
+//	}
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background" >
+    <RelativeLayout
+        android:id="@+id/waiting_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <ProgressBar android:id="@+id/progress_disc"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:indeterminate="true"/>
+	    <TextView android:layout_width="match_parent"
+	        android:layout_marginLeft="40dp"
+	        android:layout_marginRight="40dp"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/progress_disc"
+	        android:layout_marginTop="16dp"
+	        android:gravity="center_horizontal"
+	        android:textSize="20sp"
+	        android:text="@string/please_wait_finder"/>
+    </RelativeLayout>
+    <LinearLayout 
+        android:id="@+id/results_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:padding="20dp">
+        <TextView android:id="@+id/results_panel_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/found_results"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+        <TextView android:id="@+id/results_panel_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_one"
+            android:layout_marginTop="10dp"/>
+        <ListView android:id="@+id/results_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:cacheColorHint="@android:color/transparent"/>
+        <Button android:id="@+id/search_again"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="right"
+            android:text="@string/search_again"
+            android:drawableLeft="@drawable/ic_action_refresh"/>
+    </LinearLayout>
+
+</RelativeLayout>
