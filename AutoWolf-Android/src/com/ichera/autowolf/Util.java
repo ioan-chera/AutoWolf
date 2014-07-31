@@ -1,20 +1,26 @@
 package com.ichera.autowolf;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Util 
 {
-	private static final String[] WOLF_FILES = new String[]
-			{
-				"gamemaps",
-				"maphead",
-				"vswap",
-				"vgagraph",
-				"audiohed",
-				"audiot",
-				"vgadict",
-				"vgahead"
-			};
+	public static final Set<String> WOLF_FILES;
+	
+	static
+	{
+		WOLF_FILES = new TreeSet<String>();
+		WOLF_FILES.add("gamemaps");
+		WOLF_FILES.add("maphead");
+		WOLF_FILES.add("vswap");
+		WOLF_FILES.add("vgagraph");
+		WOLF_FILES.add("audiohed");
+		WOLF_FILES.add("audiot");
+		WOLF_FILES.add("vgadict");
+		WOLF_FILES.add("vgahead");
+	}
 	
 	public static boolean dirIsValid(String dir)
 	{
@@ -30,6 +36,18 @@ public class Util
 		return fileListContainsWolf(f.listFiles());
 	}
 	
+	public static boolean fileIsOfWolf(String t)
+	{
+		if(t.length() > 4 && 
+				WOLF_FILES.contains(
+						t.substring(0, t.length() - 4)
+						.toLowerCase(Locale.US)))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean fileListContainsWolf(File[] fs)
 	{
 		if(fs == null || fs.length < 8)
@@ -38,19 +56,11 @@ public class Util
 		for(File g : fs)
 		{
 			String t = g.getName();
-			for(String s : WOLF_FILES)
-			{
-				if(t.length() < s.length())
-					continue;
-				if(t.substring(0, s.length()).equalsIgnoreCase(s))
-				{
-					eqcount++;
-					break;
-				}
-			}
+			if(fileIsOfWolf(t))
+				++eqcount;
 		}
 		
-		if(eqcount >= WOLF_FILES.length)
+		if(eqcount >= WOLF_FILES.size())
 			return true;
 		
 		return false;

@@ -35,11 +35,13 @@ public class FinderActivity extends Activity
 	private static final String PREF_PATHS = "Paths";
 	
 	private View mWaitingPanel, mResultsPanel;
-	private TextView mResultsTitle, mResultsSubtitle;
+	private TextView mResultsTitle, mResultsSubtitle, mProgressText;
 	
 	private ListView mResultsList;
 	
 	private String[] mPaths;
+	
+	private AsyncTask<Void, String, ArrayList<File>> mAsyncTask;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -52,6 +54,7 @@ public class FinderActivity extends Activity
 		
 		mResultsTitle = (TextView)findViewById(R.id.results_panel_title);
 		mResultsSubtitle = (TextView)findViewById(R.id.results_panel_subtitle);
+		mProgressText = (TextView)findViewById(R.id.progress_text);
 		
 		mResultsList = (ListView)findViewById(R.id.results_list);
 		mResultsList.setOnItemClickListener(new AbsListView.OnItemClickListener() 
@@ -94,7 +97,7 @@ public class FinderActivity extends Activity
 			ArrayList<File> fs = new ArrayList<File>(paths.length);
 			for(String p : paths)
 			{
-				if(p != null && p.length() > 0)
+				if(p != null && p.trim().length() > 0)
 				{
 					fs.add(new File(p));
 				}
@@ -155,8 +158,10 @@ public class FinderActivity extends Activity
 	{
 		showWaitingPanel();
 		
-		new AsyncTask<Void, Void, ArrayList<File>>() 
+		(mAsyncTask = new AsyncTask<Void, String, ArrayList<File>>() 
 		{	
+			private int iteration = 0;
+			
 			@Override
 			protected ArrayList<File> doInBackground(Void... params) 
 			{
@@ -169,10 +174,47 @@ public class FinderActivity extends Activity
 				return ret;
 			}
 			
+			private void workSearch(File dir, ArrayList<File> validDirs)
+			{
+				File[] fs = dir.listFiles();
+				if(fs == null)
+					return;
+				
+				if(iteration++ % 64 == 0)
+					publishProgress(dir.getPath());
+				
+				int eqcount = 0;
+				for(File g : fs)
+				{
+					if(isCancelled())
+						return;
+					if(fs.length >= 8 && Util.fileIsOfWolf(g.getName()))
+						++eqcount;
+					if(g.isDirectory())
+						workSearch(g, validDirs);
+				}
+				if(eqcount >= 8)
+					validDirs.add(dir);
+			}
+			
+			@Override
+			protected void onCancelled()
+			{
+				mProgressText.setVisibility(View.GONE);
+			}
+			
+			@Override
+			protected void onProgressUpdate(String... paths)
+			{
+				mProgressText.setVisibility(View.VISIBLE);
+				mProgressText.setText(paths[0] != null ? paths[0] : "");
+			}
+			
 			@Override
 			protected void onPostExecute(ArrayList<File> result)
 			{
-				
+				mProgressText.setVisibility(View.GONE);
+				mAsyncTask = null;
 				SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 				SharedPreferences.Editor editor = settings.edit();
 				
@@ -197,23 +239,18 @@ public class FinderActivity extends Activity
 				
 				showResultsPanel(result);
 			}
-		}.execute();
+		}).execute();
 	}
 	
-	private void workSearch(File dir, ArrayList<File> validDirs)
+	@Override
+	protected void onDestroy()
 	{
-		File[] fs = dir.listFiles();
-		if(fs == null)
-			return;
-		if(Util.fileListContainsWolf(fs))
-			validDirs.add(dir);
-		
-		for(File g : fs)
-		{
-			if(g.isDirectory())
-				workSearch(g, validDirs);
-		}
+		super.onDestroy();
+		if(mAsyncTask != null && !mAsyncTask.isCancelled())
+			mAsyncTask.cancel(true);
 	}
+	
+	
 	
 	private class PathsAdapter extends BaseAdapter
 	{
