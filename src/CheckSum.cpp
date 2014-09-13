@@ -140,7 +140,7 @@ void CheckSum::CalculateMD5Checksum(const void *message,
 			memcpy(&w[wordpos], input.ControlledMessage() + chunkpos +
                    wordpos * 2, sizeof(uint32_t));
 		}
-		uint32_t a = h0, b = h1, c = h2, d = h3, f, g, temp;
+		uint32_t a = h0, b = h1, c = h2, d = h3, f = 0, g = 0, temp;
 		for(uint32_t i = 0; i < 64; ++i)
 		{
 			if(i <= 15)

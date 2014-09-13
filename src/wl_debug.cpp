@@ -215,7 +215,7 @@ void BasicOverhead ()
     // left side (filtered)
 
     uintptr_t tile;
-    int color;
+    int color = 0;
     offx -= 128;
 
     for(x=0;x<MAPSIZE;x++)

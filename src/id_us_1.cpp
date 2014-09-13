@@ -483,11 +483,11 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 {
 	Boolean8		redraw,
 				cursorvis,cursormoved,
-				done,result, checkkey;
+				done,result = false, checkkey;
 	ScanCode	sc;
 	char		c;
 	char		s[MaxString],olds[MaxString];
-	int         cursor,len;
+	int         cursor,len = 0;
 	word		i,
 				w,h,
 				temp;

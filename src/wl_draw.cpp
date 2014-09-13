@@ -503,7 +503,7 @@ static void HitWall (hitwall_t orient)
 
 static void HitDoor (hitwall_t orient)
 {
-   int doorpage;
+   int doorpage = 0;
    int doornum;
    int texture;
 
@@ -1059,8 +1059,8 @@ void CalcTics ()
 
 static void AsmRefresh()
 {
-   int32_t xstep, ystep;
-   longword xpartial, ypartial;
+   int32_t xstep = 0, ystep = 0;
+   longword xpartial = 0, ypartial = 0;
    Boolean8 playerInPushwallBackTile = tilemap[focaltx][focalty] == 64;
 
    for(pixx = 0; pixx < viewwidth; pixx++)

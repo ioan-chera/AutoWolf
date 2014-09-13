@@ -21,7 +21,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#import <Cocoa/Cocoa.h>
 #include "CocoaFun.h"
 
 #define APPLICATION_UTI @"com.ichera.autowolf"
@@ -64,7 +63,12 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 {
 	@autoreleasepool
 	{
-		[[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+#if TARGET_OS_IPHONE
+        UIAlertView* av = [[UIAlertView alloc] initWithTitle:[NSString stringWithCString:title encoding:NSUTF8StringEncoding] message:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [av show];
+#elif TARGET_OS_MAC
+        [[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+#endif
 	}
 }
 
@@ -76,7 +80,7 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 //
 void Cocoa_Notify(const char *title, const char *msg)
 {
-#ifndef OSX_106
+#if !TARGET_OS_IPHONE
 	@autoreleasepool
 	{
 		BOOL notificationCenterIsAvailable =

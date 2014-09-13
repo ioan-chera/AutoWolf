@@ -257,7 +257,6 @@ extern AudioLoader audioSegs;
 
 //===========================================================================
 
-class PString;
 extern  std::string  cfg_extension;
 extern  std::string  cfg_graphext;
 extern  std::string  cfg_audioext;

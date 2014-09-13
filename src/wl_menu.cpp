@@ -960,7 +960,7 @@ static void DrawNewGameDiff(int w);
 
 static int CP_NewGame (int)
 {
-    int which, episode;
+    int which = 0, episode = 0;
 
     if(SPEAR::flag)
         UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
@@ -2133,7 +2133,7 @@ int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD };
 static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j, exit, tick, redraw, which, x, picked, lastFlashTime;
+    int j, exit, tick, redraw, which, x = 0, picked, lastFlashTime;
     CursorInfo ci;
 
 

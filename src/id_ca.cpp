@@ -230,7 +230,7 @@ void MapLoader::cacheMap (int mapnum, short episode)
    int32_t   pos,compressed;
    int       plane;
    word     *dest;
-   memptr    bigbufferseg;
+   memptr    bigbufferseg = nullptr;
    unsigned  size;
    word     *source;
    // IOANCH 20130301: unification culling
@@ -740,7 +740,7 @@ void AudioLoader::cacheAdlibChunk (int chunk)
 //
 void AudioLoader::loadAllSounds (SDMode newMode)
 {
-   unsigned start,i;
+   unsigned start = 0,i;
    unsigned char cachein = 0;
    // IOANCH 20130303: don't use label use variable
    

@@ -1787,7 +1787,7 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 //
 // Main program start
 //
-#if defined(__APPLE__) || defined(__ANDROID__)	// OS X (but not iOS) still uses that NSApplicationMain thing. Android has to put up with JNI.
+#if (defined(__APPLE__) && !TARGET_OS_IPHONE) || defined(__ANDROID__)	// OS X (but not iOS) still uses that NSApplicationMain thing. Android has to put up with JNI.
 #define main SDL_main
 #endif
 int main(int argc, TChar *argv[])

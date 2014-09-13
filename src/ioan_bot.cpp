@@ -578,7 +578,7 @@ Boolean8 BotMan::FindShortestPath(Boolean8 ignoreproj, Boolean8 mindnazis,
 		path.addStartNode(player->tilex, player->tiley);    // Normal
 
 	int imin, ifound;
-	int tx, ty, cx, cy;
+	int tx, ty, cx = 0, cy = 0;
 	objtype *check, *check2;
 	int tentative_g_add;
 	
@@ -839,7 +839,7 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 	int tx = player->tilex, ty = player->tiley;
 	int i, j, k, distmin;
 	objtype *ret, *retmin = NULL;
-	short angmin;
+	short angmin = 0;
 	static objtype *oldret;
 	double dby, dbx;
 
@@ -1049,8 +1049,8 @@ void BotMan::DoRetreat(Boolean8 forth, objtype *cause) const
 {
 	int neg = forth? -1 : 1;
 	controly = neg * RUNMOVE * tics;
-	int j, backx, backy, sidex, sidey,
-        tx = player->tilex, ty = player->tiley, dir;
+	int j, backx = 0, backy = 0, sidex = 0, sidey = 0,
+        tx = player->tilex, ty = player->tiley, dir = 0;
     
     const int backx_[] = {-neg, 0,    0,   neg, neg,  0,    0,    -neg};
     const int backy_[] = {0,    neg,  neg, 0,   0,    -neg, -neg, 0};
@@ -1256,7 +1256,7 @@ objtype *BotMan::IsEnemyNearby(int tx, int ty) const
 
 void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, bool tryuse) const
 {
-    int movedir;
+    int movedir = 0;
     // set up the target angle
 	// int tangle = Basic::DirAngle(mx,my,nx,ny);
     if(nx == mx && ny == my)
@@ -1348,7 +1348,7 @@ void BotMan::ExecuteStrafe(int mx, int my, int nx, int ny, bool tryuse) const
 	{
 		buttonstate[bt_strafe] = true;
 		// straight line: can strafe now
-		fixed centx, centy, cento, plro;
+		fixed centx, centy, cento = 0, plro = 0;
 		centx = (player->tilex << TILESHIFT);
 		centy = (player->tiley << TILESHIFT);
 		
@@ -1606,7 +1606,7 @@ void BotMan::DoCombatAI(int eangle, int edist)
 	
 	objtype *check = EnemyOnTarget();
 	objtype *check2 = DamageThreat(check);
-	short int pangle, epangle; 
+	short int pangle = 0, epangle;
 	int proj = 0;
 	
 	if(!check2)
@@ -1740,7 +1740,7 @@ void BotMan::DoNonCombatAI()
 	byte tile;
 	int nexton = path.getNextIndex(nowon);
 	int nexton2 = path.getNextIndex(nexton);
-	int nx2, ny2;
+	int nx2 = 0, ny2 = 0;
 	if(nexton2 >= 0)
 		path.getCoords(nexton2, &nx2, &ny2);
 	

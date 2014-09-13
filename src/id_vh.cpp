@@ -337,7 +337,7 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
                     unsigned height, unsigned frames, Boolean8 abortable)
 {
     unsigned x, y, frame, pixperframe;
-    int32_t  rndval, lastrndval;
+    int32_t  rndval = 0, lastrndval;
     int      first = 1;
 
     lastrndval = 0;

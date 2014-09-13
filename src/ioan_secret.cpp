@@ -224,7 +224,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 		visited.fill(0);
 		visited[playerpos] = 2;
 
-		unsigned needed, neededindex;
+		unsigned needed, neededindex = 0;
 		unsigned secretindex = 0;
 		unsigned pos;
 		unsigned exitcount = 0;
