@@ -1157,7 +1157,7 @@ void main_InitDigiMap ()
 	map = IMPALE(wolfdigimap);
 	unsigned int lastvalue = IMPALE((unsigned int)LASTSOUND);
 
-    for (; *map != lastvalue; map += 3)
+    for (; *map != (int)lastvalue; map += 3)
     {
         sd_digiMap[map[0]] = map[1];
         sd_digiChannel[map[1]] = map[2];

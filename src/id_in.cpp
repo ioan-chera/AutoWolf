@@ -180,12 +180,12 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		  
          if(mod & (KMOD_SHIFT | KMOD_CAPS))
          {
-            if(sym < lengthof(m_ShiftNames) && m_ShiftNames[sym])
+            if(sym < (int)lengthof(m_ShiftNames) && m_ShiftNames[sym])
                m_lastASCII = m_ShiftNames[sym];
          }
          else
          {
-            if(sym < lengthof(m_ASCIINames) && m_ASCIINames[sym])
+            if(sym < (int)lengthof(m_ASCIINames) && m_ASCIINames[sym])
                m_lastASCII = m_ASCIINames[sym];
          }
 		m_keyboard.insert(m_lastScan);

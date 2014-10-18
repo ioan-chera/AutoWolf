@@ -301,7 +301,7 @@ void US_Printf(const char *formatStr, ...)
     va_start(vlist, formatStr);
     int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
-    if(len <= -1 || len >= sizeof(strbuf))
+    if(len <= -1 || (size_t)len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
     US_Print(strbuf);
 }
@@ -320,7 +320,7 @@ void US_CPrintf(const char *formatStr, ...)
     va_start(vlist, formatStr);
     int len = vsnprintf(strbuf, sizeof(strbuf), formatStr, vlist);
     va_end(vlist);
-    if(len <= -1 || len >= sizeof(strbuf))
+    if(len <= -1 || (size_t)len >= sizeof(strbuf))
         strbuf[sizeof(strbuf) - 1] = 0;
     US_CPrint(strbuf);
 }

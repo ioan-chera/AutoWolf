@@ -115,22 +115,23 @@ unsigned int PString::HashCodeStatic(const char *str, size_t inLength)
 //
 // Constructor with given cstr and inLength
 //
-PString::PString(const char *cstr, size_t inLength) : _index(0),
-_size(PSTRING_LOCAL_LENGTH)
+PString::PString(const char *cstr, size_t inLength) : 
+_size(PSTRING_LOCAL_LENGTH),
+_index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));
     copy(cstr, inLength);
 }
 
-PString::PString(const char *cstr) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+PString::PString(const char *cstr) : _size(PSTRING_LOCAL_LENGTH), _index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));
     copy(cstr);
 }
 
-PString::PString(const PString &other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+PString::PString(const PString &other) : _size(PSTRING_LOCAL_LENGTH), _index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));
@@ -139,7 +140,7 @@ PString::PString(const PString &other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 
 // IOANCH 20130522: move constructor
 #if __cplusplus > 199711L
-PString::PString(PString &&other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+PString::PString(PString &&other) : _size(PSTRING_LOCAL_LENGTH), _index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));
@@ -148,7 +149,7 @@ PString::PString(PString &&other) : _index(0), _size(PSTRING_LOCAL_LENGTH)
 }
 #endif
 
-PString::PString(size_t startSize) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+PString::PString(size_t startSize) : _size(PSTRING_LOCAL_LENGTH), _index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));
@@ -156,7 +157,7 @@ PString::PString(size_t startSize) : _index(0), _size(PSTRING_LOCAL_LENGTH)
         initCreateSize(startSize);
 }
 
-PString::PString(int number) : _index(0), _size(PSTRING_LOCAL_LENGTH)
+PString::PString(int number) : _size(PSTRING_LOCAL_LENGTH), _index(0)
 {
     _buffer = _local;
     memset(_local, 0, sizeof(_local));

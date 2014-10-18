@@ -425,7 +425,7 @@ static void HitWall (hitwall_t orient)
       doorwallplus = 3;
 
       break;
-   case hw_horiz:
+   default:
 
       interceptvar = xintercept;
       texture = ((xintercept + texdelta) >> TEXTUREFROMFIXEDSHIFT)&TEXTUREMASK;

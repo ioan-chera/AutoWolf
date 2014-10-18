@@ -132,13 +132,16 @@ class BotMan
 	byte pressuse;	// periodic switch for triggering button-down-only commands
 	short retreatwaitdelay, retreatwaitcount, retreat;	// retreat controllers
 	int exitx, exity;
-	objtype *threater;
+	
 	List <objtype *> enemyrecord[MAPSIZE][MAPSIZE];	// map of known enemies
 	
 	bool m_chokemap[MAPSIZE][MAPSIZE];	// map of choke points
 
    MapExploration mapExploration;	// map of explored areas
     int knownExitX, knownExitY;
+    
+    objtype *threater;
+    
    RandomGenerator botRnd;
     
 
@@ -198,6 +201,7 @@ public:
     // Constructor
     //
     BotMan() :
+    moodBox(),
     searchstage(SSGeneral),
     panic(false),
     pressuse(0),
@@ -206,11 +210,10 @@ public:
     retreat(0),
     exitx(0),
     exity(0),
+    mapExploration(),
     knownExitX(0),
     knownExitY(0),
     threater(NULL),
-    moodBox(),
-    mapExploration(),
 	haspushes(false)
     {
 

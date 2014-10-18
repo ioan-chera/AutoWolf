@@ -957,7 +957,7 @@ Boolean8 Sound::Play(soundnames sound_abstract)
     ispos = sd_nextSoundPos;
     sd_nextSoundPos = false;
 
-    if (sound == -1 || (sd_digiMode == sds_Off && sd_soundMode == sdm_Off))
+    if (sd_digiMode == sds_Off && sd_soundMode == sdm_Off)
         return 0;
 
     s = (SoundCommon *) SoundTable[sound];

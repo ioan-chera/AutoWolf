@@ -404,7 +404,7 @@ void Write (int x, int y, const char *string)
                     break;
 
                 default:
-                    VWB_DrawPic (nx, ny, alpha[ch]);
+                    VWB_DrawPic (nx, ny, alpha[(int)ch]);
             }
             nx += 16;
         }

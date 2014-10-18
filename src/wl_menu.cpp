@@ -850,7 +850,7 @@ static int CP_CheckQuick (ScanCode scancode)
             if (Confirm (ENDGAMESTR))
 #else
             // IOANCH 20130202: unification process
-            if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
+            if (Confirm (endStrings[wolfRnd () & (0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0))]))
 #endif
             {
 				DestroySavedInstance();
@@ -2133,7 +2133,7 @@ int moveorder[4] = { LEFT, RIGHT, FWRD, BKWD };
 static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*PrintRtn) (int),
                int type)
 {
-    int j, exit, tick, redraw, which, x = 0, picked, lastFlashTime;
+    int j, exit, tick, redraw, which = 0, x = 0, picked, lastFlashTime;
     CursorInfo ci;
 
 
@@ -2874,7 +2874,7 @@ static int CP_Quit (int)
     if (Confirm (ENDGAMESTR))
 #else
     // IOANCH 20130202: unification process
-    if (Confirm (endStrings[wolfRnd () & 0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0)]))
+    if (Confirm (endStrings[wolfRnd () & (0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0))]))
 #endif
 
     {
@@ -3111,7 +3111,7 @@ static int HandleMenu (CP_iteminfo * item_i, const CP_itemtype * items, void (*r
         {
             lastBlinkTime = GetTimeCount ();
             // IOANCH 20130302: unification
-            if (shape == SPEAR::g(C_CURSOR1PIC))
+            if (shape == (int)SPEAR::g(C_CURSOR1PIC))
             {
                 shape = SPEAR::g(C_CURSOR2PIC);
                 timer = 8;
@@ -3685,7 +3685,7 @@ Message (const char *string)
             h += font->height;
         }
         else
-            w += font->width[string[i]];
+            w += font->width[(int)string[i]];
     }
 
     if (w + 10 > mw)

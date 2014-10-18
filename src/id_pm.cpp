@@ -114,6 +114,8 @@ bool VSwapContainer::loadFile(const char *filename
    
    fileSize = vswap.Tell();
    unpaddedDataSize = fileSize - pageOffsets[0];
+   // FIXME: the thing below would never happen!
+#if 0
    if(unpaddedDataSize > (size_t) -1)
    {
 //      if(errmsg)
@@ -126,6 +128,7 @@ bool VSwapContainer::loadFile(const char *filename
       throw Exception(PString("The page file \"").concat(filename).concat("\" is too large!")());
       return false;
    }
+#endif
    
    pageOffsets[n.m_numChunks] = (uint32_t)fileSize;
    
@@ -175,7 +178,7 @@ bool VSwapContainer::loadFile(const char *filename
    ptr = (uint8_t *) n.m_pageData;
    for(u = 0; u < (unsigned)n.m_numChunks; u++)
    {
-      if((u >= (unsigned)n.m_spriteStart && u < (unsigned)n.m_soundStart) || u == n.m_numChunks - 1)
+      if((u >= (unsigned)n.m_spriteStart && u < (unsigned)n.m_soundStart) || u == (unsigned)n.m_numChunks - 1)
       {
          size_t offs = ptr - (uint8_t *) n.m_pageData;
          
@@ -183,7 +186,7 @@ bool VSwapContainer::loadFile(const char *filename
          if(offs & 1)
          {
             *ptr++ = 0;
-            if(u == n.m_numChunks - 1)
+            if(u == (unsigned)n.m_numChunks - 1)
                n.m_soundInfoPagePadded = true;
          }
       }

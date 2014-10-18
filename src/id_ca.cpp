@@ -880,7 +880,7 @@ bool CA_WriteFile(const std::string &filename, void *ptr, int32_t length)
     if(!f)
         return false;
 
-    if(fwrite(ptr, 1, length, f) < length)
+    if(fwrite(ptr, 1, length, f) < (size_t)length)
     {
         fclose(f);
         return false;
@@ -908,7 +908,7 @@ bool CA_LoadFile(const char *filename, memptr *ptr)
    size = (int32_t)file.Tell();
    file.seek(0, SEEK_SET);
    *ptr = I_CheckedMalloc(size);
-   if(file.read(*ptr, size) < size)
+   if(file.read(*ptr, size) < (size_t)size)
     {
        file.Close();
         return false;
