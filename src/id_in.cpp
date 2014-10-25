@@ -51,6 +51,18 @@
 #include "wl_main.h"
 #include "wl_play.h"
 
+#ifdef USE_SDL1_2
+#define KP2 SDLK_KP2
+#define KP4 SDLK_KP4
+#define KP6 SDLK_KP6
+#define KP8 SDLK_KP8
+#else
+#define KP2 SDLK_KP_2
+#define KP4 SDLK_KP_4
+#define KP6 SDLK_KP_6
+#define KP8 SDLK_KP_8
+#endif
+
 InputManager myInput;
 
 // IOANCH: added C++ class
@@ -131,17 +143,24 @@ void InputManager::p_processEvent(const SDL_Event *event)
          // check for keypresses
       case SDL_KEYDOWN:
       {
-         if(event->key.keysym.sym == SDLK_SCROLLLOCK ||
+         if(event->key.keysym.sym == SCROLLLOCK ||
             event->key.keysym.sym == SDLK_F12)
          {
             m_grabInput = !m_grabInput;
+#ifdef USE_SDL1_2
+             SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
 			 SDL_SetRelativeMouseMode(m_grabInput ? SDL_TRUE : SDL_FALSE);
-//            SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#endif
             return;
          }
          
          m_lastScan = (ScanCode)event->key.keysym.sym;
+#ifdef USE_SDL1_2
+          SDLMod mod = SDL_GetModState();
+#else
          SDL_Keymod mod = SDL_GetModState();
+#endif
          if(m_keyboard.count(sc_Alt))
          {
             if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
@@ -157,18 +176,20 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RSHIFT)) m_lastScan = (ScanCode)SDLK_LSHIFT;
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RALT)) m_lastScan = (ScanCode)SDLK_LALT;
          else if(m_lastScan == static_cast<ScanCode>(SDLK_RCTRL)) m_lastScan = (ScanCode)SDLK_LCTRL;
-         else if(m_lastScan == static_cast<ScanCode>(SDLK_RGUI)) m_lastScan = (ScanCode)SDLK_LGUI;
+         else if(m_lastScan == static_cast<ScanCode>(RGUI)) m_lastScan = (ScanCode)LGUI;
+#ifndef USE_SDL1_2
 		 else if(m_lastScan == static_cast<ScanCode>(SDLK_AC_BACK)) m_lastScan = (ScanCode)SDLK_ESCAPE;
+#endif
          else
          {
             if((mod & KMOD_NUM) == 0)
             {
                switch((int)m_lastScan)
                {
-                  case SDLK_KP_2: m_lastScan = (ScanCode)SDLK_DOWN; break;
-                  case SDLK_KP_4: m_lastScan = (ScanCode)SDLK_LEFT; break;
-                  case SDLK_KP_6: m_lastScan = (ScanCode)SDLK_RIGHT; break;
-                  case SDLK_KP_8: m_lastScan = (ScanCode)SDLK_UP; break;
+                  case KP2: m_lastScan = (ScanCode)SDLK_DOWN; break;
+                  case KP4: m_lastScan = (ScanCode)SDLK_LEFT; break;
+                  case KP6: m_lastScan = (ScanCode)SDLK_RIGHT; break;
+                  case KP8: m_lastScan = (ScanCode)SDLK_UP; break;
                }
             }
          }
@@ -201,18 +222,20 @@ void InputManager::p_processEvent(const SDL_Event *event)
          else if(key == SDLK_RSHIFT) key = SDLK_LSHIFT;
          else if(key == SDLK_RALT) key = SDLK_LALT;
          else if(key == SDLK_RCTRL) key = SDLK_LCTRL;
-         else if(key == SDLK_RGUI) key = SDLK_LGUI;
+         else if(key == RGUI) key = LGUI;
+#ifndef USE_SDL1_2
 		 else if(key == SDLK_AC_BACK) key = SDLK_ESCAPE;
+#endif
          else
          {
             if((SDL_GetModState() & KMOD_NUM) == 0)
             {
                switch(key)
                {
-                  case SDLK_KP_2: key = SDLK_DOWN; break;
-                  case SDLK_KP_4: key = SDLK_LEFT; break;
-                  case SDLK_KP_6: key = SDLK_RIGHT; break;
-                  case SDLK_KP_8: key = SDLK_UP; break;
+                  case KP2: key = SDLK_DOWN; break;
+                  case KP4: key = SDLK_LEFT; break;
+                  case KP6: key = SDLK_RIGHT; break;
+                  case KP8: key = SDLK_UP; break;
                }
             }
          }
@@ -224,6 +247,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   //
 		   // For Android and possibly iOS
 		   //
+#ifndef USE_SDL1_2
 	   case SDL_APP_WILLENTERBACKGROUND:
 		   Sound::Stop();
 		   Sound::MusicOff();
@@ -271,23 +295,25 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   if(event->text.text[0] && !event->text.text[1])
 			   m_lastASCII = event->text.text[0];
 		   break;
-//      case SDL_ACTIVEEVENT:
-//      {
-//         if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)
-//         {
-//            if(event->active.gain)
-//            {
-//               if(m_needRestore)
-//               {
-//                  I_FreeLatchMem();
-//                  I_LoadLatchMem();
-//               }
-//               
-//               m_needRestore = false;
-//            }
-//            else m_needRestore = true;
-//         }
-//      }
+#else
+      case SDL_ACTIVEEVENT:
+      {
+         if(cfg_fullscreen && (event->active.state & SDL_APPACTIVE) != 0)
+         {
+            if(event->active.gain)
+            {
+               if(m_needRestore)
+               {
+                  I_FreeLatchMem();
+                  I_LoadLatchMem();
+               }
+               
+               m_needRestore = false;
+            }
+            else m_needRestore = true;
+         }
+      }
+#endif
          
 #if defined(GP2X)
       case SDL_JOYBUTTONDOWN:
@@ -344,9 +370,11 @@ void InputManager::initialize()
    if(cfg_fullscreen || cfg_forcegrabmouse)
    {
       m_grabInput = true;
+#ifdef USE_SDL1_2
+       SDL_WM_GrabInput(SDL_GRAB_ON);
+#else
 	   SDL_SetRelativeMouseMode(SDL_TRUE);
-
-	   //      SDL_WM_GrabInput(SDL_GRAB_ON);
+#endif
    }
    
    // I didn't find a way to ask libSDL whether a mouse is present, yet...

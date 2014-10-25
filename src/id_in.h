@@ -31,6 +31,20 @@
 #include "Config.h"
 #include "i_video.h"
 
+#ifdef USE_SDL1_2
+#define KP_5 SDLK_KP5
+#define LGUI SDLK_LMETA
+#define PRINTSCREEN SDLK_PRINT
+#define RGUI SDLK_RMETA
+#define SCROLLLOCK SDLK_SCROLLOCK
+#else
+#define KP_5 SDLK_KP_5
+#define LGUI SDLK_LGUI
+#define PRINTSCREEN SDLK_PRINTSCREEN
+#define RGUI SDLK_RMETA
+#define SCROLLLOCK SDLK_SCROLLLOCK
+#endif
+
 #ifdef	__DEBUG__
 #define	__DEBUG_InputMgr__
 #endif
@@ -102,8 +116,8 @@ enum ScanCode
    sc_F11 =          SDLK_F11,
    sc_F12 =          SDLK_F12,
    
-   sc_ScrollLock =   SDLK_SCROLLLOCK,
-   sc_PrintScreen =  SDLK_PRINTSCREEN,
+   sc_ScrollLock =        SCROLLLOCK,
+   sc_PrintScreen =       PRINTSCREEN,
    
    sc_1 =            SDLK_1,
    sc_2 =            SDLK_2,
@@ -144,9 +158,9 @@ enum ScanCode
    sc_Z =            SDLK_z,
    
    // IOANCH 20130802: added meta
-   sc_LMeta =        SDLK_LGUI,
-   sc_RMeta =        SDLK_RGUI,
-   sc_KP5 =          SDLK_KP_5,
+   sc_LMeta =             LGUI,
+   sc_RMeta =             RGUI,
+   sc_KP5 =               KP_5,
 };
 const char key_None = 0;
 
@@ -205,9 +219,13 @@ public:
    
    void centreMouse() const
    {
+#ifdef USE_SDL1_2
+     SDL_WarpMouse(cfg_screenWidth / 2, cfg_screenHeight / 2);
+#else
 	   int w, h;
 	   SDL_GetWindowSize(vid_window, &w, &h);
 	   SDL_WarpMouseInWindow(vid_window, w / 2, h / 2);
+#endif
    }
    
    bool inputGrabbed() const

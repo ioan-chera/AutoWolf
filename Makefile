@@ -1,7 +1,7 @@
 CONFIG ?= config.default
 -include $(CONFIG)
-CC = gcc
-CXX = g++ -std=c++11
+CC ?= cc
+CXX ?= c++
 
 BINARY    ?= autowolf
 PREFIX    ?= /usr/local
@@ -12,11 +12,28 @@ INSTALL_PROGRAM ?= $(INSTALL) -m 555 -s
 INSTALL_MAN     ?= $(INSTALL) -m 444
 INSTALL_DATA    ?= $(INSTALL) -m 444
 
+UNAME := $(shell uname)
 
-SDL_CONFIG  ?= sdl2-config
+ifeq ($(UNAME),Darwin)
+    OSX_VERSION := $(shell if [ $(shell sw_vers -productVersion | cut -f 2 -d .) -gt 6 ]; then echo new; else echo old; fi)
+    ifeq ($(OSX_VERSION),old)
+        SDL_CONFIG ?= sdl-config
+    else
+        SDL_CONFIG ?= sdl2-config
+    endif
+else
+    SDL_CONFIG ?= sdl2-config
+endif
+
 CFLAGS_SDL  ?= $(shell $(SDL_CONFIG) --cflags)
 LDFLAGS_SDL ?= $(shell $(SDL_CONFIG) --libs)
 
+ifeq ($(SDL_CONFIG),sdl2-config)
+    LDFLAGS_SDL += -lSDL2_mixer
+else
+    LDFLAGS_SDL += -lSDL_mixer
+    CFLAGS += -DUSE_SDL1_2
+endif
 
 CFLAGS += $(CFLAGS_SDL)
 
@@ -26,7 +43,7 @@ CFLAGS += -Wpointer-arith
 CFLAGS += -Wreturn-type
 CFLAGS += -Wwrite-strings
 CFLAGS += -Wcast-align
-CFLAGS += -Wno-unused-result
+#CFLAGS += -Wno-unused-result
 
 ifdef GPL
     CFLAGS += -DUSE_GPL
@@ -41,9 +58,9 @@ CCFLAGS += -Wimplicit-int
 CCFLAGS += -Wsequence-point
 
 CXXFLAGS += $(CFLAGS)
+CXXFLAGS += -std=c++11
 
 LDFLAGS += $(LDFLAGS_SDL)
-LDFLAGS += -lSDL2_mixer
 ifneq (,$(findstring MINGW,$(shell uname -s)))
 LDFLAGS += -static-libgcc
 endif
@@ -104,6 +121,9 @@ SRCS += src/wl_play.cpp
 SRCS += src/wl_shade.cpp
 SRCS += src/wl_state.cpp
 SRCS += src/wl_text.cpp
+ifeq ($(UNAME), Darwin)
+SRCS += src/macosx/CocoaFun.mm
+endif
 
 DEPS = $(filter %.d, $(SRCS:.c=.d) $(SRCS:.cpp=.d) $(SRCS:.m=.d) $(SRCS:.mm=.d))
 OBJS = $(filter %.o, $(SRCS:.c=.o) $(SRCS:.cpp=.o) $(SRCS:.m=.o) $(SRCS:.mm=.o))
@@ -130,7 +150,7 @@ $(BINARY): $(OBJS)
 .c.o:
 	@echo '===> CC $<'
 	$(Q)$(CC) $(CCFLAGS) -c $< -o $@
-	
+
 .m.o:
 	@echo '===> CC $<'
 	$(Q)$(CC) $(CCFLAGS) -c $< -o $@

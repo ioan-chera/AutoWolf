@@ -37,13 +37,16 @@
 unsigned vid_screenPitch;
 unsigned vid_bufferPitch;
 
+#ifdef USE_SDL1_2
+static SDL_Surface* vid_screen;
+#else
 SDL_Window* vid_window;
 static SDL_Renderer* vid_renderer;
 static SDL_Texture* vid_texture;
-
 static SDL_Color* vid_trueBuffer;
+#endif
 
-static SDL_Surface *vid_screenBuffer = nullptr;
+static SDL_Surface *vid_screenBuffer;
 
 static SDL_Surface *vid_latchpics[NUMLATCHPICS];
 
@@ -74,7 +77,9 @@ void I_InitEngine()
 {
    // initialize SDL
 #if defined _WIN32
-   //putenv("SDL_VIDEODRIVER=windib");
+#ifdef USE_SDL1_2
+   putenv("SDL_VIDEODRIVER=windib");
+#endif
 #endif
    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
    {
@@ -87,13 +92,41 @@ void I_InitEngine()
 #if defined(GP2X_940)
    GP2X_MemoryInit();
 #endif
-	
-	vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
-											 SDL_WINDOWPOS_UNDEFINED,
-											 SDL_WINDOWPOS_UNDEFINED,
-								  cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
-								  cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI : SDL_WINDOW_ALLOW_HIGHDPI);
-   	
+
+#ifdef USE_SDL1_2
+    SDL_WM_SetCaption(SPEAR::FullTitle(), NULL);
+    if(cfg_screenBits == (unsigned)-1)
+	{
+		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
+		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
+	}
+    
+    vid_screen = SDL_SetVideoMode(cfg_screenWidth, cfg_screenHeight,
+								  cfg_screenBits,
+								  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
+								  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
+								  | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
+    
+    if(!vid_screen)
+    {
+        throw Exception((std::string("Unable to set video mode: ")
+                         + SDL_GetError()).c_str());
+    }
+    
+   if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
+       cfg_usedoublebuffering = false;
+
+   SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
+   memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
+
+#else
+    vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
+				  SDL_WINDOWPOS_UNDEFINED,
+				  SDL_WINDOWPOS_UNDEFINED,
+      cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
+      cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI
+				  : SDL_WINDOW_ALLOW_HIGHDPI);
+
 //	if(cfg_screenBits == -1)
 //	{
 //		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
@@ -102,29 +135,36 @@ void I_InitEngine()
 	
 	if(!vid_window)
 	{
-		throw Exception((std::string("Unable to create SDL window: ") + SDL_GetError()).c_str());
+		throw Exception((std::string("Unable to create SDL window: ")
+				 + SDL_GetError()).c_str());
 	}
-	
+
 	vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
 	if(!vid_renderer)
 	{
-		throw Exception((std::string("Unable to create SDL renderer: ") + SDL_GetError()).c_str());
+		throw Exception((std::string("Unable to create SDL renderer: ")
+	                        + SDL_GetError()).c_str());
 	}
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");  // make the scaled rendering look smoother.
-	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_screenWidth, cfg_screenHeight) < 0)
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+// make the scaled rendering look smoother.
+	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_screenWidth,
+	cfg_screenHeight) < 0)
 	{
-		throw Exception((std::string("Unable to set SDL renderer logical size: ") + SDL_GetError()).c_str());
+		throw Exception((std::string("Unable to set SDL renderer logical"
+	                       " size: ") + SDL_GetError()).c_str());
 	}
 	
-	vid_texture = SDL_CreateTexture(vid_renderer,
-								   SDL_PIXELFORMAT_ABGR8888,
-								   SDL_TEXTUREACCESS_STREAMING,
-								   cfg_screenWidth, cfg_screenHeight);
+	vid_texture = SDL_CreateTexture(vid_renderer,							   SDL_PIXELFORMAT_ABGR8888,
+		        SDL_TEXTUREACCESS_STREAMING,
+			cfg_screenWidth, cfg_screenHeight);
 	if(!vid_texture)
 	{
-		throw Exception((std::string("Unable to create SDL texture: ") + SDL_GetError()).c_str());
+		throw Exception((std::string("Unable to create SDL texture: ")
+	                         + SDL_GetError()).c_str());
 	}
-	
+
+	vid_trueBuffer = new SDL_Color[cfg_screenWidth * cfg_screenHeight];
+#endif
 	
 //	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
 //		cfg_usedoublebuffering = false;
@@ -135,7 +175,6 @@ void I_InitEngine()
 	memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
 	
 	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth, cfg_screenHeight);
-	vid_trueBuffer = new SDL_Color[cfg_screenWidth * cfg_screenHeight];
 	
 	vid_bufferPitch = vid_screenBuffer->pitch;
 	
@@ -210,7 +249,11 @@ byte *I_LockBuffer()
 //
 SDL_Color *I_LockDirect()
 {
+#ifdef USE_SDL1_2
+    return reinterpret_cast<SDL_Color*>(I_lockSurface(vid_screen));
+#else
    return vid_trueBuffer;
+#endif
 }
 
 //
@@ -236,6 +279,9 @@ void I_UnlockBuffer()
 }
 void I_UnlockDirect()
 {
+#ifdef USE_SDL1_2
+    I_unlockSurface(vid_screen);
+#endif
 }
 
 //
@@ -243,13 +289,21 @@ void I_UnlockDirect()
 //
 void I_UpdateDirect()
 {
+#ifdef USE_SDL1_2
+    SDL_Flip(vid_screen);
+#else
 	SDL_UpdateTexture(vid_texture, nullptr, vid_trueBuffer, cfg_screenWidth * sizeof(SDL_Color));
 	SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr);
 	SDL_RenderPresent(vid_renderer);
+#endif
 }
 
 void I_UpdateScreen()
 {
+#ifdef USE_SDL1_2
+    SDL_BlitSurface(vid_screenBuffer, NULL, vid_screen, NULL);
+	SDL_Flip(vid_screen);
+#else
 	unsigned x, y;
 	for (y = 0; y < cfg_screenHeight; ++y)
 	{
@@ -259,6 +313,7 @@ void I_UpdateScreen()
 		}
 	}
 	I_UpdateDirect();
+#endif
 }
 void I_ClearScreen(int color)
 {
@@ -282,8 +337,19 @@ void I_SaveBufferBMP(const char *fname)
 
 void I_SetPalette (SDL_Color *palette, bool forceupdate)
 {
-   memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
+memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
+#ifdef USE_SDL1_2
+    if(cfg_screenBits == 8)
+        SDL_SetPalette(vid_screen, SDL_PHYSPAL, palette, 0, 256);
+    else
+    {
+        SDL_SetPalette(vid_screenBuffer, SDL_LOGPAL, palette, 0, 256);
+        if(forceupdate)
+            I_UpdateScreen();
+    }
+#else
    I_UpdateScreen();
+#endif
 }
 
 

@@ -1749,6 +1749,7 @@ void DestroySavedInstance()
 //
 // SDL HANDLE MOBILE APP EVENTS QUICKLY
 //
+#ifndef USE_SDL1_2
 static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 {
 	if (event->type == SDL_APP_WILLENTERBACKGROUND)
@@ -1781,6 +1782,7 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 	}
 	return 1;
 }
+#endif
 
 //
 // main
@@ -1811,8 +1813,9 @@ int main(int argc, TChar *argv[])
 		CFG_CheckForEpisodes();
 
 		InitGame();
-
+#ifndef USE_SDL1_2
 		SDL_SetEventFilter(handleMobileAppEvent, nullptr);
+#endif
 
 		DemoLoop();
 

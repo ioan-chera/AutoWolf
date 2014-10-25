@@ -510,6 +510,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
    myInput.setLastScan(sc_None);
 
 	// TOUCHSCREEN KEYBOARD
+#ifndef USE_SDL1_2
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
 	SDL_Rect rect;
@@ -537,7 +538,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	
 	SDL_SetTextInputRect(&rect);
 	SDL_StartTextInput();
-	
+#endif
 	
 	while (!done)
 	{
@@ -775,8 +776,9 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 
 		I_UpdateScreen();
 	}
-
+#ifndef USE_SDL1_2
 	SDL_StopTextInput();
+#endif
 	
 	if (cursorvis)
 		USL_XORICursor(x,y,s,cursor);

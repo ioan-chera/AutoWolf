@@ -21,6 +21,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 #include "CocoaFun.h"
 
 #define APPLICATION_UTI @"com.ichera.autowolf"
@@ -35,7 +37,7 @@
 //
 char *Cocoa_CreateApplicationSupportPathString()
 {
-	@autoreleasepool
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	{
 		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		if([paths count] <= 0)
@@ -43,6 +45,8 @@ char *Cocoa_CreateApplicationSupportPathString()
 			char *ret = new char[2];
 			ret[0] = '.';
 			ret[1] = 0;
+            
+            [pool release];
 			return ret;
 		}
 		
@@ -52,8 +56,11 @@ char *Cocoa_CreateApplicationSupportPathString()
 		size_t len = strlen(content);
 		char *ret = (char*)calloc(len, sizeof(char));
 		memcpy(ret, content, len);
+        
+        [pool release];
 		return ret;
 	}
+    [pool release];
 }
 
 //
@@ -61,7 +68,7 @@ char *Cocoa_CreateApplicationSupportPathString()
 //
 void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 {
-	@autoreleasepool
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	{
 #if TARGET_OS_IPHONE
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:[NSString stringWithCString:title encoding:NSUTF8StringEncoding] message:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -70,6 +77,7 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
         [[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 #endif
 	}
+    [pool release];
 }
 
 //
@@ -81,23 +89,24 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 void Cocoa_Notify(const char *title, const char *msg)
 {
 #if !TARGET_OS_IPHONE
-	@autoreleasepool
+	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	{
-		BOOL notificationCenterIsAvailable =
-		(NSClassFromString(@"NSUserNotificationCenter") != nil);
+        Class UserNotificationCenter = NSClassFromString(@"NSUserNotificationCenter");
 		
-		if(notificationCenterIsAvailable)
+		if(UserNotificationCenter)
 		{
-			NSUserNotification *notification = [[[NSUserNotification alloc] init] autorelease];
+            Class UserNotification = NSClassFromString(@"NSUserNotification");
+			id notification = [[[UserNotification alloc] init] autorelease];
 			NSString *infoText = [[[NSString alloc] initWithUTF8String:msg] autorelease],
 			*notifTitle = [[[NSString alloc] initWithUTF8String:title] autorelease];
 			
-			notification.title = notifTitle;
-			notification.informativeText = infoText;
-			NSUserNotificationCenter *notifCentre = [NSUserNotificationCenter defaultUserNotificationCenter];
+			[notification setTitle:notifTitle];
+			[notification setInformativeText:infoText];
+			id notifCentre = [UserNotificationCenter defaultUserNotificationCenter];
 			
 			[notifCentre deliverNotification:notification];
 		}
 	}
+    [pool release];
 #endif
 }

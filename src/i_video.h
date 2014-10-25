@@ -27,7 +27,12 @@
 #include "id_vl.h"
 
 extern  unsigned vid_bufferPitch;
+
+#ifdef USE_SDL1_2
+//extern SDL_Surface* vid_screen;
+#else
 extern SDL_Window* vid_window;
+#endif
 
 void I_InitEngine();
 void I_InitAfterSignon();

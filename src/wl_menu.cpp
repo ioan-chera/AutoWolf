@@ -312,22 +312,26 @@ void US_SetScanNames()
 	ScanNames[SDLK_F13] = "F13";
 	ScanNames[SDLK_F14] = "F14";
 	ScanNames[SDLK_F15] = "F15";
+#ifndef USE_SDL1_2
 	ScanNames[SDLK_F16] = "F16";
 	ScanNames[SDLK_F17] = "F17";
 	ScanNames[SDLK_F18] = "F18";
 	ScanNames[SDLK_F19] = "F19";
 	ScanNames[SDLK_NUMLOCKCLEAR] = "NumLk";
+#else
+    ScanNames[SDLK_NUMLOCK] = "NumLk";
+#endif
 	ScanNames[SDLK_CAPSLOCK] = "CapsLk";
-	ScanNames[SDLK_SCROLLLOCK] = "ScrlLk";
+	ScanNames[SCROLLLOCK] = "ScrlLk";
 	ScanNames[SDLK_RSHIFT] = "RShft";
 	ScanNames[SDLK_LSHIFT] = "Shift";
 	ScanNames[SDLK_RCTRL] = "RCtrl";
 	ScanNames[SDLK_LCTRL] = "LCtrl";
 	ScanNames[SDLK_RALT] = "RAlt";
 	ScanNames[SDLK_LALT] = "Alt";
-	ScanNames[SDLK_RGUI] = "RMeta";
-	ScanNames[SDLK_LGUI] = "LMeta";
-	ScanNames[SDLK_PRINTSCREEN] = "PrtSc";
+	ScanNames[RGUI] = "RMeta";
+	ScanNames[LGUI] = "LMeta";
+	ScanNames[PRINTSCREEN] = "PrtSc";
 	ScanNames[sc_BackSpace] = "BkSp";
 	ScanNames[sc_Tab] = "Tab";
 	ScanNames[sc_Return] = "Return";
