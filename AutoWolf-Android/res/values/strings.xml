@@ -22,8 +22,8 @@
     
     <string name="please_wait_finder">Searching for\nWolfenstein 3D&#8230;</string>
     <string name="activity_finder">Find Wolfenstein 3D</string>
-    <string name="found_results">Found these Wolfenstein 3D games.</string>
-    <string name="pick_one">Pick one to play.</string>
+    <string name="found_results">Found these Wolfenstein 3D games</string>
+    <string name="pick_one">Pick one to play</string>
     <string name="search_again">Search again</string>
     <string name="no_found_results">Sorry, couldn\'t find Wolfenstein 3D on your device.</string>
     <string name="no_found_explanation">You need a copy of the original DOS version of Wolfenstein 3D, stored into this device.</string>

@@ -6,13 +6,16 @@ import org.libsdl.app.SDLActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,8 +23,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements View.OnClickListener,
-TextWatcher, CompoundButton.OnCheckedChangeListener
+public class MainActivity extends Activity implements 
+	CompoundButton.OnCheckedChangeListener,
+	View.OnClickListener,
+	View.OnTouchListener,
+	TextWatcher
 {
 	private static final String PREFS_NAME = "AutoWolfLaunchPreferences";
 	
@@ -38,6 +44,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 	private int mSkillLevel;
 	private boolean mSecretStep3;
 	private boolean mLowRes;
+	
+	private View mScrollView;
 	
 	private Button mChooseButton;
 	private EditText mWarpField;
@@ -89,6 +97,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		
 		mStartButton = (Button)findViewById(R.id.start_button);
 		
+		mScrollView = findViewById(R.id.scroll_view);
+		
 		mChooseButton.setOnClickListener(this);
 		mWarpField.addTextChangedListener(this);
 		
@@ -101,6 +111,8 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 		mLowResBox.setOnCheckedChangeListener(this);
 		
 		mStartButton.setOnClickListener(this);
+		
+		mScrollView.setOnTouchListener(this);
 		
 		getData();
 	}
@@ -346,6 +358,18 @@ TextWatcher, CompoundButton.OnCheckedChangeListener
 //		}
 		
 		SDLActivity.sDemandNorestore = true;
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) 
+	{
+		if(v == mScrollView)
+		{
+			InputMethodManager imm = (InputMethodManager)getSystemService(
+					Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(mWarpField.getWindowToken(), 0);
+		}
+		return false;
 	}
 	
 	/* Checks if external storage is available for read and write */
