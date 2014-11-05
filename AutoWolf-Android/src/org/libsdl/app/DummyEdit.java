@@ -11,7 +11,7 @@ import android.view.inputmethod.InputConnection;
  */
 class DummyEdit extends View implements View.OnKeyListener 
 {
-    InputConnection ic;
+    private InputConnection ic;
 
     public DummyEdit(Context context) {
         super(context);

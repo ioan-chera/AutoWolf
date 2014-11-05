@@ -34,11 +34,11 @@ class SDLSurface extends SurfaceView implements
 {
 	
 	// Sensors
-	protected static SensorManager mSensorManager;
-	protected static Display mDisplay;
+	protected static SensorManager sSensorManager;
+	protected static Display sDisplay;
 	
 	// Keep track of the surface size to normalize touch events
-	protected static float mWidth, mHeight;
+	protected static float sWidth, sHeight;
 	
 	// Startup    
 	@SuppressLint("NewApi")
@@ -53,17 +53,17 @@ class SDLSurface extends SurfaceView implements
 	    setOnKeyListener(this); 
 	    setOnTouchListener(this);   
 	
-	    mDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE))
+	    sDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE))
 	    		.getDefaultDisplay();
-	    mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
+	    sSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 	    
 	    if(Build.VERSION.SDK_INT >= 12) {
 	        setOnGenericMotionListener(new SDLGenericMotionListener_API12());
 	    }
 	
 	    // Some arbitrary defaults to avoid a potential division by zero
-	    mWidth = 1.0f;
-	    mHeight = 1.0f;
+	    sWidth = 1.0f;
+	    sHeight = 1.0f;
 	}
 	
 	public Surface getNativeSurface() {
@@ -141,8 +141,8 @@ class SDLSurface extends SurfaceView implements
 	        break;
 	    }
 	
-	    mWidth = width;
-	    mHeight = height;
+	    sWidth = width;
+	    sHeight = height;
 	    SDLActivity.onNativeResize(width, height, sdlFormat);
 	    Log.v("SDL", "Window size:" + width + "x"+height);
 	
@@ -234,8 +234,8 @@ class SDLSurface extends SurfaceView implements
 	        case MotionEvent.ACTION_MOVE:
 	            for (i = 0; i < pointerCount; i++) {
 	                pointerFingerId = event.getPointerId(i);
-	                x = event.getX(i) / mWidth;
-	                y = event.getY(i) / mHeight;
+	                x = event.getX(i) / sWidth;
+	                y = event.getY(i) / sHeight;
 	                p = event.getPressure(i);
 	                SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p);
 	            }
@@ -253,8 +253,8 @@ class SDLSurface extends SurfaceView implements
 	            }
 	            
 	            pointerFingerId = event.getPointerId(i);
-	            x = event.getX(i) / mWidth;
-	            y = event.getY(i) / mHeight;
+	            x = event.getX(i) / sWidth;
+	            y = event.getY(i) / sHeight;
 	            p = event.getPressure(i);
 	            SDLActivity.onNativeTouch(touchDevId, pointerFingerId, action, x, y, p);
 	            break;
@@ -270,12 +270,12 @@ class SDLSurface extends SurfaceView implements
 	public void enableSensor(int sensortype, boolean enabled) {
 	    // TODO: This uses getDefaultSensor - what if we have >1 accels?
 	    if (enabled) {
-	        mSensorManager.registerListener(this, 
-	                        mSensorManager.getDefaultSensor(sensortype), 
+	        sSensorManager.registerListener(this, 
+	                        sSensorManager.getDefaultSensor(sensortype), 
 	                        SensorManager.SENSOR_DELAY_GAME, null);
 	    } else {
-	        mSensorManager.unregisterListener(this, 
-	                        mSensorManager.getDefaultSensor(sensortype));
+	        sSensorManager.unregisterListener(this, 
+	                        sSensorManager.getDefaultSensor(sensortype));
 	    }
 	}
 	
@@ -288,7 +288,7 @@ class SDLSurface extends SurfaceView implements
 	public void onSensorChanged(SensorEvent event) {
 	    if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 	        float x, y;
-	        switch (mDisplay.getRotation()) {
+	        switch (sDisplay.getRotation()) {
 	            case Surface.ROTATION_90:
 	                x = -event.values[1];
 	                y = event.values[0];
