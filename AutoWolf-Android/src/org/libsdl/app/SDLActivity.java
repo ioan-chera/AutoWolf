@@ -34,21 +34,21 @@ public class SDLActivity extends Activity
     private static final String TAG = "SDL";
 
     // Keep track of the paused state
-    public static boolean mIsPaused, mIsSurfaceReady, mHasFocus;
-    public static boolean mExitCalledFromJava;
+    public static boolean sIsPaused, sIsSurfaceReady, sHasFocus;
+    public static boolean sExitCalledFromJava;
 
     // Main components
-    protected static SDLActivity mSingleton;
-    protected static SDLSurface mSurface;
-    protected static View mTextEdit;
-    protected static ViewGroup mLayout;
-    protected static SDLJoystickHandler mJoystickHandler;
+    protected static SDLActivity sSingleton;
+    protected static SDLSurface sSurface;
+    protected static View sTextEdit;
+    protected static ViewGroup sLayout;
+    protected static SDLJoystickHandler sJoystickHandler;
 
     // This is what SDL runs in. It invokes SDL_main(), eventually
-    protected static Thread mSDLThread;
+    protected static Thread sSDLThread;
     
     // Audio
-    protected static AudioTrack mAudioTrack;
+    protected static AudioTrack sAudioTrack;
     
     // ARGS
     public static final String EXTRA_ARGS = "args";
@@ -74,24 +74,24 @@ public class SDLActivity extends Activity
     	// initialize everything here
         // Otherwise, when exiting the app and returning to it, these variables 
     	// *keep* their pre exit values
-        mSingleton = null;
-        mSurface = null;
-        mTextEdit = null;
-        mLayout = null;
-        mJoystickHandler = null;
-        mSDLThread = null;
-        mAudioTrack = null;
-        mExitCalledFromJava = false;
-        mIsPaused = false;
-        mIsSurfaceReady = false;
-        mHasFocus = true;
+        sSingleton = null;
+        sSurface = null;
+        sTextEdit = null;
+        sLayout = null;
+        sJoystickHandler = null;
+        sSDLThread = null;
+        sAudioTrack = null;
+        sExitCalledFromJava = false;
+        sIsPaused = false;
+        sIsSurfaceReady = false;
+        sHasFocus = true;
     }
 
     // Setup
     @Override
     protected void onCreate(Bundle savedInstanceState) 
     {
-        Log.v("SDL", "onCreate():" + mSingleton);
+        Log.v("SDL", "onCreate():" + sSingleton);
         super.onCreate(savedInstanceState);
         
         Intent intent = getIntent();
@@ -104,22 +104,23 @@ public class SDLActivity extends Activity
         
         SDLActivity.initialize();
         // So we can call stuff from static callbacks
-        mSingleton = this;
+        sSingleton = this;
 
         // Set up the surface
-        mSurface = new SDLSurface(getApplication());
+        sSurface = new SDLSurface(getApplication());
         
         if(Build.VERSION.SDK_INT >= 12) {
-            mJoystickHandler = new SDLJoystickHandler_API12();
+            sJoystickHandler = new SDLJoystickHandler_API12();
         }
-        else {
-            mJoystickHandler = new SDLJoystickHandler();
+        else 
+        {
+            sJoystickHandler = new SDLJoystickHandler();
         }
 
-        mLayout = new AbsoluteLayout(this);
-        mLayout.addView(mSurface);
+        sLayout = new AbsoluteLayout(this);
+        sLayout.addView(sSurface);
 
-        setContentView(mLayout);
+        setContentView(sLayout);
         
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -148,7 +149,7 @@ public class SDLActivity extends Activity
         super.onWindowFocusChanged(hasFocus);
         Log.v("SDL", "onWindowFocusChanged(): " + hasFocus);
 
-        SDLActivity.mHasFocus = hasFocus;
+        SDLActivity.sHasFocus = hasFocus;
         if (hasFocus) 
         {
             SDLActivity.handleResume();
@@ -168,21 +169,21 @@ public class SDLActivity extends Activity
     {
         Log.v("SDL", "onDestroy()");
         // Send a quit message to the application
-        SDLActivity.mExitCalledFromJava = true;
+        SDLActivity.sExitCalledFromJava = true;
         SDLActivity.nativeQuit();
 
         // Now wait for the SDL thread to quit
-        if (SDLActivity.mSDLThread != null) 
+        if (SDLActivity.sSDLThread != null) 
         {
             try 
             {
-                SDLActivity.mSDLThread.join();
+                SDLActivity.sSDLThread.join();
             } 
             catch(Exception e) 
             {
                 Log.v("SDL", "Problem stopping thread: " + e);
             }
-            SDLActivity.mSDLThread = null;
+            SDLActivity.sSDLThread = null;
 
             //Log.v("SDL", "Finished waiting for SDL thread");
         }
@@ -215,11 +216,11 @@ public class SDLActivity extends Activity
      */
     public static void handlePause() 
     {
-        if (!SDLActivity.mIsPaused && SDLActivity.mIsSurfaceReady) 
+        if(!SDLActivity.sIsPaused && SDLActivity.sIsSurfaceReady) 
         {
-            SDLActivity.mIsPaused = true;
+            SDLActivity.sIsPaused = true;
             SDLActivity.nativePause();
-            mSurface.enableSensor(Sensor.TYPE_ACCELEROMETER, false);
+            sSurface.enableSensor(Sensor.TYPE_ACCELEROMETER, false);
         }
     }
 
@@ -229,19 +230,19 @@ public class SDLActivity extends Activity
      */
     public static void handleResume() 
     {
-        if (SDLActivity.mIsPaused && SDLActivity.mIsSurfaceReady && SDLActivity.mHasFocus) 
+        if (SDLActivity.sIsPaused && SDLActivity.sIsSurfaceReady && SDLActivity.sHasFocus) 
         {
-            SDLActivity.mIsPaused = false;
+            SDLActivity.sIsPaused = false;
             SDLActivity.nativeResume();
-            mSurface.enableSensor(Sensor.TYPE_ACCELEROMETER, true);
+            sSurface.enableSensor(Sensor.TYPE_ACCELEROMETER, true);
         }
     }
         
     /* The native thread has finished */
     public static void handleNativeExit() 
     {
-        SDLActivity.mSDLThread = null;
-        mSingleton.finish();
+        SDLActivity.sSDLThread = null;
+        sSingleton.finish();
     }
 
 
@@ -291,11 +292,11 @@ public class SDLActivity extends Activity
                 }
                 break;
             case COMMAND_TEXTEDIT_HIDE:
-                if (mTextEdit != null) {
-                    mTextEdit.setVisibility(View.GONE);
+                if (sTextEdit != null) {
+                    sTextEdit.setVisibility(View.GONE);
 
                     InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mTextEdit.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(sTextEdit.getWindowToken(), 0);
                 }
                 break;
 
@@ -352,15 +353,15 @@ public class SDLActivity extends Activity
 
     public static boolean setActivityTitle(String title) {
         // Called from SDLMain() thread and can't directly affect the view
-        return mSingleton.sendCommand(COMMAND_CHANGE_TITLE, title);
+        return sSingleton.sendCommand(COMMAND_CHANGE_TITLE, title);
     }
 
     public static boolean sendMessage(int command, int param) {
-        return mSingleton.sendCommand(command, Integer.valueOf(param));
+        return sSingleton.sendCommand(command, Integer.valueOf(param));
     }
 
     public static Context getContext() {
-        return mSingleton;
+        return sSingleton;
     }
 
     /**
@@ -413,29 +414,29 @@ public class SDLActivity extends Activity
             AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
                     w, h + HEIGHT_PADDING, x, y);
 
-            if (mTextEdit == null) {
-                mTextEdit = new DummyEdit(getContext());
+            if (sTextEdit == null) {
+                sTextEdit = new DummyEdit(getContext());
 
-                mLayout.addView(mTextEdit, params);
+                sLayout.addView(sTextEdit, params);
             } else {
-                mTextEdit.setLayoutParams(params);
+                sTextEdit.setLayoutParams(params);
             }
 
-            mTextEdit.setVisibility(View.VISIBLE);
-            mTextEdit.requestFocus();
+            sTextEdit.setVisibility(View.VISIBLE);
+            sTextEdit.requestFocus();
 
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mTextEdit, 0);
+            imm.showSoftInput(sTextEdit, 0);
         }
     }
 
     public static boolean showTextInput(int x, int y, int w, int h) {
         // Transfer the task to the main thread as a Runnable
-        return mSingleton.commandHandler.post(new ShowTextInputTask(x, y, w, h));
+        return sSingleton.commandHandler.post(new ShowTextInputTask(x, y, w, h));
     }
             
     public static Surface getNativeSurface() {
-        return SDLActivity.mSurface.getNativeSurface();
+        return SDLActivity.sSurface.getNativeSurface();
     }
 
     // Audio
@@ -451,31 +452,31 @@ public class SDLActivity extends Activity
         // latency already
         desiredFrames = Math.max(desiredFrames, (AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat) + frameSize - 1) / frameSize);
         
-        if (mAudioTrack == null) {
-            mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
+        if (sAudioTrack == null) {
+            sAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
                     channelConfig, audioFormat, desiredFrames * frameSize, AudioTrack.MODE_STREAM);
             
             // Instantiating AudioTrack can "succeed" without an exception and the track may still be invalid
             // Ref: https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/media/java/android/media/AudioTrack.java
             // Ref: http://developer.android.com/reference/android/media/AudioTrack.html#getState()
             
-            if (mAudioTrack.getState() != AudioTrack.STATE_INITIALIZED) {
+            if (sAudioTrack.getState() != AudioTrack.STATE_INITIALIZED) {
                 Log.e("SDL", "Failed during initialization of Audio Track");
-                mAudioTrack = null;
+                sAudioTrack = null;
                 return -1;
             }
             
-            mAudioTrack.play();
+            sAudioTrack.play();
         }
        
-        Log.v("SDL", "SDL audio: got " + ((mAudioTrack.getChannelCount() >= 2) ? "stereo" : "mono") + " " + ((mAudioTrack.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT) ? "16-bit" : "8-bit") + " " + (mAudioTrack.getSampleRate() / 1000f) + "kHz, " + desiredFrames + " frames buffer");
+        Log.v("SDL", "SDL audio: got " + ((sAudioTrack.getChannelCount() >= 2) ? "stereo" : "mono") + " " + ((sAudioTrack.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT) ? "16-bit" : "8-bit") + " " + (sAudioTrack.getSampleRate() / 1000f) + "kHz, " + desiredFrames + " frames buffer");
         
         return 0;
     }
     
     public static void audioWriteShortBuffer(short[] buffer) {
         for (int i = 0; i < buffer.length; ) {
-            int result = mAudioTrack.write(buffer, i, buffer.length - i);
+            int result = sAudioTrack.write(buffer, i, buffer.length - i);
             if (result > 0) {
                 i += result;
             } else if (result == 0) {
@@ -493,7 +494,7 @@ public class SDLActivity extends Activity
     
     public static void audioWriteByteBuffer(byte[] buffer) {
         for (int i = 0; i < buffer.length; ) {
-            int result = mAudioTrack.write(buffer, i, buffer.length - i);
+            int result = sAudioTrack.write(buffer, i, buffer.length - i);
             if (result > 0) {
                 i += result;
             } else if (result == 0) {
@@ -510,9 +511,9 @@ public class SDLActivity extends Activity
     }
 
     public static void audioQuit() {
-        if (mAudioTrack != null) {
-            mAudioTrack.stop();
-            mAudioTrack = null;
+        if (sAudioTrack != null) {
+            sAudioTrack.stop();
+            sAudioTrack = null;
         }
     }
 
@@ -536,12 +537,12 @@ public class SDLActivity extends Activity
             
     // Joystick glue code, just a series of stubs that redirect to the SDLJoystickHandler instance
     public static boolean handleJoystickMotionEvent(MotionEvent event) {
-        return mJoystickHandler.handleMotionEvent(event);
+        return sJoystickHandler.handleMotionEvent(event);
     }
     
     public static void pollInputDevices() {
-        if (SDLActivity.mSDLThread != null) {
-            mJoystickHandler.pollInputDevices();
+        if (SDLActivity.sSDLThread != null) {
+            sJoystickHandler.pollInputDevices();
         }
     }
     

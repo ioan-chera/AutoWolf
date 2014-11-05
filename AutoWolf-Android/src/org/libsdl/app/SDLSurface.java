@@ -26,8 +26,11 @@ in order to do anything useful.
 
 Because of this, that's where we set up the SDL thread
 */
-class SDLSurface extends SurfaceView implements SurfaceHolder.Callback, 
-View.OnKeyListener, View.OnTouchListener, SensorEventListener  
+class SDLSurface extends SurfaceView implements 
+	SurfaceHolder.Callback, 
+	View.OnKeyListener, 
+	View.OnTouchListener, 
+	SensorEventListener  
 {
 	
 	// Sensors
@@ -50,7 +53,8 @@ View.OnKeyListener, View.OnTouchListener, SensorEventListener
 	    setOnKeyListener(this); 
 	    setOnTouchListener(this);   
 	
-	    mDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+	    mDisplay = ((WindowManager)context.getSystemService(Context.WINDOW_SERVICE))
+	    		.getDefaultDisplay();
 	    mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
 	    
 	    if(Build.VERSION.SDK_INT >= 12) {
@@ -67,19 +71,22 @@ View.OnKeyListener, View.OnTouchListener, SensorEventListener
 	}
 	
 	// Called when we have a valid drawing surface
+	@SuppressWarnings("deprecation")
 	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
+	public void surfaceCreated(SurfaceHolder holder) 
+	{
 	    Log.v("SDL", "surfaceCreated()");
 	    holder.setType(SurfaceHolder.SURFACE_TYPE_GPU);
 	}
 	
 	// Called when we lose the surface
 	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
+	public void surfaceDestroyed(SurfaceHolder holder) 
+	{
 	    Log.v("SDL", "surfaceDestroyed()");
 	    // Call this *before* setting mIsSurfaceReady to 'false'
 	    SDLActivity.handlePause();
-	    SDLActivity.mIsSurfaceReady = false;
+	    SDLActivity.sIsSurfaceReady = false;
 	    SDLActivity.onNativeSurfaceDestroyed();
 	}
 	
@@ -140,29 +147,29 @@ View.OnKeyListener, View.OnTouchListener, SensorEventListener
 	    Log.v("SDL", "Window size:" + width + "x"+height);
 	
 	    // Set mIsSurfaceReady to 'true' *before* making a call to handleResume
-	    SDLActivity.mIsSurfaceReady = true;
+	    SDLActivity.sIsSurfaceReady = true;
 	    SDLActivity.onNativeSurfaceChanged();
 	
 	
-	    if (SDLActivity.mSDLThread == null) {
+	    if (SDLActivity.sSDLThread == null) {
 	        // This is the entry point to the C app.
 	        // Start up the C app thread and enable sensor input for the first time
 	
-	        SDLActivity.mSDLThread = new Thread(new SDLMain(), "SDLThread");
+	        SDLActivity.sSDLThread = new Thread(new SDLMain(), "SDLThread");
 	        enableSensor(Sensor.TYPE_ACCELEROMETER, true);
-	        SDLActivity.mSDLThread.start();
+	        SDLActivity.sSDLThread.start();
 	        
 	        // Set up a listener thread to catch when the native thread ends
 	        new Thread(new Runnable(){
 	            @Override
 	            public void run(){
 	                try {
-	                    SDLActivity.mSDLThread.join();
+	                    SDLActivity.sSDLThread.join();
 	                }
 	                catch(Exception e){}
 	                finally{ 
 	                    // Native thread has finished
-	                    if (! SDLActivity.mExitCalledFromJava) {
+	                    if (! SDLActivity.sExitCalledFromJava) {
 	                        SDLActivity.handleNativeExit();
 	                    }
 	                }
