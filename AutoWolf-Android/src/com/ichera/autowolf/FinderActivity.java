@@ -146,8 +146,6 @@ public class FinderActivity extends Activity
 	
 	private void updateList()
 	{
-		
-		
 		if(mResultsList.getAdapter() == null)
 			mResultsList.setAdapter(new PathsAdapter());
 		else

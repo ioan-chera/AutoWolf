@@ -36,22 +36,28 @@
 	        android:paddingLeft="30dp"
 	        android:paddingRight="30dp"
 	        android:text="@string/choose_wolfdir_button"/>
-	    <TextView android:id="@+id/warp_label"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
-	        android:layout_gravity="center_horizontal"
-	        android:text="@string/warp_label"
-	        android:textSize="16sp"/>
-	    <View android:id="@+id/separator2"
-	        android:layout_width="match_parent"
-	        android:layout_height="1px"
-	        android:background="@android:color/darker_gray"/>
-	    <EditText android:id="@+id/warp_field"
+	    <LinearLayout 
 	        android:layout_width="match_parent"
 	        android:layout_height="48dp"
-	        android:inputType="number"
-	        android:hint="@string/warp_field_hint"/>
+	        android:layout_marginTop="16dp"
+	        android:orientation="horizontal">
+	        <CheckBox 
+	            android:id="@+id/warp_check"
+	        	android:layout_width="wrap_content"
+	        	android:layout_height="match_parent"
+	        	android:layout_marginEnd="8dp"
+	        	android:layout_marginRight="8dp"
+	        	android:text="@string/warp_label"/>
+	        <EditText 
+	            android:id="@+id/warp_field"
+		        android:layout_width="0dp"
+		        android:layout_weight="1"
+		        android:layout_height="match_parent"
+		        android:inputType="number"
+		        android:hint="@string/warp_field_hint"/>
+	    </LinearLayout>
+	    
+	    
 	    <TextView android:id="@+id/skill_label"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

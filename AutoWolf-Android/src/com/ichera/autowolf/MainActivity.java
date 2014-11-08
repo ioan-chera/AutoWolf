@@ -1,6 +1,8 @@
 package com.ichera.autowolf;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.libsdl.app.SDLActivity;
 
@@ -15,6 +17,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,6 +36,7 @@ public class MainActivity extends Activity implements
 	
 	private static final String PREF_WOLFDIR = "wolfdir";
 	private static final String PREF_TEDLEVEL = "tedlevel";
+	private static final String PREF_TEDLEVEL_ENABLED = "tedlevelEnabled";
 	private static final String PREF_SKILL = "skill";
 	private static final String PREF_SECRETSTEP3 = "secretstep3";
 	private static final String PREF_LOWRES = "lowres";
@@ -40,6 +44,8 @@ public class MainActivity extends Activity implements
 	private static final int REQUEST_OPEN_FOLDER = 1;
 	
 	private String mWolfdir;
+	private String mOldWolfdir;
+	private boolean mTedlevelEnabled;
 	private int mTedlevel;
 	private int mSkillLevel;
 	private boolean mSecretStep3;
@@ -48,6 +54,7 @@ public class MainActivity extends Activity implements
 	private View mScrollView;
 	
 	private Button mChooseButton;
+	private CompoundButton mWarpCheck;
 	private EditText mWarpField;
 	
 	private RadioButton mBabyButton;
@@ -84,7 +91,19 @@ public class MainActivity extends Activity implements
 		
 		setContentView(R.layout.main);
 		
-		mChooseButton = (Button)findViewById(R.id.choose_wolfdir_button); 
+		setInterfaceItems();
+		
+		setListeners();
+				
+		getData();
+		
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+	}
+	
+	private void setInterfaceItems()
+	{
+		mChooseButton = (Button)findViewById(R.id.choose_wolfdir_button);
+		mWarpCheck = (CompoundButton)findViewById(R.id.warp_check);
 		mWarpField = (EditText)findViewById(R.id.warp_field);
 		
 		mBabyButton = (RadioButton)findViewById(R.id.baby_button);
@@ -98,8 +117,13 @@ public class MainActivity extends Activity implements
 		mStartButton = (Button)findViewById(R.id.start_button);
 		
 		mScrollView = findViewById(R.id.scroll_view);
-		
+	}
+	
+	private void setListeners()
+	{
 		mChooseButton.setOnClickListener(this);
+		
+		mWarpCheck.setOnCheckedChangeListener(this);
 		mWarpField.addTextChangedListener(this);
 		
 		mBabyButton.setOnCheckedChangeListener(this);
@@ -113,8 +137,6 @@ public class MainActivity extends Activity implements
 		mStartButton.setOnClickListener(this);
 		
 		mScrollView.setOnTouchListener(this);
-		
-		getData();
 	}
 	
 	private void getData()
@@ -123,6 +145,7 @@ public class MainActivity extends Activity implements
 		
 		mWolfdir = settings.getString(PREF_WOLFDIR, "");
 		mTedlevel = settings.getInt(PREF_TEDLEVEL, 0);
+		mTedlevelEnabled = settings.getBoolean(PREF_TEDLEVEL_ENABLED, false);
 		mSkillLevel = settings.getInt(PREF_SKILL, 3);
 		mSecretStep3 = settings.getBoolean(PREF_SECRETSTEP3, false);
 		mLowRes = settings.getBoolean(PREF_LOWRES, false);
@@ -137,6 +160,7 @@ public class MainActivity extends Activity implements
 		if(mWolfdir != null && mWolfdir.length() > 0)
 			editor.putString(PREF_WOLFDIR, mWolfdir);
 		editor.putInt(PREF_TEDLEVEL, mTedlevel);
+		editor.putBoolean(PREF_TEDLEVEL_ENABLED, mTedlevelEnabled);
 		editor.putInt(PREF_SKILL, mSkillLevel);
 		editor.putBoolean(PREF_SECRETSTEP3, mSecretStep3);
 		editor.putBoolean(PREF_LOWRES, mLowRes);
@@ -159,9 +183,28 @@ public class MainActivity extends Activity implements
 		{
 			((TextView)findViewById(R.id.current_wolfdir)).setText(mWolfdir);
 			((Button)findViewById(R.id.start_button)).setEnabled(true);
+			
+			updateLevelList();
 		}
+		mWarpCheck.setChecked(mTedlevelEnabled);
+		mWarpField.setEnabled(mTedlevelEnabled);
+		if(!mTedlevelEnabled)
+		{
+			dismissKeyboard();
+			if(!mind)
+				mWarpField.setText("");
+		}
+		else
+			mWarpField.requestFocus();
+
 		if(!mind)
-			mWarpField.setText(String.valueOf(mTedlevel));
+		{
+			if(mTedlevel >= 0 && mTedlevelEnabled)
+				mWarpField.setText(String.valueOf(mTedlevel));
+			else
+				mWarpField.setText("");
+		}
+		
 		switch(mSkillLevel)
 		{
 		case 0:
@@ -179,6 +222,54 @@ public class MainActivity extends Activity implements
 		}
 		mSecretStep3Box.setChecked(mSecretStep3);
 		mLowResBox.setChecked(mLowRes);
+	}
+	
+	private void updateLevelList()
+	{
+		if(mWolfdir == null || mWolfdir.equals(mOldWolfdir))
+			return;
+		mOldWolfdir = mWolfdir;
+		
+		File dir = new File(mWolfdir);
+		File[] files = dir.listFiles();
+		if(files == null)
+		{
+			// TODO: empty the list
+			return;
+		}
+		
+		File maphead = null, gamemaps = null;
+		String name;
+		int count = 0;
+		for(File file : files)
+		{
+			name = file.getName().toLowerCase(Locale.US);
+			if(name.startsWith("gamemaps"))
+			{
+				gamemaps = file;
+				++count;
+			}
+			else if(name.startsWith("maphead"))
+			{
+				maphead = file;
+				++count;
+			}
+			if(count == 2)
+				break;
+		}
+		
+		if(maphead == null || gamemaps == null)
+		{
+			// TODO: empty the list
+			return;
+		}
+		
+		LevelChecker check = new LevelChecker();
+		if(!check.loadFile(maphead, gamemaps))
+		{
+			// TODO: empty the list
+			return;
+		}
 	}
 
 	@Override
@@ -252,17 +343,20 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) 
 	{
-		try
+		if(mTedlevelEnabled)
 		{
-			String text = mWarpField.getText().toString();
-			if(text != null && text.length() > 0)
-				mTedlevel = Integer.valueOf(text);
-			else
+			try
+			{
+				String text = mWarpField.getText().toString();
+				if(text != null && text.length() > 0)
+					mTedlevel = Integer.valueOf(text);
+				else
+					mTedlevel = -1;
+			}
+			catch(NumberFormatException e)
+			{
 				mTedlevel = -1;
-		}
-		catch(NumberFormatException e)
-		{
-			mTedlevel = -1;
+			}
 		}
 		updateUi(true);
 		putData();
@@ -277,6 +371,8 @@ public class MainActivity extends Activity implements
 				mSecretStep3 = mSecretStep3Box.isChecked();
 			else if(buttonView == mLowResBox)
 				mLowRes = mLowResBox.isChecked();
+			else if(buttonView == mWarpCheck)
+				mTedlevelEnabled = mWarpCheck.isChecked();
 			updateUi();
 			putData();
 			return;
@@ -308,7 +404,7 @@ public class MainActivity extends Activity implements
 			mArgs.add("--wolfdir");
 			mArgs.add(mWolfdir);
 		}
-		if(mTedlevel >= 0)
+		if(mTedlevel >= 0 && mTedlevelEnabled)
 		{
 			mArgs.add("--tedlevel");
 			mArgs.add(String.valueOf(mTedlevel));
@@ -359,15 +455,26 @@ public class MainActivity extends Activity implements
 		
 		SDLActivity.sDemandNorestore = true;
 	}
+	
+	private void dismissKeyboard()
+	{
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(mWarpField.getWindowToken(), 0);		
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		dismissKeyboard();
+	}
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) 
 	{
 		if(v == mScrollView)
 		{
-			InputMethodManager imm = (InputMethodManager)getSystemService(
-					Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(mWarpField.getWindowToken(), 0);
+			dismissKeyboard();
 		}
 		return false;
 	}
