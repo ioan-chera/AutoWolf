@@ -147,11 +147,10 @@ bool VSwapContainer::loadFile(const char *filename
 //            concat(pageOffsets[u]).concat(" (filesize: ").
 //            concat(fileSize).concat(")");
 //         }
+          free(pageOffsets);
+          free(pageLengths);
+          vswap.Close();
          throw Exception(PString("Illegal page offset for page ").concat(u).concat("): ").concat(pageOffsets[u]).concat(" (filesize: ").concat((int)fileSize).concat(")")());
-         free(pageOffsets);
-         free(pageLengths);
-         vswap.Close();
-         return false;
          
       }
    }

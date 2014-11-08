@@ -60,7 +60,7 @@ char *Cocoa_CreateApplicationSupportPathString()
         [pool release];
 		return ret;
 	}
-    [pool release];
+//    [pool release];
 }
 
 //

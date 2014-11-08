@@ -1678,6 +1678,6 @@ startplayloop:
         }
     } while (1);
 
-	DestroySavedInstance();
-	g_inGameLoop = false;
+//	DestroySavedInstance();
+//	g_inGameLoop = false;
 }
