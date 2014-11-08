@@ -21,12 +21,16 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef __ANDROID__
+#include <jni.h>
+#endif
 
 #include "wl_def.h"
 #include "Config.h"
 #include "i_video.h"
 #include "id_ca.h"
 #include "id_vh.h"
+#include "Logger.h"
 #include "PString.h"
 #include "SODFlag.h"
 #include "wl_main.h"
@@ -66,6 +70,29 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
 //   SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
    return ret;
 }
+
+#ifdef __ANDROID__
+static void UpdateAndroidSurfaceSize()
+{
+    void* venv = SDL_AndroidGetJNIEnv();
+    JNIEnv* env = (JNIEnv*)venv;
+    
+    jclass c = env->FindClass("org/libsdl/app/SDLActivity");
+    if(!c)
+    {
+        Logger::Write("Failed finding Android activity class!");
+        return;
+    }
+    
+    jmethodID mid = env->GetStaticMethodID(c, "updateSurfaceSize", "(II)V");
+    if(!mid)
+    {
+        Logger::Write("Failed finding Android activity class method!");
+        return;
+    }
+    env->CallStaticVoidMethod(c, mid, cfg_screenWidth, cfg_screenHeight);
+}
+#endif
 
 //
 // I_InitEngine
@@ -126,6 +153,9 @@ void I_InitEngine()
       cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
       cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI
 				  : SDL_WINDOW_ALLOW_HIGHDPI);
+#ifdef __ANDROID__
+    UpdateAndroidSurfaceSize();
+#endif
 
 //	if(cfg_screenBits == -1)
 //	{
@@ -154,9 +184,10 @@ void I_InitEngine()
 	                       " size: ") + SDL_GetError()).c_str());
 	}
 	
-	vid_texture = SDL_CreateTexture(vid_renderer,							   SDL_PIXELFORMAT_ABGR8888,
-		        SDL_TEXTUREACCESS_STREAMING,
-			cfg_screenWidth, cfg_screenHeight);
+	vid_texture = SDL_CreateTexture(vid_renderer,
+                                    SDL_PIXELFORMAT_ABGR8888,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    cfg_screenWidth, cfg_screenHeight);
 	if(!vid_texture)
 	{
 		throw Exception((std::string("Unable to create SDL texture: ")

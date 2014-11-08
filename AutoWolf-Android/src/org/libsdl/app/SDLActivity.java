@@ -118,11 +118,66 @@ public class SDLActivity extends Activity
         }
 
         sLayout = new AbsoluteLayout(this);
+//        AbsoluteLayout.LayoutParams allp = new AbsoluteLayout.LayoutParams(640, 400, 0, 0);
         sLayout.addView(sSurface);
+//        sSurface.setLayoutParams(allp);
 
         setContentView(sLayout);
         
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+    
+    public static void updateSurfaceSize(int requestedWidth, int requestedHeight)
+    {
+    	ViewGroup.LayoutParams vglp = sSurface.getLayoutParams();
+    	AbsoluteLayout.LayoutParams allp;
+    	
+    	// do the math
+    	int x, y, width, height;
+    	int screenWidth = sLayout.getWidth();
+    	int screenHeight = sLayout.getHeight();
+    	Log.d("SDLActivity", "Layout size: " + screenWidth + "*" + screenHeight);
+    	
+    	if(screenWidth <= 0 || screenHeight <= 0)
+    	{
+    		Log.e("SDLActivity", "Bad screen size!");
+    		return;
+    	}
+    	
+    	double ratio = (double)requestedWidth / requestedHeight;
+    	double screenRatio = (double)screenWidth / screenHeight;
+    	
+    	if(ratio > screenRatio)
+    	{
+    		// request wider than screen
+    		width = screenWidth;
+    		height = (int)(width / ratio);
+    		x = 0;
+    		y = (screenHeight - height) / 2;
+    	}
+    	else
+    	{
+    		height = screenHeight;
+    		width = (int)(height * ratio);
+    		y = 0;
+    		x = (screenWidth - width) / 2;
+    	}
+    	
+    	if(vglp instanceof AbsoluteLayout.LayoutParams)
+    	{
+    		allp = (AbsoluteLayout.LayoutParams)vglp;
+    	}
+    	else
+    	{
+    		allp = new AbsoluteLayout.LayoutParams(width, height, x, y);
+    		sSurface.setLayoutParams(allp);
+    	}
+		allp.width = width;
+		allp.height = height;
+		allp.x = x;
+		allp.y = y;
+		
+		Log.d("SDLActivity", "Updated screen size to " + width + " " + height + " " + x + " " + y);
     }
 
     // Events
