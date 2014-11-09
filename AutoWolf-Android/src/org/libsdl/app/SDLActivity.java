@@ -6,6 +6,7 @@ import java.util.Arrays;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -118,25 +120,28 @@ public class SDLActivity extends Activity
         }
 
         sLayout = new AbsoluteLayout(this);
-//        AbsoluteLayout.LayoutParams allp = new AbsoluteLayout.LayoutParams(640, 400, 0, 0);
+        sLayout.setBackgroundColor(Color.BLACK);
         sLayout.addView(sSurface);
-//        sSurface.setLayoutParams(allp);
+//        sSurface.getLayoutParams().width = 400;
 
         setContentView(sLayout);
+        
+        updateSurfaceSize();
         
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     
-    public static void updateSurfaceSize(int requestedWidth, int requestedHeight)
+    public static void updateSurfaceSize()
     {
-    	ViewGroup.LayoutParams vglp = sSurface.getLayoutParams();
-    	AbsoluteLayout.LayoutParams allp;
-    	
+    	final int requestedWidth = 640, requestedHeight = 400;
     	// do the math
-    	int x, y, width, height;
-    	int screenWidth = sLayout.getWidth();
-    	int screenHeight = sLayout.getHeight();
-    	Log.d("SDLActivity", "Layout size: " + screenWidth + "*" + screenHeight);
+    	final int x, y, width, height;
+    	
+    	Display display = sSingleton.getWindowManager().getDefaultDisplay();
+    	
+    	int screenWidth = Math.max(display.getWidth(), display.getHeight());
+    	int screenHeight = Math.min(display.getWidth(), display.getHeight());;
+    	Log.d("SDLActivity", "Screen size: " + screenWidth + "*" + screenHeight);
     	
     	if(screenWidth <= 0 || screenHeight <= 0)
     	{
@@ -163,14 +168,20 @@ public class SDLActivity extends Activity
     		x = (screenWidth - width) / 2;
     	}
     	
-    	if(vglp instanceof AbsoluteLayout.LayoutParams)
+    	ViewGroup.LayoutParams vglp = sSurface.getLayoutParams();
+    	AbsoluteLayout.LayoutParams allp;
+
+		if(vglp instanceof AbsoluteLayout.LayoutParams)
     	{
     		allp = (AbsoluteLayout.LayoutParams)vglp;
+    		Log.d("SDLActivity", "allp is vglp");
     	}
+	
     	else
     	{
     		allp = new AbsoluteLayout.LayoutParams(width, height, x, y);
     		sSurface.setLayoutParams(allp);
+    		Log.d("SDLActivity", "allp replaces vglp");
     	}
 		allp.width = width;
 		allp.height = height;
@@ -179,7 +190,7 @@ public class SDLActivity extends Activity
 		
 		Log.d("SDLActivity", "Updated screen size to " + width + " " + height + " " + x + " " + y);
     }
-
+    
     // Events
     @Override
     protected void onPause() 

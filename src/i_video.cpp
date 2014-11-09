@@ -71,29 +71,6 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
    return ret;
 }
 
-#ifdef __ANDROID__
-static void UpdateAndroidSurfaceSize()
-{
-    void* venv = SDL_AndroidGetJNIEnv();
-    JNIEnv* env = (JNIEnv*)venv;
-    
-    jclass c = env->FindClass("org/libsdl/app/SDLActivity");
-    if(!c)
-    {
-        Logger::Write("Failed finding Android activity class!");
-        return;
-    }
-    
-    jmethodID mid = env->GetStaticMethodID(c, "updateSurfaceSize", "(II)V");
-    if(!mid)
-    {
-        Logger::Write("Failed finding Android activity class method!");
-        return;
-    }
-    env->CallStaticVoidMethod(c, mid, cfg_screenWidth, cfg_screenHeight);
-}
-#endif
-
 //
 // I_InitEngine
 //
@@ -153,9 +130,6 @@ void I_InitEngine()
       cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
       cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI
 				  : SDL_WINDOW_ALLOW_HIGHDPI);
-#ifdef __ANDROID__
-    UpdateAndroidSurfaceSize();
-#endif
 
 //	if(cfg_screenBits == -1)
 //	{
