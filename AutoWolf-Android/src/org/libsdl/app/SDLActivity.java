@@ -6,7 +6,6 @@ import java.util.Arrays;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.media.AudioFormat;
 import android.media.AudioManager;
