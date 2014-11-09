@@ -3592,8 +3592,15 @@ static int Confirm (const char *string)
     int xit = 0, x, y, tick = 0, lastBlinkTime;
     int whichsnd[2] = { ESCPRESSEDSND, SHOOTSND };
     CursorInfo ci;
-
+    
+    // IOANCH: add some tap hint
+#ifdef __ANDROID__
+    std::string mstr = string;
+    mstr += "\n\nTap here for yes...";
+    Message(mstr.c_str());
+#else
     Message (string);
+#endif
     myInput.clearKeysDown ();
     WaitKeyUp ();
 
