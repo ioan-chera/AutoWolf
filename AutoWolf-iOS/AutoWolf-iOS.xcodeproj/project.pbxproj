@@ -78,6 +78,10 @@
 		4F4EFD5519C4F3D4003C8734 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD5419C4F3D4003C8734 /* CoreMotion.framework */; };
 		4FDA00441A0FE0DD00A57FCF /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDA00421A0FE0DD00A57FCF /* libSDL2_mixer.a */; };
 		4FDA00451A0FE0DD00A57FCF /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDA00431A0FE0DD00A57FCF /* libSDL2.a */; };
+		4FDA00491A1004C100A57FCF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA00471A1004C100A57FCF /* AppDelegate.m */; };
+		4FDA004A1A1004C100A57FCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA00481A1004C100A57FCF /* main.m */; };
+		4FDA004D1A1005E100A57FCF /* LauncherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FDA004C1A1005E100A57FCF /* LauncherViewController.m */; };
+		4FDA004F1A10078E00A57FCF /* wolftest in Resources */ = {isa = PBXBuildFile; fileRef = 4FDA004E1A10078E00A57FCF /* wolftest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -234,6 +238,12 @@
 		4F4EFD5419C4F3D4003C8734 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		4FDA00421A0FE0DD00A57FCF /* libSDL2_mixer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_mixer.a; path = ../lib/ios/libSDL2_mixer.a; sourceTree = "<group>"; };
 		4FDA00431A0FE0DD00A57FCF /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../lib/ios/libSDL2.a; sourceTree = "<group>"; };
+		4FDA00461A1004C100A57FCF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4FDA00471A1004C100A57FCF /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4FDA00481A1004C100A57FCF /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4FDA004B1A1005E100A57FCF /* LauncherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LauncherViewController.h; sourceTree = "<group>"; };
+		4FDA004C1A1005E100A57FCF /* LauncherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LauncherViewController.m; sourceTree = "<group>"; };
+		4FDA004E1A10078E00A57FCF /* wolftest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = wolftest; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -473,8 +483,14 @@
 		4F4EFD4619C4EC74003C8734 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				4FDA004E1A10078E00A57FCF /* wolftest */,
+				4FDA00461A1004C100A57FCF /* AppDelegate.h */,
+				4FDA00471A1004C100A57FCF /* AppDelegate.m */,
+				4FDA00481A1004C100A57FCF /* main.m */,
 				4F4EFD4719C4ECA0003C8734 /* CocoaFun.h */,
 				4F4EFD4819C4ECA0003C8734 /* CocoaFun.mm */,
+				4FDA004B1A1005E100A57FCF /* LauncherViewController.h */,
+				4FDA004C1A1005E100A57FCF /* LauncherViewController.m */,
 			);
 			name = ios;
 			sourceTree = "<group>";
@@ -554,6 +570,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDA004F1A10078E00A57FCF /* wolftest in Resources */,
 				4F4EFC7119C4EBE6003C8734 /* InfoPlist.strings in Resources */,
 				4F4EFC7919C4EBE6003C8734 /* Images.xcassets in Resources */,
 			);
@@ -586,6 +603,7 @@
 				4F4EFD1319C4EC2F003C8734 /* e_hashkeys.cpp in Sources */,
 				4F4EFD3619C4EC2F003C8734 /* wl_dir3dspr.cpp in Sources */,
 				4F4EFD1119C4EC2F003C8734 /* DataFile.cpp in Sources */,
+				4FDA004D1A1005E100A57FCF /* LauncherViewController.m in Sources */,
 				4F4EFD4019C4EC2F003C8734 /* wl_state.cpp in Sources */,
 				4F4EFD1019C4EC2F003C8734 /* Config.cpp in Sources */,
 				4F4EFD3919C4EC2F003C8734 /* wl_game.cpp in Sources */,
@@ -594,6 +612,7 @@
 				4F4EFD1A19C4EC2F003C8734 /* id_in.cpp in Sources */,
 				4F4EFD1E19C4EC2F003C8734 /* id_vh.cpp in Sources */,
 				4F4EFD2719C4EC2F003C8734 /* obattrib.cpp in Sources */,
+				4FDA00491A1004C100A57FCF /* AppDelegate.m in Sources */,
 				4F4EFD1D19C4EC2F003C8734 /* id_us_1.cpp in Sources */,
 				4F4EFD2119C4EC2F003C8734 /* ioan_bot.cpp in Sources */,
 				4F4EFD2E19C4EC2F003C8734 /* SODFlag.cpp in Sources */,
@@ -619,6 +638,7 @@
 				4F4EFD2419C4EC2F003C8734 /* m_buffer.cpp in Sources */,
 				4F4EFD3F19C4EC2F003C8734 /* wl_shade.cpp in Sources */,
 				4F4EFD4519C4EC6F003C8734 /* dbopl.cpp in Sources */,
+				4FDA004A1A1004C100A57FCF /* main.m in Sources */,
 				4F4EFD3819C4EC2F003C8734 /* wl_floorceiling.cpp in Sources */,
 				4F4EFD3419C4EC2F003C8734 /* wl_cloudsky.cpp in Sources */,
 				4F4EFD1219C4EC2F003C8734 /* DirectoryFile.cpp in Sources */,

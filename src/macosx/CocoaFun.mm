@@ -21,7 +21,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#if !TARGET_OS_IPHONE
+#include "../version.h"
+#ifdef OSX
 #import <AppKit/AppKit.h>
 #endif
 #import <Foundation/Foundation.h>
@@ -53,7 +54,9 @@ char *Cocoa_CreateApplicationSupportPathString()
 		}
 		
 		NSString *applicationSupportDirectory = [paths objectAtIndex:0];
-		const char* content = [[applicationSupportDirectory stringByAppendingPathComponent:APPLICATION_UTI] cStringUsingEncoding:NSUTF8StringEncoding];
+        NSString* settingsDir = [applicationSupportDirectory stringByAppendingPathComponent:APPLICATION_UTI];
+        [[NSFileManager defaultManager] createDirectoryAtPath:settingsDir withIntermediateDirectories:YES attributes:nil error:NULL];
+		const char* content = [settingsDir cStringUsingEncoding:NSUTF8StringEncoding];
 		
 		size_t len = strlen(content);
 		char *ret = (char*)calloc(len, sizeof(char));
@@ -72,10 +75,10 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 {
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	{
-#if TARGET_OS_IPHONE
+#ifdef IOS
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:[NSString stringWithCString:title encoding:NSUTF8StringEncoding] message:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
-#elif TARGET_OS_MAC
+#else
         [[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
 #endif
 	}
@@ -90,7 +93,7 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
 //
 void Cocoa_Notify(const char *title, const char *msg)
 {
-#if !TARGET_OS_IPHONE
+#ifdef OSX
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	{
         Class UserNotificationCenter = NSClassFromString(@"NSUserNotificationCenter");

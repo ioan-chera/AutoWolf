@@ -3594,7 +3594,7 @@ static int Confirm (const char *string)
     CursorInfo ci;
     
     // IOANCH: add some tap hint
-#ifdef __ANDROID__
+#ifdef TOUCHSCREEN
     std::string mstr = string;
     mstr += "\n\nTap here for yes...";
     Message(mstr.c_str());

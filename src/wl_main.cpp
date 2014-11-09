@@ -986,7 +986,7 @@ static void FinishSignon ()
 
         I_UpdateScreen();
 
-#ifndef __ANDROID__
+#ifndef TOUCHSCREEN
         if (!cfg_nowait)
             myInput.ack ();
 #endif
@@ -1012,7 +1012,7 @@ static void FinishSignon ()
     else
     {
         I_UpdateScreen();
-#ifndef __ANDROID__
+#ifndef TOUCHSCREEN
         if (!cfg_nowait)
             VL_WaitVBL(3*70);
 #endif
@@ -1792,10 +1792,10 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 //
 // Main program start
 //
-#if (defined(__APPLE__) && !TARGET_OS_IPHONE) || defined(__ANDROID__)	// OS X (but not iOS) still uses that NSApplicationMain thing. Android has to put up with JNI.
+#if defined(__APPLE__) || defined(__ANDROID__)
 #define main SDL_main
 #endif
-int main(int argc, TChar *argv[])
+int SDL_main(int argc, TChar *argv[])
 {
 	//TestListPerf();
 	try

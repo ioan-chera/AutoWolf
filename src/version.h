@@ -21,6 +21,23 @@
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
+// Platform stuff
+#ifdef __APPLE__
+#if TARGET_OS_IPHONE
+#define IOS
+#define TOUCHSCREEN
+#else
+#define OSX
+#endif
+#endif
+
+#ifdef __ANDROID__
+#ifndef TOUCHSCREEN
+#define TOUCHSCREEN
+#endif
+#endif
+
+
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 /* Defines used for different versions */

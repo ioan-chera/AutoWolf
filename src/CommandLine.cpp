@@ -292,7 +292,7 @@ void CommandLine::Parse()
 			"By Ioan Chera on Wolf4SDL codebase\n"
 			"Wolf4SDL: Ported by Chaos-Software (http://www.chaos-software.de.vu)\n"
 			"Original Wolfenstein 3D by id Software\n\n";
-#ifdef __APPLE__
+#ifdef OSX
 		help += "Usage: open -a AutoWolf --args [options]\n";
 #else
 		help += "Usage: autowolf [options]\n";
@@ -337,7 +337,7 @@ void CommandLine::Parse()
 #elif !defined(__APPLE__)
 		help += "                        (default: $HOME/.autowolf)\n";	// IOANCH 20130116: changed name
 #else
-		help += "                        (default: ~/Library/Application Support/com.ichera.autowolf)\n";
+		help += "                        (default: <Application Support>/com.ichera.autowolf)\n";
 #endif
 			// IOANCH 20130301: unification culling
 		help +=

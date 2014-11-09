@@ -21,10 +21,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifdef __ANDROID__
-#include <jni.h>
-#endif
-
 #include "wl_def.h"
 #include "Config.h"
 #include "i_video.h"
