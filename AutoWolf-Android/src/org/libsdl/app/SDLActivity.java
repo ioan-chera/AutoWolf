@@ -120,7 +120,7 @@ public class SDLActivity extends Activity
         }
 
         sLayout = new AbsoluteLayout(this);
-        sLayout.setBackgroundColor(Color.BLACK);
+//        sLayout.setBackgroundColor(Color.BLACK);
         sLayout.addView(sSurface);
 //        sSurface.getLayoutParams().width = 400;
 

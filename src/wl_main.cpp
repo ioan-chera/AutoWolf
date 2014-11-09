@@ -986,8 +986,10 @@ static void FinishSignon ()
 
         I_UpdateScreen();
 
+#ifndef __ANDROID__
         if (!cfg_nowait)
             myInput.ack ();
+#endif
 
         // IOANCH 20130301: unification culling
 
@@ -1010,9 +1012,10 @@ static void FinishSignon ()
     else
     {
         I_UpdateScreen();
-
+#ifndef __ANDROID__
         if (!cfg_nowait)
             VL_WaitVBL(3*70);
+#endif
     }
 
 }
