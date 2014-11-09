@@ -72,12 +72,12 @@
 		4F4EFD4119C4EC2F003C8734 /* wl_text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4EFD0C19C4EC2E003C8734 /* wl_text.cpp */; };
 		4F4EFD4519C4EC6F003C8734 /* dbopl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F4EFD4319C4EC6F003C8734 /* dbopl.cpp */; };
 		4F4EFD4919C4ECA0003C8734 /* CocoaFun.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4F4EFD4819C4ECA0003C8734 /* CocoaFun.mm */; };
-		4F4EFD4C19C4F230003C8734 /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD4A19C4F230003C8734 /* libSDL2_mixer.a */; };
-		4F4EFD4D19C4F230003C8734 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD4B19C4F230003C8734 /* libSDL2.a */; };
 		4F4EFD4F19C4F3B2003C8734 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD4E19C4F3B2003C8734 /* OpenGLES.framework */; };
 		4F4EFD5119C4F3C1003C8734 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD5019C4F3C1003C8734 /* QuartzCore.framework */; };
 		4F4EFD5319C4F3CC003C8734 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD5219C4F3CC003C8734 /* AudioToolbox.framework */; };
 		4F4EFD5519C4F3D4003C8734 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFD5419C4F3D4003C8734 /* CoreMotion.framework */; };
+		4FDA00441A0FE0DD00A57FCF /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDA00421A0FE0DD00A57FCF /* libSDL2_mixer.a */; };
+		4FDA00451A0FE0DD00A57FCF /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDA00431A0FE0DD00A57FCF /* libSDL2.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -228,12 +228,12 @@
 		4F4EFD4419C4EC6F003C8734 /* dbopl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dbopl.h; path = ../../src/dosbox/dbopl.h; sourceTree = "<group>"; };
 		4F4EFD4719C4ECA0003C8734 /* CocoaFun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CocoaFun.h; path = ../../src/macosx/CocoaFun.h; sourceTree = "<group>"; };
 		4F4EFD4819C4ECA0003C8734 /* CocoaFun.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CocoaFun.mm; path = ../../src/macosx/CocoaFun.mm; sourceTree = "<group>"; };
-		4F4EFD4A19C4F230003C8734 /* libSDL2_mixer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_mixer.a; path = ../lib/ios/libSDL2_mixer.a; sourceTree = "<group>"; };
-		4F4EFD4B19C4F230003C8734 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../lib/ios/libSDL2.a; sourceTree = "<group>"; };
 		4F4EFD4E19C4F3B2003C8734 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		4F4EFD5019C4F3C1003C8734 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4F4EFD5219C4F3CC003C8734 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4F4EFD5419C4F3D4003C8734 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		4FDA00421A0FE0DD00A57FCF /* libSDL2_mixer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2_mixer.a; path = ../lib/ios/libSDL2_mixer.a; sourceTree = "<group>"; };
+		4FDA00431A0FE0DD00A57FCF /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = ../lib/ios/libSDL2.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,12 +243,12 @@
 			files = (
 				4F4EFD5519C4F3D4003C8734 /* CoreMotion.framework in Frameworks */,
 				4F4EFD5319C4F3CC003C8734 /* AudioToolbox.framework in Frameworks */,
+				4FDA00451A0FE0DD00A57FCF /* libSDL2.a in Frameworks */,
 				4F4EFD5119C4F3C1003C8734 /* QuartzCore.framework in Frameworks */,
 				4F4EFD4F19C4F3B2003C8734 /* OpenGLES.framework in Frameworks */,
-				4F4EFD4C19C4F230003C8734 /* libSDL2_mixer.a in Frameworks */,
-				4F4EFD4D19C4F230003C8734 /* libSDL2.a in Frameworks */,
 				4F4EFC6919C4EBE6003C8734 /* CoreGraphics.framework in Frameworks */,
 				4F4EFC6B19C4EBE6003C8734 /* UIKit.framework in Frameworks */,
+				4FDA00441A0FE0DD00A57FCF /* libSDL2_mixer.a in Frameworks */,
 				4F4EFC6719C4EBE6003C8734 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,12 +288,12 @@
 		4F4EFC6519C4EBE6003C8734 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4FDA00421A0FE0DD00A57FCF /* libSDL2_mixer.a */,
+				4FDA00431A0FE0DD00A57FCF /* libSDL2.a */,
 				4F4EFD5419C4F3D4003C8734 /* CoreMotion.framework */,
 				4F4EFD5219C4F3CC003C8734 /* AudioToolbox.framework */,
 				4F4EFD5019C4F3C1003C8734 /* QuartzCore.framework */,
 				4F4EFD4E19C4F3B2003C8734 /* OpenGLES.framework */,
-				4F4EFD4A19C4F230003C8734 /* libSDL2_mixer.a */,
-				4F4EFD4B19C4F230003C8734 /* libSDL2.a */,
 				4F4EFC6619C4EBE6003C8734 /* Foundation.framework */,
 				4F4EFC6819C4EBE6003C8734 /* CoreGraphics.framework */,
 				4F4EFC6A19C4EBE6003C8734 /* UIKit.framework */,
@@ -677,7 +677,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -721,7 +720,6 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -845,6 +843,7 @@
 				4F4EFC9119C4EBE6003C8734 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4F4EFC9219C4EBE6003C8734 /* Build configuration list for PBXNativeTarget "AutoWolf-iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -853,6 +852,7 @@
 				4F4EFC9419C4EBE6003C8734 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
