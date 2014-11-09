@@ -3596,7 +3596,7 @@ static int Confirm (const char *string)
     // IOANCH: add some tap hint
 #ifdef __ANDROID__
     std::string mstr = string;
-    mstr += "\n\nTap for yes...";
+    mstr += "\n\nTap here for yes...";
     Message(mstr.c_str());
 #else
     Message (string);
