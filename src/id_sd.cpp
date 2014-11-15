@@ -814,7 +814,7 @@ void SD_L_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
                 }
             }
         }
-        if(sd_sqActive)
+        if(sd_sqActive && sd_sqHackPtr)
         {
             do
             {

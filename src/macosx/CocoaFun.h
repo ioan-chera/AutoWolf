@@ -27,6 +27,7 @@ void        Cocoa_Notify(const char *title, const char *msg);
 
 #ifdef IOS
 double      Cocoa_StatusBarHeight();
+void        Cocoa_HideStatusBar();
 double      Cocoa_PixelsPerDot();
 #endif
 

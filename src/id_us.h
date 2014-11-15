@@ -154,7 +154,7 @@ Boolean8         US_LineInput(int x,int y,char *buf,const char *def,Boolean8 esc
                              int maxchars,int maxwidth);
 
 
-void	        USL_PrintInCenter(const char *s,Rect r);
+void	        USL_PrintInCenter(const char *s,AWRect r);
 char 	        *USL_GiveSaveName(word game);
 
 #endif

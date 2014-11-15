@@ -124,6 +124,12 @@ double Cocoa_StatusBarHeight()
         return MIN(sz.width, sz.height);
     }
 }
+void Cocoa_HideStatusBar()
+{
+    @autoreleasepool {
+        [UIApplication sharedApplication].statusBarHidden = YES;
+    }
+}
 double Cocoa_PixelsPerDot()
 {
     @autoreleasepool {

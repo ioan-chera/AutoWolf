@@ -63,6 +63,10 @@
 #endif
 #include "wl_atmos.h"
 
+#ifdef IOS
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // WOLFENSTEIN 3-D
@@ -1787,12 +1791,53 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 }
 #endif
 
+static void InitIOSArgs(int* argc, TChar*** argv)
+{
+#ifdef IOS
+    *argv = (TChar**)calloc(5, sizeof(char*));
+    if(!*argv)
+        throw Exception("Fail allocating new argv struct!");
+    
+    unsigned i = 0;
+    
+    (*argv)[i++] = (TChar*)"AutoWolf";
+    (*argv)[i++] = (TChar*)"--norestore";
+//    (*argv)[i++] = (TChar*)"--res";
+//    (*argv)[i++] = (TChar*)"640";
+//    (*argv)[i++] = (TChar*)"480";
+//    (*argv)[i++] = (TChar*)"--joystick";
+//    (*argv)[i++] = (TChar*)"-1";
+    (*argv)[i++] = (TChar*)"--wolfdir";
+    (*argv)[i++] = (TChar*)calloc(PATH_MAX, sizeof(TChar));
+    
+    if((*argv)[i - 1] == nullptr)
+        throw Exception("Fail allocating path arg");
+    
+    CFBundleRef bundle = CFBundleGetMainBundle();
+    if(!bundle)
+        throw Exception("Couldn't get main bundle!");
+    CFURLRef resURL = CFBundleCopyResourcesDirectoryURL(bundle);
+    if(!resURL)
+        throw Exception("Couldn't get bundle resource URL!");
+    CFStringRef resPath = CFURLCopyPath(resURL);
+    if(!CFStringGetCString(resPath, (*argv)[i - 1], PATH_MAX, kCFStringEncodingUTF8))
+        throw Exception("Fail getting c string out of string");
+    
+    CFRelease(resPath);
+    CFRelease(resURL);
+    
+    strlcat((*argv)[i - 1], "/wolftest", PATH_MAX);
+    
+    *argc = i;
+#endif
+}
+
 //
 // main
 //
 // Main program start
 //
-#if defined(__APPLE__) || defined(__ANDROID__)
+#if defined(OSX) || defined(__ANDROID__)
 #define main SDL_main
 #endif
 int SDL_main(int argc, TChar *argv[])
@@ -1800,6 +1845,8 @@ int SDL_main(int argc, TChar *argv[])
 	//TestListPerf();
 	try
 	{
+        InitIOSArgs(&argc, &argv);
+        
 #if defined(_arch_dreamcast)
 		DC_Init();
 #else

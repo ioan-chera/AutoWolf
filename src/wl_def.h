@@ -103,13 +103,13 @@ typedef uint32_t longword;
 typedef int8_t Boolean8;
 typedef void * memptr;
 
-struct Point
+struct AWPoint
 {
     int x,y;
 };
-struct Rect
+struct AWRect
 {
-    Point ul,lr;
+    AWPoint ul,lr;
 };
 
 //#include "SODFlag.h"

@@ -21,6 +21,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "version.h"
 #include "wl_def.h"
 #include "Config.h"
 #include "i_video.h"
@@ -32,6 +33,10 @@
 #include "wl_main.h"
 #include "wl_draw.h"
 #include "Exception.h"
+
+#ifdef IOS
+#include "CocoaFun.h"
+#endif
 
 // used globally
 unsigned vid_screenPitch;
@@ -120,12 +125,19 @@ void I_InitEngine()
    memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
 
 #else
+    
+    Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
+#ifdef TOUCHSCREEN
+    flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+//    cfg_fullscreen = true;
+#endif
+    if(cfg_fullscreen)
+        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    
     vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
 				  SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED,
-      cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight,
-      cfg_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI
-				  : SDL_WINDOW_ALLOW_HIGHDPI);
+      cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight, flags);
 
 //	if(cfg_screenBits == -1)
 //	{
@@ -183,6 +195,10 @@ void I_InitEngine()
 //#ifdef __ANDROID__
 //	SDL_SetWindowSize(vid_window, cfg_screenWidth, cfg_screenHeight);
 //#endif
+    
+#ifdef IOS
+    Cocoa_HideStatusBar();
+#endif
 	
 }
 

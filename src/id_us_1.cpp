@@ -204,7 +204,7 @@ void US_PrintSigned(int32_t n)
 // 	USL_PrintInCenter() - Prints a string in the center of the given rect
 //
 ////////////////////////////////////////////////////////////////////////////////
-void USL_PrintInCenter(const char *s,Rect r)
+void USL_PrintInCenter(const char *s,AWRect r)
 {
 	word	w,h,
 			rw,rh;
@@ -225,7 +225,7 @@ void USL_PrintInCenter(const char *s,Rect r)
 ////////////////////////////////////////////////////////////////////////////////
 void US_PrintCentered(const char *s)
 {
-	Rect	r;
+	AWRect	r;
 
 	r.ul.x = WindowX;
 	r.ul.y = WindowY;

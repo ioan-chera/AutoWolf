@@ -276,11 +276,11 @@ void InputManager::p_processEvent(const SDL_Event *event)
 #ifdef IOS
            // UPDATE: on iOS, one must handle the status bar offset (20p?)
            
-           double statusBarHeight = Cocoa_StatusBarHeight() * Cocoa_PixelsPerDot();
-           
-           fingery = (fingery * (windowHeight + statusBarHeight) - statusBarHeight) / windowHeight;
-           if(fingery < 0)
-               fingery = 0;
+//           double statusBarHeight = Cocoa_StatusBarHeight() * Cocoa_PixelsPerDot();
+//           
+//           fingery = (fingery * (windowHeight + statusBarHeight) - statusBarHeight) / windowHeight;
+//           if(fingery < 0)
+//               fingery = 0;
 #endif
 		   
 		   if(128*windowWidth / windowHeight >
