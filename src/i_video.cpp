@@ -51,6 +51,8 @@ static SDL_Texture* vid_texture;
 static SDL_Color* vid_trueBuffer;
 #endif
 
+int vid_screenWidth, vid_screenHeight;
+
 static SDL_Surface *vid_screenBuffer;
 
 static SDL_Surface *vid_latchpics[NUMLATCHPICS];
@@ -129,6 +131,11 @@ void I_InitEngine()
     Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
 #ifdef TOUCHSCREEN
     flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    
+    SDL_DisplayMode mode;
+    SDL_GetDesktopDisplayMode(0, &mode);   //<-- calls SDL_GetVideoInfo();
+    vid_screenWidth = mode.w;
+    vid_screenHeight = mode.h;
 //    cfg_fullscreen = true;
 #endif
     if(cfg_fullscreen)
@@ -159,19 +166,17 @@ void I_InitEngine()
 	}
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 // make the scaled rendering look smoother.
-    int w = cfg_logicalWidth;
-    int h = cfg_logicalHeight;
-    
 #ifdef TOUCHSCREEN
-    // aspect ratio correction
-    w = cfg_displayWidth;
-    h = cfg_displayHeight;
-#else
+    // aspect ratio correction on iOS. For Android it's done differently
     cfg_displayWidth = cfg_logicalWidth;
-    cfg_displayHeight = cfg_logicalHeight;
+    cfg_displayHeight = 3 * cfg_displayWidth / 4;
+#else
+    vid_screenWidth = cfg_displayWidth = cfg_logicalWidth;
+    vid_screenHeight = cfg_displayHeight = cfg_logicalHeight;
 #endif
+    cfg_displayRatio = (float)cfg_displayWidth / cfg_displayHeight;
     
-	if(SDL_RenderSetLogicalSize(vid_renderer, w, h) < 0)
+	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_displayWidth, cfg_displayHeight) < 0)
 	{
 		throw Exception((std::string("Unable to set SDL renderer logical"
 	                       " size: ") + SDL_GetError()).c_str());

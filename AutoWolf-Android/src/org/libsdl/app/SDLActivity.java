@@ -132,7 +132,7 @@ public class SDLActivity extends Activity
     
     public static void updateSurfaceSize()
     {
-    	final int requestedWidth = 640, requestedHeight = 400;
+    	final int requestedWidth = 640, requestedHeight = 480;
     	// do the math
     	final int x, y, width, height;
     	

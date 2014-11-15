@@ -265,19 +265,18 @@ void InputManager::p_processEvent(const SDL_Event *event)
 	   case SDL_FINGERUP:
 	   {
 		   m_fingerdown = event->type != SDL_FINGERUP;
-		   int windowWidth, windowHeight;
            float fingerx = event->tfinger.x;
            float fingery = event->tfinger.y;
-		   SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
 		   // WARNING: it's assumed that the window is in the middle. Who's to
 		   // know for sure?
            
 #ifdef TOUCHSCREEN
            // UPDATE: on iOS, one must handle the status bar offset (20p?)
-           
+//           Logger::Write("%d %d\n", vid_screenWidth, vid_screenHeight);
+//           Logger::Write("x %f y %f\n", fingerx, fingery);
 #endif
 
-		   if(128*windowWidth / windowHeight >
+		   if(128*vid_screenWidth / vid_screenHeight >
 			  static_cast<int>(128*cfg_displayWidth / cfg_displayHeight))
 		   {
 			   // Greater aspect ratio of window: pillar box. Height is correct
@@ -290,14 +289,14 @@ void InputManager::p_processEvent(const SDL_Event *event)
 			   // a = 1 / 2 - 1 / 2 * w / W
 			   // a = 1 / 2 * (1 - w / W)
 			   // a = 1 / 2 * (1 - H / sh * sw / W)
-			   float a = 0.5f * (1 - (float)windowHeight * cfg_displayRatio / windowWidth);
+			   float a = 0.5f * (1 - (float)vid_screenHeight * cfg_displayRatio / vid_screenWidth);
 			   m_touchx = static_cast<int>((fingerx - a) / (1 - 2 * a) * cfg_logicalWidth);
 			   m_touchy = static_cast<int>(fingery * cfg_logicalHeight);
 			   
 		   }
 		   else
 		   {
-			   float a = 0.5f * (1 - (float)windowWidth / cfg_displayRatio / windowHeight);
+			   float a = 0.5f * (1 - (float)vid_screenWidth / cfg_displayRatio / vid_screenHeight);
 			   m_touchx = static_cast<int>(fingerx * cfg_logicalWidth);
 			   m_touchy = static_cast<int>((fingery - a) / (1 - 2 * a) * cfg_logicalHeight);
 		   }
