@@ -115,3 +115,19 @@ void Cocoa_Notify(const char *title, const char *msg)
     [pool release];
 #endif
 }
+
+#ifdef IOS
+double Cocoa_StatusBarHeight()
+{
+    @autoreleasepool {
+        CGSize sz = [UIApplication sharedApplication].statusBarFrame.size;
+        return MIN(sz.width, sz.height);
+    }
+}
+double Cocoa_PixelsPerDot()
+{
+    @autoreleasepool {
+        return [UIScreen mainScreen].scale;
+    }
+}
+#endif

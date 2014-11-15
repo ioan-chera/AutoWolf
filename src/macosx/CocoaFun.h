@@ -25,5 +25,10 @@ void        Cocoa_DisplayErrorAlert(const char *msg, const char* title);
 
 void        Cocoa_Notify(const char *title, const char *msg);
 
+#ifdef IOS
+double      Cocoa_StatusBarHeight();
+double      Cocoa_PixelsPerDot();
+#endif
+
 #endif
 

@@ -23,6 +23,7 @@
 
 // Platform stuff
 #ifdef __APPLE__
+#include <TargetConditionals.h>
 #if TARGET_OS_IPHONE
 #define IOS
 #define TOUCHSCREEN

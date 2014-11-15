@@ -37,6 +37,7 @@
 //	DEBUG - there are more globals
 //
 
+#include "version.h"
 #include "Config.h"
 #include "Exception.h"
 #include "i_system.h"
@@ -50,6 +51,10 @@
 #include "wl_def.h"
 #include "wl_main.h"
 #include "wl_play.h"
+
+#ifdef IOS
+#include "CocoaFun.h"
+#endif
 
 #ifdef USE_SDL1_2
 #define KP2 SDLK_KP2
@@ -260,10 +265,23 @@ void InputManager::p_processEvent(const SDL_Event *event)
 	   case SDL_FINGERUP:
 	   {
 		   m_fingerdown = event->type != SDL_FINGERUP;
-		   int windowWidth, windowHeight;
+		   int windowWidth, windowHeight, windowX, windowY;
+           float fingerx = event->tfinger.x;
+           float fingery = event->tfinger.y;
 		   SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
+           SDL_GetWindowPosition(vid_window, &windowX, &windowY);
 		   // WARNING: it's assumed that the window is in the middle. Who's to
 		   // know for sure?
+           
+#ifdef IOS
+           // UPDATE: on iOS, one must handle the status bar offset (20p?)
+           
+           double statusBarHeight = Cocoa_StatusBarHeight() * Cocoa_PixelsPerDot();
+           
+           fingery = (fingery * (windowHeight + statusBarHeight) - statusBarHeight) / windowHeight;
+           if(fingery < 0)
+               fingery = 0;
+#endif
 		   
 		   if(128*windowWidth / windowHeight >
 			  static_cast<int>(128*cfg_screenWidth / cfg_screenHeight))
@@ -279,15 +297,15 @@ void InputManager::p_processEvent(const SDL_Event *event)
 			   // a = 1 / 2 * (1 - w / W)
 			   // a = 1 / 2 * (1 - H / sh * sw / W)
 			   float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio / windowWidth);
-			   m_touchx = static_cast<int>((event->tfinger.x - a) / (1 - 2 * a) * cfg_screenWidth);
-			   m_touchy = static_cast<int>(event->tfinger.y * cfg_screenHeight);
+			   m_touchx = static_cast<int>((fingerx - a) / (1 - 2 * a) * cfg_screenWidth);
+			   m_touchy = static_cast<int>(fingery * cfg_screenHeight);
 			   
 		   }
 		   else
 		   {
 			   float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio / windowHeight);
-			   m_touchx = static_cast<int>(event->tfinger.x * cfg_screenWidth);
-			   m_touchy = static_cast<int>((event->tfinger.y - a) / (1 - 2 * a) * cfg_screenHeight);
+			   m_touchx = static_cast<int>(fingerx * cfg_screenWidth);
+			   m_touchy = static_cast<int>((fingery - a) / (1 - 2 * a) * cfg_screenHeight);
 		   }
 	   }
 		   break;

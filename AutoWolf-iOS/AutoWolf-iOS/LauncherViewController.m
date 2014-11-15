@@ -37,14 +37,17 @@ extern int SDL_main(int argc, char* argv[]);
 -(void)buttonClicked:(id)sender
 {
     NSString* rp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"wolftest"];
-    char** argv = calloc(4, sizeof(char*));
+    char** argv = calloc(5, sizeof(char*));
     argv[0] = "AutoWolf";
-    argv[1] = "--wolfdir";
-    argv[2] = calloc(PATH_MAX, sizeof(char));
-    [rp getCString:argv[2] maxLength:PATH_MAX - 1 encoding:NSUTF8StringEncoding];
+    argv[1] = "--norestore";
+    argv[2] = "--wolfdir";
+    argv[3] = calloc(PATH_MAX, sizeof(char));
+    [rp getCString:argv[3] maxLength:PATH_MAX - 1 encoding:NSUTF8StringEncoding];
+    
+    
     
     SDL_SetMainReady();
-    SDL_main(3, argv);
+    SDL_main(4, argv);
 }
 
 - (void)didReceiveMemoryWarning
