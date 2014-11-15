@@ -1538,9 +1538,9 @@ void    A_StartDeathCam (objtype *ob)
     if(cfg_usedoublebuffering) I_UpdateScreen();
     
     gamestate.victoryflag = true;
-    unsigned fadeheight = viewsize != 21 ? cfg_screenHeight-vid_scaleFactor*STATUSLINES : cfg_screenHeight;
-    VL_BarScaledCoord (0, 0, cfg_screenWidth, fadeheight, bordercol);
-    FizzleFade(0, 0, cfg_screenWidth, fadeheight, 70, false);
+    unsigned fadeheight = viewsize != 21 ? cfg_logicalHeight-vid_scaleFactor*STATUSLINES : cfg_logicalHeight;
+    VL_BarScaledCoord (0, 0, cfg_logicalWidth, fadeheight, bordercol);
+    FizzleFade(0, 0, cfg_logicalWidth, fadeheight, 70, false);
     
     if (bordercol != VIEWCOLOR)
     {

@@ -1577,7 +1577,7 @@ void    ThreeDRefresh ()
 
    if (fizzlein)
    {
-      FizzleFade(0, 0, cfg_screenWidth, cfg_screenHeight, 20, false);
+      FizzleFade(0, 0, cfg_logicalWidth, cfg_logicalHeight, 20, false);
       fizzlein = false;
 
       lasttimecount = GetTimeCount();          // don't make a big tic count

@@ -220,7 +220,7 @@ public:
    void centreMouse() const
    {
 #ifdef USE_SDL1_2
-     SDL_WarpMouse(cfg_screenWidth / 2, cfg_screenHeight / 2);
+     SDL_WarpMouse(cfg_logicalWidth / 2, cfg_logicalHeight / 2);
 #else
 	   int w, h;
 	   SDL_GetWindowSize(vid_window, &w, &h);

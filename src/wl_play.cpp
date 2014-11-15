@@ -431,8 +431,8 @@ static void PollMouseMove ()
     if(myInput.inputGrabbed())
         myInput.centreMouse();
 
-    mousexmove -= cfg_screenWidth / 2;
-    mouseymove -= cfg_screenHeight / 2;
+    mousexmove -= cfg_logicalWidth / 2;
+    mouseymove -= cfg_logicalHeight / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);

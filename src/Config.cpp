@@ -83,13 +83,13 @@ int     cfg_tedlevel = -1;            // default is not to start a level
 
 #if defined(_arch_dreamcast)
 bool  cfg_usedoublebuffering = false;
-unsigned cfg_screenWidth = LOGIC_WIDTH;
-unsigned cfg_screenHeight = LOGIC_HEIGHT;
+unsigned cfg_logicalWidth = LOGIC_WIDTH;
+unsigned cfg_logicalHeight = LOGIC_HEIGHT;
 unsigned cfg_screenBits = 8;
 #elif defined(GP2X)
 bool  cfg_usedoublebuffering = true;
-unsigned cfg_screenWidth = LOGIC_WIDTH;
-unsigned cfg_screenHeight = 240;
+unsigned cfg_logicalWidth = LOGIC_WIDTH;
+unsigned cfg_logicalHeight = 240;
 #if defined(GP2X_940)
 unsigned cfg_screenBits = 8;
 #else
@@ -97,11 +97,15 @@ unsigned cfg_screenBits = 16;
 #endif
 #else
 bool  cfg_usedoublebuffering = true;
-unsigned cfg_screenWidth = 640;
-unsigned cfg_screenHeight = 400;
+unsigned cfg_logicalWidth = 640;
+unsigned cfg_logicalHeight = 400;
+// CURRENTLY TOUCHSCREEN ONLY
+unsigned cfg_displayWidth = 640;
+unsigned cfg_displayHeight = 480;
+float cfg_displayRatio = (float)cfg_displayWidth / cfg_displayHeight;
 unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 #endif
-float cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
+float cfg_logicalRatio = (float)cfg_logicalWidth / cfg_logicalHeight;
 
 bool cfg_norestore;
 

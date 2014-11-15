@@ -515,9 +515,9 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	SDL_GetWindowSize(vid_window, &windowWidth, &windowHeight);
 	SDL_Rect rect;
 	if(128*windowWidth / windowHeight >
-	   static_cast<int>(128*cfg_screenWidth / cfg_screenHeight))
+	   static_cast<int>(128*cfg_displayWidth / cfg_displayHeight))
 	{
-		float a = 0.5f * (1 - (float)windowHeight * cfg_aspectRatio /
+		float a = 0.5f * (1 - (float)windowHeight * cfg_displayRatio /
 						  windowWidth);
 		
 		rect.x = static_cast<int>(windowWidth * (a + (float)x / LOGIC_WIDTH * (1 - 2 * a)));
@@ -525,7 +525,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	}
 	else
 	{
-		float a = 0.5f * (1 - (float)windowWidth / cfg_aspectRatio /
+		float a = 0.5f * (1 - (float)windowWidth / cfg_displayRatio /
 						  windowHeight);
 		rect.x = static_cast<int>(windowWidth * ((float)x / LOGIC_WIDTH));
 		rect.y = static_cast<int>(windowHeight * (a + (float)y / LOGIC_HEIGHT * (1 - 2 * a)));

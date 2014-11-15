@@ -47,9 +47,11 @@ extern int      cfg_mission;
 extern bool  cfg_nowait;
 extern int      cfg_tedlevel;
 extern unsigned cfg_screenBits;
-extern unsigned cfg_screenHeight;
-extern unsigned cfg_screenWidth;
-extern float	cfg_aspectRatio;
+extern unsigned cfg_logicalHeight;
+extern unsigned cfg_logicalWidth;
+extern unsigned cfg_displayWidth, cfg_displayHeight;
+extern float    cfg_displayRatio;
+extern float	cfg_logicalRatio;
 extern bool  cfg_usedoublebuffering;
 extern bool cfg_norestore;
     

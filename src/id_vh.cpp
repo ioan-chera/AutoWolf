@@ -316,8 +316,8 @@ static int log2_ceil(uint32_t x)
 //
 void VH_Startup()
 {
-    int rndbits_x = log2_ceil(cfg_screenWidth);
-    fiz_rndbits_y = log2_ceil(cfg_screenHeight);
+    int rndbits_x = log2_ceil(cfg_logicalWidth);
+    fiz_rndbits_y = log2_ceil(cfg_logicalHeight);
 
     int rndbits = rndbits_x + fiz_rndbits_y;
     if(rndbits < 17)
@@ -398,7 +398,7 @@ Boolean8 FizzleFade (int x1, int y1, unsigned width,
                     // copy one pixel
                     //
 					
-					destptr[(y1 + y) * cfg_screenWidth + x1 + x] = vid_curpal[srcptr[(y1 + y) * cfg_screenWidth + x1 + x]];
+					destptr[(y1 + y) * cfg_logicalWidth + x1 + x] = vid_curpal[srcptr[(y1 + y) * cfg_logicalWidth + x1 + x]];
 
                     if(rndval == 0)		// entire sequence has been completed
                         goto finished;

@@ -721,7 +721,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+                if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -800,7 +800,7 @@ static int CP_CheckQuick (ScanCode scancode)
                 }
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+                if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
                 lastgamemusicoffset = StartCPMusic (MENUSONG);
@@ -2819,7 +2819,7 @@ static int CP_ChangeView (int)
         {
             Sound::Play (ESCPRESSEDSND);
             MenuFadeOut ();
-            if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+            if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
                 I_ClearScreen(0);
             return 0;
         }
@@ -2835,7 +2835,7 @@ static int CP_ChangeView (int)
 
     ShootSnd ();
     MenuFadeOut ();
-    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+    if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     return 0;
@@ -2848,12 +2848,12 @@ static int CP_ChangeView (int)
 //
 static void DrawChangeView (int view)
 {
-    int rescaledHeight = cfg_screenHeight / vid_scaleFactor;
+    int rescaledHeight = cfg_logicalHeight / vid_scaleFactor;
     if(view != 21) VL_Bar (0, rescaledHeight - 40, LOGIC_WIDTH, 40, bordercol);
 // IOANCH 20130301: unification culling
     ShowViewSize (view);
 
-    PrintY = (cfg_screenHeight / vid_scaleFactor) - 39;
+    PrintY = (cfg_logicalHeight / vid_scaleFactor) - 39;
     WindowX = 0;
     WindowY = LOGIC_WIDTH;                                  // TODO: Check this!
     SETFONTCOLOR (HIGHLIGHT, Menu::g_bkgdColor);
@@ -2986,7 +2986,7 @@ static void SetupControlPanel ()
     SETFONTCOLOR (TEXTCOLOR, Menu::g_bkgdColor);
     fontnumber = 1;
     WindowH = LOGIC_HEIGHT;
-    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+    if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     if (!ingame)

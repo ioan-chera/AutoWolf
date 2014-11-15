@@ -270,8 +270,8 @@ void VL_Plot (int x, int y, int color)
 {
     byte *ptr;
 
-    assert(x >= 0 && (unsigned) x < cfg_screenWidth
-            && y >= 0 && (unsigned) y < cfg_screenHeight
+    assert(x >= 0 && (unsigned) x < cfg_logicalWidth
+            && y >= 0 && (unsigned) y < cfg_logicalHeight
             && "VL_Plot: Pixel out of bounds!");
 
     ptr = I_LockBuffer();
@@ -296,8 +296,8 @@ byte VL_GetPixel (int x, int y)
     byte *ptr;
     byte col;
 
-    assert_ret(x >= 0 && (unsigned) x < cfg_screenWidth
-            && y >= 0 && (unsigned) y < cfg_screenHeight
+    assert_ret(x >= 0 && (unsigned) x < cfg_logicalWidth
+            && y >= 0 && (unsigned) y < cfg_logicalHeight
             && "VL_GetPixel: Pixel out of bounds!");
 
     ptr = I_LockBuffer();
@@ -324,8 +324,8 @@ void VL_Hlin (unsigned x, unsigned y, unsigned width, int color)
 {
     byte *ptr;
 
-    assert(x >= 0 && x + width <= cfg_screenWidth
-            && y >= 0 && y < cfg_screenHeight
+    assert(x >= 0 && x + width <= cfg_logicalWidth
+            && y >= 0 && y < cfg_logicalHeight
             && "VL_Hlin: Destination rectangle out of bounds!");
 
     ptr = I_LockBuffer();
@@ -350,8 +350,8 @@ void VL_Vlin (int x, int y, int height, int color)
 {
 	byte *ptr;
 
-	assert(x >= 0 && (unsigned) x < cfg_screenWidth
-			&& y >= 0 && (unsigned) y + height <= cfg_screenHeight
+	assert(x >= 0 && (unsigned) x < cfg_logicalWidth
+			&& y >= 0 && (unsigned) y + height <= cfg_logicalHeight
 			&& "VL_Vlin: Destination rectangle out of bounds!");
 
 	ptr = I_LockBuffer();
@@ -382,8 +382,8 @@ void VL_BarScaledCoord (int scx, int scy, int scwidth, int scheight, int color)
 {
 	byte *ptr;
 
-	assert(scx >= 0 && (unsigned) scx + scwidth <= cfg_screenWidth
-			&& scy >= 0 && (unsigned) scy + scheight <= cfg_screenHeight
+	assert(scx >= 0 && (unsigned) scx + scwidth <= cfg_logicalWidth
+			&& scy >= 0 && (unsigned) scy + scheight <= cfg_logicalHeight
 			&& "VL_BarScaledCoord: Destination rectangle out of bounds!");
 
 	ptr = I_LockBuffer();
@@ -426,8 +426,8 @@ void VL_MemToScreenScaledCoord (const byte *source, int width, int height,
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * vid_scaleFactor <= cfg_screenWidth
-            && desty >= 0 && desty + height * vid_scaleFactor <= cfg_screenHeight
+    assert(destx >= 0 && destx + width * vid_scaleFactor <= cfg_logicalWidth
+            && desty >= 0 && desty + height * vid_scaleFactor <= cfg_logicalHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     ptr = I_LockBuffer();
@@ -474,8 +474,8 @@ void VL_MemToScreenScaledCoord (const byte *source, int origwidth, int origheigh
     int i, j, sci, scj;
     unsigned m, n;
 
-    assert(destx >= 0 && destx + width * vid_scaleFactor <= cfg_screenWidth
-            && desty >= 0 && desty + height * vid_scaleFactor <= cfg_screenHeight
+    assert(destx >= 0 && destx + width * vid_scaleFactor <= cfg_logicalWidth
+            && desty >= 0 && desty + height * vid_scaleFactor <= cfg_logicalHeight
             && "VL_MemToScreenScaledCoord: Destination rectangle out of bounds!");
 
     ptr = I_LockBuffer();
@@ -507,12 +507,12 @@ void VL_MemToScreenScaledCoord (const byte *source, int origwidth, int origheigh
 //
 void VL_SetViewportValues()
 {
-   vid_scaleFactor = cfg_screenWidth/LOGIC_WIDTH;
-   if(cfg_screenHeight/LOGIC_HEIGHT < vid_scaleFactor)
-      vid_scaleFactor = cfg_screenHeight/LOGIC_HEIGHT;
+   vid_scaleFactor = cfg_logicalWidth/LOGIC_WIDTH;
+   if(cfg_logicalHeight/LOGIC_HEIGHT < vid_scaleFactor)
+      vid_scaleFactor = cfg_logicalHeight/LOGIC_HEIGHT;
    
-   vid_pixelangle = (short *) I_CheckedMalloc(cfg_screenWidth * sizeof(short));
+   vid_pixelangle = (short *) I_CheckedMalloc(cfg_logicalWidth * sizeof(short));
 
-   vid_wallheight = (int *) I_CheckedMalloc(cfg_screenWidth * sizeof(int));
+   vid_wallheight = (int *) I_CheckedMalloc(cfg_logicalWidth * sizeof(int));
 
 }

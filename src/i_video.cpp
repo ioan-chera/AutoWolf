@@ -46,7 +46,7 @@ unsigned vid_bufferPitch;
 static SDL_Surface* vid_screen;
 #else
 SDL_Window* vid_window;
-static SDL_Renderer* vid_renderer;
+SDL_Renderer* vid_renderer;
 static SDL_Texture* vid_texture;
 static SDL_Color* vid_trueBuffer;
 #endif
@@ -106,7 +106,7 @@ void I_InitEngine()
 		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
 	}
     
-    vid_screen = SDL_SetVideoMode(cfg_screenWidth, cfg_screenHeight,
+    vid_screen = SDL_SetVideoMode(cfg_logicalWidth, cfg_logicalHeight,
 								  cfg_screenBits,
 								  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
 								  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
@@ -137,7 +137,7 @@ void I_InitEngine()
     vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
 				  SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED,
-      cfg_fullscreen ? 0 : cfg_screenWidth, cfg_fullscreen ? 0 : cfg_screenHeight, flags);
+      cfg_fullscreen ? 0 : cfg_logicalWidth, cfg_fullscreen ? 0 : cfg_logicalHeight, flags);
 
 //	if(cfg_screenBits == -1)
 //	{
@@ -159,8 +159,19 @@ void I_InitEngine()
 	}
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 // make the scaled rendering look smoother.
-	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_screenWidth,
-	cfg_screenHeight) < 0)
+    int w = cfg_logicalWidth;
+    int h = cfg_logicalHeight;
+    
+#ifdef TOUCHSCREEN
+    // aspect ratio correction
+    w = cfg_displayWidth;
+    h = cfg_displayHeight;
+#else
+    cfg_displayWidth = cfg_logicalWidth;
+    cfg_displayHeight = cfg_logicalHeight;
+#endif
+    
+	if(SDL_RenderSetLogicalSize(vid_renderer, w, h) < 0)
 	{
 		throw Exception((std::string("Unable to set SDL renderer logical"
 	                       " size: ") + SDL_GetError()).c_str());
@@ -169,14 +180,14 @@ void I_InitEngine()
 	vid_texture = SDL_CreateTexture(vid_renderer,
                                     SDL_PIXELFORMAT_ABGR8888,
                                     SDL_TEXTUREACCESS_STREAMING,
-                                    cfg_screenWidth, cfg_screenHeight);
+                                    cfg_logicalWidth, cfg_logicalHeight);
 	if(!vid_texture)
 	{
 		throw Exception((std::string("Unable to create SDL texture: ")
 	                         + SDL_GetError()).c_str());
 	}
 
-	vid_trueBuffer = new SDL_Color[cfg_screenWidth * cfg_screenHeight];
+	vid_trueBuffer = new SDL_Color[cfg_logicalWidth * cfg_logicalHeight];
 #endif
 	
 //	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
@@ -187,13 +198,13 @@ void I_InitEngine()
 //	SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
 	memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
 	
-	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_screenWidth, cfg_screenHeight);
+	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_logicalWidth, cfg_logicalHeight);
 	
 	vid_bufferPitch = vid_screenBuffer->pitch;
 	
 	// IOANCH: removed vid_curSurface, was redundant
 //#ifdef __ANDROID__
-//	SDL_SetWindowSize(vid_window, cfg_screenWidth, cfg_screenHeight);
+//	SDL_SetWindowSize(vid_window, cfg_logicalWidth, cfg_logicalHeight);
 //#endif
     
 #ifdef IOS
@@ -309,7 +320,7 @@ void I_UpdateDirect()
 #ifdef USE_SDL1_2
     SDL_Flip(vid_screen);
 #else
-	SDL_UpdateTexture(vid_texture, nullptr, vid_trueBuffer, cfg_screenWidth * sizeof(SDL_Color));
+	SDL_UpdateTexture(vid_texture, nullptr, vid_trueBuffer, cfg_logicalWidth * sizeof(SDL_Color));
 	SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr);
 	SDL_RenderPresent(vid_renderer);
 #endif
@@ -322,11 +333,11 @@ void I_UpdateScreen()
 	SDL_Flip(vid_screen);
 #else
 	unsigned x, y;
-	for (y = 0; y < cfg_screenHeight; ++y)
+	for (y = 0; y < cfg_logicalHeight; ++y)
 	{
-		for (x = 0; x < cfg_screenWidth; ++x)
+		for (x = 0; x < cfg_logicalWidth; ++x)
 		{
-			vid_trueBuffer[y * cfg_screenWidth + x] = vid_curpal[static_cast<uint8_t*>(vid_screenBuffer->pixels)[y * cfg_screenWidth + x]];
+			vid_trueBuffer[y * cfg_logicalWidth + x] = vid_curpal[static_cast<uint8_t*>(vid_screenBuffer->pixels)[y * cfg_logicalWidth + x]];
 		}
 	}
 	I_UpdateDirect();
@@ -384,8 +395,8 @@ memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
 void I_LatchToScreenScaledCoord(int surf_index, int xsrc, int ysrc,
                                 int width, int height, int scxdest, int scydest)
 {
-	assert(scxdest >= 0 && scxdest + width * vid_scaleFactor <= cfg_screenWidth
-          && scydest >= 0 && scydest + height * vid_scaleFactor <= cfg_screenHeight
+	assert(scxdest >= 0 && scxdest + width * vid_scaleFactor <= cfg_logicalWidth
+          && scydest >= 0 && scydest + height * vid_scaleFactor <= cfg_logicalHeight
           && "I_LatchToScreenScaledCoord: Destination rectangle out of bounds!");
    
    SDL_Surface *source = vid_latchpics[surf_index];
@@ -554,8 +565,8 @@ void I_MemToLatch(const byte *source, int width, int height, SDL_Surface *destSu
    byte *ptr;
    int xsrc, ysrc, pitch;
    
-   assert(x >= 0 && (unsigned) x + width <= cfg_screenWidth
-          && y >= 0 && (unsigned) y + height <= cfg_screenHeight
+   assert(x >= 0 && (unsigned) x + width <= cfg_logicalWidth
+          && y >= 0 && (unsigned) y + height <= cfg_logicalHeight
           && "I_MemToLatch: Destination rectangle out of bounds!");
    
    ptr = I_lockSurface(destSurface);

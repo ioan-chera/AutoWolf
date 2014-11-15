@@ -32,6 +32,7 @@ extern  unsigned vid_bufferPitch;
 //extern SDL_Surface* vid_screen;
 #else
 extern SDL_Window* vid_window;
+extern SDL_Renderer* vid_renderer;
 #endif
 
 void I_InitEngine();

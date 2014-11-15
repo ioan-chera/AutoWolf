@@ -894,8 +894,8 @@ void DrawPlayBorderSides()
 {
     if(viewsize == 21) return;
 
-	const int sw = cfg_screenWidth;
-	const int sh = cfg_screenHeight;
+	const int sw = cfg_logicalWidth;
+	const int sh = cfg_logicalHeight;
 	const int vw = viewwidth;
 	const int vh = viewheight;
 	const int px = vid_scaleFactor; // size of one "pixel"
@@ -943,24 +943,24 @@ void DrawPlayBorderSides()
 
 void DrawStatusBorder (byte color)
 {
-    int statusborderw = (cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2;
+    int statusborderw = (cfg_logicalWidth-vid_scaleFactor*LOGIC_WIDTH)/2;
 
-    VL_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),color);
-    VL_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,0,cfg_logicalWidth,cfg_logicalHeight-vid_scaleFactor*(STATUSLINES-3),color);
+    VL_BarScaledCoord (0,cfg_logicalHeight-vid_scaleFactor*(STATUSLINES-3),
         statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
-    VL_BarScaledCoord (0,cfg_screenHeight-vid_scaleFactor*2,cfg_screenWidth,vid_scaleFactor*2,color);
-    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*8, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-3),
+    VL_BarScaledCoord (0,cfg_logicalHeight-vid_scaleFactor*2,cfg_logicalWidth,vid_scaleFactor*2,color);
+    VL_BarScaledCoord (cfg_logicalWidth-statusborderw-vid_scaleFactor*8, cfg_logicalHeight-vid_scaleFactor*(STATUSLINES-3),
         statusborderw+vid_scaleFactor*8,vid_scaleFactor*(STATUSLINES-4),color);
 
-    VL_BarScaledCoord (statusborderw+vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*9, cfg_logicalHeight-vid_scaleFactor*3,
         vid_scaleFactor*97, vid_scaleFactor*1, color-1);
-    VL_BarScaledCoord (statusborderw+vid_scaleFactor*106, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*106, cfg_logicalHeight-vid_scaleFactor*3,
         vid_scaleFactor*161, vid_scaleFactor*1, color-2);
-    VL_BarScaledCoord (statusborderw+vid_scaleFactor*267, cfg_screenHeight-vid_scaleFactor*3,
+    VL_BarScaledCoord (statusborderw+vid_scaleFactor*267, cfg_logicalHeight-vid_scaleFactor*3,
         vid_scaleFactor*44, vid_scaleFactor*1, color-3);
-    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES-4),
+    VL_BarScaledCoord (cfg_logicalWidth-statusborderw-vid_scaleFactor*9, cfg_logicalHeight-vid_scaleFactor*(STATUSLINES-4),
         vid_scaleFactor*1, vid_scaleFactor*20, color-2);
-    VL_BarScaledCoord (cfg_screenWidth-statusborderw-vid_scaleFactor*9, cfg_screenHeight-vid_scaleFactor*(STATUSLINES/2-4),
+    VL_BarScaledCoord (cfg_logicalWidth-statusborderw-vid_scaleFactor*9, cfg_logicalHeight-vid_scaleFactor*(STATUSLINES/2-4),
         vid_scaleFactor*1, vid_scaleFactor*14, color-3);
 }
 
@@ -981,19 +981,19 @@ void DrawPlayBorder ()
         DrawStatusBorder(bordercol);
     else
     {
-        const int statusborderw = (cfg_screenWidth-px*LOGIC_WIDTH)/2;
-        VL_BarScaledCoord (0, cfg_screenHeight-px*STATUSLINES,
+        const int statusborderw = (cfg_logicalWidth-px*LOGIC_WIDTH)/2;
+        VL_BarScaledCoord (0, cfg_logicalHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
-        VL_BarScaledCoord (cfg_screenWidth-statusborderw-px*8, cfg_screenHeight-px*STATUSLINES,
+        VL_BarScaledCoord (cfg_logicalWidth-statusborderw-px*8, cfg_logicalHeight-px*STATUSLINES,
             statusborderw+px*8, px*STATUSLINES, bordercol);
     }
 
-    if((unsigned) viewheight == cfg_screenHeight) return;
+    if((unsigned) viewheight == cfg_logicalHeight) return;
 
-    VL_BarScaledCoord (0,0,cfg_screenWidth,cfg_screenHeight-px*STATUSLINES,bordercol);
+    VL_BarScaledCoord (0,0,cfg_logicalWidth,cfg_logicalHeight-px*STATUSLINES,bordercol);
 
-    const int xl = cfg_screenWidth/2-viewwidth/2;
-    const int yl = (cfg_screenHeight-px*STATUSLINES-viewheight)/2;
+    const int xl = cfg_logicalWidth/2-viewwidth/2;
+    const int yl = (cfg_logicalHeight-px*STATUSLINES-viewheight)/2;
     VL_BarScaledCoord (xl,yl,viewwidth,viewheight,0);
 
     if(xl != 0)
@@ -1023,7 +1023,7 @@ void DrawPlayBorder ()
 
 void DrawPlayScreen ()
 {
-    VWB_DrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2,cfg_screenHeight-vid_scaleFactor*STATUSLINES,SPEAR::g(STATUSBARPIC));
+    VWB_DrawPicScaledCoord ((cfg_logicalWidth-vid_scaleFactor*LOGIC_WIDTH)/2,cfg_logicalHeight-vid_scaleFactor*STATUSLINES,SPEAR::g(STATUSBARPIC));
     DrawPlayBorder ();
 
     DrawFace ();
@@ -1042,8 +1042,8 @@ void ShowActStatus()
     const byte *source = graphSegs[SPEAR::g(STATUSBARPIC)];
     int	picnum = SPEAR::g(STATUSBARPIC) - SPEAR::g(STARTPICS);
    GraphicLoader::pictabletype psize = graphSegs.sizeAt(picnum);
-    int destx = (cfg_screenWidth-vid_scaleFactor*LOGIC_WIDTH)/2 + 9 * vid_scaleFactor;
-    int desty = cfg_screenHeight - (psize.height - 4) * vid_scaleFactor;
+    int destx = (cfg_logicalWidth-vid_scaleFactor*LOGIC_WIDTH)/2 + 9 * vid_scaleFactor;
+    int desty = cfg_logicalHeight - (psize.height - 4) * vid_scaleFactor;
     VL_MemToScreenScaledCoord(source, psize.width, psize.height, 9, 4, destx,
                               desty, psize.width - 18, psize.height - 7);
 
@@ -1627,7 +1627,7 @@ startplayloop:
 				g_inGameLoop = false;
 
                 VW_FadeOut ();
-                if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+                if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
                     I_ClearScreen(0);
 
 #ifdef _arch_dreamcast

@@ -1288,13 +1288,13 @@ Boolean8 SetViewSize (unsigned width, unsigned height)
     viewheight = height&~1;                 // must be even
     centerx = viewwidth/2-1;
     shootdelta = viewwidth/10;
-    if((unsigned) viewheight == cfg_screenHeight)
+    if((unsigned) viewheight == cfg_logicalHeight)
         viewscreenx = viewscreeny = screenofs = 0;
     else
     {
-        viewscreenx = (cfg_screenWidth-viewwidth) / 2;
-        viewscreeny = (cfg_screenHeight-vid_scaleFactor*STATUSLINES-viewheight)/2;
-        screenofs = viewscreeny*cfg_screenWidth+viewscreenx;
+        viewscreenx = (cfg_logicalWidth-viewwidth) / 2;
+        viewscreeny = (cfg_logicalHeight-vid_scaleFactor*STATUSLINES-viewheight)/2;
+        screenofs = viewscreeny*cfg_logicalWidth+viewscreenx;
     }
 
 //
@@ -1315,20 +1315,20 @@ void ShowViewSize (int width)
 
     if(width == 21)
     {
-        viewwidth = cfg_screenWidth;
-        viewheight = cfg_screenHeight;
-        VL_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight, 0);
+        viewwidth = cfg_logicalWidth;
+        viewheight = cfg_logicalHeight;
+        VL_BarScaledCoord (0, 0, cfg_logicalWidth, cfg_logicalHeight, 0);
     }
     else if(width == 20)
     {
-        viewwidth = cfg_screenWidth;
-        viewheight = cfg_screenHeight - vid_scaleFactor*STATUSLINES;
+        viewwidth = cfg_logicalWidth;
+        viewheight = cfg_logicalHeight - vid_scaleFactor*STATUSLINES;
         DrawPlayBorder ();
     }
     else
     {
-        viewwidth = width*16*cfg_screenWidth/LOGIC_WIDTH;
-        viewheight = (int) (width*16*HEIGHTRATIO*cfg_screenHeight/LOGIC_HEIGHT);
+        viewwidth = width*16*cfg_logicalWidth/LOGIC_WIDTH;
+        viewheight = (int) (width*16*HEIGHTRATIO*cfg_logicalHeight/LOGIC_HEIGHT);
         DrawPlayBorder ();
     }
 
@@ -1341,11 +1341,11 @@ void main_NewViewSize (int width)
 {
     viewsize = width;
     if(viewsize == 21)
-        SetViewSize(cfg_screenWidth, cfg_screenHeight);
+        SetViewSize(cfg_logicalWidth, cfg_logicalHeight);
     else if(viewsize == 20)
-        SetViewSize(cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * STATUSLINES);
+        SetViewSize(cfg_logicalWidth, cfg_logicalHeight - vid_scaleFactor * STATUSLINES);
     else
-        SetViewSize(width*16*cfg_screenWidth/LOGIC_WIDTH, (unsigned) (width*16*HEIGHTRATIO*cfg_screenHeight/LOGIC_HEIGHT));
+        SetViewSize(width*16*cfg_logicalWidth/LOGIC_WIDTH, (unsigned) (width*16*HEIGHTRATIO*cfg_logicalHeight/LOGIC_HEIGHT));
 }
 
 
@@ -1580,7 +1580,7 @@ static void DemoLoop()
             if (playstate == ex_abort)
                 break;
             VW_FadeOut();
-            if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+            if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
                 I_ClearScreen(0);
             StartCPMusic(INTROSONG);
         }
@@ -1801,7 +1801,7 @@ static void InitIOSArgs(int* argc, TChar*** argv)
     unsigned i = 0;
     
     (*argv)[i++] = (TChar*)"AutoWolf";
-    (*argv)[i++] = (TChar*)"--norestore";
+//    (*argv)[i++] = (TChar*)"--norestore";
 //    (*argv)[i++] = (TChar*)"--res";
 //    (*argv)[i++] = (TChar*)"640";
 //    (*argv)[i++] = (TChar*)"480";

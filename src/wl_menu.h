@@ -53,8 +53,8 @@ namespace Menu
 #define INTROSONG       (SPEAR::flag ? (int)XTOWER2_MUS_sod : (int)NAZI_NOR_MUS_wl6)
 
 #define SENSITIVE       60
-#define CENTERX         ((int) cfg_screenWidth / 2)
-#define CENTERY         ((int) cfg_screenHeight / 2)
+#define CENTERX         ((int) cfg_logicalWidth / 2)
+#define CENTERY         ((int) cfg_logicalHeight / 2)
 
 #define MENU_X  76
 #define MENU_Y  55

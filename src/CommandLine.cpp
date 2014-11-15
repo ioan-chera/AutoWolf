@@ -135,13 +135,13 @@ void CommandLine::Parse()
 					throw std::range_error("The res option needs the width and/or the height argument!");
 				else
 				{
-					cfg_screenWidth = atoi((++it)->c_str());
-					cfg_screenHeight = atoi((++it)->c_str());
-					cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
-					unsigned factor = cfg_screenWidth / LOGIC_WIDTH;
-					if (cfg_screenWidth % LOGIC_WIDTH ||
-						(cfg_screenHeight != LOGIC_HEIGHT * factor &&
-						cfg_screenHeight != 240 * factor))
+					cfg_logicalWidth = atoi((++it)->c_str());
+					cfg_logicalHeight = atoi((++it)->c_str());
+					cfg_logicalRatio = (float)cfg_logicalWidth / cfg_logicalHeight;
+					unsigned factor = cfg_logicalWidth / LOGIC_WIDTH;
+					if (cfg_logicalWidth % LOGIC_WIDTH ||
+						(cfg_logicalHeight != LOGIC_HEIGHT * factor &&
+						cfg_logicalHeight != 240 * factor))
 					{
 						throw std::range_error("Screen size must be a multiple of 320x200 or 320x240!");
 					}
@@ -153,12 +153,12 @@ void CommandLine::Parse()
 					throw std::range_error("The resf option needs the width and/or the height argument!");
 				else
 				{
-					cfg_screenWidth = atoi((++it)->c_str());
-					cfg_screenHeight = atoi((++it)->c_str());
-					cfg_aspectRatio = (float)cfg_screenWidth / cfg_screenHeight;
-					if (cfg_screenWidth < LOGIC_WIDTH)
+					cfg_logicalWidth = atoi((++it)->c_str());
+					cfg_logicalHeight = atoi((++it)->c_str());
+					cfg_logicalRatio = (float)cfg_logicalWidth / cfg_logicalHeight;
+					if (cfg_logicalWidth < LOGIC_WIDTH)
 						throw std::range_error("Screen width must be at least 320!");
-					if (cfg_screenHeight < LOGIC_HEIGHT)
+					if (cfg_logicalHeight < LOGIC_HEIGHT)
 						throw std::range_error("Screen height must be at least 200!");
 				}
 			}

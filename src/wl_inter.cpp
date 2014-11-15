@@ -201,7 +201,7 @@ void Victory ()
     if(!SPEAR::flag)
         graphSegs.cacheChunk (SPEAR::g(C_TIMECODEPIC));
 
-    VL_Bar (0, 0, LOGIC_WIDTH, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, LOGIC_WIDTH, cfg_logicalHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
 // IOANCH 20130301: unification culling
@@ -313,7 +313,7 @@ void Victory ()
     myInput.ack ();
 
     VW_FadeOut ();
-    if(cfg_screenHeight % LOGIC_HEIGHT != 0)
+    if(cfg_logicalHeight % LOGIC_HEIGHT != 0)
         I_ClearScreen(0);
 
     if(!SPEAR::flag)
@@ -577,7 +577,7 @@ void LevelCompleted ()
 
     CacheLump (SPEAR::g(LEVELEND_LUMP_START), SPEAR::g(LEVELEND_LUMP_END));
     ClearSplitVWB ();           // set up for double buffering in split screen
-    VL_Bar (0, 0, LOGIC_WIDTH, cfg_screenHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
+    VL_Bar (0, 0, LOGIC_WIDTH, cfg_logicalHeight / vid_scaleFactor - STATUSLINES + 1, VIEWCOLOR);
 
     if (bordercol != VIEWCOLOR)
         DrawStatusBorder (VIEWCOLOR);
@@ -973,12 +973,12 @@ void PreloadGraphics ()
     DrawLevel ();
     ClearSplitVWB ();           // set up for double buffering in split screen
 
-    VL_BarScaledCoord (0, 0, cfg_screenWidth, cfg_screenHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
-    LatchDrawPicScaledCoord ((cfg_screenWidth-vid_scaleFactor*224)/16,
-        (cfg_screenHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR::g(GETPSYCHEDPIC));
+    VL_BarScaledCoord (0, 0, cfg_logicalWidth, cfg_logicalHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
+    LatchDrawPicScaledCoord ((cfg_logicalWidth-vid_scaleFactor*224)/16,
+        (cfg_logicalHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR::g(GETPSYCHEDPIC));
 
-    WindowX = (cfg_screenWidth - vid_scaleFactor*224)/2;
-    WindowY = (cfg_screenHeight - vid_scaleFactor*(STATUSLINES+48))/2;
+    WindowX = (cfg_logicalWidth - vid_scaleFactor*224)/2;
+    WindowY = (cfg_logicalHeight - vid_scaleFactor*(STATUSLINES+48))/2;
     WindowW = vid_scaleFactor * 28 * 8;
     WindowH = vid_scaleFactor * 48;
 
