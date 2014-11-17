@@ -132,7 +132,7 @@ static void EndSpear ()
 
     EndScreen (SPEAR::g(END2PALETTE), SPEAR::g(ENDSCREEN12PIC));
 
-    MainMenu[savegame].active = 0;
+    MainMenu[mi_savegame].active = 0;
 }
 
 

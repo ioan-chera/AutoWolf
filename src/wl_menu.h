@@ -126,6 +126,7 @@ extern CP_iteminfo MainItems;
 
 void EnableEndGameMenuItem();
 
+void menu_PlatformSetup();
 void menu_SetupSaveGames();
 
 void DrawMenu(const CP_iteminfo *item_i,const CP_itemtype *items);
@@ -148,17 +149,17 @@ void FreeMusic();
 
 enum menuitems
 {
-        newgame,
-        soundmenu,
-        control,
-        loadgame,
-        savegame,
-        changeview,
+        mi_newgame,
+        mi_soundmenu,
+        mi_control,
+        mi_loadgame,
+        mi_savegame,
+        mi_changeview,
 // IOANCH 20130301: unification culling
 
-        viewscores,
-        backtodemo,
-        quit
+        mi_viewscores,
+        mi_backtodemo,
+        mi_quit
 };
 
 //

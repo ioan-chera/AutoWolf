@@ -1218,6 +1218,7 @@ static void InitGame()
 
     main_ReadConfig ();
 
+    menu_PlatformSetup();
     menu_SetupSaveGames();
 
 //

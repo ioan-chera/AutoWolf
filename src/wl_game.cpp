@@ -1639,9 +1639,9 @@ startplayloop:
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
 
-                strcpy(MainMenu[viewscores].string,STR_VS);
+                strcpy(MainMenu[mi_viewscores].string,STR_VS);
 
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[mi_viewscores].routine = CP_ViewScores;
 
                 return;
 
@@ -1666,9 +1666,9 @@ startplayloop:
                 CheckHighScore (gamestate.score,gamestate.mapon+1);
                 // IOANCH 20130301: unification culling
 
-                strcpy(MainMenu[viewscores].string,STR_VS);
+                strcpy(MainMenu[mi_viewscores].string,STR_VS);
 
-                MainMenu[viewscores].routine = CP_ViewScores;
+                MainMenu[mi_viewscores].routine = CP_ViewScores;
                 return;
 
             default:

@@ -26,6 +26,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "version.h"
 #include "Config.h"
 #include "Logger.h"
 #include "MasterDirectoryFile.h"
@@ -60,9 +61,6 @@ static const int STRIPE = 0x2c;
 static int s_bord2Color;
 static int s_deactive;
 
-// IOANCH 20130303: Cocoa functions for Apple computers
-#include "macosx/CocoaFun.h"
-
 enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
 
 struct CustomCtrls
@@ -74,7 +72,7 @@ extern int lastgamemusicoffset;
 // IOANCH: made external
 
 // IOANCH 20130301: unification culling
-#define STARTITEM       newgame
+#define STARTITEM       mi_newgame
 
 
 // ENDSTRx constants are defined in foreign.h
@@ -401,6 +399,49 @@ void US_SetScanNames()
 	ScanNames[SDLK_RIGHTBRACKET] = "]";
 }
 
+// ID
+static void DrawMainMenu ();
+
+static void ID()
+{
+    VW_FadeOut ();
+    // IOANCH 20130301: unification music
+    StartCPMusic (XJAZNAZI_MUS_sod);
+    UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+    UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
+    Sound::StopDigitized ();
+    
+    
+    graphSegs.cacheChunk (SPEAR::g(IDGUYS1PIC));
+    VWB_DrawPic (0, 0, SPEAR::g(IDGUYS1PIC));
+    graphSegs.uncacheChunk (SPEAR::g(IDGUYS1PIC));
+    
+    graphSegs.cacheChunk (SPEAR::g(IDGUYS2PIC));
+    VWB_DrawPic (0, 80, SPEAR::g(IDGUYS2PIC));
+    graphSegs.uncacheChunk (SPEAR::g(IDGUYS2PIC));
+    
+    I_UpdateScreen ();
+    
+    SDL_Color pal[256];
+    graphSegs.cacheChunk (SPEAR::g(IDGUYSPALETTE));
+    VL_ConvertPalette(graphSegs[SPEAR::g(IDGUYSPALETTE)], pal, 256);
+    VL_FadeIn (0, 255, pal, 30);
+    graphSegs.uncacheChunk (SPEAR::g(IDGUYSPALETTE));
+    
+    while (myInput.keyboard(sc_I) || myInput.keyboard(sc_D))
+        myInput.waitAndProcessEvents();
+    myInput.clearKeysDown ();
+    myInput.ack ();
+    
+    VW_FadeOut ();
+    
+    CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
+    CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
+    DrawMainMenu ();
+    StartCPMusic (MENUSONG);
+    MenuFadeIn ();
+}
+
 ////////////////////////////////////////////////////////////////////
 //
 // Wolfenstein Control Panel!  Ta Da!
@@ -408,7 +449,6 @@ void US_SetScanNames()
 ////////////////////////////////////////////////////////////////////
 static void CleanupControlPanel ();
 static int CP_CheckQuick (ScanCode scancode);
-static void DrawMainMenu ();
 static void SetupControlPanel ();
 static int CP_Quit(int);
 static int CP_EndGame(int);
@@ -496,49 +536,14 @@ void Menu::ControlPanel (ScanCode scancode)
             //
             if (myInput.keyboard(sc_I) && myInput.keyboard(sc_D))
             {
-                VW_FadeOut ();
-                            // IOANCH 20130301: unification music
-                StartCPMusic (XJAZNAZI_MUS_sod);
-                UnCacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
-                UnCacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
-                Sound::StopDigitized ();
-
-
-                graphSegs.cacheChunk (SPEAR::g(IDGUYS1PIC));
-                VWB_DrawPic (0, 0, SPEAR::g(IDGUYS1PIC));
-                graphSegs.uncacheChunk (SPEAR::g(IDGUYS1PIC));
-
-                graphSegs.cacheChunk (SPEAR::g(IDGUYS2PIC));
-                VWB_DrawPic (0, 80, SPEAR::g(IDGUYS2PIC));
-                graphSegs.uncacheChunk (SPEAR::g(IDGUYS2PIC));
-
-                I_UpdateScreen ();
-
-                SDL_Color pal[256];
-                graphSegs.cacheChunk (SPEAR::g(IDGUYSPALETTE));
-                VL_ConvertPalette(graphSegs[SPEAR::g(IDGUYSPALETTE)], pal, 256);
-                VL_FadeIn (0, 255, pal, 30);
-                graphSegs.uncacheChunk (SPEAR::g(IDGUYSPALETTE));
-
-                while (myInput.keyboard(sc_I) || myInput.keyboard(sc_D))
-                    myInput.waitAndProcessEvents();
-                myInput.clearKeysDown ();
-                myInput.ack ();
-
-                VW_FadeOut ();
-
-                CacheLump (SPEAR::g(BACKDROP_LUMP_START), SPEAR::g(BACKDROP_LUMP_END));
-                CacheLump (SPEAR::g(OPTIONS_LUMP_START), SPEAR::g(OPTIONS_LUMP_END));
-                DrawMainMenu ();
-                StartCPMusic (MENUSONG);
-                MenuFadeIn ();
+                ID();
             }
         }
 
         switch (which)
         {
-            case viewscores:
-                if (MainMenu[viewscores].routine == NULL)
+            case mi_viewscores:
+                if (MainMenu[mi_viewscores].routine == NULL)
                 {
                     if (CP_EndGame (0))
                         s_StartGame = 1;
@@ -550,7 +555,7 @@ void Menu::ControlPanel (ScanCode scancode)
                 }
                 break;
 
-            case backtodemo:
+            case mi_backtodemo:
                 s_StartGame = 1;
                 if (!ingame)
                     StartCPMusic (INTROSONG);
@@ -558,7 +563,7 @@ void Menu::ControlPanel (ScanCode scancode)
                 break;
 
             case -1:
-            case quit:
+            case mi_quit:
                 CP_Quit (0);
                 break;
 
@@ -595,10 +600,10 @@ void Menu::ControlPanel (ScanCode scancode)
 
 void EnableEndGameMenuItem()
 {
-    MainMenu[viewscores].routine = NULL;
+    MainMenu[mi_viewscores].routine = NULL;
     // IOANCH 20130301: unification culling
 
-    strcpy (MainMenu[viewscores].string, STR_EG);
+    strcpy (MainMenu[mi_viewscores].string, STR_EG);
 
 }
 
@@ -632,23 +637,23 @@ static void DrawMainMenu ()
 
 
 #ifdef SPANISH
-        strcpy (&MainMenu[backtodemo].string, STR_GAME);
+        strcpy (&MainMenu[mi_backtodemo].string, STR_GAME);
 #else
-        strcpy (&MainMenu[backtodemo].string[8], STR_GAME);
+        strcpy (&MainMenu[mi_backtodemo].string[8], STR_GAME);
 #endif
 
-        MainMenu[backtodemo].active = 2;
+        MainMenu[mi_backtodemo].active = 2;
     }
     else
     {
         // IOANCH 20130301: unification culling
 
 #ifdef SPANISH
-        strcpy (&MainMenu[backtodemo].string, STR_BD);
+        strcpy (&MainMenu[mi_backtodemo].string, STR_BD);
 #else
-        strcpy (&MainMenu[backtodemo].string[8], STR_DEMO);
+        strcpy (&MainMenu[mi_backtodemo].string[8], STR_DEMO);
 #endif
-        MainMenu[backtodemo].active = 1;
+        MainMenu[mi_backtodemo].active = 1;
     }
 
     DrawMenu (&MainItems, &MainMenu[0]);
@@ -657,12 +662,36 @@ static void DrawMainMenu ()
 
 // IOANCH 20130301: unification culling
 
+static int Confirm(const char *string);
+
+static void AskQuit()
+{
+#ifdef SPANISH
+    if (Confirm (ENDGAMESTR))
+#else
+        // IOANCH 20130202: unification process
+    if (Confirm (endStrings[wolfRnd () & (0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0))]))
+#endif
+    {
+        DestroySavedInstance();
+        if(ingame)
+            bot.SaveData();
+        
+        I_UpdateScreen ();
+        Sound::MusicOff ();
+        Sound::Stop();
+        MenuFadeOut ();
+        
+        Quit ();
+    }
+
+}
+
 ////////////////////////////////////////////////////////////////////
 //
 // CHECK QUICK-KEYS & QUIT (WHILE IN A GAME)
 //
 ////////////////////////////////////////////////////////////////////
-static int Confirm(const char *string);
 
 static int CP_CheckQuick (ScanCode scancode)
 {
@@ -686,7 +715,7 @@ static int CP_CheckQuick (ScanCode scancode)
 
             WindowH = LOGIC_HEIGHT;
             fontnumber = 0;
-            MainMenu[savegame].active = 0;
+            MainMenu[mi_savegame].active = 0;
             return 1;
 
         //
@@ -851,24 +880,7 @@ static int CP_CheckQuick (ScanCode scancode)
             WindowW = LOGIC_WIDTH;
             WindowH = 160;
             // IOANCH 20130301: unification culling
-#ifdef SPANISH
-            if (Confirm (ENDGAMESTR))
-#else
-            // IOANCH 20130202: unification process
-            if (Confirm (endStrings[wolfRnd () & (0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0))]))
-#endif
-            {
-				DestroySavedInstance();
-				if(ingame)
-					bot.SaveData();
-
-                I_UpdateScreen ();
-                Sound::MusicOff ();
-				Sound::Stop();
-                MenuFadeOut ();
-
-                Quit ();
-            }
+            AskQuit();
 
             DrawPlayBorder ();
             WindowH = LOGIC_HEIGHT;
@@ -901,10 +913,10 @@ static int CP_EndGame (int)
     playstate = ex_died;
     killerobj = NULL;
 
-    MainMenu[savegame].active = 0;
-    MainMenu[viewscores].routine = CP_ViewScores;
+    MainMenu[mi_savegame].active = 0;
+    MainMenu[mi_viewscores].routine = CP_ViewScores;
 
-    strcpy (MainMenu[viewscores].string, STR_VS);
+    strcpy (MainMenu[mi_viewscores].string, STR_VS);
 
 
     return 1;
@@ -2875,25 +2887,7 @@ static int CP_Quit (int)
 {
     // IOANCH 20130301: unification culling
 
-#ifdef SPANISH
-    if (Confirm (ENDGAMESTR))
-#else
-    // IOANCH 20130202: unification process
-    if (Confirm (endStrings[wolfRnd () & (0x7 + (wolfRnd () & 1) + (SPEAR::flag ? 9 : 0))]))
-#endif
-
-    {
-		// IOANCH 20121217: save data
-		DestroySavedInstance();
-		if(ingame)
-			bot.SaveData();
-		
-        I_UpdateScreen ();
-        Sound::MusicOff ();
-		Sound::Stop();
-        MenuFadeOut ();
-        Quit ();
-    }
+    AskQuit();
 
     DrawMainMenu ();
     return 0;
@@ -2993,13 +2987,21 @@ static void SetupControlPanel ()
     if (!ingame)
         audioSegs.loadAllSounds(sd_soundMode);
     else
-        MainMenu[savegame].active = 1;
+        MainMenu[mi_savegame].active = 1;
 
     //
     // CENTER MOUSE
     //
     if(myInput.inputGrabbed())
         myInput.centreMouse();
+}
+
+// Platform-specific setup
+void menu_PlatformSetup()
+{
+#ifdef IOS
+    MainMenu[mi_quit].active = 0;
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////
