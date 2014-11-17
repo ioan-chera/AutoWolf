@@ -136,4 +136,10 @@ double Cocoa_PixelsPerDot()
         return [UIScreen mainScreen].scale;
     }
 }
+void Cocoa_DisableIdleTimer()
+{
+    @autoreleasepool {
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
+    }
+}
 #endif

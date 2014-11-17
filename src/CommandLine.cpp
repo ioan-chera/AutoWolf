@@ -20,6 +20,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "version.h"
+
 #ifdef _WIN32
 #include <Windows.h>
 #include <shellapi.h>
@@ -27,6 +29,10 @@
 
 #ifdef __ANDROID__
 #include <SDL_system.h>
+#endif
+
+#ifdef IOS
+#include <CoreFoundation/CoreFoundation.h>
 #endif
 
 #include <system_error>
@@ -61,12 +67,39 @@ static void feedFromWindows()
 }
 #endif
 
+#ifdef IOS
+static void feedFromIOS()
+{
+    s_argv.push_back("AutoWolf");
+    s_argv.push_back("--wolfdir");
+    
+    char c[PATH_MAX];
+    
+    CFBundleRef bundle = CFBundleGetMainBundle();
+    if(!bundle)
+        throw Exception("Couldn't get main bundle!");
+    CFURLRef resURL = CFBundleCopyResourcesDirectoryURL(bundle);
+    if(!resURL)
+        throw Exception("Couldn't get bundle resource URL!");
+    CFStringRef resPath = CFURLCopyPath(resURL);
+    if(!CFStringGetCString(resPath, c, PATH_MAX, kCFStringEncodingUTF8))
+        throw Exception("Fail getting c string out of string");
+    
+    CFRelease(resPath);
+    CFRelease(resURL);
+    
+    strlcat(c, "/wolftest", PATH_MAX);
+    
+    s_argv.push_back(c);
+}
+#endif
+
 void CommandLine::Feed(int argc, const char* const* argv)
 {
 #ifdef _WIN32
 	feedFromWindows();
-//#elif defined(__ANDROID__)
-//	feedFromAndroid("AutoWolf");
+#elif defined(IOS)
+    feedFromIOS();
 #else
 	if (!argc || !argv)
 		return;

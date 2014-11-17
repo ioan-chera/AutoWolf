@@ -26,18 +26,10 @@
 #include <TargetConditionals.h>
 #if TARGET_OS_IPHONE
 #define IOS
-#define TOUCHSCREEN
 #else
 #define OSX
 #endif
 #endif
-
-#ifdef __ANDROID__
-#ifndef TOUCHSCREEN
-#define TOUCHSCREEN
-#endif
-#endif
-
 
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 

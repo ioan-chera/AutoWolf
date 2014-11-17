@@ -1388,7 +1388,14 @@ void PlayLoop ()
 	
     do
     {
-		
+#ifndef USE_SDL1_2
+		if(g_forceSDLRestart)
+        {
+            g_forceSDLRestart = false;
+            I_RecreateRenderer();
+        }
+#endif
+        
         PollControls ();
 
 		// Execute pending thread-resulted commands on main thread.

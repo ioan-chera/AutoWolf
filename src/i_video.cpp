@@ -33,6 +33,7 @@
 #include "wl_main.h"
 #include "wl_draw.h"
 #include "Exception.h"
+#include "Platform.h"
 
 #ifdef IOS
 #include "CocoaFun.h"
@@ -53,6 +54,8 @@ static SDL_Color* vid_trueBuffer;
 
 int vid_screenWidth, vid_screenHeight;
 
+volatile bool g_forceSDLRestart;
+
 static SDL_Surface *vid_screenBuffer;
 
 static SDL_Surface *vid_latchpics[NUMLATCHPICS];
@@ -72,6 +75,122 @@ static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
    }
 //   SDL_SetColors(ret, IMPALE(vid_palette), 0, 256);
    return ret;
+}
+
+#ifdef USE_SDL1_2
+static void I_initSDL12()
+{
+    SDL_WM_SetCaption(SPEAR::FullTitle(), NULL);
+    if(cfg_screenBits == (unsigned)-1)
+    {
+        const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
+        cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
+    }
+    
+    vid_screen = SDL_SetVideoMode(cfg_logicalWidth, cfg_logicalHeight,
+                                  cfg_screenBits,
+                                  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
+                                  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
+                                  | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
+    
+    if(!vid_screen)
+    {
+        throw Exception((std::string("Unable to set video mode: ")
+                         + SDL_GetError()).c_str());
+    }
+    
+    if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
+        cfg_usedoublebuffering = false;
+    
+    SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
+    memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
+}
+#endif
+
+void I_RecreateRenderer()
+{
+#ifndef USE_SDL1_2
+    if(vid_trueBuffer)
+        delete[] vid_trueBuffer;
+    if(vid_texture)
+        SDL_DestroyTexture(vid_texture);
+    if(vid_renderer)
+        SDL_DestroyRenderer(vid_renderer);
+    if(vid_window)
+        SDL_DestroyWindow(vid_window);
+    
+    // Reload vid_screen attributes
+    if(Platform::touchscreen)
+    {
+        SDL_DisplayMode mode;
+        SDL_GetDesktopDisplayMode(0, &mode);
+        vid_screenWidth = mode.w;
+        vid_screenHeight = mode.h;
+    }
+    
+    Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
+    if(Platform::touchscreen || cfg_fullscreen)
+        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    
+    vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
+                                  SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED,
+                                  cfg_fullscreen ? 0 : cfg_logicalWidth,
+                                  cfg_fullscreen ? 0 : cfg_logicalHeight,
+                                  flags);
+    
+    if(!vid_window)
+    {
+        throw Exception((std::string("Unable to create SDL window: ")
+                         + SDL_GetError()).c_str());
+    }
+    
+    vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
+    if(!vid_renderer)
+    {
+        throw Exception((std::string("Unable to create SDL renderer: ")
+	                        + SDL_GetError()).c_str());
+    }
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+    
+    // make the scaled rendering look smoother.
+    if(Platform::touchscreen)
+    {
+        // aspect ratio correction on iOS. For Android it's done differently
+        vid_correctedWidth = cfg_logicalWidth;
+        vid_correctedHeight = 3 * vid_correctedWidth / 4;
+    }
+    else
+    {
+        // Also copy the values into vid_screen attributes
+        vid_screenWidth = vid_correctedWidth = cfg_logicalWidth;
+        vid_screenHeight = vid_correctedHeight = cfg_logicalHeight;
+    }
+
+    vid_correctedRatio = (float)vid_correctedWidth / vid_correctedHeight;
+    
+    if(SDL_RenderSetLogicalSize(vid_renderer,
+                                vid_correctedWidth,
+                                vid_correctedHeight) < 0)
+    {
+        throw Exception((std::string("Unable to set SDL renderer logical"
+                                     " size: ") + SDL_GetError()).c_str());
+    }
+    
+    vid_texture = SDL_CreateTexture(vid_renderer,
+                                    SDL_PIXELFORMAT_ABGR8888,
+                                    SDL_TEXTUREACCESS_STREAMING,
+                                    cfg_logicalWidth,
+                                    cfg_logicalHeight);
+    if(!vid_texture)
+    {
+        throw Exception((std::string("Unable to create SDL texture: ")
+                         + SDL_GetError()).c_str());
+    }
+    
+    vid_trueBuffer = new SDL_Color[cfg_logicalWidth * cfg_logicalHeight];
+    
+#endif
 }
 
 //
@@ -101,98 +220,9 @@ void I_InitEngine()
 #endif
 
 #ifdef USE_SDL1_2
-    SDL_WM_SetCaption(SPEAR::FullTitle(), NULL);
-    if(cfg_screenBits == (unsigned)-1)
-	{
-		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
-		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
-	}
-    
-    vid_screen = SDL_SetVideoMode(cfg_logicalWidth, cfg_logicalHeight,
-								  cfg_screenBits,
-								  (cfg_usedoublebuffering ? SDL_HWSURFACE | SDL_DOUBLEBUF : 0)
-								  | (cfg_screenBits == 8 ? SDL_HWPALETTE : 0)
-								  | (cfg_fullscreen ? SDL_FULLSCREEN : 0));
-    
-    if(!vid_screen)
-    {
-        throw Exception((std::string("Unable to set video mode: ")
-                         + SDL_GetError()).c_str());
-    }
-    
-   if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
-       cfg_usedoublebuffering = false;
-
-   SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
-   memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
-
+    I_initSDL12();
 #else
-    
-    Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
-#ifdef TOUCHSCREEN
-    flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    
-    SDL_DisplayMode mode;
-    SDL_GetDesktopDisplayMode(0, &mode);   //<-- calls SDL_GetVideoInfo();
-    vid_screenWidth = mode.w;
-    vid_screenHeight = mode.h;
-//    cfg_fullscreen = true;
-#endif
-    if(cfg_fullscreen)
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    
-    vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
-				  SDL_WINDOWPOS_UNDEFINED,
-				  SDL_WINDOWPOS_UNDEFINED,
-      cfg_fullscreen ? 0 : cfg_logicalWidth, cfg_fullscreen ? 0 : cfg_logicalHeight, flags);
-
-//	if(cfg_screenBits == -1)
-//	{
-//		const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
-//		cfg_screenBits = vidInfo->vfmt->BitsPerPixel;
-//	}
-	
-	if(!vid_window)
-	{
-		throw Exception((std::string("Unable to create SDL window: ")
-				 + SDL_GetError()).c_str());
-	}
-
-	vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
-	if(!vid_renderer)
-	{
-		throw Exception((std::string("Unable to create SDL renderer: ")
-	                        + SDL_GetError()).c_str());
-	}
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-// make the scaled rendering look smoother.
-#ifdef TOUCHSCREEN
-    // aspect ratio correction on iOS. For Android it's done differently
-    cfg_displayWidth = cfg_logicalWidth;
-    cfg_displayHeight = 3 * cfg_displayWidth / 4;
-#else
-    vid_screenWidth = cfg_displayWidth = cfg_logicalWidth;
-    vid_screenHeight = cfg_displayHeight = cfg_logicalHeight;
-#endif
-    cfg_displayRatio = (float)cfg_displayWidth / cfg_displayHeight;
-    
-	if(SDL_RenderSetLogicalSize(vid_renderer, cfg_displayWidth, cfg_displayHeight) < 0)
-	{
-		throw Exception((std::string("Unable to set SDL renderer logical"
-	                       " size: ") + SDL_GetError()).c_str());
-	}
-	
-	vid_texture = SDL_CreateTexture(vid_renderer,
-                                    SDL_PIXELFORMAT_ABGR8888,
-                                    SDL_TEXTUREACCESS_STREAMING,
-                                    cfg_logicalWidth, cfg_logicalHeight);
-	if(!vid_texture)
-	{
-		throw Exception((std::string("Unable to create SDL texture: ")
-	                         + SDL_GetError()).c_str());
-	}
-
-	vid_trueBuffer = new SDL_Color[cfg_logicalWidth * cfg_logicalHeight];
+    I_RecreateRenderer();
 #endif
 	
 //	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
@@ -213,7 +243,8 @@ void I_InitEngine()
 //#endif
     
 #ifdef IOS
-    Cocoa_HideStatusBar();
+//    Cocoa_HideStatusBar();
+    Cocoa_DisableIdleTimer();
 #endif
 	
 }

@@ -258,6 +258,11 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   Sound::MusicOff();
 		   break;
 	   case SDL_APP_DIDENTERFOREGROUND:
+#ifdef IOS
+           Cocoa_HideStatusBar();   // make sure it stays hidden
+#endif
+           
+           I_RecreateRenderer();
 		   Sound::MusicOn();
 		   break;
 	   case SDL_FINGERDOWN:
@@ -270,14 +275,8 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   // WARNING: it's assumed that the window is in the middle. Who's to
 		   // know for sure?
            
-#ifdef TOUCHSCREEN
-           // UPDATE: on iOS, one must handle the status bar offset (20p?)
-//           Logger::Write("%d %d\n", vid_screenWidth, vid_screenHeight);
-//           Logger::Write("x %f y %f\n", fingerx, fingery);
-#endif
-
 		   if(128*vid_screenWidth / vid_screenHeight >
-			  static_cast<int>(128*cfg_displayWidth / cfg_displayHeight))
+			  static_cast<int>(128*vid_correctedWidth / vid_correctedHeight))
 		   {
 			   // Greater aspect ratio of window: pillar box. Height is correct
 			   
@@ -289,14 +288,14 @@ void InputManager::p_processEvent(const SDL_Event *event)
 			   // a = 1 / 2 - 1 / 2 * w / W
 			   // a = 1 / 2 * (1 - w / W)
 			   // a = 1 / 2 * (1 - H / sh * sw / W)
-			   float a = 0.5f * (1 - (float)vid_screenHeight * cfg_displayRatio / vid_screenWidth);
+			   float a = 0.5f * (1 - (float)vid_screenHeight * vid_correctedRatio / vid_screenWidth);
 			   m_touchx = static_cast<int>((fingerx - a) / (1 - 2 * a) * cfg_logicalWidth);
 			   m_touchy = static_cast<int>(fingery * cfg_logicalHeight);
 			   
 		   }
 		   else
 		   {
-			   float a = 0.5f * (1 - (float)vid_screenWidth / cfg_displayRatio / vid_screenHeight);
+			   float a = 0.5f * (1 - (float)vid_screenWidth / vid_correctedRatio / vid_screenHeight);
 			   m_touchx = static_cast<int>(fingerx * cfg_logicalWidth);
 			   m_touchy = static_cast<int>((fingery - a) / (1 - 2 * a) * cfg_logicalHeight);
 		   }

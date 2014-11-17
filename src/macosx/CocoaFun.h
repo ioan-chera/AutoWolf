@@ -29,6 +29,7 @@ void        Cocoa_Notify(const char *title, const char *msg);
 double      Cocoa_StatusBarHeight();
 void        Cocoa_HideStatusBar();
 double      Cocoa_PixelsPerDot();
+void        Cocoa_DisableIdleTimer();
 #endif
 
 #endif

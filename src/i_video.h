@@ -36,7 +36,10 @@ extern SDL_Renderer* vid_renderer;
 extern int vid_screenWidth, vid_screenHeight;
 #endif
 
+extern volatile bool g_forceSDLRestart;
+
 void I_InitEngine();
+void I_RecreateRenderer();
 void I_InitAfterSignon();
 byte *I_LockBuffer();
 SDL_Color *I_LockDirect();

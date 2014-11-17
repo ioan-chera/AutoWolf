@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F13FF301A180F0400B64656 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F13FF2E1A180F0400B64656 /* Platform.cpp */; };
 		4F4EFC6719C4EBE6003C8734 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFC6619C4EBE6003C8734 /* Foundation.framework */; };
 		4F4EFC6919C4EBE6003C8734 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFC6819C4EBE6003C8734 /* CoreGraphics.framework */; };
 		4F4EFC6B19C4EBE6003C8734 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F4EFC6A19C4EBE6003C8734 /* UIKit.framework */; };
@@ -93,6 +94,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4F13FF2E1A180F0400B64656 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = ../../src/Platform.cpp; sourceTree = "<group>"; };
+		4F13FF2F1A180F0400B64656 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../../src/Platform.h; sourceTree = "<group>"; };
 		4F4EFC6319C4EBE6003C8734 /* AutoWolf-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AutoWolf-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F4EFC6619C4EBE6003C8734 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4F4EFC6819C4EBE6003C8734 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -124,7 +127,6 @@
 		4F4EFCA419C4EC2E003C8734 /* gfxv_sod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_sod.h; path = ../../src/gfxv_sod.h; sourceTree = "<group>"; };
 		4F4EFCA519C4EC2E003C8734 /* gfxv_wl6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxv_wl6.h; path = ../../src/gfxv_wl6.h; sourceTree = "<group>"; };
 		4F4EFCA619C4EC2E003C8734 /* gfxvabstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfxvabstract.h; path = ../../src/gfxvabstract.h; sourceTree = "<group>"; };
-		4F4EFCA719C4EC2E003C8734 /* gp2x.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gp2x.h; path = ../../src/gp2x.h; sourceTree = "<group>"; };
 		4F4EFCA819C4EC2E003C8734 /* HistoryRatio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HistoryRatio.h; path = ../../src/HistoryRatio.h; sourceTree = "<group>"; };
 		4F4EFCA919C4EC2E003C8734 /* i_system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_system.h; path = ../../src/i_system.h; sourceTree = "<group>"; };
 		4F4EFCAA19C4EC2E003C8734 /* i_video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = i_video.h; path = ../../src/i_video.h; sourceTree = "<group>"; };
@@ -271,6 +273,176 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F13FF241A1809DE00B64656 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFD0819C4EC2E003C8734 /* wl_parallax.cpp */,
+				4F4EFD0919C4EC2E003C8734 /* wl_play.cpp */,
+				4F4EFCD419C4EC2E003C8734 /* wl_play.h */,
+				4F4EFD0A19C4EC2E003C8734 /* wl_shade.cpp */,
+				4F4EFCD519C4EC2E003C8734 /* wl_shade.h */,
+				4F4EFD0B19C4EC2E003C8734 /* wl_state.cpp */,
+				4F4EFCD619C4EC2E003C8734 /* wl_state.h */,
+				4F4EFD0C19C4EC2E003C8734 /* wl_text.cpp */,
+				4F4EFCD719C4EC2E003C8734 /* wl_text.h */,
+				4F4EFCF819C4EC2E003C8734 /* signon.cpp */,
+				4F4EFCEB19C4EC2E003C8734 /* ioan_bas.cpp */,
+				4F4EFCB219C4EC2E003C8734 /* ioan_bas.h */,
+				4F4EFCD819C4EC2E003C8734 /* ActorStates.cpp */,
+				4F4EFC9519C4EC2E003C8734 /* ActorStates.h */,
+				4F4EFCF219C4EC2E003C8734 /* obattrib.cpp */,
+				4F4EFCBC19C4EC2E003C8734 /* obattrib.h */,
+				4F4EFCF919C4EC2E003C8734 /* SODFlag.cpp */,
+				4F4EFCC219C4EC2E003C8734 /* SODFlag.h */,
+				4F4EFCFB19C4EC2E003C8734 /* wl_act1.cpp */,
+				4F4EFCC919C4EC2E003C8734 /* wl_act1.h */,
+				4F4EFCFC19C4EC2E003C8734 /* wl_act2.cpp */,
+				4F4EFCCA19C4EC2E003C8734 /* wl_act2.h */,
+				4F4EFCFD19C4EC2E003C8734 /* wl_agent.cpp */,
+				4F4EFCCB19C4EC2E003C8734 /* wl_agent.h */,
+				4F4EFCFE19C4EC2E003C8734 /* wl_atmos.cpp */,
+				4F4EFCCC19C4EC2E003C8734 /* wl_atmos.h */,
+				4F4EFCFF19C4EC2E003C8734 /* wl_cloudsky.cpp */,
+				4F4EFCCD19C4EC2E003C8734 /* wl_cloudsky.h */,
+				4F4EFD0019C4EC2E003C8734 /* wl_debug.cpp */,
+				4F4EFD0119C4EC2E003C8734 /* wl_dir3dspr.cpp */,
+				4F4EFD0219C4EC2E003C8734 /* wl_draw.cpp */,
+				4F4EFCCF19C4EC2E003C8734 /* wl_draw.h */,
+				4F4EFD0319C4EC2E003C8734 /* wl_floorceiling.cpp */,
+				4F4EFD0419C4EC2E003C8734 /* wl_game.cpp */,
+				4F4EFCD019C4EC2E003C8734 /* wl_game.h */,
+				4F4EFD0519C4EC2E003C8734 /* wl_inter.cpp */,
+				4F4EFCD119C4EC2E003C8734 /* wl_inter.h */,
+			);
+			name = game;
+			sourceTree = "<group>";
+		};
+		4F13FF251A1809E900B64656 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCC319C4EC2E003C8734 /* spr_sod.h */,
+				4F4EFCC419C4EC2E003C8734 /* spr_wl6.h */,
+				4F4EFCC519C4EC2E003C8734 /* sprabstract.h */,
+				4F4EFCA419C4EC2E003C8734 /* gfxv_sod.h */,
+				4F4EFCA519C4EC2E003C8734 /* gfxv_wl6.h */,
+				4F4EFCA619C4EC2E003C8734 /* gfxvabstract.h */,
+				4F4EFCA319C4EC2E003C8734 /* foreign.h */,
+				4F4EFCA119C4EC2E003C8734 /* f_spear.h */,
+				4F4EFC9619C4EC2E003C8734 /* audioabstract.h */,
+				4F4EFC9719C4EC2E003C8734 /* audiosod.h */,
+				4F4EFC9819C4EC2E003C8734 /* audiowl6.h */,
+			);
+			name = data;
+			sourceTree = "<group>";
+		};
+		4F13FF261A1809F300B64656 /* utility */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCF619C4EC2E003C8734 /* PString.cpp */,
+				4F4EFCC019C4EC2E003C8734 /* PString.h */,
+				4F4EFCF419C4EC2E003C8734 /* Property.cpp */,
+				4F4EFCBE19C4EC2E003C8734 /* Property.h */,
+				4F4EFCB919C4EC2E003C8734 /* m_swap.h */,
+				4F4EFCB819C4EC2E003C8734 /* m_dllist.h */,
+				4F4EFCEE19C4EC2E003C8734 /* Logger.cpp */,
+				4F4EFCB619C4EC2E003C8734 /* Logger.h */,
+				4F4EFCB519C4EC2E003C8734 /* List.h */,
+				4F4EFCE019C4EC2E003C8734 /* FileSystem.cpp */,
+				4F4EFCA219C4EC2E003C8734 /* FileSystem.h */,
+				4F4EFC9E19C4EC2E003C8734 /* e_hash.h */,
+				4F4EFCDE19C4EC2E003C8734 /* e_hashkeys.cpp */,
+				4F4EFC9F19C4EC2E003C8734 /* e_hashkeys.h */,
+				4F4EFCDF19C4EC2E003C8734 /* Exception.cpp */,
+				4F4EFCA019C4EC2E003C8734 /* Exception.h */,
+				4F4EFCD919C4EC2E003C8734 /* CheckSum.cpp */,
+				4F4EFC9919C4EC2E003C8734 /* CheckSum.h */,
+				4F4EFCFA19C4EC2E003C8734 /* StdStringExtensions.cpp */,
+				4F4EFCC619C4EC2E003C8734 /* StdStringExtensions.h */,
+				4F4EFCC719C4EC2E003C8734 /* TimeMeasure.h */,
+			);
+			name = utility;
+			sourceTree = "<group>";
+		};
+		4F13FF271A180A0000B64656 /* initialization */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCDA19C4EC2E003C8734 /* CommandLine.cpp */,
+				4F4EFC9A19C4EC2E003C8734 /* CommandLine.h */,
+				4F4EFCDB19C4EC2E003C8734 /* Config.cpp */,
+				4F4EFC9B19C4EC2E003C8734 /* Config.h */,
+				4F4EFCC819C4EC2E003C8734 /* version.h */,
+				4F4EFCCE19C4EC2E003C8734 /* wl_def.h */,
+				4F4EFD0619C4EC2E003C8734 /* wl_main.cpp */,
+				4F4EFCD219C4EC2E003C8734 /* wl_main.h */,
+				4F4EFD0719C4EC2E003C8734 /* wl_menu.cpp */,
+				4F4EFCD319C4EC2E003C8734 /* wl_menu.h */,
+				4F13FF2E1A180F0400B64656 /* Platform.cpp */,
+				4F13FF2F1A180F0400B64656 /* Platform.h */,
+			);
+			name = initialization;
+			sourceTree = "<group>";
+		};
+		4F13FF281A180A0C00B64656 /* datafile */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCF519C4EC2E003C8734 /* PropertyFile.cpp */,
+				4F4EFCBF19C4EC2E003C8734 /* PropertyFile.h */,
+				4F4EFCF119C4EC2E003C8734 /* MasterDirectoryFile.cpp */,
+				4F4EFCBB19C4EC2E003C8734 /* MasterDirectoryFile.h */,
+				4F4EFCEF19C4EC2E003C8734 /* m_buffer.cpp */,
+				4F4EFCB719C4EC2E003C8734 /* m_buffer.h */,
+				4F4EFCDC19C4EC2E003C8734 /* DataFile.cpp */,
+				4F4EFC9C19C4EC2E003C8734 /* DataFile.h */,
+				4F4EFCDD19C4EC2E003C8734 /* DirectoryFile.cpp */,
+				4F4EFC9D19C4EC2E003C8734 /* DirectoryFile.h */,
+				4F4EFCE419C4EC2E003C8734 /* id_ca.cpp */,
+				4F4EFCE619C4EC2E003C8734 /* id_pm.cpp */,
+				4F4EFCAD19C4EC2E003C8734 /* id_pm.h */,
+				4F4EFCAB19C4EC2E003C8734 /* id_ca.h */,
+			);
+			name = datafile;
+			sourceTree = "<group>";
+		};
+		4F13FF291A180A3B00B64656 /* bot */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCED19C4EC2E003C8734 /* ioan_secret.cpp */,
+				4F4EFCB419C4EC2E003C8734 /* ioan_secret.h */,
+				4F4EFCEC19C4EC2E003C8734 /* ioan_bot.cpp */,
+				4F4EFCB319C4EC2E003C8734 /* ioan_bot.h */,
+				4F4EFCE119C4EC2E003C8734 /* HistoryRatio.cpp */,
+				4F4EFCA819C4EC2E003C8734 /* HistoryRatio.h */,
+				4F4EFCF019C4EC2E003C8734 /* MapExploration.cpp */,
+				4F4EFCBA19C4EC2E003C8734 /* MapExploration.h */,
+				4F4EFCF319C4EC2E003C8734 /* PathArray.cpp */,
+				4F4EFCBD19C4EC2E003C8734 /* PathArray.h */,
+			);
+			name = bot;
+			sourceTree = "<group>";
+		};
+		4F13FF2A1A180A5C00B64656 /* system */ = {
+			isa = PBXGroup;
+			children = (
+				4F4EFCE219C4EC2E003C8734 /* i_system.cpp */,
+				4F4EFCA919C4EC2E003C8734 /* i_system.h */,
+				4F4EFCE319C4EC2E003C8734 /* i_video.cpp */,
+				4F4EFCAA19C4EC2E003C8734 /* i_video.h */,
+				4F4EFCE519C4EC2E003C8734 /* id_in.cpp */,
+				4F4EFCAC19C4EC2E003C8734 /* id_in.h */,
+				4F4EFCE719C4EC2E003C8734 /* id_sd.cpp */,
+				4F4EFCAE19C4EC2E003C8734 /* id_sd.h */,
+				4F4EFCE819C4EC2E003C8734 /* id_us_1.cpp */,
+				4F4EFCAF19C4EC2E003C8734 /* id_us.h */,
+				4F4EFCE919C4EC2E003C8734 /* id_vh.cpp */,
+				4F4EFCB019C4EC2E003C8734 /* id_vh.h */,
+				4F4EFCEA19C4EC2E003C8734 /* id_vl.cpp */,
+				4F4EFCB119C4EC2E003C8734 /* id_vl.h */,
+				4F4EFCF719C4EC2E003C8734 /* ShellUnicode.cpp */,
+				4F4EFCC119C4EC2E003C8734 /* ShellUnicode.h */,
+			);
+			name = system;
+			sourceTree = "<group>";
+		};
 		4F4EFC5A19C4EBE6003C8734 = {
 			isa = PBXGroup;
 			children = (
@@ -310,130 +482,17 @@
 		4F4EFC6C19C4EBE6003C8734 /* AutoWolf-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				4F13FF2A1A180A5C00B64656 /* system */,
+				4F13FF291A180A3B00B64656 /* bot */,
+				4F13FF281A180A0C00B64656 /* datafile */,
+				4F13FF271A180A0000B64656 /* initialization */,
+				4F13FF261A1809F300B64656 /* utility */,
+				4F13FF251A1809E900B64656 /* data */,
+				4F13FF241A1809DE00B64656 /* game */,
 				4F4EFD4619C4EC74003C8734 /* ios */,
 				4F4EFD4219C4EC3D003C8734 /* dosbox */,
-				4F4EFCD819C4EC2E003C8734 /* ActorStates.cpp */,
-				4F4EFC9519C4EC2E003C8734 /* ActorStates.h */,
-				4F4EFC9619C4EC2E003C8734 /* audioabstract.h */,
-				4F4EFC9719C4EC2E003C8734 /* audiosod.h */,
-				4F4EFC9819C4EC2E003C8734 /* audiowl6.h */,
-				4F4EFCD919C4EC2E003C8734 /* CheckSum.cpp */,
-				4F4EFC9919C4EC2E003C8734 /* CheckSum.h */,
-				4F4EFCDA19C4EC2E003C8734 /* CommandLine.cpp */,
-				4F4EFC9A19C4EC2E003C8734 /* CommandLine.h */,
-				4F4EFCDB19C4EC2E003C8734 /* Config.cpp */,
-				4F4EFC9B19C4EC2E003C8734 /* Config.h */,
-				4F4EFCDC19C4EC2E003C8734 /* DataFile.cpp */,
-				4F4EFC9C19C4EC2E003C8734 /* DataFile.h */,
-				4F4EFCDD19C4EC2E003C8734 /* DirectoryFile.cpp */,
-				4F4EFC9D19C4EC2E003C8734 /* DirectoryFile.h */,
-				4F4EFC9E19C4EC2E003C8734 /* e_hash.h */,
-				4F4EFCDE19C4EC2E003C8734 /* e_hashkeys.cpp */,
-				4F4EFC9F19C4EC2E003C8734 /* e_hashkeys.h */,
-				4F4EFCDF19C4EC2E003C8734 /* Exception.cpp */,
-				4F4EFCA019C4EC2E003C8734 /* Exception.h */,
-				4F4EFCA119C4EC2E003C8734 /* f_spear.h */,
-				4F4EFCE019C4EC2E003C8734 /* FileSystem.cpp */,
-				4F4EFCA219C4EC2E003C8734 /* FileSystem.h */,
-				4F4EFCA319C4EC2E003C8734 /* foreign.h */,
-				4F4EFCA419C4EC2E003C8734 /* gfxv_sod.h */,
-				4F4EFCA519C4EC2E003C8734 /* gfxv_wl6.h */,
-				4F4EFCA619C4EC2E003C8734 /* gfxvabstract.h */,
-				4F4EFCA719C4EC2E003C8734 /* gp2x.h */,
-				4F4EFCE119C4EC2E003C8734 /* HistoryRatio.cpp */,
-				4F4EFCA819C4EC2E003C8734 /* HistoryRatio.h */,
-				4F4EFCE219C4EC2E003C8734 /* i_system.cpp */,
-				4F4EFCA919C4EC2E003C8734 /* i_system.h */,
-				4F4EFCE319C4EC2E003C8734 /* i_video.cpp */,
-				4F4EFCAA19C4EC2E003C8734 /* i_video.h */,
-				4F4EFCE419C4EC2E003C8734 /* id_ca.cpp */,
-				4F4EFCAB19C4EC2E003C8734 /* id_ca.h */,
-				4F4EFCE519C4EC2E003C8734 /* id_in.cpp */,
-				4F4EFCAC19C4EC2E003C8734 /* id_in.h */,
-				4F4EFCE619C4EC2E003C8734 /* id_pm.cpp */,
-				4F4EFCAD19C4EC2E003C8734 /* id_pm.h */,
-				4F4EFCE719C4EC2E003C8734 /* id_sd.cpp */,
-				4F4EFCAE19C4EC2E003C8734 /* id_sd.h */,
-				4F4EFCAF19C4EC2E003C8734 /* id_us.h */,
-				4F4EFCE819C4EC2E003C8734 /* id_us_1.cpp */,
-				4F4EFCE919C4EC2E003C8734 /* id_vh.cpp */,
-				4F4EFCB019C4EC2E003C8734 /* id_vh.h */,
-				4F4EFCEA19C4EC2E003C8734 /* id_vl.cpp */,
-				4F4EFCB119C4EC2E003C8734 /* id_vl.h */,
 				4F4EFC7819C4EBE6003C8734 /* Images.xcassets */,
-				4F4EFCEB19C4EC2E003C8734 /* ioan_bas.cpp */,
-				4F4EFCB219C4EC2E003C8734 /* ioan_bas.h */,
-				4F4EFCEC19C4EC2E003C8734 /* ioan_bot.cpp */,
-				4F4EFCB319C4EC2E003C8734 /* ioan_bot.h */,
-				4F4EFCED19C4EC2E003C8734 /* ioan_secret.cpp */,
-				4F4EFCB419C4EC2E003C8734 /* ioan_secret.h */,
-				4F4EFCB519C4EC2E003C8734 /* List.h */,
-				4F4EFCEE19C4EC2E003C8734 /* Logger.cpp */,
-				4F4EFCB619C4EC2E003C8734 /* Logger.h */,
-				4F4EFCEF19C4EC2E003C8734 /* m_buffer.cpp */,
-				4F4EFCB719C4EC2E003C8734 /* m_buffer.h */,
-				4F4EFCB819C4EC2E003C8734 /* m_dllist.h */,
-				4F4EFCB919C4EC2E003C8734 /* m_swap.h */,
-				4F4EFCF019C4EC2E003C8734 /* MapExploration.cpp */,
-				4F4EFCBA19C4EC2E003C8734 /* MapExploration.h */,
-				4F4EFCF119C4EC2E003C8734 /* MasterDirectoryFile.cpp */,
-				4F4EFCBB19C4EC2E003C8734 /* MasterDirectoryFile.h */,
-				4F4EFCF219C4EC2E003C8734 /* obattrib.cpp */,
-				4F4EFCBC19C4EC2E003C8734 /* obattrib.h */,
-				4F4EFCF319C4EC2E003C8734 /* PathArray.cpp */,
-				4F4EFCBD19C4EC2E003C8734 /* PathArray.h */,
-				4F4EFCF419C4EC2E003C8734 /* Property.cpp */,
-				4F4EFCBE19C4EC2E003C8734 /* Property.h */,
-				4F4EFCF519C4EC2E003C8734 /* PropertyFile.cpp */,
-				4F4EFCBF19C4EC2E003C8734 /* PropertyFile.h */,
-				4F4EFCF619C4EC2E003C8734 /* PString.cpp */,
-				4F4EFCC019C4EC2E003C8734 /* PString.h */,
-				4F4EFCF719C4EC2E003C8734 /* ShellUnicode.cpp */,
-				4F4EFCC119C4EC2E003C8734 /* ShellUnicode.h */,
-				4F4EFCF819C4EC2E003C8734 /* signon.cpp */,
-				4F4EFCF919C4EC2E003C8734 /* SODFlag.cpp */,
-				4F4EFCC219C4EC2E003C8734 /* SODFlag.h */,
-				4F4EFCC319C4EC2E003C8734 /* spr_sod.h */,
-				4F4EFCC419C4EC2E003C8734 /* spr_wl6.h */,
-				4F4EFCC519C4EC2E003C8734 /* sprabstract.h */,
-				4F4EFCFA19C4EC2E003C8734 /* StdStringExtensions.cpp */,
-				4F4EFCC619C4EC2E003C8734 /* StdStringExtensions.h */,
 				4F4EFC6D19C4EBE6003C8734 /* Supporting Files */,
-				4F4EFCC719C4EC2E003C8734 /* TimeMeasure.h */,
-				4F4EFCC819C4EC2E003C8734 /* version.h */,
-				4F4EFCFB19C4EC2E003C8734 /* wl_act1.cpp */,
-				4F4EFCC919C4EC2E003C8734 /* wl_act1.h */,
-				4F4EFCFC19C4EC2E003C8734 /* wl_act2.cpp */,
-				4F4EFCCA19C4EC2E003C8734 /* wl_act2.h */,
-				4F4EFCFD19C4EC2E003C8734 /* wl_agent.cpp */,
-				4F4EFCCB19C4EC2E003C8734 /* wl_agent.h */,
-				4F4EFCFE19C4EC2E003C8734 /* wl_atmos.cpp */,
-				4F4EFCCC19C4EC2E003C8734 /* wl_atmos.h */,
-				4F4EFCFF19C4EC2E003C8734 /* wl_cloudsky.cpp */,
-				4F4EFCCD19C4EC2E003C8734 /* wl_cloudsky.h */,
-				4F4EFD0019C4EC2E003C8734 /* wl_debug.cpp */,
-				4F4EFCCE19C4EC2E003C8734 /* wl_def.h */,
-				4F4EFD0119C4EC2E003C8734 /* wl_dir3dspr.cpp */,
-				4F4EFD0219C4EC2E003C8734 /* wl_draw.cpp */,
-				4F4EFCCF19C4EC2E003C8734 /* wl_draw.h */,
-				4F4EFD0319C4EC2E003C8734 /* wl_floorceiling.cpp */,
-				4F4EFD0419C4EC2E003C8734 /* wl_game.cpp */,
-				4F4EFCD019C4EC2E003C8734 /* wl_game.h */,
-				4F4EFD0519C4EC2E003C8734 /* wl_inter.cpp */,
-				4F4EFCD119C4EC2E003C8734 /* wl_inter.h */,
-				4F4EFD0619C4EC2E003C8734 /* wl_main.cpp */,
-				4F4EFCD219C4EC2E003C8734 /* wl_main.h */,
-				4F4EFD0719C4EC2E003C8734 /* wl_menu.cpp */,
-				4F4EFCD319C4EC2E003C8734 /* wl_menu.h */,
-				4F4EFD0819C4EC2E003C8734 /* wl_parallax.cpp */,
-				4F4EFD0919C4EC2E003C8734 /* wl_play.cpp */,
-				4F4EFCD419C4EC2E003C8734 /* wl_play.h */,
-				4F4EFD0A19C4EC2E003C8734 /* wl_shade.cpp */,
-				4F4EFCD519C4EC2E003C8734 /* wl_shade.h */,
-				4F4EFD0B19C4EC2E003C8734 /* wl_state.cpp */,
-				4F4EFCD619C4EC2E003C8734 /* wl_state.h */,
-				4F4EFD0C19C4EC2E003C8734 /* wl_text.cpp */,
-				4F4EFCD719C4EC2E003C8734 /* wl_text.h */,
 			);
 			path = "AutoWolf-iOS";
 			sourceTree = "<group>";
@@ -635,6 +694,7 @@
 				4F4EFD4119C4EC2F003C8734 /* wl_text.cpp in Sources */,
 				4F4EFD1C19C4EC2F003C8734 /* id_sd.cpp in Sources */,
 				4F4EFD2B19C4EC2F003C8734 /* PString.cpp in Sources */,
+				4F13FF301A180F0400B64656 /* Platform.cpp in Sources */,
 				4F4EFD1819C4EC2F003C8734 /* i_video.cpp in Sources */,
 				4F4EFD2819C4EC2F003C8734 /* PathArray.cpp in Sources */,
 				4F4EFD1919C4EC2F003C8734 /* id_ca.cpp in Sources */,

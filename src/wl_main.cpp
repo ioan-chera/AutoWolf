@@ -62,10 +62,7 @@
 #include "macosx/CocoaFun.h"
 #endif
 #include "wl_atmos.h"
-
-#ifdef IOS
-#include <CoreFoundation/CoreFoundation.h>
-#endif
+#include "Platform.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -990,10 +987,8 @@ static void FinishSignon ()
 
         I_UpdateScreen();
 
-#ifndef TOUCHSCREEN
-        if (!cfg_nowait)
+        if (!Platform::touchscreen && !cfg_nowait)
             myInput.ack ();
-#endif
 
         // IOANCH 20130301: unification culling
 
@@ -1016,10 +1011,8 @@ static void FinishSignon ()
     else
     {
         I_UpdateScreen();
-#ifndef TOUCHSCREEN
-        if (!cfg_nowait)
+        if (!Platform::touchscreen && !cfg_nowait)
             VL_WaitVBL(3*70);
-#endif
     }
 
 }
@@ -1617,7 +1610,7 @@ static void DemoLoop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-std::string stringByReplacing(const char* text, const char* what, const char* towhat)
+static std::string stringByReplacing(const char* text, const char* what, const char* towhat)
 {
 	std::string str(text);
 	
@@ -1784,53 +1777,16 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 	}
 	else if (event->type == SDL_APP_DIDENTERFOREGROUND)
 	{
+#ifdef IOS
+        Cocoa_HideStatusBar();
+        g_forceSDLRestart = true;
+#endif
 		Sound::MusicOn();
 		return 0;
 	}
 	return 1;
 }
 #endif
-
-static void InitIOSArgs(int* argc, TChar*** argv)
-{
-#ifdef IOS
-    *argv = (TChar**)calloc(5, sizeof(char*));
-    if(!*argv)
-        throw Exception("Fail allocating new argv struct!");
-    
-    unsigned i = 0;
-    
-    (*argv)[i++] = (TChar*)"AutoWolf";
-//    (*argv)[i++] = (TChar*)"--norestore";
-//    (*argv)[i++] = (TChar*)"--res";
-//    (*argv)[i++] = (TChar*)"640";
-//    (*argv)[i++] = (TChar*)"480";
-//    (*argv)[i++] = (TChar*)"--joystick";
-//    (*argv)[i++] = (TChar*)"-1";
-    (*argv)[i++] = (TChar*)"--wolfdir";
-    (*argv)[i++] = (TChar*)calloc(PATH_MAX, sizeof(TChar));
-    
-    if((*argv)[i - 1] == nullptr)
-        throw Exception("Fail allocating path arg");
-    
-    CFBundleRef bundle = CFBundleGetMainBundle();
-    if(!bundle)
-        throw Exception("Couldn't get main bundle!");
-    CFURLRef resURL = CFBundleCopyResourcesDirectoryURL(bundle);
-    if(!resURL)
-        throw Exception("Couldn't get bundle resource URL!");
-    CFStringRef resPath = CFURLCopyPath(resURL);
-    if(!CFStringGetCString(resPath, (*argv)[i - 1], PATH_MAX, kCFStringEncodingUTF8))
-        throw Exception("Fail getting c string out of string");
-    
-    CFRelease(resPath);
-    CFRelease(resURL);
-    
-    strlcat((*argv)[i - 1], "/wolftest", PATH_MAX);
-    
-    *argc = i;
-#endif
-}
 
 //
 // main
@@ -1845,8 +1801,7 @@ int SDL_main(int argc, TChar *argv[])
 	//TestListPerf();
 	try
 	{
-        InitIOSArgs(&argc, &argv);
-        
+        Platform::DetermineConfig();
 #if defined(_arch_dreamcast)
 		DC_Init();
 #else

@@ -48,6 +48,7 @@
 #include "wl_menu.h"
 #include "wl_play.h"
 #include "wl_text.h"
+#include "Platform.h"
 
 int Menu::g_bkgdColor;
 int Menu::g_bordColor;
@@ -3594,13 +3595,16 @@ static int Confirm (const char *string)
     CursorInfo ci;
     
     // IOANCH: add some tap hint
-#ifdef TOUCHSCREEN
-    std::string mstr = string;
-    mstr += "\n\nTap here for yes...";
-    Message(mstr.c_str());
-#else
-    Message (string);
-#endif
+    
+    if(Platform::touchscreen)
+    {
+        std::string mstr = string;
+        mstr += "\n\nTap here for yes...";
+        Message(mstr.c_str());
+    }
+    else
+        Message (string);
+    
     myInput.clearKeysDown ();
     WaitKeyUp ();
 

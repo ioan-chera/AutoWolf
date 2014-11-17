@@ -100,9 +100,9 @@ bool  cfg_usedoublebuffering = true;
 unsigned cfg_logicalWidth = 640;
 unsigned cfg_logicalHeight = 400;
 // CURRENTLY TOUCHSCREEN ONLY
-unsigned cfg_displayWidth = 640;
-unsigned cfg_displayHeight = 480;
-float cfg_displayRatio = (float)cfg_displayWidth / cfg_displayHeight;
+unsigned vid_correctedWidth = 640;
+unsigned vid_correctedHeight = 480;
+float vid_correctedRatio = (float)vid_correctedWidth / vid_correctedHeight;
 unsigned cfg_screenBits = -1;      // use "best" color depth according to libSDL
 #endif
 float cfg_logicalRatio = (float)cfg_logicalWidth / cfg_logicalHeight;
