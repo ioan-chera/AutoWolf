@@ -42,6 +42,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 	MasterDirectoryFile.cpp \
 	obattrib.cpp \
 	PathArray.cpp \
+  Platform.cpp \
 	Property.cpp \
 	PropertyFile.cpp \
 	PString.cpp \

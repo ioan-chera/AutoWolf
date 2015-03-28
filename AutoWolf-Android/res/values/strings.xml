@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Automatic Wolfenstein</string>
     <string name="choose_wolfdir_label">Current Wolfenstein Folder</string>
-    <string name="not_chosen_label">None Chosen</string>
+    <string name="not_chosen_label">Game not chosen. You need to have Wolfenstein 3D (for DOS) copied from your computer into this device. To do it: make sure you have the DOS version of Wolf3D installed on your PC. Then copy the eight .WL6 or .SOD files somewhere into this device\'s storage (you can use USB file transfer for this). After you do this, tap the button below to find the files and get them! Cloud storage not supported yet, sorry! If you don\'t have Wolf3D, you can still find the PC DOS version on sale!</string>
     <string name="choose_wolfdir_button">Select Folder&#8230;</string>
     <string name="warp_label">Jump to Level:</string>
     <string name="warp_field_hint">(Start Normally)</string>
@@ -12,8 +12,8 @@
     <string name="medium_button">Bring \'em on</string>
     <string name="hard_button">I am death incarnate!</string>
     <string name="start_button">Start!</string>
-    <string name="secretstep3">Emulate secret overstep</string>
-    <string name="lowres">Low resolution</string>
+    <string name="secretstep3">Emulate secret overstep (old bug, needed for some custom maps)</string>
+    <string name="lowres">Low resolution (may help on slower hardware)</string>
     
     <string name="open_activity">Pick Wolfenstein Directory</string>
     <string name="error">Cannot load folder</string>
