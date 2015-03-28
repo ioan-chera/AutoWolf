@@ -22,12 +22,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "../version.h"
+
 #ifdef OSX
 #import <AppKit/AppKit.h>
+#elif defined(IOS)
+#import <UIKit/UIKit.h>
+#include "wl_def.h"
+#include "i_video.h"
 #endif
+
 #import <Foundation/Foundation.h>
 #include "CocoaFun.h"
 
+// Unfortunately frozen to this value. Normally I should name it "org.i-chera.autowolf", but I can't
+// change the name now because it would stop reading old version preference states
 #define APPLICATION_UTI @"com.ichera.autowolf"
 
 //
@@ -140,6 +148,35 @@ void Cocoa_DisableIdleTimer()
 {
     @autoreleasepool {
         [UIApplication sharedApplication].idleTimerDisabled = YES;
+    }
+}
+
+// https://forums.libsdl.org/viewtopic.php?t=8682&sid=baac6ce2135c88065fa22f6d777b0ae3
+void Cocoa_PutBackButton()
+{
+    @autoreleasepool {
+        SDL_SysWMinfo systemWindowInfo;
+        SDL_VERSION(&systemWindowInfo.version);
+        if(!SDL_GetWindowWMInfo(vid_window, &systemWindowInfo))
+        {
+            return;
+        }
+        UIWindow* iosWindow = systemWindowInfo.info.uikit.window;
+        UIViewController* viewController = iosWindow.rootViewController;
+        if(!viewController)
+        {
+            NSLog(@"ERROR: no view controller");
+            return;
+        }
+        UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
+        [button setTitle:@"Back" forState:UIControlStateNormal];
+        [button sizeToFit];
+        button.frame = CGRectMake(0, 0, 88, 44);
+        button.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
+        [viewController.view addSubview:button];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [viewController.view bringSubviewToFront:button];
+        });
     }
 }
 #endif

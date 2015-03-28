@@ -30,6 +30,7 @@ double      Cocoa_StatusBarHeight();
 void        Cocoa_HideStatusBar();
 double      Cocoa_PixelsPerDot();
 void        Cocoa_DisableIdleTimer();
+void        Cocoa_PutBackButton();
 #endif
 
 #endif

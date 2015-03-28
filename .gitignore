@@ -32,3 +32,5 @@ AutoWolf-Android/bin
 AutoWolf-Android/gen
 AutoWolf-Android/libs
 AutoWolf-Android/obj
+*.xccheckout
+AutoWolf-iOS/sdl-include

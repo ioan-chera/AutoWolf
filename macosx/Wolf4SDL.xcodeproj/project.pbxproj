@@ -13,6 +13,7 @@
 		4F1ECC2116E6579400A37742 /* obattrib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2016E6579400A37742 /* obattrib.cpp */; };
 		4F1ECC2916E922B500A37742 /* Property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC2716E922B500A37742 /* Property.cpp */; };
 		4F1ECC3416EA505B00A37742 /* e_hashkeys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */; };
+		4F240E2D1AC6BFB4006B1294 /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F240E2B1AC6BFB4006B1294 /* Platform.cpp */; };
 		4F267FBF174B83C100C00DBF /* Makefile.osx in Resources */ = {isa = PBXBuildFile; fileRef = 4F267FBE174B83C100C00DBF /* Makefile.osx */; };
 		4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F267FCC174B87E500C00DBF /* MapExploration.cpp */; };
 		4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F32BDAB1749441A00EF744B /* ActorStates.cpp */; };
@@ -105,6 +106,8 @@
 		4F1ECC3016EA4F5600A37742 /* e_hashkeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = e_hashkeys.h; path = ../src/e_hashkeys.h; sourceTree = "<group>"; };
 		4F1ECC3116EA4F5600A37742 /* m_dllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = m_dllist.h; path = ../src/m_dllist.h; sourceTree = "<group>"; };
 		4F1ECC3316EA505B00A37742 /* e_hashkeys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = e_hashkeys.cpp; path = ../src/e_hashkeys.cpp; sourceTree = "<group>"; };
+		4F240E2B1AC6BFB4006B1294 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = ../src/Platform.cpp; sourceTree = "<group>"; };
+		4F240E2C1AC6BFB4006B1294 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = ../src/Platform.h; sourceTree = "<group>"; };
 		4F267FBE174B83C100C00DBF /* Makefile.osx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.osx; path = ../Makefile.osx; sourceTree = SOURCE_ROOT; };
 		4F267FCB174B87E500C00DBF /* MapExploration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapExploration.h; path = ../src/MapExploration.h; sourceTree = SOURCE_ROOT; };
 		4F267FCC174B87E500C00DBF /* MapExploration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MapExploration.cpp; path = ../src/MapExploration.cpp; sourceTree = SOURCE_ROOT; };
@@ -407,6 +410,8 @@
 		FA8DFA96158692E000EBBFB2 /* IOAN */ = {
 			isa = PBXGroup;
 			children = (
+				4F240E2B1AC6BFB4006B1294 /* Platform.cpp */,
+				4F240E2C1AC6BFB4006B1294 /* Platform.h */,
 				4F6DCA1E18E00FA300F05373 /* CommandLine.cpp */,
 				4F6DCA1F18E00FA300F05373 /* CommandLine.h */,
 				4F6DCA2018E00FA300F05373 /* FileSystem.cpp */,
@@ -685,6 +690,7 @@
 				4F471993173BC0310018E82B /* Config.cpp in Sources */,
 				4F32BDAD1749441B00EF744B /* ActorStates.cpp in Sources */,
 				4F267FCD174B87E500C00DBF /* MapExploration.cpp in Sources */,
+				4F240E2D1AC6BFB4006B1294 /* Platform.cpp in Sources */,
 				4F6DCA2A18E00FA300F05373 /* FileSystem.cpp in Sources */,
 				4F00B0EA1796DA5E0091B7BD /* i_system.cpp in Sources */,
 				4FF097C517A6869C00706687 /* i_video.cpp in Sources */,

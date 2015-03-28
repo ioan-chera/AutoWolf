@@ -245,6 +245,7 @@ void I_InitEngine()
 #ifdef IOS
 //    Cocoa_HideStatusBar();
     Cocoa_DisableIdleTimer();
+    Cocoa_PutBackButton();
 #endif
 	
 }
