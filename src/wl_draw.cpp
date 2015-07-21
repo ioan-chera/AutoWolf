@@ -58,6 +58,11 @@
 
 #define ACTORSIZE       0x4000
 
+enum
+{
+    DRAW_CENTER = MAPSIZE << (TILESHIFT - 1),   // center coordinate
+};
+
 /*
 =============================================================================
 
@@ -633,13 +638,15 @@ static int CalcRotate (const objtype *ob)
    // this isn't exactly correct, as it should vary by a trig value,
    // but it is close enough with only eight rotations
 
-   viewangle = player->angle + (centerx - ob->viewx) / 8;
-
+//   viewangle = player->angle + (centerx - ob->viewx) / 8;
+//
    if (ob->obclass == rocketobj || ob->obclass == hrocketobj)
-      angle = (viewangle - 180) - ob->angle;
+      angle = -ob->angle;
    else
-      angle = (viewangle - 180) - dirangle[ob->dir];
+      angle = -dirangle[ob->dir];
 
+    angle += ANGLES / 4;
+    angle += ANGLES / 2;
    angle += ANGLES / 16;
    while (angle >= ANGLES)
       angle -= ANGLES;
@@ -1501,6 +1508,221 @@ static void CalcViewVariables()
 
 //==========================================================================
 
+static void draw2dView()
+{
+    // view size: viewwidth * viewheight
+    // center pos: (viewheight / 2, viewwidth / 2)
+    // shown size: viewwidth * PIXGLOBAL, viewheight * PIXGLOBAL
+    // num tiles: viewwidth * PIXGLOBAL / TILEGLOBAL
+
+    int vx, vy;                 // view coordinates
+    int vcx = viewwidth / 2;    // view center x
+    int vcy = viewheight / 2;   // view center y
+    fixed x, y;                 // game coordinates
+    fixed cx = player->x;       // center game coords
+    fixed cy = player->y;
+    int tx, ty;                 // tile coordinates
+    int tmx, tmy;               // tile modulus
+    int txmin, tymin, txmax, tymax;
+    byte tile;
+    byte doornum;
+
+    txmin = (cx - vcx * PIXGLOBAL) / TILEGLOBAL;
+    tymin = (cy - vcy * PIXGLOBAL) / TILEGLOBAL;
+    txmax = (cx + (viewwidth - vcx - 1) * PIXGLOBAL) / TILEGLOBAL;
+    tymax = (cy + (viewheight - vcy - 1) * PIXGLOBAL) / TILEGLOBAL;
+
+    byte* ptr = vbuf;
+    byte ceiling = vgaCeiling[gamestate.episode * 10 + mapSegs.map()];
+    for (vy = 0; vy < viewheight; ++vy)
+    {
+        for (vx = 0; vx < viewwidth; ++vx)
+        {
+            ptr = vbuf + vbufPitch * vy + vx;
+            x = cx + (vx - vcx) * PIXGLOBAL;
+            y = cy + (vy - vcy) * PIXGLOBAL;
+            tx = x / TILEGLOBAL;
+            ty = y / TILEGLOBAL;
+            if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+            {
+                *ptr = 0;
+                continue;
+            }
+            // inside map
+            tile = tilemap[tx][ty] & ~0x40;
+            if (!tile)
+            {
+                *ptr = ceiling;
+                continue;
+            }
+            tmx = x % TILEGLOBAL / PIXGLOBAL;
+            tmy = y % TILEGLOBAL / PIXGLOBAL;
+            if(tile < MAXWALLTILES)
+            {
+                if(tmx >= 64 || tmy >= 64)
+                    printf("ERROR %d %d\n", tmx, tmy);
+                *ptr = *(vSwapData.getTexture(horizwall[tile]) + tmy + tmx * 64);
+                continue;
+            }
+            if(tile & 0x80)
+            {
+                doornum = tile & ~0x80;
+                if(doorobjlist[doornum].vertical)
+                    *ptr = tmx >= 28 && tmx < 36 ? 128 : ceiling;
+                else
+                    *ptr = tmy >= 28 && tmy < 36 ? 128 : ceiling;
+                continue;
+            }
+        }
+    }
+
+    statobj_t *statptr;
+    const t_compshape* sprite;
+    const byte* spbytes;
+    word lpx, rpx;
+    word tpx, bpx, pst;
+    word ofs;
+    fixed xdiff, ydiff;
+    for (statptr = &statobjlist[0] ; statptr != laststatobj ; statptr++)
+    {
+        if (statptr->shapenum == -1)
+            continue;                          // object has been deleted
+        tx = statptr->tilex;
+        ty = statptr->tiley;
+        if(tx < txmin || tx > txmax || ty < tymin || ty > tymax)
+            continue;
+
+        x = tx << TILESHIFT;
+        y = ty << TILESHIFT;
+        xdiff = x + TILEGLOBAL / 2 - cx;
+        ydiff = y + TILEGLOBAL / 2 - cy;
+        if(abs(xdiff) < TILEGLOBAL / 2 && abs(ydiff) < TILEGLOBAL / 2
+           && statptr->flags & FL_BONUS)
+        {
+            Agent::GetBonus (statptr);
+            if(statptr->shapenum == -1)
+                continue;                                           // object has been taken
+        }
+        int ovx = vcx + (x - cx) / PIXGLOBAL;
+        int ovy = vcy + (y - cy) / PIXGLOBAL;
+
+        sprite = vSwapData.getSprite(statptr->shapenum);
+        spbytes = reinterpret_cast<const byte*>(sprite);
+        lpx = sprite->leftpix;
+        rpx = sprite->rightpix;
+        int i;
+
+        for(i = 0, tmx = lpx; tmx <= rpx; ++tmx, ++i)
+        {
+            vx = ovx + tmx;
+            // OPTIMIZATION: exit the loop
+            if(vx < 0)
+                continue;
+            if(vx >= viewwidth)
+                break;
+            ofs = sprite->dataofs[i];
+            for(;;)
+            {
+                bpx = (spbytes[ofs] + 256 * spbytes[ofs + 1]) / 2;
+                if(!bpx)
+                    break;
+                ofs += 2;
+                pst = spbytes[ofs] + 256 * spbytes[ofs + 1];
+                ofs += 2;
+                tpx = (spbytes[ofs] + 256 * spbytes[ofs + 1]) / 2;
+                ofs += 2;
+                for(tmy = tpx; tmy < bpx; ++tmy)
+                {
+                    vy = ovy + tmy;
+                    if(vy < 0)
+                        continue;
+                    if (vy >= viewheight)
+                        break;
+
+                    ptr = vbuf + vbufPitch * vy + vx;
+                    *ptr = spbytes[pst + tmy];
+                }
+            }
+        }
+    }
+
+    objtype* obj;
+    bool drawn = false;
+    short shn;
+    for (obj = player; obj; obj = obj->next)
+    {
+        obj->flags &= ~FL_VISABLE;
+        if(obj == player)
+            shn = SPR_BJ_W1 + lasttimecount / 8 % 4;
+        else
+            shn = obj->state->shapenum;
+        if (!shn)
+            continue;                          // object has been deleted
+        tx = obj->tilex;
+        ty = obj->tiley;
+        if(tx < txmin || tx > txmax || ty < tymin || ty > tymax)
+            continue;
+
+        x = obj->x - TILEGLOBAL / 2;
+        y = obj->y - TILEGLOBAL / 2;
+
+        int ovx = vcx + (x - cx) / PIXGLOBAL;
+        int ovy = vcy + (y - cy) / PIXGLOBAL;
+
+        if (shn == -1)
+            shn = obj->temp1;  // special shape
+
+        if (obj->state->rotate)
+            shn += CalcRotate (obj);
+
+        sprite = vSwapData.getSprite(shn);
+        spbytes = reinterpret_cast<const byte*>(sprite);
+        lpx = sprite->leftpix;
+        rpx = sprite->rightpix;
+        int i;
+
+        drawn = false;
+        for(i = 0, tmx = lpx; tmx <= rpx; ++tmx, ++i)
+        {
+            vx = ovx + tmx;
+            // OPTIMIZATION: exit the loop
+            if(vx < 0)
+                continue;
+            if(vx >= viewwidth)
+                break;
+            ofs = sprite->dataofs[i];
+            for(;;)
+            {
+                bpx = (spbytes[ofs] + 256 * spbytes[ofs + 1]) / 2;
+                if(!bpx)
+                    break;
+                ofs += 2;
+                pst = spbytes[ofs] + 256 * spbytes[ofs + 1];
+                ofs += 2;
+                tpx = (spbytes[ofs] + 256 * spbytes[ofs + 1]) / 2;
+                ofs += 2;
+                for(tmy = tpx; tmy < bpx; ++tmy)
+                {
+                    vy = ovy + tmy;
+                    if(vy < 0)
+                        continue;
+                    if (vy >= viewheight)
+                        break;
+
+                    drawn = true;
+                    ptr = vbuf + vbufPitch * vy + vx;
+                    *ptr = spbytes[pst + tmy];
+                }
+            }
+        }
+        if(drawn)
+        {
+            TransformActor(obj);
+            obj->flags |= FL_VISABLE;
+        }
+    }
+}
+
 /*
 ========================
 =
@@ -1529,13 +1751,15 @@ void    Draw::ThreeDRefresh ()
 //
 // follow the walls from there to the right, drawing as we go
 //
-   VGAClearScreen ();
+    draw2dView();
+
+//   VGAClearScreen ();
 #if defined(USE_FEATUREFLAGS) && defined(USE_STARSKY)
    if(GetFeatureFlags() & FF_STARSKY)
       DrawStarSky(vbuf, vbufPitch);
 #endif
 
-   WallRefresh ();
+//   WallRefresh ();
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_PARALLAX)
    if(GetFeatureFlags() & FF_PARALLAXSKY)
@@ -1552,7 +1776,7 @@ void    Draw::ThreeDRefresh ()
 //
 // draw all the scaled images
 //
-   DrawScaleds();                  // draw scaled stuff
+//   DrawScaleds();                  // draw scaled stuff
 
 #if defined(USE_FEATUREFLAGS) && defined(USE_RAIN)
    if(GetFeatureFlags() & FF_RAIN)
@@ -1563,7 +1787,7 @@ void    Draw::ThreeDRefresh ()
       DrawSnow(vbuf, vbufPitch);
 #endif
 
-   DrawPlayerWeapon ();    // draw player's hands
+//   DrawPlayerWeapon ();    // draw player's hands
 
    if(myInput.keyboard(sc_Tab) && viewsize == 21 && (int)gamestate.weapon != -1)
       ShowActStatus();
