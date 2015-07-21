@@ -25,6 +25,7 @@
 #include "FileSystem.h"
 #include "i_system.h"
 #include "SODFlag.h"
+#include "wl_draw.h"
 #include "wl_menu.h"
 #include "ioan_secret.h"
 
@@ -988,6 +989,7 @@ void SPEAR::Initialize(const std::string &basePath)
 
 void SPEAR::SetGlobalValues()
 {
+    Draw::SetSpearModuleValues();
 	Menu::SetSpearModuleValues();
 	
 	SecretSolver::SetSpearModuleValues();

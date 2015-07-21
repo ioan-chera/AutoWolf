@@ -26,8 +26,13 @@ extern  Boolean8 fizzlein, fpscounter;
 extern  fixed   viewx,viewy;                    // the focal point
 extern  fixed   viewsin,viewcos;
 
-void    ThreeDRefresh ();
 void    CalcTics ();
+
+namespace Draw
+{
+    void SetSpearModuleValues();
+    void ThreeDRefresh();
+}
 
 struct t_compshape
 {

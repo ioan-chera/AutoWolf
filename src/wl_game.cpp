@@ -1304,7 +1304,7 @@ static void Died ()
 
     if (vid_screenfaded)
     {
-        ThreeDRefresh ();
+        Draw::ThreeDRefresh ();
         VW_FadeIn ();
     }
 
@@ -1362,7 +1362,7 @@ static void Died ()
             if (player->angle >= ANGLES)
                 player->angle -= ANGLES;
 
-            ThreeDRefresh ();
+            Draw::ThreeDRefresh ();
             CalcTics ();
         } while (curangle != iangle);
     }
@@ -1384,7 +1384,7 @@ static void Died ()
             if (player->angle < 0)
                 player->angle += ANGLES;
 
-            ThreeDRefresh ();
+            Draw::ThreeDRefresh ();
             CalcTics ();
         } while (curangle != iangle);
     }

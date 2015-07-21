@@ -98,7 +98,6 @@ static void    TransformActor (objtype *ob);
 static int     CalcRotate (const objtype *ob);
 static void    DrawScaleds ();
 void    CalcTics ();
-void    ThreeDRefresh ();
 
 
 
@@ -586,6 +585,8 @@ static const byte vgaCeiling_sod[] =
    0x1d, 0xde, 0xdf, 0xde, 0xdf, 0xde, 0xe1, 0xdc, 0x2e, 0x1d, 0xdc
 };
 
+static const byte *vgaCeiling;
+
 
 /*
 =====================
@@ -598,7 +599,7 @@ static const byte vgaCeiling_sod[] =
 static void VGAClearScreen ()
 {
    // IOANCH 20130302: unification
-   byte ceiling = IMPALE(vgaCeiling)[gamestate.episode * 10 + mapSegs.map()];
+   byte ceiling = vgaCeiling[gamestate.episode * 10 + mapSegs.map()];
 
    int y;
    byte *ptr = vbuf;
@@ -1509,7 +1510,7 @@ static void CalcViewVariables()
 ========================
 */
 
-void    ThreeDRefresh ()
+void    Draw::ThreeDRefresh ()
 {
 //
 // clear out the traced array
@@ -1614,4 +1615,9 @@ void    ThreeDRefresh ()
       }
    }
 #endif
+}
+
+void Draw::SetSpearModuleValues()
+{
+    vgaCeiling = SPEAR::flag ? vgaCeiling_sod : vgaCeiling_wl6;
 }

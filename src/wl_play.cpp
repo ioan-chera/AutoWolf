@@ -1415,7 +1415,7 @@ void PlayLoop ()
 
 			UpdatePaletteShifts ();
 
-			ThreeDRefresh ();
+			Draw::ThreeDRefresh ();
 		}
 
         //
