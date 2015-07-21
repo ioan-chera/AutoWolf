@@ -610,10 +610,9 @@ static void VGAClearScreen ()
       memset(ptr, shadetable[GetShade((y - viewheight / 2) << 3)][FLOOR_COLOUR],
              viewwidth);
 #else
-   for(y = 0; y < viewheight / 2; y++, ptr += vbufPitch)
+    // For 2D view, make all view the ceiling colour
+   for(y = 0; y < viewheight; y++, ptr += vbufPitch)
       memset(ptr, ceiling, viewwidth);
-   for(; y < viewheight; y++, ptr += vbufPitch)
-      memset(ptr, FLOOR_COLOUR, viewwidth);
 #endif
 }
 
