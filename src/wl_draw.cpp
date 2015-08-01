@@ -1543,7 +1543,10 @@ static void draw2dView()
             y = cy + (vy - vcy) * PIXGLOBAL;
             tx = x / TILEGLOBAL;
             ty = y / TILEGLOBAL;
-            if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+
+            // beware of negative dividend error
+            if(x < 0 || y < 0 || tx < 0 || tx >= MAPSIZE || ty < 0
+               || ty >= MAPSIZE)
             {
                 *ptr = 0;
                 continue;
@@ -1568,9 +1571,17 @@ static void draw2dView()
             {
                 doornum = tile & ~0x80;
                 if(doorobjlist[doornum].vertical)
-                    *ptr = tmx >= 28 && tmx < 36 ? 128 : ceiling;
+                {
+                    // 65536 = 2^16
+                    // 64 = 2^6
+                    *ptr = tmx >= 28 && tmx < 36
+                    && tmy > doorposition[doornum] >> 10 ? 128 : ceiling;
+                }
                 else
-                    *ptr = tmy >= 28 && tmy < 36 ? 128 : ceiling;
+                {
+                    *ptr = tmy >= 28 && tmy < 36
+                    && tmx > doorposition[doornum] >> 10 ? 128 : ceiling;
+                }
                 continue;
             }
         }
