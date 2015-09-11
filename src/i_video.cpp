@@ -49,7 +49,6 @@ static SDL_Surface* vid_screen;
 SDL_Window* vid_window;
 SDL_Renderer* vid_renderer;
 static SDL_Texture* vid_texture;
-static SDL_Color* vid_trueBuffer;
 #endif
 
 int vid_screenWidth, vid_screenHeight;
@@ -110,8 +109,6 @@ static void I_initSDL12()
 void I_RecreateRenderer()
 {
 #ifndef USE_SDL1_2
-    if(vid_trueBuffer)
-        delete[] vid_trueBuffer;
     if(vid_texture)
         SDL_DestroyTexture(vid_texture);
     if(vid_renderer)
@@ -187,8 +184,6 @@ void I_RecreateRenderer()
         throw Exception((std::string("Unable to create SDL texture: ")
                          + SDL_GetError()).c_str());
     }
-    
-    vid_trueBuffer = new SDL_Color[cfg_logicalWidth * cfg_logicalHeight];
     
 #endif
 }
@@ -317,7 +312,10 @@ SDL_Color *I_LockDirect()
 #ifdef USE_SDL1_2
     return reinterpret_cast<SDL_Color*>(I_lockSurface(vid_screen));
 #else
-   return vid_trueBuffer;
+    void *vpixels;
+    int pitch;
+    SDL_LockTexture(vid_texture, nullptr, &vpixels, &pitch);
+   return static_cast<SDL_Color *>(vpixels);
 #endif
 }
 
@@ -346,6 +344,8 @@ void I_UnlockDirect()
 {
 #ifdef USE_SDL1_2
     I_unlockSurface(vid_screen);
+#else
+    SDL_UnlockTexture(vid_texture);
 #endif
 }
 
@@ -357,7 +357,6 @@ void I_UpdateDirect()
 #ifdef USE_SDL1_2
     SDL_Flip(vid_screen);
 #else
-	SDL_UpdateTexture(vid_texture, nullptr, vid_trueBuffer, cfg_logicalWidth * sizeof(SDL_Color));
 	SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr);
 	SDL_RenderPresent(vid_renderer);
 #endif
@@ -370,6 +369,7 @@ void I_UpdateScreen()
 	SDL_Flip(vid_screen);
 #else
 	unsigned x, y;
+    SDL_Color *vid_trueBuffer = I_LockDirect();
 	for (y = 0; y < cfg_logicalHeight; ++y)
 	{
 		for (x = 0; x < cfg_logicalWidth; ++x)
@@ -377,6 +377,7 @@ void I_UpdateScreen()
 			vid_trueBuffer[y * cfg_logicalWidth + x] = vid_curpal[static_cast<uint8_t*>(vid_screenBuffer->pixels)[y * cfg_logicalWidth + x]];
 		}
 	}
+    I_UnlockDirect();
 	I_UpdateDirect();
 #endif
 }
