@@ -431,8 +431,11 @@ static void PollMouseMove ()
     if(myInput.inputGrabbed())
         myInput.centreMouse();
 
-    mousexmove -= cfg_logicalWidth / 2;
-    mouseymove -= cfg_logicalHeight / 2;
+    int w, h;
+    SDL_GetWindowSize(vid_window, &w, &h);
+
+    mousexmove -= w / 2;
+    mouseymove -= h / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
     controly += mouseymove * 20 / (13 - mouseadjustment);

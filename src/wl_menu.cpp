@@ -3511,30 +3511,32 @@ void ReadAnyControl (CursorInfo * ci)
     if (mouseenabled && myInput.inputGrabbed())
     {
         int mousex, mousey, buttons;
-        buttons = SDL_GetMouseState(&mousex, &mousey);
+        buttons = SDL_GetRelativeMouseState(&mousex, &mousey);
         int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
         int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
         buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));
         if(middlePressed) buttons |= 1 << 2;
         if(rightPressed) buttons |= 1 << 1;
 
-        if(mousey - CENTERY < -SENSITIVE)
+        printf("%d %d\n", mousex, mousey);
+
+        if(mousey/* - CENTERY*/ < -SENSITIVE/4)
         {
             ci->dir = dir_North;
             mouseactive = 1;
         }
-        else if(mousey - CENTERY > SENSITIVE)
+        else if(mousey/* - CENTERY*/ > SENSITIVE/4)
         {
             ci->dir = dir_South;
             mouseactive = 1;
         }
 
-        if(mousex - CENTERX < -SENSITIVE)
+        if(mousex/* - CENTERX*/ < -SENSITIVE/4)
         {
             ci->dir = dir_West;
             mouseactive = 1;
         }
-        else if(mousex - CENTERX > SENSITIVE)
+        else if(mousex/* - CENTERX*/ > SENSITIVE/4)
         {
             ci->dir = dir_East;
             mouseactive = 1;

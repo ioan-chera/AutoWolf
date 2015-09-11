@@ -51,6 +51,7 @@
 #include "wl_def.h"
 #include "wl_main.h"
 #include "wl_play.h"
+#include "Platform.h"
 
 #ifdef IOS
 #include "CocoaFun.h"
@@ -155,7 +156,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 #ifdef USE_SDL1_2
              SDL_WM_GrabInput(m_grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
 #else
-			 SDL_SetRelativeMouseMode(m_grabInput ? SDL_TRUE : SDL_FALSE);
+//			 SDL_SetRelativeMouseMode(m_grabInput ? SDL_TRUE : SDL_FALSE);
 #endif
             return;
          }
@@ -268,38 +269,39 @@ void InputManager::p_processEvent(const SDL_Event *event)
 	   case SDL_FINGERDOWN:
 	   case SDL_FINGERMOTION:
 	   case SDL_FINGERUP:
-	   {
-		   m_fingerdown = event->type != SDL_FINGERUP;
-           float fingerx = event->tfinger.x;
-           float fingery = event->tfinger.y;
-		   // WARNING: it's assumed that the window is in the middle. Who's to
-		   // know for sure?
-           
-		   if(128*vid_screenWidth / vid_screenHeight >
-			  static_cast<int>(128*vid_correctedWidth / vid_correctedHeight))
-		   {
-			   // Greater aspect ratio of window: pillar box. Height is correct
-			   
-			   // 0... a... 1 - a... 1
-			   // w / W
-			   // w = H / sh * sw
-			   // a = 1 / 2 - ca
-			   // ca = 1 / 2 * w / W
-			   // a = 1 / 2 - 1 / 2 * w / W
-			   // a = 1 / 2 * (1 - w / W)
-			   // a = 1 / 2 * (1 - H / sh * sw / W)
-			   float a = 0.5f * (1 - (float)vid_screenHeight * vid_correctedRatio / vid_screenWidth);
-			   m_touchx = static_cast<int>((fingerx - a) / (1 - 2 * a) * cfg_logicalWidth);
-			   m_touchy = static_cast<int>(fingery * cfg_logicalHeight);
-			   
-		   }
-		   else
-		   {
-			   float a = 0.5f * (1 - (float)vid_screenWidth / vid_correctedRatio / vid_screenHeight);
-			   m_touchx = static_cast<int>(fingerx * cfg_logicalWidth);
-			   m_touchy = static_cast<int>((fingery - a) / (1 - 2 * a) * cfg_logicalHeight);
-		   }
-	   }
+           if(Platform::touchscreen)
+           {
+               m_fingerdown = event->type != SDL_FINGERUP;
+               float fingerx = event->tfinger.x;
+               float fingery = event->tfinger.y;
+               // WARNING: it's assumed that the window is in the middle. Who's to
+               // know for sure?
+               
+               if(128*vid_screenWidth / vid_screenHeight >
+                  static_cast<int>(128*vid_correctedWidth / vid_correctedHeight))
+               {
+                   // Greater aspect ratio of window: pillar box. Height is correct
+                   
+                   // 0... a... 1 - a... 1
+                   // w / W
+                   // w = H / sh * sw
+                   // a = 1 / 2 - ca
+                   // ca = 1 / 2 * w / W
+                   // a = 1 / 2 - 1 / 2 * w / W
+                   // a = 1 / 2 * (1 - w / W)
+                   // a = 1 / 2 * (1 - H / sh * sw / W)
+                   float a = 0.5f * (1 - (float)vid_screenHeight * vid_correctedRatio / vid_screenWidth);
+                   m_touchx = static_cast<int>((fingerx - a) / (1 - 2 * a) * cfg_logicalWidth);
+                   m_touchy = static_cast<int>(fingery * cfg_logicalHeight);
+                   
+               }
+               else
+               {
+                   float a = 0.5f * (1 - (float)vid_screenWidth / vid_correctedRatio / vid_screenHeight);
+                   m_touchx = static_cast<int>(fingerx * cfg_logicalWidth);
+                   m_touchy = static_cast<int>((fingery - a) / (1 - 2 * a) * cfg_logicalHeight);
+               }
+           }
 		   break;
 	   case SDL_TEXTINPUT:
 		   if(event->text.text[0] && !event->text.text[1])
@@ -383,7 +385,7 @@ void InputManager::initialize()
 #ifdef USE_SDL1_2
        SDL_WM_GrabInput(SDL_GRAB_ON);
 #else
-	   SDL_SetRelativeMouseMode(SDL_TRUE);
+//	   SDL_SetRelativeMouseMode(SDL_TRUE);
 #endif
    }
    
