@@ -3518,8 +3518,6 @@ void ReadAnyControl (CursorInfo * ci)
         if(middlePressed) buttons |= 1 << 2;
         if(rightPressed) buttons |= 1 << 1;
 
-        printf("%d %d\n", mousex, mousey);
-
         if(mousey/* - CENTERY*/ < -SENSITIVE/4)
         {
             ci->dir = dir_North;
