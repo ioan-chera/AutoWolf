@@ -53,6 +53,10 @@ void I_SetColor    (int color, int red, int green, int blue);
 void I_GetColor    (int color, int *red, int *green, int *blue);
 void I_SetPalette  (SDL_Color *palette, bool forceupdate);
 
+void I_RedrawFrame();
+void I_FillColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+void I_RenderPresent();
+
 void I_LatchToScreenScaledCoord (int surf_index, int xsrc, int ysrc,
                                  int width, int height, int scxdest, int scydest);
 

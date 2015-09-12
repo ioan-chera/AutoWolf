@@ -40,7 +40,6 @@
 #endif
 
 // used globally
-unsigned vid_screenPitch;
 unsigned vid_bufferPitch;
 
 #ifdef USE_SDL1_2
@@ -117,7 +116,7 @@ void I_RecreateRenderer()
         SDL_DestroyWindow(vid_window);
     
     // Reload vid_screen attributes
-    if(Platform::touchscreen)
+//    if(Platform::touchscreen)
     {
         SDL_DisplayMode mode;
         SDL_GetDesktopDisplayMode(0, &mode);
@@ -128,12 +127,13 @@ void I_RecreateRenderer()
     Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
     if(Platform::touchscreen || cfg_fullscreen)
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    
+
+    // Unfortunately for fullscreen, the logical screen width has to be specified.
     vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
                                   SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED,
-                                  cfg_fullscreen ? 0 : cfg_logicalWidth,
-                                  cfg_fullscreen ? 0 : cfg_logicalHeight,
+                                  cfg_fullscreen ? vid_screenWidth : cfg_logicalWidth,
+                                  cfg_fullscreen ? vid_screenHeight : cfg_logicalHeight,
                                   flags);
     
     if(!vid_window)
@@ -147,6 +147,11 @@ void I_RecreateRenderer()
     {
         throw Exception((std::string("Unable to create SDL renderer: ")
 	                        + SDL_GetError()).c_str());
+    }
+    if(SDL_SetRenderDrawBlendMode(vid_renderer, SDL_BLENDMODE_BLEND) < 0)
+    {
+        throw Exception((std::string("SDL_SetRenderDrawBlendMode: ")
+                         + SDL_GetError()).c_str());
     }
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
     
@@ -314,7 +319,8 @@ SDL_Color *I_LockDirect()
 #else
     void *vpixels;
     int pitch;
-    SDL_LockTexture(vid_texture, nullptr, &vpixels, &pitch);
+    if(SDL_LockTexture(vid_texture, nullptr, &vpixels, &pitch) < 0)
+        throw Exception((std::string("Lock texture failed: ") + SDL_GetError()).c_str());
    return static_cast<SDL_Color *>(vpixels);
 #endif
 }
@@ -357,7 +363,8 @@ void I_UpdateDirect()
 #ifdef USE_SDL1_2
     SDL_Flip(vid_screen);
 #else
-	SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr);
+	if(SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr) < 0)
+        throw Exception((std::string("Render copy failed: ") + SDL_GetError()).c_str());
 	SDL_RenderPresent(vid_renderer);
 #endif
 }
@@ -378,7 +385,8 @@ void I_UpdateScreen()
 		}
 	}
     I_UnlockDirect();
-	I_UpdateDirect();
+    if(!vid_screenfaded)
+        I_UpdateDirect();
 #endif
 }
 void I_ClearScreen(int color)
@@ -416,6 +424,35 @@ memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
 #else
    I_UpdateScreen();
 #endif
+}
+
+void I_RedrawFrame()
+{
+    // copy the original texture first
+    if(SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr) < 0)
+    {
+        throw Exception((std::string("FC SDL_RenderCopy: ")
+                         + SDL_GetError()).c_str());
+    }
+}
+
+void I_FillColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    if(SDL_SetRenderDrawColor(vid_renderer, r, g, b, a) < 0)
+    {
+        throw Exception((std::string("FC SDL_SetRenderDrawColor: ")
+                         + SDL_GetError()).c_str());
+    }
+    if(SDL_RenderFillRect(vid_renderer, nullptr) < 0)
+    {
+        throw Exception((std::string("FC SDL_RenderClear: ")
+                         + SDL_GetError()).c_str());
+    }
+}
+
+void I_RenderPresent()
+{
+    SDL_RenderPresent(vid_renderer);
 }
 
 

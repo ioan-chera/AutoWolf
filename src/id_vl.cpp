@@ -38,7 +38,7 @@
 #endif
 
 unsigned vid_scaleFactor;
-Boolean8	 vid_screenfaded;
+bool	 vid_screenfaded;
 
 SDL_Color palette1[256], palette2[256];
 SDL_Color vid_curpal[256];
@@ -110,31 +110,6 @@ void VL_ConvertPalette(const byte *srcpal, SDL_Color *destpal, int numColors)
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// =
-// = VL_FillPalette
-// =
-//
-////////////////////////////////////////////////////////////////////////////////
-
-
-void VL_FillPalette (int red, int green, int blue)
-{
-    int i;
-    SDL_Color pal[256];
-
-    for(i=0; i<256; i++)
-    {
-        pal[i].r = red;
-        pal[i].g = green;
-        pal[i].b = blue;
-    }
-
-    I_SetPalette(pal, true);
-}
-// IOANCH: abstracted away
-
 //===========================================================================
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -164,50 +139,33 @@ void VL_GetPalette (SDL_Color *palette)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+SDL_Color g_lastColor;
 
 void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 {
-	int		    i,j,orig,delta;
-	SDL_Color   *origptr, *newptr;
+	int		    i;
 
-    red = red * 255 / 63;
-    green = green * 255 / 63;
-    blue = blue * 255 / 63;
-
-	VL_WaitVBL(1);
-	VL_GetPalette(palette1);
-	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
+    g_lastColor.r = red = red * 255 / 63;
+    g_lastColor.g = green = green * 255 / 63;
+    g_lastColor.b = blue = blue * 255 / 63;
+    g_lastColor.a = 0;
 
 //
 // fade through intermediate frames
 //
 	for (i=0;i<steps;i++)
 	{
-		origptr = &palette1[start];
-		newptr = &palette2[start];
-		for (j=start;j<=end;j++)
-		{
-			orig = origptr->r;
-			delta = red-orig;
-			newptr->r = orig + delta * i / steps;
-			orig = origptr->g;
-			delta = green-orig;
-			newptr->g = orig + delta * i / steps;
-			orig = origptr->b;
-			delta = blue-orig;
-			newptr->b = orig + delta * i / steps;
-			origptr++;
-			newptr++;
-		}
-
-		if(!cfg_usedoublebuffering || cfg_screenBits == 8) VL_WaitVBL(1);
-		I_SetPalette (palette2, true);
+        I_RedrawFrame();
+        I_FillColour(red, green, blue, 255 / steps * i);
+        I_RenderPresent();
+//        SDL_Delay(100);
 	}
 
 //
 // final color
 //
-	VL_FillPalette (red,green,blue);
+    I_FillColour(red, green, blue, 255);
+    I_RenderPresent();
 
 	vid_screenfaded = true;
 }
@@ -224,35 +182,28 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 
 void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 {
-	int i,j,delta;
+	int i;
 
 	VL_WaitVBL(1);
-	VL_GetPalette(palette1);
-	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
 
 //
 // fade through intermediate frames
 //
 	for (i=0;i<steps;i++)
 	{
-		for (j=start;j<=end;j++)
-		{
-			delta = palette[j].r-palette1[j].r;
-			palette2[j].r = palette1[j].r + delta * i / steps;
-			delta = palette[j].g-palette1[j].g;
-			palette2[j].g = palette1[j].g + delta * i / steps;
-			delta = palette[j].b-palette1[j].b;
-			palette2[j].b = palette1[j].b + delta * i / steps;
-		}
-
-		if(!cfg_usedoublebuffering || cfg_screenBits == 8) VL_WaitVBL(1);
-		I_SetPalette(palette2, true);
+        I_RedrawFrame();
+        I_FillColour(g_lastColor.r, g_lastColor.g, g_lastColor.b,
+                     255 - 255 * i / steps);
+        I_RenderPresent();
+//        SDL_Delay(100);
 	}
+
+    I_RedrawFrame();
+    I_RenderPresent();
 
 //
 // final color
 //
-	I_SetPalette (palette, true);
 	vid_screenfaded = false;
 }
 // IOANCH 20130726: moved to i_system
