@@ -599,7 +599,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0730;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Wolf4SDL" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -725,7 +725,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					APPLE_NON_CPP11,
@@ -744,6 +746,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../lib/osx/universal;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "Automatic Wolfenstein";
 				SDKROOT = macosx;
 			};
@@ -762,6 +765,7 @@
 					/opt/local/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ichera.autowolf;
 				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -781,6 +785,7 @@
 					/opt/local/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ichera.autowolf;
 				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -802,6 +807,7 @@
 				);
 				OTHER_CFLAGS = "-fast";
 				OTHER_CPLUSPLUSFLAGS = "-fast";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ichera.autowolf;
 				PRODUCT_NAME = AutoWolf;
 				WRAPPER_EXTENSION = app;
 			};
@@ -820,7 +826,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = __AUTOWOLF_DEBUG_MAX_OS_X__;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -859,6 +867,7 @@
 				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
