@@ -149,8 +149,11 @@ void CFG_SetupConfigLocation()
     }
     
     // IOANCH 20130304: initialize bot master directory file location
-   masterDir.initialize(masterDirectoryFileName);
-    bot_initializeConfigLocation();
+    if(cfg_botActive)
+    {
+        masterDir.initialize(masterDirectoryFileName);
+        bot_initializeConfigLocation();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////

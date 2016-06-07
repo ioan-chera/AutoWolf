@@ -674,7 +674,7 @@ static void AskQuit()
 #endif
     {
         DestroySavedInstance();
-        if(ingame)
+        if(ingame && cfg_botActive)
             bot.SaveData();
         
         I_UpdateScreen ();

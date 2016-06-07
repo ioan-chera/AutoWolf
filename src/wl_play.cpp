@@ -1469,7 +1469,7 @@ void PlayLoop ()
 	
 	// IOANCH 20121215
 	// Now is a time to save explored map data
-	if(ingame)
+	if(cfg_botActive && ingame)
 		bot.SaveData();
 
     if (playstate != ex_died)

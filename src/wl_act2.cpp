@@ -970,7 +970,7 @@ void T_Chase (objtype *ob)
             Act1::OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
             {
-               if(doorobjlist[-ob->distance - 1].action == dr_closed)
+               if(doorobjlist[-ob->distance - 1].action == dr_closed && cfg_botActive)
                {
                   // IOANCH: also alert the bot
                   HeardEvent *hevent = new HeardEvent;

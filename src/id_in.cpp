@@ -134,7 +134,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   {
 			   Logger::Write("...not forced");
 			   DestroySavedInstance();
-			  if (ingame)
+			  if (ingame && cfg_botActive)
 				  bot.SaveData();
 			 Quit();
 		   }
@@ -172,7 +172,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
             if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
 			{
 				DestroySavedInstance();
-				if (ingame)
+				if (ingame && cfg_botActive)
 					bot.SaveData();
                Quit();
 			}

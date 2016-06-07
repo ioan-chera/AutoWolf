@@ -485,7 +485,7 @@ again:
     }
     else if (myInput.keyboard(sc_Q))        // Q = fast quit
 	{ 
-		if (ingame)
+		if (ingame && cfg_botActive)
 			bot.SaveData();
 		DestroySavedInstance();
         Quit ();

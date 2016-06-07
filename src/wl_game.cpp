@@ -237,7 +237,7 @@ void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source)
    PlaySoundLocGlobal(s, ob->x, ob->y);
    
    // Then put it in bot's memory
-   if(source)
+   if(cfg_botActive && source)
    {
       HeardEvent *hevent = new HeardEvent;
 	   hevent->set(ob->x, ob->y, SPEAR::sd(s), I_GetTicks(), source, 0);
@@ -741,7 +741,8 @@ void SetupGameLevel ()
 #endif
 	
 	// IOANCH 17.05.2012: initialize bot
-	bot.MapInit();
+    if(cfg_botActive)
+        bot.MapInit();
 
 //
 // copy the wall data to a data segment array
