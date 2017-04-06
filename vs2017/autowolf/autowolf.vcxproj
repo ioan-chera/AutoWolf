@@ -157,7 +157,6 @@
     <ClCompile Include="..\..\src\Exception.cpp" />
     <ClCompile Include="..\..\src\e_hashkeys.cpp" />
     <ClCompile Include="..\..\src\FileSystem.cpp" />
-    <ClCompile Include="..\..\src\HistoryRatio.cpp" />
     <ClCompile Include="..\..\src\id_ca.cpp" />
     <ClCompile Include="..\..\src\id_in.cpp" />
     <ClCompile Include="..\..\src\id_pm.cpp" />
@@ -222,7 +221,6 @@
     <ClInclude Include="..\..\src\gfxvabstract.h" />
     <ClInclude Include="..\..\src\gfxv_sod.h" />
     <ClInclude Include="..\..\src\gfxv_wl6.h" />
-    <ClInclude Include="..\..\src\HistoryRatio.h" />
     <ClInclude Include="..\..\src\id_ca.h" />
     <ClInclude Include="..\..\src\id_in.h" />
     <ClInclude Include="..\..\src\id_pm.h" />

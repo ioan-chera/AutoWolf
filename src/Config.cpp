@@ -35,7 +35,6 @@
 #include "Exception.h"
 #include "id_ca.h"
 #include "ioan_bas.h"
-#include "MasterDirectoryFile.h"
 #include "SODFlag.h"
 #include "wl_game.h"
 #include "wl_main.h"

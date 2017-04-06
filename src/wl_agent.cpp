@@ -40,7 +40,6 @@
 #include "id_vh.h"
 #include "id_vl.h"
 #include "ioan_bas.h"
-#include "HistoryRatio.h"
 #include "Config.h"
 #include "obattrib.h"
 
