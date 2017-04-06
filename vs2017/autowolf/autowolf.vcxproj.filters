@@ -71,9 +71,6 @@
     <ClCompile Include="..\..\src\e_hashkeys.cpp">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\PathArray.cpp">
-      <Filter>Source Files\IOAN\DataStruct</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Property.cpp">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
@@ -242,9 +239,6 @@
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\m_dllist.h">
-      <Filter>Source Files\IOAN\DataStruct</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\PathArray.h">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Property.h">
