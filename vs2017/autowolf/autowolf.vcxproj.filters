@@ -68,9 +68,6 @@
     <ClCompile Include="..\..\src\Exception.cpp">
       <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\CheckSum.cpp">
-      <Filter>Source Files\IOAN\DataStruct</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e_hashkeys.cpp">
       <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClCompile>
@@ -237,9 +234,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Exception.h">
       <Filter>Source Files\IOAN\DataStruct\Exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\CheckSum.h">
-      <Filter>Source Files\IOAN\DataStruct</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\e_hash.h">
       <Filter>Source Files\IOAN\DataStruct</Filter>

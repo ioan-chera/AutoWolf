@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\ActorStates.cpp" />
-    <ClCompile Include="..\..\src\CheckSum.cpp" />
     <ClCompile Include="..\..\src\CommandLine.cpp" />
     <ClCompile Include="..\..\src\Config.cpp" />
     <ClCompile Include="..\..\src\DataFile.cpp" />
@@ -209,7 +208,6 @@
     <ClInclude Include="..\..\src\audioabstract.h" />
     <ClInclude Include="..\..\src\audiosod.h" />
     <ClInclude Include="..\..\src\audiowl6.h" />
-    <ClInclude Include="..\..\src\CheckSum.h" />
     <ClInclude Include="..\..\src\CommandLine.h" />
     <ClInclude Include="..\..\src\Config.h" />
     <ClInclude Include="..\..\src\DataFile.h" />
