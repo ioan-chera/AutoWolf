@@ -168,7 +168,6 @@
     <ClCompile Include="..\..\src\i_system.cpp" />
     <ClCompile Include="..\..\src\i_video.cpp" />
     <ClCompile Include="..\..\src\Logger.cpp" />
-    <ClCompile Include="..\..\src\MapExploration.cpp" />
     <ClCompile Include="..\..\src\MasterDirectoryFile.cpp" />
     <ClCompile Include="..\..\src\m_buffer.cpp" />
     <ClCompile Include="..\..\src\obattrib.cpp" />
@@ -231,7 +230,6 @@
     <ClInclude Include="..\..\src\i_video.h" />
     <ClInclude Include="..\..\src\List.h" />
     <ClInclude Include="..\..\src\Logger.h" />
-    <ClInclude Include="..\..\src\MapExploration.h" />
     <ClInclude Include="..\..\src\MasterDirectoryFile.h" />
     <ClInclude Include="..\..\src\m_buffer.h" />
     <ClInclude Include="..\..\src\m_dllist.h" />

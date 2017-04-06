@@ -161,9 +161,6 @@
     <ClCompile Include="..\..\src\ActorStates.cpp">
       <Filter>Source Files\TABLES</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\MapExploration.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\i_system.cpp">
       <Filter>Source Files\IOAN\HAL</Filter>
     </ClCompile>
@@ -348,9 +345,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ActorStates.h">
       <Filter>Source Files\TABLES</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\MapExploration.h">
-      <Filter>Source Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\i_system.h">
       <Filter>Source Files\IOAN\HAL</Filter>
