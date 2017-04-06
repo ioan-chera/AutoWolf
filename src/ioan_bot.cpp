@@ -679,7 +679,7 @@ Boolean8 BotMan::FindShortestPath(Boolean8 ignoreproj, Boolean8 mindnazis,
 			
 			// This checks for any blocking device: refactor it
 			if((check && !ISPOINTER(check) && !(door & 0x80)) || 
-               ((abs(cx - player->tilex) > 1 || abs(cy - player->tiley) > 1) && 
+               ((abs(cx - (int)player->tilex) > 1 || abs(cy - (int)player->tiley) > 1) && 
                 !ignoreproj && IsProjectile(cx, cy, 1)) || 
                (mindnazis && (player->tilex != tx || player->tiley != ty || 
                               (check && ISPOINTER(check) && 
@@ -848,8 +848,8 @@ objtype *BotMan::EnemyVisible(short *angle, int *distance, Boolean8 solidActors)
 	for(ret = (objtype *)Basic::livingNazis.firstObject(); ret;
         ret = (objtype *)Basic::livingNazis.nextObject())
 	{
-		k = abs(ret->tilex - tx);
-		j = abs(ret->tiley - ty);
+		k = abs((int)ret->tilex - tx);
+		j = abs((int)ret->tiley - ty);
 		i = k > j ? k : j;
 
 		if(i > 15)
@@ -1170,7 +1170,7 @@ objtype *BotMan::IsProjectile(int tx, int ty, int dist, short *angle,
 		ps = Basic::thrownProjectiles.nextObject())
 	{
       ret = ps->proj;
-		if(abs(ret->tilex - tx) <= dist && abs(ret->tiley - ty) <= dist)
+		if(abs((int)ret->tilex - tx) <= dist && abs((int)ret->tiley - ty) <= dist)
 		{
 			switch(ret->obclass)
 			{

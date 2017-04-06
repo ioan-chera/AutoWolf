@@ -1316,8 +1316,8 @@ void    GunAttack (objtype *ob)
     //
     // hit something
     //
-    dx = ABS(closest->tilex - player->tilex);
-    dy = ABS(closest->tiley - player->tiley);
+    dx = abs((int)closest->tilex - (int)player->tilex);
+    dy = abs((int)closest->tiley - (int)player->tiley);
     dist = dx>dy ? dx:dy;
     if (dist<2)
         damage = wolfRnd() / 4;

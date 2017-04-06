@@ -34,3 +34,4 @@ AutoWolf-Android/libs
 AutoWolf-Android/obj
 *.xccheckout
 AutoWolf-iOS/sdl-include
+vs2017/autowolf/.vs/

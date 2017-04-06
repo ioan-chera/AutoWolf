@@ -310,8 +310,8 @@ void A_UShoot (objtype *ob)
     
     A_Shoot (ob);
     
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - (int)player->tilex);
+    dy = abs((int)ob->tiley - (int)player->tiley);
     dist = dx>dy ? dx : dy;
     if (dist <= 1)
         TakeDamage (10,ob);
@@ -518,8 +518,8 @@ void T_ProjectileBossChase(objtype *ob)
     Boolean8 dodge;
 	
     dodge = false;
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - (int)player->tilex);
+    dy = abs((int)ob->tiley - (int)player->tiley);
     dist = dx>dy ? dx : dy;
 	
     if (ob->CheckLine())                                              // got a shot at player?
@@ -900,8 +900,8 @@ void T_Chase (objtype *ob)
     if (ob->CheckLine())      // got a shot at player?
     {
         ob->hidden = false;
-        dx = abs(ob->tilex - player->tilex);
-        dy = abs(ob->tiley - player->tiley);
+        dx = abs((int)ob->tilex - (int)player->tilex);
+        dy = abs((int)ob->tiley - (int)player->tiley);
         dist = dx>dy ? dx : dy;
         
 #ifdef PLAYDEMOLIKEORIGINAL
@@ -1265,8 +1265,8 @@ void A_Shoot (objtype *ob)
     if (!ob->CheckLine ())                    // player is not behind a wall
         return;
     
-    dx = abs(ob->tilex - player->tilex);
-    dy = abs(ob->tiley - player->tiley);
+    dx = abs((int)ob->tilex - (int)player->tilex);
+    dy = abs((int)ob->tiley - (int)player->tiley);
     dist = dx>dy ? dx:dy;
     
     if (ob->obclass == ssobj || ob->obclass == bossobj)

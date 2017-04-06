@@ -128,12 +128,7 @@ struct AWRect
 #define MAPSPOT(x,y,plane) mapSegs((plane), (x), (y))
 
 #define SIGN(x)         ((x)>0?1:-1)
-#ifndef ABS
-#define ABS(x)          ((int)(x)>0?(x):-(x))
-#endif
 #define LABS(x)         ((int32_t)(x)>0?(x):-(x))
-
-#define abs(x) ABS(x)
 
 /*
 =============================================================================
