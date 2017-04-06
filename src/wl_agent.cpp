@@ -36,10 +36,10 @@
 #include "wl_play.h"
 #include "wl_state.h"
 #include "id_ca.h"
+#include "id_us.h"
 #include "id_vh.h"
 #include "id_vl.h"
 #include "ioan_bas.h"
-#include "ioan_bot.h"	// IOANCH
 #include "HistoryRatio.h"
 #include "Config.h"
 #include "obattrib.h"
@@ -455,8 +455,6 @@ void TakeDamage (int points,objtype *attacker)
     if (gamestate.difficulty==gd_baby)
         points>>=2;
 	
-	// IOANCH 02.07.2012: alert the bot that damage was taken
-	bot.damagetaken = attacker;
 
     if (!godmode)
         gamestate.health -= points;
@@ -1301,7 +1299,6 @@ void    GunAttack (objtype *ob)
         if (closest == oldclosest)
 		{
 			// IOANCH 26.06.2012: efficiency
-			bot.shootRatio.addFail();
             return;                                         // no more targets, all missed
 		}
 
@@ -1327,14 +1324,10 @@ void    GunAttack (objtype *ob)
     {
         if ( (wolfRnd() / 12) < dist)           // missed
 		{
-			// IOANCH 26.06.2012: efficiency
-			bot.shootRatio.addFail();
             return;
 		}
         damage = wolfRnd() / 6;
     }
-	// IOANCH 26.06.2012: efficiency
-	bot.shootRatio.addSuccess();
     closest->DamageActor (damage);
 }
 

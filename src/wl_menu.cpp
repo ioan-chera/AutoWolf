@@ -38,8 +38,8 @@
 #include "i_video.h"
 #include "id_ca.h"
 #include "id_sd.h"
+#include "id_us.h"
 #include "id_vh.h"
-#include "ioan_bot.h"	// IOANCH 20121217: bot
 #include "wl_agent.h"
 #include "wl_def.h"
 #include "wl_draw.h"
@@ -50,6 +50,7 @@
 #include "wl_play.h"
 #include "wl_text.h"
 #include "Platform.h"
+#include "StdStringExtensions.h"
 
 int Menu::g_bkgdColor;
 int Menu::g_bordColor;
@@ -674,8 +675,6 @@ static void AskQuit()
 #endif
     {
         DestroySavedInstance();
-        if(ingame)
-            bot.SaveData();
         
         I_UpdateScreen ();
         Sound::MusicOff ();

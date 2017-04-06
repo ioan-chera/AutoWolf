@@ -35,7 +35,6 @@
 #include "Exception.h"
 #include "id_ca.h"
 #include "ioan_bas.h"
-#include "ioan_bot.h"
 #include "MasterDirectoryFile.h"
 #include "SODFlag.h"
 #include "wl_game.h"
@@ -147,10 +146,6 @@ void CFG_SetupConfigLocation()
 			I_MakeDir(cfg_dir);
         }
     }
-    
-    // IOANCH 20130304: initialize bot master directory file location
-   masterDir.initialize(masterDirectoryFileName);
-    bot_initializeConfigLocation();
 }
 
 ///////////////////////////////////////////////////////////////////////////

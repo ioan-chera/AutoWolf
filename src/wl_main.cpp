@@ -53,9 +53,9 @@
 #include "id_ca.h"
 #include "id_pm.h"
 #include "id_sd.h"
+#include "id_us.h"
 #include "id_vh.h"
 #include "ioan_bas.h"
-#include "ioan_bot.h"
 #include "List.h"
 #include "MasterDirectoryFile.h"
 #ifdef __APPLE__
@@ -1196,9 +1196,6 @@ static void InitGame()
 
 	I_UpdateScreen();
 	
-	// IOANCH 20121218: Load bot data
-    masterDir.loadFromFile(masterDirectoryFilePath);
-    bot.SetMood();
 
     VH_Startup ();  // sets some pseudorandom numbers
     myInput.initialize();  // sets up the input devices
@@ -1763,7 +1760,6 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 			{
 				
 				std::lock_guard<std::mutex> lock(g_playloopMutex);
-				bot.SaveData();
 				SaveFullInstanceState();
 			}
 			// else: either dead or in elevator at this point. The instance save is handled elsewhere then

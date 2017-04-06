@@ -24,8 +24,8 @@
 #include "wl_def.h"
 
 #include "id_ca.h"
+#include "id_us.h"
 #include "ioan_bas.h"
-#include "ioan_bot.h"
 #include "obattrib.h"
 #include "wl_act1.h"
 #include "wl_act2.h"
@@ -342,9 +342,6 @@ void Basic::SpawnEnemy(classtype which, int tilex, int tiley, int dir,
     default:
         return;
 	}
-	
-	// IOANCH 20121219: record enemy position
-	bot.RecordEnemyPosition(newobj);
 	
 	if(newenemy)
 		livingNazis.add(newenemy);

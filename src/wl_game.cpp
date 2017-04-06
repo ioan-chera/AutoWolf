@@ -43,7 +43,6 @@
 #include "wl_play.h"
 // IOANCH 17.05.2012
 #include "ioan_bas.h"
-#include "ioan_bot.h"
 #include "i_video.h"
 #include "i_system.h"
 #include "id_ca.h"
@@ -52,6 +51,7 @@
 #include "ioan_secret.h"
 #include "List.h"
 #include "Config.h"
+#include "StdStringExtensions.h"
 
 #ifdef MYPROFILE
 #include <TIME.H>
@@ -235,14 +235,6 @@ void    PlaySoundLocActor(word s, const objtype *ob,  objtype *source)
 {
    // First play the sound
    PlaySoundLocGlobal(s, ob->x, ob->y);
-   
-   // Then put it in bot's memory
-   if(source)
-   {
-      HeardEvent *hevent = new HeardEvent;
-	   hevent->set(ob->x, ob->y, SPEAR::sd(s), I_GetTicks(), source, 0);
-      bot.heardEvents.add(hevent);
-   }
 }
 
 void UpdateSoundLoc()
@@ -740,9 +732,6 @@ void SetupGameLevel ()
     #undef MXX
 #endif
 	
-	// IOANCH 17.05.2012: initialize bot
-	bot.MapInit();
-
 //
 // copy the wall data to a data segment array
 //
@@ -855,30 +844,7 @@ void SetupGameLevel ()
 // are in memory
 //
    audioSegs.loadAllSounds(sd_soundMode);
-
-    // IOANCH: try to solve secret puzzle here
-   std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
-   ssolver->GetLevelData();
-   unsigned sessionNo = g_sessionNo;
-	std::thread thread([ssolver, sessionNo]{
-		
-		std::vector<SecretPush> pushes = ssolver->Solve(sessionNo);
-		
-		if (sessionNo != g_sessionNo)	// cancel if session changed
-			return;
-		
-		if (pushes.size() == 0)
-			Logger::Write("Timeout finding a sequence, knocking myself out.");
-		
-		AddPostCommand([pushes]{
-			// Mark as "haspushes" anyway. The bot will know what to do about it.
-			bot.pushes = std::move(pushes);
-			bot.haspushes = true;
-			bot.PopPushedSecrets();
-		}, sessionNo);
-	});
-	thread.detach();
-
+   
 //    scoreMap.TestPushBlocks();
 }
 

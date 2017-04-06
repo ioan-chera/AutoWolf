@@ -35,7 +35,6 @@
 #include "ioan_bas.h"	// IOANCH 29.09.2012
 #include "Config.h"
 #include "SODFlag.h"
-#include "ioan_bot.h"
 #include "Exception.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -887,8 +886,6 @@ void PushWall (int checkx, int checky, int dir)
     }
     actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
 
-	if (bot.haspushes && bot.pushes.size())
-		bot.pushes.pop_back();
     gamestate.secretcount++;
     pwallx = checkx;
     pwally = checky;

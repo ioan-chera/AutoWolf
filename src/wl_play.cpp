@@ -46,8 +46,8 @@
 #include "i_system.h"
 #include "id_ca.h"
 #include "id_sd.h"
+#include "id_us.h"
 #include "id_vh.h"
-#include "ioan_bot.h"
 #include "PString.h"
 #include "SODFlag.h"
 #include "wl_cloudsky.h"
@@ -561,12 +561,6 @@ void PollControls ()
 
      if (joystickenabled)
           PollJoystickMove ();
-
-     if(cfg_botActive)	// bot active: operate
-	 {
-		 // Find A* path
-		 bot.DoCommand();
-	 }
 
 //
 // bound movement to a maximum
@@ -1467,11 +1461,6 @@ void PlayLoop ()
     }
     while (!playstate && !startgame);
 	
-	// IOANCH 20121215
-	// Now is a time to save explored map data
-	if(ingame)
-		bot.SaveData();
-
     if (playstate != ex_died)
         FinishPaletteShifts ();
 }

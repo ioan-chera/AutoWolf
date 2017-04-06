@@ -39,7 +39,6 @@
 #include "id_ca.h"
 #include "id_us.h"
 #include "id_vh.h"
-#include "ioan_bot.h"
 #ifdef USE_CLOUDSKY
 #include "wl_cloudsky.h"
 #endif
@@ -485,8 +484,6 @@ again:
     }
     else if (myInput.keyboard(sc_Q))        // Q = fast quit
 	{ 
-		if (ingame)
-			bot.SaveData();
 		DestroySavedInstance();
         Quit ();
 	}

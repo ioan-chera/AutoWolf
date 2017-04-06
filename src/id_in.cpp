@@ -45,7 +45,6 @@
 #include "id_in.h"
 #include "id_sd.h"
 #include "id_us.h"
-#include "ioan_bot.h"
 #include "Logger.h"
 #include "PString.h"
 #include "wl_def.h"
@@ -134,8 +133,6 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   {
 			   Logger::Write("...not forced");
 			   DestroySavedInstance();
-			  if (ingame)
-				  bot.SaveData();
 			 Quit();
 		   }
 		   else
@@ -172,8 +169,6 @@ void InputManager::p_processEvent(const SDL_Event *event)
             if(static_cast<int>(m_lastScan) == static_cast<int>(SDLK_F4))
 			{
 				DestroySavedInstance();
-				if (ingame)
-					bot.SaveData();
                Quit();
 			}
          }

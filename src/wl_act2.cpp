@@ -40,9 +40,9 @@
 #include "Config.h"
 #include "i_video.h"
 #include "id_ca.h"
+#include "id_us.h"
 #include "id_vh.h"
 #include "ioan_bas.h"
-#include "ioan_bot.h"	// include bot
 #include "List.h"
 #include "obattrib.h"   // IOANCH 20130306
 #include "Exception.h"
@@ -970,18 +970,6 @@ void T_Chase (objtype *ob)
             Act1::OpenDoor (-ob->distance-1);
             if (doorobjlist[-ob->distance-1].action != dr_open)
             {
-               if(doorobjlist[-ob->distance - 1].action == dr_closed)
-               {
-                  // IOANCH: also alert the bot
-                  HeardEvent *hevent = new HeardEvent;
-				   hevent->set(doorobjlist[-ob->distance - 1].tilex << TILESHIFT,
-							   doorobjlist[-ob->distance - 1].tiley << TILESHIFT,
-							   SPEAR::sd(OPENDOORSND),
-							   I_GetTicks(),
-							   ob,
-							   0);
-                  bot.heardEvents.add(hevent);
-               }
                 return;
             }
             ob->distance = TILEGLOBAL;      // go ahead, the door is now open
