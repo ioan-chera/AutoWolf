@@ -89,9 +89,6 @@
     <ClCompile Include="..\..\src\ioan_bas.cpp">
       <Filter>Source Files\IOAN</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ioan_secret.cpp">
-      <Filter>Source Files\IOAN</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\obattrib.cpp">
       <Filter>Source Files\TABLES</Filter>
     </ClCompile>
@@ -257,9 +254,6 @@
       <Filter>Source Files\IOAN\FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ioan_bas.h">
-      <Filter>Source Files\IOAN</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ioan_secret.h">
       <Filter>Source Files\IOAN</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\audioabstract.h">
