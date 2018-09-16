@@ -1614,6 +1614,7 @@ static void DemoLoop()
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#if !defined(_WIN32) && !defined(__APPLE__) && !defined(__ANDROID__)
 static std::string stringByReplacing(const char* text, const char* what, const char* towhat)
 {
 	std::string str(text);
@@ -1629,6 +1630,7 @@ static std::string stringByReplacing(const char* text, const char* what, const c
 	
 	return str;
 }
+#endif
 
 static void showErrorAlert(const char* message, const char* title)
 {
