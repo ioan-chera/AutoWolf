@@ -141,6 +141,7 @@ class SecretSolver
 	}
 	bool OperateWall(unsigned targetpos, unsigned sourcepos, unsigned index);
 	bool OperateWall(SecretPush pair, unsigned index);
+    bool CheckSurePush(unsigned targetpos, unsigned sourcepos);
 	unsigned UndoSecret();
 
 public:

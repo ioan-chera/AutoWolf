@@ -180,6 +180,80 @@ bool SecretSolver::OperateWall(SecretPush pair, unsigned index)
 	return OperateWall(pair.targetpos, pair.sourcepos, index);
 }
 
+//
+// Checks if a push is certain to be unique per block
+//
+bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
+{
+    // Check if the player can reach any adjacent position to targetpos, other than sourcepos
+    // But first clear all non-targetpos spots
+    std::queue<unsigned> tiles;
+    std::vector<bool> visited;
+    visited.resize(maparea);
+    visited[playerpos] = true;
+    tiles.push(playerpos);
+
+    while(!tiles.empty())
+    {
+        unsigned pos = tiles.front();
+        tiles.pop();
+        if(pos % MAPSIZE < MAPSIZE - 2)
+        {
+            if(pos + 1 != targetpos && (!IsWall(pos + 1) || (*actorbuf)[pos + 1] == SecretClass) &&
+               !visited[pos + 1])
+            {
+                tiles.push(pos + 1);
+                visited[pos + 1] = true;
+            }
+            else if(pos + 1 == targetpos && pos != sourcepos)
+                return false;
+        }
+        else if(pos % MAPSIZE > 1)
+        {
+            if(pos - 1 != targetpos && (!IsWall(pos - 1) || (*actorbuf)[pos - 1] == SecretClass) &&
+               !visited[pos - 1])
+            {
+                tiles.push(pos - 1);
+                visited[pos - 1] = true;
+            }
+            else if(pos - 1 == targetpos && pos != sourcepos)
+                return false;
+        }
+        else if(pos / MAPSIZE < MAPSIZE - 2)
+        {
+            if(pos + MAPSIZE != targetpos && (!IsWall(pos + MAPSIZE) || (*actorbuf)[pos + MAPSIZE] == SecretClass) &&
+               !visited[pos + MAPSIZE])
+            {
+                tiles.push(pos + MAPSIZE);
+                visited[pos + MAPSIZE] = true;
+            }
+            else if(pos + MAPSIZE == targetpos && pos != sourcepos)
+                return false;
+        }
+        else if(pos / MAPSIZE > 1)
+        {
+            if(pos - MAPSIZE != targetpos && (!IsWall(pos - MAPSIZE) || (*actorbuf)[pos - MAPSIZE] == SecretClass) &&
+               !visited[pos - MAPSIZE])
+            {
+                tiles.push(pos - MAPSIZE);
+                visited[pos - MAPSIZE] = true;
+            }
+            else if(pos - MAPSIZE == targetpos && pos != sourcepos)
+                return false;
+        }
+    }
+    // Can push it
+    uint16_t walltype = (*wallbuf)[targetpos];
+    // We already determined that the next spot is empty. See if the second next is.
+    if (IsSecretFree(targetpos + (targetpos - sourcepos) * 2))
+        (*wallbuf)[targetpos + (targetpos - sourcepos) * 2] = walltype;
+    else
+        (*wallbuf)[targetpos + (targetpos - sourcepos)] = walltype;
+    (*wallbuf)[targetpos] = (*wallbuf)[sourcepos];
+    (*actorbuf)[targetpos] = 0;    // consume secret trigger
+    return true;
+}
+
 unsigned SecretSolver::UndoSecret()
 {
 	if (pushstates.size() <= 1)
@@ -428,7 +502,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - 1) % WOLF3D_MAPSIZE, (pos - 1) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos - 1, pos, 0));
+                        if(!CheckSurePush(pos - 1, pos))
+                            secrets->push_back(SecretPush(pos - 1, pos, 0));
+                        else
+                        {
+                            tiles.push(pos - 1);
+                            visited[pos - 1] = 2;
+                        }
 					}
 					else if (visited[pos] == 2 && IsExit(pos - 1))
 						exitcount++;
@@ -449,7 +529,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + 1) % WOLF3D_MAPSIZE, (pos + 1) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos + 1, pos, 0));
+                        if(!CheckSurePush(pos + 1, pos))
+                            secrets->push_back(SecretPush(pos + 1, pos, 0));
+                        else
+                        {
+                            tiles.push(pos + 1);
+                            visited[pos + 1] = 2;
+                        }
 					}
 					else if (visited[pos] == 2 && IsExit(pos + 1))
 						exitcount++;
@@ -470,7 +556,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos - MAPSIZE, pos, 0));
+                        if(!CheckSurePush(pos - MAPSIZE, pos))
+                            secrets->push_back(SecretPush(pos - MAPSIZE, pos, 0));
+                        else
+                        {
+                            tiles.push(pos - MAPSIZE);
+                            visited[pos - MAPSIZE] = 2;
+                        }
 					}
 				}
 
@@ -489,7 +581,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-						secrets->push_back(SecretPush(pos + MAPSIZE, pos, 0));
+                        if(!CheckSurePush(pos + MAPSIZE, pos))
+                            secrets->push_back(SecretPush(pos + MAPSIZE, pos, 0));
+                        else
+                        {
+                            tiles.push(pos + MAPSIZE);
+                            visited[pos + MAPSIZE] = 2;
+                        }
 					}
 				}
 			}
