@@ -257,11 +257,15 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
    return false;
 };
 
-void BotMan::PopPushedSecrets()
+//
+// Sets the bot push list
+//
+void BotMan::SetPushList(const std::vector<SecretPush> &inPushes)
 {
-	if (!haspushes || pushes.size() == 0)
-		return;
-	objtype *check;
+    pushes = inPushes;
+    haspushes = true;
+    searchstage = SSGeneral;
+	const objtype *check;
 	while (pushes.size())
 	{
 		check = actorat[pushes.back().targetpos % MAPSIZE][pushes.back().targetpos / MAPSIZE];

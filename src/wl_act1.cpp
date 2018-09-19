@@ -27,6 +27,7 @@
 
 #include "wl_def.h"
 
+#include "Logger.h"
 #include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_main.h"

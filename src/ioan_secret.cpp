@@ -207,10 +207,36 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 {
 	Uint32 ticks = SDL_GetTicks();
 
+    auto finalize = [](std::stack<unsigned> &choicestates,
+                       std::stack<std::vector<SecretPush>> &secretliststates,
+                       std::vector<SecretPush> &finality)
+    {
+        while (!choicestates.empty() && !secretliststates.empty())
+        {
+            SecretPush push = secretliststates.top()[choicestates.top()];
+            finality.push_back(push);
+
+            choicestates.pop();
+            secretliststates.pop();
+        }
+    };
+
+    auto maxpushes = [finalize, this]()
+    {
+        if(maxscore > 0)
+        {
+            Logger::Write("Got maximum score %u\n", maxscore);
+            std::vector<SecretPush> finality;
+            finalize(maxchoicestates, maxsecretliststates, finality);
+            return finality;
+        }
+        return std::vector<SecretPush>();
+    };
+
 	try
 	{
 		if (!GetX(playerpos) || !GetY(playerpos) || GetX(playerpos) >= MAPSIZE - 1 || GetY(playerpos) >= MAPSIZE - 1)
-			return std::vector<SecretPush>();
+			return maxpushes();
 
 		std::queue<unsigned> tiles;
 		std::array<std::stack<unsigned>, 4> lockedtiles;
@@ -238,7 +264,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 			if (SDL_GetTicks() - ticks >= timelimit || sessionNo != g_sessionNo)
 			{
 				//				printf("Count: %u\n", count);
-				return std::vector<SecretPush>();
+				return maxpushes();
 			}
 
 			//			++count;
@@ -481,24 +507,26 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 			if (totaltreasure && MapHasTally() && scorestates.top().treasurecount == totaltreasure)
 				scorestates.top().maxtreasures = 1;
 
-			if (scorestates.top().totalscore() == totalscore && exitcount)
-			{
-				//("Found maximum score for pushes!");
-				//WritePushes();
-				std::vector<SecretPush> finality;
-				secretliststates.pop();
-				while (!choicestates.empty() && !secretliststates.empty())
-				{
-					SecretPush push = secretliststates.top()[choicestates.top()];
-					finality.push_back(push);
-
-					//Logger::Write("%d", push.prerequisite);
-
-					choicestates.pop();
-					secretliststates.pop();
-				}
-				return finality;
-			}
+            unsigned total = scorestates.top().totalscore();
+            if(exitcount)
+            {
+                if (total == totalscore)
+                {
+                    //("Found maximum score for pushes!");
+                    //WritePushes();
+                    std::vector<SecretPush> finality;
+                    secretliststates.pop();
+                    finalize(choicestates, secretliststates, finality);
+                    return finality;
+                }
+                if(total > maxscore)
+                {
+                    maxscore = total;
+                    maxchoicestates = choicestates;
+                    maxsecretliststates = secretliststates;
+                    maxsecretliststates.pop();
+                }
+            }
 
 			// We now got the secret walls
 			if (secrets->empty())
@@ -517,6 +545,8 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 				} while (secretindex != (unsigned)-1 && secretindex >= secrets->size());
 			}
 		} while (secretindex != (unsigned)-1);
+
+        return maxpushes();
 	}
 	catch (const std::exception &e)
 	{

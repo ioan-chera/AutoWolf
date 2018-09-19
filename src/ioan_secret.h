@@ -103,6 +103,10 @@ class SecretSolver
 	// Secret push list states
 	std::stack<std::vector<SecretPush>> secretliststates;
 
+    unsigned maxscore;  // maximum score obtained so far
+    std::stack<unsigned> maxchoicestates;
+    std::stack<std::vector<SecretPush>> maxsecretliststates;
+
 	RandomGenerator rnd;
 
 	// 30000 score max.
@@ -148,6 +152,7 @@ public:
 	totaltreasure(0),
 	mapnum(0),
 	playerpos(0),
+    maxscore(0),
 	wallbuf(nullptr),
 	actorbuf(nullptr)
 	{

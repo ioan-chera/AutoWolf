@@ -871,11 +871,10 @@ void SetupGameLevel ()
 		if (pushes.size() == 0)
 			Logger::Write("Timeout finding a sequence, knocking myself out.");
 		
-		AddPostCommand([pushes]{
+		AddPostCommand([pushes]
+        {
 			// Mark as "haspushes" anyway. The bot will know what to do about it.
-			bot.pushes = std::move(pushes);
-			bot.haspushes = true;
-			bot.PopPushedSecrets();
+            bot.SetPushList(pushes);
 		}, sessionNo);
 	});
 	thread.detach();
