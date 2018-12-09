@@ -2357,7 +2357,8 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 while (!cust->allowed[which]);
                 redraw = 1;
                 Sound::Play (MOVEGUN1SND);
-                while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
+                while (static_cast<void>(ReadAnyControl(&ci)), ci.dir != dir_None)
+                    I_Delay(5);
                 myInput.clearKeysDown ();
                 break;
 
@@ -2371,7 +2372,8 @@ static void EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int),
                 while (!cust->allowed[which]);
                 redraw = 1;
                 Sound::Play (MOVEGUN1SND);
-                while (ReadAnyControl (&ci), ci.dir != dir_None) I_Delay(5);
+                while (static_cast<void>(ReadAnyControl(&ci)), ci.dir != dir_None)
+                    I_Delay(5);
                 myInput.clearKeysDown ();
                 break;
             case dir_North:
@@ -3487,7 +3489,7 @@ void
 WaitKeyUp ()
 {
     CursorInfo ci;
-    while (ReadAnyControl (&ci), ci.button0 |
+    while (static_cast<void>(ReadAnyControl (&ci)), ci.button0 |
            ci.button1 |
            ci.button2 | ci.button3 | myInput.keyboard(sc_Space) | myInput.keyboard(sc_Enter) | myInput.keyboard(sc_Escape))
     {

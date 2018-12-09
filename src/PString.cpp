@@ -693,7 +693,7 @@ static void _NormalizeSlashes(char *str, size_t inLength)
     // Collapse multiple slashes
     const char *endpos = str + inLength;
     // IOANCH: I hope it works...
-    for(p = str + (isUNC ? 2 : 0); (*str++ = *p), str != endpos; )
+    for(p = str + (isUNC ? 2 : 0); static_cast<void>((*str++ = *p)), str != endpos; )
         if(*p++ == useSlash)
             while(*p == useSlash)
                 p++;
@@ -1143,7 +1143,7 @@ size_t PString::findLastOf(char c) const
             break;
         }
     }
-    while((rover == _buffer) ? false : (--rover, true));
+    while((rover == _buffer) ? false : (static_cast<void>(--rover), true));
     
     return found ? rover - _buffer : npos;
 }

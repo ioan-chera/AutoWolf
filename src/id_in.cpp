@@ -588,13 +588,25 @@ CursorInfo InputManager::readControl()
 	processEvents();
    
    if (m_keyboard.count(KbdDefs.upleft))
-      mx = motion_Left,my = motion_Up;
+   {
+       mx = motion_Left;
+       my = motion_Up;
+   }
    else if (m_keyboard.count(KbdDefs.upright))
-      mx = motion_Right,my = motion_Up;
+   {
+       mx = motion_Right;
+       my = motion_Up;
+   }
    else if (m_keyboard.count(KbdDefs.downleft))
-      mx = motion_Left,my = motion_Down;
+   {
+       mx = motion_Left;
+       my = motion_Down;
+   }
    else if (m_keyboard.count(KbdDefs.downright))
-      mx = motion_Right,my = motion_Down;
+   {
+       mx = motion_Right;
+       my = motion_Down;
+   }
    
    if (m_keyboard.count(KbdDefs.up))
       my = motion_Up;

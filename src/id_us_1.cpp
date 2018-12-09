@@ -363,13 +363,21 @@ void US_DrawWindow(word x,word y,word w,word h)
 
 	US_ClearWindow();
 
-	VWB_DrawTile8(sx,sy,0),VWB_DrawTile8(sx,sy + sh,5);
+    VWB_DrawTile8(sx,sy,0);
+    VWB_DrawTile8(sx,sy + sh,5);
 	for (i = sx + 8;i <= sx + sw - 8;i += 8)
-		VWB_DrawTile8(i,sy,1),VWB_DrawTile8(i,sy + sh,6);
-	VWB_DrawTile8(i,sy,2),VWB_DrawTile8(i,sy + sh,7);
+    {
+        VWB_DrawTile8(i,sy,1);
+        VWB_DrawTile8(i,sy + sh,6);
+    }
+    VWB_DrawTile8(i,sy,2);
+    VWB_DrawTile8(i,sy + sh,7);
 
 	for (i = sy + 8;i <= sy + sh - 8;i += 8)
-		VWB_DrawTile8(sx,i,3),VWB_DrawTile8(sx + sw,i,4);
+    {
+        VWB_DrawTile8(sx,i,3);
+        VWB_DrawTile8(sx + sw,i,4);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

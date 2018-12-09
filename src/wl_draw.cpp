@@ -695,7 +695,11 @@ static void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t fla
       if(lpix != rpix && rpix > 0)
       {
          if(lpix < 0) lpix = 0;
-         if(rpix > viewwidth) rpix = viewwidth, i = shape->rightpix + 1;
+         if(rpix > viewwidth)
+         {
+             rpix = viewwidth;
+             i = shape->rightpix + 1;
+         }
          cline = (byte *)shape + *cmdptr;
          while(lpix < rpix)
          {
@@ -725,7 +729,11 @@ static void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t fla
                         col = ((byte *)shape)[newstart + j];
 #endif
                         if(scrstarty < 0) scrstarty = 0;
-                        if(screndy > viewheight) screndy = viewheight, j = endy;
+                        if(screndy > viewheight)
+                        {
+                            screndy = viewheight;
+                            j = endy;
+                        }
 
                         while(scrstarty < screndy)
                         {
@@ -777,7 +785,11 @@ static void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
       if(lpix != rpix && rpix > 0)
       {
          if(lpix < 0) lpix = 0;
-         if(rpix > viewwidth) rpix = viewwidth, i = shape->rightpix + 1;
+         if(rpix > viewwidth)
+         {
+             rpix = viewwidth;
+             i = shape->rightpix + 1;
+         }
          cline = (byte *)shape + *cmdptr;
          while(lpix < rpix)
          {
@@ -801,7 +813,11 @@ static void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
                   {
                      col = ((byte *)shape)[newstart + j];
                      if(scrstarty < 0) scrstarty = 0;
-                     if(screndy > viewheight) screndy = viewheight, j = endy;
+                     if(screndy > viewheight)
+                     {
+                         screndy = viewheight;
+                         j = endy;
+                     }
 
                      while(scrstarty < screndy)
                      {
@@ -1158,11 +1174,28 @@ static void AsmRefresh()
 vertentry:
          if((uint32_t)yintercept > mapheight * 65536 - 1 || (word)xtile >= mapwidth)
          {
-            if(xtile < 0) xintercept = 0, xtile = 0;
-            else if(xtile >= mapwidth) xintercept = mapwidth << TILESHIFT, xtile = mapwidth - 1;
-            else xtile = (short) (xintercept >> TILESHIFT);
-            if(yintercept < 0) yintercept = 0, ytile = 0;
-            else if(yintercept >= (mapheight << TILESHIFT)) yintercept = mapheight << TILESHIFT, ytile = mapheight - 1;
+            if(xtile < 0)
+            {
+                xintercept = 0;
+                xtile = 0;
+            }
+            else if(xtile >= mapwidth)
+            {
+                xintercept = mapwidth << TILESHIFT;
+                xtile = mapwidth - 1;
+            }
+            else
+                xtile = (short) (xintercept >> TILESHIFT);
+            if(yintercept < 0)
+            {
+                yintercept = 0;
+                ytile = 0;
+            }
+            else if(yintercept >= (mapheight << TILESHIFT))
+            {
+                yintercept = mapheight << TILESHIFT;
+                ytile = mapheight - 1;
+            }
             yspot = 0xffff;
             tilehit = 0;
             HitWall(hw_horiz);
@@ -1313,11 +1346,28 @@ passvert:
 horizentry:
          if((uint32_t)xintercept > mapwidth * 65536 - 1 || (word)ytile >= mapheight)
          {
-            if(ytile < 0) yintercept = 0, ytile = 0;
-            else if(ytile >= mapheight) yintercept = mapheight << TILESHIFT, ytile = mapheight - 1;
-            else ytile = (short) (yintercept >> TILESHIFT);
-            if(xintercept < 0) xintercept = 0, xtile = 0;
-            else if(xintercept >= (mapwidth << TILESHIFT)) xintercept = mapwidth << TILESHIFT, xtile = mapwidth - 1;
+            if(ytile < 0)
+            {
+                yintercept = 0;
+                ytile = 0;
+            }
+            else if(ytile >= mapheight)
+            {
+                yintercept = mapheight << TILESHIFT;
+                ytile = mapheight - 1;
+            }
+            else
+                ytile = (short) (yintercept >> TILESHIFT);
+            if(xintercept < 0)
+            {
+                xintercept = 0;
+                xtile = 0;
+            }
+            else if(xintercept >= (mapwidth << TILESHIFT))
+            {
+                xintercept = mapwidth << TILESHIFT;
+                xtile = mapwidth - 1;
+            }
             xspot = 0xffff;
             tilehit = 0;
             HitWall(hw_vert);
