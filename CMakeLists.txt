@@ -58,6 +58,9 @@ set(SDL2MIXER_OGG ON CACHE BOOL "" FORCE)   # Optional, uses stb_vorbis (built-i
 set(SDL2MIXER_OGG_STB ON CACHE BOOL "" FORCE)  # Use stb_vorbis instead of libogg
 set(SDL2MIXER_MP3 OFF CACHE BOOL "" FORCE)  # Not needed for Wolf3D
 
+set(SDL2MIXER_WAVPACK OFF          CACHE BOOL "" FORCE)
+set(SDL2MIXER_WAVPACK_SHARED OFF   CACHE BOOL "" FORCE)
+
 # Alternatively, if you need more audio format support with vendored libraries:
 # set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)  # Use all vendored libraries
 
