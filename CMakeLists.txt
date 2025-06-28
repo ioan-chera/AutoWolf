@@ -15,6 +15,12 @@ include(FetchContent)
 # EXTERNAL DEPENDENCIES
 # =============================================================================
 
+# Configure SDL2 to build as shared library
+set(SDL_SHARED ON CACHE BOOL "" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+
 # Fetch SDL2
 FetchContent_Declare(
     SDL2
@@ -22,6 +28,11 @@ FetchContent_Declare(
     GIT_TAG        release-2.32.8  # or whatever version you prefer
     GIT_SHALLOW    TRUE
 )
+
+# Configure SDL2_mixer build options
+set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
+set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_INSTALL OFF CACHE BOOL "" FORCE)
 
 # Fetch SDL2_mixer
 FetchContent_Declare(
@@ -60,9 +71,6 @@ set(SDL2MIXER_MP3 OFF CACHE BOOL "" FORCE)  # Not needed for Wolf3D
 
 set(SDL2MIXER_WAVPACK OFF          CACHE BOOL "" FORCE)
 set(SDL2MIXER_WAVPACK_SHARED OFF   CACHE BOOL "" FORCE)
-
-# Alternatively, if you need more audio format support with vendored libraries:
-# set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)  # Use all vendored libraries
 
 FetchContent_MakeAvailable(SDL2_mixer)
 
@@ -218,6 +226,7 @@ if(WIN32)
         _CRT_NONSTDC_NO_WARNINGS
         _WINDOWS
     )
+    
 elseif(APPLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         APPLE_NON_CPP11  # Based on Xcode project settings
@@ -240,10 +249,11 @@ endif()
 # LINK LIBRARIES
 # =============================================================================
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    SDL2::SDL2
-    SDL2::SDL2main
-    SDL2_mixer::SDL2_mixer
+# Link SDL2 libraries (always dynamic)
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+    SDL2::SDL2 
+    SDL2::SDL2main 
+    SDL2_mixer
 )
 
 # Platform-specific libraries
@@ -278,6 +288,21 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
     BUNDLE DESTINATION .
 )
+
+# Install SDL2 DLLs on Windows (required for dynamic linking)
+if(WIN32)
+    # Install SDL2 DLLs
+    install(FILES 
+        $<TARGET_FILE:SDL2>
+        DESTINATION bin
+    )
+    
+    # Install SDL2_mixer DLLs  
+    install(FILES 
+        $<TARGET_FILE:SDL2_mixer>
+        DESTINATION bin
+    )
+endif()
 
 # =============================================================================
 # SUGGESTED SUBDIRECTORY STRUCTURE

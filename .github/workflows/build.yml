@@ -21,19 +21,63 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Ninja
+      - name: Setup Ninja (Non-Windows)
+        if: runner.os != 'Windows'
         uses: ashutoshvarma/setup-ninja@v1.1
 
-      - name: Configure
+      - name: Setup MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Configure (Windows)
+        if: runner.os == 'Windows'
+        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+      - name: Configure (Non-Windows)
+        if: runner.os != 'Windows'
         run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }}
 
       - name: Install (stage)
-        run: cmake --install build --prefix install
+        run: cmake --install build --prefix install --config ${{ env.BUILD_TYPE }}
 
-      # Upload only when started via “Run workflow” button
+      # Copy required DLLs for Windows builds (dynamic linking)
+      - name: Copy Windows DLLs
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Find and copy SDL2 DLLs from the build directory
+          $installDir = "install"
+          $buildDir = "build"
+          
+          # Create bin directory if it doesn't exist
+          New-Item -ItemType Directory -Force -Path "$installDir/bin"
+          
+          # Find SDL2 DLLs in the build directory
+          $sdlDlls = Get-ChildItem -Path "$buildDir" -Recurse -Name "SDL2*.dll" -ErrorAction SilentlyContinue
+          
+          foreach ($dll in $sdlDlls) {
+            $source = Join-Path $buildDir $dll
+            $dest = Join-Path "$installDir/bin" (Split-Path $dll -Leaf)
+            Copy-Item $source $dest -Force
+            Write-Host "Copied $dll to install/bin/"
+          }
+          
+          # Verify we have the required DLLs
+          $requiredDlls = @("SDL2.dll", "SDL2_mixer.dll")
+          foreach ($dll in $requiredDlls) {
+            $dllPath = Join-Path "$installDir/bin" $dll
+            if (-not (Test-Path $dllPath)) {
+              Write-Error "Required DLL not found: $dll"
+              exit 1
+            } else {
+              Write-Host "✓ Found required DLL: $dll"
+            }
+          }
+
+      # Upload only when started via "Run workflow" button
       - name: Upload bundle
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
