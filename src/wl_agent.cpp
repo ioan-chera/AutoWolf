@@ -399,11 +399,9 @@ void UpdateFace ()
 static void LatchNumber (int x, int y, unsigned width, int32_t number)
 {
     unsigned length,c;
-    char    str[20];
+    std::string str = std::to_string(number);
 
-    ltoanoreturn ((long int)number,str,10);
-
-    length = (unsigned) strlen (str);
+    length = (unsigned) str.length();
 
     while (length<width)
     {

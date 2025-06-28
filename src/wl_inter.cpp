@@ -152,7 +152,6 @@ void Victory ()
 // IOANCH 20130301: unification culling
     int32_t sec;
     int i, min, kr, sr, tr, x;
-    char tempstr[8];
 
 #define RATIOX  6
 #define RATIOY  14
@@ -265,17 +264,17 @@ void Victory ()
     VWB_DrawPic (i, TIMEY * 8, SPEAR::g(L_NUM0PIC) + (sec % 10));
     I_UpdateScreen ();
 
-    itoanoreturn (kr, tempstr, 10);
-    x = RATIOX + 24 - (int) strlen(tempstr) * 2;
-    Write (x, RATIOY, tempstr);
+    std::string tempstr = std::to_string(kr);
+    x = RATIOX + 24 - (int) tempstr.length() * 2;
+    Write (x, RATIOY, tempstr.c_str());
 
-    itoanoreturn (sr, tempstr, 10);
-    x = RATIOX + 24 - (int) strlen(tempstr) * 2;
-    Write (x, RATIOY + 2, tempstr);
+    tempstr = std::to_string(sr);
+    x = RATIOX + 24 - (int) tempstr.length() * 2;
+    Write (x, RATIOY + 2, tempstr.c_str());
 
-    itoanoreturn (tr, tempstr, 10);
-    x = RATIOX + 24 - (int) strlen(tempstr) * 2;
-    Write (x, RATIOY + 4, tempstr);
+    tempstr = std::to_string(tr);
+    x = RATIOX + 24 - (int) tempstr.length() * 2;
+    Write (x, RATIOY + 4, tempstr.c_str());
 
 #ifndef SPANISH
     // IOANCH 20130301: unification culling
@@ -294,11 +293,11 @@ void Victory ()
             PrintX = 30 * 8 - 3;
             PrintY = TIMEY * 8 + 8;
             PrintX += 4;
+			tempstr.resize(3);
             tempstr[0] = (((min / 10) ^ (min % 10)) ^ 0xa) + 'A';
             tempstr[1] = (int) ((((sec / 10) ^ (sec % 10)) ^ 0xa) + 'A');
             tempstr[2] = (tempstr[0] ^ tempstr[1]) + 'A';
-            tempstr[3] = 0;
-            US_Print (tempstr);
+            US_Print (tempstr.c_str());
         }
     }
 
@@ -459,7 +458,6 @@ void LevelCompleted ()
     } ;
 
     int x, i, min, sec, ratio, kr, sr, tr;
-    char tempstr[10];
     int32_t bonus, timeleft = 0;
     // IOANCH 20130302: unification
     times parTimes_wl6[] = {
@@ -615,7 +613,7 @@ void LevelCompleted ()
         Write (1, 18, STR_RAT2TREASURE);
 #endif
 
-        Write (26, 2, itoa (gamestate.mapon + 1, tempstr, 10));
+        Write (26, 2, std::to_string(gamestate.mapon + 1).c_str());
 
 
 #ifdef SPANISH
@@ -673,13 +671,14 @@ void LevelCompleted ()
         // PRINT TIME BONUS
         //
         bonus = timeleft * PAR_AMOUNT;
+		std::string tempstr;
         if (bonus)
         {
             for (i = 0; i <= timeleft; i++)
             {
-                ltoanoreturn ((long int)((int32_t) i * PAR_AMOUNT), tempstr, 10);
-                x = 36 - (int) strlen(tempstr) * 2;
-                Write (x, 7, tempstr);
+                tempstr = std::to_string((int32_t)i * PAR_AMOUNT);
+                x = 36 - (int) tempstr.length() * 2;
+                Write (x, 7, tempstr.c_str());
                 if (!(i % (PAR_AMOUNT / 10)))
                     Sound::Play (ENDBONUS1SND);
                 if(!cfg_usedoublebuffering || !(i % (PAR_AMOUNT / 50))) I_UpdateScreen ();
@@ -708,9 +707,9 @@ void LevelCompleted ()
         ratio = kr;
         for (i = 0; i <= ratio; i++)
         {
-            itoanoreturn (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
-            Write (x, 14, tempstr);
+            tempstr = std::to_string(i);
+            x = RATIOXX - (int) tempstr.length() * 2;
+            Write (x, 14, tempstr.c_str());
             if (!(i % 10))
                 Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
@@ -725,9 +724,9 @@ void LevelCompleted ()
             VL_WaitVBL (VBLWAIT);
 			Sound::Stop();
             bonus += PERCENT100AMT;
-            ltoanoreturn ((long int)bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
-            Write (x, 7, tempstr);
+            tempstr = std::to_string((long int)bonus);
+            x = (RATIOXX - 1) - (int) tempstr.length() * 2;
+            Write (x, 7, tempstr.c_str());
             I_UpdateScreen ();
             Sound::Play (PERCENT100SND);
         }
@@ -750,9 +749,9 @@ void LevelCompleted ()
         ratio = sr;
         for (i = 0; i <= ratio; i++)
         {
-            itoanoreturn (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
-            Write (x, 16, tempstr);
+            tempstr = std::to_string(i);
+            x = RATIOXX - (int) tempstr.length() * 2;
+            Write (x, 16, tempstr.c_str());
             if (!(i % 10))
                 Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
@@ -767,9 +766,9 @@ void LevelCompleted ()
             VL_WaitVBL (VBLWAIT);
 			Sound::Stop();
             bonus += PERCENT100AMT;
-            ltoanoreturn ((long int)bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
-            Write (x, 7, tempstr);
+            tempstr = std::to_string((long int)bonus);
+            x = (RATIOXX - 1) - (int)tempstr.length() * 2;
+            Write (x, 7, tempstr.c_str());
             I_UpdateScreen ();
             Sound::Play (PERCENT100SND);
         }
@@ -791,9 +790,9 @@ void LevelCompleted ()
         ratio = tr;
         for (i = 0; i <= ratio; i++)
         {
-            itoanoreturn (i, tempstr, 10);
-            x = RATIOXX - (int) strlen(tempstr) * 2;
-            Write (x, 18, tempstr);
+            tempstr = std::to_string(i);
+            x = RATIOXX - (int) tempstr.length() * 2;
+            Write (x, 18, tempstr.c_str());
             if (!(i % 10))
                 Sound::Play (ENDBONUS1SND);
             if(!cfg_usedoublebuffering || !(i & 1)) I_UpdateScreen ();
@@ -807,9 +806,9 @@ void LevelCompleted ()
             VL_WaitVBL (VBLWAIT);
 			Sound::Stop();
             bonus += PERCENT100AMT;
-            ltoanoreturn ((long int)bonus, tempstr, 10);
-            x = (RATIOXX - 1) - (int) strlen(tempstr) * 2;
-            Write (x, 7, tempstr);
+            tempstr = std::to_string((long int)bonus);
+            x = (RATIOXX - 1) - (int)tempstr.length() * 2;
+            Write (x, 7, tempstr.c_str());
             I_UpdateScreen ();
             Sound::Play (PERCENT100SND);
         }
@@ -829,26 +828,26 @@ void LevelCompleted ()
         //
         // JUMP STRAIGHT HERE IF KEY PRESSED
         //
-done:   itoanoreturn (kr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-        Write (x, 14, tempstr);
+done:   tempstr = std::to_string(kr);
+        x = RATIOXX - (int) tempstr.length() * 2;
+        Write (x, 14, tempstr.c_str());
 
-        itoanoreturn (sr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-        Write (x, 16, tempstr);
+        tempstr = std::to_string(sr);
+        x = RATIOXX - (int) tempstr.length() * 2;
+        Write (x, 16, tempstr.c_str());
 
-        itoanoreturn (tr, tempstr, 10);
-        x = RATIOXX - (int) strlen(tempstr) * 2;
-        Write (x, 18, tempstr);
+        tempstr = std::to_string(tr);
+        x = RATIOXX - (int) tempstr.length() * 2;
+        Write (x, 18, tempstr.c_str());
 
         bonus = (int32_t) timeleft *PAR_AMOUNT +
             (PERCENT100AMT * (kr >= 100)) +
             (PERCENT100AMT * (sr >= 100)) + (PERCENT100AMT * (tr >= 100));
 
         GivePoints (bonus);
-        ltoanoreturn ((long int)bonus, tempstr, 10);
-        x = 36 - (int) strlen(tempstr) * 2;
-        Write (x, 7, tempstr);
+        tempstr = std::to_string((long int)bonus);
+        x = 36 - (int) tempstr.length() * 2;
+        Write (x, 7, tempstr.c_str());
 
         //
         // SAVE RATIO INFORMATION FOR ENDGAME
@@ -1007,7 +1006,7 @@ void PreloadGraphics ()
 
 void DrawHighScores ()
 {
-    char buffer[16];
+    std::string buffer;
 
     char *str;
     // IOANCH 20130301: unification culling
@@ -1087,18 +1086,18 @@ void DrawHighScores ()
         //
         // level
         //
-        itoanoreturn (s->completed, buffer, 10);
+        std::string buffer = std::to_string(s->completed);
         // IOANCH 20130303
         if(!SPEAR::flag)
         {
-            for (str = buffer; *str; str++)
+            for (char *str = &buffer[0]; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-            USL_MeasureString (buffer, &w, &h);
+            USL_MeasureString (buffer.c_str(), &w, &h);
             PrintX = (22 * 8) - w;
         }
         else
         {
-            USL_MeasureString (buffer, &w, &h);
+            USL_MeasureString (buffer.c_str(), &w, &h);
             PrintX = 194 - w;
         }
 // IOANCH 20130301: unification culling
@@ -1106,9 +1105,9 @@ void DrawHighScores ()
         if(!SPEAR::flag)
         {
             PrintX -= 6;
-            itoanoreturn (s->episode + 1, buffer1, 10);
+            std::string buffer1 = std::to_string(s->episode + 1);
             US_Print ("E");
-            US_Print (buffer1);
+            US_Print (buffer1.c_str());
             US_Print ("/L");
         }
 
@@ -1117,28 +1116,28 @@ void DrawHighScores ()
             if (s->completed == 21)
                 VWB_DrawPic (PrintX + 8, PrintY - 1, SPEAR::g(C_WONSPEARPIC));
             else
-                US_Print (buffer);
+                US_Print (buffer.c_str());
         }
         else
-            US_Print (buffer);
+            US_Print (buffer.c_str());
 
         //
         // score
         //
-        itoanoreturn (s->score, buffer, 10);
+        buffer = std::to_string(s->score);
         if(!SPEAR::flag)
         {
-            for (str = buffer; *str; str++)
+            for (str = &buffer[0]; *str; str++)
                 *str = *str + (129 - '0');  // Used fixed-width numbers (129...)
-            USL_MeasureString (buffer, &w, &h);
+            USL_MeasureString (buffer.c_str(), &w, &h);
             PrintX = (34 * 8) - 8 - w;
         }
         else
         {
-            USL_MeasureString (buffer, &w, &h);
+            USL_MeasureString (buffer.c_str(), &w, &h);
             PrintX = 292 - w;
         }
-        US_Print (buffer);
+        US_Print (buffer.c_str());
 
         // IOANCH 20130301: unification culling
 

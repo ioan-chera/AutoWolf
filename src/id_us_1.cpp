@@ -48,6 +48,7 @@
 #include "wl_main.h"
 #include "wl_menu.h"
 #include "Exception.h"
+#include <string>
 
 
 #if _MSC_VER == 1200            // Visual C++ 6
@@ -194,9 +195,7 @@ void US_PrintUnsigned(longword n)
 ////////////////////////////////////////////////////////////////////////////////
 void US_PrintSigned(int32_t n)
 {
-	char	buffer[32];
-
-	US_Print(ltoa((long int)n,buffer,10));
+    US_Print(std::to_string(n).c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
