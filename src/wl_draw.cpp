@@ -1278,7 +1278,7 @@ vertentry:
                            if(pwalldir == di_south)
                               yintercept = (yintercept & 0xffff0000) + (pwallposi << 10);
                            else
-                              yintercept = (yintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10);
+                              yintercept = static_cast<int32_t>((yintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10));
                            xintercept = xintercept - ((xstep * (64 - pwallpos)) >> 6);
                            xtile = (short) (xintercept >> TILESHIFT);
                            tilehit = pwalltile;
@@ -1450,7 +1450,7 @@ horizentry:
                            if(pwalldir == di_east)
                               xintercept = (xintercept & 0xffff0000) + (pwallposi << 10);
                            else
-                              xintercept = (xintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10);
+                              xintercept = static_cast<int32_t>((xintercept & 0xffff0000) - TILEGLOBAL + (pwallposi << 10));
                            yintercept = yintercept - ((ystep * (64 - pwallpos)) >> 6);
                            ytile = (short) (yintercept >> TILESHIFT);
                            tilehit = pwalltile;

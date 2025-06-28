@@ -87,7 +87,12 @@ void Cocoa_DisplayErrorAlert(const char *msg, const char* title)
         UIAlertView* av = [[UIAlertView alloc] initWithTitle:[NSString stringWithCString:title encoding:NSUTF8StringEncoding] message:[NSString stringWithCString:msg encoding:NSUTF8StringEncoding] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
 #else
-        [[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%s", title] defaultButton:@"Quit" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%s", msg] runModal];
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:[NSString stringWithFormat:@"%s", title]];
+        [alert setInformativeText:[NSString stringWithFormat:@"%s", msg]];
+        [alert addButtonWithTitle:@"Quit"];
+        [alert runModal];
+        [alert release];
 #endif
 	}
     [pool release];
