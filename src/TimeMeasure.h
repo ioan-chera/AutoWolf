@@ -19,7 +19,7 @@
 #ifndef TIMEMEASURE_H_
 #define TIMEMEASURE_H_
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #define SET_TIME_MEASURE(a) TimeMeasure<a> TIME_MEASURE(__FUNCTION__)
 

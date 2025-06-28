@@ -33,6 +33,10 @@
 
 #import <Foundation/Foundation.h>
 #include "CocoaFun.h"
+#ifdef IOS
+// SDL_syswm.h might have different path in SDL 3 or be included in main SDL.h
+// Try alternative approaches if needed
+#endif
 
 // Unfortunately frozen to this value. Normally I should name it "org.i-chera.autowolf", but I can't
 // change the name now because it would stop reading old version preference states

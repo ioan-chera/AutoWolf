@@ -543,8 +543,8 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 	rect.h = static_cast<int>(((float)characterHeight / LOGIC_HEIGHT) * windowHeight);
 	rect.w = windowWidth - rect.x;
 	
-	SDL_SetTextInputRect(&rect);
-	SDL_StartTextInput();
+	SDL_SetTextInputArea(vid_window, &rect, 0);
+	SDL_StartTextInput(vid_window);
 #endif
 	
 	while (!done)
@@ -784,7 +784,7 @@ Boolean8 US_LineInput(int x,int y,char *buf,const char *def,Boolean8 escok, int 
 		I_UpdateScreen();
 	}
 #ifndef USE_SDL1_2
-	SDL_StopTextInput();
+	SDL_StopTextInput(vid_window);
 #endif
 	
 	if (cursorvis)

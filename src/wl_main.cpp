@@ -1756,9 +1756,9 @@ void DestroySavedInstance()
 // SDL HANDLE MOBILE APP EVENTS QUICKLY
 //
 #ifndef USE_SDL1_2
-static int handleMobileAppEvent(void* userdata, SDL_Event* event)
+static bool handleMobileAppEvent(void* userdata, SDL_Event* event)
 {
-	if (event->type == SDL_APP_WILLENTERBACKGROUND)
+	if (event->type == SDL_EVENT_WILL_ENTER_BACKGROUND)
 	{
 		Sound::Stop();
 		Sound::MusicOff();
@@ -1774,24 +1774,24 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 			}
 			// else: either dead or in elevator at this point. The instance save is handled elsewhere then
 		}
-		return 0;
+		return false;
 	}
-	else if (event->type == SDL_APP_TERMINATING)
+	else if (event->type == SDL_EVENT_TERMINATING)
 	{
 		Logger::Write("SDL_APP_TERMINATING");
 		g_appForcedToQuit = true;
 		exit(0);
 	}
-	else if (event->type == SDL_APP_DIDENTERFOREGROUND)
+	else if (event->type == SDL_EVENT_DID_ENTER_FOREGROUND)
 	{
 #ifdef IOS
         Cocoa_HideStatusBar();
         g_forceSDLRestart = true;
 #endif
 		Sound::MusicOn();
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }
 #endif
 
@@ -1800,10 +1800,7 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 //
 // Main program start
 //
-#if defined(OSX) || defined(__ANDROID__)
-#define main SDL_main
-#endif
-int SDL_main(int argc, TChar *argv[])
+int main(int argc, TChar *argv[])
 {
 	//TestListPerf();
 	try
@@ -1826,7 +1823,7 @@ int SDL_main(int argc, TChar *argv[])
 
 		InitGame();
 #ifndef USE_SDL1_2
-		SDL_SetEventFilter(handleMobileAppEvent, nullptr);
+		SDL_AddEventWatch(handleMobileAppEvent, nullptr);
 #endif
 
 		DemoLoop();
@@ -1855,7 +1852,7 @@ int SDL_main(int argc, TChar *argv[])
 		ShutdownId();
 		
 		showErrorAlert(e.what(), "AutoWolf Error");
-		return 1;
+		return true;
 	}
 	catch (...)
 	{

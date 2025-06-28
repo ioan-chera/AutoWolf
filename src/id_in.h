@@ -130,32 +130,32 @@ enum ScanCode
    sc_9 =            SDLK_9,
    sc_0 =            SDLK_0,
    
-   sc_A =            SDLK_a,
-   sc_B =            SDLK_b,
-   sc_C =            SDLK_c,
-   sc_D =            SDLK_d,
-   sc_E =            SDLK_e,
-   sc_F =            SDLK_f,
-   sc_G =            SDLK_g,
-   sc_H =            SDLK_h,
-   sc_I =            SDLK_i,
-   sc_J =            SDLK_j,
-   sc_K =            SDLK_k,
-   sc_L =            SDLK_l,
-   sc_M =            SDLK_m,
-   sc_N =            SDLK_n,
-   sc_O =            SDLK_o,
-   sc_P =            SDLK_p,
-   sc_Q =            SDLK_q,
-   sc_R =            SDLK_r,
-   sc_S =            SDLK_s,
-   sc_T =            SDLK_t,
-   sc_U =            SDLK_u,
-   sc_V =            SDLK_v,
-   sc_W =            SDLK_w,
-   sc_X =            SDLK_x,
-   sc_Y =            SDLK_y,
-   sc_Z =            SDLK_z,
+   sc_A =            SDLK_A,
+   sc_B =            SDLK_B,
+   sc_C =            SDLK_C,
+   sc_D =            SDLK_D,
+   sc_E =            SDLK_E,
+   sc_F =            SDLK_F,
+   sc_G =            SDLK_G,
+   sc_H =            SDLK_H,
+   sc_I =            SDLK_I,
+   sc_J =            SDLK_J,
+   sc_K =            SDLK_K,
+   sc_L =            SDLK_L,
+   sc_M =            SDLK_M,
+   sc_N =            SDLK_N,
+   sc_O =            SDLK_O,
+   sc_P =            SDLK_P,
+   sc_Q =            SDLK_Q,
+   sc_R =            SDLK_R,
+   sc_S =            SDLK_S,
+   sc_T =            SDLK_T,
+   sc_U =            SDLK_U,
+   sc_V =            SDLK_V,
+   sc_W =            SDLK_W,
+   sc_X =            SDLK_X,
+   sc_Y =            SDLK_Y,
+   sc_Z =            SDLK_Z,
    
    // IOANCH 20130802: added meta
    sc_LMeta =             LGUI,
@@ -180,7 +180,7 @@ private:
    bool    m_mousePresent;
    bool    m_paused;
    
-   SDL_Joystick *m_joystick;
+   SDL_Gamepad *m_gamepad;
    int m_joyNumHats;
    bool m_grabInput;
    bool m_needRestore;

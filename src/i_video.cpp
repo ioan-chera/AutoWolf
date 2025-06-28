@@ -66,7 +66,7 @@ static SDL_Surface *vid_latchpics[NUMLATCHPICS];
 static SDL_Surface *I_createSurface(Uint32 flags, int width, int height)
 {
    SDL_Surface *ret;
-   ret = SDL_CreateRGBSurface(flags, width, height, 8, 0, 0, 0, 0);
+   ret = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_INDEX8);
    if(!ret)
    {
       throw Exception((PString("Unable to create ")<<width<<"x"<<height<<" buffer surface: "<<SDL_GetError())());
@@ -118,20 +118,18 @@ void I_RecreateRenderer()
     // Reload vid_screen attributes
 //    if(Platform::touchscreen)
     {
-        SDL_DisplayMode mode;
-        SDL_GetDesktopDisplayMode(0, &mode);
-        vid_screenWidth = mode.w;
-        vid_screenHeight = mode.h;
+        const SDL_DisplayMode *mode;
+        mode = SDL_GetCurrentDisplayMode(SDL_GetPrimaryDisplay());
+        vid_screenWidth = mode->w;
+        vid_screenHeight = mode->h;
     }
     
-    Uint32 flags = SDL_WINDOW_ALLOW_HIGHDPI;
+    Uint32 flags = SDL_WINDOW_HIGH_PIXEL_DENSITY;
     if(Platform::touchscreen || cfg_fullscreen)
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        flags |= SDL_WINDOW_FULLSCREEN;
 
     // Unfortunately for fullscreen, the logical screen width has to be specified.
     vid_window = SDL_CreateWindow(SPEAR::FullTitle(),
-                                  SDL_WINDOWPOS_UNDEFINED,
-                                  SDL_WINDOWPOS_UNDEFINED,
                                   cfg_fullscreen ? vid_screenWidth : cfg_logicalWidth,
                                   cfg_fullscreen ? vid_screenHeight : cfg_logicalHeight,
                                   flags);
@@ -142,7 +140,7 @@ void I_RecreateRenderer()
                          + SDL_GetError()).c_str());
     }
     
-    vid_renderer = SDL_CreateRenderer(vid_window, -1, 0);
+    vid_renderer = SDL_CreateRenderer(vid_window, NULL);
     if(!vid_renderer)
     {
         throw Exception((std::string("Unable to create SDL renderer: ")
@@ -153,7 +151,7 @@ void I_RecreateRenderer()
         throw Exception((std::string("SDL_SetRenderDrawBlendMode: ")
                          + SDL_GetError()).c_str());
     }
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+//    SDL_SetHint(SDL_HINT_RENDER_SCALE_ALGORITHM, "nearest");
     
     // make the scaled rendering look smoother.
     if(Platform::touchscreen)
@@ -171,9 +169,10 @@ void I_RecreateRenderer()
 
     vid_correctedRatio = (float)vid_correctedWidth / vid_correctedHeight;
     
-    if(SDL_RenderSetLogicalSize(vid_renderer,
+    if(SDL_SetRenderLogicalPresentation(vid_renderer,
                                 vid_correctedWidth,
-                                vid_correctedHeight) < 0)
+                                vid_correctedHeight,
+                                SDL_LOGICAL_PRESENTATION_LETTERBOX) < 0)
     {
         throw Exception((std::string("Unable to set SDL renderer logical"
                                      " size: ") + SDL_GetError()).c_str());
@@ -207,7 +206,7 @@ void I_InitEngine()
    putenv("SDL_VIDEODRIVER=windib");
 #endif
 #endif
-   if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0)
+   if(!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK))
    {
 	   throw Exception((std::string("Unable to init SDL: ") + SDL_GetError()).c_str());
    }
@@ -227,13 +226,13 @@ void I_InitEngine()
 	
 //	if((vid_screen->flags & SDL_DOUBLEBUF) != SDL_DOUBLEBUF)
 //		cfg_usedoublebuffering = false;
-	SDL_ShowCursor(SDL_DISABLE);
+	SDL_HideCursor();
 	
 	// IOANCH 20130202: unification process
 //	SDL_SetColors(vid_screen, IMPALE(vid_palette), 0, 256);
 	memcpy(vid_curpal, IMPALE(vid_palette), sizeof(SDL_Color) * 256);
 	
-	vid_screenBuffer = I_createSurface(SDL_SWSURFACE, cfg_logicalWidth, cfg_logicalHeight);
+	vid_screenBuffer = I_createSurface(0, cfg_logicalWidth, cfg_logicalHeight);
 	
 	vid_bufferPitch = vid_screenBuffer->pitch;
 	
@@ -363,7 +362,7 @@ void I_UpdateDirect()
 #ifdef USE_SDL1_2
     SDL_Flip(vid_screen);
 #else
-	if(SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr) < 0)
+	if(SDL_RenderTexture(vid_renderer, vid_texture, nullptr, nullptr) < 0)
         throw Exception((std::string("Render copy failed: ") + SDL_GetError()).c_str());
 	SDL_RenderPresent(vid_renderer);
 #endif
@@ -391,7 +390,7 @@ void I_UpdateScreen()
 }
 void I_ClearScreen(int color)
 {
-   SDL_FillRect(vid_screenBuffer, NULL, color);
+   SDL_FillSurfaceRect(vid_screenBuffer, NULL, color);
 }
 void I_SaveBufferBMP(const char *fname)
 {
@@ -429,9 +428,9 @@ memcpy(vid_curpal, palette, sizeof(SDL_Color) * 256);
 void I_RedrawFrame()
 {
     // copy the original texture first
-    if(SDL_RenderCopy(vid_renderer, vid_texture, nullptr, nullptr) < 0)
+    if(SDL_RenderTexture(vid_renderer, vid_texture, nullptr, nullptr) < 0)
     {
-        throw Exception((std::string("FC SDL_RenderCopy: ")
+        throw Exception((std::string("FC SDL_RenderTexture: ")
                          + SDL_GetError()).c_str());
     }
 }
@@ -565,7 +564,7 @@ void I_FreeLatchMem()
    int i;
    for(i = 0; i < (2 + (signed int)SPEAR::g(LATCHPICS_LUMP_END) - (signed int)SPEAR::g(LATCHPICS_LUMP_START)); i++)
    {
-      SDL_FreeSurface(vid_latchpics[i]);
+      SDL_DestroySurface(vid_latchpics[i]);
       vid_latchpics[i] = nullptr;
    }
 }
@@ -591,7 +590,7 @@ void I_LoadLatchMem ()
    // tile 8s
    //
    // IOANCH: use I_ call
-   surf = I_createSurface(SDL_SWSURFACE, 8 * 8, (SPEAR::g(NUMTILE8) + 7) / 8 * 8);
+   surf = I_createSurface(0, 8 * 8, (SPEAR::g(NUMTILE8) + 7) / 8 * 8);
    
 	vid_latchpics[0] = surf;
    graphSegs.cacheChunk(SPEAR::g(STARTTILE8));
@@ -615,7 +614,7 @@ void I_LoadLatchMem ()
 	for (i=start;i<=end;i++)
 	{
 		psize = graphSegs.sizeAt(i-SPEAR::g(STARTPICS));
-      surf = I_createSurface(SDL_SWSURFACE, psize.width, psize.height);
+      surf = I_createSurface(0, psize.width, psize.height);
       
 		vid_latchpics[2+i-start] = surf;
 		graphSegs.cacheChunk (i);

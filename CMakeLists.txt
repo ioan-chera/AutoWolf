@@ -15,53 +15,53 @@ include(FetchContent)
 # EXTERNAL DEPENDENCIES
 # =============================================================================
 
-# Fetch SDL2
+# Fetch SDL3
 FetchContent_Declare(
-    SDL2
+    SDL3
     GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-    GIT_TAG        release-2.28.5  # or whatever version you prefer
+    GIT_TAG        release-3.2.16
     GIT_SHALLOW    TRUE
 )
 
-# Fetch SDL2_mixer
+# Fetch SDL3_mixer
 FetchContent_Declare(
-    SDL2_mixer
+    SDL3_mixer
     GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-    GIT_TAG        release-2.6.3   # or whatever version you prefer
+    GIT_TAG        main  # SDL 3 compatibility is on main branch
     GIT_SHALLOW    TRUE
 )
 
-# Make SDL2 available
-FetchContent_MakeAvailable(SDL2)
+# Make SDL3 available
+FetchContent_MakeAvailable(SDL3)
 
-# Configure SDL2_mixer to be self-contained
+# Configure SDL3_mixer to be self-contained
 # Disable all external dependencies and use built-in decoders where possible
-set(SDL2MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_INSTALL OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_SAMPLES OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_INSTALL OFF CACHE BOOL "" FORCE)
 
 # Disable optional external libraries
-set(SDL2MIXER_OPUS OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_FLAC OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_MOD OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_MIDI OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_OPUS OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_FLAC OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_MOD OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_MIDI OFF CACHE BOOL "" FORCE)
 
 # Use built-in/vendored libraries instead of system ones
-set(SDL2MIXER_OPUS_SHARED OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_FLAC_LIBFLAC_SHARED OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_MOD_MODPLUG_SHARED OFF CACHE BOOL "" FORCE)
-set(SDL2MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_OPUS_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_FLAC_LIBFLAC_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_MOD_MODPLUG_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL3MIXER_MIDI_FLUIDSYNTH_SHARED OFF CACHE BOOL "" FORCE)
 
 # Enable only the formats we need for Wolfenstein 3D
 # Wolf3D primarily uses OPL/AdLib music and digital sound effects
-set(SDL2MIXER_WAVE ON CACHE BOOL "" FORCE)  # For sound effects
-set(SDL2MIXER_OGG ON CACHE BOOL "" FORCE)   # Optional, uses stb_vorbis (built-in)
-set(SDL2MIXER_OGG_STB ON CACHE BOOL "" FORCE)  # Use stb_vorbis instead of libogg
-set(SDL2MIXER_MP3 OFF CACHE BOOL "" FORCE)  # Not needed for Wolf3D
+set(SDL3MIXER_WAVE ON CACHE BOOL "" FORCE)  # For sound effects
+set(SDL3MIXER_OGG ON CACHE BOOL "" FORCE)   # Optional, uses stb_vorbis (built-in)
+set(SDL3MIXER_OGG_STB ON CACHE BOOL "" FORCE)  # Use stb_vorbis instead of libogg
+set(SDL3MIXER_MP3 OFF CACHE BOOL "" FORCE)  # Not needed for Wolf3D
 
 # Alternatively, if you need more audio format support with vendored libraries:
-# set(SDL2MIXER_VENDORED ON CACHE BOOL "" FORCE)  # Use all vendored libraries
+# set(SDL3MIXER_VENDORED ON CACHE BOOL "" FORCE)  # Use all vendored libraries
 
-FetchContent_MakeAvailable(SDL2_mixer)
+FetchContent_MakeAvailable(SDL3_mixer)
 
 # =============================================================================
 # SOURCE FILES
@@ -149,7 +149,6 @@ if(WIN32)
     )
 elseif(APPLE)
     list(APPEND PLATFORM_SOURCES
-        src/macosx/SDLMain.m
         src/macosx/CocoaFun.mm
     )
     set(PLATFORM_RESOURCES
@@ -238,9 +237,9 @@ endif()
 # =============================================================================
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    SDL2::SDL2
-    SDL2::SDL2main
-    SDL2_mixer::SDL2_mixer
+    SDL3::SDL3
+    SDL3::SDL3-shared
+    SDL3_mixer::SDL3_mixer
 )
 
 # Platform-specific libraries

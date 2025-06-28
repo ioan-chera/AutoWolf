@@ -300,7 +300,7 @@ static int songs_sod[] = {
     XFUNKIE_MUS_sod,
     XDEATH_MUS_sod,
     XGETYOU_MUS_sod,                // DON'T KNOW
-    ULTIMATE_MUS_sod,               // Trans Gr”sse
+    ULTIMATE_MUS_sod,               // Trans Grï¿½sse
 	
     DUNGEON_MUS_sod,
     GOINGAFT_MUS_sod,
@@ -425,9 +425,12 @@ static void PollKeyboardMove ()
 
 static void PollMouseMove ()
 {
+    float mousexmove_f, mouseymove_f;
     int mousexmove, mouseymove;
 
-    SDL_GetMouseState(&mousexmove, &mouseymove);
+    SDL_GetMouseState(&mousexmove_f, &mouseymove_f);
+    mousexmove = (int)roundf(mousexmove_f);
+    mouseymove = (int)roundf(mouseymove_f);
     if(myInput.inputGrabbed())
         myInput.centreMouse();
 

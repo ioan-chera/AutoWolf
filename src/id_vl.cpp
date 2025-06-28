@@ -49,12 +49,12 @@ SDL_Color vid_curpal[256];
 
 // IOANCH 20130202: unification process
 // SDL_Color gamepal[]={
-SDL_Colour vid_palette_sod[]={
+SDL_Color vid_palette_sod[]={
 // #ifdef SPEAR::flag
     #include "sodpal.inc"
 };
 // #else
-SDL_Colour vid_palette_wl6[]={
+SDL_Color vid_palette_wl6[]={
     #include "wolfpal.inc"
 // #endif
 };

@@ -57,9 +57,8 @@
 #  include <unistd.h>
 #endif
 
-#include <SDL.h>
-#include <SDL_mixer.h>
-#include <SDL_syswm.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 #if !defined O_BINARY
 #	define O_BINARY 0

@@ -378,7 +378,7 @@ void SD_PrepareSound(int which)
     }
     SoundBuffers[which] = wavebuffer;
 
-    sd_soundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
+    sd_soundChunks[which] = Mix_LoadWAV_IO(SDL_IOFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
 }
 
@@ -407,7 +407,7 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
 
     if(Mix_PlayChannel(channel, sample, 0) == -1)
     {
-        Logger::Write("Unable to play sound: %s", Mix_GetError());
+        Logger::Write("Unable to play sound: %s", SDL_GetError());
         return 0;
     }
 
@@ -851,9 +851,14 @@ void SD_Startup()
     if (SD_Started)
         return;
 
-    if(Mix_OpenAudio(cfg_samplerate, AUDIO_S16, 2, cfg_audiobuffer))
+    SDL_AudioSpec spec;
+    spec.freq = cfg_samplerate;
+    spec.format = SDL_AUDIO_S16LE;
+    spec.channels = 2;
+    
+    if(!Mix_OpenAudio(0, &spec))
     {
-        Logger::Write("Unable to open audio: %s", Mix_GetError());
+        Logger::Write("Unable to open audio: %s", SDL_GetError());
         return;
     }
 

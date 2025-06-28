@@ -107,9 +107,9 @@ const byte InputManager::m_ShiftNames[] =		// Shifted ASCII for scan codes
 int InputManager::p_getMouseButtons() const
 {
    int buttons = SDL_GetMouseState(NULL, NULL);
-   int middlePressed = buttons & SDL_BUTTON(SDL_BUTTON_MIDDLE);
-   int rightPressed = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
-   buttons &= ~(SDL_BUTTON(SDL_BUTTON_MIDDLE) | SDL_BUTTON(SDL_BUTTON_RIGHT));
+   int middlePressed = buttons & SDL_BUTTON_MIDDLE;
+   int rightPressed = buttons & SDL_BUTTON_RIGHT;
+   buttons &= ~(SDL_BUTTON_MIDDLE | SDL_BUTTON_RIGHT);
    if(middlePressed) buttons |= 1 << 2;
    if(rightPressed) buttons |= 1 << 1;
    
@@ -128,7 +128,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
    switch (event->type)
    {
          // exit if the window is closed
-      case SDL_QUIT:
+      case SDL_EVENT_QUIT:
 		  Logger::Write("SDL_QUIT processed");
 		   if(!g_appForcedToQuit)
 		   {
@@ -147,10 +147,10 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   
          
          // check for keypresses
-      case SDL_KEYDOWN:
+      case SDL_EVENT_KEY_DOWN:
       {
-         if(event->key.keysym.sym == SCROLLLOCK ||
-            event->key.keysym.sym == SDLK_F12)
+         if(event->key.key == SDLK_SCROLLLOCK ||
+            event->key.key == SDLK_F12)
          {
             m_grabInput = !m_grabInput;
 #ifdef USE_SDL1_2
@@ -161,7 +161,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
             return;
          }
          
-         m_lastScan = (ScanCode)event->key.keysym.sym;
+         m_lastScan = (ScanCode)event->key.key;
 #ifdef USE_SDL1_2
           SDLMod mod = SDL_GetModState();
 #else
@@ -188,7 +188,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 #endif
          else
          {
-            if((mod & KMOD_NUM) == 0)
+            if((mod & SDL_KMOD_NUM) == 0)
             {
                switch((int)m_lastScan)
                {
@@ -205,7 +205,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
          if(sym >= 'a' && sym <= 'z')
             sym -= 32;  // convert to uppercase
 		  
-         if(mod & (KMOD_SHIFT | KMOD_CAPS))
+         if(mod & (SDL_KMOD_SHIFT | SDL_KMOD_CAPS))
          {
             if(sym < (int)lengthof(m_ShiftNames) && m_ShiftNames[sym])
                m_lastASCII = m_ShiftNames[sym];
@@ -221,9 +221,9 @@ void InputManager::p_processEvent(const SDL_Event *event)
          break;
 		}
          
-      case SDL_KEYUP:
+      case SDL_EVENT_KEY_UP:
       {
-         int key = event->key.keysym.sym;
+         int key = event->key.key;
          if(key == SDLK_KP_ENTER) key = SDLK_RETURN;
          else if(key == SDLK_RSHIFT) key = SDLK_LSHIFT;
          else if(key == SDLK_RALT) key = SDLK_LALT;
@@ -234,7 +234,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
 #endif
          else
          {
-            if((SDL_GetModState() & KMOD_NUM) == 0)
+            if((SDL_GetModState() & SDL_KMOD_NUM) == 0)
             {
                switch(key)
                {
@@ -254,11 +254,11 @@ void InputManager::p_processEvent(const SDL_Event *event)
 		   // For Android and possibly iOS
 		   //
 #ifndef USE_SDL1_2
-	   case SDL_APP_WILLENTERBACKGROUND:
+	   case SDL_EVENT_WILL_ENTER_BACKGROUND:
 		   Sound::Stop();
 		   Sound::MusicOff();
 		   break;
-	   case SDL_APP_DIDENTERFOREGROUND:
+	   case SDL_EVENT_DID_ENTER_FOREGROUND:
 #ifdef IOS
            Cocoa_HideStatusBar();   // make sure it stays hidden
 #endif
@@ -266,12 +266,12 @@ void InputManager::p_processEvent(const SDL_Event *event)
            I_RecreateRenderer();
 		   Sound::MusicOn();
 		   break;
-	   case SDL_FINGERDOWN:
-	   case SDL_FINGERMOTION:
-	   case SDL_FINGERUP:
+	   case SDL_EVENT_FINGER_DOWN:
+	   case SDL_EVENT_FINGER_MOTION:
+	   case SDL_EVENT_FINGER_UP:
            if(Platform::touchscreen)
            {
-               m_fingerdown = event->type != SDL_FINGERUP;
+               m_fingerdown = event->type != SDL_EVENT_FINGER_UP;
                float fingerx = event->tfinger.x;
                float fingery = event->tfinger.y;
                // WARNING: it's assumed that the window is in the middle. Who's to
@@ -303,7 +303,7 @@ void InputManager::p_processEvent(const SDL_Event *event)
                }
            }
 		   break;
-	   case SDL_TEXTINPUT:
+	   case SDL_EVENT_TEXT_INPUT:
 		   if(event->text.text[0] && !event->text.text[1])
 			   m_lastASCII = event->text.text[0];
 		   break;
@@ -363,21 +363,25 @@ void InputManager::initialize()
    
    clearKeysDown();
    
-   if(cfg_joystickindex >= 0 && cfg_joystickindex < SDL_NumJoysticks())
+   int numGamepads = SDL_GetNumGamepads();
+   if(cfg_joystickindex >= 0 && cfg_joystickindex < numGamepads)
    {
-      m_joystick = SDL_JoystickOpen(cfg_joystickindex);
-      if(m_joystick)
+      SDL_GamepadID *gamepad_ids = SDL_GetGamepads(NULL);
+      if(gamepad_ids && cfg_joystickindex < numGamepads)
       {
-         m_joyNumButtons = SDL_JoystickNumButtons(m_joystick);
-         if(m_joyNumButtons > 32)
-            m_joyNumButtons = 32;      // only up to 32 buttons are supported
-         m_joyNumHats = SDL_JoystickNumHats(m_joystick);
-         if(cfg_joystickhat < -1 || cfg_joystickhat >= m_joyNumHats)
-            throw Exception(PString("The joystickhat param must be between 0 and ").concat(m_joyNumHats - 1).concat("!")());
+         m_gamepad = SDL_OpenGamepad(gamepad_ids[cfg_joystickindex]);
+         if(m_gamepad)
+         {
+            m_joyNumButtons = 32;  // SDL gamepad has standard button set
+            m_joyNumHats = 1;      // SDL gamepad has one D-pad
+            if(cfg_joystickhat < -1 || cfg_joystickhat >= m_joyNumHats)
+               throw Exception(PString("The joystickhat param must be between 0 and ").concat(m_joyNumHats - 1).concat("!")());
+         }
+         SDL_free(gamepad_ids);
       }
    }
    
-   SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+   SDL_SetEventEnabled(SDL_EVENT_MOUSE_MOTION, false);
    
    if(cfg_fullscreen || cfg_forcegrabmouse)
    {
@@ -411,8 +415,8 @@ void InputManager::close()
    if (!m_started)
 		return;
    
-   if(m_joystick)
-      SDL_JoystickClose(m_joystick);
+   if(m_gamepad)
+      SDL_CloseGamepad(m_gamepad);
    
 	m_started = false;
 }
@@ -424,31 +428,30 @@ void InputManager::close()
 //
 void InputManager::getJoyDelta(int *dx, int *dy) const
 {
-   if(!m_joystick)
+   if(!m_gamepad)
    {
       *dx = *dy = 0;
       return;
    }
    
-   SDL_JoystickUpdate();
 #ifdef _arch_dreamcast
    int x = 0;
    int y = 0;
 #else
-   int x = SDL_JoystickGetAxis(m_joystick, 0) >> 8;
-   int y = SDL_JoystickGetAxis(m_joystick, 1) >> 8;
+   int x = (int)(SDL_GetGamepadAxis(m_gamepad, SDL_GAMEPAD_AXIS_LEFTX) / 256);
+   int y = (int)(SDL_GetGamepadAxis(m_gamepad, SDL_GAMEPAD_AXIS_LEFTY) / 256);
 #endif
    
    if(cfg_joystickhat != -1)
    {
-      uint8_t hatState = SDL_JoystickGetHat(m_joystick, cfg_joystickhat);
-      if(hatState & SDL_HAT_RIGHT)
+      // Use D-pad buttons instead of hat
+      if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT))
          x += 127;
-      else if(hatState & SDL_HAT_LEFT)
+      else if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_DPAD_LEFT))
          x -= 127;
-      if(hatState & SDL_HAT_DOWN)
+      if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_DPAD_DOWN))
          y += 127;
-      else if(hatState & SDL_HAT_UP)
+      else if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_DPAD_UP))
          y -= 127;
       
       if(x < -128) x = -128;
@@ -469,16 +472,15 @@ void InputManager::getJoyDelta(int *dx, int *dy) const
 //
 void InputManager::getJoyFineDelta(int *dx, int *dy) const
 {
-   if(!m_joystick)
+   if(!m_gamepad)
    {
       *dx = 0;
       *dy = 0;
       return;
    }
    
-   SDL_JoystickUpdate();
-   int x = SDL_JoystickGetAxis(m_joystick, 0);
-   int y = SDL_JoystickGetAxis(m_joystick, 1);
+   int x = (int)(SDL_GetGamepadAxis(m_gamepad, SDL_GAMEPAD_AXIS_LEFTX) / 256);
+   int y = (int)(SDL_GetGamepadAxis(m_gamepad, SDL_GAMEPAD_AXIS_LEFTY) / 256);
    
    if(x < -128) x = -128;
    else if(x > 127) x = 127;
@@ -497,13 +499,20 @@ void InputManager::getJoyFineDelta(int *dx, int *dy) const
 //
 int InputManager::joyButtons() const
 {
-   if(!m_joystick) return 0;
-   
-   SDL_JoystickUpdate();
+   if(!m_gamepad) return 0;
    
    int res = 0;
-   for(int i = 0; i < m_joyNumButtons && i < 32; i++)
-      res |= SDL_JoystickGetButton(m_joystick, i) << i;
+   // Map standard gamepad buttons to bit positions
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_A)) res |= 1 << 0;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_B)) res |= 1 << 1;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_X)) res |= 1 << 2;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_Y)) res |= 1 << 3;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_LEFT_SHOULDER)) res |= 1 << 4;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER)) res |= 1 << 5;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_BACK)) res |= 1 << 6;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_START)) res |= 1 << 7;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_LEFT_STICK)) res |= 1 << 8;
+   if(SDL_GetGamepadButton(m_gamepad, SDL_GAMEPAD_BUTTON_RIGHT_STICK)) res |= 1 << 9;
    return res;
 }
 
@@ -765,14 +774,14 @@ bool InputManager::userInput(longword delay)
 //
 void IN_InitVerifyJoysticks()
 {
-   int numJoysticks = SDL_NumJoysticks();
+   int numGamepads = SDL_GetNumGamepads();
    if(cfg_joystickindex && (cfg_joystickindex < -1 ||
-      cfg_joystickindex >= numJoysticks))
+      cfg_joystickindex >= numGamepads))
    {
-      if(!numJoysticks)
-         throw Exception("No joysticks are available to SDL!\n");
+      if(!numGamepads)
+         throw Exception("No gamepads are available to SDL!\n");
       else
-         throw Exception((PString("The joystick index must be between -1 and %i!\n") <<
-            (numJoysticks - 1))());
+         throw Exception((PString("The gamepad index must be between -1 and %i!\n") <<
+            (numGamepads - 1))());
    }
 }
