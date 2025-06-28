@@ -1803,7 +1803,7 @@ static int handleMobileAppEvent(void* userdata, SDL_Event* event)
 #if defined(OSX) || defined(__ANDROID__)
 #define main SDL_main
 #endif
-int SDL_main(int argc, TChar *argv[])
+int main(int argc, TChar *argv[])
 {
 	//TestListPerf();
 	try
