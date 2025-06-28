@@ -516,10 +516,10 @@ void PageLayout (Boolean8 shownumber)
     if (shownumber)
     {
 #ifdef SPANISH
-        sprintf(str, "Hoja %d de %d", pagenum, s_numpages);
+        snprintf(str, sizeof(str), "Hoja %d de %d", pagenum, s_numpages);
         px = 208;
 #else
-        sprintf(str, "pg %d of %d", pagenum, s_numpages);
+        snprintf(str, sizeof(str), "pg %d of %d", pagenum, s_numpages);
         px = 213;
 #endif
         py = 183;

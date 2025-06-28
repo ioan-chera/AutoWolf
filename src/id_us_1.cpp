@@ -182,7 +182,7 @@ void US_Print(const char *sorg)
 void US_PrintUnsigned(longword n)
 {
 	char	buffer[32];
-	sprintf(buffer, "%u", n);
+	snprintf(buffer, sizeof(buffer), "%u", n);
 
 	US_Print(buffer);
 }

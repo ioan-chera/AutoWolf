@@ -180,7 +180,7 @@ int DC_CheckForMaps(char *path) {
 #endif
 #endif
                     strcpy(fpath, path);
-                    sprintf(fpath, "%s/%s", fpath, dirent->name);
+                    snprintf(fpath, sizeof(fpath), "%s/%s", fpath, dirent->name);
                     DC_CheckForMaps(fpath);
                 }
                 fs_close(dir);

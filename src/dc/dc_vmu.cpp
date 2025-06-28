@@ -140,7 +140,7 @@ int DC_LoadFromVMU(char *fname) {
     unsigned char *unzipdata;
     vmu_pkg_t vmu_package;
 
-    sprintf(fpath, "/vmu/a1/%s", fname);
+    snprintf(fpath, sizeof(fpath), "/vmu/a1/%s", fname);
     file = fs_open(fpath, O_RDONLY);
     if(file == 0) return 0;
     filesize = fs_total(file);
