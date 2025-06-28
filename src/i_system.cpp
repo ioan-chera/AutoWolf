@@ -123,7 +123,8 @@ std::string I_GetSettingsDir()
    HRESULT result = SHGetFolderPathW(nullptr, CSIDL_APPDATA, nullptr, 0, appdatdir);
    if(!SUCCEEDED(result))
 	   throw std::system_error(std::error_code(result & 0xffff, std::system_category()), "Your Application Data directory is not defined. You must set this before playing.");
-   return ConcatSubpath(WideCharToUTF8(appdatdir), "AutoWolf");
+   std::string converted = WideCharToUTF8(appdatdir);
+   return ConcatSubpath(converted, "AutoWolf");
 #elif defined(__ANDROID__)
 	std::string internal = SDL_AndroidGetInternalStoragePath();
 	return internal;
