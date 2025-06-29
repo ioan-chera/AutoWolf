@@ -148,7 +148,85 @@ set(CORE_SOURCES
     
     # DOSBox OPL emulation
     src/dosbox/dbopl.cpp
+
+    # Header files (for IDEs and source grouping)
+    src/ActorStates.h
+    src/CheckSum.h
+    src/CommandLine.h
+    src/Config.h
+    src/DataFile.h
+    src/DirectoryFile.h
+    src/Exception.h
+    src/e_hash.h
+    src/e_hashkeys.h
+    src/FileSystem.h
+    src/HistoryRatio.h
+    src/Logger.h
+    src/MapExploration.h
+    src/MasterDirectoryFile.h
+    src/m_buffer.h
+    src/m_dllist.h
+    src/m_swap.h
+    src/obattrib.h
+    src/PathArray.h
+    src/Platform.h
+    src/Property.h
+    src/PropertyFile.h
+    src/PString.h
+    src/ShellUnicode.h
+    src/SODFlag.h
+    src/StdStringExtensions.h
+    src/gp2x.h
+    src/i_system.h
+    src/i_video.h
+    src/id_ca.h
+    src/id_in.h
+    src/id_pm.h
+    src/id_sd.h
+    src/id_us.h
+    src/id_vh.h
+    src/id_vl.h
+    src/ioan_bas.h
+    src/ioan_bot.h
+    src/ioan_secret.h
+    src/f_spear.h
+    src/foreign.h
+    src/gfxv_sod.h
+    src/gfxv_wl6.h
+    src/gfxvabstract.h
+    src/List.h
+    src/spr_sod.h
+    src/spr_wl6.h
+    src/sprabstract.h
+    src/version.h
+    src/TimeMeasure.h
+    src/wl_act1.h
+    src/wl_act2.h
+    src/wl_agent.h
+    src/wl_atmos.h
+    src/wl_cloudsky.h
+    src/wl_def.h
+    src/wl_draw.h
+    src/wl_game.h
+    src/wl_inter.h
+    src/wl_main.h
+    src/wl_menu.h
+    src/wl_play.h
+    src/wl_shade.h
+    src/wl_state.h
+    src/wl_text.h
+    src/audiowl6.h
+    src/audiosod.h
+    src/audioabstract.h
 )
+
+# Organize source files into filters for Visual Studio
+source_group("ID" REGULAR_EXPRESSION "src/id_.*|src/wl_.*|src/f_spear.*|src/gfxv_.*|src/spr_.*|src/foreign.*|src/List.*|src/version.*|src/TimeMeasure.*")
+source_group("Wolf" REGULAR_EXPRESSION "src/wl_.*")
+source_group("Ioan" REGULAR_EXPRESSION "src/ioan_.*")
+source_group("Structures" REGULAR_EXPRESSION "src/ActorStates.*|src/CheckSum.*|src/CommandLine.*|src/Config.*|src/DataFile.*|src/DirectoryFile.*|src/Exception.*|src/e_hash.*|src/FileSystem.*|src/HistoryRatio.*|src/Logger.*|src/MapExploration.*|src/MasterDirectoryFile.*|src/m_buffer.*|src/obattrib.*|src/PathArray.*|src/Platform.*|src/Property.*|src/PropertyFile.*|src/PString.*|src/ShellUnicode.*|src/SODFlag.*|src/StdStringExtensions.*|src/gp2x.*")
+source_group("HAL" REGULAR_EXPRESSION "src/i_system.*|src/i_video.*")
+source_group("DOSBox OPL" REGULAR_EXPRESSION "src/dosbox/.*")
 
 # Platform-specific sources
 if(WIN32)
@@ -178,6 +256,15 @@ if(WIN32)
         ${CORE_SOURCES}
         ${PLATFORM_SOURCES}
         ${PLATFORM_RESOURCES}
+    )
+    # Copy SDL2 and SDL2_mixer DLLs next to the executable after build
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:SDL2>
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:SDL2_mixer>
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
 elseif(APPLE)
     add_executable(${PROJECT_NAME} MACOSX_BUNDLE
@@ -303,50 +390,3 @@ if(WIN32)
         DESTINATION bin
     )
 endif()
-
-# =============================================================================
-# SUGGESTED SUBDIRECTORY STRUCTURE
-# =============================================================================
-
-# You could split this CMakeLists.txt into multiple files by creating subdirectories:
-#
-# 1. src/CMakeLists.txt - For core game sources
-#    add_subdirectory(src)
-#
-# 2. src/dosbox/CMakeLists.txt - For DOSBox OPL emulation
-#    Create a static library for the DOSBox components
-#
-# 3. src/ioan/CMakeLists.txt - For IOAN-specific components
-#    Group all IOAN-related files (ioan_*.cpp, data structures, etc.)
-#
-# 4. src/hal/CMakeLists.txt - For hardware abstraction layer
-#    Group i_system.cpp, i_video.cpp
-#
-# 5. external/CMakeLists.txt - For managing external dependencies
-#    Move FetchContent declarations here
-#
-# Example of how to structure src/CMakeLists.txt:
-# 
-# # In main CMakeLists.txt:
-# add_subdirectory(src)
-# add_subdirectory(external)
-#
-# # In src/CMakeLists.txt:
-# add_library(autowolf_core STATIC
-#     id_ca.cpp
-#     id_in.cpp
-#     # ... other core files
-# )
-# target_include_directories(autowolf_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-# 
-# add_subdirectory(dosbox)
-# add_subdirectory(ioan)
-# add_subdirectory(hal)
-#
-# # Then in main CMakeLists.txt, link these libraries:
-# target_link_libraries(${PROJECT_NAME} PRIVATE
-#     autowolf_core
-#     autowolf_dosbox
-#     autowolf_ioan
-#     autowolf_hal
-# )
