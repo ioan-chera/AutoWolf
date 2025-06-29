@@ -29,9 +29,15 @@
 
 namespace Act1
 {
+enum
+{
+	STATIC_ID_OFFSET = 23,
+};
+
 	void OpenDoor (int door);
 	void SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock);
-	void setupSpearOfDestinyStructures();
+	void SetSpearModuleValues();
+	wl_stat_t GetStaticType(int actorid);
 }
 
 

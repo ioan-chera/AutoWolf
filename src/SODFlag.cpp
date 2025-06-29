@@ -984,13 +984,11 @@ void SPEAR::Initialize(const std::string &basePath)
     }
 	// One of the ifs failed - fall here and return SPEAR::flag 1
     flag = true;
-    Act1::setupSpearOfDestinyStructures();
 }
 
 
 void SPEAR::SetGlobalValues()
 {
+    Act1::SetSpearModuleValues();
 	Menu::SetSpearModuleValues();
-	
-	SecretSolver::SetSpearModuleValues();
 }

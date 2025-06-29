@@ -358,12 +358,12 @@ static void ScanInfoPlane()
                 case 71:
                 case 72:
                     // IOANCH 20130302: unification
-                    SpawnStatic(x,y,tile-23);
+                    SpawnStatic(x,y,tile-Act1::STATIC_ID_OFFSET);
                     break;
                 case 73:
                 case 74:
                     if(SPEAR::flag)
-                        SpawnStatic(x,y,tile-23);
+                        SpawnStatic(x,y,tile-Act1::STATIC_ID_OFFSET);
                     break;
 
 //
@@ -377,47 +377,47 @@ static void ScanInfoPlane()
 //
 // guard
 //
-                case 180:
-                case 181:
-                case 182:
-                case 183:
+                case Game::GuardStandHard1:
+                case Game::GuardStandHard2:
+                case Game::GuardStandHard3:
+                case Game::GuardStandHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 144:
-                case 145:
-                case 146:
-                case 147:
+                    tile -= Game::NormalSkillOffset;
+                case Game::GuardStandMedium1:
+                case Game::GuardStandMedium2:
+                case Game::GuardStandMedium3:
+                case Game::GuardStandMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 108:
-                case 109:
-                case 110:
-                case 111:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(guardobj, x, y, tile - 108);
+                    tile -= Game::NormalSkillOffset;
+                case Game::GuardStandEasy1:
+                case Game::GuardStandEasy2:
+                case Game::GuardStandEasy3:
+                case Game::GuardStandEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(guardobj, x, y, tile - Game::GuardStandEasy1);
                     break;
 
 
-                case 184:
-                case 185:
-                case 186:
-                case 187:
+                case Game::GuardPatrolHard1:
+                case Game::GuardPatrolHard2:
+                case Game::GuardPatrolHard3:
+                case Game::GuardPatrolHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 148:
-                case 149:
-                case 150:
-                case 151:
+                    tile -= Game::NormalSkillOffset;
+                case Game::GuardPatrolMedium1:
+                case Game::GuardPatrolMedium2:
+                case Game::GuardPatrolMedium3:
+                case Game::GuardPatrolMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 112:
-                case 113:
-                case 114:
-                case 115:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(guardobj, x, y, tile - 112, true);
+                    tile -= Game::NormalSkillOffset;
+                case Game::GuardPatrolEasy1:
+                case Game::GuardPatrolEasy2:
+                case Game::GuardPatrolEasy3:
+                case Game::GuardPatrolEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(guardobj, x, y, tile - Game::GuardPatrolEasy1, true);
                     break;
 
                 case 124:
@@ -426,140 +426,140 @@ static void ScanInfoPlane()
 //
 // officer
 //
-                case 188:
-                case 189:
-                case 190:
-                case 191:
+                case Game::OfficerStandHard1:
+                case Game::OfficerStandHard2:
+                case Game::OfficerStandHard3:
+                case Game::OfficerStandHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 152:
-                case 153:
-                case 154:
-                case 155:
+                    tile -= Game::NormalSkillOffset;
+                case Game::OfficerStandMedium1:
+                case Game::OfficerStandMedium2:
+                case Game::OfficerStandMedium3:
+                case Game::OfficerStandMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 116:
-                case 117:
-                case 118:
-                case 119:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(officerobj, x, y, tile - 116);
+                    tile -= Game::NormalSkillOffset;
+                case Game::OfficerStandEasy1:
+                case Game::OfficerStandEasy2:
+                case Game::OfficerStandEasy3:
+                case Game::OfficerStandEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(officerobj, x, y, tile - Game::OfficerStandEasy1);
                     break;
 
 
-                case 192:
-                case 193:
-                case 194:
-                case 195:
+                case Game::OfficerPatrolHard1:
+                case Game::OfficerPatrolHard2:
+                case Game::OfficerPatrolHard3:
+                case Game::OfficerPatrolHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 156:
-                case 157:
-                case 158:
-                case 159:
+                    tile -= Game::NormalSkillOffset;
+                case Game::OfficerPatrolMedium1:
+                case Game::OfficerPatrolMedium2:
+                case Game::OfficerPatrolMedium3:
+                case Game::OfficerPatrolMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 120:
-                case 121:
-                case 122:
-                case 123:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(officerobj, x, y, tile - 120, true);
+                    tile -= Game::NormalSkillOffset;
+                case Game::OfficerPatrolEasy1:
+                case Game::OfficerPatrolEasy2:
+                case Game::OfficerPatrolEasy3:
+                case Game::OfficerPatrolEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(officerobj, x, y, tile - Game::OfficerPatrolEasy1, true);
                     break;
 
 
 //
 // ss
 //
-                case 198:
-                case 199:
-                case 200:
-                case 201:
+                case Game::SSStandHard1:
+                case Game::SSStandHard2:
+                case Game::SSStandHard3:
+                case Game::SSStandHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 162:
-                case 163:
-                case 164:
-                case 165:
+                    tile -= Game::NormalSkillOffset;
+                case Game::SSStandMedium1:
+                case Game::SSStandMedium2:
+                case Game::SSStandMedium3:
+                case Game::SSStandMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 126:
-                case 127:
-                case 128:
-                case 129:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(ssobj, x, y, tile - 126);
+                    tile -= Game::NormalSkillOffset;
+                case Game::SSStandEasy1:
+                case Game::SSStandEasy2:
+                case Game::SSStandEasy3:
+                case Game::SSStandEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(ssobj, x, y, tile - Game::SSStandEasy1);
                     break;
 
 
-                case 202:
-                case 203:
-                case 204:
-                case 205:
+                case Game::SSPatrolHard1:
+                case Game::SSPatrolHard2:
+                case Game::SSPatrolHard3:
+                case Game::SSPatrolHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 166:
-                case 167:
-                case 168:
-                case 169:
+                    tile -= Game::NormalSkillOffset;
+                case Game::SSPatrolMedium1:
+                case Game::SSPatrolMedium2:
+                case Game::SSPatrolMedium3:
+                case Game::SSPatrolMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 130:
-                case 131:
-                case 132:
-                case 133:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(ssobj, x, y, tile - 130, true);
+                    tile -= Game::NormalSkillOffset;
+                case Game::SSPatrolEasy1:
+                case Game::SSPatrolEasy2:
+                case Game::SSPatrolEasy3:
+                case Game::SSPatrolEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(ssobj, x, y, tile - Game::SSPatrolEasy1, true);
                     break;
 
 //
 // dogs
 //
-                case 206:
-                case 207:
-                case 208:
-                case 209:
+                case Game::DogStandHard1:
+                case Game::DogStandHard2:
+                case Game::DogStandHard3:
+                case Game::DogStandHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 170:
-                case 171:
-                case 172:
-                case 173:
+                    tile -= Game::NormalSkillOffset;
+                case Game::DogStandMedium1:
+                case Game::DogStandMedium2:
+                case Game::DogStandMedium3:
+                case Game::DogStandMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 134:
-                case 135:
-                case 136:
-                case 137:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(dogobj, x, y, tile - 134);
+                    tile -= Game::NormalSkillOffset;
+                case Game::DogStandEasy1:
+                case Game::DogStandEasy2:
+                case Game::DogStandEasy3:
+                case Game::DogStandEasy4:	// IOANCH 17.05.2012: use centralized function
+						 Basic::SpawnEnemy(dogobj, x, y, tile - Game::DogStandEasy1);
                     break;
 
 
-                case 210:
-                case 211:
-                case 212:
-                case 213:
+                case Game::DogPatrolHard1:
+                case Game::DogPatrolHard2:
+                case Game::DogPatrolHard3:
+                case Game::DogPatrolHard4:
                     if (gamestate.difficulty<gd_hard)
                         break;
-                    tile -= 36;
-                case 174:
-                case 175:
-                case 176:
-                case 177:
+                    tile -= Game::NormalSkillOffset;
+                case Game::DogPatrolMedium1:
+                case Game::DogPatrolMedium2:
+                case Game::DogPatrolMedium3:
+                case Game::DogPatrolMedium4:
                     if (gamestate.difficulty<gd_medium)
                         break;
-                    tile -= 36;
-                case 138:
-                case 139:
-                case 140:
-                case 141:	// IOANCH 17.05.2012: use centralized function
-					Basic::SpawnEnemy(dogobj, x, y, tile - 138, true);
+                    tile -= Game::NormalSkillOffset;
+                case Game::DogPatrolEasy1:
+                case Game::DogPatrolEasy2:
+                case Game::DogPatrolEasy3:
+                case Game::DogPatrolEasy4:	// IOANCH 17.05.2012: use centralized function
+					Basic::SpawnEnemy(dogobj, x, y, tile - Game::DogPatrolEasy1, true);
                     break;
 
 //
@@ -567,92 +567,88 @@ static void ScanInfoPlane()
 //
                     // IOANCH 20130302: unification
 
-                case 214:	// IOANCH 17.05.2012: use centralized function
+                case Game::BossHans:	// IOANCH 17.05.2012: use centralized function
 				    if(!SPEAR::flag) Basic::SpawnEnemy(bossobj, x, y);
                     break;
-                case 197:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(gretelobj, x, y);
+                case Game::BossGretel:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(gretelobj, x, y);
                     break;
-                case 215:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(giftobj, x, y);
+                case Game::BossGift:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(giftobj, x, y);
                     break;
-                case 179:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(fatobj, x, y);
+                case Game::BossFat:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(fatobj, x, y);
                     break;
-                case 196:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(schabbobj, x, y);
+                case Game::BossSchabbs:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(schabbobj, x, y);
                     break;
-                case 160:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(fakeobj, x, y);
+                case Game::FakeHitler:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(fakeobj, x, y);
                     break;
-                case 178:	// IOANCH 17.05.2012: use centralized function
-					if(!SPEAR::flag) Basic::SpawnEnemy(mechahitlerobj, x, y);
-                    break;
-
-                case 106:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(spectreobj, x, y);
-                    break;
-                case 107:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(angelobj, x, y);
-                    break;
-                case 125:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(transobj, x, y);
-                    break;
-                case 142:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(uberobj, x, y);
-                    break;
-                case 143:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(willobj, x, y);
-                    break;
-                case 161:	// IOANCH 17.05.2012: use centralized function
-					if(SPEAR::flag) Basic::SpawnEnemy(deathobj, x, y);
+                case Game::BossHitler:
+                    if(!SPEAR::flag) Basic::SpawnEnemy(mechahitlerobj, x, y);
                     break;
 
+                case Game::Spectre:
+                    if(SPEAR::flag) Basic::SpawnEnemy(spectreobj, x, y);
+                    break;
+                case Game::BossAngel:
+                    if(SPEAR::flag) Basic::SpawnEnemy(angelobj, x, y);
+                    break;
+                case Game::BossTrans:
+                    if(SPEAR::flag) Basic::SpawnEnemy(transobj, x, y);
+                    break;
+                case Game::BossUber:
+                    if(SPEAR::flag) Basic::SpawnEnemy(uberobj, x, y);
+                    break;
+                case Game::BossWill:
+                    if(SPEAR::flag) Basic::SpawnEnemy(willobj, x, y);
+                    break;
+                case Game::BossDeath:
+                    if(SPEAR::flag) Basic::SpawnEnemy(deathobj, x, y);
+                    break;
 
-
-//
-// mutants
-//
-                case 252:
-                case 253:
-                case 254:
-                case 255:
-                    if (gamestate.difficulty<gd_hard)
+                    // mutants
+                case Game::MutantStandHard1:
+                case Game::MutantStandHard2:
+                case Game::MutantStandHard3:
+                case Game::MutantStandHard4:
+                    if(gamestate.difficulty < gd_hard)
                         break;
-                    tile -= 18;
-                case 234:
-                case 235:
-                case 236:
-                case 237:
-                    if (gamestate.difficulty<gd_medium)
+                    tile -= Game::MutantSkillOffset;
+                case Game::MutantStandMedium1:
+                case Game::MutantStandMedium2:
+                case Game::MutantStandMedium3:
+                case Game::MutantStandMedium4:
+                    if(gamestate.difficulty < gd_medium)
                         break;
-                    tile -= 18;
-                case 216:
-                case 217:
-                case 218:
-                case 219:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(mutantobj, x, y, tile - 216);
+                    tile -= Game::MutantSkillOffset;
+                case Game::MutantStandEasy1:
+                case Game::MutantStandEasy2:
+                case Game::MutantStandEasy3:
+                case Game::MutantStandEasy4:
+                    Basic::SpawnEnemy(mutantobj, x, y, tile - Game::MutantStandEasy1);
                     break;
 
-                case 256:
-                case 257:
-                case 258:
-                case 259:
-                    if (gamestate.difficulty<gd_hard)
+                case Game::MutantPatrolHard1:
+                case Game::MutantPatrolHard2:
+                case Game::MutantPatrolHard3:
+                case Game::MutantPatrolHard4:
+                    if(gamestate.difficulty < gd_hard)
                         break;
-                    tile -= 18;
-                case 238:
-                case 239:
-                case 240:
-                case 241:
-                    if (gamestate.difficulty<gd_medium)
+                    tile -= Game::MutantSkillOffset;
+                case Game::MutantPatrolMedium1:
+                case Game::MutantPatrolMedium2:
+                case Game::MutantPatrolMedium3:
+                case Game::MutantPatrolMedium4:
+                    if(gamestate.difficulty < gd_medium)
                         break;
-                    tile -= 18;
-                case 220:
-                case 221:
-                case 222:
-                case 223:	// IOANCH 17.05.2012: use centralized function
-						 Basic::SpawnEnemy(mutantobj, x, y, tile - 220, true);
+                    tile -= Game::MutantSkillOffset;
+                case Game::MutantPatrolEasy1:
+                case Game::MutantPatrolEasy2:
+                case Game::MutantPatrolEasy3:
+                case Game::MutantPatrolEasy4:
+                    Basic::SpawnEnemy(mutantobj, x, y, tile - Game::MutantPatrolEasy1, true);
                     break;
 
 //

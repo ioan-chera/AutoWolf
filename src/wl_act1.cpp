@@ -58,7 +58,7 @@ struct _statinfo_t
 };
 
 // IOANCH 20130202: unification process
-static _statinfo_t statinfo_wl6[] =
+static const _statinfo_t statinfo_wl6[] =
 {
     {SPR_STAT_0},                           // puddle          spr1v
     {SPR_STAT_1,block},                     // Green Barrel    "
@@ -137,12 +137,21 @@ static _statinfo_t statinfo_wl6[] =
     {-1}                                    // terminator
 };
 
-static _statinfo_t *statinfo_sod;
+static const _statinfo_t *statinfo;
+static int statinfo_length = lengthof(statinfo_wl6);
 
-void Act1::setupSpearOfDestinyStructures()
+void Act1::SetSpearModuleValues()
 {
-    if(statinfo_sod)
-        return;
+    if(!SPEAR::flag)
+    {
+        statinfo = statinfo_wl6; // use the original values
+		return;
+    }
+
+    static _statinfo_t *statinfo_sod;
+    if(statinfo == statinfo_sod)
+		return; // already initialized
+
     std::vector<_statinfo_t> newStatInfo;
     newStatInfo.resize(lengthof(statinfo_wl6));
     memcpy(newStatInfo.data(), statinfo_wl6, sizeof(statinfo_wl6));
@@ -168,8 +177,19 @@ void Act1::setupSpearOfDestinyStructures()
     // Store the result
     statinfo_sod = new _statinfo_t[newStatInfo.size()];
     memcpy(statinfo_sod, newStatInfo.data(), newStatInfo.size() * sizeof(_statinfo_t));
+
+	statinfo = statinfo_sod; // use the modified values
+	statinfo_length = (int)newStatInfo.size();
 }
 
+
+wl_stat_t Act1::GetStaticType(int actorid)
+{
+	actorid -= STATIC_ID_OFFSET;
+	if(actorid < 0 || actorid >= statinfo_length)
+		return none; // out of range
+	return statinfo[actorid].type;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -197,9 +217,6 @@ void InitStaticList ()
 void SpawnStatic (int tilex, int tiley, int type)
 {
     // IOANCH 20130202: unification process
-    const _statinfo_t *statinfo;
-    statinfo = IMPALE(statinfo);
-    
     laststatobj->shapenum = statinfo[type].picnum;
     laststatobj->tilex = tilex;
     laststatobj->tiley = tiley;
@@ -272,9 +289,6 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     statobj_t *spot;
     
     // IOANCH 20130202: unification process
-    const _statinfo_t *statinfo;
-    statinfo = IMPALE(statinfo);
-
     //
     // find the item number
     //

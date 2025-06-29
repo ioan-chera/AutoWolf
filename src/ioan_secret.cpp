@@ -24,11 +24,12 @@
 #include <queue>
 #include "id_ca.h"
 #include "ioan_secret.h"
+#include "obattrib.h"
+#include "wl_act1.h"
 #include "wl_game.h"
 #include "wl_play.h"
 #include "Logger.h"
 
-static const unsigned SecretClass = 98;
 static const unsigned timelimit = 10000;
 
 // Key inventory stuff
@@ -52,7 +53,7 @@ inline static unsigned GetY(unsigned what)
 
 inline static bool IsPlayerStart(unsigned kind)
 {
-	return kind >= 19 && kind <= 22;
+	return kind >= PLAYER_START_NORTH && kind <= PLAYER_START_WEST;
 }
 
 // Chosen to be 512 items long
@@ -81,37 +82,16 @@ static const unsigned pointsFor[] = {
 
 };
 
-// This part is extremely delicate
-// Can't be const, can't be static, or performance will go down
-
-uint8_t isSoftWall_wl6[] = {
- // 0  1  2  3  4   5  6  7  8  9  10 11 12 13 14  15 16 17 18 19  20 21 22 23 24  25 26 27 28 29
-    0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  1, 1, 0, 1, 0,	//  0
-    1, 1, 0, 1, 1,  1, 1, 0, 0, 1,  1, 1, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,	// 30
-    1, 0, 1, 1, 0,  0, 0, 0, 1, 1,  0, 0, 0, 0, // 60
-																									// 90
-};
-
-uint8_t isSoftWall_sod[] = {
- // 0  1  2  3  4   5  6  7  8  9  10 11 12 13 14  15 16 17 18 19  20 21 22 23 24  25 26 27 28 29
-	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 0, 1,  1, 1, 0, 1, 0,	//  0
-	1, 1, 0, 1, 1,  1, 1, 0, 1, 1,  1, 1, 0, 0, 0,  1, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0, 1, 1,	// 30
-	1, 0, 1, 0, 0,  0, 0, 1, 1, 1,  0, 1, 0, 1, // 60
-																									// 90
-};
-
-const uint8_t *isSoftWall;
-
 // Doesn't matter whether i choose macro or small/inline stuff here
 
 bool SecretSolver::IsSoftWall(unsigned pos) const
 {
-	return (*actorbuf)[pos] < lengthof(isSoftWall_wl6) ? isSoftWall[(*actorbuf)[pos]] != 0 : false;
+	return Act1::GetStaticType((*actorbuf)[pos]) == block;
 }
 
 bool SecretSolver::IsWall(unsigned kind) const
 {
-	if ((*wallbuf)[kind] && (*wallbuf)[kind] < 90)
+	if ((*wallbuf)[kind] && (*wallbuf)[kind] < DOOR_VERTICAL_1)
 		return true;
 	return IsSoftWall(kind);
 }
@@ -121,6 +101,23 @@ inline static unsigned PointsFor(unsigned kind)
 	return kind < lengthof(pointsFor) ? pointsFor[kind] : 0;
 }
 
+static bool IsTreasure(unsigned kind, int &score)
+{
+	wl_stat_t type = Act1::GetStaticType(kind);
+	switch(type)
+	{
+	case bo_cross:
+	case bo_chalice:
+	case bo_bible:
+	case bo_crown:
+		score = atr::treasures[type - bo_cross].points;
+		return true;
+	case bo_fullheal:
+		score = 0;
+		return true;
+	}
+	return false;
+}
 bool SecretSolver::IsSecretFree(unsigned pos) const
 {
 	if (IsWall(pos))
@@ -134,7 +131,7 @@ bool SecretSolver::IsSecretFree(unsigned pos) const
 
 bool SecretSolver::IsSecret(unsigned targetpos, unsigned sourcepos) const
 {
-	if ((*actorbuf)[targetpos] != SecretClass)	// secret spot
+	if ((*actorbuf)[targetpos] != PUSHABLETILE)	// secret spot
 		return false;
 	if (!(*wallbuf)[targetpos] || (*wallbuf)[targetpos] >= 106)	// not a wall
 		return false;
@@ -199,7 +196,7 @@ bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
         tiles.pop();
         if(pos % MAPSIZE < MAPSIZE - 2)
         {
-            if(pos + 1 != targetpos && (!IsWall(pos + 1) || (*actorbuf)[pos + 1] == SecretClass) &&
+            if(pos + 1 != targetpos && (!IsWall(pos + 1) || (*actorbuf)[pos + 1] == PUSHABLETILE) &&
                !visited[pos + 1])
             {
                 tiles.push(pos + 1);
@@ -210,7 +207,7 @@ bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
         }
         else if(pos % MAPSIZE > 1)
         {
-            if(pos - 1 != targetpos && (!IsWall(pos - 1) || (*actorbuf)[pos - 1] == SecretClass) &&
+            if(pos - 1 != targetpos && (!IsWall(pos - 1) || (*actorbuf)[pos - 1] == PUSHABLETILE) &&
                !visited[pos - 1])
             {
                 tiles.push(pos - 1);
@@ -221,7 +218,7 @@ bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
         }
         else if(pos / MAPSIZE < MAPSIZE - 2)
         {
-            if(pos + MAPSIZE != targetpos && (!IsWall(pos + MAPSIZE) || (*actorbuf)[pos + MAPSIZE] == SecretClass) &&
+            if(pos + MAPSIZE != targetpos && (!IsWall(pos + MAPSIZE) || (*actorbuf)[pos + MAPSIZE] == PUSHABLETILE) &&
                !visited[pos + MAPSIZE])
             {
                 tiles.push(pos + MAPSIZE);
@@ -232,7 +229,7 @@ bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
         }
         else if(pos / MAPSIZE > 1)
         {
-            if(pos - MAPSIZE != targetpos && (!IsWall(pos - MAPSIZE) || (*actorbuf)[pos - MAPSIZE] == SecretClass) &&
+            if(pos - MAPSIZE != targetpos && (!IsWall(pos - MAPSIZE) || (*actorbuf)[pos - MAPSIZE] == PUSHABLETILE) &&
                !visited[pos - MAPSIZE])
             {
                 tiles.push(pos - MAPSIZE);
@@ -668,17 +665,19 @@ void SecretSolver::GetLevelData()
 		for (int x = 0; x < MAPSIZE; ++x)
 		{
 			unsigned kind = mapSegs[1][y * MAPSIZE + x];
-			if (PointsFor(kind))
+			int score = 0;
+			if(IsTreasure(kind, score))
 			{
-				if (kind >= 52 && kind < 56)
+				if(MapHasTally() || score)	// do not bother counting extra life if there's no maxing stake
 					totaltreasure++;
-				else
-					totalenemies++;
+				totalscore += score;
+			}
+			else if (PointsFor(kind))
+			{
+				totalenemies++;
 				totalscore += PointsFor(kind);
 			}
-			else if (kind == 56 && MapHasTally())
-				totaltreasure++;
-			if (kind == SecretClass)
+			if (kind == PUSHABLETILE)
 				totalsecrets++;
 			if (IsPlayerStart(kind))
 			{
@@ -711,9 +710,4 @@ void SecretSolver::GetLevelData()
 	playerpos = ppos;
 
 	scorestates.push(Inventory(this));
-}
-
-void SecretSolver::SetSpearModuleValues()
-{
-	isSoftWall = SPEAR::flag ? isSoftWall_sod : isSoftWall_wl6;
 }
