@@ -25,6 +25,7 @@
 #include "FileSystem.h"
 #include "i_system.h"
 #include "SODFlag.h"
+#include "wl_act1.h"
 #include "wl_menu.h"
 #include "ioan_secret.h"
 
@@ -983,6 +984,7 @@ void SPEAR::Initialize(const std::string &basePath)
     }
 	// One of the ifs failed - fall here and return SPEAR::flag 1
     flag = true;
+    Act1::setupSpearOfDestinyStructures();
 }
 
 

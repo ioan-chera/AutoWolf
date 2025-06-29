@@ -139,7 +139,7 @@ static _statinfo_t statinfo_wl6[] =
 
 static _statinfo_t *statinfo_sod;
 
-static void makeSODStatInfo()
+void Act1::setupSpearOfDestinyStructures()
 {
     if(statinfo_sod)
         return;
@@ -198,7 +198,6 @@ void SpawnStatic (int tilex, int tiley, int type)
 {
     // IOANCH 20130202: unification process
     const _statinfo_t *statinfo;
-    makeSODStatInfo();
     statinfo = IMPALE(statinfo);
     
     laststatobj->shapenum = statinfo[type].picnum;
@@ -274,7 +273,6 @@ void PlaceItemType (int itemtype, int tilex, int tiley)
     
     // IOANCH 20130202: unification process
     const _statinfo_t *statinfo;
-    makeSODStatInfo();
     statinfo = IMPALE(statinfo);
 
     //

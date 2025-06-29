@@ -31,7 +31,9 @@ namespace Act1
 {
 	void OpenDoor (int door);
 	void SpawnDoor (int tilex, int tiley, Boolean8 vertical, int lock);
+	void setupSpearOfDestinyStructures();
 }
+
 
 void InitStaticList ();
 void SpawnStatic (int tilex, int tiley, int type);
