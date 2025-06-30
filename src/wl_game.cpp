@@ -854,26 +854,26 @@ void SetupGameLevel ()
    audioSegs.loadAllSounds(sd_soundMode);
 
     // IOANCH: try to solve secret puzzle here
-   std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
-   ssolver->GetLevelData();
-   unsigned sessionNo = g_sessionNo;
-	std::thread thread([ssolver, sessionNo]{
-		
-		std::vector<SecretPush> pushes = ssolver->Solve(sessionNo);
-		
-		if (sessionNo != g_sessionNo)	// cancel if session changed
-			return;
-		
-		if (pushes.size() == 0)
-			Logger::Write("Timeout finding a sequence, knocking myself out.");
-		
-		AddPostCommand([pushes]
-        {
-			// Mark as "haspushes" anyway. The bot will know what to do about it.
-            bot.SetPushList(pushes);
-		}, sessionNo);
-	});
-	thread.detach();
+//   std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
+//   ssolver->GetLevelData();
+//   unsigned sessionNo = g_sessionNo;
+//	std::thread thread([ssolver, sessionNo]{
+//		
+//		std::vector<SecretPush> pushes = ssolver->Solve(sessionNo);
+//		
+//		if (sessionNo != g_sessionNo)	// cancel if session changed
+//			return;
+//		
+//		if (pushes.size() == 0)
+//			Logger::Write("Timeout finding a sequence, knocking myself out.");
+//		
+//		AddPostCommand([pushes]
+//        {
+//			// Mark as "haspushes" anyway. The bot will know what to do about it.
+//            bot.SetPushList(pushes);
+//		}, sessionNo);
+//	});
+//	thread.detach();
 
 //    scoreMap.TestPushBlocks();
 }

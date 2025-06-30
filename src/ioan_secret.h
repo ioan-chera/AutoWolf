@@ -151,4 +151,9 @@ public:
 	std::vector<SecretPush> Solve(unsigned sessionNo);
 };
 
+namespace Secret
+{
+void AnalyzeSecrets();
+}
+
 #endif

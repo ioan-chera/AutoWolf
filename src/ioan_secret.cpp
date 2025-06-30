@@ -32,6 +32,31 @@
 
 static const unsigned timelimit = 10000;
 
+struct Vector
+{
+	Vector operator+(const Vector& other) const noexcept
+	{
+		return Vector{x + other.x, y + other.y};
+	}
+
+	Vector operator-(const Vector& other) const noexcept
+	{
+		return Vector{x - other.x, y - other.y};
+	}
+
+	bool inMapBounds() const noexcept
+	{
+		return x >= 0 && x < MAPSIZE && y >= 0 && y < MAPSIZE;
+	}
+
+	int flat() const noexcept
+	{
+		return y * MAPSIZE + x;
+	}
+
+	int x, y;
+};
+
 // Key inventory stuff
 enum KeyFlags
 {
@@ -71,7 +96,7 @@ static const unsigned pointsFor[] = {
 	200, 200, 200, 200, 5000, 5000, 700, 700, 700, 700,  700,  700,  700,  700,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,  700,  700, 700, 700, 700,  700,	// 210
 	700, 700,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,  700,  700,  700, 700,  700,  700, 700, 700,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0,	// 240
 	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 270
-  	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 300
+	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 300
 	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 330
 	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 360
 	  0,   0,   0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,    0,   0,    0,    0,   0,   0,   0,   0,    0,    0,    0,    0,   0,   0,   0,    0, // 390
@@ -184,73 +209,73 @@ bool SecretSolver::OperateWall(SecretPush pair, unsigned index)
 //
 bool SecretSolver::CheckSurePush(unsigned targetpos, unsigned sourcepos)
 {
-    // Check if the player can reach any adjacent position to targetpos, other than sourcepos
-    // But first clear all non-targetpos spots
-    std::queue<unsigned> tiles;
-    std::vector<bool> visited;
-    visited.resize(maparea);
-    visited[playerpos] = true;
-    tiles.push(playerpos);
+	// Check if the player can reach any adjacent position to targetpos, other than sourcepos
+	// But first clear all non-targetpos spots
+	std::queue<unsigned> tiles;
+	std::vector<bool> visited;
+	visited.resize(maparea);
+	visited[playerpos] = true;
+	tiles.push(playerpos);
 
-    while(!tiles.empty())
-    {
-        unsigned pos = tiles.front();
-        tiles.pop();
-        if(pos % MAPSIZE < MAPSIZE - 2)
-        {
-            if(pos + 1 != targetpos && (!IsWall(pos + 1) || (*actorbuf)[pos + 1] == PUSHABLETILE) &&
-               !visited[pos + 1])
-            {
-                tiles.push(pos + 1);
-                visited[pos + 1] = true;
-            }
-            else if(pos + 1 == targetpos && pos != sourcepos)
-                return false;
-        }
-        else if(pos % MAPSIZE > 1)
-        {
-            if(pos - 1 != targetpos && (!IsWall(pos - 1) || (*actorbuf)[pos - 1] == PUSHABLETILE) &&
-               !visited[pos - 1])
-            {
-                tiles.push(pos - 1);
-                visited[pos - 1] = true;
-            }
-            else if(pos - 1 == targetpos && pos != sourcepos)
-                return false;
-        }
-        else if(pos / MAPSIZE < MAPSIZE - 2)
-        {
-            if(pos + MAPSIZE != targetpos && (!IsWall(pos + MAPSIZE) || (*actorbuf)[pos + MAPSIZE] == PUSHABLETILE) &&
-               !visited[pos + MAPSIZE])
-            {
-                tiles.push(pos + MAPSIZE);
-                visited[pos + MAPSIZE] = true;
-            }
-            else if(pos + MAPSIZE == targetpos && pos != sourcepos)
-                return false;
-        }
-        else if(pos / MAPSIZE > 1)
-        {
-            if(pos - MAPSIZE != targetpos && (!IsWall(pos - MAPSIZE) || (*actorbuf)[pos - MAPSIZE] == PUSHABLETILE) &&
-               !visited[pos - MAPSIZE])
-            {
-                tiles.push(pos - MAPSIZE);
-                visited[pos - MAPSIZE] = true;
-            }
-            else if(pos - MAPSIZE == targetpos && pos != sourcepos)
-                return false;
-        }
-    }
-    // Can push it
-    uint16_t walltype = (*wallbuf)[targetpos];
-    // We already determined that the next spot is empty. See if the second next is.
-    if (IsSecretFree(targetpos + (targetpos - sourcepos) * 2))
-        (*wallbuf)[targetpos + (targetpos - sourcepos) * 2] = walltype;
-    else
-        (*wallbuf)[targetpos + (targetpos - sourcepos)] = walltype;
-    (*wallbuf)[targetpos] = (*wallbuf)[sourcepos];
-    (*actorbuf)[targetpos] = 0;    // consume secret trigger
-    return true;
+	while(!tiles.empty())
+	{
+		unsigned pos = tiles.front();
+		tiles.pop();
+		if(pos % MAPSIZE < MAPSIZE - 2)
+		{
+			if(pos + 1 != targetpos && (!IsWall(pos + 1) || (*actorbuf)[pos + 1] == PUSHABLETILE) &&
+			   !visited[pos + 1])
+			{
+				tiles.push(pos + 1);
+				visited[pos + 1] = true;
+			}
+			else if(pos + 1 == targetpos && pos != sourcepos)
+				return false;
+		}
+		else if(pos % MAPSIZE > 1)
+		{
+			if(pos - 1 != targetpos && (!IsWall(pos - 1) || (*actorbuf)[pos - 1] == PUSHABLETILE) &&
+			   !visited[pos - 1])
+			{
+				tiles.push(pos - 1);
+				visited[pos - 1] = true;
+			}
+			else if(pos - 1 == targetpos && pos != sourcepos)
+				return false;
+		}
+		else if(pos / MAPSIZE < MAPSIZE - 2)
+		{
+			if(pos + MAPSIZE != targetpos && (!IsWall(pos + MAPSIZE) || (*actorbuf)[pos + MAPSIZE] == PUSHABLETILE) &&
+			   !visited[pos + MAPSIZE])
+			{
+				tiles.push(pos + MAPSIZE);
+				visited[pos + MAPSIZE] = true;
+			}
+			else if(pos + MAPSIZE == targetpos && pos != sourcepos)
+				return false;
+		}
+		else if(pos / MAPSIZE > 1)
+		{
+			if(pos - MAPSIZE != targetpos && (!IsWall(pos - MAPSIZE) || (*actorbuf)[pos - MAPSIZE] == PUSHABLETILE) &&
+			   !visited[pos - MAPSIZE])
+			{
+				tiles.push(pos - MAPSIZE);
+				visited[pos - MAPSIZE] = true;
+			}
+			else if(pos - MAPSIZE == targetpos && pos != sourcepos)
+				return false;
+		}
+	}
+	// Can push it
+	uint16_t walltype = (*wallbuf)[targetpos];
+	// We already determined that the next spot is empty. See if the second next is.
+	if (IsSecretFree(targetpos + (targetpos - sourcepos) * 2))
+		(*wallbuf)[targetpos + (targetpos - sourcepos) * 2] = walltype;
+	else
+		(*wallbuf)[targetpos + (targetpos - sourcepos)] = walltype;
+	(*wallbuf)[targetpos] = (*wallbuf)[sourcepos];
+	(*actorbuf)[targetpos] = 0;    // consume secret trigger
+	return true;
 }
 
 unsigned SecretSolver::UndoSecret()
@@ -280,31 +305,31 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 {
 	Uint32 ticks = SDL_GetTicks();
 
-    auto finalize = [](std::stack<unsigned> &choicestates,
-                       std::stack<std::vector<SecretPush>> &secretliststates,
-                       std::vector<SecretPush> &finality)
-    {
-        while (!choicestates.empty() && !secretliststates.empty())
-        {
-            SecretPush push = secretliststates.top()[choicestates.top()];
-            finality.push_back(push);
+	auto finalize = [](std::stack<unsigned> &choicestates,
+					   std::stack<std::vector<SecretPush>> &secretliststates,
+					   std::vector<SecretPush> &finality)
+	{
+		while (!choicestates.empty() && !secretliststates.empty())
+		{
+			SecretPush push = secretliststates.top()[choicestates.top()];
+			finality.push_back(push);
 
-            choicestates.pop();
-            secretliststates.pop();
-        }
-    };
+			choicestates.pop();
+			secretliststates.pop();
+		}
+	};
 
-    auto maxpushes = [finalize, this]()
-    {
-        if(maxscore > 0)
-        {
-            Logger::Write("Got maximum score %u\n", maxscore);
-            std::vector<SecretPush> finality;
-            finalize(maxchoicestates, maxsecretliststates, finality);
-            return finality;
-        }
-        return std::vector<SecretPush>();
-    };
+	auto maxpushes = [finalize, this]()
+	{
+		if(maxscore > 0)
+		{
+			Logger::Write("Got maximum score %u\n", maxscore);
+			std::vector<SecretPush> finality;
+			finalize(maxchoicestates, maxsecretliststates, finality);
+			return finality;
+		}
+		return std::vector<SecretPush>();
+	};
 
 	try
 	{
@@ -501,13 +526,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - 1) % WOLF3D_MAPSIZE, (pos - 1) / WOLF3D_MAPSIZE);
-                        if(!CheckSurePush(pos - 1, pos))
-                            secrets->push_back(SecretPush(pos - 1, pos, 0));
-                        else
-                        {
-                            tiles.push(pos - 1);
-                            visited[pos - 1] = 2;
-                        }
+						if(!CheckSurePush(pos - 1, pos))
+							secrets->push_back(SecretPush(pos - 1, pos, 0));
+						else
+						{
+							tiles.push(pos - 1);
+							visited[pos - 1] = 2;
+						}
 					}
 					else if (visited[pos] == 2 && IsExit(pos - 1))
 						exitcount++;
@@ -528,13 +553,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + 1, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + 1) % WOLF3D_MAPSIZE, (pos + 1) / WOLF3D_MAPSIZE);
-                        if(!CheckSurePush(pos + 1, pos))
-                            secrets->push_back(SecretPush(pos + 1, pos, 0));
-                        else
-                        {
-                            tiles.push(pos + 1);
-                            visited[pos + 1] = 2;
-                        }
+						if(!CheckSurePush(pos + 1, pos))
+							secrets->push_back(SecretPush(pos + 1, pos, 0));
+						else
+						{
+							tiles.push(pos + 1);
+							visited[pos + 1] = 2;
+						}
 					}
 					else if (visited[pos] == 2 && IsExit(pos + 1))
 						exitcount++;
@@ -555,13 +580,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos - MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos - WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-                        if(!CheckSurePush(pos - MAPSIZE, pos))
-                            secrets->push_back(SecretPush(pos - MAPSIZE, pos, 0));
-                        else
-                        {
-                            tiles.push(pos - MAPSIZE);
-                            visited[pos - MAPSIZE] = 2;
-                        }
+						if(!CheckSurePush(pos - MAPSIZE, pos))
+							secrets->push_back(SecretPush(pos - MAPSIZE, pos, 0));
+						else
+						{
+							tiles.push(pos - MAPSIZE);
+							visited[pos - MAPSIZE] = 2;
+						}
 					}
 				}
 
@@ -580,13 +605,13 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 					else if (visited[pos] == 2 && IsSecret(pos + MAPSIZE, pos))
 					{
 						//printf("Found secret from %u %u to %u %u\n", pos % WOLF3D_MAPSIZE, pos / WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) % WOLF3D_MAPSIZE, (pos + WOLF3D_MAPSIZE) / WOLF3D_MAPSIZE);
-                        if(!CheckSurePush(pos + MAPSIZE, pos))
-                            secrets->push_back(SecretPush(pos + MAPSIZE, pos, 0));
-                        else
-                        {
-                            tiles.push(pos + MAPSIZE);
-                            visited[pos + MAPSIZE] = 2;
-                        }
+						if(!CheckSurePush(pos + MAPSIZE, pos))
+							secrets->push_back(SecretPush(pos + MAPSIZE, pos, 0));
+						else
+						{
+							tiles.push(pos + MAPSIZE);
+							visited[pos + MAPSIZE] = 2;
+						}
 					}
 				}
 			}
@@ -604,26 +629,26 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 			if (totaltreasure && MapHasTally() && scorestates.top().treasurecount == totaltreasure)
 				scorestates.top().maxtreasures = 1;
 
-            unsigned total = scorestates.top().totalscore();
-            if(exitcount)
-            {
-                if (total == totalscore)
-                {
-                    //("Found maximum score for pushes!");
-                    //WritePushes();
-                    std::vector<SecretPush> finality;
-                    secretliststates.pop();
-                    finalize(choicestates, secretliststates, finality);
-                    return finality;
-                }
-                if(total > maxscore)
-                {
-                    maxscore = total;
-                    maxchoicestates = choicestates;
-                    maxsecretliststates = secretliststates;
-                    maxsecretliststates.pop();
-                }
-            }
+			unsigned total = scorestates.top().totalscore();
+			if(exitcount)
+			{
+				if (total == totalscore)
+				{
+					//("Found maximum score for pushes!");
+					//WritePushes();
+					std::vector<SecretPush> finality;
+					secretliststates.pop();
+					finalize(choicestates, secretliststates, finality);
+					return finality;
+				}
+				if(total > maxscore)
+				{
+					maxscore = total;
+					maxchoicestates = choicestates;
+					maxsecretliststates = secretliststates;
+					maxsecretliststates.pop();
+				}
+			}
 
 			// We now got the secret walls
 			if (secrets->empty())
@@ -643,7 +668,7 @@ std::vector<SecretPush> SecretSolver::Solve(unsigned sessionNo)
 			}
 		} while (secretindex != (unsigned)-1);
 
-        return maxpushes();
+		return maxpushes();
 	}
 	catch (const std::exception &e)
 	{
@@ -686,12 +711,12 @@ void SecretSolver::GetLevelData()
 				ppos = y * MAPSIZE + x;
 			}
 		}
-		
+
 	pushstates.push(std::array<uint16_t, maparea>());
 	actorstates.push(std::array<uint16_t, maparea>());
 	wallbuf = &pushstates.top();
 	actorbuf = &actorstates.top();
-	
+
 	memcpy(wallbuf->data(), mapSegs[0], sizeof(*wallbuf));
 	memcpy(actorbuf->data(), mapSegs[1], sizeof(*actorbuf));
 
@@ -712,4 +737,329 @@ void SecretSolver::GetLevelData()
 	playerpos = ppos;
 
 	scorestates.push(Inventory(this));
+}
+
+inline static bool IsSolidWall(int areatile)
+{
+	return areatile > 0 && areatile < DOOR_VERTICAL_1;
+}
+
+struct Pushable
+{
+	Vector location;
+	int numPushPoints;
+	Vector pushPoints[4];
+};
+
+enum class AreaAttrib
+{
+	none,
+	wall,
+	door,
+};
+
+enum class ActorAttrib
+{
+	none,
+	obstacle,
+	pushable,
+	corpse,
+	treasure,
+	key,
+};
+
+struct SimTile
+{
+	bool blocksPush() const noexcept
+	{
+		return area == AreaAttrib::wall || area == AreaAttrib::door || actor == ActorAttrib::obstacle ||
+				 actor == ActorAttrib::corpse || hasEnemy;
+	}
+
+	bool blocksAccess() const noexcept
+	{
+		return area == AreaAttrib::wall || actor == ActorAttrib::obstacle;
+	}
+
+	AreaAttrib area;
+	ActorAttrib actor;
+	bool hasEnemy;	// Must be separate because patrolling actors are shifted
+	int lock;
+	int points;
+	bool hasExit;
+};
+
+static int DoorTypeToLock(int doorType)
+{
+	switch(doorType)
+	{
+		case DOOR_VERTICAL_2:
+		case DOOR_HORIZONTAL_2:
+			return KEY_1;
+			break;
+		case DOOR_VERTICAL_3:
+		case DOOR_HORIZONTAL_3:
+			return KEY_2;
+			break;
+		case DOOR_VERTICAL_4:
+		case DOOR_HORIZONTAL_4:
+			return KEY_3;
+			break;
+		case DOOR_VERTICAL_5:
+		case DOOR_HORIZONTAL_5:
+			return KEY_4;
+			break;
+		default:
+			break;
+	}
+	return 0;
+}
+
+static std::vector<SimTile> BuildSimMap()
+{
+	std::vector<SimTile> simTiles;
+	simTiles.resize(maparea);
+	for(int y = 0; y < MAPSIZE; ++y)
+	{
+		for(int x = 0; x < MAPSIZE; ++x)
+		{
+			SimTile &tile = simTiles[y * MAPSIZE + x];
+			// Detecting wall
+			const objtype *actor = actorat[x][y];
+			if(!ISPOINTER(actor))
+			{
+				int value = mapSegs(0, x, y);
+				if(value > 0 && value < DOOR_VERTICAL_1)
+				{
+					if(value == ELEVATORTILE)
+						tile.hasExit = true;
+					tile.area = AreaAttrib::wall;
+				}
+				else if(value >= DOOR_VERTICAL_1 && value <= DOOR_HORIZONTAL_6)
+				{
+					tile.area = AreaAttrib::door;
+					tile.lock = DoorTypeToLock(value);
+				}
+				else
+				{
+					// In other cases, if it's still not a pointer actorat, then it's a solid wall
+					tile.area = AreaAttrib::none;
+					tile.actor = ActorAttrib::obstacle;
+				}
+			}
+			else
+			{
+				// In this case we may have an actor type
+				switch(actor->obclass)
+				{
+					case inertobj:
+						tile.actor = ActorAttrib::corpse;
+						break;
+					case guardobj:
+						tile.hasEnemy = true;
+						tile.points = 100;
+						break;
+					case officerobj:
+						tile.hasEnemy = true;
+						tile.points = 400;
+						break;
+					case ssobj:
+						tile.hasEnemy = true;
+						tile.points = 500;
+						break;
+					case dogobj:
+					case spectreobj:	// NOTE: this one actually gives as many points
+						tile.hasEnemy = true;
+						tile.points = 200;
+						break;
+					case bossobj:
+					case gretelobj:
+					case transobj:
+					case uberobj:
+					case willobj:
+					case deathobj:
+						tile.hasEnemy = true;
+						tile.points = 5000;
+						tile.lock = KEY_1;
+						break;
+					case schabbobj:
+					case giftobj:
+					case fatobj:
+					case angelobj:
+						tile.hasEnemy = true;
+						tile.points = 5000;
+						tile.hasExit = true;
+						break;
+					case fakeobj:
+						tile.hasEnemy = true;
+						tile.points = 2000;
+						break;
+					case mechahitlerobj:
+						tile.hasEnemy = true;
+						tile.points = 10000;
+						tile.hasExit = true;
+						break;
+					case mutantobj:
+						tile.hasEnemy = true;
+						tile.points = 700;
+						break;
+					default:
+						break;
+				}
+			}
+
+			int actorvalue = mapSegs(1, x, y);
+
+			if(actorvalue == PUSHABLETILE)
+				tile.actor = ActorAttrib::pushable;
+			else if(actorvalue == EXITTILE)
+				tile.hasExit = true;
+			else if(actorvalue)
+			{
+				wl_stat_t type = Act1::GetStaticType(actorvalue);
+				switch(type)
+				{
+					case bo_cross:
+						tile.actor = ActorAttrib::treasure;
+						tile.points = 100;
+						break;
+					case bo_chalice:
+						tile.actor = ActorAttrib::treasure;
+						tile.points = 500;
+						break;
+					case bo_bible:
+						tile.actor = ActorAttrib::treasure;
+						tile.points = 1000;
+						break;
+					case bo_crown:
+						tile.actor = ActorAttrib::treasure;
+						tile.points = 5000;
+						break;
+					case bo_fullheal:
+						tile.actor = ActorAttrib::treasure;
+						tile.points = 0;	// no points for full heal
+						break;
+					case bo_key1:
+						tile.actor = ActorAttrib::key;
+						tile.lock = KEY_1;
+						break;
+					case bo_key2:
+						tile.actor = ActorAttrib::key;
+						tile.lock = KEY_2;
+						break;
+					case bo_key3:
+						tile.actor = ActorAttrib::key;
+						tile.lock = KEY_3;
+						break;
+					case bo_key4:
+						tile.actor = ActorAttrib::key;
+						tile.lock = KEY_4;
+						break;
+					case bo_spear:
+						tile.hasExit = true;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+}
+
+static bool Push(std::vector<SimTile> &simTiles, Vector pushPos, Vector wallPos)
+{
+	if(simTiles[pushPos.flat()].blocksAccess())
+		return false;
+	if(simTiles[wallPos.flat()].actor != ActorAttrib::pushable ||
+	   simTiles[wallPos.flat()].area != AreaAttrib::wall)
+	{
+		return false;
+	}
+	Vector nextPos = wallPos + (wallPos - pushPos);
+	Vector nextPos2 = nextPos + (wallPos - pushPos);
+	if(nextPos2.inMapBounds() && !simTiles[nextPos2.flat()].blocksPush())
+		simTiles[nextPos2.flat()].area = AreaAttrib::wall;
+	else if(nextPos.inMapBounds() && !simTiles[nextPos.flat()].blocksPush())
+		simTiles[nextPos.flat()].area = AreaAttrib::wall;
+	else
+		return false;
+
+	simTiles[wallPos.flat()].area = AreaAttrib::none;
+	simTiles[wallPos.flat()].actor = ActorAttrib::none;
+
+	return true;
+}
+
+// Called from SetupGameLevel, which calls ScanInfoPlane
+void Secret::AnalyzeSecrets()
+{
+	std::vector<SimTile> simTiles = BuildSimMap();
+
+	Vector playerpos = Vector{player->tilex, player->tiley};
+
+	// Look for trivial secrets
+	std::queue<Vector> tiles;
+	tiles.push(playerpos);
+
+	std::vector<std::vector<bool>> visited;
+	visited.resize(maparea);
+	for(auto &v : visited)
+		v.resize(maparea, false);
+
+	static const Vector dirs[] = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
+
+	std::unordered_map<int, Pushable> pushables;
+
+	// Look for reachable pushables
+	while(!tiles.empty())
+	{
+		Vector pos = tiles.front();
+		tiles.pop();
+
+		visited[pos.y][pos.x] = true;
+
+		for(Vector dir : dirs)
+		{
+			Vector candidate = pos + dir;
+			if(!candidate.inMapBounds() || visited[candidate.y][candidate.x])
+				continue;
+			int candidatePos = candidate.y * MAPSIZE + candidate.x;
+			if(simTiles[candidatePos].actor == ActorAttrib::obstacle)
+				continue;
+
+			if(simTiles[candidatePos].area == AreaAttrib::wall)
+			{
+				if(simTiles[candidatePos].actor != ActorAttrib::pushable)
+					continue;
+				// Pushable tile now
+				Pushable &push = pushables[candidatePos];
+				push.location = candidate;
+				Vector nextPos = candidate + dir;
+				if(nextPos.inMapBounds() && !simTiles[nextPos.flat()].blocksPush())
+				{
+					assert(push.numPushPoints < 4);
+					push.pushPoints[push.numPushPoints++] = pos;
+				}
+
+				continue;
+			}
+			tiles.push(candidate);
+		}
+	}
+
+	// Now it's time to build the model world
+
+	bool found = 0;
+	for(const auto &pair : pushables)
+	{
+		if(pair.second.numPushPoints == 1)
+		{
+			Vector pushPoint = pair.second.pushPoints[0];
+			Vector location = pair.second.location;
+			printf("Pushing trivial wall (%d %d)->(%d %d)\n", pushPoint.x, pushPoint.y,
+				   location.x, location.y);
+			Push(simTiles, pushPoint, location);
+			// TODO
+		}
+	}
 }
