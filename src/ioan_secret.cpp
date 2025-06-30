@@ -115,6 +115,8 @@ static bool IsTreasure(unsigned kind, int &score)
 	case bo_fullheal:
 		score = 0;
 		return true;
+	default:
+		return false;
 	}
 	return false;
 }
