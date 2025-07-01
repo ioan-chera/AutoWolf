@@ -149,7 +149,7 @@ void Act1::SetSpearModuleValues()
     }
 
     static _statinfo_t *statinfo_sod;
-    if(statinfo == statinfo_sod)
+    if(statinfo && statinfo == statinfo_sod)
 		return; // already initialized
 
     std::vector<_statinfo_t> newStatInfo;
