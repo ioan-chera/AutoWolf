@@ -189,9 +189,9 @@ class BotMan
 	void getChokeData();
 public:
    
-	std::vector<SecretPush> pushes;
+//	std::vector<SecretPush> pushes;
 	bool haspushes;
-    void SetPushList(const std::vector<SecretPush> &pushes);
+//    void SetPushList(const std::vector<SecretPush> &pushes);
 
    List <HeardEvent *> heardEvents;                // list of recent sounds
    

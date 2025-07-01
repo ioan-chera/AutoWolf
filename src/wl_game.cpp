@@ -853,6 +853,8 @@ void SetupGameLevel ()
 //
    audioSegs.loadAllSounds(sd_soundMode);
 
+   Secret::AnalyzeSecrets();
+
     // IOANCH: try to solve secret puzzle here
 //   std::shared_ptr<SecretSolver> ssolver(new SecretSolver);
 //   ssolver->GetLevelData();

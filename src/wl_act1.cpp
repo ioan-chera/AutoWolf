@@ -849,8 +849,8 @@ void PushWall (int checkx, int checky, int dir)
     }
     actorat[checkx+dx][checky+dy] = (objtype *)(uintptr_t) (tilemap[checkx+dx][checky+dy] = oldtile);
 
-	if (bot.haspushes && bot.pushes.size())
-		bot.pushes.pop_back();
+//	if (bot.haspushes && bot.pushes.size())
+//		bot.pushes.pop_back();
     gamestate.secretcount++;
     pwallx = checkx;
     pwally = checky;

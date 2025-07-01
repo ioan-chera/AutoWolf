@@ -86,7 +86,7 @@ void BotMan::MapInit()
    heardEvents.killAll();
 
    haspushes = false;
-   pushes.clear();
+//   pushes.clear();
 	
 	memset(m_chokemap, 0, sizeof(m_chokemap));
 }
@@ -226,11 +226,11 @@ void BotMan::SetMood()
 
 bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 {
-	if (!haspushes || (searchstage < SSMax && pushes.size() &&
-		(pushes.back().prerequisite ||
-		pushes.back().sourcepos != (unsigned)(tx + MAPSIZE * ty) ||
-		pushes.back().targetpos != (unsigned)((tx + txofs) + MAPSIZE * (ty + tyofs)))))
-		return false;
+//	if (!haspushes || (searchstage < SSMax && pushes.size() &&
+//		(pushes.back().prerequisite ||
+//		pushes.back().sourcepos != (unsigned)(tx + MAPSIZE * ty) ||
+//		pushes.back().targetpos != (unsigned)((tx + txofs) + MAPSIZE * (ty + tyofs)))))
+//		return false;
    if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
    {
       objtype *check;
@@ -260,23 +260,23 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 //
 // Sets the bot push list
 //
-void BotMan::SetPushList(const std::vector<SecretPush> &inPushes)
-{
-    pushes = inPushes;
-    haspushes = true;
-    searchstage = SSGeneral;
-	const objtype *check;
-	while (pushes.size())
-	{
-		check = actorat[pushes.back().targetpos % MAPSIZE][pushes.back().targetpos / MAPSIZE];
-		if (!check || (check && ISPOINTER(check)))
-		{
-			pushes.pop_back();
-		}
-		else
-			break;
-	}	
-}
+//void BotMan::SetPushList(const std::vector<SecretPush> &inPushes)
+//{
+//    pushes = inPushes;
+//    haspushes = true;
+//    searchstage = SSGeneral;
+//	const objtype *check;
+//	while (pushes.size())
+//	{
+//		check = actorat[pushes.back().targetpos % MAPSIZE][pushes.back().targetpos / MAPSIZE];
+//		if (!check || (check && ISPOINTER(check)))
+//		{
+//			pushes.pop_back();
+//		}
+//		else
+//			break;
+//	}	
+//}
 
 //
 // BotMan::ObjectOfInterest
@@ -296,11 +296,11 @@ Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
 		return true;
 	}
 
-	if (haspushes && pushes.size() && pushes.back().prerequisite == (unsigned)(tx + MAPSIZE * ty))
-	{
-		pushes.back().prerequisite = 0;
-		return true;
-	}
+//	if (haspushes && pushes.size() && pushes.back().prerequisite == (unsigned)(tx + MAPSIZE * ty))
+//	{
+//		pushes.back().prerequisite = 0;
+//		return true;
+//	}
 	
 	//int i;
 	exitx = -1;
