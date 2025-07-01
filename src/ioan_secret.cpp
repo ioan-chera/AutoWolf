@@ -23,6 +23,7 @@
 
 #include <queue>
 #include <chrono>
+#include <set>
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "obattrib.h"
@@ -162,6 +163,16 @@ struct SimTile
 		if(flags & ST_DOOR)
 			return (keys & lock) == 0;
 		return false;
+	}
+
+	bool operator < (const SimTile &other) const noexcept
+	{
+		// Needed by set
+		if (flags != other.flags)
+			return flags < other.flags;
+		if (points != other.points)
+			return points < other.points;
+		return lock < other.lock;
 	}
 
 	int flags;
@@ -728,7 +739,8 @@ static std::vector<PushableWall> ExploreAndCollect(std::vector<SimTile> &simTile
 static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos, Inventory inventory, 
                                    std::vector<Inventory>& exitReachableResults, 
                                    std::chrono::steady_clock::time_point startTime, 
-                                   std::chrono::seconds timeout)
+                                   std::chrono::seconds timeout,
+                                   std::set<std::vector<SimTile>>& visitedStates)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
@@ -763,6 +775,13 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 	
 	// Final exploration after all trivial pushes to get remaining pushable walls
 	std::vector<PushableWall> remainingPushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
+	
+	// Check if this state has been visited before
+	if (visitedStates.find(simTiles) != visitedStates.end())
+	{
+		return; // Already visited this state
+	}
+	visitedStates.insert(simTiles);
 	
 	// If exit is reachable, store this inventory
 	if (inventory.exitReachable)
@@ -813,7 +832,7 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 				newInventory.pushes.push_back(pushRecord);
 				
 				// Recursively explore this new state
-				ExploreWithBacktracking(newTiles, newPlayerPos, newInventory, exitReachableResults, startTime, timeout);
+				ExploreWithBacktracking(newTiles, newPlayerPos, newInventory, exitReachableResults, startTime, timeout, visitedStates);
 			}
 		}
 	}
@@ -830,12 +849,15 @@ void Secret::AnalyzeSecrets()
 	// Container to collect all inventories where exit is reachable
 	std::vector<Inventory> exitReachableResults;
 	
+	// Set to track visited states to avoid redundant exploration
+	std::set<std::vector<SimTile>> visitedStates;
+	
 	// Set up 5-second timeout for backtracking
 	auto startTime = std::chrono::steady_clock::now();
-	auto timeout = std::chrono::seconds(80);
+	auto timeout = std::chrono::seconds(10);
 
 	// Start the recursive exploration and backtracking
-	ExploreWithBacktracking(simTiles, playerPos, initialInventory, exitReachableResults, startTime, timeout);
+	ExploreWithBacktracking(simTiles, playerPos, initialInventory, exitReachableResults, startTime, timeout, visitedStates);
 	
 	// Check if we timed out
 	auto elapsed = std::chrono::steady_clock::now() - startTime;
