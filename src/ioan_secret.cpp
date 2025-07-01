@@ -24,6 +24,9 @@
 #include <queue>
 #include <chrono>
 #include <set>
+#include <unordered_set>
+#include <functional>
+#include <array>
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "obattrib.h"
@@ -41,17 +44,17 @@ static bool IsValidMove(int toPos, int dir)
 	// Check basic bounds
 	if (toPos < 0 || toPos >= maparea)
 		return false;
-		
+
 	// Check map boundaries
 	int toX = toPos % MAPSIZE;
 	int toY = toPos / MAPSIZE;
 	if (toX < 0 || toX >= MAPSIZE || toY < 0 || toY >= MAPSIZE)
 		return false;
-		
+
 	// Check row boundaries for horizontal moves (prevent wrap-around)
 	if (dir == -1 && toX == MAPSIZE - 1) return false;  // Left move wrapping to right edge
 	if (dir == 1 && toX == 0) return false;  // Right move wrapping to left edge
-	
+
 	return true;
 }
 
@@ -93,7 +96,7 @@ struct Inventory
 			return pushes.size() > other.pushes.size();
 		return exitReachable && !other.exitReachable;  // Prefer reachable exits
 	}
-	
+
 	bool operator<(const Inventory &other) const noexcept
 	{
 		return other > *this;
@@ -175,10 +178,45 @@ struct SimTile
 		return lock < other.lock;
 	}
 
+	bool operator == (const SimTile &other) const noexcept
+	{
+		// Needed by unordered_set
+		return flags == other.flags && points == other.points && lock == other.lock;
+	}
+
 	int flags;
 	int points;
 	int lock;
 };
+
+// Type alias for the game map
+using SimMap = std::array<SimTile, maparea>;
+
+// Hash function for SimTile
+namespace std {
+	template<>
+	struct hash<SimTile> {
+		size_t operator()(const SimTile& tile) const {
+			size_t h1 = std::hash<int>{}(tile.flags);
+			size_t h2 = std::hash<int>{}(tile.points);
+			size_t h3 = std::hash<int>{}(tile.lock);
+			return h1 ^ (h2 << 1) ^ (h3 << 2);
+		}
+	};
+
+	// Hash function for SimMap (std::array<SimTile, maparea>)
+	template<>
+	struct hash<SimMap> {
+		size_t operator()(const SimMap& arr) const {
+			size_t result = 0;
+			hash<SimTile> hasher;
+			for (size_t i = 0; i < arr.size(); ++i) {
+				result ^= hasher(arr[i]) + 0x9e3779b9 + (result << 6) + (result >> 2);
+			}
+			return result;
+		}
+	};
+}
 
 static int DoorTypeToLock(int doorType)
 {
@@ -206,11 +244,10 @@ static int DoorTypeToLock(int doorType)
 	return 0;
 }
 
-static std::vector<SimTile> BuildSimMap()
+static SimMap BuildSimMap()
 {
-	std::vector<SimTile> simTiles;
-	simTiles.resize(maparea);
-	
+	SimMap simTiles;
+
 	for(int y = 0; y < MAPSIZE; ++y)
 	{
 		for(int x = 0; x < MAPSIZE; ++x)
@@ -219,7 +256,7 @@ static std::vector<SimTile> BuildSimMap()
 			tile.flags = 0;
 			tile.points = 0;
 			tile.lock = 0;
-			
+
 			// Check wall data from mapSegs plane 0
 			int wallValue = mapSegs(0, x, y);
 			if(wallValue > 0 && wallValue < DOOR_VERTICAL_1)
@@ -228,7 +265,7 @@ static std::vector<SimTile> BuildSimMap()
 				if(wallValue == ELEVATORTILE)
 					tile.flags |= ST_EXIT;
 			}
-			
+
 			// Check actor data from actorat
 			const objtype *actor = actorat[x][y];
 			if(ISPOINTER(actor))
@@ -367,7 +404,7 @@ static std::vector<SimTile> BuildSimMap()
 		{
 			SimTile &tile = simTiles[y * MAPSIZE + x];
 			tile.flags |= ST_DOOR;
-			
+
 			// Set lock based on door type
 			switch(door->lock)
 			{
@@ -388,36 +425,36 @@ static std::vector<SimTile> BuildSimMap()
 					break;
 			}
 		}
-	
+
 	}
-	
+
 	return simTiles;
 }
 
 
-static void HandlePushableWall(std::vector<SimTile> &simTiles, int wallPos, int dir, std::vector<PushableWall> &pushableWallsFound)
+static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vector<PushableWall> &pushableWallsFound)
 {
 	// Check if we can actually push this wall in this direction
 	int behindPos = wallPos + dir;
 	bool canPush = false;
-	
+
 	if (IsValidMove(behindPos, dir))
 	{
 		SimTile &behindTile = simTiles[behindPos];
-		
+
 		// Can push if the tile behind is not blocked by doors, obstacles, corpses, or walls
 		if (!(behindTile.flags & (ST_WALL | ST_DOOR | ST_OBSTACLE | ST_CORPSE)))
 		{
 			canPush = true;
 		}
 	}
-	
+
 	if (canPush)
 	{
 		// Check if we already found this pushable wall
 		auto it = std::find_if(pushableWallsFound.begin(), pushableWallsFound.end(),
 			[wallPos](const PushableWall& pw) { return pw.position == wallPos; });
-		
+
 		if (it != pushableWallsFound.end())
 		{
 			// Add this direction if not already present
@@ -437,21 +474,21 @@ static void HandlePushableWall(std::vector<SimTile> &simTiles, int wallPos, int 
 	}
 }
 
-static void FloodFillExplore(std::vector<SimTile> &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
+static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
 {
 	std::queue<int> queue;
 	queue.push(startPos);
 	visited[startPos] = true;
 
 	std::vector<std::pair<int, int>> lockedDoors;
-	
+
 	while (!queue.empty())
 	{
 		int pos = queue.front();
 		queue.pop();
-		
+
 		SimTile &tile = simTiles[pos];
-		
+
 		// Collect treasure
 		if (tile.flags & ST_TREASURE)
 		{
@@ -460,7 +497,7 @@ static void FloodFillExplore(std::vector<SimTile> &simTiles, int startPos, Inven
 			tile.flags &= ~ST_TREASURE;
 			tile.points = 0;
 		}
-		
+
 		// Collect keys
 		if (tile.flags & ST_KEY)
 		{
@@ -476,7 +513,7 @@ static void FloodFillExplore(std::vector<SimTile> &simTiles, int startPos, Inven
 				}
 			}
 		}
-		
+
 		// Kill enemies
 		if (tile.flags & ST_ENEMY)
 		{
@@ -485,22 +522,22 @@ static void FloodFillExplore(std::vector<SimTile> &simTiles, int startPos, Inven
 			tile.flags &= ~ST_ENEMY;
 			tile.points = 0;
 		}
-		
+
 		// Check if exit is reachable
 		if (tile.flags & ST_EXIT)
 		{
 			inventory.exitReachable = true;
 		}
-		
+
 		// Explore adjacent tiles
 		for (int dir : DIRS)
 		{
 			int newPos = pos + dir;
 			if (visited[newPos] || !IsValidMove(newPos, dir))
 				continue;
-			
+
 			SimTile &nextTile = simTiles[newPos];
-			
+
 			// Can't pass through walls or obstacles (unless it's a door we can open)
 			if (nextTile.flags & ST_WALL)
 			{
@@ -533,26 +570,26 @@ static void FloodFillExplore(std::vector<SimTile> &simTiles, int startPos, Inven
 				visited[newPos] = true;
 				continue;
 			}
-				
+
 			visited[newPos] = true;
 			queue.push(newPos);
 		}
 	}
 }
 
-static void FloodFillEnemies(std::vector<SimTile> &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited)
+static void FloodFillEnemies(SimMap &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited)
 {
 	std::queue<int> queue;
 	queue.push(startPos);
 	visited[startPos] = true;
-	
+
 	while (!queue.empty())
 	{
 		int pos = queue.front();
 		queue.pop();
-		
+
 		SimTile &tile = simTiles[pos];
-		
+
 		// Kill enemies (this is the only thing we do in obstacle flood fill)
 		if (tile.flags & ST_ENEMY)
 		{
@@ -567,75 +604,75 @@ static void FloodFillEnemies(std::vector<SimTile> &simTiles, int startPos, Inven
 				inventory.exitReachable = true;
 			}
 		}
-		
+
 		// Explore through obstacles (but not walls or doors)
 		for (int dir : DIRS)
 		{
 			int newPos = pos + dir;
 			if (visited[newPos] || !IsValidMove(newPos, dir))
 				continue;
-			
+
 			SimTile &nextTile = simTiles[newPos];
-			
+
 			// Can't pass through walls or doors in obstacle flood fill for enemy sighting
 			if (nextTile.flags & (ST_WALL | ST_DOOR))
 				continue;
-				
+
 			visited[newPos] = true;
 			queue.push(newPos);
 		}
 	}
 }
 
-static bool IsTrivialPush(std::vector<SimTile> &simTiles, const PushableWall &pushableWall)
+static bool IsTrivialPush(SimMap &simTiles, const PushableWall &pushableWall)
 {
 	// First check: if more than one valid direction, it's not trivial
 	if (pushableWall.validDirections.size() != 1)
 	{
 		return false;
 	}
-	
+
 	int wallPos = pushableWall.position;
 	int dir = pushableWall.validDirections[0];
 	int fromPos = wallPos - dir;
 	int behindPos = wallPos + dir;
-	
+
 	// These checks are already done in HandlePushableWall when adding valid directions
 	assert(behindPos >= 0 && behindPos < maparea);
 	int wallX = wallPos % MAPSIZE;
 	int behindX = behindPos % MAPSIZE;
 	assert(!((dir == -1 && (wallX == 0 || behindX == MAPSIZE - 1)) ||
 			 (dir == 1 && (wallX == MAPSIZE - 1 || behindX == 0))));
-	
+
 	// Second check: do reachability test
 	// From the tile in front of the pushwall, try to reach the tile behind it
 	// while treating this specific pushwall as solid but other pushwalls as passable
-	
+
 	std::vector<bool> visited(maparea, false);
 	std::queue<int> queue;
 	queue.push(fromPos);
 	visited[fromPos] = true;
-	
+
 	while (!queue.empty())
 	{
 		int pos = queue.front();
 		queue.pop();
-		
+
 		// If we reached the tile behind the wall, it's not trivial
 		if (pos == behindPos)
 		{
 			return false;
 		}
-		
+
 		// Explore adjacent tiles
 		for (int exploreDir : DIRS)
 		{
 			int newPos = pos + exploreDir;
 			if (visited[newPos] || !IsValidMove(newPos, exploreDir))
 				continue;
-			
+
 			SimTile &nextTile = simTiles[newPos];
-			
+
 			// Can't pass through obstacles or the specific pushwall we're testing
 			if (nextTile.flags & ST_OBSTACLE)
 				continue;
@@ -643,27 +680,27 @@ static bool IsTrivialPush(std::vector<SimTile> &simTiles, const PushableWall &pu
 				continue;
 			if ((nextTile.flags & ST_WALL) && !(nextTile.flags & ST_PUSHABLE))  // Regular walls
 				continue;
-				
+
 			// CAN pass through other pushable walls or locked doors
 			visited[newPos] = true;
 			queue.push(newPos);
 		}
 	}
-	
+
 	// If we couldn't reach the tile behind the wall, it's a trivial push
 	return true;
 }
 
-static bool CanPushWall(std::vector<SimTile> &simTiles, int wallPos, int direction)
+static bool CanPushWall(SimMap &simTiles, int wallPos, int direction)
 {
 	int toPos = wallPos + direction;
 	int toPos2 = wallPos + direction * 2;
-	
+
 	if (!IsValidMove(toPos, direction))
 		return false;
-	
+
 	SimTile &toTile = simTiles[toPos];
-	
+
 	// Try to push two spaces first
 	if (IsValidMove(toPos2, direction))
 	{
@@ -674,28 +711,28 @@ static bool CanPushWall(std::vector<SimTile> &simTiles, int wallPos, int directi
 			return true;
 		}
 	}
-	
+
 	// Try to push one space
 	if (!(toTile.flags & (ST_WALL | ST_OBSTACLE | ST_CORPSE | ST_DOOR)))
 	{
 		return true;
 	}
-	
+
 	return false;
 }
 
-static int PushWall(std::vector<SimTile> &simTiles, int wallPos, int direction, Push &pushRecord)
+static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushRecord)
 {
 	// returns the player position after the push
 	int fromPos = wallPos - direction;
 	int toPos = wallPos + direction;
 	int toPos2 = wallPos + direction * 2;
-	
+
 	pushRecord.from = fromPos;
 	pushRecord.wallpos = wallPos;
-	
+
 	SimTile &wallTile = simTiles[wallPos];
-	
+
 	// Try to push two spaces first
 	if (IsValidMove(toPos, direction) && IsValidMove(toPos2, direction))
 	{
@@ -709,7 +746,7 @@ static int PushWall(std::vector<SimTile> &simTiles, int wallPos, int direction, 
 			return fromPos;
 		}
 	}
-	
+
 	// Push one space
 	SimTile &toTile = simTiles[toPos];
 	toTile.flags |= ST_WALL;
@@ -718,45 +755,45 @@ static int PushWall(std::vector<SimTile> &simTiles, int wallPos, int direction, 
 	return fromPos;
 }
 
-static std::vector<PushableWall> ExploreAndCollect(std::vector<SimTile> &simTiles, int playerPos, Inventory &inventory)
+static std::vector<PushableWall> ExploreAndCollect(SimMap &simTiles, int playerPos, Inventory &inventory)
 {
 	std::vector<bool> visited(maparea, false);
-	
+
 	// Main flood fill for exploration and collection
 	std::vector<int> obstaclesFound;
 	std::vector<PushableWall> pushableWallsFound;
 	FloodFillExplore(simTiles, playerPos, inventory, visited, obstaclesFound, pushableWallsFound);
-	
+
 	// Secondary flood fill through obstacles to find enemies
 	for(int obstaclePos : obstaclesFound)
 	{
 		FloodFillEnemies(simTiles, obstaclePos, inventory, visited);
 	}
-	
+
 	return pushableWallsFound;
 }
 
-static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos, Inventory inventory, 
-                                   std::vector<Inventory>& exitReachableResults, 
-                                   std::chrono::steady_clock::time_point startTime, 
-                                   std::chrono::seconds timeout,
-                                   std::set<std::vector<SimTile>>& visitedStates)
+static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory inventory,
+								   std::vector<Inventory>& exitReachableResults,
+								   std::chrono::steady_clock::time_point startTime,
+								   std::chrono::seconds timeout,
+								   std::unordered_set<SimMap>& visitedStates)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
 		return;
-		
+
 	bool foundTrivialPush = true;
 	std::vector<PushableWall> pushableWalls;
-	
+
 	// Keep exploring and pushing trivial walls until no more are found
 	while (foundTrivialPush)
 	{
 		foundTrivialPush = false;
-		
+
 		// Explore and collect everything reachable, getting pushable walls encountered
 		pushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
-		
+
 		// Check each pushable wall for triviality
 		for (const PushableWall &pushableWall : pushableWalls)
 		{
@@ -772,17 +809,17 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 			}
 		}
 	}
-	
+
 	// Final exploration after all trivial pushes to get remaining pushable walls
 	std::vector<PushableWall> remainingPushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
-	
+
 	// Check if this state has been visited before
 	if (visitedStates.find(simTiles) != visitedStates.end())
 	{
 		return; // Already visited this state
 	}
 	visitedStates.insert(simTiles);
-	
+
 	// If exit is reachable, store this inventory
 	if (inventory.exitReachable)
 	{
@@ -795,7 +832,7 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 				break;
 			}
 		}
-		
+
 		if (isBetter && !exitReachableResults.empty())
 		{
 			Logger::Write("New best solution found: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
@@ -804,33 +841,33 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 						  inventory.keys);
 			exitReachableResults.clear();  // Clear previous results
 		}
-		
+
 		exitReachableResults.push_back(inventory);
 	}
-	
+
 	// Backtracking: try each non-trivial pushable wall
 	for (const PushableWall &pushableWall : remainingPushableWalls)
 	{
 		// Check timeout before each major operation
 		if (std::chrono::steady_clock::now() - startTime > timeout)
 			return;
-			
+
 		// Use all valid directions for non-trivial pushes
 		for (int direction : pushableWall.validDirections)
 		{
 			if (CanPushWall(simTiles, pushableWall.position, direction))
 			{
 				// Create new state (copy current state)
-				std::vector<SimTile> newTiles = simTiles;
+				SimMap newTiles = simTiles;
 				Inventory newInventory = inventory;
 				newInventory.exitReachable = false;  // Reset exit reachability for new state
-				
+
 				// Push the wall in the new state
 				Push pushRecord;
 				int newPlayerPos = PushWall(newTiles, pushableWall.position, direction, pushRecord);
 				pushRecord.trivial = false;  // Mark as non-trivial push
 				newInventory.pushes.push_back(pushRecord);
-				
+
 				// Recursively explore this new state
 				ExploreWithBacktracking(newTiles, newPlayerPos, newInventory, exitReachableResults, startTime, timeout, visitedStates);
 			}
@@ -842,41 +879,41 @@ static void ExploreWithBacktracking(std::vector<SimTile> simTiles, int playerPos
 // Called from SetupGameLevel, which calls ScanInfoPlane
 void Secret::AnalyzeSecrets()
 {
-	std::vector<SimTile> simTiles = BuildSimMap();
+	SimMap simTiles = BuildSimMap();
 	int playerPos = player->tiley * MAPSIZE + player->tilex;
 	Inventory initialInventory = {};
-	
+
 	// Container to collect all inventories where exit is reachable
 	std::vector<Inventory> exitReachableResults;
-	
+
 	// Set to track visited states to avoid redundant exploration
-	std::set<std::vector<SimTile>> visitedStates;
-	
+	std::unordered_set<SimMap> visitedStates;
+
 	// Set up 5-second timeout for backtracking
 	auto startTime = std::chrono::steady_clock::now();
 	auto timeout = std::chrono::seconds(10);
 
 	// Start the recursive exploration and backtracking
 	ExploreWithBacktracking(simTiles, playerPos, initialInventory, exitReachableResults, startTime, timeout, visitedStates);
-	
+
 	// Check if we timed out
 	auto elapsed = std::chrono::steady_clock::now() - startTime;
 	if (elapsed >= timeout)
 	{
 		Logger::Write("Backtracking timed out after %d seconds\n", (int)timeout.count());
 	}
-	
+
 	if (exitReachableResults.empty())
 	{
 		Logger::Write("No solutions found with reachable exit\n");
 		return;
 	}
-	
+
 	Logger::Write("Found %u solutions with reachable exit\n", (unsigned)exitReachableResults.size());
-	
+
 	// Find the maximum inventory (best solution)
 	Inventory maxInventory = *std::max_element(exitReachableResults.begin(), exitReachableResults.end());
-	
+
 	// Keep only the inventories that are equal to the maximum (all optimal solutions)
 	std::vector<Inventory> optimalSolutions;
 	for (const Inventory& inv : exitReachableResults)
@@ -886,9 +923,9 @@ void Secret::AnalyzeSecrets()
 			optimalSolutions.push_back(inv);
 		}
 	}
-	
+
 	Logger::Write("Found %u optimal solutions\n", (unsigned)optimalSolutions.size());
-	
+
 	for(const Inventory &solution : optimalSolutions)
 	{
 		Logger::Write("Points: %d, Treasures: %d, Enemies: %d, Pushes: %d, Keys: %d",
