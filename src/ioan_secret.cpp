@@ -777,6 +777,166 @@ static std::vector<PushableWall> ExploreAndCollect(SimMap &simTiles, int playerP
 	return pushableWallsFound;
 }
 
+static Inventory EstimateMaxInventory(const SimMap &simTiles, int playerPos, Inventory inventory)
+{
+	// Create a copy to avoid modifying the original
+	SimMap tempTiles = simTiles;
+	Inventory maxInventory = inventory;
+	VisitedMap visited;
+	
+	std::queue<int> queue;
+	queue.push(playerPos);
+	visited[playerPos] = true;
+	
+	std::vector<std::pair<int, int>> lockedDoors;
+	std::vector<int> obstaclesFound;
+	
+	while (!queue.empty())
+	{
+		int pos = queue.front();
+		queue.pop();
+		
+		SimTile &tile = tempTiles[pos];
+		
+		// Collect treasure
+		if (tile.flags & ST_TREASURE)
+		{
+			maxInventory.treasureCollected++;
+			maxInventory.pointsCollected += tile.points;
+			tile.flags &= ~ST_TREASURE;
+			tile.points = 0;
+		}
+		
+		// Collect keys
+		if (tile.flags & ST_KEY)
+		{
+			maxInventory.keys |= tile.lock;
+			tile.flags &= ~ST_KEY;
+			tile.lock = 0;
+			
+			// Check if we can now open any previously locked doors
+			for(auto& pair : lockedDoors)
+			{
+				if (pair.second & maxInventory.keys)
+				{
+					queue.push(pair.first);
+					pair.second &= ~maxInventory.keys;
+				}
+			}
+		}
+		
+		// Kill enemies
+		if (tile.flags & ST_ENEMY)
+		{
+			maxInventory.enemiesKilled++;
+			maxInventory.pointsCollected += tile.points;
+			tile.flags &= ~ST_ENEMY;
+			tile.points = 0;
+		}
+		
+		// Check if exit is reachable
+		if (tile.flags & ST_EXIT)
+		{
+			maxInventory.exitReachable = true;
+		}
+		
+		// Explore adjacent tiles
+		for (int dir : DIRS)
+		{
+			int newPos = pos + dir;
+			if (visited[newPos] || !IsValidMove(newPos, dir))
+				continue;
+			
+			SimTile &nextTile = tempTiles[newPos];
+			
+			// Can't pass through regular walls
+			if ((nextTile.flags & ST_WALL) && !(nextTile.flags & ST_PUSHABLE))
+				continue;
+			
+			// Handle obstacles - track them for enemy collection
+			if (nextTile.flags & ST_OBSTACLE)
+			{
+				if(!visited[newPos])
+				{
+					obstaclesFound.push_back(newPos);
+					visited[newPos] = true;
+				}
+				continue;
+			}
+			
+			if (nextTile.flags & ST_CORPSE)
+				continue;
+			
+			// For doors, check if we can open them or track them for later
+			if (nextTile.flags & ST_DOOR)
+			{
+				if (nextTile.lock != 0 && (nextTile.lock & maxInventory.keys) == 0)
+				{
+					// Can't open this door yet, but track it for when we get the key
+					lockedDoors.push_back({newPos, nextTile.lock});
+					visited[newPos] = true;
+					continue;
+				}
+			}
+			
+			// TREAT PUSHABLE WALLS AS PASSABLE for heuristic estimation
+			// This gives us the theoretical maximum if all walls could be pushed optimally
+			
+			visited[newPos] = true;
+			queue.push(newPos);
+		}
+	}
+	
+	// Secondary flood fill through obstacles to find enemies (like FloodFillEnemies)
+	for(int obstaclePos : obstaclesFound)
+	{
+		std::queue<int> obstacleQueue;
+		obstacleQueue.push(obstaclePos);
+		
+		while (!obstacleQueue.empty())
+		{
+			int pos = obstacleQueue.front();
+			obstacleQueue.pop();
+			
+			SimTile &tile = tempTiles[pos];
+			
+			// Kill enemies (this is the only thing we do in obstacle flood fill)
+			if (tile.flags & ST_ENEMY)
+			{
+				maxInventory.enemiesKilled++;
+				maxInventory.pointsCollected += tile.points;
+				tile.flags &= ~ST_ENEMY;
+				tile.points = 0;
+
+				// Also mark exit reachable if enemy triggers it on death
+				if(tile.flags & ST_EXIT)
+				{
+					maxInventory.exitReachable = true;
+				}
+			}
+			
+			// Explore through obstacles (but not walls or doors)
+			for (int dir : DIRS)
+			{
+				int newPos = pos + dir;
+				if (visited[newPos] || !IsValidMove(newPos, dir))
+					continue;
+				
+				SimTile &nextTile = tempTiles[newPos];
+				
+				// Can't pass through walls or doors in obstacle flood fill for enemy sighting
+				if(!(nextTile.flags & ST_PUSHABLE) && nextTile.flags & (ST_WALL | ST_DOOR))
+					continue;
+					
+				visited[newPos] = true;
+				obstacleQueue.push(newPos);
+			}
+		}
+	}
+	
+	return maxInventory;
+}
+
 static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory inventory,
 								   std::vector<Inventory>& exitReachableResults,
 								   std::chrono::steady_clock::time_point startTime,
