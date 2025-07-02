@@ -479,11 +479,18 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 	}
 }
 
-static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventory, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
+struct GameState
+{
+	SimMap simTiles;
+	int playerPos;
+	Inventory inventory;
+};
+
+static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
 {
 	std::queue<int> queue;
-	queue.push(startPos);
-	visited[startPos] = true;
+	queue.push(state.playerPos);
+	visited[state.playerPos] = true;
 
 	std::vector<std::pair<int, int>> lockedDoors;
 
@@ -492,13 +499,13 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 		int pos = queue.front();
 		queue.pop();
 
-		SimTile &tile = simTiles[pos];
+		SimTile &tile = state.simTiles[pos];
 
 		// Collect treasure
 		if (tile.flags & ST_TREASURE)
 		{
-			inventory.treasureCollected++;
-			inventory.pointsCollected += tile.points;
+			state.inventory.treasureCollected++;
+			state.inventory.pointsCollected += tile.points;
 			tile.flags &= ~ST_TREASURE;
 			tile.points = 0;
 		}
@@ -506,15 +513,15 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 		// Collect keys
 		if (tile.flags & ST_KEY)
 		{
-			inventory.keys |= tile.lock;
+			state.inventory.keys |= tile.lock;
 			tile.flags &= ~ST_KEY;
 			tile.lock = 0;
 			for(auto pair : lockedDoors)
 			{
-				if (pair.second & inventory.keys)
+				if (pair.second & state.inventory.keys)
 				{
 					queue.push(pair.first);
-					pair.second &= ~inventory.keys;
+					pair.second &= ~state.inventory.keys;
 				}
 			}
 		}
@@ -522,8 +529,8 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 		// Kill enemies
 		if (tile.flags & ST_ENEMY)
 		{
-			inventory.enemiesKilled++;
-			inventory.pointsCollected += tile.points;
+			state.inventory.enemiesKilled++;
+			state.inventory.pointsCollected += tile.points;
 			tile.flags &= ~ST_ENEMY;
 			tile.points = 0;
 		}
@@ -531,7 +538,7 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 		// Check if exit is reachable
 		if (tile.flags & ST_EXIT)
 		{
-			inventory.exitReachable = true;
+			state.inventory.exitReachable = true;
 		}
 
 		// Explore adjacent tiles
@@ -541,21 +548,21 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 			if (visited[newPos] || !IsValidMove(newPos, dir))
 				continue;
 
-			SimTile &nextTile = simTiles[newPos];
+			SimTile &nextTile = state.simTiles[newPos];
 
 			// Can't pass through walls or obstacles (unless it's a door we can open)
 			if (nextTile.flags & ST_WALL)
 			{
 				if(nextTile.flags & ST_PUSHABLE)
 				{
-					HandlePushableWall(simTiles, newPos, dir, pushableWallsFound);
+					HandlePushableWall(state.simTiles, newPos, dir, pushableWallsFound);
 					// Do not visit it, as we need to check it from multiple places
 				}
 
 				// Exit switches can only be operated east-west
 				if(nextTile.flags & ST_EXIT && !(nextTile.flags & ST_PUSHABLE) && abs(dir) == 1)
 				{
-					inventory.exitReachable = true;
+					state.inventory.exitReachable = true;
 					visited[newPos] = true;
 				}
 				continue;
@@ -569,7 +576,7 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 				}
 				continue;
 			}
-			if ((nextTile.flags & ST_DOOR) && nextTile.lock != 0 && (nextTile.lock & inventory.keys) == 0)
+			if ((nextTile.flags & ST_DOOR) && nextTile.lock != 0 && (nextTile.lock & state.inventory.keys) == 0)
 			{
 				lockedDoors.push_back({newPos, nextTile.lock});
 				visited[newPos] = true;
@@ -760,34 +767,34 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 	return fromPos;
 }
 
-static std::vector<PushableWall> ExploreAndCollect(SimMap &simTiles, int playerPos, Inventory &inventory)
+static std::vector<PushableWall> ExploreAndCollect(GameState &state)
 {
 	VisitedMap visited;
 
 	// Main flood fill for exploration and collection
 	std::vector<int> obstaclesFound;
 	std::vector<PushableWall> pushableWallsFound;
-	FloodFillExplore(simTiles, playerPos, inventory, visited, obstaclesFound, pushableWallsFound);
+	FloodFillExplore(state, visited, obstaclesFound, pushableWallsFound);
 
 	// Secondary flood fill through obstacles to find enemies
 	for(int obstaclePos : obstaclesFound)
 	{
-		FloodFillEnemies(simTiles, obstaclePos, inventory, visited);
+		FloodFillEnemies(state.simTiles, obstaclePos, state.inventory, visited);
 	}
 
 	return pushableWallsFound;
 }
 
-static Inventory EstimateMaxInventory(const SimMap &simTiles, int playerPos, const Inventory &inventory)
+static Inventory EstimateMaxInventory(const GameState &state)
 {
 	// Create a copy to avoid modifying the original
-	SimMap tempTiles = simTiles;
-	Inventory maxInventory = inventory;
+	SimMap tempTiles = state.simTiles;
+	Inventory maxInventory = state.inventory;
 	VisitedMap visited;
 	
 	std::queue<int> queue;
-	queue.push(playerPos);
-	visited[playerPos] = true;
+	queue.push(state.playerPos);
+	visited[state.playerPos] = true;
 	
 	std::vector<std::pair<int, int>> lockedDoors;
 	std::vector<int> obstaclesFound;
@@ -938,25 +945,46 @@ static Inventory EstimateMaxInventory(const SimMap &simTiles, int playerPos, con
 	return maxInventory;
 }
 
-static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory inventory,
-								   std::vector<Inventory>& exitReachableResults,
-								   std::chrono::steady_clock::time_point startTime,
-								   std::chrono::seconds timeout,
-								   std::unordered_set<SimMap>& visitedStates)
+
+class BacktrackingExplorer
+{
+private:
+	std::vector<Inventory>& exitReachableResults;
+	std::chrono::steady_clock::time_point startTime;
+	std::chrono::seconds timeout;
+	std::unordered_set<SimMap>& visitedStates;
+
+public:
+	BacktrackingExplorer(std::vector<Inventory>& results,
+						 std::chrono::steady_clock::time_point start,
+						 std::chrono::seconds timeLimit,
+						 std::unordered_set<SimMap>& visited)
+		: exitReachableResults(results)
+		, startTime(start)
+		, timeout(timeLimit)
+		, visitedStates(visited)
+	{
+	}
+
+	void explore(GameState state);
+};
+
+void BacktrackingExplorer::explore(GameState state)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
 		return;
 
 	// Check if this state has been visited before
-	if (visitedStates.find(simTiles) != visitedStates.end())
+	if (visitedStates.find(state.simTiles) != visitedStates.end())
 	{
 		return; // Already visited this state
 	}
-	visitedStates.insert(simTiles);
+	visitedStates.insert(state.simTiles);
 
 	bool foundTrivialPush = true;
 	std::vector<PushableWall> pushableWalls;
+	std::vector<PushableWall> nontrivialWalls;
 
 	// Keep exploring and pushing trivial walls until no more are found
 	while (foundTrivialPush)
@@ -964,36 +992,39 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 		foundTrivialPush = false;
 
 		// Explore and collect everything reachable, getting pushable walls encountered
-		pushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
+		pushableWalls = ExploreAndCollect(state);
+		nontrivialWalls.clear();	// Clear because we'll encounter same non-trivial walls each time
 
 		// Check each pushable wall for triviality
 		for (const PushableWall &pushableWall : pushableWalls)
 		{
-			if (IsTrivialPush(simTiles, pushableWall))
+			if (IsTrivialPush(state.simTiles, pushableWall))
 			{
 				int direction = pushableWall.validDirections[0];  // We know it has exactly one
 				// Push the trivial wall
 				Push pushRecord;
-				playerPos = PushWall(simTiles, pushableWall.position, direction, pushRecord);
+				state.playerPos = PushWall(state.simTiles, pushableWall.position, direction, pushRecord);
 				pushRecord.trivial = true;  // Mark as trivial push
-				inventory.pushes.push_back(pushRecord);
+				state.inventory.pushes.push_back(pushRecord);
 				foundTrivialPush = true;
+			}
+			else
+			{
+				// If not trivial, add to non-trivial list
+				nontrivialWalls.push_back(pushableWall);
 			}
 		}
 	}
 
-	// Final exploration after all trivial pushes to get remaining pushable walls
-	std::vector<PushableWall> remainingPushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
-
-	Inventory maxPossibleInventory = EstimateMaxInventory(simTiles, playerPos, inventory);
+	Inventory maxPossibleInventory = EstimateMaxInventory(state);
 
 	// If exit is reachable, store this inventory
-	if (inventory.exitReachable)
+	if (state.inventory.exitReachable)
 	{
 		bool isBetter = true;
 		for (const Inventory& existing : exitReachableResults)
 		{
-			if (!(inventory > existing))
+			if (!(state.inventory > existing))
 			{
 				isBetter = false;
 				break;
@@ -1003,25 +1034,19 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 		if (isBetter && !exitReachableResults.empty())
 		{
 			Logger::Write("New best solution found: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
-						  inventory.pointsCollected, inventory.treasureCollected,
-						  inventory.enemiesKilled, (int)inventory.pushes.size(),
-						  inventory.keys);
+						state.inventory.pointsCollected, state.inventory.treasureCollected,
+						state.inventory.enemiesKilled, (int)state.inventory.pushes.size(),
+						state.inventory.keys);
 			exitReachableResults.clear();  // Clear previous results
 		}
 
-		exitReachableResults.push_back(inventory);
+		exitReachableResults.push_back(state.inventory);
 	}
 
-	struct Attempt
-	{
-		SimMap simTiles;
-		int playerPos;
-		Inventory inventory;
-	};
-	std::vector<Attempt> postponedAttempts;
+	std::vector<std::pair<GameState, Inventory>> postponedAttempts;
 
 	// Backtracking: try each non-trivial pushable wall
-	for (const PushableWall &pushableWall : remainingPushableWalls)
+	for (const PushableWall &pushableWall : nontrivialWalls)
 	{
 		// Check timeout before each major operation
 		if (std::chrono::steady_clock::now() - startTime > timeout)
@@ -1030,42 +1055,61 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 		// Use all valid directions for non-trivial pushes
 		for (int direction : pushableWall.validDirections)
 		{
-			if (CanPushWall(simTiles, pushableWall.position, direction))
+			if (CanPushWall(state.simTiles, pushableWall.position, direction))
 			{
 				// Create new state (copy current state)
-				SimMap newTiles = simTiles;
-				Inventory newInventory = inventory;
-				newInventory.exitReachable = false;  // Reset exit reachability for new state
+				GameState newState = state;
+				newState.inventory.exitReachable = false;  // Reset exit reachability for new state
 
 				// Push the wall in the new state
 				Push pushRecord;
-				int newPlayerPos = PushWall(newTiles, pushableWall.position, direction, pushRecord);
+				newState.playerPos = PushWall(newState.simTiles, pushableWall.position, direction, pushRecord);
 				pushRecord.trivial = false;  // Mark as non-trivial push
-				newInventory.pushes.push_back(pushRecord);
+				newState.inventory.pushes.push_back(pushRecord);
 
-				Inventory maxInventoryAfterPush = EstimateMaxInventory(newTiles, newPlayerPos, newInventory);
+				Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
 				if(maxInventoryAfterPush < maxPossibleInventory)
 				{
 					// This risks being a bad move, so postpone it as we try better options first
-					postponedAttempts.push_back({newTiles, newPlayerPos, newInventory});
+					// But only if it's not definitely worse than what we just found
+					if(!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
+					{
+						Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+									  maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
+									  maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
+									  maxInventoryAfterPush.keys);
+					}
+					else
+					{
+						postponedAttempts.push_back({newState, maxInventoryAfterPush});
+					}
 					continue;
 				}
 
 				// Recursively explore this new state
-				ExploreWithBacktracking(newTiles, newPlayerPos, newInventory, exitReachableResults, startTime, timeout, visitedStates);
+				explore(newState);
 			}
 		}
 	}
 
 	// Postponed attempts
 	// TODO: prune them if they are worse than the current best
-	for (const Attempt &attempt : postponedAttempts)
+	for (const std::pair<GameState, Inventory> &attempt : postponedAttempts)
 	{
+		if(!exitReachableResults.empty() && attempt.second < exitReachableResults[0])
+		{
+			// If this attempt is worse than the best found, skip it
+			Logger::Write("Skipping postponed attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+						  attempt.second.pointsCollected, attempt.second.treasureCollected,
+						  attempt.second.enemiesKilled, (int)attempt.second.pushes.size(),
+						  attempt.second.keys);
+			continue;
+		}
 		// Check timeout before each major operation
 		if (std::chrono::steady_clock::now() - startTime > timeout)
 			return;
 
-		ExploreWithBacktracking(attempt.simTiles, attempt.playerPos, attempt.inventory, exitReachableResults, startTime, timeout, visitedStates);
+		explore(attempt.first);
 	}
 }
 
@@ -1073,9 +1117,10 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 // Called from SetupGameLevel, which calls ScanInfoPlane
 void Secret::AnalyzeSecrets()
 {
-	SimMap simTiles = BuildSimMap();
-	int playerPos = player->tiley * MAPSIZE + player->tilex;
-	Inventory initialInventory = {};
+	GameState initialState;
+	initialState.simTiles = BuildSimMap();
+	initialState.playerPos = player->tiley * MAPSIZE + player->tilex;
+	initialState.inventory = {};
 
 	// Container to collect all inventories where exit is reachable
 	std::vector<Inventory> exitReachableResults;
@@ -1088,7 +1133,8 @@ void Secret::AnalyzeSecrets()
 	auto timeout = std::chrono::seconds(5);
 
 	// Start the recursive exploration and backtracking
-	ExploreWithBacktracking(simTiles, playerPos, initialInventory, exitReachableResults, startTime, timeout, visitedStates);
+	BacktrackingExplorer explorer(exitReachableResults, startTime, timeout, visitedStates);
+	explorer.explore(initialState);
 
 	// Check if we timed out
 	auto elapsed = std::chrono::steady_clock::now() - startTime;
