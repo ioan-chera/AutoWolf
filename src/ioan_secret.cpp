@@ -28,6 +28,7 @@
 #include <functional>
 #include <array>
 #include <bitset>
+#include <compare>
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "obattrib.h"
@@ -777,7 +778,7 @@ static std::vector<PushableWall> ExploreAndCollect(SimMap &simTiles, int playerP
 	return pushableWallsFound;
 }
 
-static Inventory EstimateMaxInventory(const SimMap &simTiles, int playerPos, Inventory inventory)
+static Inventory EstimateMaxInventory(const SimMap &simTiles, int playerPos, const Inventory &inventory)
 {
 	// Create a copy to avoid modifying the original
 	SimMap tempTiles = simTiles;
@@ -984,6 +985,8 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 	// Final exploration after all trivial pushes to get remaining pushable walls
 	std::vector<PushableWall> remainingPushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
 
+	Inventory maxPossibleInventory = EstimateMaxInventory(simTiles, playerPos, inventory);
+
 	// If exit is reachable, store this inventory
 	if (inventory.exitReachable)
 	{
@@ -1009,6 +1012,14 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 		exitReachableResults.push_back(inventory);
 	}
 
+	struct Attempt
+	{
+		SimMap simTiles;
+		int playerPos;
+		Inventory inventory;
+	};
+	std::vector<Attempt> postponedAttempts;
+
 	// Backtracking: try each non-trivial pushable wall
 	for (const PushableWall &pushableWall : remainingPushableWalls)
 	{
@@ -1032,10 +1043,29 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 				pushRecord.trivial = false;  // Mark as non-trivial push
 				newInventory.pushes.push_back(pushRecord);
 
+				Inventory maxInventoryAfterPush = EstimateMaxInventory(newTiles, newPlayerPos, newInventory);
+				if(maxInventoryAfterPush < maxPossibleInventory)
+				{
+					// This risks being a bad move, so postpone it as we try better options first
+					postponedAttempts.push_back({newTiles, newPlayerPos, newInventory});
+					continue;
+				}
+
 				// Recursively explore this new state
 				ExploreWithBacktracking(newTiles, newPlayerPos, newInventory, exitReachableResults, startTime, timeout, visitedStates);
 			}
 		}
+	}
+
+	// Postponed attempts
+	// TODO: prune them if they are worse than the current best
+	for (const Attempt &attempt : postponedAttempts)
+	{
+		// Check timeout before each major operation
+		if (std::chrono::steady_clock::now() - startTime > timeout)
+			return;
+
+		ExploreWithBacktracking(attempt.simTiles, attempt.playerPos, attempt.inventory, exitReachableResults, startTime, timeout, visitedStates);
 	}
 }
 
