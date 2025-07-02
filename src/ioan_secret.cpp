@@ -27,6 +27,7 @@
 #include <unordered_set>
 #include <functional>
 #include <array>
+#include <bitset>
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "obattrib.h"
@@ -191,6 +192,9 @@ struct SimTile
 
 // Type alias for the game map
 using SimMap = std::array<SimTile, maparea>;
+
+// Type alias for visited tiles bitset
+using VisitedMap = std::bitset<maparea>;
 
 // Hash function for SimTile
 namespace std {
@@ -474,7 +478,7 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 	}
 }
 
-static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
+static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventory, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
 {
 	std::queue<int> queue;
 	queue.push(startPos);
@@ -577,7 +581,7 @@ static void FloodFillExplore(SimMap &simTiles, int startPos, Inventory &inventor
 	}
 }
 
-static void FloodFillEnemies(SimMap &simTiles, int startPos, Inventory &inventory, std::vector<bool> &visited)
+static void FloodFillEnemies(SimMap &simTiles, int startPos, Inventory &inventory, VisitedMap &visited)
 {
 	std::queue<int> queue;
 	queue.push(startPos);
@@ -648,7 +652,7 @@ static bool IsTrivialPush(SimMap &simTiles, const PushableWall &pushableWall)
 	// From the tile in front of the pushwall, try to reach the tile behind it
 	// while treating this specific pushwall as solid but other pushwalls as passable
 
-	std::vector<bool> visited(maparea, false);
+	VisitedMap visited;
 	std::queue<int> queue;
 	queue.push(fromPos);
 	visited[fromPos] = true;
@@ -757,7 +761,7 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 
 static std::vector<PushableWall> ExploreAndCollect(SimMap &simTiles, int playerPos, Inventory &inventory)
 {
-	std::vector<bool> visited(maparea, false);
+	VisitedMap visited;
 
 	// Main flood fill for exploration and collection
 	std::vector<int> obstaclesFound;
@@ -782,6 +786,13 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
 		return;
+
+	// Check if this state has been visited before
+	if (visitedStates.find(simTiles) != visitedStates.end())
+	{
+		return; // Already visited this state
+	}
+	visitedStates.insert(simTiles);
 
 	bool foundTrivialPush = true;
 	std::vector<PushableWall> pushableWalls;
@@ -812,13 +823,6 @@ static void ExploreWithBacktracking(SimMap simTiles, int playerPos, Inventory in
 
 	// Final exploration after all trivial pushes to get remaining pushable walls
 	std::vector<PushableWall> remainingPushableWalls = ExploreAndCollect(simTiles, playerPos, inventory);
-
-	// Check if this state has been visited before
-	if (visitedStates.find(simTiles) != visitedStates.end())
-	{
-		return; // Already visited this state
-	}
-	visitedStates.insert(simTiles);
 
 	// If exit is reachable, store this inventory
 	if (inventory.exitReachable)
@@ -891,7 +895,7 @@ void Secret::AnalyzeSecrets()
 
 	// Set up 5-second timeout for backtracking
 	auto startTime = std::chrono::steady_clock::now();
-	auto timeout = std::chrono::seconds(10);
+	auto timeout = std::chrono::seconds(5);
 
 	// Start the recursive exploration and backtracking
 	ExploreWithBacktracking(simTiles, playerPos, initialInventory, exitReachableResults, startTime, timeout, visitedStates);
