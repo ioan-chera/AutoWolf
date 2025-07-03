@@ -20,6 +20,31 @@
 #ifndef IOAN_SECRET_H_
 #define IOAN_SECRET_H_
 
+#include <vector>
+#include <utility>
+
+struct Push
+{
+	int from;
+	int wallpos;
+	int to;
+	bool trivial;
+	
+	bool operator==(const Push& other) const noexcept
+	{
+		return from == other.from && 
+		       wallpos == other.wallpos && 
+		       to == other.to && 
+		       trivial == other.trivial;
+	}
+};
+
+struct PushTree
+{
+	std::vector<Push> trivial;
+	std::vector<std::pair<Push, PushTree>> nontrivial;
+};
+
 namespace Secret
 {
 void AnalyzeSecrets();

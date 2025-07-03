@@ -69,13 +69,6 @@ enum KeyFlags
 	KEY_4 = 8,
 };
 
-struct Push
-{
-	int from;
-	int wallpos;
-	int to;
-	bool trivial;
-};
 
 struct PushableWall
 {
@@ -219,6 +212,18 @@ namespace std {
 				result ^= hasher(arr[i]) + 0x9e3779b9 + (result << 6) + (result >> 2);
 			}
 			return result;
+		}
+	};
+	
+	// Hash function for Push
+	template<>
+	struct hash<Push> {
+		size_t operator()(const Push& push) const {
+			size_t h1 = std::hash<int>{}(push.from);
+			size_t h2 = std::hash<int>{}(push.wallpos);
+			size_t h3 = std::hash<int>{}(push.to);
+			size_t h4 = std::hash<bool>{}(push.trivial);
+			return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3);
 		}
 	};
 }
@@ -1181,4 +1186,37 @@ void Secret::AnalyzeSecrets()
 						  push.trivial ? "yes" : "no");
 		}
 	}
+}
+
+static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults, 
+	size_t startIndex)
+{
+	if(pushResults.empty())
+		return {};
+
+	PushTree tree;
+
+	size_t i;
+	for(i = startIndex; i < pushResults[0].pushes.size(); ++i)
+	{
+		const Push &push = pushResults[0].pushes[i];
+		if(!push.trivial)
+			break;
+		tree.trivial.push_back(push);
+	}
+	// Now we got into a nontrivial push
+	size_t nontrivialIndex = i;
+	std::unordered_map<Push, std::vector<Inventory>> nontrivialPushes;
+	for(const Inventory &result : pushResults)
+	{
+		// TODO: actually check we're not at the end of the vector
+		nontrivialPushes[result.pushes[nontrivialIndex]].push_back(result);
+	}
+	for(const auto &pair : nontrivialPushes)
+	{
+		PushTree childTree = PushTreeFromReachableResults(pair.second, nontrivialIndex + 1);
+		tree.nontrivial.push_back({pair.first, std::move(childTree)});
+	}
+
+	return tree;
 }
