@@ -37,6 +37,11 @@ struct Push
 		       to == other.to && 
 		       trivial == other.trivial;
 	}
+	
+	bool operator!=(const Push& other) const noexcept
+	{
+		return !(*this == other);
+	}
 };
 
 struct PushTree

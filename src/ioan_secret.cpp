@@ -453,10 +453,8 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 		SimTile &behindTile = simTiles[behindPos];
 
 		// Can push if the tile behind is not blocked by doors, obstacles, corpses, or walls
-		if (!(behindTile.flags & (ST_WALL | ST_DOOR | ST_OBSTACLE | ST_CORPSE)))
-		{
+		if (!behindTile.blocksPush())
 			canPush = true;
-		}
 	}
 
 	if (canPush)
@@ -708,36 +706,6 @@ static bool IsTrivialPush(SimMap &simTiles, const PushableWall &pushableWall)
 	return true;
 }
 
-static bool CanPushWall(SimMap &simTiles, int wallPos, int direction)
-{
-	int toPos = wallPos + direction;
-	int toPos2 = wallPos + direction * 2;
-
-	if (!IsValidMove(toPos, direction))
-		return false;
-
-	SimTile &toTile = simTiles[toPos];
-
-	// Try to push two spaces first
-	if (IsValidMove(toPos2, direction))
-	{
-		SimTile &toTile2 = simTiles[toPos2];
-		if (!((toTile2.flags | toTile.flags) & (ST_WALL | ST_OBSTACLE | ST_CORPSE | ST_DOOR)))
-		{
-			// Can push two spaces
-			return true;
-		}
-	}
-
-	// Try to push one space
-	if (!(toTile.flags & (ST_WALL | ST_OBSTACLE | ST_CORPSE | ST_DOOR)))
-	{
-		return true;
-	}
-
-	return false;
-}
-
 static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushRecord)
 {
 	// returns the player position after the push
@@ -754,7 +722,7 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 	if (IsValidMove(toPos, direction) && IsValidMove(toPos2, direction))
 	{
 		SimTile &toTile2 = simTiles[toPos2];
-		if (!(toTile2.flags & (ST_WALL | ST_OBSTACLE | ST_CORPSE | ST_DOOR)))
+		if (!toTile2.blocksPush())
 		{
 			// Push two spaces
 			toTile2.flags |= ST_WALL;
@@ -1060,40 +1028,37 @@ void BacktrackingExplorer::explore(GameState state)
 		// Use all valid directions for non-trivial pushes
 		for (int direction : pushableWall.validDirections)
 		{
-			if (CanPushWall(state.simTiles, pushableWall.position, direction))
+			// Create new state (copy current state)
+			GameState newState = state;
+			newState.inventory.exitReachable = false;  // Reset exit reachability for new state
+
+			// Push the wall in the new state
+			Push pushRecord;
+			newState.playerPos = PushWall(newState.simTiles, pushableWall.position, direction, pushRecord);
+			pushRecord.trivial = false;  // Mark as non-trivial push
+			newState.inventory.pushes.push_back(pushRecord);
+
+			Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
+			if(maxInventoryAfterPush < maxPossibleInventory)
 			{
-				// Create new state (copy current state)
-				GameState newState = state;
-				newState.inventory.exitReachable = false;  // Reset exit reachability for new state
-
-				// Push the wall in the new state
-				Push pushRecord;
-				newState.playerPos = PushWall(newState.simTiles, pushableWall.position, direction, pushRecord);
-				pushRecord.trivial = false;  // Mark as non-trivial push
-				newState.inventory.pushes.push_back(pushRecord);
-
-				Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
-				if(maxInventoryAfterPush < maxPossibleInventory)
+				// This risks being a bad move, so postpone it as we try better options first
+				// But only if it's not definitely worse than what we just found
+				if(!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
 				{
-					// This risks being a bad move, so postpone it as we try better options first
-					// But only if it's not definitely worse than what we just found
-					if(!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
-					{
-						Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
-									  maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
-									  maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
-									  maxInventoryAfterPush.keys);
-					}
-					else
-					{
-						postponedAttempts.push_back({newState, maxInventoryAfterPush});
-					}
-					continue;
+					Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+									maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
+									maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
+									maxInventoryAfterPush.keys);
 				}
-
-				// Recursively explore this new state
-				explore(newState);
+				else
+				{
+					postponedAttempts.push_back({newState, maxInventoryAfterPush});
+				}
+				continue;
 			}
+
+			// Recursively explore this new state
+			explore(newState);
 		}
 	}
 
