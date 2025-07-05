@@ -1118,6 +1118,40 @@ void BacktrackingExplorer::explore(GameState state)
 	}
 }
 
+static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults, 
+	size_t startIndex)
+{
+	if(pushResults.empty())
+		return {};
+
+	PushTree tree;
+
+	size_t i;
+	for(i = startIndex; i < pushResults[0].pushes.size(); ++i)
+	{
+		const Push &push = pushResults[0].pushes[i];
+		if(!push.trivial)
+			break;
+		tree.trivial.push_back(push);
+	}
+	// Now we got into a nontrivial push
+	size_t nontrivialIndex = i;
+	std::unordered_map<Push, std::vector<Inventory>> nontrivialPushes;
+	for(const Inventory &result : pushResults)
+	{
+		if(result.pushes.size() <= nontrivialIndex)
+			continue; // No nontrivial push in this result
+		nontrivialPushes[result.pushes[nontrivialIndex]].push_back(result);
+	}
+	for(const auto &pair : nontrivialPushes)
+	{
+		PushTree childTree = PushTreeFromReachableResults(pair.second, nontrivialIndex + 1);
+		tree.nontrivial.push_back({pair.first, std::move(childTree)});
+	}
+
+	return tree;
+}
+
 
 // Called from SetupGameLevel, which calls ScanInfoPlane
 void Secret::AnalyzeSecrets()
@@ -1186,37 +1220,36 @@ void Secret::AnalyzeSecrets()
 						  push.trivial ? "yes" : "no");
 		}
 	}
+
+	PushTree tree = PushTreeFromReachableResults(optimalSolutions, 0);
+	
+	// Log information about the PushTree
+	std::function<void(const PushTree&, int)> logPushTree = [&](const PushTree& tree, int depth) {
+		std::string indent(depth * 2, ' ');
+		Logger::Write("%sPushTree: %u trivial, %u non-trivial", 
+					  indent.c_str(), (unsigned)tree.trivial.size(), (unsigned)tree.nontrivial.size());
+		
+		for (const Push& push : tree.trivial)
+		{
+			Logger::Write("%s  Trivial push from %d,%d to %d,%d at wall %d,%d",
+						  indent.c_str(),
+						  (push.from%MAPSIZE)+1, (push.from/MAPSIZE)+1,
+						  (push.to%MAPSIZE)+1, (push.to/MAPSIZE)+1,
+						  (push.wallpos%MAPSIZE)+1, (push.wallpos/MAPSIZE)+1);
+		}
+		
+		for (const auto& branch : tree.nontrivial)
+		{
+			Logger::Write("%s  Non-trivial push from %d,%d to %d,%d at wall %d,%d",
+						  indent.c_str(),
+						  (branch.first.from%MAPSIZE)+1, (branch.first.from/MAPSIZE)+1,
+						  (branch.first.to%MAPSIZE)+1, (branch.first.to/MAPSIZE)+1,
+						  (branch.first.wallpos%MAPSIZE)+1, (branch.first.wallpos/MAPSIZE)+1);
+			logPushTree(branch.second, depth + 1);
+		}
+	};
+	
+	Logger::Write("PushTree structure:");
+	logPushTree(tree, 0);
 }
 
-static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults, 
-	size_t startIndex)
-{
-	if(pushResults.empty())
-		return {};
-
-	PushTree tree;
-
-	size_t i;
-	for(i = startIndex; i < pushResults[0].pushes.size(); ++i)
-	{
-		const Push &push = pushResults[0].pushes[i];
-		if(!push.trivial)
-			break;
-		tree.trivial.push_back(push);
-	}
-	// Now we got into a nontrivial push
-	size_t nontrivialIndex = i;
-	std::unordered_map<Push, std::vector<Inventory>> nontrivialPushes;
-	for(const Inventory &result : pushResults)
-	{
-		// TODO: actually check we're not at the end of the vector
-		nontrivialPushes[result.pushes[nontrivialIndex]].push_back(result);
-	}
-	for(const auto &pair : nontrivialPushes)
-	{
-		PushTree childTree = PushTreeFromReachableResults(pair.second, nontrivialIndex + 1);
-		tree.nontrivial.push_back({pair.first, std::move(childTree)});
-	}
-
-	return tree;
-}
