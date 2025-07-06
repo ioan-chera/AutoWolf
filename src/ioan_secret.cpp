@@ -50,6 +50,20 @@ enum KeyFlags
 	KEY_4 = 8,
 };
 
+enum
+{
+	ST_WALL = 1,
+	ST_EXIT = 2,
+	ST_OBSTACLE = 4,
+	ST_CORPSE = 8,
+	ST_DOOR = 16,
+	ST_PUSHABLE = 32,
+	ST_TREASURE = 64,
+	ST_KEY = 128,
+	ST_ENEMY = 256,
+};
+
+
 
 struct PushableWall
 {
@@ -118,59 +132,6 @@ struct Inventory
 	const Tally &total;
 };
 
-static bool IsValidMove(int toPos, int dir)
-{
-	// Check basic bounds
-	if (toPos < 0 || toPos >= maparea)
-		return false;
-
-	// Check map boundaries
-	int toX = toPos % MAPSIZE;
-	int toY = toPos / MAPSIZE;
-	if (toX < 0 || toX >= MAPSIZE || toY < 0 || toY >= MAPSIZE)
-		return false;
-
-	// Check row boundaries for horizontal moves (prevent wrap-around)
-	if (dir == -1 && toX == MAPSIZE - 1) return false;  // Left move wrapping to right edge
-	if (dir == 1 && toX == 0) return false;  // Right move wrapping to left edge
-
-	return true;
-}
-
-inline static unsigned GetX(unsigned what)
-{
-	return what % MAPSIZE;
-}
-
-inline static unsigned GetY(unsigned what)
-{
-	return what / MAPSIZE;
-}
-
-inline static bool IsPlayerStart(unsigned kind)
-{
-	return kind >= PLAYER_START_NORTH && kind <= PLAYER_START_WEST;
-}
-
-inline static bool IsSolidWall(int areatile)
-{
-	return areatile > 0 && areatile < DOOR_VERTICAL_1;
-}
-
-
-enum
-{
-	ST_WALL = 1,
-	ST_EXIT = 2,
-	ST_OBSTACLE = 4,
-	ST_CORPSE = 8,
-	ST_DOOR = 16,
-	ST_PUSHABLE = 32,
-	ST_TREASURE = 64,
-	ST_KEY = 128,
-	ST_ENEMY = 256,
-};
-
 struct SimTile
 {
 	bool blocksPush() const noexcept
@@ -213,6 +174,67 @@ struct SimTile
 
 // Type alias for the game map
 using SimMap = std::array<SimTile, maparea>;
+
+
+struct GameState
+{
+	explicit GameState(Tally &tally)
+		: inventory(tally)
+	{
+		BuildSimMap(tally);
+		playerPos = player->tilex + player->tiley * MAPSIZE;
+	}
+
+	SimMap simTiles = {};
+	int playerPos = 0;
+	Inventory inventory;
+
+private:
+	void BuildSimMap(Tally &total);
+};
+
+static bool IsValidMove(int toPos, int dir)
+{
+	// Check basic bounds
+	if (toPos < 0 || toPos >= maparea)
+		return false;
+
+	// Check map boundaries
+	int toX = toPos % MAPSIZE;
+	int toY = toPos / MAPSIZE;
+	if (toX < 0 || toX >= MAPSIZE || toY < 0 || toY >= MAPSIZE)
+		return false;
+
+	// Check row boundaries for horizontal moves (prevent wrap-around)
+	if (dir == -1 && toX == MAPSIZE - 1) return false;  // Left move wrapping to right edge
+	if (dir == 1 && toX == 0) return false;  // Right move wrapping to left edge
+
+	return true;
+}
+
+inline static unsigned GetX(unsigned what)
+{
+	return what % MAPSIZE;
+}
+
+inline static unsigned GetY(unsigned what)
+{
+	return what / MAPSIZE;
+}
+
+inline static bool IsPlayerStart(unsigned kind)
+{
+	return kind >= PLAYER_START_NORTH && kind <= PLAYER_START_WEST;
+}
+
+inline static bool IsSolidWall(int areatile)
+{
+	return areatile > 0 && areatile < DOOR_VERTICAL_1;
+}
+
+
+
+
 
 // Type alias for visited tiles bitset
 using VisitedMap = std::bitset<maparea>;
@@ -281,10 +303,8 @@ static int DoorTypeToLock(int doorType)
 	return 0;
 }
 
-static SimMap BuildSimMap(Tally &total)
+void GameState::BuildSimMap(Tally &total)
 {
-	SimMap simTiles;
-
 	for(int y = 0; y < MAPSIZE; ++y)
 	{
 		for(int x = 0; x < MAPSIZE; ++x)
@@ -479,8 +499,6 @@ static SimMap BuildSimMap(Tally &total)
 		}
 
 	}
-
-	return simTiles;
 }
 
 
@@ -524,17 +542,6 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 	}
 }
 
-struct GameState
-{
-	explicit GameState(const Tally &tally)
-		: inventory(tally)
-	{
-	}
-
-	SimMap simTiles = {};
-	int playerPos = 0;
-	Inventory inventory;
-};
 
 static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
 {
@@ -986,10 +993,10 @@ public:
 	{
 	}
 
-	void explore(GameState state);
+	void explore(GameState &state);
 };
 
-void BacktrackingExplorer::explore(GameState state)
+void BacktrackingExplorer::explore(GameState &state)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
@@ -1111,7 +1118,7 @@ void BacktrackingExplorer::explore(GameState state)
 
 	// Postponed attempts
 	// TODO: prune them if they are worse than the current best
-	for (const std::pair<GameState, Inventory> &attempt : postponedAttempts)
+	for (std::pair<GameState, Inventory> &attempt : postponedAttempts)
 	{
 		if(!exitReachableResults.empty() && attempt.second < exitReachableResults[0])
 		{
@@ -1170,9 +1177,6 @@ void Secret::AnalyzeSecrets()
 {
 	Tally total = {};
 	GameState initialState(total);
-	initialState.simTiles = BuildSimMap(total);
-	initialState.playerPos = player->tiley * MAPSIZE + player->tilex;
-	initialState.inventory;
 
 	// Container to collect all inventories where exit is reachable
 	std::vector<Inventory> exitReachableResults;
