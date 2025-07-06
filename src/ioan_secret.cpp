@@ -41,25 +41,6 @@ static const unsigned timelimit = 10000;
 
 static const int DIRS[] = {-1, 1, -MAPSIZE, MAPSIZE};
 
-static bool IsValidMove(int toPos, int dir)
-{
-	// Check basic bounds
-	if (toPos < 0 || toPos >= maparea)
-		return false;
-
-	// Check map boundaries
-	int toX = toPos % MAPSIZE;
-	int toY = toPos / MAPSIZE;
-	if (toX < 0 || toX >= MAPSIZE || toY < 0 || toY >= MAPSIZE)
-		return false;
-
-	// Check row boundaries for horizontal moves (prevent wrap-around)
-	if (dir == -1 && toX == MAPSIZE - 1) return false;  // Left move wrapping to right edge
-	if (dir == 1 && toX == 0) return false;  // Right move wrapping to left edge
-
-	return true;
-}
-
 // Key inventory stuff
 enum KeyFlags
 {
@@ -76,13 +57,26 @@ struct PushableWall
 	std::vector<int> validDirections;
 };
 
+struct Tally
+{
+	int enemies;
+	int treasure;
+	int secrets;
+};
+
 struct Inventory
 {
+	explicit Inventory(const Tally &tally) : total(tally)
+	{
+	}
+
 	bool operator>(const Inventory &other) const noexcept
 	{
 		// Compare based on points collected, then treasures, then enemies killed, then pushes
-		if (pointsCollected != other.pointsCollected)
-			return pointsCollected > other.pointsCollected;
+		int myScore = totalScore();
+		int otherScore = other.totalScore();
+		if (myScore != otherScore)
+			return myScore > otherScore;
 		if (treasureCollected != other.treasureCollected)
 			return treasureCollected > other.treasureCollected;
 		if (enemiesKilled != other.enemiesKilled)
@@ -102,13 +96,46 @@ struct Inventory
 		return !(*this > other) && !(other > *this);
 	}
 
-	int treasureCollected;
-	int enemiesKilled;
-	int pointsCollected;
-	int keys;
+	int totalScore() const
+	{
+		int result = pointsCollected;
+		if(treasureCollected >= total.treasure)
+			result += 10000;
+		if(enemiesKilled >= total.enemies)
+			result += 10000;
+		if((int)pushes.size() >= total.secrets)
+			result += 10000;
+		return result;
+	}	
+
+	int treasureCollected = 0;
+	int enemiesKilled = 0;
+	int pointsCollected = 0;
+	int keys = 0;
 	std::vector<Push> pushes;
-	bool exitReachable;
+	bool exitReachable = false;
+
+	const Tally &total;
 };
+
+static bool IsValidMove(int toPos, int dir)
+{
+	// Check basic bounds
+	if (toPos < 0 || toPos >= maparea)
+		return false;
+
+	// Check map boundaries
+	int toX = toPos % MAPSIZE;
+	int toY = toPos / MAPSIZE;
+	if (toX < 0 || toX >= MAPSIZE || toY < 0 || toY >= MAPSIZE)
+		return false;
+
+	// Check row boundaries for horizontal moves (prevent wrap-around)
+	if (dir == -1 && toX == MAPSIZE - 1) return false;  // Left move wrapping to right edge
+	if (dir == 1 && toX == 0) return false;  // Right move wrapping to left edge
+
+	return true;
+}
 
 inline static unsigned GetX(unsigned what)
 {
@@ -254,7 +281,7 @@ static int DoorTypeToLock(int doorType)
 	return 0;
 }
 
-static SimMap BuildSimMap()
+static SimMap BuildSimMap(Tally &total)
 {
 	SimMap simTiles;
 
@@ -288,19 +315,23 @@ static SimMap BuildSimMap()
 					case guardobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 100;
+						total.enemies++;
 						break;
 					case officerobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 400;
+						total.enemies++;
 						break;
 					case ssobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 500;
+						total.enemies++;
 						break;
 					case dogobj:
 					case spectreobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 200;
+						total.enemies++;
 						break;
 					case bossobj:
 					case gretelobj:
@@ -311,6 +342,7 @@ static SimMap BuildSimMap()
 						tile.flags |= ST_ENEMY | ST_KEY;
 						tile.points = 5000;
 						tile.lock |= KEY_1;
+						total.enemies++;
 						break;
 					case schabbobj:
 					case giftobj:
@@ -319,19 +351,23 @@ static SimMap BuildSimMap()
 						tile.flags |= ST_ENEMY;
 						tile.points = 5000;
 						tile.flags |= ST_EXIT;
+						total.enemies++;
 						break;
 					case fakeobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 2000;
+						total.enemies++;
 						break;
 					case mechahitlerobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 10000;
 						tile.flags |= ST_EXIT;
+						total.enemies++;
 						break;
 					case mutantobj:
 						tile.flags |= ST_ENEMY;
 						tile.points = 700;
+						total.enemies++;
 						break;
 					default:
 						break;
@@ -349,6 +385,7 @@ static SimMap BuildSimMap()
 			if(actorValue == PUSHABLETILE)
 			{
 				tile.flags |= ST_PUSHABLE;
+				total.secrets++;
 			}
 			else if(actorValue == EXITTILE)
 			{
@@ -362,22 +399,27 @@ static SimMap BuildSimMap()
 					case bo_cross:
 						tile.flags |= ST_TREASURE;
 						tile.points = 100;
+						total.treasure++;
 						break;
 					case bo_chalice:
 						tile.flags |= ST_TREASURE;
 						tile.points = 500;
+						total.treasure++;
 						break;
 					case bo_bible:
 						tile.flags |= ST_TREASURE;
 						tile.points = 1000;
+						total.treasure++;
 						break;
 					case bo_crown:
 						tile.flags |= ST_TREASURE;
 						tile.points = 5000;
+						total.treasure++;
 						break;
 					case bo_fullheal:
 						tile.flags |= ST_TREASURE;
 						tile.points = 0;
+						total.treasure++;
 						break;
 					case bo_key1:
 						tile.flags |= ST_KEY;
@@ -484,8 +526,13 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 
 struct GameState
 {
-	SimMap simTiles;
-	int playerPos;
+	explicit GameState(const Tally &tally)
+		: inventory(tally)
+	{
+	}
+
+	SimMap simTiles = {};
+	int playerPos = 0;
 	Inventory inventory;
 };
 
@@ -1121,10 +1168,11 @@ static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushR
 // Called from SetupGameLevel, which calls ScanInfoPlane
 void Secret::AnalyzeSecrets()
 {
-	GameState initialState;
-	initialState.simTiles = BuildSimMap();
+	Tally total = {};
+	GameState initialState(total);
+	initialState.simTiles = BuildSimMap(total);
 	initialState.playerPos = player->tiley * MAPSIZE + player->tilex;
-	initialState.inventory = {};
+	initialState.inventory;
 
 	// Container to collect all inventories where exit is reachable
 	std::vector<Inventory> exitReachableResults;
@@ -1144,16 +1192,16 @@ void Secret::AnalyzeSecrets()
 	auto elapsed = std::chrono::steady_clock::now() - startTime;
 	if (elapsed >= timeout)
 	{
-		Logger::Write("Backtracking timed out after %d seconds\n", (int)timeout.count());
+		Logger::Write("Backtracking timed out after %d seconds", (int)timeout.count());
 	}
 
 	if (exitReachableResults.empty())
 	{
-		Logger::Write("No solutions found with reachable exit\n");
+		Logger::Write("No solutions found with reachable exit");
 		return;
 	}
 
-	Logger::Write("Found %u solutions with reachable exit\n", (unsigned)exitReachableResults.size());
+	Logger::Write("Found %u solutions with reachable exit", (unsigned)exitReachableResults.size());
 
 	// Find the maximum inventory (best solution)
 	Inventory maxInventory = *std::max_element(exitReachableResults.begin(), exitReachableResults.end());
@@ -1169,6 +1217,12 @@ void Secret::AnalyzeSecrets()
 	}
 
 	Logger::Write("Found %u optimal solutions\n", (unsigned)optimalSolutions.size());
+	if(maxInventory.enemiesKilled >= total.enemies)
+		Logger::Write("All enemies killed in optimal solutions");
+	if(maxInventory.treasureCollected >= total.treasure)
+		Logger::Write("All treasure collected in optimal solutions");
+	if((int)maxInventory.pushes.size() >= total.secrets)
+		Logger::Write("All pushable walls pushed in optimal solutions");
 
 	for(const Inventory &solution : optimalSolutions)
 	{
