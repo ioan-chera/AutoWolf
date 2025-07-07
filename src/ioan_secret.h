@@ -23,6 +23,8 @@
 #include <vector>
 #include <utility>
 
+namespace Secret
+{
 struct Push
 {
 	int from;
@@ -50,9 +52,7 @@ struct PushTree
 	std::vector<std::pair<Push, PushTree>> nontrivial;
 };
 
-namespace Secret
-{
-void AnalyzeSecrets();
+PushTree AnalyzeSecrets();
 }
 
 #endif

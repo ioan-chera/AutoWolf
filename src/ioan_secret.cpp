@@ -37,6 +37,8 @@
 #include "wl_play.h"
 #include "Logger.h"
 
+namespace Secret {
+
 static const unsigned timelimit = 10000;
 
 static const int DIRS[] = {-1, 1, -MAPSIZE, MAPSIZE};
@@ -239,11 +241,13 @@ inline static bool IsSolidWall(int areatile)
 // Type alias for visited tiles bitset
 using VisitedMap = std::bitset<maparea>;
 
-// Hash function for SimTile
+} // namespace Secret
+
+// Hash function specializations need to be in std namespace
 namespace std {
 	template<>
-	struct hash<SimTile> {
-		size_t operator()(const SimTile& tile) const {
+	struct hash<Secret::SimTile> {
+		size_t operator()(const Secret::SimTile& tile) const {
 			size_t h1 = std::hash<int>{}(tile.flags);
 			size_t h2 = std::hash<int>{}(tile.points);
 			size_t h3 = std::hash<int>{}(tile.lock);
@@ -253,10 +257,10 @@ namespace std {
 
 	// Hash function for SimMap (std::array<SimTile, maparea>)
 	template<>
-	struct hash<SimMap> {
-		size_t operator()(const SimMap& arr) const {
+	struct hash<Secret::SimMap> {
+		size_t operator()(const Secret::SimMap& arr) const {
 			size_t result = 0;
-			hash<SimTile> hasher;
+			hash<Secret::SimTile> hasher;
 			for (size_t i = 0; i < arr.size(); ++i) {
 				result ^= hasher(arr[i]) + 0x9e3779b9 + (result << 6) + (result >> 2);
 			}
@@ -266,8 +270,8 @@ namespace std {
 	
 	// Hash function for Push
 	template<>
-	struct hash<Push> {
-		size_t operator()(const Push& push) const {
+	struct hash<Secret::Push> {
+		size_t operator()(const Secret::Push& push) const {
 			size_t h1 = std::hash<int>{}(push.from);
 			size_t h2 = std::hash<int>{}(push.wallpos);
 			size_t h3 = std::hash<int>{}(push.to);
@@ -276,6 +280,8 @@ namespace std {
 		}
 	};
 }
+
+namespace Secret {
 
 static int DoorTypeToLock(int doorType)
 {
@@ -1173,7 +1179,7 @@ static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushR
 
 
 // Called from SetupGameLevel, which calls ScanInfoPlane
-void Secret::AnalyzeSecrets()
+PushTree AnalyzeSecrets()
 {
 	Tally total = {};
 	GameState initialState(total);
@@ -1244,35 +1250,8 @@ void Secret::AnalyzeSecrets()
 		}
 	}
 
-	PushTree tree = PushTreeFromReachableResults(optimalSolutions, 0);
-	
-	// Log information about the PushTree
-	std::function<void(const PushTree&, int)> logPushTree = [&](const PushTree& tree, int depth) {
-		std::string indent(depth * 2, ' ');
-		Logger::Write("%sPushTree: %u trivial, %u non-trivial", 
-					  indent.c_str(), (unsigned)tree.trivial.size(), (unsigned)tree.nontrivial.size());
-		
-		for (const Push& push : tree.trivial)
-		{
-			Logger::Write("%s  Trivial push from %d,%d to %d,%d at wall %d,%d",
-						  indent.c_str(),
-						  (push.from%MAPSIZE)+1, (push.from/MAPSIZE)+1,
-						  (push.to%MAPSIZE)+1, (push.to/MAPSIZE)+1,
-						  (push.wallpos%MAPSIZE)+1, (push.wallpos/MAPSIZE)+1);
-		}
-		
-		for (const auto& branch : tree.nontrivial)
-		{
-			Logger::Write("%s  Non-trivial push from %d,%d to %d,%d at wall %d,%d",
-						  indent.c_str(),
-						  (branch.first.from%MAPSIZE)+1, (branch.first.from/MAPSIZE)+1,
-						  (branch.first.to%MAPSIZE)+1, (branch.first.to/MAPSIZE)+1,
-						  (branch.first.wallpos%MAPSIZE)+1, (branch.first.wallpos/MAPSIZE)+1);
-			logPushTree(branch.second, depth + 1);
-		}
-	};
-	
-	Logger::Write("PushTree structure:");
-	logPushTree(tree, 0);
+	return PushTreeFromReachableResults(optimalSolutions, 0);	
 }
+
+} // namespace Secret
 
