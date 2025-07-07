@@ -867,6 +867,8 @@ void PushWall (int checkx, int checky, int dir)
     // IOANCH 20130601: play at location
     PlaySoundLocTile(PUSHWALLSND, pwallx, pwally);
 //    Sound::Play (PUSHWALLSND);
+
+    bot.ReportPush(pwallx, pwally, (controldir_t)dir);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

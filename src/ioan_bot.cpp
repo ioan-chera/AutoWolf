@@ -218,6 +218,47 @@ void BotMan::SetMood()
     }
 }
 
+void BotMan::FindSecrets()
+{
+	pushTree = Secret::AnalyzeSecrets();
+}
+
+void BotMan::ReportPush(int wx, int wy, controldir_t wdir)
+{
+	int dx, dy;
+	switch(wdir)
+	{
+		case di_north:
+			dx = 0; dy = -1;
+			break;
+		case di_east:
+			dx = 1; dy = 0;
+			break;
+		case di_south:
+			dx = 0; dy = 1;
+			break;
+		case di_west:
+			dx = -1; dy = 0;
+			break;
+		default:
+			return;
+	}
+
+	int px = wx - dx;
+	int py = wy - dy;
+
+	if(px < 0 || px >= MAPSIZE || py < 0 || py >= MAPSIZE)
+		return; // Out of bounds
+	if(wx < 0 || wx >= MAPSIZE || wy < 0 || wy >= MAPSIZE)
+		return; // Out of bounds after offset
+
+	Secret::Push push = {};
+	push.from = py * MAPSIZE + px;
+	push.wallpos = wy * MAPSIZE + wx;
+	// No matter others
+	pushTree.clear(push);
+}
+
 // Bot moods: using today value as seed, use a random strategy, one or more:
 // - As soon as elevator is found, take it
 // - Avoid taking the secret elevator (and if "as soon", don't take it)
@@ -231,7 +272,11 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 //		pushes.back().sourcepos != (unsigned)(tx + MAPSIZE * ty) ||
 //		pushes.back().targetpos != (unsigned)((tx + txofs) + MAPSIZE * (ty + tyofs)))))
 //		return false;
-   if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
+
+	if(!pushTree.SafeToPush(tx, ty, txofs, tyofs))
+		return false;
+
+	if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
    {
       objtype *check;
       check = actorat[tx + txofs][ty + tyofs];
@@ -244,9 +289,9 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
       if(!actorat[tx2ofs][ty2ofs] && ty2ofs >= 0
          && ty2ofs < MAPSIZE && tx2ofs >= 0 && tx2ofs < MAPSIZE)
       {
-         if(searchstage >= SSOnePushWalls ||
-            (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0
-             && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
+//         if(searchstage >= SSOnePushWalls ||
+//            (!actorat[tx3ofs][ty3ofs] && tx3ofs >= 0
+//             && tx3ofs < MAPSIZE && ty3ofs >= 0 && ty3ofs < MAPSIZE))
          {
             exity = ty + tyofs;
             exitx = tx + txofs;

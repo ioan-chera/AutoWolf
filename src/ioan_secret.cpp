@@ -29,6 +29,7 @@
 #include <array>
 #include <bitset>
 #include <compare>
+#include "Config.h"
 #include "id_ca.h"
 #include "ioan_secret.h"
 #include "obattrib.h"
@@ -772,32 +773,32 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 	int fromPos = wallPos - direction;
 	int toPos = wallPos + direction;
 	int toPos2 = wallPos + direction * 2;
+	int toPos3 = wallPos + direction * 3;
 
 	pushRecord.from = fromPos;
 	pushRecord.wallpos = wallPos;
 
 	SimTile &wallTile = simTiles[wallPos];
 
-	// Try to push two spaces first
-	if (IsValidMove(toPos, direction) && IsValidMove(toPos2, direction))
+	if(IsValidMove(toPos, direction) && !simTiles[toPos].blocksPush())
 	{
-		SimTile &toTile2 = simTiles[toPos2];
-		if (!toTile2.blocksPush())
+		wallTile.flags &= ~(ST_WALL | ST_PUSHABLE);
+		int destination;
+		if(IsValidMove(toPos2, direction) && !simTiles[toPos2].blocksPush())
 		{
-			// Push two spaces
-			toTile2.flags |= ST_WALL;
-			pushRecord.to = toPos2;
-			wallTile.flags &= ~(ST_WALL | ST_PUSHABLE);
-			return fromPos;
+			if(cfg_secretstep3 && IsValidMove(toPos3, direction) && !simTiles[toPos3].blocksPush())
+				destination = toPos3;
+			else
+				destination = toPos2;
 		}
+		else
+			destination = toPos;
+		simTiles[destination].flags |= ST_WALL;
+		pushRecord.to = destination;
+		return fromPos;
 	}
-
-	// Push one space
-	SimTile &toTile = simTiles[toPos];
-	toTile.flags |= ST_WALL;
-	pushRecord.to = toPos;
-	wallTile.flags &= ~(ST_WALL | ST_PUSHABLE);
-	return fromPos;
+	assert(false && "Invalid push operation: cannot push wall in this direction");
+	return 0;  // Should never reach here, but return 0 to avoid compiler warnings
 }
 
 static std::vector<PushableWall> ExploreAndCollect(GameState &state)
@@ -1177,6 +1178,30 @@ static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushR
 	return tree;
 }
 
+void PushTree::clear(const Push &push)
+{
+	for(size_t i = 0; i < trivial.size(); ++i)
+	{
+		const Push &item = trivial[i];
+		if(item.from == push.from && item.wallpos == push.wallpos)
+		{
+			trivial[i] = trivial.back();
+			trivial.pop_back();
+			return;
+		}
+	}
+	for(size_t i = 0; i < nontrivial.size(); ++i)
+	{
+		const auto &pair = nontrivial[i];
+		if(pair.first.from == push.from && pair.first.wallpos == push.wallpos)
+		{
+			const PushTree &childTree = pair.second;
+			trivial.insert(trivial.end(), childTree.trivial.begin(), childTree.trivial.end());
+			nontrivial = childTree.nontrivial; // Move nontrivial children to this tree
+			return;
+		}
+	}
+}
 
 // Called from SetupGameLevel, which calls ScanInfoPlane
 PushTree AnalyzeSecrets()
@@ -1251,6 +1276,32 @@ PushTree AnalyzeSecrets()
 	}
 
 	return PushTreeFromReachableResults(optimalSolutions, 0);	
+}
+
+// Returns a subtree if safe to push a nontrivial wall
+bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs) const
+{
+	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
+		return false; // Out of bounds
+	int wx = tx + txofs;
+	int wy = ty + tyofs;
+	if(wx < 0 || wx >= MAPSIZE || wy < 0 || wy >= MAPSIZE)
+		return false; // Out of bounds after offset
+	if(trivial.empty() && nontrivial.empty())
+		return true; // No tree, nothing to check
+	
+	// Check if trivial
+	for(const Push &push : trivial)
+	{
+		if(push.from == ty * MAPSIZE + tx && push.wallpos == wy * MAPSIZE + wx)
+			return true;
+	}
+	for(const auto &pair : nontrivial)
+	{
+		if(pair.first.from == ty * MAPSIZE + tx && pair.first.wallpos == wy * MAPSIZE + wx)
+			return true; // Found a non-trivial push that matches
+	}
+	return false;
 }
 
 } // namespace Secret

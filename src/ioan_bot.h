@@ -143,7 +143,7 @@ class BotMan
     objtype *threater;
     
    RandomGenerator botRnd;
-    
+    Secret::PushTree pushTree; // tree of pushes, for secret solving
 
 	void ExploreFill(int tx, int ty, fixed ox, fixed oy,
                             Boolean8 firstcall = false);
@@ -236,6 +236,9 @@ public:
     
     // Set occasional mood
     void SetMood();
+
+    void FindSecrets();
+    void ReportPush(int wx, int wy, controldir_t wdir);
 };
 extern BotMan bot;
 
