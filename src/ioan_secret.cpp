@@ -1192,12 +1192,16 @@ void PushTree::clear(const Push &push)
 	}
 	for(size_t i = 0; i < nontrivial.size(); ++i)
 	{
-		const auto &pair = nontrivial[i];
+		auto &pair = nontrivial[i];
 		if(pair.first.from == push.from && pair.first.wallpos == push.wallpos)
 		{
-			const PushTree &childTree = pair.second;
-			trivial.insert(trivial.end(), childTree.trivial.begin(), childTree.trivial.end());
-			nontrivial = childTree.nontrivial; // Move nontrivial children to this tree
+			// Extract data before modifying the vector
+			std::vector<Push> childTrivial = std::move(pair.second.trivial);
+			std::vector<std::pair<Push, PushTree>> childNontrivial = std::move(pair.second.nontrivial);
+			
+			// Now safely modify this tree
+			trivial.insert(trivial.end(), childTrivial.begin(), childTrivial.end());
+			nontrivial = std::move(childNontrivial);
 			return;
 		}
 	}
@@ -1302,6 +1306,32 @@ bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs) const
 			return true; // Found a non-trivial push that matches
 	}
 	return false;
+}
+
+void PushTree::logStructure(int depth) const
+{
+	std::string indent(depth * 2, ' ');
+	Logger::Write("%sPushTree: %u trivial, %u non-trivial", 
+				  indent.c_str(), (unsigned)trivial.size(), (unsigned)nontrivial.size());
+	
+	for (const Push& push : trivial)
+	{
+		Logger::Write("%s  Trivial push from %d,%d to %d,%d at wall %d,%d",
+					  indent.c_str(),
+					  (push.from%MAPSIZE)+1, (push.from/MAPSIZE)+1,
+					  (push.to%MAPSIZE)+1, (push.to/MAPSIZE)+1,
+					  (push.wallpos%MAPSIZE)+1, (push.wallpos/MAPSIZE)+1);
+	}
+	
+	for (const auto& branch : nontrivial)
+	{
+		Logger::Write("%s  Non-trivial push from %d,%d to %d,%d at wall %d,%d",
+					  indent.c_str(),
+					  (branch.first.from%MAPSIZE)+1, (branch.first.from/MAPSIZE)+1,
+					  (branch.first.to%MAPSIZE)+1, (branch.first.to/MAPSIZE)+1,
+					  (branch.first.wallpos%MAPSIZE)+1, (branch.first.wallpos/MAPSIZE)+1);
+		branch.second.logStructure(depth + 1);
+	}
 }
 
 } // namespace Secret

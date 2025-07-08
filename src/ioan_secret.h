@@ -50,6 +50,7 @@ struct PushTree
 {
 	void clear(const Push &push);
 	bool SafeToPush(int tx, int ty, int txofs, int tyofs) const;
+	void logStructure(int depth = 0) const;
 
 	std::vector<Push> trivial;
 	std::vector<std::pair<Push, PushTree>> nontrivial;
