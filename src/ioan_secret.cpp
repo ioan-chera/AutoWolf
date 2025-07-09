@@ -81,6 +81,9 @@ struct Tally
 	int secrets;
 };
 
+// Type alias for visited tiles bitset
+using VisitedMap = std::bitset<maparea>;
+
 struct Inventory
 {
 	explicit Inventory(const Tally &tally) : total(tally)
@@ -150,7 +153,7 @@ struct SimTile
 			return true;
 		// Enemies can be confronted, so they won't block access
 		if(flags & ST_DOOR)
-			return (keys & lock) == 0;
+			return lock && (lock & keys) == 0;
 		return false;
 	}
 
@@ -196,6 +199,12 @@ private:
 	void BuildSimMap(Tally &total);
 };
 
+struct CollectionResult
+{
+	std::vector<PushableWall> pushableWalls;
+	VisitedMap visitedTiles;
+};
+
 static bool IsValidMove(int toPos, int dir)
 {
 	// Check basic bounds
@@ -235,13 +244,6 @@ inline static bool IsSolidWall(int areatile)
 	return areatile > 0 && areatile < DOOR_VERTICAL_1;
 }
 
-
-
-
-
-// Type alias for visited tiles bitset
-using VisitedMap = std::bitset<maparea>;
-
 } // namespace Secret
 
 // Hash function specializations need to be in std namespace
@@ -277,7 +279,14 @@ namespace std {
 			size_t h2 = std::hash<int>{}(push.wallpos);
 			size_t h3 = std::hash<int>{}(push.to);
 			size_t h4 = std::hash<bool>{}(push.trivial);
-			return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3);
+			
+			// Hash the blockedTiles vector
+			size_t h5 = 0;
+			for (int tile : push.blockedTiles) {
+				h5 ^= std::hash<int>{}(tile) + 0x9e3779b9 + (h5 << 6) + (h5 >> 2);
+			}
+			
+			return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3) ^ (h5 << 4);
 		}
 	};
 }
@@ -549,6 +558,38 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 	}
 }
 
+// Simple visit that doesn't collect anything, just marks reachable tiles. Used when checking if a
+// nontrivial push might block previously reachable tiles.
+static VisitedMap FloodFillVisit(const GameState &state)
+{
+	std::queue<int> queue;
+	queue.push(state.playerPos);
+	VisitedMap visited = {};
+	visited[state.playerPos] = true;
+
+	while (!queue.empty())
+	{
+		int pos = queue.front();
+		queue.pop();
+
+		// Explore adjacent tiles
+		for (int dir : DIRS)
+		{
+			int newPos = pos + dir;
+			if (visited[newPos] || !IsValidMove(newPos, dir))
+				continue;
+
+			const SimTile &nextTile = state.simTiles[newPos];
+
+			// Can't pass through walls or obstacles
+			if (nextTile.blocksAccess(state.inventory.keys))
+				continue;
+
+			visited[newPos] = true;
+			queue.push(newPos);
+		}
+	}
+}
 
 static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
 {
@@ -653,7 +694,7 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 	}
 }
 
-static void FloodFillEnemies(SimMap &simTiles, int startPos, Inventory &inventory, VisitedMap &visited)
+static void FloodFillEnemiesBeyondObstacles(SimMap &simTiles, int startPos, Inventory &inventory, VisitedMap &visited)
 {
 	std::queue<int> queue;
 	queue.push(startPos);
@@ -801,7 +842,7 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 	return 0;  // Should never reach here, but return 0 to avoid compiler warnings
 }
 
-static std::vector<PushableWall> ExploreAndCollect(GameState &state)
+static CollectionResult ExploreAndCollect(GameState &state)
 {
 	VisitedMap visited;
 
@@ -810,13 +851,43 @@ static std::vector<PushableWall> ExploreAndCollect(GameState &state)
 	std::vector<PushableWall> pushableWallsFound;
 	FloodFillExplore(state, visited, obstaclesFound, pushableWallsFound);
 
+	// Only populate with the walkable visited options
+	CollectionResult result = {};
+	result.visitedTiles = visited;
+
 	// Secondary flood fill through obstacles to find enemies
 	for(int obstaclePos : obstaclesFound)
 	{
-		FloodFillEnemies(state.simTiles, obstaclePos, state.inventory, visited);
+		FloodFillEnemiesBeyondObstacles(state.simTiles, obstaclePos, state.inventory, visited);
+	}
+	
+	result.pushableWalls = std::move(pushableWallsFound);
+
+	return result;
+}
+
+static void UpdateExitReachableResults(const GameState &state, std::vector<Inventory> &exitReachableResults)
+{
+	bool isBetter = true;
+	for (const Inventory& existing : exitReachableResults)
+	{
+		if (!(state.inventory > existing))
+		{
+			isBetter = false;
+			break;
+		}
 	}
 
-	return pushableWallsFound;
+	if (isBetter && !exitReachableResults.empty())
+	{
+		Logger::Write("New best solution found: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+					state.inventory.pointsCollected, state.inventory.treasureCollected,
+					state.inventory.enemiesKilled, (int)state.inventory.pushes.size(),
+					state.inventory.keys);
+		exitReachableResults.clear();  // Clear previous results
+	}
+
+	exitReachableResults.push_back(state.inventory);
 }
 
 static Inventory EstimateMaxInventory(const GameState &state)
@@ -1017,8 +1088,9 @@ void BacktrackingExplorer::explore(GameState &state)
 	visitedStates.insert(state.simTiles);
 
 	bool foundTrivialPush = true;
-	std::vector<PushableWall> pushableWalls;
 	std::vector<PushableWall> nontrivialWalls;
+
+	VisitedMap visitedBeforeNontrivials = {};
 
 	// Keep exploring and pushing trivial walls until no more are found
 	while (foundTrivialPush)
@@ -1026,11 +1098,13 @@ void BacktrackingExplorer::explore(GameState &state)
 		foundTrivialPush = false;
 
 		// Explore and collect everything reachable, getting pushable walls encountered
-		pushableWalls = ExploreAndCollect(state);
+		CollectionResult collectionResult = ExploreAndCollect(state);
 		nontrivialWalls.clear();	// Clear because we'll encounter same non-trivial walls each time
 
+		visitedBeforeNontrivials |= collectionResult.visitedTiles;
+		
 		// Check each pushable wall for triviality
-		for (const PushableWall &pushableWall : pushableWalls)
+		for (const PushableWall &pushableWall : collectionResult.pushableWalls)
 		{
 			if (IsTrivialPush(state.simTiles, pushableWall))
 			{
@@ -1055,26 +1129,7 @@ void BacktrackingExplorer::explore(GameState &state)
 	// If exit is reachable, store this inventory
 	if (state.inventory.exitReachable)
 	{
-		bool isBetter = true;
-		for (const Inventory& existing : exitReachableResults)
-		{
-			if (!(state.inventory > existing))
-			{
-				isBetter = false;
-				break;
-			}
-		}
-
-		if (isBetter && !exitReachableResults.empty())
-		{
-			Logger::Write("New best solution found: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
-						state.inventory.pointsCollected, state.inventory.treasureCollected,
-						state.inventory.enemiesKilled, (int)state.inventory.pushes.size(),
-						state.inventory.keys);
-			exitReachableResults.clear();  // Clear previous results
-		}
-
-		exitReachableResults.push_back(state.inventory);
+		UpdateExitReachableResults(state, exitReachableResults);
 	}
 
 	std::vector<std::pair<GameState, Inventory>> postponedAttempts;
@@ -1098,6 +1153,15 @@ void BacktrackingExplorer::explore(GameState &state)
 			newState.playerPos = PushWall(newState.simTiles, pushableWall.position, direction, pushRecord);
 			pushRecord.trivial = false;  // Mark as non-trivial push
 			newState.inventory.pushes.push_back(pushRecord);
+
+			VisitedMap visitedAfterPush = FloodFillVisit(newState);
+			
+			// Check if this push blocks access to previously reachable tiles
+			VisitedMap blockedTiles = visitedBeforeNontrivials & ~visitedAfterPush;
+			if (blockedTiles.any())
+				for (int i = 0; i < maparea; ++i)
+					if (blockedTiles[i])
+						pushRecord.blockedTiles.push_back(i);
 
 			Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
 			if(maxInventoryAfterPush < maxPossibleInventory)
@@ -1283,7 +1347,7 @@ PushTree AnalyzeSecrets()
 }
 
 // Returns a subtree if safe to push a nontrivial wall
-bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs) const
+bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs, const Push *&nontrivialPush) const
 {
 	if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
 		return false; // Out of bounds
@@ -1303,7 +1367,10 @@ bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs) const
 	for(const auto &pair : nontrivial)
 	{
 		if(pair.first.from == ty * MAPSIZE + tx && pair.first.wallpos == wy * MAPSIZE + wx)
+		{
+			nontrivialPush = &pair.first; // Found a non-trivial push that matches
 			return true; // Found a non-trivial push that matches
+		}
 	}
 	return false;
 }

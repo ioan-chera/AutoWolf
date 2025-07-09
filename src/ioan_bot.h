@@ -156,9 +156,9 @@ class BotMan
 	void MoveStrafe(short tangle, short dangle, Boolean8 tryuse,
                            byte pressuse, int nx, int ny);
 
-   bool secretVerify(int tx, int ty, int txofs, int tyofs);
+   bool secretVerify(int tx, int ty, int txofs, int tyofs, Boolean8 knifeinsight, bool alreadyVerifying);
 	Boolean8 ObjectOfInterest(int dx, int dy,
-                                    Boolean8 knifeinsight = false);
+                                    Boolean8 knifeinsight = false, bool whileVerifyingSecrets = false);
 	objtype *EnemyOnTarget(Boolean8 solidActors = false) const;
 	objtype *EnemyVisible(short *angle, int *distance,
                                  Boolean8 solidActors = false);

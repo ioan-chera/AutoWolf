@@ -265,7 +265,7 @@ void BotMan::ReportPush(int wx, int wy, controldir_t wdir)
 // - Don't look for treasure
 // - Don't actively hunt for Nazis (except boss)
 
-bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
+bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs, Boolean8 knifeinsight, bool alreadyVerifying)
 {
 //	if (!haspushes || (searchstage < SSMax && pushes.size() &&
 //		(pushes.back().prerequisite ||
@@ -273,8 +273,17 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 //		pushes.back().targetpos != (unsigned)((tx + txofs) + MAPSIZE * (ty + tyofs)))))
 //		return false;
 
-	if(!pushTree.SafeToPush(tx, ty, txofs, tyofs))
+	const Secret::Push *nontrivial = nullptr;
+	if(!pushTree.SafeToPush(tx, ty, txofs, tyofs, nontrivial))
 		return false;
+	if(!alreadyVerifying && nontrivial && !nontrivial->blockedTiles.empty())
+		for(int tile : nontrivial->blockedTiles)
+		{
+			int beyondx = tile % MAPSIZE;
+			int beyondy = tile / MAPSIZE;
+			if(ObjectOfInterest(beyondx, beyondy, knifeinsight, true))
+				return false;
+		}
 
 	if(mapSegs(1, tx + txofs, ty + tyofs) == PUSHABLETILE)
    {
@@ -328,7 +337,7 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs)
 //
 // Pickable item, secret door, exit switch, exit pad
 //
-Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
+Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight, bool whileVerifyingSecrets)
 {
     if(tx < 0 || tx >= MAPSIZE || ty < 0 || ty >= MAPSIZE)
         return true;
@@ -456,13 +465,13 @@ Boolean8 BotMan::ObjectOfInterest(int tx, int ty, Boolean8 knifeinsight)
 	if(!knifeinsight && (!(moodBox() & MoodBox::MOOD_DONTHUNTSECRETS) || searchstage >= SSMax))	// don't look for secret doors if compromised
 	{
 		// PUSH SOUTH
-        if (secretVerify(tx, ty, 0, 1))
+        if (secretVerify(tx, ty, 0, 1, knifeinsight, whileVerifyingSecrets))
             return true;
-        if (secretVerify(tx, ty, 0, -1))
+        if (secretVerify(tx, ty, 0, -1, knifeinsight, whileVerifyingSecrets))
             return true;
-        if (secretVerify(tx, ty, 1, 0))
+        if (secretVerify(tx, ty, 1, 0, knifeinsight, whileVerifyingSecrets))
             return true;
-        if (secretVerify(tx, ty, -1, 0))
+        if (secretVerify(tx, ty, -1, 0, knifeinsight, whileVerifyingSecrets))
             return true;
 	}
 
@@ -646,7 +655,7 @@ Boolean8 BotMan::FindShortestPath(Boolean8 ignoreproj, Boolean8 mindnazis,
 		if(!retreating)
 		{
 			
-			if(ObjectOfInterest(tx, ty, knifeinsight))
+			if(ObjectOfInterest(tx, ty, knifeinsight, false))
 			{
 				// found goal
 				path.finish(imin);

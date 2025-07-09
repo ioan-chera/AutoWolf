@@ -31,13 +31,15 @@ struct Push
 	int wallpos;
 	int to;
 	bool trivial;
+	std::vector<int> blockedTiles; // Tiles that are blocked by this push and need to be checked
 	
 	bool operator==(const Push& other) const noexcept
 	{
 		return from == other.from && 
 		       wallpos == other.wallpos && 
 		       to == other.to && 
-		       trivial == other.trivial;
+		       trivial == other.trivial &&
+		       blockedTiles == other.blockedTiles;
 	}
 	
 	bool operator!=(const Push& other) const noexcept
@@ -49,7 +51,7 @@ struct Push
 struct PushTree
 {
 	void clear(const Push &push);
-	bool SafeToPush(int tx, int ty, int txofs, int tyofs) const;
+	bool SafeToPush(int tx, int ty, int txofs, int tyofs, const Push *&nontrivial) const;
 	void logStructure(int depth = 0) const;
 
 	std::vector<Push> trivial;
