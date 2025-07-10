@@ -558,40 +558,9 @@ static void HandlePushableWall(SimMap &simTiles, int wallPos, int dir, std::vect
 	}
 }
 
-// Simple visit that doesn't collect anything, just marks reachable tiles. Used when checking if a
-// nontrivial push might block previously reachable tiles.
-static VisitedMap FloodFillVisit(const GameState &state)
-{
-	std::queue<int> queue;
-	queue.push(state.playerPos);
-	VisitedMap visited = {};
-	visited[state.playerPos] = true;
-
-	while (!queue.empty())
-	{
-		int pos = queue.front();
-		queue.pop();
-
-		// Explore adjacent tiles
-		for (int dir : DIRS)
-		{
-			int newPos = pos + dir;
-			if (visited[newPos] || !IsValidMove(newPos, dir))
-				continue;
-
-			const SimTile &nextTile = state.simTiles[newPos];
-
-			// Can't pass through walls or obstacles
-			if (nextTile.blocksAccess(state.inventory.keys))
-				continue;
-
-			visited[newPos] = true;
-			queue.push(newPos);
-		}
-	}
-}
-
-static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<int> &obstaclesFound, std::vector<PushableWall> &pushableWallsFound)
+static void FloodFillExplore(GameState &state, VisitedMap &visited,
+							 std::vector<int> *obstaclesFound,
+							 std::vector<PushableWall> *pushableWallsFound, bool visitOnly)
 {
 	std::queue<int> queue;
 	queue.push(state.playerPos);
@@ -607,7 +576,7 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 		SimTile &tile = state.simTiles[pos];
 
 		// Collect treasure
-		if (tile.flags & ST_TREASURE)
+		if (!visitOnly && tile.flags & ST_TREASURE)
 		{
 			state.inventory.treasureCollected++;
 			state.inventory.pointsCollected += tile.points;
@@ -616,7 +585,7 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 		}
 
 		// Collect keys
-		if (tile.flags & ST_KEY)
+		if (!visitOnly && tile.flags & ST_KEY)
 		{
 			state.inventory.keys |= tile.lock;
 			tile.flags &= ~ST_KEY;
@@ -632,7 +601,7 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 		}
 
 		// Kill enemies
-		if (tile.flags & ST_ENEMY)
+		if (!visitOnly && tile.flags & ST_ENEMY)
 		{
 			state.inventory.enemiesKilled++;
 			state.inventory.pointsCollected += tile.points;
@@ -641,7 +610,7 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 		}
 
 		// Check if exit is reachable
-		if (tile.flags & ST_EXIT)
+		if (!visitOnly && tile.flags & ST_EXIT)
 		{
 			state.inventory.exitReachable = true;
 		}
@@ -658,16 +627,17 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 			// Can't pass through walls or obstacles (unless it's a door we can open)
 			if (nextTile.flags & ST_WALL)
 			{
-				if(nextTile.flags & ST_PUSHABLE)
+				if(!visitOnly && nextTile.flags & ST_PUSHABLE && pushableWallsFound)
 				{
-					HandlePushableWall(state.simTiles, newPos, dir, pushableWallsFound);
+					HandlePushableWall(state.simTiles, newPos, dir, *pushableWallsFound);
 					// Do not visit it, as we need to check it from multiple places
 				}
 
 				// Exit switches can only be operated east-west
 				if(nextTile.flags & ST_EXIT && !(nextTile.flags & ST_PUSHABLE) && abs(dir) == 1)
 				{
-					state.inventory.exitReachable = true;
+					if(!visitOnly)
+						state.inventory.exitReachable = true;
 					visited[newPos] = true;
 				}
 				continue;
@@ -676,14 +646,16 @@ static void FloodFillExplore(GameState &state, VisitedMap &visited, std::vector<
 			{
 				if(!visited[newPos])
 				{
-					obstaclesFound.push_back(newPos);
+					if(!visitOnly && obstaclesFound)
+						obstaclesFound->push_back(newPos);
 					visited[newPos] = true;
 				}
 				continue;
 			}
 			if ((nextTile.flags & ST_DOOR) && nextTile.lock != 0 && (nextTile.lock & state.inventory.keys) == 0)
 			{
-				lockedDoors.push_back({newPos, nextTile.lock});
+				if(!visitOnly)
+					lockedDoors.push_back({newPos, nextTile.lock});
 				visited[newPos] = true;
 				continue;
 			}
@@ -844,12 +816,12 @@ static int PushWall(SimMap &simTiles, int wallPos, int direction, Push &pushReco
 
 static CollectionResult ExploreAndCollect(GameState &state)
 {
-	VisitedMap visited;
+	VisitedMap visited = {};
 
 	// Main flood fill for exploration and collection
 	std::vector<int> obstaclesFound;
 	std::vector<PushableWall> pushableWallsFound;
-	FloodFillExplore(state, visited, obstaclesFound, pushableWallsFound);
+	FloodFillExplore(state, visited, &obstaclesFound, &pushableWallsFound, false);
 
 	// Only populate with the walkable visited options
 	CollectionResult result = {};
@@ -1154,8 +1126,9 @@ void BacktrackingExplorer::explore(GameState &state)
 			pushRecord.trivial = false;  // Mark as non-trivial push
 			newState.inventory.pushes.push_back(pushRecord);
 
-			VisitedMap visitedAfterPush = FloodFillVisit(newState);
-			
+			VisitedMap visitedAfterPush = {};
+			FloodFillExplore(newState, visitedAfterPush, nullptr, nullptr, true);
+
 			// Check if this push blocks access to previously reachable tiles
 			VisitedMap blockedTiles = visitedBeforeNontrivials & ~visitedAfterPush;
 			if (blockedTiles.any())
