@@ -1125,6 +1125,7 @@ void BacktrackingExplorer::explore(GameState &state)
 			newState.playerPos = PushWall(newState.simTiles, pushableWall.position, direction, pushRecord);
 			pushRecord.trivial = false;  // Mark as non-trivial push
 			newState.inventory.pushes.push_back(pushRecord);
+			Push &pushRef = newState.inventory.pushes.back();
 
 			VisitedMap visitedAfterPush = {};
 			FloodFillExplore(newState, visitedAfterPush, nullptr, nullptr, true);
@@ -1134,7 +1135,7 @@ void BacktrackingExplorer::explore(GameState &state)
 			if (blockedTiles.any())
 				for (int i = 0; i < maparea; ++i)
 					if (blockedTiles[i])
-						pushRecord.blockedTiles.push_back(i);
+						pushRef.blockedTiles.push_back(i);
 
 			Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
 			if(maxInventoryAfterPush < maxPossibleInventory)
