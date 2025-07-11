@@ -1059,6 +1059,7 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading, dou
 	// Check if this state has been visited before
 	if (visitedStates.find(state.simTiles) != visitedStates.end())
 	{
+		loading.Update(progressMax, progressTotal);
 		return; // Already visited this state
 	}
 	visitedStates.insert(state.simTiles);
@@ -1114,13 +1115,6 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading, dou
 		Inventory inventory;
 		double progressAmount;
 	};
-
-	if(nontrivialWalls.empty() && progressMax < progressTotal)
-	{
-		loading.Update(progressMax, progressTotal);
-		// loadingCurrent += progressAmount;
-		return;
-	}
 
 	std::vector<PostponedAttempt> postponedAttempts;
 
@@ -1212,6 +1206,8 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading, dou
 		explore(attempt.state, loading, loadingCurrent, loadingCurrent + attempt.progressAmount);
 		loadingCurrent += attempt.progressAmount;
 	}
+
+	loading.Update(progressMax, progressTotal);
 }
 
 static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults,
