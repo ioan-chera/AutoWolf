@@ -41,6 +41,8 @@
 
 namespace Secret {
 
+static const double progressTotal = 256;
+
 static const unsigned timelimit = 10000;
 
 static const int DIRS[] = {-1, 1, -MAPSIZE, MAPSIZE};
@@ -1044,12 +1046,11 @@ public:
 	{
 	}
 
-	void explore(GameState &state, LoadingScreen &loading, double progressBase, double progressMax,
-		double progressTotal);
+	void explore(GameState &state, LoadingScreen &loading, double progressMin, double progressMax);
 };
 
-void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
-	double progressBase, double progressMax, double progressTotal)
+void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading, double progressMin,
+	double progressMax)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
@@ -1114,30 +1115,17 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
 		double progressAmount;
 	};
 
-	if(nontrivialWalls.empty())
+	if(nontrivialWalls.empty() && progressMax < progressTotal)
+	{
+		loading.Update(progressMax, progressTotal);
+		// loadingCurrent += progressAmount;
 		return;
+	}
 
 	std::vector<PostponedAttempt> postponedAttempts;
 
-	double loadingBase;
-	double loadingFactor;
-	double loadingTotal;
-	double loadingProgress;
-
-	if(!progressMax)
-	{
-		loadingBase = 0;
-		loadingFactor = 1;
-		loadingTotal = (double)nontrivialWalls.size();
-	}
-	else
-	{
-		loadingBase = progressBase;
-		loadingFactor = (progressMax - progressBase) / (double)nontrivialWalls.size();
-		loadingTotal = progressTotal;
-	}
-
-	loadingProgress = 0;
+	double loadingCurrent = progressMin;
+	double loadingFactor = (progressMax - progressMin) / (double)nontrivialWalls.size();
 
 	// Backtracking: try each non-trivial pushable wall
 	for (const PushableWall &pushableWall : nontrivialWalls)
@@ -1147,7 +1135,7 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
 			return;
 
 		// Use all valid directions for non-trivial pushes
-		double progressAmount = 1.0 / (double)pushableWall.validDirections.size();
+		double progressAmount = loadingFactor / (double)pushableWall.validDirections.size();
 		for (int direction : pushableWall.validDirections)
 		{
 			// Create new state (copy current state)
@@ -1182,8 +1170,8 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
 					// 				maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
 					// 				maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
 					// 				maxInventoryAfterPush.keys);
-					loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
-					loadingProgress += progressAmount;
+					loading.Update(loadingCurrent, progressTotal);
+					loadingCurrent += progressAmount;
 				}
 				else
 				{
@@ -1193,11 +1181,10 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
 			}
 
 			// Recursively explore this new state
-			loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
-			loadingProgress += progressAmount;
+			// loading.Update(loadingCurrent, progressTotal);
 
-			explore(newState, loading, loadingBase + loadingProgress * loadingFactor, 
-			loadingBase + (loadingProgress + progressAmount) * loadingFactor, loadingTotal);
+			explore(newState, loading, loadingCurrent, loadingCurrent + progressAmount);
+			loadingCurrent += progressAmount;
 		}
 	}
 
@@ -1212,19 +1199,18 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
 			// 			  attempt.second.pointsCollected, attempt.second.treasureCollected,
 			// 			  attempt.second.enemiesKilled, (int)attempt.second.pushes.size(),
 			// 			  attempt.second.keys);
-			loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
-			loadingProgress += attempt.progressAmount;
+			loading.Update(loadingCurrent, progressTotal);
+			loadingCurrent += attempt.progressAmount;
 			continue;
 		}
 		// Check timeout before each major operation
 		if (std::chrono::steady_clock::now() - startTime > timeout)
 			return;
 
-		loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
-		loadingProgress += attempt.progressAmount;
+		// loading.Update(loadingCurrent, progressTotal);
 		
-		explore(attempt.state, loading, loadingBase + loadingProgress * loadingFactor, 
-			loadingBase + (loadingProgress + attempt.progressAmount) * loadingFactor, loadingTotal);
+		explore(attempt.state, loading, loadingCurrent, loadingCurrent + attempt.progressAmount);
+		loadingCurrent += attempt.progressAmount;
 	}
 }
 
@@ -1311,7 +1297,7 @@ PushTree AnalyzeSecrets()
 	BacktrackingExplorer explorer(exitReachableResults, startTime, timeout, visitedStates);
 	{
 		LoadingScreen loading;
-		explorer.explore(initialState, loading, 0, 0, 0);
+		explorer.explore(initialState, loading, 1, progressTotal);
 	}
 
 	// Check if we timed out
