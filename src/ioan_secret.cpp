@@ -35,6 +35,7 @@
 #include "obattrib.h"
 #include "wl_act1.h"
 #include "wl_game.h"
+#include "wl_inter.h"
 #include "wl_play.h"
 #include "Logger.h"
 
@@ -126,7 +127,7 @@ struct Inventory
 		if((int)pushes.size() >= total.secrets)
 			result += 10000;
 		return result;
-	}	
+	}
 
 	int treasureCollected = 0;
 	int enemiesKilled = 0;
@@ -270,7 +271,7 @@ namespace std {
 			return result;
 		}
 	};
-	
+
 	// Hash function for Push
 	template<>
 	struct hash<Secret::Push> {
@@ -279,13 +280,13 @@ namespace std {
 			size_t h2 = std::hash<int>{}(push.wallpos);
 			size_t h3 = std::hash<int>{}(push.to);
 			size_t h4 = std::hash<bool>{}(push.trivial);
-			
+
 			// Hash the blockedTiles vector
 			size_t h5 = 0;
 			for (int tile : push.blockedTiles) {
 				h5 ^= std::hash<int>{}(tile) + 0x9e3779b9 + (h5 << 6) + (h5 >> 2);
 			}
-			
+
 			return h1 ^ (h2 << 1) ^ (h3 << 2) ^ (h4 << 3) ^ (h5 << 4);
 		}
 	};
@@ -832,7 +833,7 @@ static CollectionResult ExploreAndCollect(GameState &state)
 	{
 		FloodFillEnemiesBeyondObstacles(state.simTiles, obstaclePos, state.inventory, visited);
 	}
-	
+
 	result.pushableWalls = std::move(pushableWallsFound);
 
 	return result;
@@ -868,21 +869,21 @@ static Inventory EstimateMaxInventory(const GameState &state)
 	SimMap tempTiles = state.simTiles;
 	Inventory maxInventory = state.inventory;
 	VisitedMap visited;
-	
+
 	std::queue<int> queue;
 	queue.push(state.playerPos);
 	visited[state.playerPos] = true;
-	
+
 	std::vector<std::pair<int, int>> lockedDoors;
 	std::vector<int> obstaclesFound;
-	
+
 	while (!queue.empty())
 	{
 		int pos = queue.front();
 		queue.pop();
-		
+
 		SimTile &tile = tempTiles[pos];
-		
+
 		// Collect treasure
 		if (tile.flags & ST_TREASURE)
 		{
@@ -891,14 +892,14 @@ static Inventory EstimateMaxInventory(const GameState &state)
 			tile.flags &= ~ST_TREASURE;
 			tile.points = 0;
 		}
-		
+
 		// Collect keys
 		if (tile.flags & ST_KEY)
 		{
 			maxInventory.keys |= tile.lock;
 			tile.flags &= ~ST_KEY;
 			tile.lock = 0;
-			
+
 			// Check if we can now open any previously locked doors
 			for(auto& pair : lockedDoors)
 			{
@@ -909,7 +910,7 @@ static Inventory EstimateMaxInventory(const GameState &state)
 				}
 			}
 		}
-		
+
 		// Kill enemies
 		if (tile.flags & ST_ENEMY)
 		{
@@ -918,26 +919,26 @@ static Inventory EstimateMaxInventory(const GameState &state)
 			tile.flags &= ~ST_ENEMY;
 			tile.points = 0;
 		}
-		
+
 		// Check if exit is reachable
 		if (tile.flags & ST_EXIT)
 		{
 			maxInventory.exitReachable = true;
 		}
-		
+
 		// Explore adjacent tiles
 		for (int dir : DIRS)
 		{
 			int newPos = pos + dir;
 			if (visited[newPos] || !IsValidMove(newPos, dir))
 				continue;
-			
+
 			SimTile &nextTile = tempTiles[newPos];
-			
+
 			// Can't pass through regular walls
 			if ((nextTile.flags & ST_WALL) && !(nextTile.flags & ST_PUSHABLE))
 				continue;
-			
+
 			// Handle obstacles - track them for enemy collection
 			if (nextTile.flags & ST_OBSTACLE)
 			{
@@ -948,10 +949,10 @@ static Inventory EstimateMaxInventory(const GameState &state)
 				}
 				continue;
 			}
-			
+
 			if (nextTile.flags & ST_CORPSE)
 				continue;
-			
+
 			// For doors, check if we can open them or track them for later
 			if (nextTile.flags & ST_DOOR)
 			{
@@ -963,28 +964,28 @@ static Inventory EstimateMaxInventory(const GameState &state)
 					continue;
 				}
 			}
-			
+
 			// TREAT PUSHABLE WALLS AS PASSABLE for heuristic estimation
 			// This gives us the theoretical maximum if all walls could be pushed optimally
-			
+
 			visited[newPos] = true;
 			queue.push(newPos);
 		}
 	}
-	
+
 	// Secondary flood fill through obstacles to find enemies (like FloodFillEnemies)
 	for(int obstaclePos : obstaclesFound)
 	{
 		std::queue<int> obstacleQueue;
 		obstacleQueue.push(obstaclePos);
-		
+
 		while (!obstacleQueue.empty())
 		{
 			int pos = obstacleQueue.front();
 			obstacleQueue.pop();
-			
+
 			SimTile &tile = tempTiles[pos];
-			
+
 			// Kill enemies (this is the only thing we do in obstacle flood fill)
 			if (tile.flags & ST_ENEMY)
 			{
@@ -999,26 +1000,26 @@ static Inventory EstimateMaxInventory(const GameState &state)
 					maxInventory.exitReachable = true;
 				}
 			}
-			
+
 			// Explore through obstacles (but not walls or doors)
 			for (int dir : DIRS)
 			{
 				int newPos = pos + dir;
 				if (visited[newPos] || !IsValidMove(newPos, dir))
 					continue;
-				
+
 				SimTile &nextTile = tempTiles[newPos];
-				
+
 				// Can't pass through walls or doors in obstacle flood fill for enemy sighting
 				if(!(nextTile.flags & ST_PUSHABLE) && nextTile.flags & (ST_WALL | ST_DOOR))
 					continue;
-					
+
 				visited[newPos] = true;
 				obstacleQueue.push(newPos);
 			}
 		}
 	}
-	
+
 	return maxInventory;
 }
 
@@ -1043,10 +1044,12 @@ public:
 	{
 	}
 
-	void explore(GameState &state);
+	void explore(GameState &state, LoadingScreen &loading, double progressBase, double progressMax,
+		double progressTotal);
 };
 
-void BacktrackingExplorer::explore(GameState &state)
+void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading,
+	double progressBase, double progressMax, double progressTotal)
 {
 	// Check if we've exceeded the timeout
 	if (std::chrono::steady_clock::now() - startTime > timeout)
@@ -1074,7 +1077,7 @@ void BacktrackingExplorer::explore(GameState &state)
 		nontrivialWalls.clear();	// Clear because we'll encounter same non-trivial walls each time
 
 		visitedBeforeNontrivials |= collectionResult.visitedTiles;
-		
+
 		// Check each pushable wall for triviality
 		for (const PushableWall &pushableWall : collectionResult.pushableWalls)
 		{
@@ -1104,7 +1107,37 @@ void BacktrackingExplorer::explore(GameState &state)
 		UpdateExitReachableResults(state, exitReachableResults);
 	}
 
-	std::vector<std::pair<GameState, Inventory>> postponedAttempts;
+	struct PostponedAttempt
+	{
+		GameState state;
+		Inventory inventory;
+		double progressAmount;
+	};
+
+	if(nontrivialWalls.empty())
+		return;
+
+	std::vector<PostponedAttempt> postponedAttempts;
+
+	double loadingBase;
+	double loadingFactor;
+	double loadingTotal;
+	double loadingProgress;
+
+	if(!progressMax)
+	{
+		loadingBase = 0;
+		loadingFactor = 1;
+		loadingTotal = (double)nontrivialWalls.size();
+	}
+	else
+	{
+		loadingBase = progressBase;
+		loadingFactor = (progressMax - progressBase) / (double)nontrivialWalls.size();
+		loadingTotal = progressTotal;
+	}
+
+	loadingProgress = 0;
 
 	// Backtracking: try each non-trivial pushable wall
 	for (const PushableWall &pushableWall : nontrivialWalls)
@@ -1114,6 +1147,7 @@ void BacktrackingExplorer::explore(GameState &state)
 			return;
 
 		// Use all valid directions for non-trivial pushes
+		double progressAmount = 1.0 / (double)pushableWall.validDirections.size();
 		for (int direction : pushableWall.validDirections)
 		{
 			// Create new state (copy current state)
@@ -1144,45 +1178,57 @@ void BacktrackingExplorer::explore(GameState &state)
 				// But only if it's not definitely worse than what we just found
 				if(!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
 				{
-					Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
-									maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
-									maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
-									maxInventoryAfterPush.keys);
+					// Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+					// 				maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,
+					// 				maxInventoryAfterPush.enemiesKilled, (int)maxInventoryAfterPush.pushes.size(),
+					// 				maxInventoryAfterPush.keys);
+					loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
+					loadingProgress += progressAmount;
 				}
 				else
 				{
-					postponedAttempts.push_back({newState, maxInventoryAfterPush});
+					postponedAttempts.push_back({newState, maxInventoryAfterPush, progressAmount});
 				}
 				continue;
 			}
 
 			// Recursively explore this new state
-			explore(newState);
+			loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
+			loadingProgress += progressAmount;
+
+			explore(newState, loading, loadingBase + loadingProgress * loadingFactor, 
+			loadingBase + (loadingProgress + progressAmount) * loadingFactor, loadingTotal);
 		}
 	}
 
 	// Postponed attempts
 	// TODO: prune them if they are worse than the current best
-	for (std::pair<GameState, Inventory> &attempt : postponedAttempts)
+	for (PostponedAttempt &attempt : postponedAttempts)
 	{
-		if(!exitReachableResults.empty() && attempt.second < exitReachableResults[0])
+		if(!exitReachableResults.empty() && attempt.inventory < exitReachableResults[0])
 		{
 			// If this attempt is worse than the best found, skip it
-			Logger::Write("Skipping postponed attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
-						  attempt.second.pointsCollected, attempt.second.treasureCollected,
-						  attempt.second.enemiesKilled, (int)attempt.second.pushes.size(),
-						  attempt.second.keys);
+			// Logger::Write("Skipping postponed attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
+			// 			  attempt.second.pointsCollected, attempt.second.treasureCollected,
+			// 			  attempt.second.enemiesKilled, (int)attempt.second.pushes.size(),
+			// 			  attempt.second.keys);
+			loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
+			loadingProgress += attempt.progressAmount;
 			continue;
 		}
 		// Check timeout before each major operation
 		if (std::chrono::steady_clock::now() - startTime > timeout)
 			return;
 
-		explore(attempt.first);
+		loading.Update(loadingBase + loadingProgress * loadingFactor, loadingTotal);
+		loadingProgress += attempt.progressAmount;
+		
+		explore(attempt.state, loading, loadingBase + loadingProgress * loadingFactor, 
+			loadingBase + (loadingProgress + attempt.progressAmount) * loadingFactor, loadingTotal);
 	}
 }
 
-static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults, 
+static PushTree PushTreeFromReachableResults(const std::vector<Inventory> &pushResults,
 	size_t startIndex)
 {
 	if(pushResults.empty())
@@ -1236,7 +1282,7 @@ void PushTree::clear(const Push &push)
 			// Extract data before modifying the vector
 			std::vector<Push> childTrivial = std::move(pair.second.trivial);
 			std::vector<std::pair<Push, PushTree>> childNontrivial = std::move(pair.second.nontrivial);
-			
+
 			// Now safely modify this tree
 			trivial.insert(trivial.end(), childTrivial.begin(), childTrivial.end());
 			nontrivial = std::move(childNontrivial);
@@ -1263,7 +1309,10 @@ PushTree AnalyzeSecrets()
 
 	// Start the recursive exploration and backtracking
 	BacktrackingExplorer explorer(exitReachableResults, startTime, timeout, visitedStates);
-	explorer.explore(initialState);
+	{
+		LoadingScreen loading;
+		explorer.explore(initialState, loading, 0, 0, 0);
+	}
 
 	// Check if we timed out
 	auto elapsed = std::chrono::steady_clock::now() - startTime;
@@ -1317,7 +1366,7 @@ PushTree AnalyzeSecrets()
 		}
 	}
 
-	return PushTreeFromReachableResults(optimalSolutions, 0);	
+	return PushTreeFromReachableResults(optimalSolutions, 0);
 }
 
 // Returns a subtree if safe to push a nontrivial wall
@@ -1331,7 +1380,7 @@ bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs, const Push *&non
 		return false; // Out of bounds after offset
 	if(trivial.empty() && nontrivial.empty())
 		return true; // No tree, nothing to check
-	
+
 	// Check if trivial
 	for(const Push &push : trivial)
 	{
@@ -1352,9 +1401,9 @@ bool PushTree::SafeToPush(int tx, int ty, int txofs, int tyofs, const Push *&non
 void PushTree::logStructure(int depth) const
 {
 	std::string indent(depth * 2, ' ');
-	Logger::Write("%sPushTree: %u trivial, %u non-trivial", 
+	Logger::Write("%sPushTree: %u trivial, %u non-trivial",
 				  indent.c_str(), (unsigned)trivial.size(), (unsigned)nontrivial.size());
-	
+
 	for (const Push& push : trivial)
 	{
 		Logger::Write("%s  Trivial push from %d,%d to %d,%d at wall %d,%d",
@@ -1363,7 +1412,7 @@ void PushTree::logStructure(int depth) const
 					  (push.to%MAPSIZE)+1, (push.to/MAPSIZE)+1,
 					  (push.wallpos%MAPSIZE)+1, (push.wallpos/MAPSIZE)+1);
 	}
-	
+
 	for (const auto& branch : nontrivial)
 	{
 		Logger::Write("%s  Non-trivial push from %d,%d to %d,%d at wall %d,%d",

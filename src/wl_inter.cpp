@@ -30,6 +30,7 @@
 #include "f_spear.h"
 #include "wl_agent.h"
 #include "wl_game.h"
+#include "wl_inter.h"
 #include "wl_menu.h"
 #include "wl_text.h"
 #include "i_video.h"
@@ -942,13 +943,13 @@ done:   tempstr = std::to_string(kr);
 =================
 */
 
-static bool PreloadUpdate (unsigned current, unsigned total)
+static bool PreloadUpdate (double current, double total)
 {
     unsigned w = WindowW - vid_scaleFactor * 10;
 
     VL_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
         w, vid_scaleFactor * 2, BLACK);
-    w = ((int32_t) w * current) / total;
+    w = (unsigned)round(((int32_t) w * current) / total);
     if (w)
     {
         VL_BarScaledCoord (WindowX + vid_scaleFactor * 5, WindowY + WindowH - vid_scaleFactor * 3,
@@ -969,28 +970,51 @@ static bool PreloadUpdate (unsigned current, unsigned total)
 
 void PreloadGraphics ()
 {
-    DrawLevel ();
-    ClearSplitVWB ();           // set up for double buffering in split screen
+    // LoadingScreen loading;
+}
 
-    VL_BarScaledCoord (0, 0, cfg_logicalWidth, cfg_logicalHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
-    LatchDrawPicScaledCoord ((cfg_logicalWidth-vid_scaleFactor*224)/16,
-        (cfg_logicalHeight-vid_scaleFactor*(STATUSLINES+48))/2, SPEAR::g(GETPSYCHEDPIC));
+void LoadingScreen::Update(double current, double total)
+{
+    // printf("loading %g %g\n", current, total);
+    if(!showing)
+        Show();
+    PreloadUpdate(current, total);
+}
 
-    WindowX = (cfg_logicalWidth - vid_scaleFactor*224)/2;
-    WindowY = (cfg_logicalHeight - vid_scaleFactor*(STATUSLINES+48))/2;
+void LoadingScreen::Show()
+{
+    if(showing)
+        return;
+    showing = true;
+
+    DrawLevel();
+    ClearSplitVWB();           // set up for double buffering in split screen
+
+    VL_BarScaledCoord(0, 0, cfg_logicalWidth, 
+        cfg_logicalHeight - vid_scaleFactor * (STATUSLINES - 1), bordercol);
+    LatchDrawPicScaledCoord((cfg_logicalWidth - vid_scaleFactor * 224) / 16,
+        (cfg_logicalHeight - vid_scaleFactor * (STATUSLINES + 48)) / 2, SPEAR::g(GETPSYCHEDPIC));
+
+    WindowX = (cfg_logicalWidth - vid_scaleFactor * 224) / 2;
+    WindowY = (cfg_logicalHeight - vid_scaleFactor * (STATUSLINES + 48)) / 2;
     WindowW = vid_scaleFactor * 28 * 8;
     WindowH = vid_scaleFactor * 48;
+    
+    I_UpdateScreen();
+    VW_FadeIn();
+}
 
-    I_UpdateScreen ();
-    VW_FadeIn ();
+LoadingScreen::~LoadingScreen()
+{
+    if(!showing)
+        return;
 
-//      PM_Preload (PreloadUpdate);
     PreloadUpdate (10, 10);
     myInput.userInput (70);
     VW_FadeOut ();
-
-    DrawPlayBorder ();
-    I_UpdateScreen ();
+    VW_FadeOut();
+    DrawPlayBorder();
+    I_UpdateScreen();
 }
 
 
