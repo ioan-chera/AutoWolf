@@ -181,7 +181,7 @@ struct SimTile
 };
 
 // Type alias for the game map
-using SimMap = std::array<SimTile, maparea>;
+using SimMap = std::vector<SimTile>;
 
 
 struct GameState
@@ -193,7 +193,7 @@ struct GameState
 		playerPos = player->tilex + player->tiley * MAPSIZE;
 	}
 
-	SimMap simTiles = {};
+	SimMap simTiles = SimMap(maparea);
 	int playerPos = 0;
 	Inventory inventory;
 
