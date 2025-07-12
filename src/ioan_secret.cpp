@@ -28,7 +28,6 @@
 #include <functional>
 #include <array>
 #include <bitset>
-#include <compare>
 #include "Config.h"
 #include "id_ca.h"
 #include "ioan_secret.h"
@@ -1306,7 +1305,7 @@ PushTree AnalyzeSecrets()
 	if (exitReachableResults.empty())
 	{
 		Logger::Write("No solutions found with reachable exit");
-		return;
+		return {};
 	}
 
 	Logger::Write("Found %u solutions with reachable exit", (unsigned)exitReachableResults.size());

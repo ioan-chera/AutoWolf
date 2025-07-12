@@ -1035,9 +1035,6 @@ void DrawHighScores ()
     char *str;
     // IOANCH 20130301: unification culling
 
-    char buffer1[5];
-
-
     word i, w, h;
     HighScore *s;
 
