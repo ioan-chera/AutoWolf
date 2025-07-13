@@ -144,6 +144,7 @@ struct SimTile
 {
 	bool blocksPush() const noexcept
 	{
+		// TODO: add deaf guard check
 		return flags & (ST_WALL | ST_OBSTACLE | ST_CORPSE | ST_DOOR);
 		// NOTE: enemies may also block, but only if deaf, immobile or bad floor code
 		// Currently not handled
@@ -937,8 +938,13 @@ static Inventory EstimateMaxInventory(const GameState &state)
 			SimTile &nextTile = tempTiles[newPos];
 
 			// Can't pass through regular walls
-			if ((nextTile.flags & ST_WALL) && !(nextTile.flags & ST_PUSHABLE))
+			if (nextTile.flags & ST_WALL)
+			{
+				if(nextTile.flags & ST_EXIT && abs(dir) == 1)
+					maxInventory.exitReachable = true;
+				if (!(nextTile.flags & ST_PUSHABLE))
 				continue;
+			}
 
 			// Handle obstacles - track them for enemy collection
 			if (nextTile.flags & ST_OBSTACLE)
@@ -1153,11 +1159,13 @@ void BacktrackingExplorer::explore(GameState &state, LoadingScreen &loading, dou
 						pushRef.blockedTiles.push_back(i);
 
 			Inventory maxInventoryAfterPush = EstimateMaxInventory(newState);
-			if(maxInventoryAfterPush < maxPossibleInventory)
+			if(maxInventoryAfterPush < maxPossibleInventory ||
+			   (!maxInventoryAfterPush.exitReachable && maxPossibleInventory.exitReachable))
 			{
 				// This risks being a bad move, so postpone it as we try better options first
 				// But only if it's not definitely worse than what we just found
-				if(!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
+				if((!exitReachableResults.empty() && maxInventoryAfterPush < exitReachableResults[0])
+				   || !maxInventoryAfterPush.exitReachable)
 				{
 					// Logger::Write("Cancelling attempt with worse inventory: Points=%d, Treasures=%d, Enemies=%d, Pushes=%d, Keys=%d\n",
 					// 				maxInventoryAfterPush.pointsCollected, maxInventoryAfterPush.treasureCollected,

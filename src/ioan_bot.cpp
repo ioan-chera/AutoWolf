@@ -276,12 +276,16 @@ bool BotMan::secretVerify(int tx, int ty, int txofs, int tyofs, Boolean8 knifein
 	const Secret::Push *nontrivial = nullptr;
 	if(!pushTree.SafeToPush(tx, ty, txofs, tyofs, nontrivial))
 		return false;
-	if(!alreadyVerifying && nontrivial && !nontrivial->blockedTiles.empty())
+	if(/*!alreadyVerifying && */nontrivial && !nontrivial->blockedTiles.empty())
 		for(int tile : nontrivial->blockedTiles)
 		{
 			int beyondx = tile % MAPSIZE;
 			int beyondy = tile / MAPSIZE;
-			if(ObjectOfInterest(beyondx, beyondy, knifeinsight, true))
+			SearchStage backupStage = searchstage;
+			searchstage = SSMax;
+			Boolean8 interesting = ObjectOfInterest(beyondx, beyondy, knifeinsight, true);
+			searchstage = backupStage;
+			if(interesting)
 				return false;
 		}
 
